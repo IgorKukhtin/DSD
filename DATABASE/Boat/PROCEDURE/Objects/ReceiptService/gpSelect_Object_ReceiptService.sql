@@ -39,14 +39,14 @@ BEGIN
            , Object_Partner.Id                      AS PartnerId
            , Object_Partner.ValueData               AS PartnerName
 
-             --цена Вх. цена без ндс
+             -- цена Вх. цена без ндс
            , COALESCE (ObjectFloat_EKPrice.ValueData,0)   ::TFloat AS EKPrice
-             --цена Вх. цена с ндс
+             -- цена Вх. цена с ндс
            , zfCalc_SummWVAT (ObjectFloat_EKPrice.ValueData, ObjectFloat_TaxKind_Value.ValueData) ::TFloat AS EKPriceWVAT
 
-             --цена Цена продажи без ндс
+             -- цена Цена продажи без ндс
            , COALESCE (ObjectFloat_SalePrice.ValueData, 0) ::TFloat AS SalePrice
-             --цена Цена продажи с ндс
+             -- цена Цена продажи с ндс
            , zfCalc_SummWVAT (ObjectFloat_SalePrice.ValueData, ObjectFloat_TaxKind_Value_WithVAT.ValueData) ::TFloat AS SalePriceWVAT 
            
            --для ProductionUnion       

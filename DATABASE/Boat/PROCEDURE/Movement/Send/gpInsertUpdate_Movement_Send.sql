@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Send()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send(Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send(Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(

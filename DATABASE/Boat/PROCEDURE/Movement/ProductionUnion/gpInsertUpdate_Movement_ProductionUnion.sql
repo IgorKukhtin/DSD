@@ -1,9 +1,6 @@
 -- Function: gpInsertUpdate_Movement_ProductionUnion()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion(Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion(Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion(Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionUnion(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>

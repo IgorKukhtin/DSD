@@ -18,7 +18,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Detail(
 RETURNS Integer
 AS
 $BODY$
-    DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert Boolean;
+   DECLARE vbPartnerId Integer;
+   DECLARE vbVATPercent TFloat;
 BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -39,6 +41,33 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
      
+     -- Поставщик услуг - формируется автоматически из данных zc_MI_Detail
+     vbPartnerId := (SELECT MAX (ObjectLink_Partner.ChildObjectId)
+                     FROM MovementItem
+                          INNER JOIN MovementItem AS MovementItem_parent ON MovementItem_parent.Id       = MovementItem.ParentId
+                                                                        AND MovementItem_parent.isErased = FALSE
+                          INNER JOIN ObjectLink AS ObjectLink_Partner
+                                                ON ObjectLink_Partner.ObjectId      = MovementItem.ObjectId
+                                               AND ObjectLink_Partner.DescId        = zc_ObjectLink_ReceiptService_Partner()
+                                               AND ObjectLink_Partner.ChildObjectId > 0
+                     WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail() AND MovementItem.isErased = FALSE
+                    );
+     -- сохранили связь с <Поставщик услуг>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), inMovementId, vbPartnerId); 
+     
+     -- % НДС
+     vbVATPercent:= (SELECT ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+                     FROM ObjectLink AS ObjectLink_TaxKind
+                          INNER JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                 ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()          
+                     WHERE ObjectLink_TaxKind.ObjectId = vbPartnerId
+                       AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                    );
+     -- сохранили <% НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), inMovementId, COALESCE (vbVATPercent, 0));
+
+
      IF vbIsInsert = TRUE
      THEN
          -- сохранили связь с <>

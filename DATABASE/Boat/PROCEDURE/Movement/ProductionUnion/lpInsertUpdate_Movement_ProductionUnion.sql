@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_Movement_ProductionUnion()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
@@ -51,12 +49,37 @@ BEGIN
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-  
+     -- Поставщик услуг - формируется автоматически из данных zc_MI_Detail
+     vbPartnerId := (SELECT MAX (ObjectLink_Partner.ChildObjectId)
+                     FROM MovementItem
+                          INNER JOIN MovementItem AS MovementItem_parent ON MovementItem_parent.Id       = MovementItem.ParentId
+                                                                        AND MovementItem_parent.isErased = FALSE
+                          INNER JOIN ObjectLink AS ObjectLink_Partner
+                                                ON ObjectLink_Partner.ObjectId      = MovementItem.ObjectId
+                                               AND ObjectLink_Partner.DescId        = zc_ObjectLink_ReceiptService_Partner()
+                                               AND ObjectLink_Partner.ChildObjectId > 0
+                     WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Detail() AND MovementItem.isErased = FALSE
+                    );
+     -- сохранили связь с <Поставщик услуг>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, vbPartnerId); 
+     
+     -- % НДС
+     vbVATPercent:= (SELECT ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+                     FROM ObjectLink AS ObjectLink_TaxKind
+                          INNER JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                 ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()          
+                     WHERE ObjectLink_TaxKind.ObjectId = vbPartnerId
+                       AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                    );
+     -- сохранили <% НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, COALESCE (vbVATPercent, 0));
+
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
-
-    -- !!!протокол через свойства конкретного объекта!!!
+     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN
          -- сохранили свойство <Дата корректировки>
@@ -72,32 +95,6 @@ BEGIN
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
          END IF;
    
-     END IF;
-
-     -- zc_MovementLinkObject_Partner  - формируется автоматически из данных zc_MI_Detail
-     vbPartnerId := (SELECT ObjectLink_Partner.ChildObjectId  
-                     FROM MovementItem AS tmp
-                          INNER JOIN ObjectLink AS ObjectLink_Partner
-                                                ON ObjectLink_Partner.ObjectId = tmp.ObjectId
-                                               AND ObjectLink_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
-                     WHERE tmp.MovementId = ioId AND tmp.DescId = zc_MI_Detail() AND tmp.isErased = FALSE
-                     LIMIT 1
-                     );
-     IF COALESCE (vbPartnerId,0) <> 0
-     THEN
-         -- сохранили связь с <Кому >
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, vbPartnerId); 
-         
-         vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
-                          FROM ObjectLink AS ObjectLink_TaxKind
-                               INNER JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                      ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                     AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()          
-                          WHERE ObjectLink_TaxKind.ObjectId = vbPartnerId
-                            AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
-           );
-         -- сохранили <% НДС>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, vbVATPercent);
      END IF;
 
      -- сохранили протокол
@@ -121,7 +118,7 @@ BEGIN
               INNER JOIN Object ON Object.Id = MovementItem.ObjectId
                                AND Object.DescId = zc_Object_Product()
           WHERE MovementItem.MovementId = ioId
-            AND MovementItem.DescId = zc_MI_Master()
+            AND MovementItem.DescId = c_MI_Master()
             AND MovementItem.isErased = FALSE
           ;
      

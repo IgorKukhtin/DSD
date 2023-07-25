@@ -660,8 +660,10 @@ BEGIN
                                             _tmpItem.ColorPatternId
                                           , _tmpItem.ObjectId_parent
                                           , _tmpItem_Child.Key_Id
+                                          , TRIM (SPLIT_PART (Object_Goods.ValueData, 'AGL', 1)) AS Comment_goods
                                      FROM _tmpItem_Detail AS _tmpItem
                                           JOIN _tmpItem_Child ON _tmpItem_Child.ObjectId_parent = _tmpItem.ObjectId_parent
+                                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpItem.ObjectId_parent
                                      WHERE _tmpItem.ColorPatternId > 0
                                     )
                       -- в этом списке будем искать
@@ -670,7 +672,9 @@ BEGIN
                                           , _tmpReceiptItems_Key.ObjectId_parent
                                           , _tmpReceiptItems_Key.Key_Id
                                           ,  _tmpReceiptItems_Key.ReceiptGoodsId
+                                          , TRIM (SPLIT_PART (Object_Goods.ValueData, 'AGL', 1)) AS Comment_goods
                                      FROM _tmpReceiptItems_Key
+                                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpReceiptItems_Key.ObjectId_parent
                                     )
                -- Результат
                SELECT tmpList_from.ObjectId_parent
@@ -681,6 +685,7 @@ BEGIN
                FROM tmpList_from
                     LEFT JOIN tmpList_to ON tmpList_to.ColorPatternId = tmpList_from.ColorPatternId
                                         AND tmpList_to.Key_Id         = tmpList_from.Key_Id
+                                        AND tmpList_to.Comment_goods  = tmpList_from.Comment_goods
               ) AS _tmpItem_find
          WHERE _tmpItem_Child.ObjectId_parent = _tmpItem_find.ObjectId_parent
         ;
@@ -1460,6 +1465,29 @@ BEGIN
 --    RAISE EXCEPTION 'Ошибка.<%>', (select Object.ValueData from _tmpItem_Detail join Object on  Object.Id = _tmpItem_Detail.GoodsId_child and Object.ValueData ilike '%9010%' limit 1);
 --end if;
 
+        -- Проверка что созданные RAL - обработаны
+        /*IF EXISTS (SELECT _tmpItem.ObjectId
+                   FROM _tmpItem_Detail AS _tmpItem
+                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpItem.ObjectId
+                        LEFT JOIN ObjectString AS ObjectString_Article
+                                               ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                              AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                   WHERE ObjectString_Article.ValueData = Object_Goods.ValueData
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.При загрузке заказа был добавлен Артикул = <%> Код = <%> Название = <%>'
+                          , (SELECT Object.ValueData from _tmpItem_Detail join Object on  Object.Id = _tmpItem_Detail.GoodsId_child and Object.ValueData ilike '%9010%' limit 1);
+                          , (SELECT ObjectString_Article.ValueData
+                             FROM _tmpItem_Detail AS _tmpItem
+                                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpItem.ObjectId
+                                  LEFT JOIN ObjectString AS ObjectString_Article
+                                                         ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                        AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                             WHERE ObjectString_Article.ValueData = Object_Goods.ValueData
+                             ORDER BY _tmpItem.ObjectId
+                             LIMIT 1
+                            )
+        END IF;*/
 
         -- 2. формируем второй раз - Количество для сборки Узла
         UPDATE _tmpItem_Detail
@@ -1539,8 +1567,8 @@ BEGIN
     , (select lfGet_Object_ValueData_sh (max (_tmpReceiptItems_new.ObjectId)) from _tmpReceiptItems_new join Object on  Object.Id = _tmpReceiptItems_new.ObjectId  and _tmpReceiptItems_new.ObjectId_parent_old in (252244) and _tmpReceiptItems_new.GoodsId_child <> 0)
     , (select                           (max (_tmpReceiptItems_new.ObjectId)) from _tmpReceiptItems_new join Object on  Object.Id = _tmpReceiptItems_new.ObjectId  and _tmpReceiptItems_new.ObjectId_parent_old not in (252234, 19761, 19749, 6357))
     , (select  count(*) from _tmpReceiptItems_new join Object on  Object.Id = _tmpReceiptItems_new.ObjectId  and _tmpReceiptItems_new.ObjectId  in (6357))
-    ;*/
-
+    ;
+*/
 
         -- !!!3.элементы документа, по партиям!!!
         WITH -- только ObjectId
