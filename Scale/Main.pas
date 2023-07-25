@@ -575,6 +575,15 @@ begin
                                 //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
                                 , ParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean
                                  );
+     if (ParamsMovement.ParamByName('MovementId_begin_next').AsInteger > 0) and (Result = TRUE)
+     then Result:=Print_Movement (ParamsMovement.ParamByName('MovementDescId_next').AsInteger
+                                , ParamsMovement.ParamByName('MovementId_begin_next').AsInteger // MovementId
+                                , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                                , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
+                                , DialogPrintForm.cbPrintPreview.Checked        // isPreview
+                                //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
+                                , ParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean
+                                 );
      //
      //Tax
      if (DialogPrintForm.cbPrintTax.Checked) and (Result = TRUE)

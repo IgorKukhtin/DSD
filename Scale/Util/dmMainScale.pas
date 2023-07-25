@@ -535,6 +535,7 @@ begin
        Params.Clear;
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inMovementDescId_next', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId_next').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inOperDatePartner', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDatePartner').AsDateTime);
        Params.AddParam('inIsDocInsert', ftBoolean, ptInput, execParamsMovement.ParamByName('isDocInsert').AsBoolean);
@@ -543,6 +544,7 @@ begin
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
+         execParamsMovement.ParamByName('MovementId_begin_next').AsInteger:=DataSet.FieldByName('MovementId_begin_next').asInteger;
          execParamsMovement.ParamByName('isExportEmail').AsBoolean:= DataSet.FieldByName('isExportEmail').AsBoolean;
        {except
          Result := '';
@@ -1676,6 +1678,7 @@ begin
         if execParamsMovement.ParamByName('MovementDescNumber').asInteger<>0 then
         begin
              CDS.Filter:=' MovementDescId='+IntToStr(ParamsMovement.ParamByName('MovementDescId').AsInteger)
+                       + ' and MovementDescId_next='+IntToStr(ParamsMovement.ParamByName('MovementDescId_next').AsInteger)
                        + ' and PaidKindId = ' + IntToStr(ParamsMovement.ParamByName('PaidKindId').AsInteger)
                        + ' and ToId = ' + IntToStr(ParamsMovement.ParamByName('ToId').AsInteger)
                           ;
@@ -1723,6 +1726,7 @@ begin
              if CDS.RecordCount<>1
              then ShowMessage('Ошибка.Код операции не определен.')
              else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
+                        ParamsMovement.ParamByName('MovementDescId_next').asInteger:= CDS.FieldByName('MovementDescId_next').asInteger;
                         ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
                         ParamsMovement.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
                         ParamsMovement.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;

@@ -107,6 +107,7 @@ begin
            ParamsMovement.ParamByName('ColorGridValue').AsInteger          := CDS.FieldByName('ColorGridValue').asInteger;
            ParamsMovement.ParamByName('MovementDescNumber').AsInteger      := CDS.FieldByName('Number').asInteger;
            ParamsMovement.ParamByName('MovementDescId').AsInteger          := CDS.FieldByName('MovementDescId').asInteger;
+           ParamsMovement.ParamByName('MovementDescId_next').AsInteger     := CDS.FieldByName('MovementDescId_next').asInteger;
            ParamsMovement.ParamByName('MovementDescName_master').asString  := CDS.FieldByName('MovementDescName_master').asString;
            ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
            ParamsMovement.ParamByName('DocumentKindId').asInteger          := CDS.FieldByName('DocumentKindId').asInteger;
@@ -191,6 +192,7 @@ begin
                MessagePanel.Caption:='Текущее взвешивание не закрыто.Будет создано <Новое> взвешивание.';
                //
                ParamsMovement_local.ParamByName('MovementDescId').AsInteger:=0;
+               ParamsMovement_local.ParamByName('MovementDescId_next').AsInteger:=0;
                ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger:=StrToInt(GetArrayList_Value_byName(Default_Array,'MovementNumber'));
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').AsString:='';
                ParamsMovement_local.ParamByName('OrderExternal_InvNumber').AsString:='';
@@ -281,6 +283,7 @@ begin
 
      //!!!обнуляется т.к.было изменение MovementDescId!!!
      if  (CDS.FieldByName('MovementDescId').asInteger<>ParamsMovement.ParamByName('MovementDescId').AsInteger)
+      or (CDS.FieldByName('MovementDescId_next').asInteger<>ParamsMovement.ParamByName('MovementDescId_next').AsInteger)
       or (CDS.FieldByName('isSendOnPriceIn').asBoolean <> ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean)
      then begin
           //!!!только если OrderExternalId был изначально!!!
@@ -378,6 +381,7 @@ begin
           ParamByName('ColorGridValue').AsInteger          := CDS.FieldByName('ColorGridValue').asInteger;
           ParamByName('MovementDescNumber').AsInteger      := CDS.FieldByName('Number').asInteger;
           ParamByName('MovementDescId').AsInteger          := CDS.FieldByName('MovementDescId').asInteger;
+          ParamByName('MovementDescId_next').AsInteger     := CDS.FieldByName('MovementDescId_next').asInteger;
           ParamByName('MovementDescName_master').asString  := CDS.FieldByName('MovementDescName_master').asString;
           ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
           ParamByName('DocumentKindId').asInteger          := CDS.FieldByName('DocumentKindId').asInteger;
@@ -797,6 +801,7 @@ begin
               EditBarCodeExit(Self);
               //переопределяются параметры, т.к. они используются в фильтре справ.
               ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+              ParamsMovement_local.ParamByName('MovementDescId_next').AsInteger:= CDS.FieldByName('MovementDescId_next').asInteger;
     end;
 end;
 {------------------------------------------------------------------------}
@@ -825,12 +830,14 @@ begin
                ParamsMovement_local.ParamByName('PaidKindId').AsInteger:=CDS.FieldByName('PaidKindId').asInteger;
                //MovementDescId
                ParamsMovement_local.ParamByName('MovementDescId').AsInteger:=CDS.FieldByName('MovementDescId').asInteger;
+               ParamsMovement_local.ParamByName('MovementDescId_next').AsInteger:=CDS.FieldByName('MovementDescId_next').asInteger;
            end
      else begin
                //PaidKindId
                ParamsMovement_local.ParamByName('PaidKindId').AsInteger:=0;
                //MovementDescId
                ParamsMovement_local.ParamByName('MovementDescId').AsInteger:=0;
+               ParamsMovement_local.ParamByName('MovementDescId_next').AsInteger:=0;
      end;
 
      //поиск контрагента по коду + заполняются параметры (!!!не только Partner!!!)
@@ -900,6 +907,7 @@ begin
               EditBarCodeExit(Self);
               //переопределяются параметры, т.к. они используются в фильтре справ.
               ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+              ParamsMovement_local.ParamByName('MovementDescId_next').AsInteger:= CDS.FieldByName('MovementDescId_next').asInteger;
     end;
 
     try
@@ -1033,6 +1041,7 @@ begin
                     //EditBarCodeExit(Self);
                     //переопределяются параметры, т.к. они используются в фильтре справ.
                     ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+                    ParamsMovement_local.ParamByName('MovementDescId_next').AsInteger:= CDS.FieldByName('MovementDescId_next').asInteger;
                     //
                     //ActiveControl:=EditPartnerCode;
               end
