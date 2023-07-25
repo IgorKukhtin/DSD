@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , InvNumberInvoice TVarChar
              , TotalCount TFloat
              , TotalSumm TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
@@ -64,6 +65,8 @@ BEGIN
              , Object_Status.ObjectCode                   AS StatusCode
              , Object_Status.ValueData                    AS StatusName
 
+             , MovementString_InvNumberInvoice.ValueData  AS InvNumberInvoice
+
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
@@ -97,6 +100,10 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement_Send.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+        LEFT JOIN MovementString AS MovementString_InvNumberInvoice
+                                 ON MovementString_InvNumberInvoice.MovementId = Movement_Send.Id
+                                AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement_Send.Id

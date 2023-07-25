@@ -33,15 +33,6 @@ BEGIN
          RETURN;
      END IF;
 
-     --если введена сумма, тогда она в приоритете попадает в —умма (расчет), а OperPrice - расчетное иначе затраты = часы*цену часа или сумма (ввод)
-     IF COALESCE (inSumm,0) <> 0  
-     THEN
-         ioAmount := inSumm;
-         ioOperPrice := CASE WHEN COALESCE (inHours,0)<>0 THEN inSumm / inHours ELSE 0 END; 
-     ELSE
-         ioAmount := inHours * ioOperPrice;
-     END IF;
-     
      --находим работу, если такой нет, тогда сохран€ем
      vbReceiptServiceId := (SELECT Object.Id FROM Object WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inReceiptServiceName)) AND Object.DescId = zc_Object_ReceiptService()); 
      IF COALESCE (vbReceiptServiceId,0) = 0
@@ -61,6 +52,31 @@ BEGIN
                                                   ) AS tmp    
          ;
      END IF;
+
+     -- после выбора работ, если установлен zc_ObjectLink_ReceiptService_Partner, EKPrice должен попадать в zc_MIFloat_Summ иначе должно попадать в zc_MIFloat_OperPrice
+     IF EXISTS (SELECT 1
+                FROM MovementItem AS tmp
+                     INNER JOIN ObjectLink AS ObjectLink_Partner
+                                           ON ObjectLink_Partner.ObjectId = tmp.ObjectId
+                                          AND ObjectLink_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
+                WHERE tmp.Id = ioId
+                )
+     THEN 
+         vb ObjectFloat AS ObjectFloat_EKPrice
+                                  ON ObjectFloat_EKPrice.ObjectId = Object_ReceiptService.Id
+                                 AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
+     END IF;
+     
+     --если введена сумма, тогда она в приоритете попадает в —умма (расчет), а OperPrice - расчетное иначе затраты = часы*цену часа или сумма (ввод)
+     IF COALESCE (inSumm,0) <> 0  
+     THEN
+         ioAmount := inSumm;
+         ioOperPrice := CASE WHEN COALESCE (inHours,0)<>0 THEN inSumm / inHours ELSE 0 END; 
+     ELSE
+         ioAmount := inHours * ioOperPrice;
+     END IF;
+     
+
      
      -- сохранили <Ёлемент документа>
      SELECT tmp.ioId

@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Movement_Send()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого
-    IN inToId                Integer   , -- Кому
+    IN inToId                Integer   , -- Кому  
+    IN inInvNumberInvoice    TVarChar  , -- номер счета
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -35,6 +37,9 @@ BEGIN
      -- сохранили связь с <Кому >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
  
+     -- сохранили <номер счета>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
+
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
@@ -72,6 +77,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.07.23         *
  23.06.21         *
 */
 

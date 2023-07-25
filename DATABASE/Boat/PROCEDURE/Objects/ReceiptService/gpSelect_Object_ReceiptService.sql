@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , PartnerId Integer, PartnerName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
-             , SalePrice TFloat, SalePriceWVAT TFloat
+             , SalePrice TFloat, SalePriceWVAT TFloat 
+             , Summ_PU TFloat, OperPrice_PU TFloat
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean)
@@ -46,7 +47,12 @@ BEGIN
              --цена Цена продажи без ндс
            , COALESCE (ObjectFloat_SalePrice.ValueData, 0) ::TFloat AS SalePrice
              --цена Цена продажи с ндс
-           , zfCalc_SummWVAT (ObjectFloat_SalePrice.ValueData, ObjectFloat_TaxKind_Value_WithVAT.ValueData) ::TFloat AS SalePriceWVAT
+           , zfCalc_SummWVAT (ObjectFloat_SalePrice.ValueData, ObjectFloat_TaxKind_Value_WithVAT.ValueData) ::TFloat AS SalePriceWVAT 
+           
+           --для ProductionUnion       
+           -- после выбора работ, если установлен zc_ObjectLink_ReceiptService_Partner, EKPrice должен попадать в zc_MIFloat_Summ иначе должно попадать в zc_MIFloat_OperPrice
+           , CASE WHEN COALESCE (Object_Partner.Id,0) <> 0 THEN COALESCE (ObjectFloat_EKPrice.ValueData,0) ELSE 0 END ::TFloat AS Summ_PU
+           , CASE WHEN COALESCE (Object_Partner.Id,0) = 0  THEN COALESCE (ObjectFloat_EKPrice.ValueData,0) ELSE 0 END ::TFloat AS OperPrice_PU
 
            , Object_Insert.ValueData                AS InsertName
            , ObjectDate_Insert.ValueData            AS InsertDate

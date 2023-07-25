@@ -279,14 +279,14 @@ object SendForm: TSendForm
       end
     end
     object Panel1: TPanel
-      Left = 11
-      Top = 141
-      Width = 320
+      Left = 8
+      Top = 140
+      Width = 256
       Height = 32
       TabOrder = 19
       object edSearchArticle: TcxTextEdit
-        Left = 177
-        Top = 6
+        Left = 119
+        Top = 5
         TabOrder = 0
         DesignSize = (
           134
@@ -294,7 +294,7 @@ object SendForm: TSendForm
         Width = 134
       end
       object lbSearchArticle: TcxLabel
-        Left = 27
+        Left = 0
         Top = 6
         Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
         ParentFont = False
@@ -326,12 +326,12 @@ object SendForm: TSendForm
       Width = 368
     end
     object cxLabel17: TcxLabel
-      Left = 337
+      Left = 270
       Top = 131
       Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1040#1074#1090#1086'):'
     end
     object edOrderClient: TcxButtonEdit
-      Left = 337
+      Left = 270
       Top = 147
       Properties.Buttons = <
         item
@@ -340,7 +340,18 @@ object SendForm: TSendForm
         end>
       Properties.ReadOnly = True
       TabOrder = 23
-      Width = 192
+      Width = 163
+    end
+    object cxLabel18: TcxLabel
+      Left = 439
+      Top = 131
+      Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+    end
+    object edInvNumberInvoice: TcxTextEdit
+      Left = 439
+      Top = 147
+      TabOrder = 25
+      Width = 90
     end
   end
   object cxPageControl: TcxPageControl
@@ -3460,6 +3471,14 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInvNumberInvoice'
+        Value = Null
+        Component = edInvNumberInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -3487,6 +3506,7 @@ object SendForm: TSendForm
         Control = edOperDate
       end
       item
+        Control = edInvNumberInvoice
       end
       item
         Control = edFrom
@@ -3649,6 +3669,13 @@ object SendForm: TSendForm
         Value = Null
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberInvoice'
+        Value = Null
+        Component = edInvNumberInvoice
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -4545,7 +4572,7 @@ object SendForm: TSendForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 128
+    Left = 336
+    Top = 144
   end
 end

@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , InvNumberInvoice TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , Comment TVarChar
@@ -36,6 +37,7 @@ BEGIN
              , inOperDate   ::TDateTime   AS OperDate     --CURRENT_DATE
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
+             , CAST ('' AS TVarChar)     AS InvNumberInvoice
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
@@ -67,6 +69,7 @@ BEGIN
           , Movement_Send.OperDate         AS OperDate
           , Object_Status.ObjectCode       AS StatusCode
           , Object_Status.ValueData        AS StatusName
+          , MovementString_InvNumberInvoice.ValueData  AS InvNumberInvoice
 
           , Object_From.Id                 AS FromId
           , Object_From.ValueData          AS FromName
@@ -99,6 +102,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement_Send.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberInvoice
+                                     ON MovementString_InvNumberInvoice.MovementId = Movement_Send.Id
+                                    AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement_Send.Id

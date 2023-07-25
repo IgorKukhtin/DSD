@@ -260,6 +260,8 @@ type
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
     dxBarSeparator2: TdxBarSeparator;
+    cxLabel18: TcxLabel;
+    edInvNumberInvoice: TcxTextEdit;
   private
   public
   end;

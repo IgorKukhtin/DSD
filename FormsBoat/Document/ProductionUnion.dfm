@@ -197,7 +197,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object cxLabel7: TcxLabel
       Left = 442
-      Top = 45
+      Top = 40
       Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit
@@ -3129,6 +3129,22 @@ object ProductionUnionForm: TProductionUnionForm
           Value = Null
           Component = DetailCDS
           ComponentItem = 'ReceiptServiceCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPrice_PU'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'OperPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Summ_PU'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Summ'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True

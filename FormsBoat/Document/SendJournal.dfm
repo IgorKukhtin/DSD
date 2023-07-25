@@ -224,6 +224,15 @@ object SendJournalForm: TSendJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object InvNumberInvoice: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvNumberInvoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
