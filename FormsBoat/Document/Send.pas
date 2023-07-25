@@ -262,6 +262,7 @@ type
     dxBarSeparator2: TdxBarSeparator;
     cxLabel18: TcxLabel;
     edInvNumberInvoice: TcxTextEdit;
+    isReceiptGoods: TcxGridDBColumn;
   private
   public
   end;

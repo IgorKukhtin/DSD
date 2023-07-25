@@ -449,6 +449,15 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 38
           end
+          object isReceiptGoods: TcxGridDBColumn
+            Caption = #1057#1073#1086#1088#1082#1072
+            DataBinding.FieldName = 'isReceiptGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1089#1073#1086#1088#1082#1077' '#1059#1079#1083#1072'/'#1052#1086#1076#1077#1083#1080' '#1080#1083#1080' '#1074' '#1086#1087#1094#1080#1103#1093
+            Options.Editing = False
+            Width = 55
+          end
           object PartnerName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerName'
@@ -950,6 +959,7 @@ object SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 216
       end
     end
   end
@@ -1477,6 +1487,11 @@ object SendForm: TSendForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cxGridChild
+        Properties.Strings = (
+          'Height')
+      end
       item
         Component = Owner
         Properties.Strings = (

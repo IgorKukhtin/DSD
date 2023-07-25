@@ -684,6 +684,15 @@ object IncomeForm: TIncomeForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isReceiptGoods: TcxGridDBColumn
+            Caption = #1057#1073#1086#1088#1082#1072
+            DataBinding.FieldName = 'isReceiptGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1089#1073#1086#1088#1082#1077' '#1059#1079#1083#1072'/'#1052#1086#1076#1077#1083#1080' '#1080#1083#1080' '#1074' '#1086#1087#1094#1080#1103#1093
+            Options.Editing = False
+            Width = 55
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -1979,6 +1988,11 @@ object IncomeForm: TIncomeForm
         Component = cbPrice
         Properties.Strings = (
           'Checked')
+      end
+      item
+        Component = cxGridChild
+        Properties.Strings = (
+          'Height')
       end
       item
         Component = Owner

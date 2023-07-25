@@ -270,6 +270,7 @@ type
     edInvNumberPack: TcxTextEdit;
     cxLabel28: TcxLabel;
     edInvNumberInvoice: TcxTextEdit;
+    isReceiptGoods: TcxGridDBColumn;
   private
   public
   end;
