@@ -17,6 +17,7 @@ $BODY$
 
   DECLARE vbTotalCount_Master TFloat;
   DECLARE vbTotalCount_Child TFloat;
+  --DECLARE vbTotalCount_Detail TFloat;
   DECLARE vbTotalCountRemains TFloat;
 
   DECLARE vbTotalSumm TFloat;              -- Итого сумма по документу (без НДС и с учетом всех расходов и скидок)
@@ -76,22 +77,29 @@ BEGIN
       --
       SELECT SUM (COALESCE(tmpMI.OperCount_Master, 0))  AS TotalCount_Master
          , SUM (COALESCE(tmpMI.OperCount_Child, 0))     AS TotalCount_Child
+         --, SUM (COALESCE(tmpMI.OperCount_Detail, 0))    AS TotalCount_Detail
            -- Итого сумма по документу (без НДС) - с учетом ТОЛЬКО скидок по элементам
          , SUM (tmpMI.SummIn) AS OperSumm_MVAT
 
-           INTO vbTotalCount_Master, vbTotalCount_Child, vbOperSumm_MVAT
+           INTO vbTotalCount_Master, vbTotalCount_Child--, vbTotalCount_Detail
+              , vbOperSumm_MVAT
 
       FROM (SELECT MovementItem.DescId
                  , MovementItem.ObjectId            AS GoodsId
                  , CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END AS OperCount_Master
-                 , CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN MovementItem.Amount ELSE 0 END AS OperCount_Child
+                 , CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN MovementItem.Amount ELSE 0 END AS OperCount_Child 
+                 --, CASE WHEN MovementItem.DescId = zc_MI_Detail() THEN MovementItem.Amount ELSE 0 END AS OperCount_Detail
                  , MIFloat_OperPrice.ValueData      AS OperPrice_original
                    -- Сумма "без НДС ?" - с учетом скидки в элементе
                  , CASE WHEN vbMovementDescId = zc_Movement_Income()
                          AND MovementItem.DescId = zc_MI_Master()
                              THEN COALESCE (MIFloat_SummIn.ValueData, 0)
+                        
                         WHEN MovementItem.DescId = zc_MI_Master()
-                             THEN zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)
+                             THEN zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) 
+
+                        WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Detail()
+                             THEN CASE WHEN COALESCE (MIFloat_Summ.ValueData,0) <> 0 THEN MIFloat_Summ.ValueData ELSE zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) END
                         ELSE 0
                    END AS SummIn
             FROM MovementItem
@@ -107,6 +115,11 @@ BEGIN
                  LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                              ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                             AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+
+                 LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                             ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                            AND MIFloat_Summ.DescId         = zc_MIFloat_Summ()
+                                            AND MovementItem.DescId         = zc_MI_Detail()
 
            WHERE MovementItem.MovementId = inMovementId
            --AND MovementItem.DescId     = zc_MI_Master()
