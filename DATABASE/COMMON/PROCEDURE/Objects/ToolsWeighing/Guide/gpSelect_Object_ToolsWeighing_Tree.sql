@@ -30,6 +30,9 @@ BEGIN
                   WHEN Object_ToolsWeighing_View.Name = 'Scale_201'
                        THEN 'Ёкспедици€ - (201)—ырье'
 
+                  WHEN Object_ToolsWeighing_View.Name = 'Scale_205'
+                       THEN 'Ёкспедици€ - (205)»рна'
+
                   WHEN Object_ToolsWeighing_View.Name = 'Scale_301'
                        THEN 'Ёкспедици€ - (301)—клад специй'
 

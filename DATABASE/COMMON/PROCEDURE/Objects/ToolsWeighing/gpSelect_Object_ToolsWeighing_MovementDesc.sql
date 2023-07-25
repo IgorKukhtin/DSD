@@ -10,8 +10,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc(
 )
 RETURNS TABLE (Number              Integer
              , MovementDescId      Integer
+             , MovementDescId_next Integer
              , FromId              Integer, FromCode         Integer, FromName         TVarChar
              , ToId                Integer, ToCode           Integer, ToName           TVarChar
+             , FromId_next         Integer, FromCode_next    Integer, FromName_next    TVarChar
+             , ToId_next           Integer, ToCode_next      Integer, ToName_next      TVarChar
              , PaidKindId          Integer, PaidKindName     TVarChar
              , InfoMoneyId         Integer, InfoMoneyCode    Integer, InfoMoneyName    TVarChar
              , PriceListId         Integer, PriceListCode    Integer, PriceListName    TVarChar
@@ -22,6 +25,7 @@ RETURNS TABLE (Number              Integer
              , ColorGridValue      Integer
              , MovementDescName        TVarChar
              , MovementDescName_master TVarChar
+             , MovementDescName_next   TVarChar
              , OrderById           Integer
              , isSendOnPriceIn     Boolean
              , isPartionGoodsDate  Boolean -- Scale + ScaleCeh - для приемки с производства - показываем контрол с датой для определения партии
@@ -34,7 +38,7 @@ RETURNS TABLE (Number              Integer
              , isOrderInternal     Boolean -- ScaleCeh - проверка для операции - разрешается только через заявку
              , isSticker_Ceh       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер на термопринтере
              , isSticker_KVK       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер-KVK на термопринтере
-             , isLockStartWeighing Boolean -- 
+             , isLockStartWeighing Boolean --
              , isKVK               Boolean -- ScaleCeh - будет KVK
              , isListInventory     Boolean -- Scale + ScaleCeh - инвентаризация только для списка
              , isAsset             Boolean -- Scale + ScaleCeh - открыть справочник ОС
@@ -55,7 +59,7 @@ BEGIN
 
     -- !!!очень важно - захардкодили главную ветку!!!
     vbLevelMain:= CASE WHEN inIsCeh = TRUE THEN 'ScaleCeh_' || inBranchCode ELSE 'Scale_' || inBranchCode END;
-    
+
     -- !!!важно - Печать этикеток - определили по BranchCode!!!
     vbIsSticker:= inBranchCode > 1000;
 
@@ -72,8 +76,11 @@ BEGIN
     -- временные таблица
     CREATE TEMP TABLE _tmpToolsWeighing (Number                   Integer
                                        , MovementDescId           Integer
+                                       , MovementDescId_next      Integer
                                        , FromId                   Integer
                                        , ToId                     Integer
+                                       , FromId_next              Integer
+                                       , ToId_next                Integer
                                        , PaidKindId               Integer
                                        , InfoMoneyId              Integer
                                        , GoodsId_ReWork           Integer
@@ -100,11 +107,18 @@ BEGIN
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isPersonalGroup, isOrderInternal, isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset, isReReturnIn, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, MovementDescId_next, FromId, ToId, FromId_next, ToId_next
+                                 , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
+                                 , isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isPersonalGroup, isOrderInternal
+                                 , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset, isReReturnIn, ItemName
+                                  )
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
+            , CASE WHEN TRIM (tmp.MovementDescId_next)      <> '' THEN TRIM (tmp.MovementDescId_next)      ELSE '0' END :: Integer AS MovementDescId_next
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
             , CASE WHEN TRIM (tmp.ToId)                     <> '' THEN TRIM (tmp.ToId)                     ELSE '0' END :: Integer AS ToId
+            , CASE WHEN TRIM (tmp.FromId_next)              <> '' THEN TRIM (tmp.FromId_next)              ELSE '0' END :: Integer AS FromId_next
+            , CASE WHEN TRIM (tmp.ToId_next)                <> '' THEN TRIM (tmp.ToId_next)                ELSE '0' END :: Integer AS ToId_next
             , CASE WHEN TRIM (tmp.PaidKindId)               <> '' THEN TRIM (tmp.PaidKindId)               ELSE '0' END :: Integer AS PaidKindId
             , CASE WHEN TRIM (tmp.InfoMoneyId)              <> '' THEN TRIM (tmp.InfoMoneyId)              ELSE '0' END :: Integer AS InfoMoneyId
             , CASE WHEN TRIM (tmp.GoodsId_ReWork)           <> '' THEN TRIM (tmp.GoodsId_ReWork)           ELSE '0' END :: Integer AS GoodsId_ReWork
@@ -175,10 +189,13 @@ BEGIN
        FROM (SELECT tmp.*
                   , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE AND tmp.MovementDescId = zc_Movement_Loss() :: TVarChar THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isArticleLoss', 'FALSE', inSession) ELSE ''  END AS isArticleLoss
              FROM (SELECT tmp.Number
-                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId'    ,               '0',      inSession) AS MovementDescId
-                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0',      inSession) AS FromId
-                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0',      inSession) AS ToId
-                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0',      inSession) AS ColorGridValue
+                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId'     ,               '0',      inSession) AS MovementDescId
+                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId_next',               '0',      inSession) AS MovementDescId_next
+                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'     ,               '0',      inSession) AS FromId
+                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'       ,               '0',      inSession) AS ToId
+                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId_next',               '0',      inSession) AS FromId_next
+                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId_next'  ,               '0',      inSession) AS ToId_next
+                        , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid'  ,               '0',      inSession) AS ColorGridValue
                         , CASE WHEN vbIsSticker = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsId_ReWork' ,          '0',      inSession) END AS GoodsId_ReWork
                         , CASE WHEN vbIsSticker = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) END AS GoodsKindWeighingGroupId -- Продажа
                         , CASE WHEN inIsCeh = TRUE                         THEN '0'     ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'PaidKindId',         '0',                                                         inSession)      END AS PaidKindId
@@ -199,8 +216,8 @@ BEGIN
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isListInventory',    'FALSE',                                                     inSession)          END AS isListInventory
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isAsset',            'FALSE',                                                     inSession)          END AS isAsset
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isReReturnIn',       'FALSE',                                                     inSession)          END AS isReReturnIn
-                        
-                        
+
+
                    FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
                   ) AS tmp
             ) AS tmp
@@ -219,22 +236,22 @@ BEGIN
     UPDATE _tmpToolsWeighing SET OrderById = 1000 * CASE WHEN _tmpToolsWeighing.FromId = 8411    -- Склад ГП ф.Киев
                                                           AND _tmpToolsWeighing.ToId   = 3080691 -- Склад ГП ф.Львов
                                                           AND inBranchCode = 2
-                                                              THEN 71 -- 
+                                                              THEN 71 --
                                                          WHEN _tmpToolsWeighing.FromId = 3080691 -- Склад ГП ф.Львов
                                                           AND _tmpToolsWeighing.ToId   = 8411    -- Склад ГП ф.Киев
                                                           AND inBranchCode = 2
-                                                              THEN 72 -- 
+                                                              THEN 72 --
 
                                                          WHEN _tmpToolsWeighing.FromId = 8411    -- Склад ГП ф.Киев
                                                           AND _tmpToolsWeighing.ToId   = 3080691 -- Склад ГП ф.Львов
                                                           AND inBranchCode = 12
-                                                              THEN 73 -- 
+                                                              THEN 73 --
                                                          WHEN _tmpToolsWeighing.FromId = 3080691 -- Склад ГП ф.Львов
                                                           AND _tmpToolsWeighing.ToId   = 8411    -- Склад ГП ф.Киев
                                                           AND inBranchCode = 12
-                                                              THEN 74 -- 
+                                                              THEN 74 --
 
-                                                         
+
                                                          WHEN vbBranchId = zc_Branch_Basis() AND _tmpToolsWeighing.isSendOnPriceIn = FALSE
                                                               THEN 60 -- для главного - расход с него, будет в списке раньше
                                                          WHEN vbBranchId = zc_Branch_Basis()
@@ -295,15 +312,25 @@ BEGIN
                              OR ObjectBoolean_SendOnPrice.ValueData = TRUE
                                )
                         )
-      -- 
+      --
       SELECT _tmpToolsWeighing.Number                        AS Number
            , _tmpToolsWeighing.MovementDescId                AS MovementDescId
+           , _tmpToolsWeighing.MovementDescId_next           AS MovementDescId_next
+
            , COALESCE (Object_From.Id, 0) :: Integer         AS FromId
            , Object_From.ObjectCode                          AS FromCode
            , Object_From.ValueData                           AS FromName
            , COALESCE (Object_To.Id, 0) :: Integer           AS ToId
            , Object_To.ObjectCode                            AS ToCode
            , Object_To.ValueData                             AS ToName
+
+           , COALESCE (Object_From_next.Id, 0) :: Integer    AS FromId_next
+           , Object_From_next.ObjectCode                     AS FromCode_next
+           , Object_From_next.ValueData                      AS FromName_next
+           , COALESCE (Object_To_next.Id, 0)   :: Integer    AS ToId_next
+           , Object_To_next.ObjectCode                       AS ToCode_next
+           , Object_To_next.ValueData                        AS ToName_next
+
            , Object_PaidKind.Id                              AS PaidKindId
            , Object_PaidKind.ValueData                       AS PaidKindName
            , COALESCE (Object_InfoMoney.Id, 0) :: Integer    AS InfoMoneyId
@@ -319,7 +346,7 @@ BEGIN
 
             , _tmpToolsWeighing.DocumentKindId               AS DocumentKindId
             , Object_DocumentKind.ValueData                  AS DocumentKindName
-            
+
             , Object_Reason.Id                               AS ReasonId
             , Object_Reason.ObjectCode                       AS ReasonCode
             , Object_Reason.ValueData                        AS ReasonName
@@ -331,8 +358,13 @@ BEGIN
            , ('(' || _tmpToolsWeighing.Number :: TVarChar ||') '
           || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '')
+
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_Income())
                        THEN COALESCE (Object_PaidKind.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
+                         || CASE WHEN _tmpToolsWeighing.MovementDescId_next > 0
+                                     THEN ' => ' || COALESCE (Object_To_next.ValueData, '') || ' (перемещение)'
+                                 ELSE ''
+                            END
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
@@ -377,8 +409,13 @@ BEGIN
           || ': '
           || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '')
+
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_Income())
                        THEN COALESCE (Object_PaidKind.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
+                         || CASE WHEN _tmpToolsWeighing.MovementDescId_next > 0
+                                     THEN ' => ' || COALESCE (Object_To_next.ValueData, '') || ' (перемещение)'
+                                 ELSE ''
+                            END
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
@@ -413,6 +450,8 @@ BEGIN
              END
             ) :: TVarChar AS MovementDescName_master
 
+           , MovementDesc_next.ItemName AS MovementDescName_next
+
            , (_tmpToolsWeighing.OrderById + _tmpToolsWeighing.Number) :: Integer AS OrderById
            , _tmpToolsWeighing.isSendOnPriceIn
            , _tmpToolsWeighing.isPartionGoodsDate
@@ -435,16 +474,18 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList              ON Object_PriceList.Id              = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
             LEFT JOIN Object AS Object_From                   ON Object_From.Id                   = _tmpToolsWeighing.FromId
             LEFT JOIN Object AS Object_To                     ON Object_To.Id                     = _tmpToolsWeighing.ToId
+            LEFT JOIN Object AS Object_From_next              ON Object_From_next.Id              = _tmpToolsWeighing.FromId_next
+            LEFT JOIN Object AS Object_To_next                ON Object_To_next.Id                = _tmpToolsWeighing.ToId_next
             LEFT JOIN Object AS Object_PaidKind               ON Object_PaidKind.Id               = _tmpToolsWeighing.PaidKindId
             LEFT JOIN Object AS Object_InfoMoney              ON Object_InfoMoney.Id              = _tmpToolsWeighing.InfoMoneyId
             LEFT JOIN Object AS Object_GoodsReWork            ON Object_GoodsReWork.Id            = _tmpToolsWeighing.GoodsId_ReWork
             LEFT JOIN Object AS Object_DocumentKind           ON Object_DocumentKind.Id           = _tmpToolsWeighing.DocumentKindId
             LEFT JOIN Object AS Object_GoodsKindWeighingGroup ON Object_GoodsKindWeighingGroup.Id = _tmpToolsWeighing.GoodsKindWeighingGroupId
-            -- LEFT JOIN MovementDesc ON MovementDesc.Id = _tmpToolsWeighing.MovementDescId
+            LEFT JOIN MovementDesc AS MovementDesc_next ON MovementDesc_next.Id = _tmpToolsWeighing.MovementDescId_next
             LEFT JOIN tmpReason ON _tmpToolsWeighing.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
             LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = CASE WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_ReturnIn() THEN tmpReason.ReasonId_ReturnIn
                                                                          WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice() THEN tmpReason.ReasonId_SendOnPrice
-                                                                         ELSE 0 
+                                                                         ELSE 0
                                                                     END
             LEFT JOIN ObjectLink AS ObjectLink_ReturnKind
                                  ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id
@@ -452,16 +493,26 @@ BEGIN
             LEFT JOIN Object AS Object_ReturnKind ON Object_ReturnKind.Id = ObjectLink_ReturnKind.ChildObjectId
 
        WHERE _tmpToolsWeighing.MovementDescId > 0
+      --AND (_tmpToolsWeighing.Number < 71 OR vbUserId = 5 OR inBranchCode <> 201 OR inIsCeh = TRUE)
+
       UNION
        -- это группы
        SELECT 0                                   AS Number
             ,(CASE WHEN tmp.isReWork = TRUE THEN -100 * tmp.MovementDescId ELSE -1 * tmp.MovementDescId END) :: Integer AS MovementDescId
+            , 0  :: Integer                       AS MovementDescId_next
             , 0                                   AS FromId
             , 0                                   AS FromCode
             , '' :: TVarChar                      AS FromName
             , 0                                   AS ToId
             , 0                                   AS ToCode
             , '' :: TVarChar                      AS ToName
+            , 0                                   AS FromId_next
+            , 0                                   AS FromCode_next
+            , '' :: TVarChar                      AS FromName_next
+            , 0                                   AS ToId_next
+            , 0                                   AS ToCode_next
+            , '' :: TVarChar                      AS ToName_next
+
             , 0                                   AS PaidKindId
             , '' :: TVarChar                      AS PaidKindName
             , 0                                   AS InfoMoneyId
@@ -513,6 +564,7 @@ BEGIN
 
               END :: TVarChar AS MovementDescName
             , '' :: TVarChar                      AS MovementDescName_master
+            , '' :: TVarChar                      AS MovementDescName_next
             , tmp.OrderById                       AS OrderById
             , tmp.isSendOnPriceIn
             , FALSE AS isPartionGoodsDate
