@@ -93,6 +93,7 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -124,8 +125,8 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   object cxLabel4: TcxLabel
     Left = 154
     Top = 201
-    Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
-    Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+    Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+    Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
   end
   object edPartner: TcxButtonEdit
     Left = 10
@@ -378,6 +379,7 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTaxKind
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

@@ -80,6 +80,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         DataBinding.FieldName = 'TaxKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1083#1103' '#1042#1093#1086#1076#1085#1086#1081' '#1094#1077#1085#1099
         Options.Editing = False
         Width = 120
       end
@@ -89,6 +90,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1083#1103' '#1042#1093#1086#1076#1085#1086#1081' '#1094#1077#1085#1099
         Options.Editing = False
         Width = 45
       end
@@ -100,7 +102,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' ('#1076#1083#1103' '#1087#1086#1083#1091#1095#1077#1085#1085#1099#1093' '#1088#1072#1073#1086#1090'/'#1091#1089#1083#1091#1075')'
         Width = 70
       end
       object EKPriceWVAT: TcxGridDBColumn
@@ -109,10 +111,9 @@ object ReceiptServiceForm: TReceiptServiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057' ('#1076#1083#1103' '#1087#1086#1083#1091#1095#1077#1085#1085#1099#1093' '#1088#1072#1073#1086#1090'/'#1091#1089#1083#1091#1075')'
         Options.Editing = False
         Width = 70
       end
@@ -122,9 +123,10 @@ object ReceiptServiceForm: TReceiptServiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' ('#1076#1083#1103' '#1088#1072#1073#1086#1090', '#1086#1082#1072#1079#1072#1085#1085#1099#1093' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102')'
         Width = 90
       end
       object SalePriceWVAT: TcxGridDBColumn
@@ -136,7 +138,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' c '#1053#1044#1057
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' c '#1053#1044#1057' ('#1076#1083#1103' '#1088#1072#1073#1086#1090', '#1086#1082#1072#1079#1072#1085#1085#1099#1093' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102')'
         Options.Editing = False
         Width = 70
       end
