@@ -99,6 +99,11 @@ type
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
     actPrintCalc: TdsdPrintAction;
+    PartnerName: TcxGridDBColumn;
+    InvNumberInvoice: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    TotalSummPVAT: TcxGridDBColumn;
   private
   public
   end;

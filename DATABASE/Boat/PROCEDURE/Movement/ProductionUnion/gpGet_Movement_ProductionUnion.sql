@@ -10,8 +10,10 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnion(
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , InvNumberInvoice TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , VATPercent TFloat
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
@@ -36,10 +38,14 @@ BEGIN
              , inOperDate   ::TDateTime   AS OperDate     --CURRENT_DATE
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
+             , CAST ('' AS TVarChar)     AS InvNumberInvoice
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
              , CAST ('' AS TVarChar)     AS ToName 
+             , 0                         AS PartnerId
+             , CAST ('' AS TVarChar)     AS PartnerName
+             
              , 0 ::TFloat                AS VATPercent
 
              , CAST ('' AS TVarChar)     AS Comment
@@ -64,11 +70,13 @@ BEGIN
           , Movement_ProductionUnion.OperDate         AS OperDate
           , Object_Status.ObjectCode       AS StatusCode
           , Object_Status.ValueData        AS StatusName
-
+          , MovementString_InvNumberInvoice.ValueData  AS InvNumberInvoice
           , Object_From.Id                 AS FromId
           , Object_From.ValueData          AS FromName
           , Object_To.Id                   AS ToId
-          , Object_To.ValueData            AS ToName 
+          , Object_To.ValueData            AS ToName
+          , Object_Partner.Id                          AS PartnerId
+          , Object_Partner.ValueData                   AS PartnerName 
           , MovementFloat_VATPercent.ValueData         AS VATPercent
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
@@ -104,6 +112,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement_ProductionUnion.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberInvoice
+                                     ON MovementString_InvNumberInvoice.MovementId = Movement_ProductionUnion.Id
+                                    AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement_ProductionUnion.Id

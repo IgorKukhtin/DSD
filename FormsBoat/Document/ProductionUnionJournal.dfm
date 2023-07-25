@@ -117,6 +117,16 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummMVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPVAT
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -169,6 +179,16 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummMVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPVAT
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -343,6 +363,57 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
         Options.Editing = False
         Width = 78
+      end
+      object PartnerName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
+        DataBinding.FieldName = 'PartnerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object InvNumberInvoice: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvNumberInvoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object VATPercent: TcxGridDBColumn
+        Caption = '% '#1053#1044#1057
+        DataBinding.FieldName = 'VATPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object TotalSummMVAT: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1091#1089#1083#1091#1075' ('#1073#1077#1079' '#1053#1044#1057')'
+        DataBinding.FieldName = 'TotalSummMVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object TotalSummPVAT: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1091#1089#1083#1091#1075' ('#1089' '#1053#1044#1057')'
+        DataBinding.FieldName = 'TotalSummPVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel

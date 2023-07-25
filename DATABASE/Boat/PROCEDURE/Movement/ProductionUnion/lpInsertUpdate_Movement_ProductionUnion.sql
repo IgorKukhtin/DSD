@@ -21,6 +21,8 @@ $BODY$
    DECLARE vbProductId Integer;
    DECLARE vbProductId_mi Integer;
    DECLARE vbMovementItemId Integer;
+   DECLARE vbPartnerId Integer;
+   DECLARE vbVATPercent TFloat;
 BEGIN
      -- Проверка
      /*IF COALESCE (inFromId, 0) = 0 OR COALESCE (inToId, 0) = 0
@@ -69,8 +71,34 @@ BEGIN
              -- сохранили свойство <Пользователь (создание)>
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
          END IF;
+   
      END IF;
 
+     -- zc_MovementLinkObject_Partner  - формируется автоматически из данных zc_MI_Detail
+     vbPartnerId := (SELECT ObjectLink_Partner.ChildObjectId  
+                     FROM MovementItem AS tmp
+                          INNER JOIN ObjectLink AS ObjectLink_Partner
+                                                ON ObjectLink_Partner.ObjectId = tmp.ObjectId
+                                               AND ObjectLink_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
+                     WHERE tmp.MovementId = ioId AND tmp.DescId = zc_MI_Detail() AND tmp.isErased = FALSE
+                     LIMIT 1
+                     );
+     IF COALESCE (vbPartnerId,0) <> 0
+     THEN
+         -- сохранили связь с <Кому >
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, vbPartnerId); 
+         
+         vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+                          FROM ObjectLink AS ObjectLink_TaxKind
+                               INNER JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                      ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                     AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()          
+                          WHERE ObjectLink_TaxKind.ObjectId = vbPartnerId
+                            AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
+           );
+         -- сохранили <% НДС>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, vbVATPercent);
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
@@ -133,6 +161,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.07.23         *
  12.07.21         *
 */
 

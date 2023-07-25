@@ -26,7 +26,6 @@ object ProductionUnionForm: TProductionUnionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -1
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -214,7 +213,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 624
-      Top = 63
+      Top = 61
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -1227,8 +1226,6 @@ object ProductionUnionForm: TProductionUnionForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = Panel3
-        ExplicitLeft = -48
-        ExplicitTop = 193
       end
     end
     object cxTabSheetDetail: TcxTabSheet
@@ -2222,8 +2219,8 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 81
-    Top = 232
+    Left = 113
+    Top = 272
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -4139,6 +4136,14 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInvNumberInvoice'
+        Value = Null
+        Component = edInvNumberInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -4174,6 +4179,9 @@ object ProductionUnionForm: TProductionUnionForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edInvNumberInvoice
       end>
     GetStoredProc = spGet
     ActionAfterExecute = actRefresh
@@ -4293,6 +4301,35 @@ object ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = GuidesParent
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberInvoice'
+        Value = Null
+        Component = edInvNumberInvoice
         DataType = ftString
         MultiSelectSeparator = ','
       end>
