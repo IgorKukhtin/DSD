@@ -7,11 +7,13 @@
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementDescId_next Integer   , -- Ключ 
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата документа
     IN inIsDocInsert         Boolean   , -- 
@@ -19,12 +21,16 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inIP                  TVarChar,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementId_begin    Integer
-             , isExportEmail       Boolean
+RETURNS TABLE (MovementId_begin         Integer
+             , MovementId_begin_next    Integer
+             , isExportEmail            Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbFromId_next      Integer;
+   DECLARE vbToId_next        Integer;
 
    DECLARE vbRetailId         Integer;
    DECLARE vbBranchId         Integer;
@@ -33,10 +39,11 @@ $BODY$
    DECLARE vbIsSendOnPriceIn  Boolean;
    DECLARE vbIsProductionIn   Boolean;
 
-   DECLARE vbMovementId_find    Integer;
-   DECLARE vbMovementId_begin   Integer;
-   DECLARE vbMovementDescId     Integer;
-   DECLARE vbIsTax              Boolean;
+   DECLARE vbMovementId_find       Integer;
+   DECLARE vbMovementId_begin      Integer;
+   DECLARE vbMovementId_begin_next Integer;
+   DECLARE vbMovementDescId        Integer;
+   DECLARE vbIsTax                 Boolean;
 
    DECLARE vbGoodsId_err     Integer;
    DECLARE vbGoodsKindId_err Integer;
@@ -138,7 +145,40 @@ BEGIN
                        ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
                   END;
      -- определили <Тип документа>
-     vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     IF inMovementDescId_next < 0
+     THEN vbMovementDescId:= ABS (inMovementDescId_next);
+          vbFromId_next:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                           FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
+                                                                 , inLevel2      := 'Movement'
+                                                                 , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                                 , inItemName    := 'FromId_next'
+                                                                 , inDefaultValue:= '0'
+                                                                 , inSession     := inSession
+                                                                  ) AS RetV
+                                 FROM MovementFloat
+                                 WHERE MovementFloat.MovementId = inMovementId
+                                   AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                   AND MovementFloat.ValueData > 0
+                                ) AS tmp
+                          );
+          vbToId_next  := (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
+                           FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
+                                                                 , inLevel2      := 'Movement'
+                                                                 , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                                 , inItemName    := 'ToId_next'
+                                                                 , inDefaultValue:= '0'
+                                                                 , inSession     := inSession
+                                                                  ) AS RetV
+                                 FROM MovementFloat
+                                 WHERE MovementFloat.MovementId = inMovementId
+                                   AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                   AND MovementFloat.ValueData > 0
+                                ) AS tmp
+                          );
+
+     ELSE
+         vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     END IF;
      -- определили <ПЕРЕРАБОТКА>
      vbGoodsId_ReWork:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
                          FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
@@ -883,8 +923,8 @@ BEGIN
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_Send_seq') AS TVarChar)
                                                   , inOperDate              := inOperDate
-                                                  , inFromId                := FromId
-                                                  , inToId                  := ToId
+                                                  , inFromId                := CASE WHEN vbFromId_next > 0 THEN vbFromId_next ELSE FromId END
+                                                  , inToId                  := CASE WHEN vbFromId_next > 0 THEN vbToId_next   ELSE ToId END
                                                   , inDocumentKindId        := 0
                                                   , inSubjectDocId          := SubjectDocId
                                                   , inComment               := tmp.Comment
@@ -1826,25 +1866,24 @@ BEGIN
                END IF;
      END IF;
 
+     IF COALESCE (inMovementDescId_next, 0) >=0
+     THEN
 -- if vbUserId <> 5 then
-     -- финиш - сохранили <Документ> - <Взвешивание (контрагент)> - только дату + ParentId + AccessKeyId
-     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, vbMovementId_begin, Movement_begin.AccessKeyId)
-     FROM Movement
-          LEFT JOIN Movement AS Movement_begin ON Movement_begin.Id = vbMovementId_begin
-     WHERE Movement.Id = inMovementId;
+         -- финиш - сохранили <Документ> - <Взвешивание (контрагент)> - только дату + ParentId + AccessKeyId
+         PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, vbMovementId_begin, Movement_begin.AccessKeyId)
+         FROM Movement
+              LEFT JOIN Movement AS Movement_begin ON Movement_begin.Id = vbMovementId_begin
+         WHERE Movement.Id = inMovementId;
+    
+         -- сохранили свойство <Протокол взвешивания>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);
+    
+         -- сохранили свойство <IP>
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inMovementId, inIP);
 
-     -- сохранили свойство <Протокол взвешивания>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);
-
-     -- сохранили свойство <IP>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inMovementId, inIP);
+     END IF;
      
 
-     -- финиш - Обязательно меняем статус документа + сохранили протокол - <Взвешивание (контрагент)>
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_WeighingPartner()
-                                , inUserId     := vbUserId
-                                 );
 -- end if;
 
      -- !!!Проверка что документ один!!!
@@ -1987,7 +2026,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=1 THEN
+ IF vbUserId = 5 AND 1=0 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  %  % % % % %  % %'
   , vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'
@@ -2019,39 +2058,72 @@ END IF;
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, vbOperDate_StartBegin);
      -- дописали св-во <Протокол Дата/время завершение>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, CLOCK_TIMESTAMP());
+     
 
+     -- если двойной документ
+     IF inMovementDescId_next > 0
+     THEN
+          -- сохранили второй документ
+          vbMovementId_begin_next:= (SELECT gpInsert.MovementId_begin
+                                     FROM gpInsert_Scale_Movement_all (inBranchCode          := inBranchCode
+                                                                     , inMovementId          := inMovementId
+                                                                     , inMovementDescId_next := -1 * inMovementDescId_next
+                                                                     , inOperDate            := inOperDate
+                                                                     , inOperDatePartner     := inOperDatePartner
+                                                                     , inIsDocInsert         := inIsDocInsert
+                                                                     , inIsOldPeriod         := inIsOldPeriod
+                                                                     , inIP                  := inIP
+                                                                     , inSession             := inSession
+                                                                      ) AS gpInsert
+                                    );
+
+          -- !!!сохранили!!!
+          UPDATE Movement SET ParentId = inMovementId WHERE Id = vbMovementId_begin_next;
+
+      END IF;
+
+     -- если НЕ второй документ
+     IF COALESCE (inMovementDescId_next, 0) >= 0
+     THEN
+         -- финиш - Обязательно меняем статус документа + сохранили протокол - <Взвешивание (контрагент)>
+         PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                    , inDescId     := zc_Movement_WeighingPartner()
+                                    , inUserId     := vbUserId
+                                     );
+     END IF;
 
      -- Результат
      RETURN QUERY
-       SELECT vbMovementId_begin AS MovementId_begin
-             , CASE WHEN vbMovementDescId = zc_Movement_Sale()
-                          -- Шері
-                     AND (EXISTS (SELECT
-                                  FROM MovementLinkObject AS MovementLinkObject_To
-                                       INNER JOIN ObjectLink AS OL_Juridical
-                                                             ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                                            AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                       INNER JOIN ObjectLink AS OL_Retail
-                                                             ON OL_Retail.ObjectId      = OL_Juridical.ChildObjectId
-                                                            AND OL_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
-                                                            AND OL_Retail.ChildObjectId = 341162 -- Шері
-                                  WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
-                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                 )
-                          -- Авіон+ ТОВ
-                       OR EXISTS (SELECT
-                                  FROM MovementLinkObject AS MovementLinkObject_To
-                                       INNER JOIN ObjectLink AS OL_Juridical
-                                                             ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                                            AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                                            AND OL_Juridical.ChildObjectId = 4978325 -- "Авіон+ ТОВ"
-                                  WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
-                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                 )
-                         )
-                         THEN TRUE
-                    ELSE FALSE
-               END :: Boolean AS isExportEmail
+       SELECT vbMovementId_begin      AS MovementId_begin
+            , vbMovementId_begin_next AS MovementId_begin_next
+            , CASE WHEN vbMovementDescId = zc_Movement_Sale()
+                         -- Шері
+                    AND (EXISTS (SELECT
+                                 FROM MovementLinkObject AS MovementLinkObject_To
+                                      INNER JOIN ObjectLink AS OL_Juridical
+                                                            ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                           AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                      INNER JOIN ObjectLink AS OL_Retail
+                                                            ON OL_Retail.ObjectId      = OL_Juridical.ChildObjectId
+                                                           AND OL_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                                           AND OL_Retail.ChildObjectId = 341162 -- Шері
+                                 WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
+                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                )
+                         -- Авіон+ ТОВ
+                      OR EXISTS (SELECT
+                                 FROM MovementLinkObject AS MovementLinkObject_To
+                                      INNER JOIN ObjectLink AS OL_Juridical
+                                                            ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                           AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                                           AND OL_Juridical.ChildObjectId = 4978325 -- "Авіон+ ТОВ"
+                                 WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
+                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                )
+                        )
+                        THEN TRUE
+                   ELSE FALSE
+              END :: Boolean AS isExportEmail
        ;
 
 

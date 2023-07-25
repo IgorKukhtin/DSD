@@ -237,7 +237,7 @@ BEGIN
             LEFT JOIN tmpMLM AS MovementLinkMovement_Send
                              ON MovementLinkMovement_Send.MovementId = Movement.Id
                             AND MovementLinkMovement_Send.DescId     = zc_MovementLinkMovement_Send()
-            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementChildId
+            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = COALESCE (MovementLinkMovement_Send.MovementChildId, Movement.ParentId)
             LEFT JOIN MovementDesc AS MovementDesc_Send ON MovementDesc_Send.Id = Movement_Send.DescId
 
             --заявка
