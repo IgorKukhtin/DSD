@@ -23,9 +23,8 @@ BEGIN
 
  
 END;$BODY$
+  LANGUAGE plpgsql VOLATILE;
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfSelect_Object_ProfitLossGroup() OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

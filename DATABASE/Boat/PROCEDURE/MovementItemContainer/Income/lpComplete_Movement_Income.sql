@@ -54,6 +54,7 @@ BEGIN
 
      -- проверка
      IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberInvoice())
+        AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не устновлено значение <Номер Счета>.';
      END IF;

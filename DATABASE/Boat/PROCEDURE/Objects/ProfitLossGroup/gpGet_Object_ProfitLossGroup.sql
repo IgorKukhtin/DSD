@@ -33,9 +33,7 @@ $BODY$BEGIN
    END IF;
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_ProfitLossGroup (Integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 
 /*-------------------------------------------------------------------------------*/

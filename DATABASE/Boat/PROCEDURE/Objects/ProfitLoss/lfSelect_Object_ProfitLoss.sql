@@ -46,9 +46,8 @@ BEGIN
           
 END;
 $BODY$
+  LANGUAGE plpgsql VOLATILE;
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfSelect_Object_ProfitLoss () OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

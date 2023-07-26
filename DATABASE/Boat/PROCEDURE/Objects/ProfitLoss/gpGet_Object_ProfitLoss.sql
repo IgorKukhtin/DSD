@@ -152,11 +152,7 @@ $BODY$BEGIN
    DROP TABLE tmpInfoMoney2;
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_ProfitLoss(integer, TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 
 /*-------------------------------------------------------------------------------*/
