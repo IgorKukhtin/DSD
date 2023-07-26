@@ -185,25 +185,78 @@ BEGIN
 
      -- заполняем таблицу - элементы документа - ЗП
      INSERT INTO _tmpItem_Detail (MovementItemId, ParentId
-                                , ReceiptServiceId, PersonalId
+                                , ReceiptServiceId, PersonalId, PartnerId
                                 , Amount
+                                , OperSumm_VAT, VATPercent
                                  )
         -- результат
         SELECT MovementItem.Id                  AS MovementItemId
              , MovementItem.ParentId            AS ParentId
-             , MovementItem.ObjectId            AS ReceiptServiceId
-             , MILinkObject_Personal.ObjectId   AS PersonalId
+               -- Работы
+             , COALESCE (MovementItem.ObjectId, 0)            AS ReceiptServiceId
+               -- Сотрудник
+             , COALESCE (MILinkObject_Personal.ObjectId, 0)   AS PersonalId
+               -- Поставщик услуг
+             , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
+               -- стоимость Работ или Сумма без НДС
              , MovementItem.Amount              AS Amount
+               -- Сумма НДС
+             , zfCalc_SummVATDiscountTax (MovementItem.Amount, 0, ObjectFloat_TaxKind_Value.ValueData)
+               -- % НДС
+             , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) AS VATPercent
         FROM MovementItem
              INNER JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = MovementItem.ParentId
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Personal
                                               ON MILinkObject_Personal.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()
+             LEFT JOIN ObjectLink AS ObjectLink_Partner
+                                  ON ObjectLink_Partner.ObjectId      = MovementItem.ObjectId
+                                 AND ObjectLink_Partner.DescId        = zc_ObjectLink_ReceiptService_Partner()
+             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                  ON ObjectLink_TaxKind.ObjectId      = ObjectLink_Partner.ChildObjectId
+                                 AND ObjectLink_TaxKind.DescId        = zc_ObjectLink_Partner_TaxKind()
+             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                  AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
 
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId     = zc_MI_Detail()
           AND MovementItem.isErased   = FALSE
        ;
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpItem_Detail WHERE _tmpItem_Detail.ReceiptServiceId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Сбока узла = <%>.%Не установлено название выполненных работ.'
+                        , (SELECT zfCalc_GoodsName_all (lfGet_Object_Article (_tmpItem_pr.GoodsId), lfGet_Object_ValueData_sh (_tmpItem_pr.GoodsId))
+                           FROM _tmpItem_Detail
+                                JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem_Detail.ParentId
+                           WHERE _tmpItem_Detail.ReceiptServiceId = 0
+                           ORDER BY _tmpItem_Detail.MovementItemId LIMIT 1
+                          )
+                        , CHR (13)
+                         ;
+     END IF;
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpItem_Detail WHERE _tmpItem_Detail.PersonalId = 0 AND _tmpItem_Detail.PartnerId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Сбока узла = <%>.%Для выполненных работ <%> %не установлено значение <Сотрудник>.'
+                        , (SELECT zfCalc_GoodsName_all (lfGet_Object_Article (_tmpItem_pr.GoodsId), lfGet_Object_ValueData_sh (_tmpItem_pr.GoodsId))
+                           FROM _tmpItem_Detail
+                                JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem_Detail.ParentId
+                           WHERE _tmpItem_Detail.PersonalId = 0 AND _tmpItem_Detail.PartnerId = 0
+                           ORDER BY _tmpItem_Detail.MovementItemId LIMIT 1
+                          )
+                        , CHR (13)
+                        , (SELECT lfGet_Object_ValueData_sh (_tmpItem_Detail.ReceiptServiceId)
+                           FROM _tmpItem_Detail
+                           WHERE _tmpItem_Detail.PersonalId = 0 AND _tmpItem_Detail.PartnerId = 0
+                           ORDER BY _tmpItem_Detail.MovementItemId LIMIT 1
+                          )
+                        , CHR (13)
+                         ;
+     END IF;
 
 
      -- определили - !!!нужна ли партия MovementId_order!!!
@@ -697,16 +750,47 @@ BEGIN
           JOIN _tmpItem_Child_mi ON _tmpItem_Child_mi.InfoMoneyDestinationId  = _tmpItem_byAccount.InfoMoneyDestinationId
      WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child_mi.MovementItemId
     ;
-     -- 2.3. определяется AccountId для проводок по суммовому учету - ЗП
-     UPDATE _tmpItem_Detail SET AccountId = _tmpAccount.AccountId
-     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000()         -- Кредиторы
-                                             , inAccountDirectionId     := zc_Enum_AccountDirection_60200()     -- Сотрудники
-                                             , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_60100() -- Заработная плата
+
+     -- 2.3. определяется AccountId для проводок по суммовому учету - Кредиторы
+     UPDATE _tmpItem_Detail SET AccountId     = _tmpAccount.AccountId
+                              , AccountId_VAT = _tmpAccount.AccountId_VAT
+     FROM (SELECT -- Кредиторы
+                  lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000()                   -- Кредиторы
+                                             , inAccountDirectionId     := CASE WHEN tmpItem_Detail.PartnerId > 0
+                                                                                THEN zc_Enum_AccountDirection_60300()     -- Кредиторы по услугам
+                                                                                ELSE zc_Enum_AccountDirection_60200()     -- Сотрудники
+                                                                           END
+                                             , inInfoMoneyDestinationId := CASE WHEN tmpItem_Detail.PartnerId > 0
+                                                                                THEN zc_Enum_InfoMoneyDestination_20700() -- услуги полученные
+                                                                                ELSE zc_Enum_InfoMoneyDestination_60100() -- Заработная плата
+                                                                           END
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
                                               ) AS AccountId
+                  -- НДС
+                , CASE WHEN tmpItem_Detail.PartnerId > 0 AND tmpItem_Detail.OperSumm_VAT <> 0
+                  THEN
+                  lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_80000()     -- Расчеты Налоги
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_80500() -- НДС
+                                             , inInfoMoneyDestinationId := View_InfoMoney_VAT.InfoMoneyDestinationId
+                                             , inInfoMoneyId            := NULL
+                                             , inUserId                 := inUserId
+                                              )
+                  END AS AccountId_VAT
+                  --
+                , tmpItem_Detail.PersonalId
+                , tmpItem_Detail.PartnerId
+
+           FROM (SELECT _tmpItem_Detail.PersonalId, _tmpItem_Detail.PartnerId, SUM (_tmpItem_Detail.OperSumm_VAT) AS OperSumm_VAT
+                 FROM _tmpItem_Detail
+                 GROUP BY _tmpItem_Detail.PersonalId, _tmpItem_Detail.PartnerId
+                ) AS tmpItem_Detail
+                -- Расчеты Налоги + НДС
+                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_VAT ON View_InfoMoney_VAT.InfoMoneyId = zc_Enum_InfoMoney_50501()
           ) AS _tmpAccount
-     WHERE _tmpAccount.AccountId > 0;
+     WHERE _tmpItem_Detail.PersonalId = _tmpAccount.PersonalId
+       AND _tmpItem_Detail.PartnerId  = _tmpAccount.PartnerId
+          ;
 
 
      -- 3.1. определяется ContainerId_Summ для проводок по суммовому учету - ПРИХОД
@@ -740,22 +824,54 @@ BEGIN
      FROM _tmpItem_Child_mi
      WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child_mi.MovementItemId
     ;
-     -- 3.3. определяется ContainerId_Summ для проводок по суммовому учету - ЗП
-     UPDATE _tmpItem_Detail SET ContainerId_Summ = lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                                                         , inParentId          := NULL
-                                                                         , inObjectId          := _tmpItem_Detail.AccountId
-                                                                         , inPartionId         := NULL
-                                                                         , inIsReserve         := FALSE
-                                                                         , inJuridicalId_basis := vbJuridicalId_Basis
-                                                                         , inBusinessId        := vbBusinessId
-                                                                         , inDescId_1          := zc_ContainerLinkObject_Personal()
-                                                                         , inObjectId_1        := _tmpItem_Detail.PersonalId
-                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                                                         , inObjectId_2        := zc_Enum_InfoMoney_60101() -- Заработная плата
-                                                                         , inDescId_3          := zc_ContainerLinkObject_ServiceDate()
-                                                                         , inObjectId_3        := lpInsertFind_Object_ServiceDate (vbOperDate)
-                                                                          );
-     
+     -- 3.3. определяется ContainerId_Summ для проводок по суммовому учету - Кредиторы
+     UPDATE _tmpItem_Detail SET ContainerId_Summ = CASE WHEN _tmpItem_Detail.PartnerId > 0
+                                                        THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                   , inParentId          := NULL
+                                                                                   , inObjectId          := _tmpItem_Detail.AccountId
+                                                                                   , inPartionId         := NULL
+                                                                                   , inIsReserve         := FALSE
+                                                                                   , inJuridicalId_basis := vbJuridicalId_Basis
+                                                                                   , inBusinessId        := vbBusinessId
+                                                                                   , inDescId_1          := zc_ContainerLinkObject_Partner()
+                                                                                   , inObjectId_1        := _tmpItem_Detail.PartnerId
+                                                                                   , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                                     -- Общефирменные + услуги полученные + Прочие услуги, работы
+                                                                                   , inObjectId_2        := zc_Enum_InfoMoney_20707()
+                                                                                    )
+                                                        ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                   , inParentId          := NULL
+                                                                                   , inObjectId          := _tmpItem_Detail.AccountId
+                                                                                   , inPartionId         := NULL
+                                                                                   , inIsReserve         := FALSE
+                                                                                   , inJuridicalId_basis := vbJuridicalId_Basis
+                                                                                   , inBusinessId        := vbBusinessId
+                                                                                   , inDescId_1          := zc_ContainerLinkObject_Personal()
+                                                                                   , inObjectId_1        := _tmpItem_Detail.PersonalId
+                                                                                   , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                                   , inObjectId_2        := zc_Enum_InfoMoney_60101() -- Заработная плата
+                                                                                   , inDescId_3          := zc_ContainerLinkObject_ServiceDate()
+                                                                                   , inObjectId_3        := lpInsertFind_Object_ServiceDate (vbOperDate)
+                                                                                    )
+                                                        END
+                               , ContainerId_VAT = CASE WHEN _tmpItem_Detail.AccountId_VAT > 0
+                                                        THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                   , inParentId          := NULL
+                                                                                   , inObjectId          := _tmpItem_Detail.AccountId_VAT
+                                                                                   , inPartionId         := NULL
+                                                                                   , inIsReserve         := FALSE
+                                                                                   , inJuridicalId_basis := vbJuridicalId_Basis
+                                                                                   , inBusinessId        := vbBusinessId
+                                                                                   , inDescId_1          := zc_ContainerLinkObject_Partner()
+                                                                                     -- Partner Official Tax - кому выставляем долг за НДС
+                                                                                   , inObjectId_1        := zc_Partner_VAT()
+                                                                                     -- 
+                                                                                   , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                                     -- Общефирменные + услуги полученные + Прочие услуги, работы
+                                                                                   , inObjectId_2        := zc_Enum_InfoMoney_20707()
+                                                                                    )
+                                                        END;
+
 
      -- 4.1. формируются Проводки - остаток количество
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
@@ -766,7 +882,7 @@ BEGIN
                                        , ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , Amount, OperDate, IsActive
                                         )
-       -- проводки - РАСХОД
+       -- проводки - РАСХОД кол-во
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_Child.MovementItemId
             , _tmpItem_Child.ContainerId_Goods
@@ -788,7 +904,7 @@ BEGIN
             JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem_Child.ParentId
 
       UNION ALL
-       -- проводки - ПРИХОД
+       -- проводки - ПРИХОД кол-во
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_pr.MovementItemId
             , _tmpItem_pr.ContainerId_Goods
@@ -822,7 +938,7 @@ BEGIN
                                        , ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , Amount, OperDate, IsActive
                                         )
-       -- проводки - РАСХОД
+       -- проводки - РАСХОД с/с
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_Child.MovementItemId
             , _tmpItem_Child.ContainerId_Summ
@@ -859,7 +975,7 @@ BEGIN
                                        , ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , Amount, OperDate, IsActive
                                         )
-       -- проводки - ПРИХОД
+       -- проводки - ПРИХОД с/с
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_pr.MovementItemId
             , _tmpItem_pr.ContainerId_Summ
@@ -883,7 +999,7 @@ BEGIN
        WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_Summ()
 
       UNION ALL
-       -- проводки - ЗП
+       -- проводки - в с/с Кредиторы
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_pr.MovementItemId
             , _tmpItem_pr.ContainerId_Summ
@@ -898,7 +1014,7 @@ BEGIN
             , _tmpItem_Detail.ContainerId_Summ        AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
             , _tmpItem_Detail.ReceiptServiceId        AS ObjectIntId_Analyzer   -- Аналитический справочник
             , _tmpItem_Detail.PersonalId              AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Personal
-            , _tmpItem_Detail.Amount                  AS Amount
+            , _tmpItem_Detail.Amount                  AS Amount                 -- !!!без НДС!!!
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
        FROM _tmpItem_Detail
@@ -906,7 +1022,7 @@ BEGIN
       ;
 
 
-     -- 4.2.3. формируются Проводки - долг по ЗП
+     -- 4.2.3. формируются Проводки - долг Кредиторы
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -915,26 +1031,70 @@ BEGIN
                                        , ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , Amount, OperDate, IsActive
                                         )
-       -- проводки - ЗП
+       -- проводки - Кредиторы
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_Detail.MovementItemId
             , _tmpItem_Detail.ContainerId_Summ
             , 0                                       AS ParentId
             , _tmpItem_Detail.AccountId               AS AccountId              -- счет
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
-            , _tmpItem_Detail.PersonalId              AS ObjectId_Analyzer      -- Товар
+            , CASE WHEN _tmpItem_Detail.PartnerId > 0 THEN _tmpItem_Detail.PartnerId ELSE _tmpItem_Detail.PersonalId END AS ObjectId_Analyzer -- Кредиторы
             , 0                                       AS PartionId              -- Партия
             , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem_Detail.AccountId               AS AccountId_Analyzer     -- Счет - корреспондент - РАСХОД
+            , _tmpItem_pr.AccountId                   AS AccountId_Analyzer     -- Счет - Корреспондент - Товар
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem_pr.ContainerId_Summ            AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
+            , _tmpItem_pr.ContainerId_Summ            AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - Товар
             , _tmpItem_Detail.ReceiptServiceId        AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , _tmpItem_pr.GoodsId                     AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Personal
-            , _tmpItem_Detail.Amount                  AS Amount
+            , _tmpItem_pr.GoodsId                     AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Товар
+            , -1 * _tmpItem_Detail.Amount             AS Amount                 -- !!!без НДС!!!
+            , vbOperDate                              AS OperDate
+            , FALSE                                   AS isActive
+       FROM _tmpItem_Detail
+            JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId  = _tmpItem_Detail.ParentId
+
+      UNION ALL
+       -- проводки - Кредиторы
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_Detail.MovementItemId
+            , _tmpItem_Detail.ContainerId_Summ
+            , 0                                       AS ParentId
+            , _tmpItem_Detail.AccountId               AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , CASE WHEN _tmpItem_Detail.PartnerId > 0 THEN _tmpItem_Detail.PartnerId ELSE _tmpItem_Detail.PersonalId END AS ObjectId_Analyzer -- Кредиторы
+            , 0                                       AS PartionId              -- Партия
+            , 0                                       AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_Detail.AccountId_VAT           AS AccountId_Analyzer     -- Счет - Корреспондент - Кредиторы
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem_Detail.ContainerId_VAT         AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - Кредиторы
+            , _tmpItem_Detail.ReceiptServiceId        AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , zc_Partner_VAT()                        AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Кредиторы
+            , -1 * _tmpItem_Detail.OperSumm_VAT       AS Amount                 -- !!!НДС!!!
+            , vbOperDate                              AS OperDate
+            , FALSE                                   AS isActive
+       FROM _tmpItem_Detail
+       WHERE _tmpItem_Detail.ContainerId_VAT > 0
+
+      UNION ALL
+       -- проводки - НДС
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_Detail.MovementItemId
+            , _tmpItem_Detail.ContainerId_VAT
+            , 0                                       AS ParentId
+            , _tmpItem_Detail.AccountId_VAT           AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , zc_Partner_VAT()                        AS ObjectId_Analyzer      -- Partner Official Tax - кому выставляем долг за НДС
+            , 0                                       AS PartionId              -- Партия
+            , 0                                       AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_Detail.AccountId               AS AccountId_Analyzer     -- Счет - Корреспондент - Кредиторы
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem_Detail.ContainerId_Summ        AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - Кредиторы
+            , _tmpItem_Detail.ReceiptServiceId        AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , _tmpItem_Detail.PartnerId                     AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Кредиторы
+            , _tmpItem_Detail.OperSumm_VAT       AS Amount                 -- !!!НДС!!!
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
        FROM _tmpItem_Detail
-            JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId  = _tmpItem_Detail.ParentId
+       WHERE _tmpItem_Detail.ContainerId_VAT > 0
       ;
 
      -- 5.0. получили цену партии - !!!ПРИХОД!!!

@@ -95,7 +95,7 @@ BEGIN
                 , Movement.OperDate
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END, 0) AS PartnerId
                   -- Partner Official Tax - кому выставляем долг за НДС
-                , 35138 AS PartnerId_VAT
+                , zc_Partner_VAT() AS PartnerId_VAT
                   --
                 , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Unit()    THEN Object_To.Id   ELSE 0 END, 0) AS UnitId
 
@@ -104,7 +104,7 @@ BEGIN
                   -- УП-статья - долг Поставщика
                 , COALESCE (ObjectLink_Partner_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) AS InfoMoneyId_Partner
                   -- УП-статья - Partner Official Tax
-                , 35042 AS InfoMoneyId_Partner_VAT -- Расчеты с бюджетом Налоговые платежи НДС
+                , zc_Enum_InfoMoney_50501() AS InfoMoneyId_Partner_VAT -- Расчеты Налоги + НДС
 
                   -- Аналитики счетов - направления - !!!ВРЕМЕННО - zc_Enum_AccountDirection_10100!!! Запасы + Склады
                 , COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, zc_Enum_AccountDirection_10100()) AS AccountDirectionId_To
@@ -539,7 +539,7 @@ BEGIN
 
      -- 3.1. определяется Счет(справочника) для проводок по долг Поставщику + НДС
      UPDATE _tmpItem_SummPartner SET AccountId     = _tmpItem_byAccount.AccountId
-                                   , AccountId_VAT = _tmpItem_byAccount.AccountId
+                                   , AccountId_VAT = _tmpItem_byAccount.AccountId_VAT
      FROM
           (SELECT -- Поставщик
                   lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
@@ -556,13 +556,13 @@ BEGIN
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
                                               )
-                  ELSE 0
                   END AS AccountId_VAT
+
            FROM (SELECT zc_Enum_AccountGroup_60000()      AS AccountGroupId     -- Кредиторы
                       , zc_Enum_AccountDirection_60100()  AS AccountDirectionId -- поставщики
                       , vbInfoMoneyId_Partner             AS InfoMoneyId
                         --
-                      , zc_Enum_AccountGroup_80000()      AS AccountGroupId_VAT     -- Расчеты с бюджетом
+                      , zc_Enum_AccountGroup_80000()      AS AccountGroupId_VAT     -- Расчеты Налоги
                       , zc_Enum_AccountDirection_80500()  AS AccountDirectionId_VAT -- НДС
                       , vbInfoMoneyId_Partner_VAT         AS InfoMoneyId_VAT
 
@@ -729,13 +729,13 @@ BEGIN
             , vbOperDate                      AS OperDate
             , FALSE                           AS isActive
 
-       FROM (-- !!!одна!!! проводка в валюте Баланса
+       FROM (-- !!!одна!!! проводка для суммы с НДС
              SELECT zc_MIContainer_Summ() AS DescId, tmp.ContainerId, tmp.AccountId, SUM (tmp.OperSumm) AS OperSumm
              FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId, tmp.AccountId
             UNION ALL
-             -- !!!одна!!! проводка для "забалансового" Валютного счета - если НАДО
+             -- !!!одна!!! проводка для суммы НДС
              SELECT zc_MIContainer_Summ() AS DescId, tmp.ContainerId_VAT AS ContainerId, tmp.AccountId_VAT AS AccountId, -1 * SUM (tmp.OperSumm_VAT) AS OperSumm
-             FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId_VAT, tmp.AccountId_VAT
+             FROM _tmpItem_SummPartner AS tmp WHERE tmp.AccountId_VAT > 0 GROUP BY tmp.ContainerId_VAT, tmp.AccountId_VAT
             ) AS _tmpItem_group
        -- !!!не будем ограничивать, т.к. эти проводки ?МОГУТ? понадобится в отчетах!!!
        -- WHERE _tmpItem_group.OperSumm <> 0
