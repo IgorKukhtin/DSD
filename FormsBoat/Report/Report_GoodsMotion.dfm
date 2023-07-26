@@ -185,6 +185,14 @@
             Options.Editing = False
             Width = 100
           end
+          object ModelName_OrderClient: TcxGridDBColumn
+            Caption = 'Model'
+            DataBinding.FieldName = 'ModelName_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object FromName_OrderClient: TcxGridDBColumn
             Caption = 'Kunden'
             DataBinding.FieldName = 'FromName_OrderClient'
@@ -1840,6 +1848,10 @@
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 224

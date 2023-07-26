@@ -49,7 +49,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , Summ_Cost TFloat
               , TotalSummPrice_cost_in TFloat
              
-              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar  
+              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar, ModelName_OrderClient TVarChar  
               
               , MovementId_Partion   Integer
               , InvNumber_Partion    TVarChar
@@ -427,8 +427,9 @@ BEGIN
                                     , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
                                     , Movement_OrderClient.OperDate                             AS OperDate_OrderClient
                                     , Object_From.ValueData                                     AS FromName
-                                    , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
-                                    , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN  
+                                    , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName
+                                    , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
+                                    , Object_Model.ValueData                                    AS ModelName  
                                FROM MovementItemFloat AS MIFloat_MovementId
                                     LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData ::Integer
 
@@ -446,6 +447,10 @@ BEGIN
                                                            ON ObjectString_CIN.ObjectId = Object_Product.Id
                                                           AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 
+                                    LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                         ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                                        AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
+                                    LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
                                WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
                                  AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                                  AND inIsOrderClient = TRUE
@@ -526,6 +531,8 @@ BEGIN
                         , MIFloat_MovementId.FromName                   AS FromName_OrderClient
                         , MIFloat_MovementId.ProductName                AS ProductName_OrderClient
                         , MIFloat_MovementId.CIN                        AS CIN_OrderClient
+                        , MIFloat_MovementId.ModelName                  AS ModelName_OrderClient
+                        
                    FROM (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
                         , Movement.OperDate
@@ -738,7 +745,8 @@ BEGIN
                           , MIFloat_MovementId.InvNumberFull_OrderClient
                           , MIFloat_MovementId.FromName
                           , MIFloat_MovementId.ProductName
-                          , MIFloat_MovementId.CIN
+                          , MIFloat_MovementId.CIN 
+                          , MIFloat_MovementId.ModelName
                           --, tmpDataAll.MovementId_Partion 
                           , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionId ELSE 0 END
                           , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId_Partion ELSE -1 END
@@ -829,6 +837,7 @@ BEGIN
            , tmpDataAll.FromName_OrderClient        ::TVarChar
            , tmpDataAll.ProductName_OrderClient     ::TVarChar
            , tmpDataAll.CIN_OrderClient             ::TVarChar 
+           , tmpDataAll.ModelName_OrderClient       ::TVarChar
            
            , tmpDataAll.MovementId_Partion          AS MovementId_Partion
            , Movement_Partion.InvNumber             AS InvNumber_Partion

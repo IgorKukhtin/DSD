@@ -433,6 +433,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Options.Editing = False
         Width = 80
       end
+      object ModelName: TcxGridDBColumn
+        Caption = 'Model'
+        DataBinding.FieldName = 'ModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object InvNumber_Invoice: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. Invoice'
         DataBinding.FieldName = 'InvNumber_Invoice'

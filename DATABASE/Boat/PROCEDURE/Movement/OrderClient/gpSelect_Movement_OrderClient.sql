@@ -42,7 +42,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , PaidKindId Integer, PaidKindName TVarChar
              , ProductId Integer, ProductName TVarChar, ProductName_Full TVarChar, DateBegin TDateTime
              , ReceiptProdModelId Integer, ReceiptProdModelCode Integer, ReceiptProdModelName TVarChar
-             , BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
+             , BrandId Integer, BrandName TVarChar
+             , ModelId Integer, ModelName TVarChar
+             , CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , Value_TaxKind TFloat, TaxKindName TVarChar, TaxKindName_info TVarChar
@@ -282,7 +284,9 @@ BEGIN
              , Object_ReceiptProdModel.ValueData            AS ReceiptProdModelName
 
              , Object_Brand.Id                              AS BrandId
-             , Object_Brand.ValueData                       AS BrandName
+             , Object_Brand.ValueData                       AS BrandName 
+             , Object_Model.Id                              AS ModelId
+             , Object_Model.ValueData                       AS ModelName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
              , zfCalc_ValueData_isErased (ObjectString_EngineNum.ValueData, Object_Product.isErased) AS EngineNum
              , Object_Engine.ValueData                      AS EngineName
@@ -425,6 +429,11 @@ BEGIN
                                  AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
              LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Model
+                                  ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
+             LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+
              LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                   ON ObjectDate_DateSale.ObjectId = Object_Product.Id
                                  AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
@@ -459,6 +468,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.07.23         *
  09.02.23         *
  25.12.22         *
  23.02.21         *

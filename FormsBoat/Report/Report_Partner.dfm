@@ -1,32 +1,30 @@
-inherited Report_PersonalForm: TReport_PersonalForm
-  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084'>'
+inherited Report_PartnerForm: TReport_PartnerForm
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'>'
   ClientHeight = 465
-  ClientWidth = 759
+  ClientWidth = 765
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 775
+  ExplicitWidth = 781
   ExplicitHeight = 504
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 759
-    Height = 382
+    Top = 91
+    Width = 765
+    Height = 374
     TabOrder = 3
-    ExplicitTop = 83
-    ExplicitWidth = 759
-    ExplicitHeight = 382
-    ClientRectBottom = 382
-    ClientRectRight = 759
+    ExplicitTop = 91
+    ExplicitWidth = 765
+    ExplicitHeight = 374
+    ClientRectBottom = 374
+    ClientRectRight = 765
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 759
-      ExplicitHeight = 382
+      ExplicitWidth = 765
+      ExplicitHeight = 374
       inherited cxGrid: TcxGrid
-        Width = 759
-        Height = 382
-        ExplicitLeft = 64
-        ExplicitTop = -29
-        ExplicitWidth = 759
-        ExplicitHeight = 382
+        Width = 765
+        Height = 374
+        ExplicitWidth = 765
+        ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -108,7 +106,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = PersonalName
+              Column = PartnerName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -120,51 +118,21 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object PersonalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1086#1090#1088'.'
-            DataBinding.FieldName = 'PersonalCode'
-            Visible = False
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'PartnerCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 71
           end
-          object PersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'PersonalName'
+          object PartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 211
-          end
-          object PositionCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1083#1078#1085'.'
-            DataBinding.FieldName = 'PositionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object PositionName: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 110
-          end
-          object ServiceDate: TcxGridDBColumn
-            Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
-            DataBinding.FieldName = 'ServiceDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm yyyy'
-            Properties.SaveTime = False
-            Properties.ShowTime = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
+            Width = 239
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -329,10 +297,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
     end
   end
   inherited Panel: TPanel
-    Width = 759
-    Height = 57
-    ExplicitWidth = 759
-    ExplicitHeight = 57
+    Width = 765
+    Height = 65
+    ExplicitWidth = 765
+    ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 60
       EditValue = 43466d
@@ -362,7 +330,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       ExplicitWidth = 52
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 415
+      Left = 277
       Top = 30
       Properties.Buttons = <
         item
@@ -371,47 +339,47 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 242
+      Width = 241
     end
     object cxLabel5: TcxLabel
-      Left = 290
+      Left = 155
       Top = 31
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
-    object cbServiceDate: TcxCheckBox
-      Left = 156
-      Top = 5
-      Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-      TabOrder = 6
-      Width = 118
+    object cxLabel3: TcxLabel
+      Left = 155
+      Top = 7
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
-    object deServiceDate: TcxDateEdit
-      Left = 156
-      Top = 30
-      EditValue = 43466d
-      Properties.DisplayFormat = 'mmmm yyyy'
-      Properties.SaveTime = False
-      Properties.ShowTime = False
+    object edAccount: TcxButtonEdit
+      Left = 565
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
       TabOrder = 7
-      Width = 118
+      Width = 187
+    end
+    object cePartner: TcxButtonEdit
+      Left = 221
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 297
     end
   end
   object cxLabel9: TcxLabel [2]
-    Left = 290
-    Top = 6
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
-  end
-  object cePersonal: TcxButtonEdit [3]
-    Left = 360
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 297
+    Left = 526
+    Top = 8
+    Caption = #1057#1095#1077#1090':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 35
@@ -420,17 +388,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cbServiceDate
-        Properties.Strings = (
-          'Checked')
-      end
-      item
         Component = deEnd
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deServiceDate
         Properties.Strings = (
           'Date')
       end
@@ -1779,8 +1737,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_PersonalDialogForm'
-      FormNameParam.Value = 'TReport_PersonalDialogForm'
+      FormName = 'TReport_PartnerDialogForm'
+      FormNameParam.Value = 'TReport_PartnerDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1803,13 +1761,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
         item
           Name = 'AccountId'
           Value = ''
-          DataType = ftString
+          Component = GuidesAccount
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
           Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1832,33 +1793,17 @@ inherited Report_PersonalForm: TReport_PersonalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isServiceDate'
+          Name = 'PartnerId'
           Value = Null
-          Component = cbServiceDate
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inDateService'
-          Value = Null
-          Component = deServiceDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalId'
-          Value = Null
-          Component = GuidesPersonal
+          Component = GuidesPartner
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalName'
+          Name = 'PartnerName'
           Value = Null
-          Component = GuidesPersonal
+          Component = GuidesPartner
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1996,12 +1941,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Top = 184
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'PersonalName'
     Left = 56
     Top = 224
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Personal'
+    StoredProcName = 'gpReport_Partner'
     Params = <
       item
         Name = 'inStartDate'
@@ -2020,18 +1964,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inServiceDate'
-        Value = 41640d
-        Component = deServiceDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisServiceDate'
-        Value = False
-        Component = cbServiceDate
-        DataType = ftBoolean
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2044,15 +1980,22 @@ inherited Report_PersonalForm: TReport_PersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = GuidesPersonal
+        Name = 'inAccountId'
+        Value = False
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'in'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 216
+    Left = 192
+    Top = 272
   end
   inherited BarManager: TdxBarManager
     Left = 168
@@ -2131,8 +2074,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 56
-    Top = 8
+    Left = 128
+    Top = 16
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -2142,10 +2085,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
       end
       item
-        Component = deServiceDate
       end
       item
-        Component = cbServiceDate
       end
       item
       end
@@ -2159,7 +2100,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
       end
       item
-        Component = GuidesPersonal
       end>
     Left = 416
     Top = 212
@@ -2194,8 +2134,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 560
-    Top = 5
+    Left = 360
+    Top = 13
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2265,37 +2205,72 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 240
+    Left = 104
     Top = 232
   end
-  object GuidesPersonal: TdsdGuides
+  object GuidesPartner: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePersonal
-    FormNameParam.Value = 'TPersonalForm'
+    FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TPartnerForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesPartner
         ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 456
-    Top = 13
+    Left = 464
+    Top = 5
+  end
+  object GuidesAccount: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAccount
+    FormNameParam.Value = 'TPAccountForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPAccountForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 648
+    Top = 5
   end
 end

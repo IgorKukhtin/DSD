@@ -40,7 +40,7 @@ RETURNS TABLE  (LocationId Integer, DescName_location TVarChar, LocationCode Int
               , OperPriceList          TFloat -- Цена по прайсу без НДС
 
                 -- Заказ Клиента
-              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar
+              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar, ModelName_OrderClient TVarChar
 
                 -- из партии
               , PartionId            Integer
@@ -247,6 +247,7 @@ BEGIN
                                     , Object_From.ValueData AS FromName_OrderClient
                                     , zfCalc_ValueData_isErased (Object_Product.ValueData,   Object_Product.isErased) AS ProductName_OrderClient
                                     , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN_OrderClient
+                                    , Object_Model.ValueData                                                          AS ModelName_OrderClient
                                FROM MovementItemFloat AS MIFloat_MovementId
                                     LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData ::Integer
 
@@ -263,6 +264,11 @@ BEGIN
                                     LEFT JOIN ObjectString AS ObjectString_CIN
                                                            ON ObjectString_CIN.ObjectId = Object_Product.Id
                                                           AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                         ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                                        AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
+                                    LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
 
                                WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
                                  AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
@@ -292,6 +298,7 @@ BEGIN
                               , MIFloat_MovementId.FromName_OrderClient
                               , MIFloat_MovementId.ProductName_OrderClient
                               , MIFloat_MovementId.CIN_OrderClient
+                              , MIFloat_MovementId.ModelName_OrderClient
 
                                 -- кол-во
                               , SUM (tmpMIContainer_group.AmountStart) AS AmountStart
@@ -346,6 +353,7 @@ BEGIN
                                 , MIFloat_MovementId.FromName_OrderClient
                                 , MIFloat_MovementId.ProductName_OrderClient
                                 , MIFloat_MovementId.CIN_OrderClient
+                                , MIFloat_MovementId.ModelName_OrderClient
 
                          HAVING SUM (tmpMIContainer_group.AmountStart) <> 0
                              OR SUM (tmpMIContainer_group.AmountIn)    <> 0
@@ -425,6 +433,7 @@ BEGIN
             , tmpDataAll.FromName_OrderClient        ::TVarChar
             , tmpDataAll.ProductName_OrderClient     ::TVarChar
             , tmpDataAll.CIN_OrderClient             ::TVarChar
+            , tmpDataAll.ModelName_OrderClient       ::TVarChar
 
               -- из партии
             , tmpDataAll.PartionId        :: Integer AS PartionId

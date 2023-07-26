@@ -269,6 +269,8 @@ type
     miReport_Personal: TMenuItem;
     actReport_OrderClient_byBoat: TdsdOpenForm;
     miReport_OrderClient_byBoat: TMenuItem;
+    actReport_Partner: TdsdOpenForm;
+    miReport_Partner: TMenuItem;
   private
     { Private declarations }
   public

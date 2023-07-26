@@ -363,7 +363,9 @@ uses
   ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
   EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
   EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
-  SendJournalChoice in '..\..\FormsBoat\Document\SendJournalChoice.pas' {SendJournalChoiceForm: TParentForm};
+  SendJournalChoice in '..\..\FormsBoat\Document\SendJournalChoice.pas' {SendJournalChoiceForm: TParentForm},
+  Report_PartnerDialog in '..\..\FormsBoat\Report\Report_PartnerDialog.pas' {Report_PartnerDialogForm: TParentForm},
+  Report_Partner in '..\..\FormsBoat\Report\Report_Partner.pas' {Report_PartnerForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
