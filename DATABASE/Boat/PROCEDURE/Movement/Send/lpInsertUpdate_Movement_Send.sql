@@ -43,10 +43,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN
@@ -64,6 +60,9 @@ BEGIN
          END IF;
      END IF;
 
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

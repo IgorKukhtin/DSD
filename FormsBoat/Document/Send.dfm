@@ -308,7 +308,7 @@ object SendForm: TSendForm
     end
     object cxLabel15: TcxLabel
       Left = 578
-      Top = 131
+      Top = 130
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' ***'#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072':'
       ParentShowHint = False
       ShowHint = True
@@ -327,7 +327,7 @@ object SendForm: TSendForm
     end
     object cxLabel17: TcxLabel
       Left = 270
-      Top = 131
+      Top = 130
       Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1040#1074#1090#1086'):'
     end
     object edOrderClient: TcxButtonEdit
@@ -344,7 +344,7 @@ object SendForm: TSendForm
     end
     object cxLabel18: TcxLabel
       Left = 439
-      Top = 131
+      Top = 130
       Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit

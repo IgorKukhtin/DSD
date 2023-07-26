@@ -29,9 +29,7 @@ $BODY$BEGIN
    WHERE Object_ProfitLossDirection.DescId = zc_Object_ProfitLossDirection();
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ProfitLossDirection (TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 
 /*-------------------------------------------------------------------------------
@@ -42,4 +40,4 @@ ALTER FUNCTION gpSelect_Object_ProfitLossDirection (TVarChar) OWNER TO postgres;
 
 */
 -- тест
--- SELECT * FROM gpSelect_Object_ProfitLossDirection(True,'2')
+-- SELECT * FROM gpSelect_Object_ProfitLossDirection ('2')

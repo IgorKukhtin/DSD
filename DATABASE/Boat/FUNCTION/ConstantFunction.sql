@@ -55,6 +55,9 @@ CREATE OR REPLACE FUNCTION zc_PriceList_Basis() RETURNS Integer AS $BODY$BEGIN R
 -- CREATE OR REPLACE FUNCTION zc_Unit_Production() RETURNS Integer AS $BODY$BEGIN RETURN (33347); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- CREATE OR REPLACE FUNCTION zc_TaxKind_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (zc_Enum_TaxKind_Basis()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- Partner Official Tax - кому выставляем долг за НДС
+-- CREATE OR REPLACE FUNCTION zc_Partner_VAT() RETURNS Integer AS $BODY$BEGIN RETURN (35138); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 */
 
 /*-------------------------------------------------------------------------------

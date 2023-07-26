@@ -47,10 +47,12 @@ BEGIN
                                           ) ON COMMIT DROP;
          -- таблица - ЗП
          CREATE TEMP TABLE _tmpItem_Detail (MovementItemId Integer, ParentId Integer
-                                          , ReceiptServiceId Integer, PersonalId Integer
-                                          , ContainerId_Summ Integer
-                                          , AccountId Integer
+                                          , ReceiptServiceId Integer, PersonalId Integer, PartnerId Integer
+                                          , ContainerId_Summ Integer, ContainerId_VAT Integer
+                                          , AccountId Integer, AccountId_VAT Integer
                                           , Amount TFloat
+                                          , OperSumm_VAT TFloat
+                                          , VATPercent TFloat
                                            ) ON COMMIT DROP;
 
      END IF;

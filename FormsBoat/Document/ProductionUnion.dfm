@@ -197,7 +197,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object cxLabel7: TcxLabel
       Left = 442
-      Top = 40
+      Top = 45
       Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit
@@ -213,7 +213,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 624
-      Top = 61
+      Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
