@@ -38,6 +38,9 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           object DescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'DescName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object UnitName: TcxGridDBColumn
@@ -50,8 +53,18 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Width = 176
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
+            Caption = #1055#1072#1088#1090#1080#1103' ('#8470' '#1076#1086#1082'.)'
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082' '#1087#1072#1088#1090#1080#1080
+            Options.Editing = False
+            Width = 147
+          end
+          object InvNumberFull: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'InvNumberFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082' '#1087#1072#1088#1090#1080#1080
@@ -655,11 +668,11 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   end
   inherited MasterDS: TDataSource
     Left = 64
-    Top = 98
+    Top = 130
   end
   inherited MasterCDS: TClientDataSet
     Left = 24
-    Top = 98
+    Top = 130
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionGoods'
@@ -688,8 +701,8 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 82
+    Left = 152
+    Top = 258
   end
   inherited BarManager: TdxBarManager
     Left = 224
