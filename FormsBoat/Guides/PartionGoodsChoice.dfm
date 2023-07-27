@@ -9,22 +9,22 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 60
+    Top = 96
     Width = 853
-    Height = 339
-    ExplicitTop = 57
+    Height = 303
+    ExplicitTop = 96
     ExplicitWidth = 853
-    ExplicitHeight = 342
-    ClientRectBottom = 339
+    ExplicitHeight = 303
+    ClientRectBottom = 303
     ClientRectRight = 853
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 853
-      ExplicitHeight = 342
+      ExplicitHeight = 303
       inherited cxGrid: TcxGrid
         Width = 853
-        Height = 339
+        Height = 303
         ExplicitWidth = 853
-        ExplicitHeight = 342
+        ExplicitHeight = 303
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -54,6 +54,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082' '#1087#1072#1088#1090#1080#1080
             Options.Editing = False
             Width = 147
           end
@@ -138,6 +139,13 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderGlyphAlignmentVert = vaTop
+            Width = 60
+          end
+          object Remains: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090'.'
+            DataBinding.FieldName = 'Remains'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object EKPrice: TcxGridDBColumn
@@ -280,7 +288,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Left = 0
     Top = 0
     Width = 853
-    Height = 34
+    Height = 70
     Align = alTop
     TabOrder = 5
     object edGoods: TcxButtonEdit
@@ -295,9 +303,72 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       Width = 300
     end
     object cxLabel3: TcxLabel
-      Left = 393
+      Left = 389
       Top = 7
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
+    end
+    object lbSearchArticle: TcxLabel
+      Left = 3
+      Top = 41
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchArticle: TcxTextEdit
+      Left = 131
+      Top = 40
+      TabOrder = 3
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
+    object lbSearchCode: TcxLabel
+      Left = 268
+      Top = 42
+      Caption = 'Interne Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCode: TcxTextEdit
+      Left = 357
+      Top = 40
+      TabOrder = 5
+      DesignSize = (
+        115
+        21)
+      Width = 115
+    end
+    object lbSearchName: TcxLabel
+      Left = 478
+      Top = 42
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 564
+      Top = 42
+      TabOrder = 7
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object cxLabel1: TcxLabel [2]
@@ -541,13 +612,39 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         end>
       isShowModal = False
     end
+    object dsdChoiceGuides1: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
-    Left = 72
-    Top = 82
+    Left = 64
+    Top = 98
   end
   inherited MasterCDS: TClientDataSet
-    Top = 82
+    Left = 24
+    Top = 98
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionGoods'
@@ -580,8 +677,8 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Top = 82
   end
   inherited BarManager: TdxBarManager
-    Left = 168
-    Top = 82
+    Left = 224
+    Top = 122
     DockControlHeights = (
       0
       0
@@ -724,11 +821,11 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TStoragePlace_ObjectForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStoragePlace_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -761,7 +858,29 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       item
         Component = GoodsGuides
       end>
-    Left = 512
-    Top = 328
+    Left = 344
+    Top = 224
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article
+    ColumnList = <
+      item
+        Column = Article
+        TextEdit = edSearchArticle
+      end
+      item
+        Column = GoodsCode
+        TextEdit = edSearchCode
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchName
+      end>
+    ActionNumber1 = dsdChoiceGuides1
+    CheckBoxList = <>
+    Left = 576
+    Top = 200
   end
 end

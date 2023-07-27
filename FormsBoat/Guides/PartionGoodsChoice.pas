@@ -48,6 +48,14 @@ type
     DescName: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    lbSearchCode: TcxLabel;
+    edSearchCode: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    dsdChoiceGuides1: TdsdChoiceGuides;
   private
     { Private declarations }
   public

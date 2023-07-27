@@ -1809,8 +1809,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 120
+    Left = 424
+    Top = 192
   end
   object FormParams: TdsdFormParams
     Params = <

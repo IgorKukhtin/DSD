@@ -191,12 +191,12 @@ BEGIN
             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpObject_PartionGoods.MovementId_orderclient
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                          ON MovementLinkObject_From.MovementId = MovementItem.MovementId_OrderClient
+                                          ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
              LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                          ON MovementLinkObject_Product.MovementId = MovementItem.MovementId_OrderClient
+                                          ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
                                          AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
              LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId  
 

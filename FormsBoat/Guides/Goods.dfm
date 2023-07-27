@@ -725,8 +725,8 @@ object GoodsForm: TGoodsForm
       Width = 125
     end
     object lbSearchArticle: TcxLabel
-      Left = 8
-      Top = 6
+      Left = 3
+      Top = 5
       Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
