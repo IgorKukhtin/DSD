@@ -263,6 +263,11 @@ type
     cxLabel18: TcxLabel;
     edInvNumberInvoice: TcxTextEdit;
     isReceiptGoods: TcxGridDBColumn;
+    actPartionGoodsAssetChoiceForm: TOpenChoiceForm;
+    actInsertRecordAsset: TInsertRecord;
+    macInsertRecordAsset: TMultiAction;
+    bb: TdxBarButton;
+    bbb: TdxBarButton;
   private
   public
   end;

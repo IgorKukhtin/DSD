@@ -510,6 +510,21 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           ComponentItem = 'PartnerName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction

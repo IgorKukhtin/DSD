@@ -1106,6 +1106,19 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbb'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErasedChild'
         end
         item
@@ -1483,6 +1496,14 @@ object SendForm: TSendForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bb: TdxBarButton
+      Action = macInsertRecordAsset
+      Category = 0
+    end
+    object bbb: TdxBarButton
+      Action = actPartionGoodsAssetChoiceForm
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1576,6 +1597,9 @@ object SendForm: TSendForm
         end
         item
           StoredProc = spBarcode_null
+        end
+        item
+          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -3206,6 +3230,123 @@ object SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
+      Category = 'Partion'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
+      ImageIndex = 1
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertRecordAsset: TInsertRecord
+      Category = 'Partion'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPartionGoodsAssetChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
+      ImageIndex = 0
+    end
+    object macInsertRecordAsset: TMultiAction
+      Category = 'Partion'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertRecordAsset
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
+      ImageIndex = 0
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4398,7 +4539,7 @@ object SendForm: TSendForm
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 280
-    Top = 192
+    Top = 224
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -4587,6 +4728,6 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 336
-    Top = 144
+    Top = 136
   end
 end
