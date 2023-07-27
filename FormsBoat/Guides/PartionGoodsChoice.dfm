@@ -9,20 +9,20 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
+    Top = 60
     Width = 853
-    Height = 342
+    Height = 339
     ExplicitTop = 57
     ExplicitWidth = 853
     ExplicitHeight = 342
-    ClientRectBottom = 342
+    ClientRectBottom = 339
     ClientRectRight = 853
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 853
       ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 853
-        Height = 342
+        Height = 339
         ExplicitWidth = 853
         ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -35,12 +35,18 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object DescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'DescName'
+            Width = 70
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 176
           end
           object InvNumber: TcxGridDBColumn
@@ -212,6 +218,51 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 86
           end
+          object FromName_OrderClient: TcxGridDBColumn
+            Caption = 'Kunden'
+            DataBinding.FieldName = 'FromName_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 120
+          end
+          object InvNumberFull_OrderClient: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 112
+          end
+          object ProductName_OrderClient: TcxGridDBColumn
+            Caption = 'Boat'
+            DataBinding.FieldName = 'ProductName_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 110
+          end
+          object CIN_OrderClient: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'CIN_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object ModelName_OrderClient: TcxGridDBColumn
+            Caption = 'Model'
+            DataBinding.FieldName = 'ModelName_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -229,7 +280,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Left = 0
     Top = 0
     Width = 853
-    Height = 31
+    Height = 34
     Align = alTop
     TabOrder = 5
     object edGoods: TcxButtonEdit
@@ -409,6 +460,87 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actReport_Goods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -479,6 +611,18 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -499,6 +643,10 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end

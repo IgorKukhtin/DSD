@@ -39,7 +39,13 @@ RETURNS TABLE (Id  Integer
              , OperPrice_cost TFloat
              , OperPriceList  TFloat
              , Amount_in TFloat
-             , isErased Boolean
+             , Remains TFloat
+             , isErased Boolean   
+             , MovementId_OrderClient Integer
+             , InvNumberFull_OrderClient TVarChar
+             , FromId_OrderClient Integer , FromName_OrderClient TVarChar
+             , ProductName_OrderClient TVarChar
+             , CIN_OrderClient TVarChar, ModelName_OrderClient TVarChar
               ) AS
 $BODY$
 BEGIN
@@ -57,14 +63,54 @@ BEGIN
                        WHERE (tmp.GoodsId = inGoodsId OR inGoodsId = 0)
                        )
 
-   , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.*
+   , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.MovementId
+                                     , Object_PartionGoods.MovementItemId
+                                     , Object_PartionGoods.UnitId
+                                     , Object_PartionGoods.FromId
+                                     , Object_PartionGoods.ObjectId
+                                     , Object_PartionGoods.GoodsGroupId
+                                     , Object_PartionGoods.MeasureId
+                                     , Object_PartionGoods.GoodsTagId
+                                     , Object_PartionGoods.GoodsTypeId
+                                     , Object_PartionGoods.ProdColorId
+                                     , Object_PartionGoods.TaxKindId
+                                     , Object_PartionGoods.GoodsSizeId
+                                     , Object_PartionGoods.CountForPrice
+                                     , Object_PartionGoods.EKPrice
+                                     , Object_PartionGoods.CostPrice
+                                     , Object_PartionGoods.OperPriceList
+                                     , Object_PartionGoods.isErased
+                                     , SUM (COALESCE (Container.Amount, 0)) AS Remains
+                                     , MIFloat_MovementId.ValueData ::Integer AS MovementId_orderclient
                                 FROM Object_PartionGoods
                                      JOIN Container ON Container.PartionId      = Object_PartionGoods.MovementItemId
                                                    AND Container.DescId         = zc_Container_Count()
                                                    AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
-                                                   AND (Container.Amount        <> 0 OR inShowAll = TRUE)
+                                                   AND (Container.Amount        <> 0 OR inShowAll = TRUE)  
+                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                 ON MIFloat_MovementId.MovementItemId = Object_PartionGoods.MovementItemId
+                                                                AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId() 
                                 WHERE (Object_PartionGoods.ObjectId = inGoodsId OR inGoodsId = 0)
+                                GROUP BY Object_PartionGoods.MovementId
+                                       , Object_PartionGoods.MovementItemId
+                                       , Object_PartionGoods.UnitId
+                                       , Object_PartionGoods.FromId
+                                       , Object_PartionGoods.ObjectId
+                                       , Object_PartionGoods.GoodsGroupId
+                                       , Object_PartionGoods.MeasureId
+                                       , Object_PartionGoods.GoodsTagId
+                                       , Object_PartionGoods.GoodsTypeId
+                                       , Object_PartionGoods.ProdColorId
+                                       , Object_PartionGoods.TaxKindId
+                                       , Object_PartionGoods.GoodsSizeId
+                                       , Object_PartionGoods.CountForPrice
+                                       , Object_PartionGoods.EKPrice
+                                       , Object_PartionGoods.CostPrice
+                                       , Object_PartionGoods.OperPriceList
+                                       , Object_PartionGoods.isErased
+                                       , MIFloat_MovementId.ValueData
                                )
+
      -- Результат
      SELECT  tmpObject_PartionGoods.MovementItemId AS Id
            , tmpObject_PartionGoods.MovementId AS MovementId
@@ -101,8 +147,16 @@ BEGIN
            , (tmpObject_PartionGoods.EKPrice / tmpObject_PartionGoods.CountForPrice + COALESCE (tmpObject_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
            , COALESCE (tmpPriceBasis.ValuePrice, tmpObject_PartionGoods.OperPriceList) AS OperPriceList
            , CASE WHEN MovementItem.isErased = FALSE AND Movement_Partion.StatusId = zc_Enum_Status_Complete() THEN MovementItem.Amount ELSE 0 END :: TFloat AS Amount_in
+           , tmpObject_PartionGoods.Remains       ::TFloat
            , tmpObject_PartionGoods.isErased
- 
+
+           , Movement_OrderClient.Id              AS MovementId_OrderClient
+           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) ::TVarChar AS InvNumberFull_OrderClient
+           , Object_From.Id                       AS FromId_OrderClient 
+           , Object_From.ValueData    ::TVarChar  AS FromName_OrderClient 
+           , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) ::TVarChar AS ProductName_OrderClient
+           , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased)::TVarChar AS CIN_OrderClient
+           , Object_Model.ValueData   ::TVarChar  AS ModelName_OrderClient
      FROM tmpObject_PartionGoods
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpObject_PartionGoods.UnitId
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpObject_PartionGoods.FromId
@@ -133,6 +187,28 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_PartNumber
                                          ON MIString_PartNumber.MovementItemId = tmpObject_PartionGoods.MovementItemId
                                         AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                        
+            LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpObject_PartionGoods.MovementId_orderclient
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = MovementItem.MovementId_OrderClient
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                          ON MovementLinkObject_Product.MovementId = MovementItem.MovementId_OrderClient
+                                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+             LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId  
+
+             LEFT JOIN ObjectString AS ObjectString_CIN
+                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                   AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Model
+                                  ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
+             LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+
 ;
 
   

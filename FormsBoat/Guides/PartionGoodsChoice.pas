@@ -45,6 +45,9 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     GoodsCode: TcxGridDBColumn;
     Article: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public
