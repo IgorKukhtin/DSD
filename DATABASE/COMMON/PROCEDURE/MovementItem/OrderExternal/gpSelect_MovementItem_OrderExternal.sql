@@ -794,10 +794,14 @@ BEGIN
                                                     AND MovementItem.isErased   = tmpIsErased.isErased
                         )
           , tmpMI_LO AS (SELECT MovementItemLinkObject.*
-                         FROM MovementItemLinkObject
-                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
-                           AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                         )
+                         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                              INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = tmpIsErased.isErased
+                              LEFT JOIN MovementItemLinkObject
+                                     ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                        )
 
           , tmpMI_Float AS (SELECT MovementItemFloat.*
                             FROM MovementItemFloat

@@ -21,6 +21,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId_Promo Integer;
    DECLARE vbOperDate_StartBegin TDateTime;
+   DECLARE vbPartnerId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      IF EXISTS (SELECT 1
@@ -42,6 +43,9 @@ BEGIN
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
+      --
+      vbPartnerId:= (SELECT CASE WHEN Object.DescId = zc_Object_Unit() THEN 0 ELSE MLO.ObjectId END FROM MovementLinkObject AS MLO LEFT JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+
      -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order
      IF EXISTS (SELECT 1
                 FROM MovementLinkObject AS MLO
@@ -58,6 +62,22 @@ AND NOT EXISTS (SELECT 1
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId = zc_MovementLinkObject_From()
                )
+AND (NOT EXISTS (SELECT 1
+                 FROM ObjectLink AS OL
+                      INNER JOIN ObjectLink AS OL_Juridical_Retail
+                                            ON OL_Juridical_Retail.ObjectId = OL.ChildObjectId 
+                                           AND OL_Juridical_Retail.DescId   =  zc_ObjectLink_Juridical_Retail()
+                                           AND OL_Juridical_Retail.ChildObjectId = 310854 -- Фоззі
+                 WHERE OL.ObjectId   = vbPartnerId
+                   AND OL.DescId     = zc_ObjectLink_Partner_Juridical()
+                   AND inGoodsId     = 9505524 -- 457 - Сосиски ФІЛЕЙКИ вар 1 ґ ТМ Наші Ковбаси
+                   AND inGoodsKindId = 8344    -- Б/В 0,5кг
+                )
+     OR (vbPartnerId = 0
+     AND inGoodsId     = 9505524 -- 457 - Сосиски ФІЛЕЙКИ вар 1 ґ ТМ Наші Ковбаси
+     AND inGoodsKindId = 8344    -- Б/В 0,5кг
+        )
+    )
 -- AND vbUserId = 5
      THEN
          -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка

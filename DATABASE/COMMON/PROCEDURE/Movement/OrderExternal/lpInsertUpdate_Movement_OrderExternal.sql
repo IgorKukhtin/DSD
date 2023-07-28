@@ -114,8 +114,14 @@ BEGIN
                       );
 
          -- Нашли
-         vbMovementId_CarInfo:= (SELECT MIN (Movement.Id)
-                                 FROM Movement
+         vbMovementId_CarInfo:= (WITH tmpMovement AS (SELECT * FROM Movement
+                                                      WHERE Movement.OperDate = inOperDate
+                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                        AND Movement.DescId   = zc_Movement_OrderExternal()
+                                                     )
+                                 --
+                                 SELECT MIN (Movement.Id)
+                                 FROM tmpMovement AS Movement
                                       -- Склад такой же
                                       INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                     ON MovementLinkObject_To.MovementId = Movement.Id

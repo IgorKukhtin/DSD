@@ -40,22 +40,22 @@ BEGIN
                 FROM MovementLinkObject AS MLO 
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId = zc_MovementLinkObject_To()
-                  AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_test AS tt)
+                  AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_two AS tt WHERE 1=0)
                ) 
      THEN   
          -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
          IF NOT EXISTS (SELECT 1
                         FROM ObjectBoolean AS ObjectBoolean_Order
-                             LEFT JOIN ObjectBoolean AS ObjectBoolean_NotMobile
-                                                     ON ObjectBoolean_NotMobile.ObjectId = ObjectBoolean_Order.ObjectId
-                                                    AND ObjectBoolean_NotMobile.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile
-                                                    AND ObjectBoolean_NotMobile.ValueData = TRUE
+                             --LEFT JOIN ObjectBoolean AS ObjectBoolean_NotMobile
+                             --                        ON ObjectBoolean_NotMobile.ObjectId = ObjectBoolean_Order.ObjectId
+                             --                       AND ObjectBoolean_NotMobile.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile
+                             --                       AND ObjectBoolean_NotMobile.ValueData = TRUE
                              INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
                         WHERE ObjectBoolean_Order.ValueData = TRUE
                           AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                           AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
                           AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
-                          AND ObjectBoolean_NotMobile.ObjectId IS 
+                          --AND ObjectBoolean_NotMobile.ObjectId IS 
                         )  
               AND EXISTS (SELECT 1 FROM ObjectLink AS OL
                                    WHERE OL.ObjectId = inGoodsId

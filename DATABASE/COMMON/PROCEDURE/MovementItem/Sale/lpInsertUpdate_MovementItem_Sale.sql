@@ -51,6 +51,9 @@ $BODY$
    DECLARE vbGoodsRealId Integer;
 BEGIN
 
+     -- Контрагент
+     vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
+
      -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order
      IF EXISTS (SELECT 1
                 FROM MovementLinkObject AS MLO
@@ -86,6 +89,17 @@ AND NOT EXISTS (SELECT 1
                                                              , zc_Enum_InfoMoney_20901() -- Ирна
                                                               )
                           )
+               AND NOT EXISTS (SELECT 1
+                               FROM ObjectLink AS OL
+                                    INNER JOIN ObjectLink AS OL_Juridical_Retail
+                                                          ON OL_Juridical_Retail.ObjectId = OL.ChildObjectId 
+                                                         AND OL_Juridical_Retail.DescId   =  zc_ObjectLink_Juridical_Retail()
+                                                         AND OL_Juridical_Retail.ChildObjectId = 310854 -- Фоззі
+                               WHERE OL.ObjectId   = vbPartnerId
+                                 AND OL.DescId     = zc_ObjectLink_Partner_Juridical()
+                                 AND inGoodsId     = 9505524 -- 457 - Сосиски ФІЛЕЙКИ вар 1 ґ ТМ Наші Ковбаси
+                                 AND inGoodsKindId = 8344    -- Б/В 0,5кг
+                              )
          THEN
             --RAISE EXCEPTION 'Ошибка.У товара <%>%<%>%не установлено свойство <Используется в заявках>=Да.% % № % от % % %'
               RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.'
@@ -189,8 +203,6 @@ AND NOT EXISTS (SELECT 1
 
      -- Заявка
      vbMovementId_Order:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order());
-     -- Контрагент
-     vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
      -- параметры акции
