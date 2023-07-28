@@ -28,7 +28,7 @@ uses
 
 type
   TReport_PartnerForm = class(TAncestorReportForm)
-    AccountName: TcxGridDBColumn;
+    AccountName_all: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     StartAmount: TcxGridDBColumn;
@@ -71,6 +71,8 @@ type
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;
     cePartner: TcxButtonEdit;
+    actOpenReport_CollationByPartner: TdsdOpenForm;
+    bbOpenReport_CollationByPartner: TdxBarButton;
   private
     { Private declarations }
   public

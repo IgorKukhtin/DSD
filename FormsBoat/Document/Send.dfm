@@ -3256,14 +3256,14 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitId'
+          Name = 'inUnitId'
           Value = ''
           Component = GuidesFrom
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'inUnitName'
           Value = ''
           Component = GuidesFrom
           ComponentItem = 'TextValue'
@@ -3292,6 +3292,7 @@ object SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item

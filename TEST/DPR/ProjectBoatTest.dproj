@@ -1246,6 +1246,14 @@
 				<Form>Report_PartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_CollationByPartner.pas">
+				<Form>Report_CollationByPartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_CollationByPartnerDialog.pas">
+				<Form>Report_CollationByPartnerDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
