@@ -1,25 +1,33 @@
 -- Function: gpReport_JuridicalCollation()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CollationByPartner (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
-    IN inStartDate    TDateTime,
-    IN inEndDate      TDateTime,
-    IN inPartnerId    Integer,
-    IN insession      TVarChar)
+    IN inStartDate          TDateTime,
+    IN inEndDate            TDateTime,
+    IN inPartnerId          Integer,
+    IN inInfoMoneyId        Integer,    -- ”правленческа€ стать€
+    IN inAccountId          Integer,    -- счет         
+    IN insession            TVarChar
+    )
 RETURNS TABLE(
               MovementSumm TFloat
             , StartRemains TFloat
             , EndRemains TFloat
             , Debet TFloat
             , Kredit TFloat
-            , movementid Integer
+            , MovementId Integer
             , OperDate TDateTime
             , InvNumber TVarChar
             , ItemName TVarChar
-            , Operationsort Integer
+            , OperationSort Integer
             , FromId Integer, FromName TVarChar
             , ToId Integer, ToName TVarChar
+            , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+            , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+            , AccountName_all TVarChar
             )
 AS
 $BODY$
@@ -47,8 +55,10 @@ BEGIN
                                                          ON CLO_InfoMoney.ContainerId = Container.Id
                                                         AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
 
-                      WHERE CLO_Partner.DescId IN (zc_ContainerLinkObject_Partner(), zc_ContainerLinkObject_Client())
+                      WHERE CLO_Partner.DescId IN (zc_ContainerLinkObject_Partner())    --, zc_ContainerLinkObject_Client()
                         AND CLO_Partner.ObjectId = inPartnerId
+                        AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
+                        AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                       )
 
         SELECT 
@@ -75,9 +85,17 @@ BEGIN
           , Object_To.Id                                   AS ToId
           , Object_To.ValueData                            AS ToName
 
+          , Object_InfoMoney_View.InfoMoneyGroupName
+          , Object_InfoMoney_View.InfoMoneyDestinationName
+          , Object_InfoMoney_View.InfoMoneyCode
+          , Object_InfoMoney_View.InfoMoneyName
+          , Object_InfoMoney_View.InfoMoneyName_all
+          , Object_Account_View.AccountName_all
         FROM
            (SELECT tmpContainer.MovementId
                  , tmpContainer.OperDate
+                 , tmpContainer.InfoMoneyId
+                 , tmpContainer.AccountId
                  , SUM (tmpContainer.MovementSumm) AS MovementSumm
                  , 0 AS Informative
                  , 0 AS StartSumm
@@ -85,7 +103,9 @@ BEGIN
                  , 0 AS OperationSort
             FROM -- движение
                (SELECT MIContainer.MovementId
-                     , MIContainer.OperDate
+                     , MIContainer.OperDate 
+                     , tmpContainer.InfoMoneyId
+                     , tmpContainer.AccountId
                      , SUM (MIContainer.Amount) AS MovementSumm
                 FROM tmpContainer
                     INNER JOIN MovementItemContainer AS MIContainer
@@ -96,9 +116,13 @@ BEGIN
                ) AS tmpContainer
            GROUP BY tmpContainer.MovementId
                   , tmpContainer.OperDate
+                  , tmpContainer.InfoMoneyId
+                  , tmpContainer.AccountId
           UNION ALL
            SELECT 0 AS MovementId
                 , NULL :: TDateTime AS OperDate
+                , tmpRemains.InfoMoneyId
+                , tmpRemains.AccountId
                 , 0 AS MovementSumm
                 , 0 AS Informative
                 , SUM (tmpRemains.StartSumm) AS StartSumm
@@ -106,12 +130,16 @@ BEGIN
                 , -1 AS OperationSort
            FROM  -- 2.1. остаток
                 (SELECT tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS StartSumm
-                      , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndSumm
+                      , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndSumm 
+                      , tmpContainer.InfoMoneyId
+                      , tmpContainer.AccountId
                  FROM tmpContainer
                       LEFT JOIN MovementItemContainer AS MIContainer 
                                                       ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                      AND MIContainer.OperDate >= inStartDate
                  GROUP BY tmpContainer.ContainerId, tmpContainer.Amount
+                        , tmpContainer.InfoMoneyId
+                        , tmpContainer.AccountId
                 ) AS tmpRemains
            HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
           ) AS Operation
@@ -127,7 +155,10 @@ BEGIN
       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                    ON MovementLinkObject_To.MovementId = Movement.Id 
                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()                                        
-      LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+      LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId 
+
+      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
+      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
       
   ORDER BY Operation.OperationSort;
                                   
@@ -141,4 +172,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_JuridicalCollation(inStartDate := ('01.11.2021')::TDateTime , inEndDate := ('12.11.2023')::TDateTime , inPartnerId := 254236 , inSession := '3');
+-- select * from gpReport_JuridicalCollation(inStartDate := ('01.11.2021')::TDateTime , inEndDate := ('12.11.2023')::TDateTime , inPartnerId := 254236 , inInfoMoneyId:=0, inAccountId:=0, inSession := '3');

@@ -120,7 +120,7 @@ type
     actReport_MotionByClient: TdsdOpenForm;
     miReport_MotionByPartner: TMenuItem;
     miProduction: TMenuItem;
-    actReport_CollationByClient: TdsdOpenForm;
+    actReport_CollationByPartner: TdsdOpenForm;
     miReport_CollationByPartner: TMenuItem;
     miReport_SaleOLAP: TMenuItem;
     actReport_SaleOLAP: TdsdOpenForm;

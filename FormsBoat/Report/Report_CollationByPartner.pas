@@ -1,4 +1,4 @@
-unit Report_JuridicalCollation;
+unit Report_CollationByPartner;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_JuridicalCollationForm = class(TAncestorReportForm)
+  TReport_CollationByPartnerForm = class(TAncestorReportForm)
     ItemName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     Debet: TcxGridDBColumn;
@@ -35,9 +35,6 @@ type
     OperDate: TcxGridDBColumn;
     actPrintOfficial: TdsdPrintAction;
     bbPrintOfficial: TdxBarButton;
-    cxLabel6: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
     actOpenForm: TdsdOpenForm;
@@ -45,7 +42,6 @@ type
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     AccountName: TcxGridDBColumn;
-    ContractName: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     InfoMoneyGroupCode: TcxGridDBColumn;
@@ -61,17 +57,10 @@ type
     cxLabel4: TcxLabel;
     edAccount: TcxButtonEdit;
     GuidesAccount: TdsdGuides;
-    cxLabel8: TcxLabel;
-    ceContract: TcxButtonEdit;
-    GuidesContract: TdsdGuides;
     StartRemains: TcxGridDBColumn;
     EndRemains: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
-    PaidKindName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
-    cxLabel5: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    GuidesPaidKind: TdsdGuides;
     cxLabel7: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
@@ -79,40 +68,20 @@ type
     bbPrintTurnover: TdxBarButton;
     MovementSumm: TcxGridDBColumn;
     OperationSort: TcxGridDBColumn;
-    InvNumberPartner: TcxGridDBColumn;
-    ContractComment: TcxGridDBColumn;
-    cxLabel10: TcxLabel;
-    edCurrency: TcxButtonEdit;
-    GuidesCurrency: TdsdGuides;
-    Debet_Currency: TcxGridDBColumn;
-    Kredit_Currency: TcxGridDBColumn;
-    StartRemains_Currency: TcxGridDBColumn;
-    EndRemains_Currency: TcxGridDBColumn;
-    MovementSumm_Currency: TcxGridDBColumn;
-    CurrencyName: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
-    cxLabel9: TcxLabel;
-    GuidesSaleChoice: TdsdGuides;
-    edInvNumberSale: TcxButtonEdit;
-    PartionMovementName: TcxGridDBColumn;
-    PaymentDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     MovementComment: TcxGridDBColumn;
     macPrint: TMultiAction;
     actSPSaveObject: TdsdExecStoredProc;
     spSavePrintObject: TdsdStoredProc;
-    cbIsInsert: TcxCheckBox;
     bbIsInsert: TdxBarControlContainerItem;
     macPrintOfficial: TMultiAction;
     macPrintCurrency: TMultiAction;
-    InvNumber_Transport: TcxGridDBColumn;
     bbIsUpdate: TdxBarControlContainerItem;
-    cbIsUpdate: TcxCheckBox;
     actOpenProtocol: TdsdOpenForm;
     bbOpenProtocol: TdxBarButton;
-    BranchName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
@@ -127,6 +96,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_JuridicalCollationForm)
+  RegisterClass(TReport_CollationByPartnerForm)
 
 end.

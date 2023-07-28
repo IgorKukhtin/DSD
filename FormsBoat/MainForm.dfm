@@ -446,12 +446,12 @@
         end>
       isShowModal = False
     end
-    object actReport_CollationByClient: TdsdOpenForm [37]
+    object actReport_CollationByPartner: TdsdOpenForm [37]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
-      FormName = 'TReport_CollationByClientForm'
-      FormNameParam.Value = 'TReport_CollationByClientForm'
+      FormName = 'TReport_CollationByPartnerForm'
+      FormNameParam.Value = 'TReport_CollationByPartnerForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1464,8 +1464,7 @@
     object miReport_Finance: TMenuItem [7]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       object miReport_CollationByPartner: TMenuItem
-        Action = actReport_CollationByClient
-        Enabled = False
+        Action = actReport_CollationByPartner
       end
       object miReport_Cash: TMenuItem
         Action = actReport_Cash

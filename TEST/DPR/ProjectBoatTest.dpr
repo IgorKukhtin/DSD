@@ -365,7 +365,9 @@ uses
   EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
   SendJournalChoice in '..\..\FormsBoat\Document\SendJournalChoice.pas' {SendJournalChoiceForm: TParentForm},
   Report_PartnerDialog in '..\..\FormsBoat\Report\Report_PartnerDialog.pas' {Report_PartnerDialogForm: TParentForm},
-  Report_Partner in '..\..\FormsBoat\Report\Report_Partner.pas' {Report_PartnerForm: TParentForm};
+  Report_Partner in '..\..\FormsBoat\Report\Report_Partner.pas' {Report_PartnerForm: TParentForm},
+  Report_CollationByPartner in '..\..\FormsBoat\Report\Report_CollationByPartner.pas' {Report_CollationByPartnerForm: TParentForm},
+  Report_CollationByPartnerDialog in '..\..\FormsBoat\Report\Report_CollationByPartnerDialog.pas' {Report_CollationByPartnerDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

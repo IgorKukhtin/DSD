@@ -883,6 +883,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByPartnerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByPartnerDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerDialogForm'));

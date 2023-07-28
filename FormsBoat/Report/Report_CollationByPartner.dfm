@@ -1,30 +1,30 @@
-inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
+inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 423
-  ClientWidth = 1156
+  ClientWidth = 921
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1172
+  ExplicitWidth = 937
   ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1156
+    Width = 921
     Height = 343
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1156
+    ExplicitWidth = 921
     ExplicitHeight = 343
     ClientRectBottom = 343
-    ClientRectRight = 1156
+    ClientRectRight = 921
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1156
+      ExplicitWidth = 921
       ExplicitHeight = 343
       inherited cxGrid: TcxGrid
-        Width = 1156
+        Width = 921
         Height = 343
-        ExplicitWidth = 1156
+        ExplicitWidth = 921
         ExplicitHeight = 343
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -51,22 +51,18 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = StartRemains_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = Debet_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = Kredit_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = EndRemains_Currency
             end
             item
               Format = ',0.00##'
@@ -76,7 +72,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = MovementSumm_Currency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -118,22 +113,18 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = StartRemains_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = Debet_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = Kredit_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = EndRemains_Currency
             end
             item
               Format = ',0.00##'
@@ -143,7 +134,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = MovementSumm_Currency
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -171,14 +161,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             Width = 70
           end
-          object InvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'InvNumberPartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
           object MovementComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1080#1079' '#1076#1086#1082'.'
             DataBinding.FieldName = 'MovementComment'
@@ -192,70 +174,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object PartionMovementName: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'PartionMovementName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object PaymentDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaymentDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object InvNumber_Transport: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'InvNumber_Transport'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 61
-          end
-          object OperDate_Transport: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'OperDate_Transport'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 70
-          end
-          object CarName: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '#1055'.'#1083'.'
-            DataBinding.FieldName = 'CarName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 80
-          end
-          object PersonalDriverName: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1055'.'#1083'.'
-            DataBinding.FieldName = 'PersonalDriverName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
             Options.Editing = False
             Width = 70
           end
@@ -303,59 +221,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             Width = 80
           end
-          object StartRemains_Currency: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1040#1082#1090#1080#1074')'
-            DataBinding.FieldName = 'StartRemains_Currency'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object Debet_Currency: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1074' '#1074#1072#1083'. '
-            DataBinding.FieldName = 'Debet_Currency'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object Kredit_Currency: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1074' '#1074#1072#1083'. '
-            DataBinding.FieldName = 'Kredit_Currency'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object EndRemains_Currency: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1040#1082#1090#1080#1074')'
-            DataBinding.FieldName = 'EndRemains_Currency'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object CurrencyName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072
-            DataBinding.FieldName = 'CurrencyName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -379,82 +244,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
-          end
-          object BranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ContractStateKindCode: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractStateKindCode'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Alignment.Horz = taLeftJustify
-            Properties.Alignment.Vert = taVCenter
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = #1055#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 12
-                Value = 1
-              end
-              item
-                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 11
-                Value = 2
-              end
-              item
-                Description = #1047#1072#1074#1077#1088#1096#1077#1085
-                ImageIndex = 13
-                Value = 3
-              end
-              item
-                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-                ImageIndex = 66
-                Value = 4
-              end>
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object ContractCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object ContractName: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object ContractTagName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object ContractComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractComment'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
           object InfoMoneyGroupCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
@@ -529,17 +318,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             VisibleForCustomization = False
             Width = 55
           end
-          object MovementSumm_Currency: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1054#1073#1086#1088#1086#1090' '#1074' '#1074#1072#1083'. '
-            DataBinding.FieldName = 'MovementSumm_Currency'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 55
-          end
           object OperationSort: TcxGridDBColumn
             Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
             DataBinding.FieldName = 'OperationSort'
@@ -550,43 +328,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           end
         end
       end
-      object cbIsInsert: TcxCheckBox
-        Left = 85
-        Top = 13
-        Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1074#1080#1079#1099' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
-        Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1088#1077#1077#1089#1090#1088#1072' "'#1040#1082#1090#1099' '#1089#1074#1077#1088#1086#1082'"'
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 1
-        Width = 212
-      end
-      object cbIsUpdate: TcxCheckBox
-        Left = 351
-        Top = 13
-        Hint = #1044#1054#1041#1040#1042#1048#1058#1068' '#1074#1080#1079#1091' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
-        Caption = '+ '#1074#1080#1079#1091' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 2
-        Width = 191
-      end
     end
   end
   inherited Panel: TPanel
-    Width = 1156
+    Width = 921
     Height = 54
-    ExplicitWidth = 1156
+    ExplicitWidth = 921
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 43101d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 29
-      EditValue = 43101d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 29
@@ -601,13 +359,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ExplicitLeft = 6
       ExplicitTop = 30
     end
-    object cxLabel6: TcxLabel
-      Left = 207
+    object cxLabel3: TcxLabel
+      Left = 212
       Top = 6
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
     end
-    object edJuridical: TcxButtonEdit
-      Left = 314
+    object edPartner: TcxButtonEdit
+      Left = 283
       Top = 5
       Properties.Buttons = <
         item
@@ -616,16 +374,16 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 210
+      Width = 230
     end
-    object cxLabel3: TcxLabel
-      Left = 244
-      Top = 30
-      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
+    object cxLabel4: TcxLabel
+      Left = 528
+      Top = 6
+      Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
-    object edPartner: TcxButtonEdit
-      Left = 314
-      Top = 29
+    object edAccount: TcxButtonEdit
+      Left = 613
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -633,16 +391,16 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 210
+      Width = 180
     end
-    object cxLabel4: TcxLabel
-      Left = 568
-      Top = 6
-      Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
+    object cxLabel7: TcxLabel
+      Left = 209
+      Top = 30
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
-    object edAccount: TcxButtonEdit
-      Left = 653
-      Top = 5
+    object ceInfoMoney: TcxButtonEdit
+      Left = 333
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
@@ -652,108 +410,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       TabOrder = 9
       Width = 180
     end
-    object cxLabel8: TcxLabel
-      Left = 870
-      Top = 6
-      Caption = #1044#1086#1075#1086#1074#1086#1088':'
-    end
-    object ceContract: TcxButtonEdit
-      Left = 923
-      Top = 5
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 11
-      Width = 90
-    end
-    object cxLabel5: TcxLabel
-      Left = 840
-      Top = 30
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
-    end
-    object edPaidKind: TcxButtonEdit
-      Left = 923
-      Top = 29
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 13
-      Width = 90
-    end
-    object cxLabel7: TcxLabel
-      Left = 529
-      Top = 30
-      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
-    end
-    object ceInfoMoney: TcxButtonEdit
-      Left = 653
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 15
-      Width = 180
-    end
-    object cxLabel10: TcxLabel
-      Left = 1040
-      Top = 30
-      Caption = #1042#1072#1083#1102#1090#1072':'
-    end
-    object edCurrency: TcxButtonEdit
-      Left = 1089
-      Top = 29
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 17
-      Width = 150
-    end
-    object cxLabel9: TcxLabel
-      Left = 1024
-      Top = 6
-      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077':'
-    end
-    object edInvNumberSale: TcxButtonEdit
-      Left = 1089
-      Top = 5
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 19
-      Width = 150
-    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
         Component = GuidesAccount
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesContract
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesCurrency
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -775,25 +436,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           'TextValue')
       end
       item
-        Component = GuidesJuridical
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesPaidKind
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
         Component = GuidesPartner
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesSaleChoice
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -909,8 +552,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1135,8 +776,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1381,8 +1020,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1601,8 +1238,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1743,11 +1378,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1077#1089#1090#1088#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1077#1089#1090#1088#1072
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_JuridicalCollationDialogForm'
-      FormNameParam.Value = 'TReport_JuridicalCollationDialogForm'
+      FormName = 'TReport_CollationByPartnerDialogForm'
+      FormNameParam.Value = 'TReport_CollationByPartnerDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1805,16 +1440,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'JuridicalId'
           Value = ''
-          Component = GuidesJuridical
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = ''
-          Component = GuidesJuridical
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1839,32 +1470,24 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindId'
           Value = ''
-          Component = GuidesPaidKind
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = ''
-          Component = GuidesContract
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
           Value = ''
-          Component = GuidesContract
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1912,41 +1535,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPartnerId'
         Value = Null
         Component = GuidesPartner
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = ''
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAccountId'
-        Value = ''
-        Component = GuidesAccount
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = ''
-        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1960,19 +1551,36 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyId'
-        Value = Null
-        Component = GuidesCurrency
+        Name = 'inAccountId'
+        Value = ''
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Partion'
         Value = Null
-        Component = GuidesSaleChoice
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 192
@@ -2018,14 +1626,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
-          ItemName = 'bbIsInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbIsUpdate'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2039,14 +1639,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Visible = True
           ItemName = 'bbPrintOfficial'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintCurrency'
         end
         item
           Visible = True
@@ -2084,14 +1676,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     object bbPrintOfficial: TdxBarButton
       Action = macPrintOfficial
       Category = 0
+      Visible = ivNever
     end
     object bbPrint: TdxBarButton
       Action = macPrint
       Category = 0
+      Visible = ivNever
     end
     object bbPrintTurnover: TdxBarButton
       Action = actPrintTurnover
       Category = 0
+      Visible = ivNever
     end
     object bbPrintCurrency: TdxBarButton
       Action = macPrintCurrency
@@ -2106,14 +1701,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Category = 0
       Hint = #1047#1072#1087#1080#1089#1072#1090#1100' '#1086#1073#1098#1077#1082#1090
       Visible = ivAlways
-      Control = cbIsInsert
     end
     object bbIsUpdate: TdxBarControlContainerItem
       Caption = 'bbIsUpdate'
       Category = 0
       Hint = 'bbIsUpdate'
       Visible = ivAlways
-      Control = cbIsUpdate
     end
     object bbOpenProtocol: TdxBarButton
       Action = actOpenProtocol
@@ -2141,7 +1734,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PeriodChoice
       end
       item
-        Component = GuidesJuridical
       end
       item
         Component = GuidesPartner
@@ -2153,81 +1745,15 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = GuidesInfoMoney
       end
       item
-        Component = GuidesContract
       end
       item
-        Component = GuidesPaidKind
       end
       item
-        Component = GuidesCurrency
       end
       item
-        Component = GuidesSaleChoice
       end>
     Left = 384
     Top = 184
-  end
-  object GuidesJuridical: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = Null
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = Null
-        Component = GuidesContract
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerId'
-        Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerName'
-        Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 392
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -2256,19 +1782,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   end
   object FormParams: TdsdFormParams
     Params = <
-      item
-        Name = 'FormName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractSigningDate'
-        Value = 42005d
-        DataType = ftDateTime
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inStartDate'
         Value = Null
@@ -2320,23 +1833,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalName'
-        Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPartnerId'
         Value = Null
         Component = GuidesPartner
@@ -2348,57 +1844,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inPartnerName'
         Value = Null
         Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindName'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = Null
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractName'
-        Value = Null
-        Component = GuidesContract
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyId'
-        Value = Null
-        Component = GuidesCurrency
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyName'
-        Value = Null
-        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2431,8 +1876,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2447,8 +1890,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = GuidesContract
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2463,8 +1904,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2479,8 +1918,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inCurrencyId'
         Value = Null
-        Component = GuidesCurrency
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2611,10 +2048,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     KeyField = 'Id'
     LookupControl = edPartner
     Key = '0'
-    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartner_ObjectForm'
+    FormName = 'TPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -2637,16 +2074,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'JuridicalId'
         Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2654,28 +2087,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 24
+    Left = 384
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.Value = 'TAccountForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAccount_ObjectForm'
+    FormName = 'TAccountForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2698,129 +2126,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 720
     Top = 65528
   end
-  object GuidesContract: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceContract
-    FormNameParam.Value = 'TContractChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractChoiceForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesContract
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterJuridicalId'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterJuridicalName'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end>
-    Left = 944
-    Top = 65534
-  end
-  object GuidesPaidKind: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 952
-    Top = 40
-  end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
@@ -2828,100 +2133,25 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 768
-    Top = 13
-  end
-  object GuidesCurrency: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edCurrency
-    FormNameParam.Value = 'TCurrency_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCurrency_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesCurrency
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesCurrency
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 1120
-    Top = 48
-  end
-  object GuidesSaleChoice: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edInvNumberSale
-    Key = '0'
-    FormNameParam.Value = 'TSaleJournalChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TSaleJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
-        Value = '0'
-        Component = GuidesSaleChoice
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
         Value = ''
-        Component = GuidesSaleChoice
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesPartner
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerName'
+        Name = 'TextValue'
         Value = ''
-        Component = GuidesPartner
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 1172
+    Left = 448
+    Top = 21
   end
   object spSavePrintObject: TdsdStoredProc
     StoredProcName = 'gpInsert_Object_ReportCollation'
@@ -2947,8 +2177,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2963,16 +2191,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inContractId'
         Value = Null
-        Component = GuidesContract
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2987,7 +2211,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inIsInsert'
         Value = Null
-        Component = cbIsInsert
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2995,7 +2218,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inIsUpdate'
         Value = Null
-        Component = cbIsUpdate
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

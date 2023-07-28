@@ -1,4 +1,4 @@
-unit Report_JuridicalCollationDialog;
+unit Report_CollationByPartnerDialog;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_JuridicalCollationDialogForm = class(TParentForm)
+  TReport_CollationByPartnerDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -39,12 +39,9 @@ type
     cxLabel5: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
-    cxLabel1: TcxLabel;
-    edJuridical: TcxButtonEdit;
     cxLabel3: TcxLabel;
     edPartner: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    PartnerGuides: TdsdGuides;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public
@@ -56,6 +53,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_JuridicalCollationDialogForm);
+  RegisterClass(TReport_CollationByPartnerDialogForm);
 
 end.
