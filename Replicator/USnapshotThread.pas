@@ -149,6 +149,8 @@ begin
     UpdateStatus('Генерация запроса на вставку ..');
     FInsertQuery := GetInsertQuery(FCurrTable);
     if FInsertQuery.IsEmpty then
+    //xe-2
+    //if FInsertQuery = '' then
     begin
       ProcessError('Ошибка получения скрипта INSERT для '+ FCurrTable);
       Exit;
@@ -298,6 +300,8 @@ begin
     FInsertPart := FTempQuery.FieldByName('InsertPart').AsString;
     FValuesPart := FTempQuery.FieldByName('ValuesPart').AsString;
     if FInsertPart.IsEmpty or FValuesPart.IsEmpty then
+    //ex-2
+    //if (FInsertPart = '') or (FValuesPart = '') then
     begin
       ProcessError('Ошибка получения скрипта INSERT для '+ FCurrTable);
       Exit;
@@ -361,6 +365,8 @@ begin
       while not Terminated and not QSrc.Eof do
       begin
         if cBatch.IsEmpty then
+        //xe-2
+        //if cBatch = '' then
           cBatch := FInsertPart + ' VALUES '
         else
           cBatch := cBatch + ',';
@@ -421,7 +427,7 @@ procedure TSnapshotThread.CopyBlobRecords;
 var LastId: integer;
     QSrc, QDst: TZQuery;
     FHadValues: boolean;
-    A: TArray<string>;
+    A: TArray<string>;//xe-2
     I: integer;
     cSQL: string;
 var tmpDate:TDateTime;
@@ -441,14 +447,22 @@ begin
     A := FKeyFields.Split([','], TStringSplitOptions.ExcludeEmpty);
     cSQL := '';
     for I := 0 to Length(A) - 1 do
+    //xe-2
+    //if 1=0 then
     begin
-      if cSQL.IsEmpty  then
+      if cSQL.IsEmpty
+      //xe-2
+      //if cSQL = ''
+      then
         cSQL := ' WHERE '
       else
         cSQL := cSQL + ' AND ';
+      //
       cSQL := cSQL + A[I] + ' = :' + A[I];
     end;
     cSQL := 'SELECT * FROM '+ FCurrTable + sLineBreak + cSQL;
+    //xe-2
+    //+ ' WHERE objectid = :objectid AND descid = :descid';
     QDst.SQL.Text := cSQL;
 
     while not Terminated do
@@ -459,9 +473,10 @@ begin
       if FIsCompositeKey then
         QSrc.SQL.Text :=
           'SELECT * FROM '+ FCurrTable + sLineBreak +
-        //' where ObjectId > ' +
-          'ORDER BY '+ FKeyFields + sLineBreak +
-          'LIMIT '+ IntToStr(FSnapshotBlobSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount)
+//       ' where ObjectId >= 4634696 ' +
+//       ' where ObjectId >= 8387882 ' +
+         ' ORDER BY '+ FKeyFields + sLineBreak +
+         ' LIMIT '+ IntToStr(FSnapshotBlobSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount)
       else
       begin
         QSrc.SQL.Text :=
