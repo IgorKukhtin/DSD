@@ -28,7 +28,7 @@ uses
 
 type
   TReport_PartnerForm = class(TAncestorReportForm)
-    AccountName: TcxGridDBColumn;
+    AccountName_all: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     StartAmount: TcxGridDBColumn;

@@ -283,9 +283,9 @@ inherited Report_PartnerForm: TReport_PartnerForm
             VisibleForCustomization = False
             Width = 80
           end
-          object AccountName: TcxGridDBColumn
+          object AccountName_all: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
-            DataBinding.FieldName = 'AccountName'
+            DataBinding.FieldName = 'AccountName_all'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

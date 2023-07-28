@@ -93,7 +93,7 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyName
           , Object_InfoMoney_View.InfoMoneyName_all
           , Object_Account_View.AccountName_all
-          , (-1 * tmpOperation.StartAmount) :: TFloat  AS StartAmount
+          , tmpOperation.StartAmount        :: TFloat  AS StartAmount
           , tmpOperation.DebetSumm          :: TFloat  AS DebetSumm
           , tmpOperation.KreditSumm         :: TFloat  AS KreditSumm
           , tmpOperation.EndAmount          :: TFloat  AS EndAmount
