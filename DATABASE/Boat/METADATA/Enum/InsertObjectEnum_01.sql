@@ -217,7 +217,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_80401() RETURNS Integer AS $BODY$BE
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30101, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_30101');
      
      -- Общефирменные + услуги полученные + Прочие услуги, работы
-     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50501, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20707');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20707, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20707');
 
      -- Расчеты Налоги + НДС
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50501, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_50501');

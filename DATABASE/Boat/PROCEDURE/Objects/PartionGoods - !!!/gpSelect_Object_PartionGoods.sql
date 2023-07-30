@@ -33,14 +33,17 @@ RETURNS TABLE (Id  Integer
              , TaxKindName TVarChar
              , GoodsSizeName TVarChar
              
-             , EKPrice TFloat
-             , CountForPrice TFloat
-             , CostPrice     TFloat
-             , OperPrice_cost TFloat
-             , OperPriceList  TFloat
+             , EKPrice          TFloat
+             , EKPrice_orig     TFloat
+             , EKPrice_discount TFloat
+             , CountForPrice    TFloat
+             , CostPrice        TFloat
+             , OperPriceList     TFloat
+
              , Amount_in TFloat
-             , Remains TFloat
-             , isErased Boolean   
+             , Remains   TFloat
+             , isErased  Boolean   
+
              , MovementId_OrderClient Integer
              , InvNumberFull_OrderClient TVarChar
              , FromId_OrderClient Integer , FromName_OrderClient TVarChar
@@ -77,11 +80,14 @@ BEGIN
                                      , Object_PartionGoods.GoodsSizeId
                                      , Object_PartionGoods.CountForPrice
                                      , Object_PartionGoods.EKPrice
+                                     , Object_PartionGoods.EKPrice_orig
+                                     , Object_PartionGoods.EKPrice_discount
                                      , Object_PartionGoods.CostPrice
                                      , Object_PartionGoods.OperPriceList
                                      , Object_PartionGoods.isErased
                                      , SUM (COALESCE (Container.Amount, 0)) AS Remains
                                      , MIFloat_MovementId.ValueData ::Integer AS MovementId_orderclient
+                                     , Container.WhereObjectId
                                 FROM Object_PartionGoods
                                      JOIN Container ON Container.PartionId      = Object_PartionGoods.MovementItemId
                                                    AND Container.DescId         = zc_Container_Count()
@@ -109,6 +115,7 @@ BEGIN
                                        , Object_PartionGoods.OperPriceList
                                        , Object_PartionGoods.isErased
                                        , MIFloat_MovementId.ValueData
+                                       , Container.WhereObjectId
                                )
 
      -- Результат
@@ -139,14 +146,27 @@ BEGIN
            , Object_TaxKind.ValueData       AS TaxKindName
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            
+             -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
            , tmpObject_PartionGoods.EKPrice
+             -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
+           , tmpObject_PartionGoods.EKPrice_orig
+             -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+           , tmpObject_PartionGoods.EKPrice_discount
+             -- 
            , tmpObject_PartionGoods.CountForPrice
              -- Цена без НДС затраты
            , tmpObject_PartionGoods.CostPrice     ::TFloat
-             -- Цена вх. с затратами без НДС
-           , (tmpObject_PartionGoods.EKPrice / tmpObject_PartionGoods.CountForPrice + COALESCE (tmpObject_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
+             -- 
            , COALESCE (tmpPriceBasis.ValuePrice, tmpObject_PartionGoods.OperPriceList) AS OperPriceList
-           , CASE WHEN MovementItem.isErased = FALSE AND Movement_Partion.StatusId = zc_Enum_Status_Complete() THEN MovementItem.Amount ELSE 0 END :: TFloat AS Amount_in
+             -- 
+           , CASE WHEN MovementItem.isErased = FALSE AND Movement_Partion.StatusId = zc_Enum_Status_Complete()
+                  THEN CASE WHEN Movement_Partion.DescId = zc_Movement_Send() AND tmpObject_PartionGoods.FromId = tmpObject_PartionGoods.WhereObjectId
+                            THEN 0
+                            ELSE MovementItem.Amount
+                       END
+                  ELSE 0
+             END :: TFloat AS Amount_in
+             --
            , tmpObject_PartionGoods.Remains       ::TFloat
            , tmpObject_PartionGoods.isErased
 

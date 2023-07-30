@@ -49,7 +49,16 @@ BEGIN
      -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
 
 
-     --
+     -- Проверка
+     IF (inDescId_1 = zc_ContainerLinkObject_InfoMoney() AND COALESCE (inObjectId_1, 0) = 0)
+     OR (inDescId_2 = zc_ContainerLinkObject_InfoMoney() AND COALESCE (inObjectId_2, 0) = 0)
+     OR (inDescId_3 = zc_ContainerLinkObject_InfoMoney() AND COALESCE (inObjectId_3, 0) = 0)
+     OR (inDescId_4 = zc_ContainerLinkObject_InfoMoney() AND COALESCE (inObjectId_4, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Уп Статья не указана для Проводок.';
+     END IF;
+
+
      --
      inContainerDescId   := COALESCE (inContainerDescId, 0);
      inObjectId          := COALESCE (inObjectId, 0);

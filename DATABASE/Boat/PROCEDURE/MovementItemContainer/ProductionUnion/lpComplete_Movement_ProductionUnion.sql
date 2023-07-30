@@ -477,7 +477,7 @@ BEGIN
      -- Создали партии - !!!ПРИХОД!!!
      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId    := _tmpItem_pr.PartionId
                                                , inMovementId        := inMovementId              -- Ключ Документа
-                                               , inFromId            := vbUnitId_To               -- Поставщик или Подразделение (место сборки)
+                                               , inFromId            := vbUnitId_From             -- Поставщик или Подразделение (место сборки)
                                                , inUnitId            := vbUnitId_To               -- Подразделение(прихода)
                                                , inOperDate          := vbOperDate                -- Дата прихода
                                                , inObjectId          := _tmpItem_pr.GoodsId       -- Комплектующие или Лодка
@@ -867,8 +867,8 @@ BEGIN
                                                                                    , inObjectId_1        := zc_Partner_VAT()
                                                                                      -- 
                                                                                    , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                                                                     -- Общефирменные + услуги полученные + Прочие услуги, работы
-                                                                                   , inObjectId_2        := zc_Enum_InfoMoney_20707()
+                                                                                     -- Расчеты Налоги + НДС
+                                                                                   , inObjectId_2        := zc_Enum_InfoMoney_50501()
                                                                                     )
                                                         END;
 

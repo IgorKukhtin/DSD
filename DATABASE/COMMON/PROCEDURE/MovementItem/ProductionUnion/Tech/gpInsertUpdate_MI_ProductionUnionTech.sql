@@ -94,7 +94,13 @@ BEGIN
    END IF;
 
    -- определяется
-   vbGoodsId_master:= COALESCE ((SELECT inGoodsId WHERE inGoodsId IN (7129, 2328, 6646, 712542, 3150)), 0); -- ЯЗЫК СВИН. ВАРЕН. + ГОЛОВЫ СВИН.ВАР. + МЯСО ГОЛОВ СВ в шкуре варен. + Лук Пассерованный
+   vbGoodsId_master:= COALESCE ((SELECT inGoodsId WHERE inGoodsId IN (2328   -- 5012;"ГОЛОВЫ СВИН.ВАР."
+                                                                    , 3150   -- 554;"Лук Пассерованный"
+                                                                    , 5717   -- 5005;"Эмульсия мясная"
+                                                                    , 6646   -- 5008;"ЯЗЫК СВИН. ВАРЕН.делик"
+                                                                    , 7129   -- 5011;"ЯЗЫК СВИН. ВАРЕН.колб."
+                                                                    , 712542 -- 2359;"МЯСО ГОЛОВ СВ в шкуре варен."
+                                                                     )), 0);
    -- определяется
    vbMeasureId_master:= (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = inGoodsId AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure());
 

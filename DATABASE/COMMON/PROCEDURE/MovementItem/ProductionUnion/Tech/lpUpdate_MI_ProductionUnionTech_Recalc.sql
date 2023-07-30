@@ -25,7 +25,17 @@ BEGIN
       -- определяется
       vbValue_Receipt:= COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0);
       -- определяется
-      vbGoodsId_master:= COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inParentId AND MovementItem.ObjectId IN (7129, 2328, 6646, 712542, 3150)), 0); -- ЯЗЫК СВИН. ВАРЕН. + ГОЛОВЫ СВИН.ВАР. + МЯСО ГОЛОВ СВ в шкуре варен. + Лук Пассерованный
+      vbGoodsId_master:= COALESCE ((SELECT MovementItem.ObjectId
+                                    FROM MovementItem
+                                    WHERE MovementItem.Id = inParentId
+                                      AND MovementItem.ObjectId IN (2328   -- 5012;"ГОЛОВЫ СВИН.ВАР."
+                                                                  , 3150   -- 554;"Лук Пассерованный"
+                                                                  , 5717   -- 5005;"Эмульсия мясная"
+                                                                  , 6646   -- 5008;"ЯЗЫК СВИН. ВАРЕН.делик"
+                                                                  , 7129   -- 5011;"ЯЗЫК СВИН. ВАРЕН.колб."
+                                                                  , 712542 -- 2359;"МЯСО ГОЛОВ СВ в шкуре варен."
+                                                                   )
+                                   ), 0);
       
 
         -- пересчет кол-во для zc_MI_Master
