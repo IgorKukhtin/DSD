@@ -1,27 +1,27 @@
 inherited Report_PartnerForm: TReport_PartnerForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'>'
   ClientHeight = 465
-  ClientWidth = 765
+  ClientWidth = 839
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 781
+  ExplicitWidth = 855
   ExplicitHeight = 504
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 765
+    Width = 839
     Height = 374
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 765
     ExplicitHeight = 374
     ClientRectBottom = 374
-    ClientRectRight = 765
+    ClientRectRight = 839
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 765
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
-        Width = 765
+        Width = 839
         Height = 374
         ExplicitWidth = 765
         ExplicitHeight = 374
@@ -111,7 +111,6 @@ inherited Report_PartnerForm: TReport_PartnerForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -119,7 +118,7 @@ inherited Report_PartnerForm: TReport_PartnerForm
           Styles.Footer = nil
           Styles.Header = nil
           object PartnerCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'PartnerCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -132,7 +131,7 @@ inherited Report_PartnerForm: TReport_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 239
+            Width = 250
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -189,8 +188,9 @@ inherited Report_PartnerForm: TReport_PartnerForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1075' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
             Options.Editing = False
-            Width = 80
+            Width = 120
           end
           object StartAmountD: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -202,7 +202,6 @@ inherited Report_PartnerForm: TReport_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 80
           end
           object StartAmountK: TcxGridDBColumn
@@ -215,24 +214,10 @@ inherited Report_PartnerForm: TReport_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
-            Width = 80
-          end
-          object DebetSumm: TcxGridDBColumn
-            Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
-            DataBinding.FieldName = 'DebetSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object KreditSumm: TcxGridDBColumn
-            Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
+            Caption = #1055#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -241,8 +226,23 @@ inherited Report_PartnerForm: TReport_PartnerForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
-            Width = 80
+            Width = 120
+          end
+          object DebetSumm: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1099
+            DataBinding.FieldName = 'DebetSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1099
+            Options.Editing = False
+            Width = 120
           end
           object EndAmount: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086
@@ -254,8 +254,9 @@ inherited Report_PartnerForm: TReport_PartnerForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1075' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
             Options.Editing = False
-            Width = 80
+            Width = 120
           end
           object EndAmountD: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -267,7 +268,6 @@ inherited Report_PartnerForm: TReport_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 80
           end
           object EndAmountK: TcxGridDBColumn
@@ -280,7 +280,6 @@ inherited Report_PartnerForm: TReport_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 80
           end
           object AccountName_all: TcxGridDBColumn
@@ -292,25 +291,39 @@ inherited Report_PartnerForm: TReport_PartnerForm
             Options.Editing = False
             Width = 55
           end
+          object ContainerId: TcxGridDBColumn
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 765
+    Width = 839
     Height = 65
     ExplicitWidth = 765
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 60
-      EditValue = 43466d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 43466d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 30
@@ -2102,10 +2115,6 @@ inherited Report_PartnerForm: TReport_PartnerForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

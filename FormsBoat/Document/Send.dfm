@@ -86,7 +86,7 @@ object SendForm: TSendForm
     end
     object cxLabel4: TcxLabel
       Left = 185
-      Top = 50
+      Top = 45
       Caption = #1050#1086#1084#1091
     end
     object cxLabel11: TcxLabel
@@ -285,16 +285,16 @@ object SendForm: TSendForm
       Height = 32
       TabOrder = 19
       object edSearchArticle: TcxTextEdit
-        Left = 119
-        Top = 5
+        Left = 122
+        Top = 7
         TabOrder = 0
         DesignSize = (
-          134
+          131
           21)
-        Width = 134
+        Width = 131
       end
       object lbSearchArticle: TcxLabel
-        Left = 0
+        Left = 2
         Top = 6
         Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
         ParentFont = False

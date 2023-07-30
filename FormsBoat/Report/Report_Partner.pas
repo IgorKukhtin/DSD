@@ -73,6 +73,7 @@ type
     cePartner: TcxButtonEdit;
     actOpenReport_CollationByPartner: TdsdOpenForm;
     bbOpenReport_CollationByPartner: TdxBarButton;
+    ContainerId: TcxGridDBColumn;
   private
     { Private declarations }
   public
