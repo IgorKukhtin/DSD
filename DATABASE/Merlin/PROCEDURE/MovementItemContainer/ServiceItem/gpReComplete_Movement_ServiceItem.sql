@@ -32,6 +32,7 @@ BEGIN
                                           inStatusCode := zc_Enum_StatusCode_Complete(),
                                           inSession    := inSession);
     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

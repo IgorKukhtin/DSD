@@ -108,11 +108,11 @@ BEGIN
                                                  ) AS OperDate
                          )
          -- находим существующие Начисления
-       , tmpMovement_Service AS (SELECT Movement.Id                     AS MovementId
-                                      , Movement.InvNumber              AS InvNumber
-                                      , Movement.OperDate               AS OperDate
-                                      , MovementItem.ObjectId           AS UnitId
-                                      , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
+       , tmpMovement_Service AS (SELECT Movement.Id                             AS MovementId
+                                      , Movement.InvNumber                      AS InvNumber
+                                      , DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
+                                      , MovementItem.ObjectId                   AS UnitId
+                                      , MILinkObject_InfoMoney.ObjectId         AS InfoMoneyId
                                  FROM Movement
                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                              AND MovementItem.DescId     = zc_MI_Master()
