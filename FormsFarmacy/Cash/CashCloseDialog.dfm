@@ -2,7 +2,7 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #1044#1080#1072#1083#1086#1075' '#1079#1072#1082#1088#1099#1090#1080#1103' '#1095#1077#1082#1072
-  ClientHeight = 164
+  ClientHeight = 176
   ClientWidth = 655
   GlassFrame.Bottom = 60
   Position = poScreenCenter
@@ -10,7 +10,7 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.Params = nil
   ExplicitWidth = 661
-  ExplicitHeight = 193
+  ExplicitHeight = 205
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -160,8 +160,8 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
     end
   end
   object cbNoPayPos: TcxCheckBox [9]
-    Left = 424
-    Top = 119
+    Left = 8
+    Top = 151
     Caption = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1073#1072#1085#1082#1086#1074#1089#1082#1080#1081' '#1090#1077#1088#1084#1080#1085#1072#1083
     TabOrder = 9
   end

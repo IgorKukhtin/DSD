@@ -544,6 +544,9 @@ BEGIN
             WHERE tmpGoodsParam.isErased = FALSE 
                or MovementItem_Send.id is not null;
     ELSE
+    
+        -- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+
 
         IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMovementItem_Send'))
         THEN
@@ -623,6 +626,8 @@ BEGIN
            AND (MovementItem.isErased = FALSE or inIsErased = TRUE);
            
         ANALYSE tmpMovementItem_Send;         
+
+        -- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
         
         IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMIContainer'))
         THEN
@@ -713,6 +718,7 @@ BEGIN
         
         ANALYSE tmpMIContainer;                             
 
+        -- raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 
         IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpContainer'))
         THEN
@@ -741,6 +747,8 @@ BEGIN
                , Object_PartionMovementItem.ObjectCode, Container.Id;
                             
         ANALYSE tmpContainer;
+
+        -- raise notice 'Value 4: %', CLOCK_TIMESTAMP();
         
         
         IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpCheck'))
@@ -767,6 +775,38 @@ BEGIN
         HAVING SUM (MI_Check.Amount) <> 0; 
                         
         ANALYSE tmpCheck;
+        
+        -- raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+        
+        
+            -- Товары из Маркетинговых контрактов
+        IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpPromo'))
+        THEN
+          DROP TABLE tmpPromo;
+        END IF;
+
+        CREATE TEMP TABLE tmpPromo ON COMMIT DROP AS 
+         SELECT DISTINCT  Object_Goods_Retail.GoodsMainId  AS GoodsId  
+         FROM Movement
+              INNER JOIN MovementDate AS MovementDate_StartPromo
+                                      ON MovementDate_StartPromo.MovementId = Movement.Id
+                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                     AND MovementDate_StartPromo.ValueData <= vbOperDate
+              INNER JOIN MovementDate AS MovementDate_EndPromo
+                                      ON MovementDate_EndPromo.MovementId = Movement.Id
+                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                     AND MovementDate_EndPromo.ValueData >= vbOperDate
+              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                 AND MI_Goods.DescId = zc_MI_Master()
+                                                 AND MI_Goods.isErased = FALSE
+              LEFT OUTER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_Goods.ObjectId
+         WHERE Movement.StatusId = zc_Enum_Status_Complete()
+           AND Movement.DescId = zc_Movement_Promo(); 
+                        
+        ANALYSE tmpPromo;
+        
+        -- raise notice 'Value 6: %', CLOCK_TIMESTAMP();
+        
         
                                                             
         -- Результат другой
@@ -879,24 +919,6 @@ BEGIN
                              AND MovementItem.IsErased = FALSE
                            GROUP BY MovementItem.ParentId
                           )
-            -- Товары из Маркетинговых контрактов
-          , tmpPromo AS (SELECT DISTINCT  Object_Goods_Retail.GoodsMainId  AS GoodsId  
-                         FROM Movement
-                              INNER JOIN MovementDate AS MovementDate_StartPromo
-                                                      ON MovementDate_StartPromo.MovementId = Movement.Id
-                                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-                                                     AND MovementDate_StartPromo.ValueData <= vbOperDate
-                              INNER JOIN MovementDate AS MovementDate_EndPromo
-                                                      ON MovementDate_EndPromo.MovementId = Movement.Id
-                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-                                                     AND MovementDate_EndPromo.ValueData >= vbOperDate
-                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                                                 AND MI_Goods.DescId = zc_MI_Master()
-                                                                 AND MI_Goods.isErased = FALSE
-                              LEFT OUTER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_Goods.ObjectId
-                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                           AND Movement.DescId = zc_Movement_Promo()
-                        )
                         
        -- результат
        SELECT
@@ -1014,6 +1036,8 @@ BEGIN
                                             AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
             LEFT JOIN Object AS Object_CommentSend
                              ON Object_CommentSend.ID = MILinkObject_CommentSend.ObjectId;
+
+        -- raise notice 'Value 10: %', CLOCK_TIMESTAMP();
                              
      END IF;
 
@@ -1057,4 +1081,5 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- 
 
-select * from gpSelect_MovementItem_Send(inMovementId := 31973736 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_Send(inMovementId := 32815662 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

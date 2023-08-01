@@ -28,6 +28,7 @@ RETURNS TABLE (
   CountConsider           Integer,
   CountRecord             Integer,
   AddBonusPercentTab      TFloat,
+  AddBonusPercentSum      TFloat,
   FixedPercent            TFloat,
   PenaltiMobApp           TFloat
 )
@@ -43,6 +44,8 @@ $BODY$
    DECLARE vbFixedPercentB TFloat;
    DECLARE vbFixedPercentC TFloat;
    DECLARE vbFixedPercentD TFloat;
+   DECLARE vbAddBonusPercent TFloat;
+   DECLARE vbisAdmin Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -50,7 +53,7 @@ BEGIN
 
     IF inSession = '3'
     THEN
-      vbUserId := 19450290;
+      vbUserId := 12625219;
     END IF;
 
     vbDateStart := date_trunc('month', inStartDate);
@@ -70,6 +73,10 @@ BEGIN
     vbFixedPercentC := COALESCE (vbFixedPercentC, 0);
     vbFixedPercentD := COALESCE (vbFixedPercentD, 0);
 
+    vbAddBonusPercent := 3;
+    vbisAdmin := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE ObjectLink_UserRole_View.UserId = inSession::Integer 
+                                                                   AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin()) 
+                 OR inSession::Integer = 298786;
     
       -- Отработано по календарю
     CREATE TEMP TABLE tmpUserUnitDayTable (
@@ -209,6 +216,7 @@ BEGIN
 
             UserID             Integer,
             UserName           TVarChar,
+            isNewUser          Boolean,
 
             UnitID             Integer,
             UnitName           TVarChar,
@@ -229,13 +237,60 @@ BEGIN
             CountRecord        Integer,
             
             FixedPercent       TFloat,
-            AddBonusPercentTab TFloat
+            AddBonusPercentTab TFloat,
+            AddBonusPercentSum TFloat
       ) ON COMMIT DROP;
 
+    CREATE TEMP TABLE tmpUser ON COMMIT DROP AS
+    SELECT MIMaster.ObjectId                                                                     AS UserId
+         , MIN(Movement.OperDate + ((MIChild.Amount - 1)::Integer::tvarchar||' DAY')::INTERVAL)  AS DateIn
+    FROM Movement
+                      
+         INNER JOIN MovementItem AS MIMaster
+                                 ON MIMaster.MovementId = Movement.ID
+                                AND MIMaster.DescId = zc_MI_Master()
+                           
+         INNER JOIN MovementItem AS MIChild
+                                 ON MIChild.MovementId = Movement.ID
+                                AND MIChild.ParentId = MIMaster.ID
+                                AND MIChild.DescId = zc_MI_Child()
+                                                   
+    WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+    GROUP BY MIMaster.ObjectId;
+                      
+    ANALYSE tmpUser;
+                      
+    CREATE TEMP TABLE tmPersonal_View  ON COMMIT DROP AS
+    SELECT ROW_NUMBER() OVER (PARTITION BY Object_User.Id ORDER BY Object_Member.IsErased) AS Ord
+         , Object_User.Id              AS UserID
+         , Object_Position.ObjectCode  AS PositionCode
+         , Object_Position.ValueData   AS PositionName
+         , COALESCE (ObjectBoolean_ReleasedMarketingPlan.ValueData, False)  AS isReleasedMarketingPlan
+    FROM Object AS Object_User
+
+         INNER JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                              ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+         LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_ReleasedMarketingPlan
+                                 ON ObjectBoolean_ReleasedMarketingPlan.ObjectId = Object_Member.Id
+                                AND ObjectBoolean_ReleasedMarketingPlan.DescId = zc_ObjectBoolean_Member_ReleasedMarketingPlan()
+			
+    WHERE Object_User.DescId = zc_Object_User();
+                              
+    ANALYSE tmPersonal_View;
+    
       -- Заполнение шапки результирующей таблицы
     INSERT INTO tmpResult (
              UserID,
              UserName,
+             isNewUser,
              UnitID,
              UnitName,
              UnitCategoryCode,
@@ -248,6 +303,7 @@ BEGIN
     SELECT DISTINCT
        tmpUserUnitDayTable.UserId,
        Object_Member.ValueData,
+       not (date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER > 90 AND COALESCE(Personal_View.PositionCode, 1) = 1),
        tmpUserUnitDayTable.UnitId,
        Object_Unit.ValueData,
        COALESCE (Object_UnitCategory.ObjectCode, 0),
@@ -266,6 +322,12 @@ BEGIN
                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
 
        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.childobjectid
+
+       LEFT JOIN tmpUser ON tmpUser.UserID = tmpUserUnitDayTable.UserId
+
+       LEFT JOIN tmPersonal_View AS Personal_View 
+                                 ON Personal_View.UserID = tmpUserUnitDayTable.UserId
+                                AND Personal_View.Ord = 1  
        
     WHERE tmpUserUnitDayTable.Ord = 1
 
@@ -290,7 +352,8 @@ BEGIN
 
             AmountTheFineTab TFloat,
             BonusAmountTab TFloat,
-            AddBonusPercentTab TFloat
+            AddBonusPercentTab TFloat,
+            AddBonusPercentSum TFloat
       ) ON COMMIT DROP;
 
       -- Заполняем данные по продажам
@@ -559,7 +622,10 @@ BEGIN
                                   ELSE 0 END,
             AddBonusPercentTab = CASE WHEN Amount >= AmountPlanMaxTab AND COALESCE(AmountPlanMax, 0) > 0 AND COALESCE(AddBonusPercent, 0) <> 0 AND 
                                            vbDateStart <> '01.04.2022' AND vbDateStart <> '01.05.2022'
-                                      THEN 1.0 * Amount * Price * COALESCE(AddBonusPercent, 0) / 100 END 
+                                      THEN 1.0 * Amount * Price * COALESCE(AddBonusPercent, 0) / 100 END, 
+            AddBonusPercentSum  = CASE WHEN Amount >= AmountPlanMaxTab AND COALESCE(AmountPlanMax, 0) > 0 AND COALESCE(AddBonusPercent, 0) <> 0 AND 
+                                            vbDateStart >= '01.07.2023'
+                                       THEN 1.0 * Amount * Price * (COALESCE(AddBonusPercent, 0) + COALESCE(vbAddBonusPercent, 0)) / 100 END 
      FROM (SELECT
             Object_UnitCategory.Id                       AS UnitCategoryId
           , ObjectFloat_PenaltyNonMinPlan.ValueData      AS PenaltyNonMinPlan
@@ -596,12 +662,14 @@ BEGIN
      UPDATE tmpResult SET
         AmountTheFineTab = COALESCE(Implementation.AmountTheFineTab, 0),
         BonusAmountTab = COALESCE(Implementation.BonusAmountTab, 0),
-        AddBonusPercentTab = COALESCE(Implementation.AddBonusPercentTab, 0)
+        AddBonusPercentTab = COALESCE(Implementation.AddBonusPercentTab, 0),
+        AddBonusPercentSum = COALESCE(Implementation.AddBonusPercentSum, 0)
      FROM (SELECT Implementation.UserID,
             Implementation.UnitID,
             SUM(Implementation.AmountTheFineTab) AS AmountTheFineTab,
             SUM(Implementation.BonusAmountTab) AS BonusAmountTab,
-            SUM(Implementation.AddBonusPercentTab) AS AddBonusPercentTab
+            SUM(Implementation.AddBonusPercentTab) AS AddBonusPercentTab,
+            SUM(Implementation.AddBonusPercentSum) AS AddBonusPercentSum
          FROM tmpImplementation AS Implementation
             INNER JOIN (SELECT tmpResult.UnitID, tmpResult.UserID FROM tmpResult) AS T1
                       ON Implementation.UserID = T1.UserID
@@ -695,7 +763,12 @@ BEGIN
                                                             , tmpResult.TotalExecutionLine
                                                             , tmpResult.TotalExecutionFixed
                                                             , tmpResult.AmountTheFineTab
-                                                            , tmpResult.BonusAmountTab) 
+                                                            , tmpResult.BonusAmountTab
+                                                            , tmpResult.AddBonusPercentTab
+                                                            , tmpResult.AddBonusPercentSum
+                                                            , tmpResult.isNewUser
+                                                            , vbisAdmin
+                                                            ) 
      FROM (SELECT
             ObjectLink_Unit_Category.ObjectId                            AS UnitId
           , ObjectFloat_MinLineByLineImplPlan.ValueData                  AS MinLineByLineImplPlan
@@ -792,6 +865,7 @@ BEGIN
         Result.CountConsider,
         Result.CountRecord,
         Result.AddBonusPercentTab,
+        Result.AddBonusPercentSum,
         Result.FixedPercent,
         (-tmpFulfillmentPlanMobile.PenaltiMobApp)::TFloat
 

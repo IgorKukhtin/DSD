@@ -51,7 +51,7 @@ object MainForm: TMainForm
         OnClick = btnExportClick
       end
       object btnExecute: TButton
-        Left = 467
+        Left = 475
         Top = 0
         Width = 90
         Height = 25

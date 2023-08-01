@@ -97,33 +97,34 @@ begin
 
   with TLoginForm.Create(Application) do
   Begin
-   // ќтключаем сохранение параметров
-   cxPropertiesStore.Active := False;
-   // «аполн€ем авторизационные пол€
-   edUserName.Text:=ParamStr(1);
-   edPassword.Text:=ParamStr(2);
+    // ќтключаем сохранение параметров
+    cxPropertiesStore.Active := False;
+    // «аполн€ем авторизационные пол€
+    edUserName.Text:=ParamStr(1);
+    edPassword.Text:=ParamStr(2);
     //≈сли все хорошо создаем главную форму Application.CreateForm();
-   AllowLocalConnect := True;  // разрешаем локальный режим
+    AllowLocalConnect := True;  // разрешаем локальный режим
 
-     if ParamStr(2)<>'' then // ≈сли два параметра, то не спрашивать логин и пароль
-       begin
-        btnOkClick(btnOk);  // нажимаем проверку логина  если передали два параметра запуска
-//       TAuthentication.CheckLogin(TStorageFactory.GetStorage, ParamStr(1), ParamStr(2), gc_User); // не работает вместе с AllowLocalConnect := True;
-       end
-      else
-       if ShowModal <> mrOk then
-       begin
-        Free;
-        exit;
-       end;
+    if ParamStr(2)<>'' then // ≈сли два параметра, то не спрашивать логин и пароль
+    begin
+      if LowerCase(ParamStr(3)) = 'ofline' then // ≈сли если запускаем офлайн
+      begin
+        gc_User.Local := True;
+        OnlyLocal := True;
+      end;
+      btnOkClick(btnOk);  // нажимаем проверку логина  если передали два параметра запуска
+      // TAuthentication.CheckLogin(TStorageFactory.GetStorage, ParamStr(1), ParamStr(2), gc_User); // не работает вместе с AllowLocalConnect := True;
+    end else if ShowModal <> mrOk then
+    begin
+      Free;
+      exit;
+    end;
 
     if not gc_User.Local and (ParamStr(2) = '') then
     Begin
       TUpdater.AutomaticUpdateProgram;
       if ParamStr(2) = '' then TUpdater.AutomaticCheckConnect;
-    End
-    else
-      gc_isSetDefault := True;
+    End else gc_isSetDefault := True;
      //
     Application.CreateForm(TdmMain, dmMain);
     Application.CreateForm(TMainCashForm2, MainCashForm2);

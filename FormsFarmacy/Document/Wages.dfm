@@ -1848,19 +1848,19 @@ inherited WagesForm: TWagesForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inApplicationAward'
+        Name = 'inPenaltyExam'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ApplicationAward'
+        ComponentItem = 'PenaltyExam'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPenaltyExam'
+        Name = 'inApplicationAward'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PenaltyExam'
+        ComponentItem = 'ApplicationAward'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

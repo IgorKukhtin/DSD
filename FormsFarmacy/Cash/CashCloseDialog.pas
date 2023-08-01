@@ -100,6 +100,10 @@ begin
   if FPaidTypeTemp <> rgPaidType.ItemIndex then
   begin
     cxGroupBox2.Visible := rgPaidType.ItemIndex = 2;
+    if cxGroupBox2.Visible then
+      cbNoPayPos.Top := cxGroupBox2.Top + cxGroupBox2.Height + 2
+    else cbNoPayPos.Top := cxGroupBox1.Top + cxGroupBox1.Height + 2;
+    cbNoPayPos.Visible := rgPaidType.ItemIndex > 0;
     edSalerCash.Value := FSummaTotal;
     edSalerCash.Properties.ReadOnly := rgPaidType.ItemIndex = 1;
     edSalerCashAdd.Text := '';

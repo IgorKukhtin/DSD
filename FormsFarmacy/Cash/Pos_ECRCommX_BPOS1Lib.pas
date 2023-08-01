@@ -21,11 +21,13 @@ type
     function GetTextCheck : string;
     function GetProcessType : TPosProcessType;
     function GetProcessState : TPosProcessState;
+    function GetCanceled : Boolean;
   protected
     function WaitPosResponsePrivat() : Integer;
     function CheckConnection : Boolean;
     function Payment(ASumma : Currency) : Boolean;
     function Refund(ASumma : Currency) : Boolean;
+    function ServiceMessage : Boolean;
     procedure Cancel;
   public
     constructor Create(APOSTerminalCode : Integer);
@@ -71,6 +73,11 @@ end;
 function TPos_ECRCommX_BPOS1Lib.GetProcessState : TPosProcessState;
 begin
   Result := ppsUndefined;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.GetCanceled : Boolean;
+begin
+  Result := FCancel;
 end;
 
 procedure TPos_ECRCommX_BPOS1Lib.AfterConstruction;
@@ -177,6 +184,11 @@ begin
   finally
    FPOS.CommClose;
   end;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.ServiceMessage : Boolean;
+begin
+  Result := True;
 end;
 
 procedure TPos_ECRCommX_BPOS1Lib.Cancel;

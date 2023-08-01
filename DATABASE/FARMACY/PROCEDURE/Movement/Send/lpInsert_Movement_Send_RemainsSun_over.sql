@@ -155,6 +155,7 @@ BEGIN
      DELETE FROM _tmpGoods_Layout;
      DELETE FROM _tmpGoods_PromoUnit;
      DELETE FROM _tmpGoods_DiscountExternal;
+     DELETE FROM _tmpGoods_TP_exception;     
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      IF inStep = 1 THEN DELETE FROM _tmpUnit_SUN_balance; END IF;
      -- 1. все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
@@ -416,6 +417,46 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              , tmpUnitDiscount.UnitId;
              
      ANALYSE _tmpGoods_DiscountExternal;
+
+     -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
+     WITH
+         tmpMovement AS (SELECT Movement.Id
+                              , MovementLinkObject_Unit.ObjectId AS UnitId
+                         FROM Movement
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                         WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete())
+      , tmpGoods AS (SELECT Movement.UnitId
+                          , MovementItem.ObjectId       AS GoodsId
+                          , SUM(MovementItem.Amount)    AS Amount
+                     FROM _tmpUnit_SUN
+
+                          INNER JOIN tmpMovement AS Movement ON Movement.UnitId = _tmpUnit_SUN.UnitId
+
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                         AND MovementItem.DescId     = zc_MI_Master()
+                                         AND MovementItem.isErased  = FALSE
+                                         AND MovementItem.Amount < 0
+                          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                            ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                          INNER JOIN ObjectBoolean AS ObjectBoolean_CommentTR_BlockFormSUN
+                                                   ON ObjectBoolean_CommentTR_BlockFormSUN.ObjectId = MILinkObject_CommentTR.ObjectId
+                                                  AND ObjectBoolean_CommentTR_BlockFormSUN.DescId = zc_ObjectFloat_CommentTR_BlockFormSUN()
+                                                  AND ObjectBoolean_CommentTR_BlockFormSUN.ValueData = True
+                     GROUP BY Movement.UnitId
+                            , MovementItem.ObjectId
+                     )
+
+     INSERT INTO _tmpGoods_TP_exception   (UnitId, GoodsId)
+     SELECT tmpGoods.UnitId, tmpGoods.GoodsId
+     FROM tmpGoods;
+     
+     ANALYSE _tmpGoods_TP_exception;
 
 --raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
@@ -1525,10 +1566,16 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              -- !!!Перемещение SUN - расход - Erased - за СЕГОДНЯ, что б не отправлять эти товары повторно в СУН-2
              LEFT JOIN tmpMI_SUN_out ON tmpMI_SUN_out.UnitId_from = tmpNotSold.UnitId
                                     AND tmpMI_SUN_out.GoodsId     = tmpNotSold.GoodsId
+             -- Исключения по техническим переучетам
+             LEFT JOIN _tmpGoods_TP_exception AS tmpGoods_TP_exception
+                                              ON tmpGoods_TP_exception.UnitId  = tmpNotSold.UnitId
+                                             AND tmpGoods_TP_exception.GoodsId = tmpNotSold.GoodsId
         WHERE -- !!!
               OB_Unit_SUN_in.ObjectId IS NULL
               -- !!!
           AND tmpMI_SUN_out.GoodsId IS NULL
+          -- Исключения по техническим переучетам
+          AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
        ;
        
      ANALYSE _tmpRemains_Partion_all;
@@ -2524,4 +2571,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 
  
- SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
+ SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";

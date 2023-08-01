@@ -21,7 +21,7 @@ uses
   cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess,
   cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
   Vcl.ComCtrls, cxBlobEdit, cxMemo, cxRichEdit, cxEditRepositoryItems,
-  dxDateRanges, cxImage;
+  dxDateRanges, cxImage, UtilConst;
 
 type
 
@@ -2970,8 +2970,9 @@ begin
 //        + '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
 //        '3. Сделайте внесение 100,00 грн.', cResult);
 
-      if isServiseOld then
-        ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
+      if not gc_User.Local then
+        if isServiseOld then
+          ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
 
       ShowTrayMessage('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Максим (IT).'#13#10 +
                       'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!');
@@ -4822,7 +4823,7 @@ begin
     fMask := SEE_MASK_NOCLOSEPROCESS;
     Wnd := Application.Handle;
     lpFile := PChar(ExecuteFile);
-    ParamString := '"' + IniUtils.gUserName + '" "' + IniUtils.gPassValue + '"';
+    ParamString := '"' + IniUtils.gUserName + '" "' + IniUtils.gPassValue + '"' + LocalFCSStart;
     // Кавычки обязательно
 
     // ParamString:= gc_User.Session;
@@ -8236,6 +8237,7 @@ begin
     gc_User.Local := false;
     if FShowMessageCheckConnection then
       ShowMessage('Режим работы: В сети');
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 60);
   except
     Begin
       gc_User.Local := True;
@@ -8243,6 +8245,7 @@ begin
         ShowMessage('Режим работы: Автономно');
     End;
   end;
+  SetMainFormCaption;
 end;
 
 procedure TMainCashForm2.CheckCDSBeforePost(DataSet: TDataSet);
@@ -13250,16 +13253,16 @@ begin
       lblActiveAlerts.Style.Color := clLime;
       lblActiveAlerts.Caption := '';
       lblActiveAlerts.Hint := 'Тревоги нет';
-      if MinutesBetween(Now, FOfLineDateTime) >= 15 then
-      begin
-        FOfLineDateTime := Now;
-        try
-          spGet_User_IsAdmin.Execute(false, false, false);
-          gc_User.Local := false;
-          ShowTrayMessage('Режим работы: В сети');
-        except
-        end;
-      end;
+//      if MinutesBetween(Now, FOfLineDateTime) >= 15 then
+//      begin
+//        FOfLineDateTime := Now;
+//        try
+//          spGet_User_IsAdmin.Execute(false, false, false);
+//          gc_User.Local := false;
+//          ShowTrayMessage('Режим работы: В сети');
+//        except
+//        end;
+//      end;
     end else
     begin
       FOfLineDateTime := Now;
@@ -15881,6 +15884,8 @@ begin
   Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +  FTextError +
           ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
 
+  if gc_User.Local then Self.Caption := Self.Caption + ' <Офлайн>';
+
   // Пропись итогов выполнения плана по сотруднику
 //  if UnitConfigCDS.Active and (UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean or
 //     UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean) then
@@ -16031,6 +16036,7 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
+    if  not gc_User.Local then
     try
       ds := TClientDataSet.Create(nil);
       try

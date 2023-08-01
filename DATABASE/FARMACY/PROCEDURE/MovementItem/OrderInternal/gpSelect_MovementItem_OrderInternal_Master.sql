@@ -1411,6 +1411,7 @@ BEGIN
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подр€зд 2 дн€ заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подр€зд 10 заказов нет прив€зки к товару поставщика;
                    -- отклонение по цене  светло - салатова€- цена подешевела, светло-розова€ - подорожала
+                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN tmpMI.isSP = TRUE AND MIFloat_Price.ValueData > tmpMI.PriceOptSP THEN zfCalc_Color (188, 143, 143)  
                   WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpMI.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (0, 255, 255) -- orange
                   WHEN tmpMI.JuridicalName ILIKE '%ј+%' AND tmpMI.JuridicalId = 410822
@@ -1420,7 +1421,6 @@ BEGIN
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10 THEN 12319924    --светло - салатова€- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  ----светло красна€ -- светло-розова€ - подорожала
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
-                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
 
@@ -2999,6 +2999,7 @@ BEGIN
            , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подр€зд 2 дн€ заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подр€зд 10 заказов нет прив€зки к товару поставщика;
+                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN zfCalc_Color (188, 143, 143)  
                   WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpGoodsMain.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (0, 255, 255) -- orange
                   WHEN tmpMI.JuridicalName ILIKE '%ј+%' AND tmpMI.JuridicalId = 410822
@@ -3008,7 +3009,6 @@ BEGIN
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатова€- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красна€ -- светло-розова€ - подорожала
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
-                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
 
@@ -4431,6 +4431,7 @@ BEGIN
            , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подр€зд 2 дн€ заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подр€зд 10 заказов нет прив€зки к товару поставщика;
+                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN zfCalc_Color (188, 143, 143)  
                   WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpGoodsMain.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (0, 255, 255) -- orange
                   WHEN tmpMI.JuridicalName ILIKE '%ј+%' AND tmpMI.JuridicalId = 410822
@@ -4440,7 +4441,6 @@ BEGIN
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатова€- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красна€ -- светло-розова€ - подорожала
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
-                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
 

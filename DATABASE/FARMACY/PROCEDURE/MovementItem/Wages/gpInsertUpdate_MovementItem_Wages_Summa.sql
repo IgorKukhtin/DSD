@@ -205,8 +205,21 @@ BEGIN
       THEN
         PERFORM gpSelect_WagesUser_ZeroApplicationAward(inMovementId := inMovementId, inUserId := vbUserWagesId, inSession := inSession);
       END IF;
-
       
+      IF COALESCE (inApplicationAward, 0) > COALESCE (vbApplicationAward, 0) AND
+         ((SELECT SUM(COALESCE (MIFloat_ApplicationAward.ValueData, 0))
+           FROM  MovementItem
+
+                 LEFT JOIN MovementItemFloat AS MIFloat_ApplicationAward
+                                             ON MIFloat_ApplicationAward.MovementItemId = MovementItem.Id
+                                            AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
+
+           WHERE MovementItem.MovementId = inMovementId
+             AND MovementItem.isErased = False) - COALESCE (vbApplicationAward, 0) + COALESCE (inApplicationAward, 0)) > 0
+      THEN
+        RAISE EXCEPTION 'Сумма по <Моб. приложение> по всем сотрудникам должна быть меньше или равна нолю.';      
+      END IF;
+
        -- сохранили свойство <Отпуск / Больничный>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HolidaysHospital(), ioId, inHolidaysHospital);
        -- сохранили свойство <Маркетинг>

@@ -164,7 +164,7 @@ BEGIN
     END IF;
   END IF;
   
-  IF inisAdmin = TRUE AND (inisNewUser = TRUE OR vbUnitCategoryCode = 8) AND inBonusAmountTab > 250 
+  IF inOperDate >= '01.07.2023' AND (inisNewUser = TRUE OR vbUnitCategoryCode = 8) AND inBonusAmountTab > 250 
   THEN
     IF inBonusAmountTab > 500 
     THEN
@@ -192,4 +192,4 @@ ALTER FUNCTION zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, 
 
 -- тест 
 
-SELECT * FROM zfCalc_MarketingPlan_Scale (zc_enum_scalecalcmarketingplan_cc1(), '01.04.2023', 13711869, 77.25, 12.21, 4412.88, 1095.48, 111, 222, False, False)
+SELECT * FROM zfCalc_MarketingPlan_Scale (zc_enum_scalecalcmarketingplan_cc1(), '01.07.2023', 13711869, 77.25, 12.21, 4412.88, 1095.48, 111, 222, False, False)

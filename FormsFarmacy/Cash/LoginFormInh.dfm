@@ -1,14 +1,23 @@
 inherited LoginForm1: TLoginForm1
+  ClientHeight = 156
+  ClientWidth = 379
   OnShow = FormShow
+  ExplicitWidth = 395
+  ExplicitHeight = 195
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxLabel1: TcxLabel
-    Left = 2
-    Top = 3
-    ExplicitLeft = 2
-    ExplicitTop = 3
-    AnchorX = 230
-    AnchorY = 123
+    Left = 0
+    Top = 0
+    Align = alClient
+    ExplicitLeft = 0
+    ExplicitTop = 0
+    ExplicitWidth = 379
+    ExplicitHeight = 156
+    Height = 156
+    Width = 379
+    AnchorX = 190
+    AnchorY = 78
   end
   inherited cxLabel2: TcxLabel
     AnchorX = 153
@@ -33,6 +42,17 @@ inherited LoginForm1: TLoginForm1
     Top = 5
     TabOrder = 8
     Width = 204
+  end
+  object btnOkOfLine: TcxButton [9]
+    Tag = 1
+    Left = 24
+    Top = 102
+    Width = 93
+    Height = 21
+    Caption = #1042#1086#1081#1090#1080' '#1086#1092#1083#1072#1081#1085
+    TabOrder = 9
+    Visible = False
+    OnClick = btnOkClick
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 48

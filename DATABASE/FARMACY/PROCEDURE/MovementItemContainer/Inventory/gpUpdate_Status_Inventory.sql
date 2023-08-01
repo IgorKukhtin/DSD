@@ -12,8 +12,14 @@ $BODY$
 BEGIN
 
    -- Запрет запуска второй копии
-   PERFORM  zfCheckRunProc ('gpUpdate_Status_Inventory', 1);
-   PERFORM  zfCheckRunProc ('gpComplete_Movement_Inventory', 1);
+   IF COALESCE((SELECT count(*) as CountProc  
+                FROM pg_stat_activity
+                WHERE state = 'active'
+                  AND (query ilike '%gpComplete_Movement_Inventory%')
+                   OR  (query ilike '%gpUpdate_Status_Inventory%')), 0) > 1
+   THEN
+     RAISE EXCEPTION 'Проведение документа уже идет...%Ориентировочное время окончания процесса для полного переучета 20-30 мин.%Ожидайте!', Chr(13), Chr(13);
+   END IF;
 
 
      CASE inStatusCode

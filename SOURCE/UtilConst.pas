@@ -13,6 +13,7 @@ var
 
   ConnectionPath: string = '..\init\init.php';
   SQLiteFile: string = '';
+  LocalFCSStart: string = '';
 
 //  EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
 //  ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';

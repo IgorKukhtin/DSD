@@ -219,72 +219,86 @@ BEGIN
 
         ANALYZE tmpPriceChange;
 
+        -- Цена сайта
+        CREATE TEMP TABLE tmpForSiteMobile ON COMMIT DROP AS 
+        SELECT p.Id, p.Price_unit_sale
+        FROM gpSelect_GoodsOnUnit_ForSiteMobile (vbUnitId::Text, '', zfCalc_UserSite()) AS p;
         
+        ANALYZE tmpForSiteMobile;
+        
+        
+        CREATE TEMP TABLE tmpRemains ON COMMIT DROP AS 
+        SELECT Container.ObjectId                  AS GoodsId
+             , SUM(Container.Amount)::TFloat       AS Amount
+        FROM Container
+        WHERE Container.DescId = zc_Container_Count()
+          AND Container.WhereObjectId = vbUnitId
+          AND Container.Amount <> 0
+        GROUP BY Container.ObjectId
+        HAVING SUM(Container.Amount)<>0;
+
+        ANALYZE tmpRemains;
+
+        CREATE TEMP TABLE MovementItemContainer ON COMMIT DROP AS 
+        SELECT MovementItemContainer.MovementItemId     AS Id
+                 , SUM(-MovementItemContainer.Amount)       AS Amount
+        FROM  MovementItemContainer
+        WHERE MovementItemContainer.MovementId = inMovementId
+          AND vbStatusId = zc_Enum_Status_UnComplete() 
+        GROUP BY MovementItemContainer.MovementItemId;
+                                      
+        ANALYZE MovementItemContainer;
+
+        CREATE TEMP TABLE tmpPrice ON COMMIT DROP AS 
+         SELECT Price_Goods.ChildObjectId                                 AS GoodsId
+              , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                      AND ObjectFloat_Goods_Price.ValueData > 0
+                     THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                     WHEN COALESCE (vbInsuranceCompaniesId, 0) = 0
+                     THEN ROUND (Price_Value.ValueData, 2)
+                     ELSE ROUND (CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) > 0 
+                                      THEN COALESCE (tmpPriceChange.PriceChange, 0)
+                                      WHEN COALESCE (tmpPriceChange.FixPercent, 0) > 0 
+                                      THEN Price_Value.ValueData  * (100.0 - COALESCE (tmpPriceChange.FixPercent, 0)) / 100.0
+                                      WHEN COALESCE (tmpPriceChange.FixDiscount, 0) > 0 AND 
+                                           Price_Value.ValueData > COALESCE (tmpPriceChange.FixDiscount, 0)
+                                      THEN Price_Value.ValueData - COALESCE (tmpPriceChange.FixDiscount, 0)
+                                      WHEN COALESCE (tmpPromoBonus.PromoBonus, 0) > 0
+                                      THEN Price_Value.ValueData * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                          (100.0 - tmpPromoBonus.PromoBonus + tmpPromoBonus.MarginPercent) / 100
+                                      ELSE Price_Value.ValueData END, 2)
+                     END :: TFloat                                        AS Price
+              , COALESCE(ObjectBoolean_Goods_TOP.ValueData, False)        AS isTop
+         FROM ObjectLink AS ObjectLink_Price_Unit
+              LEFT JOIN ObjectFloat AS Price_Value
+                     ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+              LEFT JOIN ObjectLink AS Price_Goods
+                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+              -- Фикс цена для всей Сети
+              LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                     ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                    AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                      ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                     AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+
+              -- Цена со скидкой
+              LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Price_Goods.ChildObjectId
+
+              -- Соц Проо бонус
+              LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = Price_Goods.ChildObjectId
+                                    
+          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+            AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId;
+
+        ANALYZE tmpPrice;
 
         -- Результат такой
         RETURN QUERY
             WITH
-                tmpRemains AS(SELECT Container.ObjectId                  AS GoodsId
-                                   , SUM(Container.Amount)::TFloat       AS Amount
-                              FROM Container
-                              WHERE Container.DescId = zc_Container_Count()
-                                AND Container.WhereObjectId = vbUnitId
-                                AND Container.Amount <> 0
-                              GROUP BY Container.ObjectId
-                              HAVING SUM(Container.Amount)<>0
-                              )
-              , MovementItemContainer AS (SELECT MovementItemContainer.MovementItemId     AS Id
-                                               , SUM(-MovementItemContainer.Amount)       AS Amount
-                                      FROM  MovementItemContainer
-                                      WHERE MovementItemContainer.MovementId = inMovementId
-                                        AND vbStatusId = zc_Enum_Status_UnComplete() 
-                                      GROUP BY MovementItemContainer.MovementItemId
-                                      )
-                                      
-              , tmpPrice AS (SELECT Price_Goods.ChildObjectId                                 AS GoodsId
-                                  , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
-                                          AND ObjectFloat_Goods_Price.ValueData > 0
-                                         THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
-                                         WHEN COALESCE (vbInsuranceCompaniesId, 0) = 0
-                                         THEN ROUND (Price_Value.ValueData, 2)
-                                         ELSE ROUND (CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) > 0 
-                                                          THEN COALESCE (tmpPriceChange.PriceChange, 0)
-                                                          WHEN COALESCE (tmpPriceChange.FixPercent, 0) > 0 
-                                                          THEN Price_Value.ValueData  * (100.0 - COALESCE (tmpPriceChange.FixPercent, 0)) / 100.0
-                                                          WHEN COALESCE (tmpPriceChange.FixDiscount, 0) > 0 AND 
-                                                               Price_Value.ValueData > COALESCE (tmpPriceChange.FixDiscount, 0)
-                                                          THEN Price_Value.ValueData - COALESCE (tmpPriceChange.FixDiscount, 0)
-                                                          WHEN COALESCE (tmpPromoBonus.PromoBonus, 0) > 0
-                                                          THEN Price_Value.ValueData * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
-                                                              (100.0 - tmpPromoBonus.PromoBonus + tmpPromoBonus.MarginPercent) / 100
-                                                          ELSE Price_Value.ValueData END, 2)
-                                         END :: TFloat                                        AS Price
-                                  , COALESCE(ObjectBoolean_Goods_TOP.ValueData, False)        AS isTop
-                             FROM ObjectLink AS ObjectLink_Price_Unit
-                                  LEFT JOIN ObjectFloat AS Price_Value
-                                         ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                        AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                                  LEFT JOIN ObjectLink AS Price_Goods
-                                         ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                        AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                  -- Фикс цена для всей Сети
-                                  LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
-                                                         ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
-                                                        AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
-                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                                          ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
-                                                         AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
-
-                                  -- Цена со скидкой
-                                  LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Price_Goods.ChildObjectId
-
-                                  -- Соц Проо бонус
-                                  LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = Price_Goods.ChildObjectId
-                                  
-                              WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                             )
-              , tmpGoods AS (SELECT DISTINCT tmpRemains.GoodsId FROM tmpRemains
+                tmpGoods AS (SELECT DISTINCT tmpRemains.GoodsId FROM tmpRemains
                          UNION 
                              SELECT DISTINCT MovementItem_Sale.GoodsId FROM MovementItem_Sale
                              )
@@ -361,8 +375,10 @@ BEGIN
                  , MovementItemContainer.Amount::TFloat                  AS AmountDeferred
                  , NULLIF(COALESCE(tmpRemainsFull.Remains, 0) +
                    COALESCE(MovementItemContainer.Amount, 0), 0)::TFloat AS AmountRemains
-                 , COALESCE(tmpRemainsFull.Price, tmpPrice.Price)        AS Price
-                 , COALESCE(tmpRemainsFull.PriceSale, tmpPrice.Price)    AS PriceSale
+                 , COALESCE(tmpForSiteMobile.Price_unit_sale, 
+                            tmpRemainsFull.Price, tmpPrice.Price)        AS Price
+                 , COALESCE(tmpForSiteMobile.Price_unit_sale, 
+                            tmpRemainsFull.PriceSale, tmpPrice.Price)    AS PriceSale
                  , CASE WHEN vbSPKindId IN (zc_Enum_SPKind_1303(), zc_Enum_SPKind_InsuranceCompanies()) 
                         THEN COALESCE (tmpRemainsFull.ChangePercent, vbChangePercent, 100) 
                         ELSE tmpRemainsFull.ChangePercent END :: TFloat  AS ChangePercent
@@ -399,6 +415,9 @@ BEGIN
                 
                 LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                         AND tmpGoodsUKTZED.Ord = 1
+                                        
+                LEFT JOIN tmpForSiteMobile ON tmpForSiteMobile.Id = tmpRemainsFull.GoodsId
+                                          AND COALESCE(vbInsuranceCompaniesId, 0) <> 0
                 
             WHERE Object_Goods_Retail.isErased = FALSE
                OR tmpRemainsFull.id is not null;
