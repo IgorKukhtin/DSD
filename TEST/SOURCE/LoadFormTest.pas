@@ -3058,6 +3058,7 @@ TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairForm'));
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetNoBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetNoBalanceForm');
+  exit;
   //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetForm');
