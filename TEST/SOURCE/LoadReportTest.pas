@@ -276,10 +276,10 @@ begin
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой365)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой365).fr3');
 
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой365-накладные)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой365-накладные).fr3');
-  }
+
   LoadReportFromFile('Отчет Покупатели c отсрочкой (накладные)', ReportPath + '\Отчеты (финансы)\Отчет Покупатели c отсрочкой (накладные).fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по юр лицам - покупатели(бухг)', ReportPath + '\Отчеты (финансы)\Обороты по юр лицам - покупатели(бухг).fr3');
   LoadReportFromFile('Обороты по юр лицам - покупатели(факт)', ReportPath + '\Отчеты (финансы)\Обороты по юр лицам - покупатели(факт).fr3');
   LoadReportFromFile('Обороты по контрагентам (факт)', ReportPath + '\Отчеты (финансы)\Обороты по контрагентам (факт).fr3');
@@ -605,7 +605,11 @@ begin
   LoadReportFromFile('PrintMovement_Tax010423', ReportPath + '\Товарный Учет\PrintMovement_Tax010423.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective010423', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective010423.fr3');
   exit;
-
+   }
+  LoadReportFromFile('PrintMovement_Tax010823', ReportPath + '\Товарный Учет\PrintMovement_Tax010823.fr3');
+  LoadReportFromFile('PrintMovement_TaxCorrective010823', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective010823.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_Tax170222', ReportPath + '\Товарный Учет\PrintMovement_Tax170222.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective170222', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective170222.fr3');
   exit;
