@@ -1528,7 +1528,7 @@
       ParentShowHint = False
       ShowHint = True
     end
-    object cxButtonEdit1: TcxButtonEdit
+    object edReceiptGoods1: TcxButtonEdit
       Left = 711
       Top = 7
       Properties.Buttons = <
@@ -4488,7 +4488,7 @@
   end
   object GuidesReceiptGoods1: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edReceiptGoods
+    LookupControl = edReceiptGoods1
     FormNameParam.Value = 'TReceiptGoodsChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -4496,14 +4496,14 @@
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'ObjectId'
+        Name = 'Key'
         Value = ''
         Component = GuidesReceiptGoods1
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ObjectName'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesReceiptGoods1
         ComponentItem = 'TextValue'
