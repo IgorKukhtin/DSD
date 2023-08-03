@@ -45,13 +45,25 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              )   
 AS
 $BODY$
+   DECLARE vbUserId Integer;
    DECLARE vbIsGoods Boolean;
    DECLARE vbIsUnit Boolean;
 
    DECLARE vbIsGoods_show Boolean;
+   DECLARE vbIsSummIn Boolean;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
 
+
+    -- !!!определяется!!!
     vbIsGoods_show:= TRUE;
+
+    -- !!!определяется!!!
+    vbIsSummIn:= -- Ограничение просмотра с/с
+                 NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+                ;
+
 /*
     -- !!!т.к. нельзя когда много данных в гриде!!!
     IF inStartDate + (INTERVAL '1 DAY') < inEndDate AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0

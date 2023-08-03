@@ -49,6 +49,7 @@ $BODY$
  DECLARE vbUserId    Integer;
  DECLARE vbIsGroup   Boolean;
  DECLARE vbIsBranch  Boolean;
+ DECLARE vbIsSummIn  Boolean;
 BEGIN
       -- vbUserId:= CASE WHEN inSession = '' THEN 5 ELSE lpGetUserBySession (inSession) END;
       vbUserId:= lpGetUserBySession (inSession);
@@ -57,6 +58,11 @@ BEGIN
 
       -- определяется уровень доступа
       vbIsBranch:= COALESCE (0 < (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), FALSE);
+
+      -- !!!определяется!!!
+      vbIsSummIn:= -- Ограничение просмотра с/с
+                   NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+                  ;
 
       -- Маховская М.В.
       IF vbUserId IN (439917)
@@ -387,9 +393,9 @@ BEGIN
          , tmpOperationGroup.AmountIn        :: TFloat AS AmountIn
          , tmpOperationGroup.AmountIn_Weight :: TFloat AS AmountIn_Weight
          , tmpOperationGroup.AmountIn_Sh     :: TFloat AS AmountIn_Sh
-         , CASE WHEN vbIsBranch = TRUE THEN 0 ELSE tmpOperationGroup.SummIn_zavod END :: TFloat AS SummIn_zavod
-         , tmpOperationGroup.SummIn_branch   :: TFloat AS SummIn_branch
-         , CASE WHEN vbIsBranch = TRUE THEN 0 ELSE tmpOperationGroup.SummIn_60000 END :: TFloat AS SummIn_60000
+         , CASE WHEN vbIsBranch = TRUE OR vbIsSummIn = FALSE THEN 0 ELSE tmpOperationGroup.SummIn_zavod END :: TFloat AS SummIn_zavod
+         , CASE WHEN vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_branch ELSE 0 END                      :: TFloat AS SummIn_branch
+         , CASE WHEN vbIsBranch = TRUE OR vbIsSummIn = FALSE THEN 0 ELSE tmpOperationGroup.SummIn_60000 END :: TFloat AS SummIn_60000
 
          , tmpOperationGroup.Amount_Send_pl       :: TFloat AS Amount_Send_pl
          , tmpOperationGroup.Summ_ProfitLoss      :: TFloat AS Summ_ProfitLoss
@@ -398,8 +404,8 @@ BEGIN
 
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_zavod  / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_zavod
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_branch / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_branch
-         , CASE WHEN tmpOperationGroup.AmountIn  <> 0 THEN tmpOperationGroup.SummIn_zavod   / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_zavod
-         , CASE WHEN tmpOperationGroup.AmountIn  <> 0 THEN tmpOperationGroup.SummIn_branch  / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_branch
+         , CASE WHEN tmpOperationGroup.AmountIn  <> 0 AND  vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_zavod   / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_zavod
+         , CASE WHEN tmpOperationGroup.AmountIn  <> 0 AND  vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_branch  / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_branch
 
          , COALESCE (tmpPriceList_kind.Price_vat, tmpPriceList.Price_vat) ::TFloat AS Price_PriceList
          , (tmpOperationGroup.AmountOut * COALESCE (tmpPriceList_kind.Price_vat, tmpPriceList.Price_vat) ) :: TFloat AS SummOut_PriceList

@@ -49,11 +49,18 @@ RETURNS TABLE (LocationId Integer, LocationCode Integer, LocationName TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
+
+  DECLARE vbIsSummIn Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
     
+
+    -- !!!определяется!!!
+    vbIsSummIn:= -- Ограничение просмотра с/с
+                 NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+                ;
 
      -- !!!может так будет быстрее!!!
     inAccountGroupId:= COALESCE (inAccountGroupId, 0);

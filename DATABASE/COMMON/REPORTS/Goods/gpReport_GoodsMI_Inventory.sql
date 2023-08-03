@@ -31,6 +31,7 @@ AS
 $BODY$
  DECLARE vbUserId Integer;
  DECLARE vbIsGroup Boolean;
+ DECLARE vbIsSummIn  Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_GoodsMI_Inventory());
@@ -38,6 +39,11 @@ BEGIN
 
      -- !!!определяется!!!
      vbIsGroup:= (inSession = '');
+
+     -- !!!определяется!!!
+     vbIsSummIn:= -- Ограничение просмотра с/с
+                  NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+                 ;
 
      -- Бурмага М.Ф. + Гармаш С.М. + Горб Т.Г. + Киян А.І.
      IF vbUserId IN (5308086, 651642, 439887, 7310795)
@@ -114,28 +120,28 @@ BEGIN
          , (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight) :: TFloat AS Amount_Weight
          , (tmpOperationGroup.AmountIn_Sh     - tmpOperationGroup.AmountOut_Sh)     :: TFloat AS Amount_Sh
 
-         , tmpOperationGroup.SummIn_zavod  :: TFloat AS SummIn_zavod
-         , tmpOperationGroup.SummIn_branch :: TFloat AS SummIn_branch
-         , tmpOperationGroup.SummIn_60000  :: TFloat AS SummIn_60000
+         , CASE WHEN vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_zavod  ELSE 0 END :: TFloat AS SummIn_zavod
+         , CASE WHEN vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_branch ELSE 0 END :: TFloat AS SummIn_branch
+         , CASE WHEN vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_60000  ELSE 0 END :: TFloat AS SummIn_60000
 
          , tmpOperationGroup.SummOut_zavod  :: TFloat AS SummOut_zavod
          , tmpOperationGroup.SummOut_branch :: TFloat AS SummOut_branch
          , tmpOperationGroup.SummOut_60000  :: TFloat AS SummOut_60000
 
-         , (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  :: TFloat AS Summ_zavod
-         , (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) :: TFloat AS Summ_branch
-         , (tmpOperationGroup.SummIn_60000  - tmpOperationGroup.SummOut_60000)  :: TFloat AS Summ_60000
+         , CASE WHEN vbIsSummIn = TRUE THEN (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  ELSE 0 END :: TFloat AS Summ_zavod
+         , CASE WHEN vbIsSummIn = TRUE THEN (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) ELSE 0 END :: TFloat AS Summ_branch
+         , CASE WHEN vbIsSummIn = TRUE THEN (tmpOperationGroup.SummIn_60000  - tmpOperationGroup.SummOut_60000)  ELSE 0 END :: TFloat AS Summ_60000
 
-         , CASE WHEN tmpOperationGroup.AmountIn <> 0 THEN tmpOperationGroup.SummIn_zavod  / tmpOperationGroup.AmountIn ELSE 0 END :: TFloat AS PriceIn_zavod
-         , CASE WHEN tmpOperationGroup.AmountIn <> 0 THEN tmpOperationGroup.SummIn_branch / tmpOperationGroup.AmountIn ELSE 0 END :: TFloat AS PriceIn_branch
+         , CASE WHEN tmpOperationGroup.AmountIn <> 0 AND vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_zavod  / tmpOperationGroup.AmountIn ELSE 0 END :: TFloat AS PriceIn_zavod
+         , CASE WHEN tmpOperationGroup.AmountIn <> 0 AND vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_branch / tmpOperationGroup.AmountIn ELSE 0 END :: TFloat AS PriceIn_branch
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_zavod  / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_zavod
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_branch / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_branch
-         , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 THEN (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_zavod
-         , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 THEN (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_branch
+         , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 AND vbIsSummIn = TRUE THEN (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_zavod
+         , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 AND vbIsSummIn = TRUE THEN (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_branch
 
-         , tmpOperationGroup.SummIn_RePrice        :: TFloat AS SummIn_RePrice
+         , CASE WHEN vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_RePrice        ELSE 0 END :: TFloat AS SummIn_RePrice
          , tmpOperationGroup.SummOut_RePrice       :: TFloat AS SummOut_RePrice
-         , tmpOperationGroup.SummIn_RePrice_60000  :: TFloat AS SummIn_RePrice_60000
+         , CASE WHEN vbIsSummIn = TRUE THEN tmpOperationGroup.SummIn_RePrice_60000  ELSE 0 END :: TFloat AS SummIn_RePrice_60000
          , tmpOperationGroup.SummOut_RePrice_60000 :: TFloat AS SummOut_RePrice_60000
 
      FROM (SELECT tmpContainer.UnitId

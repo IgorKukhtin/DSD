@@ -164,8 +164,12 @@ BEGIN
 
 
     -- !!!определяется!!!
-    vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
-
+    vbIsSummIn:= -- Отчеты руководитель сырья
+                 NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647)
+                 -- Ограничение просмотра с/с
+             AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+            ;
+    
     -- !!!может так будет быстрее!!!
     inAccountGroupId:= COALESCE (inAccountGroupId, 0);
 
@@ -679,6 +683,7 @@ BEGIN
                                                   AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
                          WHERE _tmpContainer.ContainerDescId = zc_Container_Count()
                            AND ObjectLink_PartionGoods_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
+                           AND inStartDate >= DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '4 MONTH'
                          GROUP BY _tmpContainer.LocationId
                                 , _tmpContainer.ContainerId_begin
                                 , _tmpContainer.GoodsId
@@ -747,6 +752,7 @@ BEGIN
                                               , MAX (tmpContainer_Count.ContainerId_begin) AS ContainerId_begin
 
                                          FROM tmpContainer_Count
+
                                                INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId_begin
                                                                    AND Container.DescId = zc_Container_CountCount()
                                                LEFT JOIN MovementItemContainer AS MIContainer 

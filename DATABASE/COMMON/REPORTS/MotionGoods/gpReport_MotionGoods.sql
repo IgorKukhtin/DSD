@@ -204,7 +204,11 @@ BEGIN
 
 
     -- !!!определяется!!!
-    vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
+    vbIsSummIn:= -- Отчеты руководитель сырья
+                 NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647)
+                 -- Ограничение просмотра с/с
+             AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+            ;
 
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;

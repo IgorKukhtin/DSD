@@ -63,15 +63,19 @@ AS
 $BODY$
  DECLARE vbUserId Integer;
  DECLARE vbIsBranch Boolean;
+ DECLARE vbIsSummIn Boolean;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
+    vbUserId:= lpGetUserBySession (inSession);
 
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
-     vbUserId:= lpGetUserBySession (inSession);
+    -- !!!определяется!!!
+    vbIsBranch:= EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
 
-     -- !!!определяется!!!
-     vbIsBranch:= EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
-
+    -- !!!определяется!!!
+    vbIsSummIn:= -- Ограничение просмотра с/с
+                 NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+                ;
 
     IF inGoodsId = 0 AND inGoodsGroupId <> 0
     THEN
@@ -1130,31 +1134,31 @@ BEGIN
         , tmpDataAll.GoodsName_parent
         , tmpDataAll.GoodsKindName_parent
 
-        , AVG (tmpDataAll.Price)            ::TFloat AS Price
-        , AVG (tmpDataAll.Price_branch)     ::TFloat AS Price_branch
+        , CASE WHEN vbIsSummIn = TRUE THEN AVG (tmpDataAll.Price)            ELSE 0 END ::TFloat AS Price
+        , CASE WHEN vbIsSummIn = TRUE THEN AVG (tmpDataAll.Price_branch)     ELSE 0 END ::TFloat AS Price_branch
 
-        , AVG (tmpDataAll.Price_end)        ::TFloat AS Price_end
-        , AVG (tmpDataAll.Price_branch_end) ::TFloat AS Price_branch_end
+        , CASE WHEN vbIsSummIn = TRUE THEN AVG (tmpDataAll.Price_end)        ELSE 0 END ::TFloat AS Price_end
+        , CASE WHEN vbIsSummIn = TRUE THEN AVG (tmpDataAll.Price_branch_end) ELSE 0 END ::TFloat AS Price_branch_end
 
-        , AVG (tmpDataAll.Price_partner)    ::TFloat AS Price_partner
+        , CASE WHEN vbIsSummIn = TRUE THEN AVG (tmpDataAll.Price_partner)    ELSE 0 END ::TFloat AS Price_partner
 
-        , SUM (tmpDataAll.SummPartnerIn)    ::TFloat  AS SummPartnerIn    
-        , SUM (tmpDataAll.SummPartnerOut)   ::TFloat  AS SummPartnerOut   
-        , SUM (tmpDataAll.AmountStart)      ::TFloat  AS AmountStart      
-        , SUM (tmpDataAll.AmountIn)         ::TFloat  AS AmountIn         
-        , SUM (tmpDataAll.AmountOut)        ::TFloat  AS AmountOut        
-        , SUM (tmpDataAll.AmountEnd)        ::TFloat  AS AmountEnd        
-        , SUM (tmpDataAll.Amount)           ::TFloat  AS Amount 
-        , SUM (tmpDataAll.SummStart)        ::TFloat  AS SummStart        
-        , SUM (tmpDataAll.SummStart_branch) ::TFloat  AS SummStart_branch 
-        , SUM (tmpDataAll.SummIn)           ::TFloat  AS SummIn           
-        , SUM (tmpDataAll.SummIn_branch)    ::TFloat  AS SummIn_branch    
-        , SUM (tmpDataAll.SummOut)          ::TFloat  AS SummOut          
-        , SUM (tmpDataAll.SummOut_branch)   ::TFloat  AS SummOut_branch   
-        , SUM (tmpDataAll.SummEnd)          ::TFloat  AS SummEnd          
-        , SUM (tmpDataAll.SummEnd_branch)   ::TFloat  AS SummEnd_branch   
-        , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ             
-        , SUM (tmpDataAll.Summ_branch)      ::TFloat  AS Summ_branch      
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummPartnerIn)    ELSE 0 END ::TFloat  AS SummPartnerIn    
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummPartnerOut)   ELSE 0 END ::TFloat  AS SummPartnerOut   
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountStart)      ELSE 0 END ::TFloat  AS AmountStart      
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountIn)         ELSE 0 END ::TFloat  AS AmountIn         
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountOut)        ELSE 0 END ::TFloat  AS AmountOut        
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountEnd)        ELSE 0 END ::TFloat  AS AmountEnd        
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.Amount)           ELSE 0 END ::TFloat  AS Amount 
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummStart)        ELSE 0 END ::TFloat  AS SummStart        
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummStart_branch) ELSE 0 END ::TFloat  AS SummStart_branch 
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummIn)           ELSE 0 END ::TFloat  AS SummIn           
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummIn_branch)    ELSE 0 END ::TFloat  AS SummIn_branch    
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummOut)          ELSE 0 END ::TFloat  AS SummOut          
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummOut_branch)   ELSE 0 END ::TFloat  AS SummOut_branch   
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummEnd)          ELSE 0 END ::TFloat  AS SummEnd          
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummEnd_branch)   ELSE 0 END ::TFloat  AS SummEnd_branch   
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.Summ)             ELSE 0 END ::TFloat  AS Summ             
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.Summ_branch)      ELSE 0 END ::TFloat  AS Summ_branch      
 
         , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change_branch, 0 :: TFloat AS Summ_Change_zavod
         , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200_branch,  0 :: TFloat AS Summ_40200_zavod

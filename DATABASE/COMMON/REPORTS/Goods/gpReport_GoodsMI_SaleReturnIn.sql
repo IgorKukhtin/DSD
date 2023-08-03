@@ -229,9 +229,12 @@ BEGIN
 
     -- определяется уровень доступа для с/с
     -- vbIsCost:= FALSE; -- EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId); -- Отчеты (управленцы) + Аналитики по продажам
-    vbIsCost:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
-                OR vbUserId = 1058530 -- Няйко В.И.
-              ;
+    vbIsCost:= (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
+             OR vbUserId = 1058530 -- Няйко В.И.
+               )
+             -- Ограничение просмотра с/с
+             AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)
+            ;
 
 
     vbIsGoods_where:= FALSE;
