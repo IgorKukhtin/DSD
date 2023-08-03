@@ -273,6 +273,8 @@ type
     isReceiptGoods: TcxGridDBColumn;
     ArticleVergl: TcxGridDBColumn;
     isProdOptions: TcxGridDBColumn;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
   private
   public
   end;
