@@ -2050,6 +2050,18 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecordReceiptGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateChoiceFormReceiptGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpDate_bySend'
         end
         item
@@ -2204,6 +2216,14 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbReport_Goods_child: TdxBarButton
       Action = actReport_Goods_child
+      Category = 0
+    end
+    object bbInsertRecordReceiptGoods: TdxBarButton
+      Action = macInsertRecordReceiptGoods
+      Category = 0
+    end
+    object bbUpdateChoiceFormReceiptGoods: TdxBarButton
+      Action = actUpdateChoiceFormReceiptGoods
       Category = 0
     end
   end
@@ -2549,6 +2569,17 @@ object ProductionUnionForm: TProductionUnionForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
+    end
+    object actInsertRecordReceiptGoods: TInsertRecord
+      Category = 'ReceiptGoods'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewMaster
+      Action = actUpdateChoiceFormReceiptGoods
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1079#1077#1083' ('#1089#1087#1080#1089#1086#1082')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1079#1077#1083' ('#1089#1087#1080#1089#1086#1082')'
+      ImageIndex = 0
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -3947,6 +3978,85 @@ object ProductionUnionForm: TProductionUnionForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateChoiceFormReceiptGoods: TOpenChoiceForm
+      Category = 'ReceiptGoods'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1079#1077#1083' ('#1089#1087#1080#1089#1086#1082')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1079#1077#1083' ('#1089#1087#1080#1089#1086#1082')'
+      ImageIndex = 1
+      FormName = 'TReceiptGoodsChoiceForm'
+      FormNameParam.Value = 'TReceiptGoodsChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object macInsertRecordReceiptGoods: TMultiAction
+      Category = 'ReceiptGoods'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertRecordReceiptGoods
+        end
+        item
+          Action = actRefreshMI_Master
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1079#1077#1083' ('#1089#1087#1080#1089#1086#1082')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1079#1077#1083' ('#1089#1087#1080#1089#1086#1082')'
+      ImageIndex = 0
     end
   end
   object MasterDS: TDataSource

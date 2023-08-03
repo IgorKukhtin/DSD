@@ -304,6 +304,11 @@ type
     edInvNumberInvoice: TcxTextEdit;
     cxLabel8: TcxLabel;
     edVATPercent: TcxCurrencyEdit;
+    actInsertRecordReceiptGoods: TInsertRecord;
+    actUpdateChoiceFormReceiptGoods: TOpenChoiceForm;
+    macInsertRecordReceiptGoods: TMultiAction;
+    bbInsertRecordReceiptGoods: TdxBarButton;
+    bbUpdateChoiceFormReceiptGoods: TdxBarButton;
   private
   public
   end;
