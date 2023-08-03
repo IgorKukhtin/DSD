@@ -32,6 +32,7 @@ type
     actLoginAdmin: TAction;
     FormParams: TdsdFormParams;
     spGet_User_IsAdmin: TdsdStoredProc;
+    btnOkOfLine: TcxButton;
     procedure btnOkClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -105,6 +106,14 @@ end;
 
 procedure TLoginForm1.btnOkClick(Sender: TObject);
 begin
+
+  if TcxButton(Sender).Tag = 1 then
+  begin
+    gc_User.Local := True;
+    OnlyLocal := True;
+    LocalFCSStart := ' "ofline"'
+  end;
+
   inherited;
   // сохраняем авторизационные данные для запуска сервиса + для вывода в MainForm
 

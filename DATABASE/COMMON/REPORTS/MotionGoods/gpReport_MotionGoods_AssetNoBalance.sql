@@ -30,16 +30,19 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , StorageName TVarChar
              , UnitCode Integer, UnitName TVarChar
-             , CarName TVarChar, EngineNum TVarChar
+             , CarName TVarChar, EngineNum TVarChar, VIN TVarChar, RegistrationCertificate TVarChar
              , CarModelCode Integer, CarModelName TVarChar 
              , CarTypeCode Integer, CarTypeName TVarChar
              , BodyTypeCode Integer, BodyTypeName TVarChar
+             , Year_car TFloat
              
-             , Price_Partion TFloat
-             , PartNumber_Partion TVarChar
-             , Model_Partion TVarChar
-             , UnitName_Storage TVarChar
-             , BranchName_Storage TVarChar 
+             , Release_Partion TDateTime
+             , Price_Partion        TFloat
+             , PartNumber_Partion   TVarChar
+             , Model_Partion        TVarChar 
+             , PartnerName_Partion      TVarChar
+             , UnitName_Storage     TVarChar
+             , BranchName_Storage   TVarChar 
              , AreaUnitName_Storage TVarChar
              , Room_Storage         TVarChar
              , Address_Storage      TVarChar
@@ -189,7 +192,7 @@ BEGIN
     CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
+/*    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
     THEN
         INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
            SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
@@ -228,7 +231,7 @@ BEGIN
     END IF;
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpLocation;
-
+  */
 
     -- группа подразделений или подразделение ...by
     IF inUnitGroupId_by <> 0
@@ -249,7 +252,37 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH tmpPriceStart AS (SELECT NULL :: Integer AS GoodsId, NULL :: TFloat AS Price WHERE 1 = 0)
-         , tmpPriceEnd AS (SELECT NULL :: Integer AS GoodsId, NULL :: TFloat AS Price WHERE 1 = 0)
+         , tmpPriceEnd AS (SELECT NULL :: Integer AS GoodsId, NULL :: TFloat AS Price WHERE 1 = 0)  
+         
+         , _tmpLocation AS (  ---LocationId, DescId, ContainerDescId)
+                            SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
+                                 , zc_ContainerLinkObject_Unit()       AS DescId
+                                 , tmpDesc.ContainerDescId             AS ContainerDescId
+                            FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
+                                 LEFT JOIN (SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+                            WHERE COALESCE (inUnitGroupId,0) <> 0 AND COALESCE (inLocationId, 0) = 0
+                         UNION ALL
+                            SELECT Object.Id AS LocationId
+                                 , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit()
+                                        WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
+                                        WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
+                                   END AS DescId
+                                 , tmpDesc.ContainerDescId
+                            FROM Object
+                                 LEFT JOIN (SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+                            WHERE Object.Id = inLocationId  AND COALESCE (inLocationId, 0)  <> 0
+                         UNION ALL
+                            SELECT tmp.LocationId, tmp.DescId, tmpDesc.ContainerDescId
+                            FROM (SELECT zc_Juridical_Basis() AS LocationId, zc_ContainerLinkObject_Unit() AS DescId
+                                 UNION ALL
+                                  SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Unit() AS DescId FROM Object WHERE Object.DescId = zc_Object_Unit()
+                                 UNION ALL
+                                  SELECT Object.Id, zc_ContainerLinkObject_Member() AS DescId FROM Object WHERE Object.DescId = zc_Object_Member()
+                                 ) AS tmp
+                                 LEFT JOIN (SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+                            WHERE COALESCE (inUnitGroupId,0) = 0 AND COALESCE (inLocationId, 0) = 0
+                           )
+         
          -- !!!криво хардкодим ОС и все что для них!!!
        , tmpReport_all AS (SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= -1 * zc_Enum_AccountGroup_10000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId
@@ -364,7 +397,7 @@ BEGIN
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
         
-        , Object_Measure.ValueData       AS MeasureName
+        , Object_Measure.ValueData       AS MeasureName  
         , ObjectFloat_Weight.ValueData   AS Weight
 
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)              AS PartionGoodsId
@@ -384,22 +417,28 @@ BEGIN
         , Object_Unit.ValueData          AS UnitName
 
         , Object_Car.ValueData           AS CarName  --гос номер авто
-        , ObjectString_EngineNum.ValueData :: TVarChar AS EngineNum
+        , ObjectString_EngineNum.ValueData  :: TVarChar AS EngineNum  
+        , ObjectString_VIN.ValueData        :: TVarChar AS VIN
+        , RegistrationCertificate.ValueData :: TVarChar AS RegistrationCertificate
         , Object_CarModel.ObjectCode AS CarModelCode
         , Object_CarModel.ValueData  AS CarModelName 
         , Object_CarType.ObjectCode  AS CarTypeCode
         , Object_CarType.ValueData   AS CarTypeName
         , Object_BodyType.ObjectCode AS BodyTypeCode
         , Object_BodyType.ValueData  AS BodyTypeName 
+        , COALESCE (ObjectFloat_Year.ValueData,0) :: TFloat  AS Year_car
 
+        , ObjectDate_Release.ValueData             ::TDateTime  AS Release_Partion
         , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
         , ObjectString_PartNumber.ValueData        :: TVarChar  AS PartNumber_Partion
         , Object_PartionModel.ValueData            :: TVarChar  AS Model_Partion
+        , Object_Partner_Partion.ValueData         :: TVarChar  AS PartnerName_Partion
         , Object_Unit_Storage.ValueData            :: TVarChar  AS UnitName_Storage
         , Object_Branch_Storage.ValueData          :: TVarChar  AS BranchName_Storage
         , Object_AreaUnit_Storage.ValueData        :: TVarChar  AS AreaUnitName_Storage
         , ObjectString_Storage_Room.ValueData      :: TVarChar  AS Room_Storage
-        , ObjectString_Storage_Address.ValueData   :: TVarChar  AS Address_Storage        
+        , ObjectString_Storage_Address.ValueData   :: TVarChar  AS Address_Storage
+                
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
         , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
@@ -814,7 +853,15 @@ BEGIN
                                ON ObjectString_EngineNum.ObjectId = Object_Car.Id
                               AND ObjectString_EngineNum.DescId = zc_ObjectString_Car_EngineNum()
 
-
+        LEFT JOIN ObjectString AS RegistrationCertificate 
+                               ON RegistrationCertificate.ObjectId = Object_Car.Id 
+                              AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
+        LEFT JOIN ObjectString AS ObjectString_VIN
+                               ON ObjectString_VIN.ObjectId = Object_Car.Id
+                              AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Year
+                              ON ObjectFloat_Year.ObjectId = Object_Car.Id
+                             AND ObjectFloat_Year.DescId = zc_ObjectFloat_Car_Year()
 
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
@@ -835,6 +882,10 @@ BEGIN
                              ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
                             AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
         LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+
+        LEFT JOIN ObjectDate AS ObjectDate_Release
+                             ON ObjectDate_Release.ObjectId = ObjectLink_Goods.ChildObjectId
+                            AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()
 
         LEFT JOIN ObjectString AS ObjectString_Storage_Address
                                ON ObjectString_Storage_Address.ObjectId = Object_Storage.Id 
@@ -872,6 +923,11 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_PartNumber
                                ON ObjectString_PartNumber.ObjectId = tmpMIContainer_group.PartionGoodsId
                               AND ObjectString_PartNumber.DescId   = zc_ObjectString_PartionGoods_PartNumber()
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Partner
+                             ON ObjectLink_PartionGoods_Partner.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_PartionGoods_Partner.DescId   = zc_ObjectLink_PartionGoods_Partner()
+        LEFT JOIN Object AS Object_Partner_Partion ON Object_Partner_Partion.Id = ObjectLink_PartionGoods_Partner.ChildObjectId
 
         LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
         LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId

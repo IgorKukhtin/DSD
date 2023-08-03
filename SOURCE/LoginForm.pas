@@ -51,6 +51,7 @@ type
     procedure SetAllowLocalConnect(Value: Boolean);
   public
     property AllowLocalConnect: Boolean read FAllowLocalConnect write SetAllowLocalConnect;
+    property OnlyLocal: Boolean read FOnlyLocal write FOnlyLocal;
   published
     property Users: string read GetUsers write SetUsers;
   end;

@@ -190,6 +190,7 @@ type
     spUpdate_PickUpLogsAndDBF: TdsdStoredProc;
     UnitConfigCDS: TClientDataSet;
     TimerTrayIconPUSH: TTimer;
+    TimerChechOnline: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -207,6 +208,7 @@ type
     procedure CashRemainsDiffExecute;
     procedure spCheck_RemainsErrorAfterExecute(Sender: TObject);
     procedure TimerTrayIconPUSHTimer(Sender: TObject);
+    procedure TimerChechOnlineTimer(Sender: TObject);
 
   private
     { Private declarations }
@@ -387,6 +389,8 @@ begin
             end;
             tiServise.Hint := '';
            end;
+
+        60: TimerChechOnlineTimer(Nil);
       end;
   except on E: Exception do
     Add_Log('AppMsgHandler Exception: ' + E.Message);
@@ -480,6 +484,8 @@ begin
       MainCashForm2.tiServise.IconIndex:=1;
       Application.ProcessMessages;
 
+      if gc_User.Local then Exit;
+
       //Получение конфигурации аптеки
       if not gc_User.Local then SaveUnitConfig;
       //Получение Сотрудников и настроек
@@ -541,6 +547,8 @@ begin   //yes
 
     // Проверяем и архивируем
     SQLiteChechAndArc;
+
+    if gc_User.Local then Exit;
 
     if SetFarmacyNameByUser then
     begin
@@ -641,12 +649,20 @@ begin
   TimerSaveReal.Enabled := false;
   TrayIconPUSHList := TStringList.Create;
 
-  try
-    spGet_User_IsAdmin.Execute;
-    if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value then  // показываем меню только для Админа
-      tiServise.PopupMenu:=pmServise
-    else tiServise.PopupMenu:=nil;
-  except on E: Exception do
+  if gc_User.Local then
+  begin
+    try
+      spGet_User_IsAdmin.Execute;
+      if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value then  // показываем меню только для Админа
+        tiServise.PopupMenu:=pmServise
+      else tiServise.PopupMenu:=nil;
+    except on E: Exception do
+      if (ParamStr(1) = 'Админ') or (gc_User.Login = 'Админ') then  // показываем меню только для Админа
+        tiServise.PopupMenu:=pmServise
+      else tiServise.PopupMenu:=nil;
+    end;
+  end else
+  begin
     if (ParamStr(1) = 'Админ') or (gc_User.Login = 'Админ') then  // показываем меню только для Админа
       tiServise.PopupMenu:=pmServise
     else tiServise.PopupMenu:=nil;
@@ -689,7 +705,7 @@ begin
   tiServise.Hint := 'Инициализация локального хранилища - да';
   FSaveRealAllRunning := false;
   TimerSaveReal.Enabled := false;
-  if SetFarmacyNameByUser then
+  if not gc_User.Local and SetFarmacyNameByUser then
   begin
     SaveUnitConfig; // Обновляем конфигурацию
     SaveRealAll;  // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
@@ -733,23 +749,7 @@ end;
 
 procedure TMainCashForm2.N5Click(Sender: TObject);
 begin
-  try
-    MainCashForm2.tiServise.IconIndex:=1;
-    Application.ProcessMessages;
-    try
-      spGet_User_IsAdmin.Execute;
-      gc_User.Local := False;
-      ChangeStatus('Режим работы: В сети');
-    except
-      Begin
-        gc_User.Local := True;
-        ChangeStatus('Режим работы: Автономно');
-      End;
-    end;
-  finally
-    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
-    Application.ProcessMessages;
-  end;
+  TimerChechOnlineTimer(Sender);
 end;
 
 procedure TMainCashForm2.N7Click(Sender: TObject);
@@ -1117,6 +1117,34 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.TimerChechOnlineTimer(Sender: TObject);
+begin
+  TimerChechOnline.Enabled := False;
+  if gc_User.Local then
+  try
+    try
+      MainCashForm2.tiServise.IconIndex:=1;
+      Application.ProcessMessages;
+      try
+        spGet_User_IsAdmin.Execute;
+        gc_User.Local := False;
+        ChangeStatus('Режим работы: В сети');
+      except
+        Begin
+          gc_User.Local := True;
+          ChangeStatus('Режим работы: Автономно');
+        End;
+      end;
+    finally
+      MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+      Application.ProcessMessages;
+      TimerChechOnline.Enabled := True;
+    end;
+  finally
+    TimerChechOnline.Enabled := True;
+  end;
+end;
+
 procedure TMainCashForm2.TimerGetRemainsTimer(Sender: TObject);
 begin
   TimerGetRemains.Enabled := False;
@@ -1145,6 +1173,8 @@ begin
   try
     if SetFarmacyNameByUser then
     begin
+
+      if gc_User.Local then Exit;
 
       bRun := False;
       dsdSave := TdsdStoredProc.Create(nil);

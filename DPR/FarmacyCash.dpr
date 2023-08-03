@@ -175,6 +175,8 @@ begin
    //  Выбор формы для запуска
     AllowLocalConnect := True;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
     gc_User.LocalMaxAtempt:=2;
+    btnOkOfLine.Visible := AllowLocalConnect;
+
 
     if FindCmdLineSwitch('autologin', True)
     then begin

@@ -27,6 +27,17 @@ BEGIN
    -- сохранили свойство <Ќазвание украинское>
    IF COALESCE (inNameUkr, '') <> ''
    THEN
+
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND 
+        vbUserId <> 9383066 AND
+        COALESCE (inNameUkr, '') <> COALESCE ((SELECT ObjectString_Goods_NameUkr.ValueData     
+                                               FROM ObjectString AS ObjectString_Goods_NameUkr
+                                               WHERE ObjectString_Goods_NameUkr.ObjectId = inId
+                                                 AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()), '')
+     THEN
+       RAISE EXCEPTION '»зменени€ украинского названи€ вам запрещено.';   
+     END IF;
+
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_NameUkr(), tmpGoods.GoodsId, inNameUkr)
      FROM             (SELECT DISTINCT
                             COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId

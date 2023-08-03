@@ -207,7 +207,7 @@ BEGIN
     -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_UnComplete());
 
-    inBayer := translate(inBayer, chr('8296')||chr('8297'), '');
+    inBayer := gpGet_BayerAscii(inBayer);
 
     IF COALESCE (inBayerId, 0) <> 0
     THEN
@@ -240,7 +240,7 @@ BEGIN
 	END IF;
 
       -- сохранили Комментарий клиента
-    inComment := translate(inComment, chr('8296')||chr('8297'), '');
+    inComment := gpGet_BayerAscii(inComment);
     IF COALESCE (TRIM(inComment), '') <> '' THEN
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentCustomer(), ioId, TRIM(inComment));
 	END IF;
@@ -304,4 +304,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inPromoCodeId := 297504593, inSession := '3'); -- Аптека_1 пр_Правды_6
-

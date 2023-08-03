@@ -91,7 +91,7 @@ BEGIN
     -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_UnComplete());
 
-    inBayer := translate(inBayer, chr('8296')||chr('8297'), '');
+    inBayer := gpGet_BayerAscii(inBayer);
 
     IF COALESCE (inBayerId, 0) <> 0
     THEN
@@ -132,3 +132,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_CheckDelivery_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayerId := 64068, inBayer := 'V S D'::TVarChar, inBayerPhone:= '+38(095) 183-1969', inInvNumberOrder:= '12345', inManagerName:= '5', inDeliveryPrice := 25, inSession := '3'::TVarChar); -- Аптека_1 пр_Правды_6
+

@@ -218,6 +218,7 @@ BEGIN
       -- информация из партий
      , tmpMIC AS (SELECT MovementItemContainer.ContainerId
                        , MovementItemContainer.MovementItemId
+                       , MovementItemContainer.OperDate
                        , (-MovementItemContainer.Amount)::TFloat AS Amount
                   FROM tmpMovementCheck
 
@@ -287,7 +288,8 @@ BEGIN
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                   
                                                   
-                               LEFT JOIN impMIncome_NDS AS MI_Income ON MI_Income.Id      = tmpMIC_Info.MIIncomeId     
+                               LEFT JOIN impMIncome_NDS AS MI_Income ON MI_Income.Id      = tmpMIC_Info.MIIncomeId    
+                                                       AND (MI_Income.NDSKindId <> zc_Enum_NDSKind_Special_0() OR tmpMIC_Info.OperDate < '01.07.2023') 
                                                                                        
                          GROUP BY Movement_Check.InvoiceId, COALESCE(MI_Income.NDSKindId, zc_Enum_NDSKind_Medical())
                          HAVING  SUM (CASE WHEN Movement_Check.DescId = zc_Movement_Check()
@@ -545,4 +547,5 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 --select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('20.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3')
 -- where TotalSummAll <> TotalSumm
 
-select * from gpSelect_Movement_Invoice(inStartDate := ('01.06.2022')::TDateTime , inEndDate := ('15.06.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_Invoice(inStartDate := ('01.07.2023')::TDateTime , inEndDate := ('24.07.2023')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+

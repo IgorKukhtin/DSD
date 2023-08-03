@@ -113,7 +113,7 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <BT_BuildType>Debug</BT_BuildType>
         <Icon_MainIcon>mainicon.ico</Icon_MainIcon>
-        <Debugger_RunParams>Админ Админ1234</Debugger_RunParams>
+        <Debugger_RunParams>Админ Админ1234 ofline</Debugger_RunParams>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -136,6 +136,7 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <BT_BuildType>Debug</BT_BuildType>
         <Icon_MainIcon>mainicon.ico</Icon_MainIcon>
+        <Debugger_RunParams>Админ Админ1234 ofline</Debugger_RunParams>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>

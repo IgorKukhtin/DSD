@@ -171,7 +171,7 @@ type
     cbAmount: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
     bbAmount: TdxBarControlContainerItem;
-    actPrint_GP: TdsdPrintAction;
+    actPrint_PP: TdsdPrintAction;
     bbPrint2: TdxBarButton;
     actPrint_Remains: TdsdPrintAction;
     bbPrint3: TdxBarButton;

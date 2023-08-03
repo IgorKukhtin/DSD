@@ -6,6 +6,7 @@ interface
 
 uses Winapi.Windows, Winapi.ActiveX, System.Variants, System.SysUtils, System.Win.ComObj,
      System.Classes, PosInterface, IdTCPClient, IdThreadComponent, IdGlobal, Vcl.Forms,
+     DateUtils,
      {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
 
 type
@@ -23,6 +24,8 @@ type
     FProcessState: TPosProcessState;
     FRadBufer: String;
     FTextCheck: String;
+    FServiceMessage : Boolean;
+    FRunServiceMessage: TDateTime;
 
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
@@ -30,11 +33,13 @@ type
     function GetTextCheck : string;
     function GetProcessType : TPosProcessType;
     function GetProcessState : TPosProcessState;
+    function GetCanceled : Boolean;
     procedure IdThreadComponentRun(Sender: TIdThreadComponent);
   protected
     function CheckConnection : Boolean;
     function Payment(ASumma : Currency) : Boolean;
     function Refund(ASumma : Currency) : Boolean;
+    function ServiceMessage : Boolean;
     procedure Cancel;
   public
     constructor Create(APOSTerminalCode : Integer);
@@ -76,6 +81,8 @@ begin
   FPOSTerminalCode := APOSTerminalCode;
   FRadBufer := '';
   FTextCheck := '';
+  FServiceMessage := False;
+  FRunServiceMessage := IncSecond(Now, 3);
 end;
 
 procedure TPos_PrivatBank_JSON.SetMsgDescriptionProc(Value: TMsgDescriptionProc);
@@ -106,6 +113,11 @@ end;
 function TPos_PrivatBank_JSON.GetProcessState : TPosProcessState;
 begin
   Result := FProcessState;
+end;
+
+function TPos_PrivatBank_JSON.GetCanceled : Boolean;
+begin
+  Result := FCancel;
 end;
 
 procedure TPos_PrivatBank_JSON.AfterConstruction;
@@ -149,7 +161,15 @@ var JSONObject, JSONParams: TJSONObject;
    end;
 
 begin
-  // ... read message from server
+
+  // Посылаем запрос об информации с устройства
+  if FServiceMessage and (FProcessState = ppsWaiting) and (FRunServiceMessage <= Now) then
+  begin
+    ServiceMessage;
+    FRunServiceMessage := IncSecond(Now, 3);
+  end;
+
+  // Проверка буфера
   if not FIdTCPClient.IOHandler.CheckForDataOnSource then Exit;
 
   Add_PosLog('Читаем.');
@@ -188,14 +208,57 @@ begin
               FProcessState := ppsOkPayment
             else if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Refund') then
               FProcessState := ppsOkRefund
+            else if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('ServiceMessage') then
+              FProcessState := FProcessState
             else FProcessState := ppsError;
 
             FTextCheck := '';
 
+            if (LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('ServiceMessage')) then
+            begin
+              JSONParams := JSONObject.Get('params').JsonValue as TJSONObject;
+              if JSONParams = nil then Exit;
+
+              if (JSONParams.Get('msgType') <> nil) then
+              begin
+                if (LowerCase(JSONParams.Get('msgType').JsonValue.Value) = LowerCase('interruptTransmitted')) then
+                begin
+                  FLastPosError := 'Выполнение операции прервано пользователем.';
+                end else if (LowerCase(JSONParams.Get('msgType').JsonValue.Value) = LowerCase('deviceBusy')) then
+                begin
+                  // Устройство занято ожидаем следующее
+                end else if (LowerCase(JSONParams.Get('msgType').JsonValue.Value) = LowerCase('getLastStatMsgCode')) then
+                begin
+                  case StrToInt(JSONParams.Get('LastStatMsgCode').JsonValue.Value) of
+                    0 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Код состояния недоступен.');
+                    1 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Карта была прочитана');
+                    2 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Использовал чип-карту');
+                    3 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Идет авторизация');
+                    4 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Ожидание действий кассира');
+                    5 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Печать чека');
+                    6 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Требуется ввод пин кода');
+                    7 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Карта удалена');
+                    8 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Мультипомощь EMV');
+                    9 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Ожидание карты');
+                    10 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('В процессе');
+                    11 : if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Правильная транзакция');
+                  end;
+                end else FLastPosError := 'Ошибка получения сообщения.';
+              end else FLastPosError := 'Ошибка получения сообщения.';
+              Exit;
+            end;
+
             if (LowerCase(JSONObject.Get('method').JsonValue.Value) <> LowerCase('Purchase')) and
                (LowerCase(JSONObject.Get('method').JsonValue.Value) <> LowerCase('Refund')) then Exit;
+
             JSONParams := JSONObject.Get('params').JsonValue as TJSONObject;
-            if JSONParams = nil then Exit;
+            if (JSONParams = nil) or (JSONParams.Get('merchant') = nil) or (JSONParams.Get('merchant').JsonValue.Value = '') then
+            begin
+              if (JSONObject.Get('errorDescription') <> nil) and (JSONObject.Get('errorDescription').JsonValue.Value <> '')  then
+                FLastPosError := JSONObject.Get('errorDescription').JsonValue.Value
+              else FLastPosError := 'Нет тела ответа...';
+              Exit;
+            end;
 
             FTextCheck := '            Карта';
             FTextCheck := FTextCheck + #13'Термінал ';
@@ -264,7 +327,8 @@ begin
       try
         FIdTCPClient.Host := FHost;
         FIdTCPClient.Port := FPort;
-        FIdTCPClient.ConnectTimeout := 4000;
+        Add_PosLog('Хост - ' + FHost + '; Порт - ' + IntToStr(FPort));
+        FIdTCPClient.ConnectTimeout := 5000;
         FIdTCPClient.Connect;
 
         Add_PosLog(JsonToSend.DataString);
@@ -316,6 +380,8 @@ begin
         begin
           FIdTCPClient.IOHandler.Write(JsonToSend);
           FProcessState := ppsWaiting;
+          FServiceMessage := True;
+          FRunServiceMessage := IncSecond(Now, 3);
         end;
 
       except on E:Exception do FLastPosError := 'Ошибка выполнения оплаты (возврата) : ' + e.Message;
@@ -351,8 +417,94 @@ begin
   Result := DoPayment(ASumma, True);
 end;
 
-procedure TPos_PrivatBank_JSON.Cancel;
+function TPos_PrivatBank_JSON.ServiceMessage : Boolean;
+  var JSONObject, JSONParams: TJSONObject; JSONPair: TJSONPair;
+      JsonToSend: TStringStream;
 begin
+
+  if FCancel Then Exit;
+  if FRadBufer <> '' Then Exit;
+
+  try
+    JSONParams := TJSONObject.Create;
+    JSONParams.AddPair('msgType', TJSONString.Create('getLastStatMsgCode'));
+
+    JSONObject := TJSONObject.Create;
+    JSONObject.AddPair('method', 'ServiceMessage');
+    JSONObject.AddPair('step', TJSONNumber.Create(0));
+    JSONObject.AddPair('params', JSONParams);
+
+    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
+    try
+      try
+
+        Add_PosLog(JsonToSend.DataString);
+        if FIdTCPClient.Connected then
+        begin
+          FIdTCPClient.IOHandler.Write(JsonToSend);
+          FProcessState := ppsWaiting;
+        end;
+
+      except on E:Exception do FLastPosError := 'Ошибка Вызова service message : ' + e.Message;
+      end;
+    finally
+      JSONObject.Free;
+      JsonToSend.Free;
+    end;
+  except on E:Exception do FLastPosError := 'Ошибка Вызова service message : ' + e.Message;
+  end;
+
+  if FLastPosError <> '' then
+  begin
+    FProcessState := ppsError;
+    Add_PosLog(FLastPosError);
+  end;
+end;
+
+procedure TPos_PrivatBank_JSON.Cancel;
+  var JSONObject, JSONParams: TJSONObject; JSONPair: TJSONPair;
+      JsonToSend: TStringStream;
+begin
+
+  if FCancel Then Exit;
+
+  if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Прерывание инициированной операции.');
+
+  try
+    JSONParams := TJSONObject.Create;
+    JSONParams.AddPair('msgType', TJSONString.Create('interrupt'));
+
+    JSONObject := TJSONObject.Create;
+    JSONObject.AddPair('method', 'ServiceMessage');
+    JSONObject.AddPair('step', TJSONNumber.Create(0));
+    JSONObject.AddPair('params', JSONParams);
+
+    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
+    try
+      try
+
+        Add_PosLog(JsonToSend.DataString);
+        if FIdTCPClient.Connected then
+        begin
+          FIdTCPClient.IOHandler.Write(JsonToSend);
+          FProcessState := ppsWaiting;
+        end;
+
+      except on E:Exception do FLastPosError := 'Ошибка отмены выполнения оерации : ' + e.Message;
+      end;
+    finally
+      JSONObject.Free;
+      JsonToSend.Free;
+    end;
+  except on E:Exception do FLastPosError := 'Ошибка отмены выполнения оерации : ' + e.Message;
+  end;
+
+  if FLastPosError <> '' then
+  begin
+    FProcessState := ppsError;
+    Add_PosLog(FLastPosError);
+  end;
+
   FCancel := True;
 end;
 

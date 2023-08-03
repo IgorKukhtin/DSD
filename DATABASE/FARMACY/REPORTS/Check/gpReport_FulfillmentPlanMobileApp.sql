@@ -339,23 +339,32 @@ BEGIN
                              , MovPlan.CountChech                                    AS CountSite
                              , MovPlan.CountSite                                     AS TotalSumm
                              , tmpESCount.CountUser                                  AS CountUser
-                             , Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)::TFloat AS ProcPlan
+                             , CASE WHEN tmpMovFact.UserId = 17908468 AND date_trunc('MONTH', inOperDate) = '01.07.2023' 
+                                    THEN 2
+                                    ELSE Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                         COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)
+                                    END::TFloat                                      AS ProcPlan
                              , tmpMovFact.UserId
                              , tmpMovFact.CountChech                                 AS CountChechUser
                              , tmpMovFact.CountMobile                                AS CountMobileUser
                              , tmpMovFact.CountMobileAll
                              
-                             , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                         COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) > 
+                             , CASE WHEN CASE WHEN tmpMovFact.UserId = 17908468 AND date_trunc('MONTH', inOperDate) = '01.07.2023' 
+                                              THEN 2
+                                              ELSE Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                                   COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)
+                                              END > 
                                          Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
                                                     THEN 1.0 * tmpMovFact.CountMobile / NullIf(tmpMovFact.CountChech, 0) * 100
                                                     ELSE 1.0 * tmpMovFact.CountMobile / NullIf(MovPlan.CountChech, 0) * 100                                       
                                                     END, 2)
                                     THEN Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
-                                                    THEN tmpMovFact.CountChech * Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                                         COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) / 100 - 
-                                                         tmpMovFact.CountMobile
+                                                    THEN tmpMovFact.CountChech * 
+                                                         CASE WHEN tmpMovFact.UserId = 17908468 AND date_trunc('MONTH', inOperDate) = '01.07.2023' 
+                                                              THEN 2
+                                                              ELSE Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                                                   COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)
+                                                              END / 100 - tmpMovFact.CountMobile
                                                     ELSE MovPlan.CountSite / COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1)
                                                          - COALESCE(tmpMovFact.CountMobile, 0)
                                                     END, 2) 
@@ -369,14 +378,20 @@ BEGIN
                                        END, 2)::TFloat                                                     AS ProcFact
                                
                              , date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER <= 30           AS isNewUser
-                             , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) - 
+                             , CASE WHEN CASE WHEN tmpMovFact.UserId = 17908468 AND date_trunc('MONTH', inOperDate) = '01.07.2023' 
+                                              THEN 2
+                                              ELSE Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                                   COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)
+                                              END - 
                                          Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
                                                     THEN 1.0 * tmpMovFact.CountMobile / NullIf(tmpMovFact.CountChech, 0) * 100
                                                     ELSE 1.0 * tmpMovFact.CountMobile / NullIf(MovPlan.CountChech, 0) * 100                                       
                                                     END, 2) > 0
-                                    THEN Round((Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                              COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) -
+                                    THEN Round((CASE WHEN tmpMovFact.UserId = 17908468 AND date_trunc('MONTH', inOperDate) = '01.07.2023' 
+                                                     THEN 2
+                                                     ELSE Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                                          COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)
+                                                     END -
                                               Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
                                                          THEN 1.0 * tmpMovFact.CountMobile / NullIf(tmpMovFact.CountChech, 0) * 100
                                                          ELSE 1.0 * tmpMovFact.CountMobile / NullIf(MovPlan.CountChech, 0) * 100                                       
@@ -413,9 +428,11 @@ BEGIN
                                   , MovPlan.ProcFact 
                                   , MovPlan.QuantityMobile
                                   , MovPlan.CountMobileAll
+                                  , MovPlan.CountChechUser
                                   , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, 
                                                                 MovPlan.QuantityMobile, 
-                                                                MovPlan.CountMobileAll)::Integer AS Place
+                                                                MovPlan.CountMobileAll, 
+                                                                MovPlan.CountChechUser DESC)::Integer AS Place
 
                              FROM tmpData AS MovPlan 
                              WHERE MovPlan.isNewUser = False AND MovPlan.isVacation = False AND MovPlan.isShowPlanMobileAppUser = TRUE
@@ -424,25 +441,30 @@ BEGIN
             tmpSumProcFact AS (SELECT MovPlan.ProcFact 
                                     , MovPlan.QuantityMobile
                                     , MovPlan.CountMobileAll
+                                    , MovPlan.CountChechUser
                                     , COUNT(*)          AS CountUser
                                FROM tmpDataPlace AS MovPlan 
                                GROUP BY MovPlan.ProcFact
                                       , MovPlan.QuantityMobile
-                                      , MovPlan.CountMobileAll),
+                                      , MovPlan.CountMobileAll
+                                      , MovPlan.CountChechUser),
             tmpSumTop AS (SELECT MovPlan.ProcFact
                                , MovPlan.QuantityMobile
                                , MovPlan.CountMobileAll
-                               , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, MovPlan.QuantityMobile, MovPlan.CountMobileAll)::Integer             AS Place
-                               , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact, MovPlan.QuantityMobile, MovPlan.CountMobileAll)::Integer   AS SumPlace
+                               , MovPlan.CountChechUser
+                               , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, MovPlan.QuantityMobile, MovPlan.CountMobileAll, MovPlan.CountChechUser DESC)::Integer             AS Place
+                               , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact, MovPlan.QuantityMobile, MovPlan.CountMobileAll, MovPlan.CountChechUser DESC)::Integer   AS SumPlace
                           FROM tmpSumProcFact AS MovPlan),
 
             tmpDataAwardPlace AS (SELECT MovPlan.UserId
                                        , MovPlan.ProcFact 
                                        , MovPlan.QuantityMobile
                                        , MovPlan.CountMobileAll
+                                       , MovPlan.CountChechUser
                                        , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact DESC, 
                                                                      MovPlan.QuantityMobile DESC, 
-                                                                     MovPlan.CountMobileAll DESC)::Integer AS Place
+                                                                     MovPlan.CountMobileAll DESC, 
+                                                                     MovPlan.CountChechUser)::Integer AS Place
                                   FROM tmpData AS MovPlan 
                                   WHERE MovPlan.isNewUser = False AND MovPlan.isShowPlanMobileAppUser = TRUE
                                     AND MovPlan.ProcFact >= COALESCE(vbAntiTOPMP_MinProcAward, 0)
@@ -450,16 +472,19 @@ BEGIN
             tmpSumAwardProcFact AS (SELECT MovPlan.ProcFact 
                                          , MovPlan.QuantityMobile
                                          , MovPlan.CountMobileAll
+                                         , MovPlan.CountChechUser
                                          , COUNT(*)          AS CountUser
                                     FROM tmpDataAwardPlace AS MovPlan 
                                     GROUP BY MovPlan.ProcFact
                                            , MovPlan.QuantityMobile
-                                           , MovPlan.CountMobileAll),
+                                           , MovPlan.CountMobileAll
+                                           , MovPlan.CountChechUser),
             tmpSumAwardTop AS (SELECT MovPlan.ProcFact
                                     , MovPlan.QuantityMobile
                                     , MovPlan.CountMobileAll
-                                    , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact DESC, MovPlan.QuantityMobile DESC, MovPlan.CountMobileAll DESC)::Integer             AS Place
-                                    , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact DESC, MovPlan.QuantityMobile DESC, MovPlan.CountMobileAll DESC)::Integer   AS SumPlace
+                                    , MovPlan.CountChechUser
+                                    , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact DESC, MovPlan.QuantityMobile DESC, MovPlan.CountMobileAll DESC, MovPlan.CountChechUser)::Integer             AS Place
+                                    , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact DESC, MovPlan.QuantityMobile DESC, MovPlan.CountMobileAll DESC, MovPlan.CountChechUser)::Integer   AS SumPlace
                                FROM tmpSumAwardProcFact AS MovPlan)
             
 
@@ -542,12 +567,14 @@ BEGIN
              LEFT JOIN tmpSumTop ON tmpSumTop.ProcFact        = MovPlan.ProcFact
                                 AND tmpSumTop.QuantityMobile  = MovPlan.QuantityMobile  
                                 AND tmpSumTop.CountMobileAll  = MovPlan.CountMobileAll  
+                                AND tmpSumTop.CountChechUser  = MovPlan.CountChechUser  
 
              LEFT JOIN tmpDataAwardPlace ON tmpDataAwardPlace.UserId = MovPlan.UserId
              
              LEFT JOIN tmpSumAwardTop ON tmpSumAwardTop.ProcFact        = MovPlan.ProcFact
                                      AND tmpSumAwardTop.QuantityMobile  = MovPlan.QuantityMobile  
                                      AND tmpSumAwardTop.CountMobileAll  = MovPlan.CountMobileAll  
+                                     AND tmpSumAwardTop.CountChechUser  = MovPlan.CountChechUser  
                                                                 
         ORDER BY Object_Unit.ValueData , Object_User.ValueData
         ;
@@ -567,4 +594,5 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 
 -- 
 
-select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('22.07.2023')::TDateTime , inUnitId := 0 , inUserId := 0 ,  inSession := '3')
+
+select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('22.08.2023')::TDateTime , inUnitId := 0 , inUserId := 0 ,  inSession := '3')

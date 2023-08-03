@@ -346,7 +346,8 @@ begin
     try
       qryReport_Upload.Close;
       qryReport_Upload.SQL.Text := qrySendList.FieldByName('SQL').AsString;
-      qryReport_Upload.ParamByName('OperDate').Value := FDate;
+      if Assigned(qryReport_Upload.Params.FindParam('OperDate')) then
+        qryReport_Upload.ParamByName('OperDate').Value := FDate;
       qryReport_Upload.Open;
     except
       on E: Exception do Add_Log(E.Message);
@@ -357,6 +358,8 @@ begin
     try
       qryReport_Upload.Close;
       qryReport_Upload.SQL.Text := qrySendList.FieldByName('SQL').AsString;
+      if Assigned(qryReport_Upload.Params.FindParam('OperDate')) then
+        qryReport_Upload.ParamByName('OperDate').Value := FDate;
       qryReport_Upload.Open;
     except
       on E: Exception do Add_Log(E.Message);

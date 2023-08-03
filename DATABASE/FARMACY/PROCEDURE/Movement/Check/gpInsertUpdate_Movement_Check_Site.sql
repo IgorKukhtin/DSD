@@ -106,7 +106,7 @@ BEGIN
     -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_UnComplete());
 
-    inBayer := translate(inBayer, chr('8296')||chr('8297')||chr('8203'), '');
+    inBayer := gpGet_BayerAscii(inBayer);
 
     IF COALESCE (inBayerId, 0) <> 0
     THEN
@@ -140,7 +140,7 @@ BEGIN
 	END IF;
 
       -- сохранили Комментарий клиента
-    inComment := translate(inComment, chr('8296')||chr('8297')||chr('8203'), '');
+    inComment := gpGet_BayerAscii(inComment);
     IF COALESCE (TRIM(inComment), '') <> '' THEN
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentCustomer(), ioId, TRIM(inComment));
 	END IF;
@@ -215,4 +215,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_Check_Site (0, 8393158, '2022-05-09 13:26:27'::TDateTime, 68870, 'Oleksii', '+38(050) 043-4130', '394725', '', False, 0 , False, '', TRUE, 123, TRUE, CURRENT_DATE::tdatetime, 0::TFloat, '3'); 
-

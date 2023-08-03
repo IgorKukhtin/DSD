@@ -95,7 +95,17 @@ BEGIN
             WHEN data_exception
             THEN vbCode := 0;
    END;
-
+   
+   IF COALESCE(ioId, 0) <> 0 AND 
+      NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin()) AND 
+      inUserId <> 9383066 AND
+      COALESCE (inNameUkr, '') <> COALESCE ((SELECT ObjectString_Goods_NameUkr.ValueData     
+                                             FROM ObjectString AS ObjectString_Goods_NameUkr
+                                             WHERE ObjectString_Goods_NameUkr.ObjectId = ioId
+                                               AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()), '')
+   THEN
+     RAISE EXCEPTION 'Изменения украинского названия вам запрещено.';   
+   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode, inName);

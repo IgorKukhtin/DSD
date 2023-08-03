@@ -6282,6 +6282,7 @@ function TdsdEDINAction.DoSendETTN: Boolean;
   var cXML : String;
 begin
   Result := False;
+  FErrorParam.Value := '';
   if not GetToken then Exit;
 
   // Пробуем найти КАТОТТГ
@@ -6352,7 +6353,6 @@ end;
 
 function TdsdEDINAction.LocalExecute: Boolean;
 begin
-  FErrorParam.Value := '';
 
   case FEDINActions of
     edinSendETTN : Result := DoSendETTN;

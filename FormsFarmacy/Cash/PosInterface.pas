@@ -15,16 +15,19 @@ type
       function GetTextCheck : string;
       function GetProcessType : TPosProcessType;
       function GetProcessState : TPosProcessState;
+      function GetCanceled : Boolean;
 
       function CheckConnection : Boolean;
       function Payment(ASumma : Currency) : Boolean;
       function Refund(ASumma : Currency) : Boolean;
+      function ServiceMessage : Boolean;
       procedure Cancel;
       property OnMsgDescriptionProc: TMsgDescriptionProc read GetMsgDescriptionProc write SetMsgDescriptionProc;
       property LastPosError : String read GetLastPosError;
       property ProcessType : TPosProcessType read GetProcessType;
       property ProcessState : TPosProcessState read GetProcessState;
       property TextCheck : String read GetTextCheck;
+      property Canceled : Boolean read GetCanceled;
    end;
 
 implementation

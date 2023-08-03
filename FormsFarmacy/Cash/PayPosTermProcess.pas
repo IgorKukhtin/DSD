@@ -145,9 +145,9 @@ begin
     end;
   end;
 
-  Add_PosLog('-------- Финиш потока');
-
   if Assigned(FEndPayPosTerm) then FEndPayPosTerm;
+
+  Add_PosLog('-------- Финиш потока');
 end;
 
 procedure TPosTermThread.MsgDescriptionProc(AMsgDescription : string);
@@ -175,20 +175,28 @@ end;
 procedure TPayPosTermProcessForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-  if Assigned(FPosTermThread) and not FPosTermThread.Finished then
+  if Assigned(FPosTermThread) and not FPosTermThread.Finished and
+    (FPosTermThread.FPosTerm.ProcessState <> ppsError) then
   begin
     if MessageDlg('Прервать оплату документа?',mtConfirmation,mbYesNo,0) <> mrYes then
     begin
       Action := caNone;
       ModalResult := 0;
       Exit;
-    end else FPosTermThread.FPosTerm.Cancel;
+    end else if not FPosTermThread.FPosTerm.Canceled and (FPosTermThread.FPosTerm.ProcessState <> ppsError) then
+    begin
+      FPosTermThread.FPosTerm.Cancel;
+      Action := caNone;
+      ModalResult := 0;
+      Exit;
+    end;
   end;
 
   if Assigned(FPosTermThread) then
   begin
     if FPosTermThread.GetLastPosError <> '' then ShowMessage(FPosTermThread.GetLastPosError);
     if not FPosTermThread.Finished then FPosTermThread.Terminate;
+    while not FPosTermThread.Finished do Sleep(500);
     FreeAndNil(FPosTermThread);
   end;
   Timer.Enabled := False;
@@ -221,7 +229,7 @@ begin
     ModalResult := mrOk
   end else
   begin
-    if Assigned(FPosTermThread) then Add_PosLog('Ошибка завершения оплаты: ' + FPosTermThread.GetLastPosError)
+    if Assigned(FPosTermThread) then Add_PosLog('Ошибка завершения оплаты')
     else Add_PosLog('Ошибка завершения оплаты: Потока нет');
     ModalResult := mrCancel;
   end;

@@ -26147,4 +26147,11 @@ object MainCashForm2: TMainCashForm2
     Left = 89
     Top = 64
   end
+  object TimerChechOnline: TTimer
+    Enabled = False
+    Interval = 60000
+    OnTimer = TimerChechOnlineTimer
+    Left = 121
+    Top = 224
+  end
 end

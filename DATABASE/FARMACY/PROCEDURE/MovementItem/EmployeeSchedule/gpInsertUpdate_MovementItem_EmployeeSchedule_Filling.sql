@@ -55,11 +55,11 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. График работы сотрудеиков не найден.';
     END IF;
 
-    IF inPayrollTypeID < 0
+    IF inPayrollTypeID < 0 OR inPayrollTypeID = zc_Enum_PayrollType_WorkVacation()
     THEN
       IF inStartHour <> '' OR inEndHour <> ''
       THEN
-        RAISE EXCEPTION 'Ошибка. Часы прихода и ухода для служебного выхода заполнять ненадо.';
+        RAISE EXCEPTION 'Ошибка. Часы прихода и ухода для служебного выхода и отпуска заполнять ненадо.';
       END IF;
     END IF;
 
@@ -201,3 +201,7 @@ $BODY$
 25.09.19                                                        *
 
 */
+
+
+--select * from gpInsertUpdate_MovementItem_EmployeeSchedule_Filling(inMovementID := 31178269 , inOperDate := ('10.07.2023')::TDateTime , inUserID := 3 , inUnitID := 0 , inPayrollTypeID := 22719689 , inStartHour := '' , inStartMin := '' , inEndHour := '' , inEndMin := '' ,  inSession := '3');
+

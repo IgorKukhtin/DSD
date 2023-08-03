@@ -247,7 +247,7 @@ type
     bbInsertUpDate_Child_bySend: TdxBarButton;
     GuidesReceiptGoods1: TdsdGuides;
     cxLabel15: TcxLabel;
-    cxButtonEdit1: TcxButtonEdit;
+    edReceiptGoods1: TcxButtonEdit;
     ModelName: TcxGridDBColumn;
     GoodsCode_group: TcxGridDBColumn;
     GoodsName_group: TcxGridDBColumn;
