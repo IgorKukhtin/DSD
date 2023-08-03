@@ -259,6 +259,7 @@ BEGIN
             -- Проведенные Заказ производство и Производство-сборка
           , tmpMIFloat_MovementId AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
                                            , Movement.DescId
+                                           , MovementItem.ObjectId
                                            , Object.DescId AS ObjectDescId
                                            , MAX (Movement.Id) AS MovementId
                                       FROM MovementItemFloat AS MIFloat_MovementId
@@ -276,6 +277,7 @@ BEGIN
                                         AND MIFloat_MovementId.ValueData IN (SELECT DISTINCT tmpMovement_OrderClient.Id :: TFloat FROM tmpMovement_OrderClient)
                                       GROUP BY MIFloat_MovementId.ValueData
                                              , Movement.DescId
+                                             , MovementItem.ObjectId
                                              , Object.DescId
                               )
         -- Результат
@@ -446,10 +448,18 @@ BEGIN
                                     ON ObjectString_GoodsGroupFull.ObjectId = tmpItem.ObjectId
                                    AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
+             -- Заказ клиента - Лодка
              LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_1   ON tmpOrderInternal_1.MovementId_OrderClient   = tmpMovement_OrderClient.Id AND tmpOrderInternal_1.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_1.ObjectDescId   = zc_Object_Product()
+                                                                    AND tmpOrderInternal_1.ObjectId                 = tmpItem.ObjectId
+             -- Заказ клиента - Узлы
              LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_2   ON tmpOrderInternal_2.MovementId_OrderClient   = tmpMovement_OrderClient.Id AND tmpOrderInternal_2.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_2.ObjectDescId   = zc_Object_Goods()
+                                                                    AND tmpOrderInternal_2.ObjectId                 = tmpItem.ObjectId
+             -- Сборка - Узлы
              LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_1 ON tmpProductionUnion_1.MovementId_OrderClient = tmpMovement_OrderClient.Id AND tmpProductionUnion_1.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_1.ObjectDescId = zc_Object_Product()
+                                                                    AND tmpProductionUnion_1.ObjectId               = tmpItem.ObjectId
+             -- Сборка - Лодка
              LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_2 ON tmpProductionUnion_2.MovementId_OrderClient = tmpMovement_OrderClient.Id AND tmpProductionUnion_2.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_2.ObjectDescId = zc_Object_Goods()
+                                                                    AND tmpProductionUnion_2.ObjectId               = tmpItem.ObjectId
        ;
 
 END;

@@ -100,6 +100,7 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     StateColor: TcxGridDBColumn;
     DateBegin: TcxGridDBColumn;
+    ModelName: TcxGridDBColumn;
   private
   public
   end;
