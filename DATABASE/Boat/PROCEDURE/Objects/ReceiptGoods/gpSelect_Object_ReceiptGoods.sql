@@ -205,7 +205,7 @@ BEGIN
          , Object_ReceiptGoods.ValueData  AS Name
 
          , ObjectString_Code.ValueData        ::TVarChar  AS UserCode
-         , CASE WHEN ObjectString_Comment.ValueData <> '' THEN ObjectString_Comment.ValueData ELSE ObjectString_Goods_Comment.ValueData END ::TVarChar  AS Comment
+         , CASE WHEN ObjectString_Comment.ValueData <> '' OR 1=1 THEN ObjectString_Comment.ValueData ELSE ObjectString_Goods_Comment.ValueData END ::TVarChar  AS Comment
          , CASE WHEN Object_Goods.Id = tmpReceiptProdModel.GoodsId
                      THEN TRUE
                 ELSE FALSE -- ObjectBoolean_Main.ValueData

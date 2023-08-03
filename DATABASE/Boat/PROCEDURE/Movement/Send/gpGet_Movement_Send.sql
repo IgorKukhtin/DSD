@@ -62,7 +62,18 @@ BEGIN
      ELSE
 
      RETURN QUERY
-
+        WITH tmpMI AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                       FROM MovementItem
+                            INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                        AND MIFloat_MovementId.ValueData      > 0
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = FALSE
+                       LIMIT 1
+                      )
+        --
         SELECT
             Movement_Send.Id
           , Movement_Send.InvNumber
@@ -84,8 +95,9 @@ BEGIN
 
           , 0                         AS ReceiptGoodsId
           , CAST ('' AS TVarChar)     AS ReceiptGoodsName
-          , 0                         AS MovementId_OrderClient
-          , CAST ('' AS TVarChar)     AS InvNumberFull_OrderClient
+          , Movement_OrderClient.Id   AS MovementId_OrderClient
+          , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+
         FROM Movement AS Movement_Send
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Send.StatusId
 
@@ -114,6 +126,9 @@ BEGIN
                                          ON MLO_Insert.MovementId = Movement_Send.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+            LEFT JOIN tmpMI ON tmpMI.MovementId_OrderClient > 0
+            LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
 
         WHERE Movement_Send.Id = inMovementId
           AND Movement_Send.DescId = zc_Movement_Send()

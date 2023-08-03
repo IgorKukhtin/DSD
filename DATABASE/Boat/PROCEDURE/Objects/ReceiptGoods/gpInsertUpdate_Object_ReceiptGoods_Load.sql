@@ -213,7 +213,7 @@ BEGIN
 
 
    -- Если первая строка загрузки удаляем все содержимое сборки модели
-   IF inRecNum = 1
+   IF inRecNum = 1 AND inGoodsName NOT ILIKE '%опция%'
    THEN
        -- поиск Шаблон сборка Модели
        vbReceiptProdModelId := (SELECT Object.Id
