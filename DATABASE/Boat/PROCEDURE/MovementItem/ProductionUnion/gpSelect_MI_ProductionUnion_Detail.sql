@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion_Detail(
 )
 RETURNS TABLE (Id Integer, ParentId Integer
              , ReceiptServiceId Integer, ReceiptServiceCode Integer, ReceiptServiceName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , Article_ReceiptService TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , Comment TVarChar
@@ -134,7 +135,9 @@ BEGIN
              , tmpMI_Detail.ParentId             :: Integer AS ParentId
              , tmpMI_Detail.ReceiptServiceId     :: Integer AS ReceiptServiceId
              , Object_ReceiptService.ObjectCode             AS ReceiptServiceCode
-             , Object_ReceiptService.ValueData              AS ReceiptServiceName
+             , Object_ReceiptService.ValueData              AS ReceiptServiceName 
+             , Object_Partner.Id                            AS PartnerId
+             , Object_Partner.ValueData                     AS PartnerName
              , ObjectString_Article.ValueData               AS Article_ReceiptService
 
              , tmpMI_Detail.PersonalId           :: Integer AS PersonalId
@@ -217,6 +220,12 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_CIN
                                     ON ObjectString_CIN.ObjectId = Object_Product.Id
                                    AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+             LEFT JOIN ObjectLink AS ObjectLink_ReceiptService_Partner
+                                  ON ObjectLink_ReceiptService_Partner.ObjectId = Object_ReceiptService.Id
+                                 AND ObjectLink_ReceiptService_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ReceiptService_Partner.ChildObjectId
+
     ;
 
 END;
