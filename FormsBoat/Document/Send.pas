@@ -268,6 +268,8 @@ type
     macInsertRecordAsset: TMultiAction;
     bb: TdxBarButton;
     bbb: TdxBarButton;
+    isProdOptions: TcxGridDBColumn;
+    ArticleVergl: TcxGridDBColumn;
   private
   public
   end;

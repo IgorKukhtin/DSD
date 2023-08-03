@@ -271,6 +271,8 @@ type
     cxLabel28: TcxLabel;
     edInvNumberInvoice: TcxTextEdit;
     isReceiptGoods: TcxGridDBColumn;
+    ArticleVergl: TcxGridDBColumn;
+    isProdOptions: TcxGridDBColumn;
   private
   public
   end;

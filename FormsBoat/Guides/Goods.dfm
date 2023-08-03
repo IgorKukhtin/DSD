@@ -52,13 +52,31 @@ object GoodsForm: TGoodsForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object isReceiptGoods: TcxGridDBColumn
+      object isReceiptGoods_group: TcxGridDBColumn
         Caption = #1059#1079#1077#1083' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'isReceiptGoods'
+        DataBinding.FieldName = 'isReceiptGoods_group'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 70
+      end
+      object isReceiptGoods: TcxGridDBColumn
+        Caption = #1057#1073#1086#1088#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isReceiptGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1089#1073#1086#1088#1082#1077' '#1059#1079#1083#1072'/'#1052#1086#1076#1077#1083#1080' '#1080#1083#1080' '#1074' '#1086#1087#1094#1080#1103#1093
+        Options.Editing = False
+        Width = 70
+      end
+      object isProdOptions: TcxGridDBColumn
+        Caption = #1054#1087#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isProdOptions'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1087#1094#1080#1103#1093
+        Options.Editing = False
+        Width = 70
       end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -384,6 +402,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'UnitName_receipt'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072' '#1082#1072#1082#1086#1084' '#1091#1095#1072#1089#1090#1082#1077' '#1087#1088#1086#1080#1089#1093#1086#1076#1080#1090' '#1089#1073#1086#1088#1082#1072' '#1091#1079#1083#1072
         Options.Editing = False
         Width = 120
       end
@@ -392,6 +411,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'GoodsName_receipt'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091#1079#1083#1072', '#1074' '#1082#1086#1090#1086#1088#1086#1084' '#1091#1095#1072#1089#1090#1074#1091#1077#1090' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1077#1077
         Options.Editing = False
         Width = 100
       end
@@ -690,7 +710,7 @@ object GoodsForm: TGoodsForm
         Width = 40
       end
       object IsArc: TcxGridDBColumn
-        Caption = #1040#1088#1093#1080#1074
+        Caption = #1040#1088#1093#1080#1074' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'isArc'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

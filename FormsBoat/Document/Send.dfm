@@ -450,11 +450,20 @@ object SendForm: TSendForm
             Width = 38
           end
           object isReceiptGoods: TcxGridDBColumn
-            Caption = #1057#1073#1086#1088#1082#1072
+            Caption = #1057#1073#1086#1088#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isReceiptGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1089#1073#1086#1088#1082#1077' '#1059#1079#1083#1072'/'#1052#1086#1076#1077#1083#1080' '#1080#1083#1080' '#1074' '#1086#1087#1094#1080#1103#1093
+            Options.Editing = False
+            Width = 55
+          end
+          object isProdOptions: TcxGridDBColumn
+            Caption = #1054#1087#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isProdOptions'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1087#1094#1080#1103#1093
             Options.Editing = False
             Width = 55
           end
@@ -530,6 +539,21 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object ArticleVergl: TcxGridDBColumn
+            Caption = 'Vergl. Nr'
+            DataBinding.FieldName = 'ArticleVergl'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+            Width = 70
           end
           object Article_all: TcxGridDBColumn
             Caption = '***Artikel Nr'
@@ -2592,7 +2616,7 @@ object SendForm: TSendForm
         item
           Name = 'Id'
           Value = Null
-          Component = ChildCDS
+          Component = MasterCDS
           ComponentItem = 'MovementId_OrderClient'
           MultiSelectSeparator = ','
         end
@@ -4566,8 +4590,8 @@ object SendForm: TSendForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 720
-    Top = 152
+    Left = 736
+    Top = 128
   end
   object spInsert_MI_Send_byOrder: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_Send_byOrder'

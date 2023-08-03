@@ -150,6 +150,8 @@ type
     actReport_Price: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     bbReport_Price: TdxBarButton;
+    isProdOptions: TcxGridDBColumn;
+    isReceiptGoods_group: TcxGridDBColumn;
   private
     { Private declarations }
   public
