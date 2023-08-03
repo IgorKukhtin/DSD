@@ -6,7 +6,7 @@ interface
 
 uses Winapi.Windows, Winapi.ActiveX, System.Variants, System.SysUtils, System.Win.ComObj,
      System.Classes, PosInterface, IdTCPClient, IdThreadComponent, IdGlobal, Vcl.Forms,
-     DateUtils,
+     DateUtils, System.TypInfo,
      {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
 
 type
@@ -280,7 +280,7 @@ begin
             FTextCheck := FTextCheck + #13'Код авторізації ';
             if (JSONParams.Get('approvalCode') <> nil) then
               FTextCheck := FTextCheck + JSONParams.Get('approvalCode').JsonValue.Value;
-            FTextCheck := FTextCheck + #13'PRN ';
+            FTextCheck := FTextCheck + #13'RRN ';
             if (JSONParams.Get('rrn') <> nil) then
               FTextCheck := FTextCheck + JSONParams.Get('rrn').JsonValue.Value;
             FTextCheck := FTextCheck + #13'Чек ';
@@ -338,7 +338,8 @@ begin
           FIdTCPClient.IOHandler.Write(JsonToSend);
           FProcessState := ppsWaiting;
         end;
-      except on E:Exception do FLastPosError := 'Ошибка проверки связи : ' + e.Message;
+      except on E:Exception do FLastPosError := 'Ошибка проверки связи : ' + e.Message +
+        '; ' + FIdTCPClient.Host + '; ' + IntToStr(FIdTCPClient.Port) + '; ' + GetEnumName(TypeInfo(TIdIPVersion), Ord(FIdTCPClient.IPVersion));
       end;
     finally
       JSONObject.Free;

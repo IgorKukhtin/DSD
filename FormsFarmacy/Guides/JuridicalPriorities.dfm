@@ -3,27 +3,28 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
   ClientHeight = 339
   ClientWidth = 655
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 671
-  ExplicitHeight = 378
+  ExplicitWidth = 673
+  ExplicitHeight = 386
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 655
-    Height = 313
+    Height = 312
+    ExplicitTop = 27
     ExplicitWidth = 655
-    ExplicitHeight = 313
-    ClientRectBottom = 313
+    ExplicitHeight = 312
+    ClientRectBottom = 312
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
-      ExplicitHeight = 313
+      ExplicitHeight = 312
       inherited cxGrid: TcxGrid
         Left = 3
         Width = 652
-        Height = 313
+        Height = 312
         ExplicitLeft = 3
         ExplicitWidth = 652
-        ExplicitHeight = 313
+        ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -105,7 +106,7 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
         Left = 0
         Top = 0
         Width = 3
-        Height = 313
+        Height = 312
         Control = cxGrid
       end
     end
@@ -288,6 +289,36 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
         end>
       Caption = 'actSetUnErased'
     end
+    object actProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -308,7 +339,7 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -343,6 +374,10 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -410,6 +445,10 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
     end
     object dxBarButton3: TdxBarButton
       Action = mactSetUnErased
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actProtocolOpenForm
       Category = 0
     end
   end

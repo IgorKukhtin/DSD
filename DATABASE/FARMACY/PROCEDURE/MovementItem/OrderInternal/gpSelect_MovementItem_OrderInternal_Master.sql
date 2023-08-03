@@ -1411,8 +1411,8 @@ BEGIN
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
                    -- отклонение по цене  светло - салатовая- цена подешевела, светло-розовая - подорожала
-                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN tmpMI.isSP = TRUE AND MIFloat_Price.ValueData > tmpMI.PriceOptSP THEN zfCalc_Color (188, 143, 143)  
+                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpMI.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (0, 255, 255) -- orange
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
@@ -2999,8 +2999,8 @@ BEGIN
            , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
-                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN zfCalc_Color (188, 143, 143)  
+                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpGoodsMain.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (0, 255, 255) -- orange
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
@@ -4431,8 +4431,8 @@ BEGIN
            , CASE
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
-                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN zfCalc_Color (188, 143, 143)  
+                  WHEN tmpMI.isClose = TRUE THEN zfCalc_Color (250, 128, 114)  
                   WHEN COALESCE (tmpMI.JuridicalId, 0) <> 0 AND COALESCE (tmpGoodsMain.DiscountName, '') <> '' AND COALESCE (tmpGoodsDiscountJuridical.GoodsMainId, 0) = 0 THEN zfCalc_Color (0, 255, 255) -- orange
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612

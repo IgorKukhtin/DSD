@@ -479,6 +479,7 @@ begin
   spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
   spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
   spGetTotal.ParamByName('inisNewUser').Value := cdsUnit.FieldByName('isNewUser').AsBoolean;
+  spGetTotal.ParamByName('inisCashier').Value := cdsUnit.FieldByName('isCashier').AsBoolean;
 
 
   spGetTotal.ParamByName('outTotal').Value := 0;
@@ -622,6 +623,7 @@ begin
     spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
     spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
     spGetTotal.ParamByName('inisNewUser').Value := cdsUnit.FieldByName('isNewUser').AsBoolean;
+    spGetTotal.ParamByName('inisCashier').Value := cdsUnit.FieldByName('isCashier').AsBoolean;
     spGetTotal.ParamByName('outTotal').Value := 0;
     try
       spGetTotal.Execute;

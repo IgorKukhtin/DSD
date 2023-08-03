@@ -217,6 +217,7 @@ BEGIN
             UserID             Integer,
             UserName           TVarChar,
             isNewUser          Boolean,
+            isCashier          Boolean,
 
             UnitID             Integer,
             UnitName           TVarChar,
@@ -291,6 +292,7 @@ BEGIN
              UserID,
              UserName,
              isNewUser,
+             isCashier,
              UnitID,
              UnitName,
              UnitCategoryCode,
@@ -303,7 +305,8 @@ BEGIN
     SELECT DISTINCT
        tmpUserUnitDayTable.UserId,
        Object_Member.ValueData,
-       not (date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER > 90 AND COALESCE(Personal_View.PositionCode, 1) = 1),
+       date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER <= 90,
+       COALESCE(Personal_View.PositionCode, 1) = 1,
        tmpUserUnitDayTable.UnitId,
        Object_Unit.ValueData,
        COALESCE (Object_UnitCategory.ObjectCode, 0),
@@ -767,6 +770,7 @@ BEGIN
                                                             , tmpResult.AddBonusPercentTab
                                                             , tmpResult.AddBonusPercentSum
                                                             , tmpResult.isNewUser
+                                                            , tmpResult.isCashier
                                                             , vbisAdmin
                                                             ) 
      FROM (SELECT
