@@ -86,7 +86,7 @@ BEGIN
           , MovementDate_Insert.ValueData  AS InsertDate
 
          , Movement_Parent.Id             ::Integer  AS MovementId_parent
-         , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+         , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
         FROM Movement AS Movement_ProductionUnion
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_ProductionUnion.StatusId
 

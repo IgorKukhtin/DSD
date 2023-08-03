@@ -20,7 +20,7 @@ $BODY$
 BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-     
+
      -- Проверка
      IF EXISTS (SELECT 1
                 FROM MovementItem
@@ -39,22 +39,40 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Элемент <%> уже существует для <%>.', lfGet_Object_ValueData_article (inObjectId), lfGet_Movement_Data (inMovementId_OrderClient);
      END IF;
 
+
      -- !Замена!
      IF inAmount = 0
      THEN
          inAmount:= 1;
      END IF;
 
+     -- !Замена!
+     IF COALESCE (inMovementId_OrderClient, 0) = 0
+     THEN
+         inMovementId_OrderClient:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);
+     END IF;
+
      -- если это лодка
      IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId = zc_Object_Product())
-     THEN 
+     THEN
+         -- Проверка
+         IF COALESCE (inMovementId_OrderClient, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Заказ клиента не установлен.';
+         END IF;
+
          -- сохранили в шапке
          UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId;
 
-     ELSEIF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.ParentId > 0)
-     THEN
+     ELSE -- IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.ParentId > 0) THEN
+     
          -- обнулили
-         UPDATE Movement SET ParentId = NULL WHERE Movement.Id = inMovementId;
+         -- UPDATE Movement SET ParentId = NULL WHERE Movement.Id = inMovementId;
+         -- !Замена!
+         -- inMovementId_OrderClient:= 0;
+
+         -- сохранили в шапке
+         UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId;
 
      END IF;
 
@@ -63,7 +81,7 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inObjectId, NULL, inMovementId, inAmount, NULL,inUserId);
 
 
-     -- сохранили свойство <Заказ Клиента> 
+     -- сохранили свойство <Заказ Клиента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_OrderClient ::TFloat);
 
      -- сохранили связь с <>
@@ -247,7 +265,7 @@ BEGIN
                 , 0 AS ColorPatternId
                 , 0 AS ProdColorPatternId
                 , 0 AS ProdOptionsId
-                  -- 
+                  --
                 , tmpReceiptProdModel.Amount
 
            FROM tmpReceiptProdModel

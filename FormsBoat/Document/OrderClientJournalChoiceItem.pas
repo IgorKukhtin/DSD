@@ -47,18 +47,10 @@ type
     OperDate: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
-    TotalSummPVAT: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     PopupMenu: TPopupMenu;
-    PriceWithVAT: TcxGridDBColumn;
-    VATPercent: TcxGridDBColumn;
-    DiscountTax: TcxGridDBColumn;
-    TotalCount: TcxGridDBColumn;
-    TotalSummMVAT: TcxGridDBColumn;
-    TotalSumm: TcxGridDBColumn;
-    TotalSummVAT: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;

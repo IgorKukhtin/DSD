@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
+             , ProductId Integer, ProductName TVarChar, ModelName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -300,6 +300,7 @@ BEGIN
              , Object_PaidKind.ValueData                  AS PaidKindName
              , Object_Product.Id                          AS ProductId
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
+             , Object_Model.ValueData                     AS ModelName
              , Object_Brand.Id                            AS BrandId
              , Object_Brand.ValueData                     AS BrandName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
@@ -412,6 +413,11 @@ BEGIN
                                   ON ObjectLink_Brand.ObjectId = Object_Product.Id
                                  AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
              LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Model
+                                  ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
+             LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
 
              --- строки
              INNER JOIN tmpItem  ON tmpItem.MovementId = tmpMovement_OrderClient.Id
