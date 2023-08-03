@@ -251,6 +251,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Width = 80
       end
       object ModelName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100
         DataBinding.FieldName = 'ModelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

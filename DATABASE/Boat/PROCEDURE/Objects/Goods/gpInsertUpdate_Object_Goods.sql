@@ -70,7 +70,11 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    --
-   IF COALESCE (ioId, 0) = 0 AND inCode = -1
+   IF inCode = -1
+   THEN
+       inCode:= (SELECT COALESCE (MIN (Object.ObjectCode), 0) - 1 FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode < 0);
+
+   ELSEIF COALESCE (ioId, 0) = 0 AND inCode = -1
    THEN
        inCode:= (SELECT COALESCE (MIN (Object.ObjectCode), 0) - 1 FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode < 0);
 
