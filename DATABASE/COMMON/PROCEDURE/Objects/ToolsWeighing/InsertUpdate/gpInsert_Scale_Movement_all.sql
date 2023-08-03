@@ -337,7 +337,8 @@ BEGIN
                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                  AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId)
+                  AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId
+               )
      THEN
          -- сохранили связь с <Договор>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, MovementLinkObject_Contract_find.ObjectId)
@@ -388,6 +389,8 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From_find
                                                   ON MovementLinkObject_From_find.MovementId = MovementLinkMovement_Order.MovementChildId
                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                     --INNER JOIN Movement AS Movement_order ON Movement_order.Id     = MovementLinkMovement_Order.MovementChildId
+                     --                                    AND Movement_order.DescId = zc_Movement_OrderExternal()
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = inMovementId
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -401,6 +404,8 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From_find
                                                   ON MovementLinkObject_From_find.MovementId = MovementLinkMovement_Order.MovementChildId
                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                     --INNER JOIN Movement AS Movement_order ON Movement_order.Id     = MovementLinkMovement_Order.MovementChildId
+                     --                                    AND Movement_order.DescId = zc_Movement_OrderExternal()
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = inMovementId
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -522,6 +527,7 @@ BEGIN
      vbIsDocMany:= inBranchCode = 1 AND (vbRetailId IN (310839 -- Фора
                                                       , 310854 -- Фоззі
                                                       , 310846 -- ВК
+                                                      , vbRetailId
                                                        )
                                       OR vbMovementDescId = zc_Movement_SendOnPrice()
                                         );
@@ -2026,10 +2032,10 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=0 THEN
+ IF vbUserId = 5 AND 1=1 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  %  % % % % %  % %'
-  , vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'
+  , vbIsDocMany -- vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'
   , vbMovementId_begin
   , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_begin))
   , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_begin)

@@ -32,7 +32,7 @@ BEGIN
 
 
      -- Проверка
-     IF COALESCE (inGoodsCode, 0) = 41 AND 1=0THEN
+     IF COALESCE (inGoodsCode, 0) = 41 AND 1=0 THEN
         RAISE EXCEPTION 'Ошибка.(%)   (%)   (%)    (%)> .'
                        , inDate_BUH
                        , inGoodsCode
@@ -63,14 +63,29 @@ BEGIN
 
 
      -- сохраненное значение переносим в  zc_ObjectString_Goods_BUH на дату, если zc_ObjectString_Goods_BUH не пусто  = ошибка
-     vbGoodsName_BUH := (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_BUH() and OS.ObjectId = vbGoodsId);
+     vbGoodsName_BUH := (SELECT OS.ValueData
+                         FROM ObjectString AS OS
+                              JOIN ObjectDate ON ObjectDate.ObjectId = vbGoodsId AND ObjectDate.DescId = zc_ObjectDate_Goods_BUH() AND ObjectDate.ValueData IS NOT NULL
+                         WHERE OS.DescId = zc_ObjectString_Goods_BUH() and OS.ObjectId = vbGoodsId
+                        );
 
-     IF COALESCE (vbGoodsName_BUH,'') <> ''
+     IF vbGoodsName_BUH <> ''
      THEN
          -- в этом случа выход
-         RETURN;
+         -- RETURN;
          --
-         RAISE EXCEPTION 'Ошибка.Для Товара - <(%) %> уже заполнено <Название (бухг.)>.', inGoodsCode, inGoodsName;
+         RAISE EXCEPTION 'Ошибка.Для Товара - <(%) %> уже заполнено%<Название (бухг.)> = <%>.%Нельзя установить новое значение = <%>.'
+                       , inGoodsCode
+                       , inGoodsName
+                       , CHR (13)
+                       , vbGoodsName_BUH
+                       , CHR (13)
+                       , (SELECT OS.ValueData
+                          FROM ObjectString AS OS
+                          WHERE OS.DescId = zc_ObjectString_Goods_BUH() and OS.ObjectId = vbGoodsId
+                         )
+                        ;
+
      END IF;
 
 
