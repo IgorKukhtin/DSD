@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit;
 
 type
   TReceiptGoodsChoiceForm = class(TParentForm)
@@ -112,6 +112,14 @@ type
     bbShowAll_ch1: TdxBarButton;
     actChoiceFormProdColor_goods_2: TOpenChoiceForm;
     MaterialOptionsName: TcxGridDBColumn;
+    Panel2: TPanel;
+    edSearchArticle: TcxTextEdit;
+    lbSearchArticle: TcxLabel;
+    lbSearchCode: TcxLabel;
+    lbSearchName: TcxLabel;
+    edSearchReceiptGoods: TcxTextEdit;
+    edSearchGoodsName: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
     { Private declarations }
   public

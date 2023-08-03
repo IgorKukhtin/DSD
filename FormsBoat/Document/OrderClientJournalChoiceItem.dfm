@@ -21,7 +21,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     Left = 0
     Top = 0
     Width = 1034
-    Height = 81
+    Height = 62
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
@@ -136,9 +136,9 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 107
+    Top = 88
     Width = 1034
-    Height = 385
+    Height = 404
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0

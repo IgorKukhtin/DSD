@@ -20,9 +20,9 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 8
-    Top = 31
+    Top = 64
     Width = 1111
-    Height = 355
+    Height = 322
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -31,7 +31,7 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
       Left = 0
       Top = 17
       Width = 1111
-      Height = 338
+      Height = 305
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
@@ -236,6 +236,14 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           Options.Editing = False
           Width = 40
         end
+        object ModelName: TcxGridDBColumn
+          Caption = #1052#1086#1076#1077#1083#1100
+          DataBinding.FieldName = 'ModelName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object EKPrice_summ: TcxGridDBColumn
           Caption = 'Total EK'
           DataBinding.FieldName = 'EKPrice_summ'
@@ -411,7 +419,7 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 26
+    Top = 59
     Width = 1127
     Height = 5
     AlignSplitter = salTop
@@ -419,16 +427,87 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
   end
   object cxRightSplitter: TcxSplitter
     Left = 1119
-    Top = 31
+    Top = 64
     Width = 8
-    Height = 355
+    Height = 322
     AlignSplitter = salRight
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 31
+    Top = 64
     Width = 8
-    Height = 355
+    Height = 322
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 1127
+    Height = 33
+    Align = alTop
+    TabOrder = 8
+    object edSearchArticle: TcxTextEdit
+      Left = 124
+      Top = 6
+      TabOrder = 0
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
+    object lbSearchArticle: TcxLabel
+      Left = 3
+      Top = 5
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object lbSearchCode: TcxLabel
+      Left = 269
+      Top = 6
+      Caption = #1059#1079#1077#1083' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object lbSearchName: TcxLabel
+      Left = 475
+      Top = 5
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchReceiptGoods: TcxTextEdit
+      Left = 319
+      Top = 6
+      TabOrder = 5
+      DesignSize = (
+        150
+        21)
+      Width = 150
+    end
+    object edSearchGoodsName: TcxTextEdit
+      Left = 607
+      Top = 6
+      TabOrder = 4
+      DesignSize = (
+        151
+        21)
+      Width = 151
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1412,5 +1491,27 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
     object N5: TMenuItem
       Action = actSetUnErased
     end
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article
+    ColumnList = <
+      item
+        Column = Article
+        TextEdit = edSearchArticle
+      end
+      item
+        Column = Name
+        TextEdit = edSearchReceiptGoods
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchGoodsName
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 88
+    Top = 248
   end
 end
