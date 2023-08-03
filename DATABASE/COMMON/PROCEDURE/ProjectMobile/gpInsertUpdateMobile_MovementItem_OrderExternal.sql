@@ -21,6 +21,7 @@ $BODY$
    DECLARE vbCountForPrice TFloat;
    DECLARE vbStatusId Integer;
 
+   DECLARE vbPartnerId Integer;
    DECLARE vbPriceListId Integer;
    DECLARE vbOperDate_pl TDateTime;
 BEGIN
@@ -73,6 +74,9 @@ BEGIN
            -- Распроводим Документ
            PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbMovementId, inUserId:= vbUserId);
       END IF;
+      
+      --
+      vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_From());
 
 
       -- если есть кол-во
@@ -82,7 +86,7 @@ BEGIN
           SELECT tmp.PriceListId, tmp.OperDate
                  INTO vbPriceListId, vbOperDate_pl
           FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
-                                                    , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                    , inPartnerId      := vbPartnerId
                                                     , inMovementDescId := zc_Movement_Sale()
                                                     , inOperDate_order := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId)
                                                     , inOperDatePartner:=  NULL
@@ -140,7 +144,18 @@ BEGIN
                                                              , zc_Enum_InfoMoney_20901() -- Ирна
                                                               )
                           )
-           --AND vbUserId <> 1058558 -- Чернікова Ольга Петрівна
+               AND NOT EXISTS (SELECT 1
+                               FROM ObjectLink AS OL
+                                    INNER JOIN ObjectLink AS OL_Juridical_Retail
+                                                          ON OL_Juridical_Retail.ObjectId = OL.ChildObjectId 
+                                                         AND OL_Juridical_Retail.DescId   =  zc_ObjectLink_Juridical_Retail()
+                                                         AND OL_Juridical_Retail.ChildObjectId = 310854 -- Фоззі
+                               WHERE OL.ObjectId   = vbPartnerId
+                                 AND OL.DescId     = zc_ObjectLink_Partner_Juridical()
+                                 AND inGoodsId     = 9505524 -- 457 - Сосиски ФІЛЕЙКИ вар 1 ґ ТМ Наші Ковбаси
+                                 AND inGoodsKindId = 8344    -- Б/В 0,5кг
+                              )
+           AND vbUserId <> 1058558 -- Чернікова Ольга Петрівна
           THEN
               RAISE EXCEPTION '%У товара <%>%<%>%не установлено свойство <Используется в заявках>=Да.%№ % от % % % % % % % %'
                              , CHR (13)
