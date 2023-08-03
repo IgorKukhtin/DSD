@@ -173,7 +173,8 @@ BEGIN
 
 
      -- Проверка через УНИКАЛЬНОСТЬ
-     IF vbIsInsert = TRUE
+     IF vbIsInsert = TRUE AND inGLNCode <> ''
+
      THEN
          PERFORM lpInsert_LockUnique (inKeyData:= 'MI'
                                         || ';' || zc_Movement_EDI() :: TVarChar

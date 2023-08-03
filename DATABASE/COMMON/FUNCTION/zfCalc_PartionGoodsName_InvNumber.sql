@@ -15,17 +15,18 @@ AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN (TRIM (CASE WHEN inInvNumber <> '' AND inInvNumber <> '0'  THEN 'инв. № <' || inInvNumber || '>' ELSE '' END
-                || ' цена : <'|| zfConvert_FloatToString (COALESCE (inPrice, 0)) || '>'
-                || ' от : <' || zfConvert_DateToString (COALESCE (inOperDate, zc_DateStart())) || '>'
-                || '  <'|| COALESCE (inUnitName_Partion, '') || '>'
-                || CASE WHEN inStorageName <> '' THEN ' место хранениия : <'|| COALESCE (inStorageName, '') || '>' ELSE '' END
-                  ));
+     RETURN (TRIM (CASE WHEN TRIM (inInvNumber) <> '' AND inInvNumber <> '0'  THEN inInvNumber
+                        ELSE CASE WHEN inInvNumber <> '' AND inInvNumber <> '0'  THEN 'инв. № <' || inInvNumber || '>' ELSE '' END
+                         || ' цена : <'|| zfConvert_FloatToString (COALESCE (inPrice, 0)) || '>'
+                         || ' от : <' || zfConvert_DateToString (COALESCE (inOperDate, zc_DateStart())) || '>'
+                         || '  <'|| COALESCE (inUnitName_Partion, '') || '>'
+                         || CASE WHEN inStorageName <> '' THEN ' место хранениия : <'|| COALESCE (inStorageName, '') || '>' ELSE '' END
+                   END
+                  ) :: TVarChar);
 
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfCalc_PartionGoodsName_InvNumber (TVarChar, TDateTime, TFloat, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -40,12 +40,12 @@ BEGIN
                                                     , inIsPersonalGroup   := FALSE                  -- используется при сохранении из списка бригад
                                                     , inSession           := inSession              -- сессия пользователя
                                                      )
-       FROM (WITH tmpTransport AS (SELECT DISTINCT Movement.OperDate
-                                                 , COALESCE (View_PersonalDriver.MemberId, 0)        AS MemberId
-                                                 , COALESCE (View_PersonalDriver.PositionId, 0)      AS PositionId
+       FROM (WITH tmpTransport AS (SELECT DISTINCT COALESCE (View_PersonalDriver.MemberId, 0)        AS MemberId
+                                               /*, COALESCE (View_PersonalDriver.PositionId, 0)      AS PositionId
                                                  , COALESCE (View_PersonalDriver.PositionLevelId, 0) AS PositionLevelId
                                                  , COALESCE (View_PersonalDriver.PersonalGroupId, 0) AS PersonalGroupId
                                                  , COALESCE (View_PersonalDriver.StorageLineId, 0)   AS StorageLineId
+                                                 , Movement.OperDate*/
                                    FROM Movement
                                         LEFT JOIN MovementFloat AS MovementFloat_HoursWork
                                                                 ON MovementFloat_HoursWork.MovementId =  Movement.Id
@@ -104,13 +104,13 @@ BEGIN
                   , tmpMI.PersonalGroupId
                   , tmpMI.StorageLineId
              FROM tmpMI
-                  LEFT JOIN tmpTransport ON tmpTransport.OperDate        = tmpMI.OperDate
-                                        AND tmpTransport.MemberId        = tmpMI.MemberId
-                                        AND tmpTransport.PositionId      = tmpMI.PositionId
-                                        AND tmpTransport.PositionLevelId = tmpMI.PositionLevelId
-                                        AND tmpTransport.PersonalGroupId = tmpMI.PersonalGroupId
-                                        AND tmpTransport.StorageLineId   = tmpMI.StorageLineId
-             WHERE tmpTransport.OperDate IS NULL
+                  INNER JOIN tmpTransport ON tmpTransport.MemberId        = tmpMI.MemberId
+                                         /*AND tmpTransport.OperDate        = tmpMI.OperDate
+                                         AND tmpTransport.PositionId      = tmpMI.PositionId
+                                         AND tmpTransport.PositionLevelId = tmpMI.PositionLevelId
+                                         AND tmpTransport.PersonalGroupId = tmpMI.PersonalGroupId
+                                         AND tmpTransport.StorageLineId   = tmpMI.StorageLineId*/
+             --WHERE tmpTransport.OperDate IS NULL
             ) AS tmpMI;
 
     -- PersonalDriver
