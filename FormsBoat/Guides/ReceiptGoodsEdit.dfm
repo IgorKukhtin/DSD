@@ -399,36 +399,10 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'TextValue_all'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BrandId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BrandName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProdEngineId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProdEngineName'
-        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inIsLimit_100 Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , Article TVarChar, Article_all TVarChar, ArticleVergl TVarChar, GoodsArticle TVarChar
              , EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
              , FeeNumber TVarChar, GoodsGroupNameFull TVarChar, Comment TVarChar
@@ -467,6 +467,7 @@ BEGIN
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
             , SUBSTRING (Object_Goods.ValueData, 1, 128) :: TVarChar AS Name
+            , zfCalc_GoodsName_all (ObjectString_Article.ValueData, SUBSTRING (Object_Goods.ValueData, 1, 128) ) AS Name_all
             , CASE WHEN vbUserId = 5 AND 1=0 THEN LOWER (ObjectString_Article.ValueData) ELSE ObjectString_Article.ValueData END :: TVarChar AS Article
             , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
             , (CASE WHEN tmpGoods_err_1.Article   IS NOT NULL

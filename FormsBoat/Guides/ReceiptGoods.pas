@@ -245,9 +245,9 @@ type
     macInsertUpDate_Child_bySend: TMultiAction;
     spInsertUpDate_Child_bySend: TdsdStoredProc;
     bbInsertUpDate_Child_bySend: TdxBarButton;
-    GuidesReceiptGoods1: TdsdGuides;
+    GuidesGoods: TdsdGuides;
     cxLabel15: TcxLabel;
-    edReceiptGoods1: TcxButtonEdit;
+    edGoodsChild: TcxButtonEdit;
     ModelName: TcxGridDBColumn;
     GoodsCode_group: TcxGridDBColumn;
     GoodsName_group: TcxGridDBColumn;
@@ -255,6 +255,7 @@ type
     macErasedGoods_child1_list: TMultiAction;
     macErasedGoods_child1: TMultiAction;
     bb: TdxBarButton;
+    Value_child_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

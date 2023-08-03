@@ -1,10 +1,12 @@
 -- Function: gpUpdate_Object_ReceiptGoodsChild_byReceiptGoods()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_ReceiptGoodsChild_byReceiptGoods(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_ReceiptGoodsChild_byReceiptGoods (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_ReceiptGoodsChild_byReceiptGoods (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_ReceiptGoodsChild_byReceiptGoods(
  INOUT inReceiptGoodsId      Integer   ,    -- ключ объекта <>
     IN inReceiptGoodsId_mask Integer   ,    --
+    IN inGoodsChildId_mask   Integer   ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -16,26 +18,27 @@ $BODY$
    DECLARE vbModelName TVarChar;
    DECLARE vbModelCode TVarChar;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptProdModel());
    vbUserId:= lpGetUserBySession (inSession);
 
-   CREATE TEMP TABLE _tmpReceiptGoodsChild_mask (NPP Integer, Comment TVarChar
+   -- Откуда переносим
+   CREATE TEMP TABLE _tmpReceiptGoodsChild_mask (Id Integer, NPP Integer, Comment TVarChar
                                                , ObjectId Integer, ReceiptLevelId Integer, MaterialOptionsId Integer, ProdColorPatternId Integer, GoodsChildId Integer
-                                               , Value TFloat, Value_servise TFloat
+                                               , Value TFloat, Value_service TFloat
                                                , ForCount TFloat
                                                 ) ON COMMIT DROP;
-    INSERT INTO _tmpReceiptGoodsChild_mask (NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_servise, ForCount )
-          SELECT ObjectFloat_NPP.ValueData :: Integer      AS NPP
+    INSERT INTO _tmpReceiptGoodsChild_mask (Id, NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_service, ForCount)
+          SELECT Object_ReceiptGoodsChild.Id
+               , ObjectFloat_NPP.ValueData :: Integer      AS NPP
                , Object_ReceiptGoodsChild.ValueData        AS Comment
                , ObjectLink_Object.ChildObjectId           AS ObjectId
                , ObjectLink_ReceiptLevel.ChildObjectId     AS ReceiptLevelId
                , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
                , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
-               , ObjectLink_GoodsChild.ChildObjectId       AS GoodsChildId
+               , CASE WHEN ObjectLink_GoodsChild.ChildObjectId > 0 THEN inGoodsChildId_mask ELSE 0 END AS GoodsChildId
                , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value
-               , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_servise
+               , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_service
                , ObjectFloat_ForCount.ValueData AS ForCount
           FROM Object AS Object_ReceiptGoodsChild
                INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
@@ -82,15 +85,15 @@ BEGIN
 
           WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
             AND Object_ReceiptGoodsChild.isErased = FALSE
-       ;
+         ;
 
-
+   -- Куда переносим
    CREATE TEMP TABLE _tmpReceiptGoodsChild (Id Integer, NPP Integer, Comment TVarChar
                                           , ObjectId Integer, ReceiptLevelId Integer, MaterialOptionsId Integer, ProdColorPatternId Integer, GoodsChildId Integer
-                                          , Value TFloat, Value_servise TFloat
+                                          , Value TFloat, Value_service TFloat
                                           , ForCount TFloat
                                            ) ON COMMIT DROP;
-    INSERT INTO _tmpReceiptGoodsChild (Id, NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_servise, ForCount )
+    INSERT INTO _tmpReceiptGoodsChild (Id, NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_service, ForCount)
           SELECT Object_ReceiptGoodsChild.Id
                , ObjectFloat_NPP.ValueData      :: Integer AS NPP
                , Object_ReceiptGoodsChild.ValueData        AS Comment
@@ -100,7 +103,7 @@ BEGIN
                , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
                , ObjectLink_GoodsChild.ChildObjectId       AS GoodsChildId
                , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value
-               , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_servise
+               , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_service
                , ObjectFloat_ForCount.ValueData AS ForCount
           FROM Object AS Object_ReceiptGoodsChild
                INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
@@ -169,15 +172,67 @@ BEGIN
                            )
           AND Object.DescId = zc_Object_ReceiptGoodsChild()
        ;
+
         -- меняем только NPP + Value + ForCount для этой структуры
         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptGoodsChild_NPP(),      _tmpReceiptGoodsChild.Id, _tmpReceiptGoodsChild_mask.NPP :: TFloat)
                 --
               , lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptGoodsChild_Value(),    _tmpReceiptGoodsChild.Id, _tmpReceiptGoodsChild_mask.Value)
               , lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptGoodsChild_ForCount(), _tmpReceiptGoodsChild.Id, _tmpReceiptGoodsChild_mask.ForCount)
+                --
+              , lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_GoodsChild(), _tmpReceiptGoodsChild.Id, _tmpReceiptGoodsChild_mask.GoodsChildId)
         FROM _tmpReceiptGoodsChild
-             JOIN _tmpReceiptGoodsChild_mask ON _tmpReceiptGoodsChild_mask.ProdColorPatternId = _tmpReceiptGoodsChild.ProdColorPatternId
-        WHERE _tmpReceiptGoodsChild.ProdColorPatternId > 0
+             JOIN _tmpReceiptGoodsChild_mask ON _tmpReceiptGoodsChild_mask.ObjectId = _tmpReceiptGoodsChild.ObjectId
+             INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup_mask
+                                   ON ObjectLink_ProdColorGroup_mask.ObjectId = _tmpReceiptGoodsChild_mask.ProdColorPatternId
+                                  AND ObjectLink_ProdColorGroup_mask.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+             INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                   ON ObjectLink_ProdColorGroup.ObjectId = _tmpReceiptGoodsChild.ProdColorPatternId
+                                  AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+        WHERE ObjectLink_ProdColorGroup_mask.ChildObjectId = ObjectLink_ProdColorGroup.ChildObjectId
        ;
+
+
+        -- Проверка
+        IF EXISTS (SELECT 1
+                   FROM _tmpReceiptGoodsChild_mask
+                        JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpReceiptGoodsChild_mask.ObjectId
+                   WHERE COALESCE (_tmpReceiptGoodsChild_mask.GoodsChildId, 0) <> COALESCE (_tmpReceiptGoodsChild.GoodsChildId, 0)
+                     AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для <%> %было значение для сборка Узел-1 = <%>.%Новое значение = <%>.(%)'
+                , (SELECT lfGet_Object_ValueData_article (_tmpReceiptGoodsChild_mask.ObjectId)
+                   FROM _tmpReceiptGoodsChild_mask
+                        JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpReceiptGoodsChild_mask.ObjectId
+                   WHERE COALESCE (_tmpReceiptGoodsChild_mask.GoodsChildId, 0) <> COALESCE (_tmpReceiptGoodsChild.GoodsChildId, 0)
+                   ORDER BY _tmpReceiptGoodsChild_mask.ObjectId
+                   LIMIT 1
+                  )
+                , CHR (13)
+                , (SELECT lfGet_Object_ValueData_article (_tmpReceiptGoodsChild.GoodsChildId)
+                   FROM _tmpReceiptGoodsChild_mask
+                        JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpReceiptGoodsChild_mask.ObjectId
+                   WHERE COALESCE (_tmpReceiptGoodsChild_mask.GoodsChildId, 0) <> COALESCE (_tmpReceiptGoodsChild.GoodsChildId, 0)
+                   ORDER BY _tmpReceiptGoodsChild_mask.ObjectId
+                   LIMIT 1
+                  )
+                , CHR (13)
+                , (SELECT lfGet_Object_ValueData_article (_tmpReceiptGoodsChild_mask.GoodsChildId)
+                   FROM _tmpReceiptGoodsChild_mask
+                        JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpReceiptGoodsChild_mask.ObjectId
+                   WHERE COALESCE (_tmpReceiptGoodsChild_mask.GoodsChildId, 0) <> COALESCE (_tmpReceiptGoodsChild.GoodsChildId, 0)
+                   ORDER BY _tmpReceiptGoodsChild_mask.ObjectId
+                   LIMIT 1
+                  )
+                , (SELECT _tmpReceiptGoodsChild_mask.Id
+                   FROM _tmpReceiptGoodsChild_mask
+                        JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpReceiptGoodsChild_mask.ObjectId
+                   WHERE COALESCE (_tmpReceiptGoodsChild_mask.GoodsChildId, 0) <> COALESCE (_tmpReceiptGoodsChild.GoodsChildId, 0)
+                   ORDER BY _tmpReceiptGoodsChild_mask.ObjectId
+                   LIMIT 1
+                  )
+                 ;
+        END IF;
 
         -- меняем ВСЕ
         PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (_tmpReceiptGoodsChild.Id, 0)
@@ -189,9 +244,9 @@ BEGIN
                                                        , inMaterialOptionsId  := _tmpReceiptGoodsChild_mask.MaterialOptionsId
                                                        , inReceiptLevelId_top := 0
                                                        , inReceiptLevelId     := _tmpReceiptGoodsChild_mask.ReceiptLevelId
-                                                       , inGoodsChildId       := _tmpReceiptGoodsChild_find.GoodsChildId
+                                                       , inGoodsChildId       := _tmpReceiptGoodsChild_mask.GoodsChildId
                                                        , ioValue              := _tmpReceiptGoodsChild_mask.Value         :: TVarChar
-                                                       , ioValue_service      := _tmpReceiptGoodsChild_mask.Value_servise :: TVarChar
+                                                       , ioValue_service      := _tmpReceiptGoodsChild_mask.Value_service :: TVarChar
                                                        , ioForCount           := _tmpReceiptGoodsChild_mask.ForCount
                                                        , inIsEnabled          := TRUE
                                                        , inSession            := inSession             ::TVarChar
@@ -199,11 +254,6 @@ BEGIN
         FROM _tmpReceiptGoodsChild_mask
              LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.NPP                = _tmpReceiptGoodsChild_mask.NPP
                                             AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
-             -- находим LEVEL - child
-             LEFT JOIN (SELECT MAX (_tmpReceiptGoodsChild.GoodsChildId) AS GoodsChildId FROM _tmpReceiptGoodsChild WHERE _tmpReceiptGoodsChild.GoodsChildId > 0
-                       ) AS _tmpReceiptGoodsChild_find
-                         ON -- только для тех где установлен LEVEL - child
-                            _tmpReceiptGoodsChild_mask.GoodsChildId > 0
         -- без этой структуры
         WHERE _tmpReceiptGoodsChild_mask.ProdColorPatternId IS NULL
        ;

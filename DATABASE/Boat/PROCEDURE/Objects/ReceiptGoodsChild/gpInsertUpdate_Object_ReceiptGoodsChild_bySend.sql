@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild_bySend(Integer, 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild_bySend(
  INOUT inReceiptGoodsId      Integer   ,    -- ключ объекта <>
-    IN inMovementId_Send     Integer   ,    --      
+    IN inMovementId_Send     Integer   ,    --
     IN inGoodsChildId        Integer   ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -26,15 +26,17 @@ BEGIN
                                , ForCount TFloat
                                 ) ON COMMIT DROP;
     INSERT INTO _tmpSendMI (Comment, ObjectId, Value, Value_servise, ForCount )
-          SELECT tmp.Comment
-               , tmp.GoodsId  AS ObjectId
-               , tmp.Amount   AS Value 
-               , 0            AS Value_servise
-               , 1            AS ForCount
+          SELECT gpSelect.Comment
+               , gpSelect.GoodsId  AS ObjectId
+               , gpSelect.Amount   AS Value
+               , 0                 AS Value_servise
+               , 1                 AS ForCount
           FROM gpSelect_MovementItem_Send (inMovementId := inMovementId_Send :: Integer
                                          , inShowAll    := False             :: Boolean
                                          , inIsErased   := False             :: Boolean
-                                         , inSession    := inSession         :: TVarChar) AS tmp
+                                         , inSession    := inSession         :: TVarChar
+                                          ) AS gpSelect
+          WHERE gpSelect.isProdOptions = FALSE
     ;
 
    --сохраненные записи
@@ -121,25 +123,47 @@ BEGIN
                             WHERE _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
                            )
           AND Object.DescId = zc_Object_ReceiptGoodsChild()
-       ; 
+       ;
        */
+
+        -- Проверка
+        IF EXISTS (SELECT _tmpSendMI.ObjectId
+                   FROM _tmpSendMI
+                        LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpSendMI.ObjectId
+                                                       AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+                   GROUP BY _tmpSendMI.ObjectId
+                   HAVING COUNT(*) > 1
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.Артикул <%> не уникален.'
+                , (SELECT lfGet_Object_ValueData_article (_tmpSendMI.ObjectId)
+                   FROM _tmpSendMI
+                        LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpSendMI.ObjectId
+                                                       AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+                   GROUP BY _tmpSendMI.ObjectId
+                   HAVING COUNT(*) > 1
+                   ORDER BY _tmpSendMI.ObjectId
+                   LIMIT 1
+                  )
+                 ;
+        END IF;
 
         -- меняем ВСЕ
         PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (_tmpReceiptGoodsChild.Id, 0)
-                                                       , inComment            := COALESCE (_tmpReceiptGoodsChild.Comment, _tmpSendMI.Comment, '')
-                                                       , inNPP                := COALESCE (_tmpReceiptGoodsChild.NPP, Null)    ::Integer
+                                                       , inComment            := COALESCE (_tmpReceiptGoodsChild.Comment, '')
+                                                       , inNPP                := _tmpReceiptGoodsChild.NPP
                                                        , inReceiptGoodsId     := inReceiptGoodsId
-                                                       , inObjectId           := COALESCE (_tmpReceiptGoodsChild.ObjectId, _tmpSendMI.ObjectId)
+                                                       , inObjectId           := _tmpSendMI.ObjectId
                                                        , inProdColorPatternId := NULL
                                                        , inMaterialOptionsId  := _tmpReceiptGoodsChild.MaterialOptionsId
                                                        , inReceiptLevelId_top := 0
                                                        , inReceiptLevelId     := _tmpReceiptGoodsChild.ReceiptLevelId
-                                                       , inGoodsChildId       := inGoodsChildId   --_tmpReceiptGoodsChild.GoodsChildId
-                                                       , ioValue              := COALESCE (_tmpSendMI.Value, _tmpReceiptGoodsChild.Value) :: TVarChar
-                                                       , ioValue_service      := COALESCE (_tmpReceiptGoodsChild.Value_servise,0)         :: TVarChar
-                                                       , ioForCount           := COALESCE (_tmpSendMI.ForCount, _tmpReceiptGoodsChild.ForCount) ::TFloat
+                                                       , inGoodsChildId       := inGoodsChildId
+                                                       , ioValue              := _tmpSendMI.Value :: TVarChar
+                                                       , ioValue_service      := ''
+                                                       , ioForCount           := COALESCE (_tmpSendMI.ForCount, _tmpReceiptGoodsChild.ForCount)
                                                        , inIsEnabled          := TRUE
-                                                       , inSession            := inSession                                                ::TVarChar
+                                                       , inSession            := inSession
                                                         ) AS Id
         FROM _tmpSendMI
              LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpSendMI.ObjectId
@@ -157,4 +181,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

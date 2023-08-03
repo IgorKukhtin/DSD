@@ -597,6 +597,11 @@
             Format = ',0.00##'
             Kind = skSum
             Column = EKPriceWVAT_summ_ch1
+          end
+          item
+            Format = ',0.########'
+            Kind = skSum
+            Column = Value_child_ch1
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -623,6 +628,11 @@
             Format = ',0.00##'
             Kind = skSum
             Column = EKPriceWVAT_summ_ch1
+          end
+          item
+            Format = ',0.########'
+            Kind = skSum
+            Column = Value_child_ch1
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -798,14 +808,32 @@
         end
         object Value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 8
+          Properties.DisplayFormat = ',0.########;-,0.########; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
           Width = 45
         end
+        object Value_child_ch1: TcxGridDBColumn
+          Caption = '***Value'
+          DataBinding.FieldName = 'Value_child'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 8
+          Properties.DisplayFormat = ',0.########;-,0.########; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060
+          Options.Editing = False
+        end
         object Value_service_ch1: TcxGridDBColumn
           Caption = 'Value (service)'
           DataBinding.FieldName = 'Value_service'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 8
+          Properties.DisplayFormat = ',0.########;-,0.########; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -818,11 +846,27 @@
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
           Options.Editing = False
           Width = 45
+        end
+        object GoodsChildName_ch1: TcxGridDBColumn
+          Caption = #1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072' '#1055#1060
+          DataBinding.FieldName = 'GoodsChildName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormGoodsChild_1
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 111
         end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
@@ -942,21 +986,6 @@
           Options.Editing = False
           VisibleForCustomization = False
           Width = 30
-        end
-        object GoodsChildName_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1077#1083#1072
-          DataBinding.FieldName = 'GoodsChildName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormGoodsChild_1
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 111
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -1182,8 +1211,8 @@
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Properties.DecimalPlaces = 8
+          Properties.DisplayFormat = ',0.########;-,0.########; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -1528,7 +1557,7 @@
       ParentShowHint = False
       ShowHint = True
     end
-    object edReceiptGoods1: TcxButtonEdit
+    object edGoodsChild: TcxButtonEdit
       Left = 711
       Top = 7
       Properties.Buttons = <
@@ -3702,8 +3731,8 @@
       item
         Name = 'inReceiptGoodsId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'inReceiptGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -4448,6 +4477,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsChildId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -4477,7 +4514,7 @@
       item
         Name = 'inGoodsChildId'
         Value = Null
-        Component = GuidesReceiptGoods1
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4486,26 +4523,26 @@
     Left = 526
     Top = 343
   end
-  object GuidesReceiptGoods1: TdsdGuides
+  object GuidesGoods: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edReceiptGoods1
-    FormNameParam.Value = 'TReceiptGoodsChoiceForm'
+    LookupControl = edGoodsChild
+    FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TReceiptGoodsChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesReceiptGoods1
+        Component = GuidesGoods
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'TextValue_all'
         Value = ''
-        Component = GuidesReceiptGoods1
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
