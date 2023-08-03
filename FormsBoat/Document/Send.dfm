@@ -1521,11 +1521,11 @@ object SendForm: TSendForm
       ShowCaption = False
     end
     object bb: TdxBarButton
-      Action = macInsertRecordAsset
+      Action = macInsertRecordPartion
       Category = 0
     end
     object bbb: TdxBarButton
-      Action = actPartionGoodsAssetChoiceForm
+      Action = actPartionGoodsChoiceForm
       Category = 0
     end
   end
@@ -3254,7 +3254,7 @@ object SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
+    object actPartionGoodsChoiceForm: TOpenChoiceForm
       Category = 'Partion'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3347,23 +3347,23 @@ object SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actInsertRecordAsset: TInsertRecord
+    object actInsertRecordPartion: TInsertRecord
       Category = 'Partion'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
-      Action = actPartionGoodsAssetChoiceForm
+      Action = actPartionGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
       ImageIndex = 0
     end
-    object macInsertRecordAsset: TMultiAction
+    object macInsertRecordPartion: TMultiAction
       Category = 'Partion'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertRecordAsset
+          Action = actInsertRecordPartion
         end
         item
           Action = actRefreshMI

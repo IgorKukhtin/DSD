@@ -101,6 +101,13 @@ type
     StateColor: TcxGridDBColumn;
     DateBegin: TcxGridDBColumn;
     ModelName: TcxGridDBColumn;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    lbSearchCode: TcxLabel;
+    edSearchInvNumber: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    edSearchReceiptGoods: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
   public
   end;
