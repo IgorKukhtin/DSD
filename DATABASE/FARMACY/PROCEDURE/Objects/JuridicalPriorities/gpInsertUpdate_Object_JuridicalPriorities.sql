@@ -17,6 +17,7 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
 --    vbUserId:=lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_JuridicalPriorities());
+   vbUserId := lpGetUserBySession (inSession);
 
    IF COALESCE(inJuridicalId, 0) = 0 OR COALESCE(inGoodsId, 0) = 0
    THEN
@@ -50,6 +51,10 @@ BEGIN
    
    -- сохранили % Приоритета 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_JuridicalPriorities_Priorities(), ioId, inPriorities);
+   
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

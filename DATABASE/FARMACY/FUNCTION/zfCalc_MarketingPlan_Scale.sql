@@ -3,7 +3,8 @@
 --DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, TFloat, TFloat, TFloat);
 --DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat);
 --DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat);
-DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, boolean, boolean);
+--DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, boolean, boolean);
+DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, boolean, boolean, boolean);
 
 CREATE OR REPLACE FUNCTION zfCalc_MarketingPlan_Scale (
        IN inScaleCalcMarketingPlanID Integer,
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION zfCalc_MarketingPlan_Scale (
        IN inAddBonusPercentTab TFloat,
        IN inAddBonusPercentSum TFloat,
        IN inisNewUser Boolean,
+       IN inisCashier Boolean,
        IN inisAdmin Boolean
        )
 RETURNS TFloat
@@ -164,18 +166,38 @@ BEGIN
     END IF;
   END IF;
   
-  IF inOperDate >= '01.07.2023' AND (inisNewUser = TRUE OR vbUnitCategoryCode = 8) AND inBonusAmountTab > 250 
+  IF inOperDate >= '01.07.2023' AND inisCashier = TRUE AND (inisNewUser = TRUE OR vbUnitCategoryCode = 8) 
   THEN
-    IF inBonusAmountTab > 500 
+    vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
+                    WHEN ROUND(inTotalExecutionLine, 2) < 42 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
+                    WHEN ROUND(inTotalExecutionLine, 2) < 75 + vbPrizeThreshold  
+                    THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                    ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;
+                    
+    IF vbTotal < 0 
+    THEN
+      vbTotal := 0;
+    END IF;
+    
+    /*IF inBonusAmountTab < 250 
+    THEN
+      vbTotal := 0;
+    ELSEIF inBonusAmountTab > 500 
     THEN
       vbTotal := inAddBonusPercentSum;
     ELSE
       vbTotal := inAddBonusPercentTab;
-    END IF;
+    END IF;*/
   ELSEIF inisNewUser = TRUE
   THEN
     vbTotal := 0;
   END IF;
+  
+  IF NOT inisCashier AND vbTotal < 0 
+  THEN
+    vbTotal := 0;
+  END IF;
+  
 
   RETURN vbTotal;
 END;

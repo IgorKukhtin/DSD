@@ -1056,6 +1056,13 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisCashier'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outTotal'
         Value = Null
         DataType = ftFloat

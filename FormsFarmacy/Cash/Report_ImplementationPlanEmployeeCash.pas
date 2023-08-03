@@ -417,11 +417,11 @@ begin
     Field.DataSet := ClientDataSet;
   end;
 
-  Field := TBooleanField.Create(Self);
-  Field.FieldKind := fkCalculated;
-  Field.FieldName := 'isFixedPercent';
-  Field.Name := 'cds' + Field.FieldName;
-  Field.DataSet := ClientDataSet;
+//  Field := TBooleanField.Create(Self);
+//  Field.FieldKind := fkCalculated;
+//  Field.FieldName := 'isFixedPercent';
+//  Field.Name := 'cds' + Field.FieldName;
+//  Field.DataSet := ClientDataSet;
 
   for I := 0 to FUnit.Count - 1 do
   begin
@@ -595,6 +595,7 @@ begin
     spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
     spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
     spGetTotal.ParamByName('inisNewUser').Value := cdsUnit.FieldByName('isNewUser').AsBoolean;
+    spGetTotal.ParamByName('inisCashier').Value := cdsUnit.FieldByName('isCashier').AsBoolean;
     spGetTotal.ParamByName('outTotal').Value := 0;
 
     try
@@ -797,7 +798,7 @@ begin
 
     Dataset['BonusPercentAddSum'] := nSum;
 
-    Dataset['isFixedPercent'] := Dataset['isFixedPercent' + FUnit.Strings[FUnitCalck]];
+    // Dataset['isFixedPercent'] := Dataset['isFixedPercent' + FUnit.Strings[FUnitCalck]];
 
     Dataset['AddBonusPercent'] := Dataset['AddBonusPercent' + FUnit.Strings[FUnitCalck]];
 

@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ImplementationPeriodTotal (
        IN inUnitId Integer,
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_ImplementationPeriodTotal (
        IN inBonusPercentSum TFloat,
        IN inBonusPercentAddSum TFloat,
        IN inisNewUser Boolean,
+       IN inisCashier Boolean,
       OUT outTotal TFloat,
        IN inSession       TVarChar    -- сессия пользователя
        )
@@ -52,12 +54,13 @@ BEGIN
                                         , inBonusPercentSum
                                         , inBonusPercentAddSum
                                         , inisNewUser
+                                        , inisCashier
                                         , vbisAdmin); 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -67,4 +70,4 @@ ALTER FUNCTION gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, T
 */
 
 -- тест 
-SELECT * FROM gpReport_ImplementationPeriodTotal (183292  , '01.06.2021', 10, 10, 20, 0, 0, 0, FALSE, '3')
+SELECT * FROM gpReport_ImplementationPeriodTotal (183292  , '01.06.2021', 10, 10, 20, 0, 0, 0, FALSE, TRUE, '3')
