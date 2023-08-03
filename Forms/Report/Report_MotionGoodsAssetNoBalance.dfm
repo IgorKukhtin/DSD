@@ -753,6 +753,37 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         Options.Editing = False
         Width = 80
       end
+      object PartnerName_Partion: TcxGridDBColumn
+        Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+        DataBinding.FieldName = 'PartnerName_Partion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Release_Partion: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1074#1099#1087#1091#1089#1082#1072
+        DataBinding.FieldName = 'Release_Partion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 66
+      end
+      object Model_Partion: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100
+        DataBinding.FieldName = 'Model_Partion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PartNumber_Partion: TcxGridDBColumn
+        Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' ('#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091') '
+        DataBinding.FieldName = 'PartNumber_Partion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object AssetToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054#1057')'
         DataBinding.FieldName = 'AssetToCode'
@@ -779,14 +810,6 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         Options.Editing = False
         Width = 126
       end
-      object CarName: TcxGridDBColumn
-        Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
@@ -794,6 +817,37 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object Year_car: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072' ('#1072#1074#1090#1086')'
+        DataBinding.FieldName = 'Year_car'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object RegistrationCertificate: TcxGridDBColumn
+        Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
+        DataBinding.FieldName = 'RegistrationCertificate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object VIN: TcxGridDBColumn
+        DataBinding.FieldName = 'VIN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object CarName: TcxGridDBColumn
+        Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object CarTypeName: TcxGridDBColumn
         Caption = #1052#1086#1076#1077#1083#1100' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
@@ -2867,7 +2921,9 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'AssettoGroupName;AssetToName;GoodsName;'
+          IndexFieldNames = 
+            'AssettoGroupName;AssetToName;GoodsName;Release_Partion;Model_Par' +
+            'tion'
           GridView = cxGridDBTableView
         end>
       Params = <
