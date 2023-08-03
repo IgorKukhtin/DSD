@@ -425,6 +425,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalChoiceItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalChoiceItemForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalReserveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalReserveForm');

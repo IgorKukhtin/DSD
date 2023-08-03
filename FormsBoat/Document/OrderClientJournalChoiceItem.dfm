@@ -21,7 +21,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     Left = 0
     Top = 0
     Width = 1034
-    Height = 31
+    Height = 81
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
@@ -70,16 +70,81 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       TabOrder = 5
       Width = 226
     end
+    object lbSearchArticle: TcxLabel
+      Left = 11
+      Top = 33
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchArticle: TcxTextEdit
+      Left = 139
+      Top = 32
+      TabOrder = 7
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
+    object lbSearchCode: TcxLabel
+      Left = 276
+      Top = 33
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber: TcxTextEdit
+      Left = 361
+      Top = 34
+      TabOrder = 9
+      DesignSize = (
+        115
+        21)
+      Width = 115
+    end
+    object lbSearchName: TcxLabel
+      Left = 485
+      Top = 33
+      Caption = #1059#1079#1077#1083' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchReceiptGoods: TcxTextEdit
+      Left = 539
+      Top = 32
+      TabOrder = 11
+      DesignSize = (
+        165
+        21)
+      Width = 165
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 107
     Width = 1034
-    Height = 435
+    Height = 385
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 57
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1569,5 +1634,27 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       end>
     Left = 568
     Top = 3
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = ClientDataSet
+    Column = Article_Object_ch3
+    ColumnList = <
+      item
+        Column = Article_Object_ch3
+        TextEdit = edSearchArticle
+      end
+      item
+        Column = InvNumber
+        TextEdit = edSearchInvNumber
+      end
+      item
+        Column = ObjectName_ch3
+        TextEdit = edSearchReceiptGoods
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 312
+    Top = 336
   end
 end
