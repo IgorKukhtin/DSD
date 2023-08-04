@@ -197,38 +197,46 @@ BEGIN
      
 
      CREATE TEMP TABLE tmpESCount ON COMMIT DROP AS 
-     SELECT MILinkObject_Unit.ObjectId                                              AS UnitId
-          , COALESCE(NULLIF(MAX(MovementItemUser.Amount), 0), COUNT(*))::Integer   AS CountUser        
-     FROM Movement
+     WITH ESCount AS  (SELECT Movement.OperDate
+                            , MILinkObject_Unit.ObjectId                                              AS UnitId
+                            , COALESCE(NULLIF(MAX(MovementItemUser.Amount), 0), COUNT(*))::Integer    AS CountUser        
+                       FROM Movement
 
-           INNER JOIN MovementItem AS MovementItemMaster
-                                   ON MovementItemMaster.MovementId = Movement.Id
-                                  AND MovementItemMaster.DescId = zc_MI_Master()
+                             INNER JOIN MovementItem AS MovementItemMaster
+                                                     ON MovementItemMaster.MovementId = Movement.Id
+                                                    AND MovementItemMaster.DescId = zc_MI_Master()
 
-           INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
-                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                               ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
+                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-           LEFT JOIN MovementItem AS MovementItemUser
-                                  ON MovementItemUser.MovementId = Movement.Id
-                                 AND MovementItemUser.ObjectId  = MILinkObject_Unit.ObjectId 
-                                 AND MovementItemUser.DescId = zc_MI_Second()
+                             LEFT JOIN MovementItem AS MovementItemUser
+                                                    ON MovementItemUser.MovementId = Movement.Id
+                                                   AND MovementItemUser.ObjectId  = MILinkObject_Unit.ObjectId 
+                                                   AND MovementItemUser.DescId = zc_MI_Second()
 
-           LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                ON ObjectLink_User_Member.ObjectId = MovementItemMaster.ObjectId
-                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                             LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                  ON ObjectLink_User_Member.ObjectId = MovementItemMaster.ObjectId
+                                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
 
-           LEFT JOIN ObjectLink AS ObjectLink_Member_Position
-                                ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
-                               AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                             LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                                  ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                 AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
 
-     WHERE Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
-       AND Movement.DescId = zc_Movement_EmployeeSchedule()
-       AND Movement.StatusId <> zc_Enum_Status_Erased()
-       AND ObjectLink_Member_Position.ChildObjectId = 1672498
-     GROUP BY MILinkObject_Unit.ObjectId;
+                       WHERE Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '2 MONTH'
+                         AND Movement.DescId = zc_Movement_EmployeeSchedule()
+                         AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         AND ObjectLink_Member_Position.ChildObjectId = 1672498
+                       GROUP BY Movement.OperDate
+                              , MILinkObject_Unit.ObjectId)
+                              
+     SELECT ESCount.UnitId
+          , MAX(ESCount.CountUser) :: Integer AS CountUser
+     FROM ESCount
+     GROUP BY ESCount.UnitId;
           
      ANALYSE tmpESCount;
+     
      -- raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpEmployeeSchedule'))

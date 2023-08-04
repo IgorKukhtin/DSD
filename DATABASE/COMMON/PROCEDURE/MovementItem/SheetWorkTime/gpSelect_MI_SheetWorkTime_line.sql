@@ -56,6 +56,7 @@ BEGIN
         SELECT Object_Personal_View.MemberId
              , MAX (Object_Personal_View.PersonalId) AS PersonalId
              , Object_Personal_View.PositionId
+             , COALESCE (Object_Personal_View.PositionLevelId,0) AS PositionLevelId
              , MAX (CASE WHEN Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate 
                               THEN Object_Personal_View.DateIn
                          ELSE zc_DateStart()
@@ -69,7 +70,8 @@ BEGIN
           AND Object_Personal_View.UnitId = inUnitId
         GROUP BY Object_Personal_View.MemberId
              --, Object_Personal_View.PersonalId
-               , Object_Personal_View.PositionId
+               , Object_Personal_View.PositionId 
+               , COALESCE (Object_Personal_View.PositionLevelId,0)
                 ;
 
      CREATE TEMP TABLE tmpDateOut_All ON COMMIT DROP AS
@@ -89,7 +91,8 @@ BEGIN
         --
         SELECT tmpList.MemberId
            --, tmpList.PersonalId
-             , tmpList.PositionId
+             , tmpList.PositionId 
+             , tmpList.PositionLevelId
              , tmpOperDate.OperDate
              , 12918                                         AS WorkTimeKindId 
              , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
@@ -349,6 +352,7 @@ BEGIN
                                             FROM tmpMovement AS tmpMI
                                            ) AS tmpMI ON tmpMI.MemberId   = tmpDateOut_All.MemberId
                                                      AND tmpMI.PositionId = tmpDateOut_All.PositionId
+                                                     AND tmpMI.PositionLevelId = tmpDateOut_All.PositionLevelId
 --                           WHERE 1=0
                            )
             -- объединяем даты увольнения и рабочие
@@ -374,6 +378,7 @@ BEGIN
                  LEFT JOIN tmpDateOut ON tmpDateOut.OperDate   = tmp.OperDate
                                      AND tmpDateOut.MemberId   = tmp.MemberId
                                      AND tmpDateOut.PositionId = tmp.PositionId
+                                     AND tmpDateOut.PositionLevelId = tmp.PositionLevelId
                                      AND tmp.Amount            = 0
           UNION
             -- дни увольнения (не рабочие)
@@ -395,6 +400,7 @@ BEGIN
                  LEFT JOIN tmpMovement ON tmpMovement.OperDate   = tmp.OperDate
                                       AND tmpMovement.MemberId   = tmp.MemberId
                                       AND tmpMovement.PositionId = tmp.PositionId
+                                      AND tmpMovement.PositionLevelId = tmp.PositionLevelId
                                       AND tmpMovement.Amount     > 0
             WHERE tmpMovement.MemberId IS NULL
            ;
@@ -1156,6 +1162,7 @@ BEGIN
          --возьмем отсюда дату увольнения
          LEFT JOIN tmpListOut ON COALESCE(tmpListOut.PositionId, 0) = D.PositionId
                              AND COALESCE(tmpListOut.MemberId, 0)   = D.MemberId
+                             AND COALESCE(tmpListOut.PositionLevelId, 0)   = D.PositionLevelId
          --получить Id сотрудника
          LEFT JOIN tmpListPersonal ON tmpListPersonal.MemberId                     = D.MemberId
                                   AND COALESCE(tmpListPersonal.PositionId, 0)      = D.PositionId
@@ -1172,7 +1179,7 @@ BEGIN
 
  
  
-     OPEN cur1 
+     OPEN cur1 FOR 
           
       SELECT tmpMI.MemberId
            , tmpMI.MemberCode
@@ -1192,10 +1199,10 @@ BEGIN
 
            , tmpMI.AmountHours
            , tmpMI.CountDay      ::TFloat
-           , tmpMI.Amount_3      ::TFloat
-           , tmpMI.Amount_4      ::TFloat
-           , tmpMI.Amount_5      ::TFloat
-           , tmpMI.Amount_6      ::TFloat 
+           , tmpMI.Amount_3 ::TFloat
+           , tmpMI.Amount_4 ::TFloat
+           , tmpMI.Amount_5 ::TFloat
+           , tmpMI.Amount_6 ::TFloat 
            , tmpMI.PersonalId
            
            , tmpMI.KeyId
@@ -1204,49 +1211,14 @@ BEGIN
           ;
      RETURN NEXT cur1;
 
-     OPEN cur2 
+     OPEN cur2 FOR
       SELECT tmpMI.*
       FROM tmpMI_Result AS tmpMI
      ;
      RETURN NEXT cur2;
 
- /*
-        SELECT tmp.ValueData    AS Name
-             , tmp.TotalAmount ::TFloat
-        '
-               || vbFieldNameText ||
-        '
-        FROM
-         (SELECT * FROM CROSSTAB (''
-                                    SELECT ARRAY[Movement_Data.ObjectId        -- AS MemberId
-                                                ] :: Integer[]
-                                         , Movement_Data.OperDate AS OperDate
-                                         , ARRAY[ CAST (COALESCE(Movement_Data.Amount, 0)  AS NUMERIC (16,0)) :: VarChar
-                                               , COALESCE (Movement_Data.ObjectId, zc_Enum_WorkTimeKind_Work()) :: VarChar
-                                                ] :: TVarChar
-                                    FROM (SELECT tmpTotal.operdate
-                                               , tmpTotal.ObjectId
-                                               , SUM (tmpTotal.Amount) AS Amount
-                                          FROM tmpTotal
-                                          Group by tmpTotal.operdate, tmpTotal.ObjectId
-                                        ) AS Movement_Data
-                                  order by 1''
-                                , ''SELECT OperDate FROM tmpOperDate order by 1
-                                  '') AS CT (' || vbCrossString || ')
-         ) AS D
-      FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 1) :: TFloat AS TotalAmount
-           UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 2) :: TFloat AS TotalAmount
-           UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 3) :: TFloat AS TotalAmount
-           UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 4) :: TFloat AS TotalAmount
-           UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
-           UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
-                 )AS tmp ON tmp.Id = D.MemberId  
-     ORDER BY tmp.Id
-         ';
-     
      -- 1)кол-во часов 2)кол-во смен 3)Кол-во шт.ед 4)Кол-во отпуска 5)Кол-во прогулов
-
-     OPEN cur3
+     OPEN cur3 FOR
      WITH
      tmpTotalGroup AS (
         SELECT tmp.ObjectId
@@ -1285,12 +1257,12 @@ BEGIN
         FROM tmpTotal AS tmp
         GROUP BY tmp.ObjectId
         )
-   , tmpTotalText AS (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData
-                UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData
-                UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData
-                UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData
-                UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData
-                UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData
+   , tmpTotalText AS (SELECT 1 AS Id, '1.кол-во часов'    AS ValueData
+                UNION SELECT 2 AS Id, '2.кол-во смен'     AS ValueData
+                UNION SELECT 3 AS Id, '3.Кол-во шт.ед'    AS ValueData
+                UNION SELECT 4 AS Id, '4.Кол-во БЛ'       AS ValueData
+                UNION SELECT 5 AS Id, '5.Кол-во отпуска'  AS ValueData
+                UNION SELECT 6 AS Id, '6.Кол-во прогулов' AS ValueData
                       )
  
      SELECT tmpTotalText.ValueData    AS Name
@@ -1329,7 +1301,7 @@ BEGIN
 
         FROM tmpTotalText 
              LEFT JOIN tmpTotalGroup AS tmp ON tmp.ObjectId = tmpTotalText.Id
-        ORDER BY tmp.Id;    
+        ORDER BY tmpTotalText.Id;    
      RETURN NEXT cur3;
 
      

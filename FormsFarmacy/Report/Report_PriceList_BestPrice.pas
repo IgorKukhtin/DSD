@@ -53,6 +53,7 @@ type
     FormParams: TdsdFormParams;
     DatePriceMin: TcxGridDBColumn;
     PercChange: TcxGridDBColumn;
+    MakerPromoName: TcxGridDBColumn;
   private
     { Private declarations }
   public

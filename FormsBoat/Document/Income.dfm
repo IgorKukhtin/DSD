@@ -391,12 +391,12 @@ object IncomeForm: TIncomeForm
     end
     object Panel1: TPanel
       Left = 2
-      Top = 151
+      Top = 122
       Width = 255
-      Height = 36
+      Height = 65
       TabOrder = 44
       object lbSearchArticle: TcxLabel
-        Left = 3
+        Left = 1
         Top = 8
         Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
         ParentFont = False
@@ -408,9 +408,30 @@ object IncomeForm: TIncomeForm
         Style.IsFontAssigned = True
       end
       object edSearchArticle: TcxTextEdit
-        Left = 126
-        Top = 8
+        Left = 125
+        Top = 10
         TabOrder = 1
+        DesignSize = (
+          125
+          21)
+        Width = 125
+      end
+      object lbSearchName: TcxLabel
+        Left = 42
+        Top = 36
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edSearchName: TcxTextEdit
+        Left = 125
+        Top = 37
+        TabOrder = 3
         DesignSize = (
           125
           21)
@@ -1269,9 +1290,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -4881,6 +4899,10 @@ object IncomeForm: TIncomeForm
     ColumnList = <
       item
         Column = Article_all
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchName
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

@@ -61,7 +61,8 @@ BEGIN
      CREATE TEMP TABLE tmpListOut ON COMMIT DROP AS
         SELECT Object_Personal_View.MemberId
              , MAX (Object_Personal_View.PersonalId) AS PersonalId
-             , Object_Personal_View.PositionId
+             , Object_Personal_View.PositionId 
+             , COALESCE (Object_Personal_View.PositionLevelId,0) AS PositionLevelId
              , MAX (CASE WHEN Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate
                               THEN Object_Personal_View.DateIn
                          ELSE zc_DateStart()
@@ -79,6 +80,7 @@ BEGIN
         GROUP BY Object_Personal_View.MemberId
              --, Object_Personal_View.PersonalId
                , Object_Personal_View.PositionId
+               , COALESCE (Object_Personal_View.PositionLevelId,0)
                 ;
 
      CREATE TEMP TABLE tmpDateOut_All ON COMMIT DROP AS
@@ -99,6 +101,7 @@ BEGIN
         SELECT tmpList.MemberId
            --, tmpList.PersonalId
              , tmpList.PositionId
+             , tmpList.PositionLevelId
              , tmpOperDate.OperDate
              , 12918                                         AS WorkTimeKindId
              , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
@@ -373,6 +376,7 @@ BEGIN
                                             FROM tmpMovement AS tmpMI
                                            ) AS tmpMI ON tmpMI.MemberId   = tmpDateOut_All.MemberId
                                                      AND tmpMI.PositionId = tmpDateOut_All.PositionId
+                                                     AND tmpMI.PositionLevelId = tmpDateOut_All.PositionLevelId
                                 LEFT JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.OperDate
                                            FROM tmpMovement AS tmpMI
                                            WHERE tmpMI.ObjectId IN (zc_Enum_WorkTimeKind_Holiday())
@@ -404,7 +408,8 @@ BEGIN
                  -- если был прин€т не сначала мес€ца или уволен в течении мес€ца отмечаем ’
                  LEFT JOIN tmpDateOut ON tmpDateOut.OperDate   = tmp.OperDate
                                      AND tmpDateOut.MemberId   = tmp.MemberId
-                                     AND tmpDateOut.PositionId = tmp.PositionId
+                                     AND tmpDateOut.PositionId = tmp.PositionId 
+                                     AND tmpDateOut.PositionLevelId = tmp.PositionLevelId
                                      AND tmp.Amount            = 0
                                      AND tmp.ObjectId NOT IN (zc_Enum_WorkTimeKind_Holiday())
           UNION
@@ -427,6 +432,7 @@ BEGIN
                  LEFT JOIN tmpMovement ON tmpMovement.OperDate   = tmp.OperDate
                                       AND tmpMovement.MemberId   = tmp.MemberId
                                       AND tmpMovement.PositionId = tmp.PositionId
+                                      AND tmpMovement.PositionLevelId = tmp.PositionLevelId
                                       AND tmpMovement.Amount     > 0
             WHERE tmpMovement.MemberId IS NULL
            ;
@@ -831,6 +837,7 @@ BEGIN
          --возьмем отсюда дату увольнени€
          LEFT JOIN tmpListOut ON COALESCE(tmpListOut.MemberId, 0)           = D.Key[1]
                              AND COALESCE(tmpListOut.PositionId, 0)         = D.Key[2]
+                             AND COALESCE(tmpListOut.PositionLevelId, 0)    = D.Key[3]
          --получить Id сотрудника
          LEFT JOIN tmpListPersonal ON tmpListPersonal.MemberId        = D.Key[1]
                                   AND COALESCE(tmpListPersonal.PositionId, 0)      = D.Key[2]
@@ -902,7 +909,7 @@ $BODY$
  07.01.14                         * Replace inPersonalId <> inMemberId
  30.11.13                                        * add isErased = FALSE
  30.11.13                                        * parse
- 25.11.13                         * Add PositionLevel
+ 25.11.13                         * Add PositionLevelId
  25.10.13                         *
  19.10.13                         *
  05.10.13                         *
