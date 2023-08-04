@@ -723,6 +723,15 @@ object GoodsForm: TGoodsForm
         VisibleForCustomization = False
         Width = 55
       end
+      object Name_all: TcxGridDBColumn
+        Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1125,6 +1134,14 @@ object GoodsForm: TGoodsForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue_all'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_all'
           DataType = ftString
           MultiSelectSeparator = ','
         end

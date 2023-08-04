@@ -152,6 +152,7 @@ type
     bbReport_Price: TdxBarButton;
     isProdOptions: TcxGridDBColumn;
     isReceiptGoods_group: TcxGridDBColumn;
+    Name_all: TcxGridDBColumn;
   private
     { Private declarations }
   public
