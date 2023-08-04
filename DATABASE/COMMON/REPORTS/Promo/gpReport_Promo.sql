@@ -95,7 +95,17 @@ RETURNS TABLE(
     ,Checked              Boolean   --Согласовано (да/нет)
     , PromoStateKindName    TVarChar --состояние акции
     , Color_PromoStateKind  Integer  -- подсветка
-    , strSign             TVarChar   --эл. подпись
+    , strSign             TVarChar   --эл. подпись     
+    
+    , PriceIn_fact              TFloat -- с/с факт
+    , PriceIn_plan              TFloat -- с/с план
+    , ContractCondition_persent TFloat --бонус сети %
+    , ContractCondition         TFloat --бонус сети сумма
+    , PriceWithVAT_calc              TFloat -- цена с ндс с учетом скидки
+    , SummaProfit_fact          TFloat --прибыль факт
+    , SummaProfit_plan          TFloat --прибыль план
+
+
     )
 AS
 $BODY$
@@ -312,11 +322,30 @@ BEGIN
                                                                                 )
                                   )
 
+        --данные с закладки 2,1 - Калькулятор скидка
+        , tmpMICalc AS (SELECT tmpMovement_Promo.Id    AS MovementId
+                             , tmp.Id                  AS MovementItemId      --, tmp.GoodsKindId
+                             , SUM (CASE WHEN Num = 2 THEN tmp.PriceIn ELSE 0 END) AS PriceIn_fact                        -- с/с факт
+                             , SUM (CASE WHEN Num = 4 THEN tmp.PriceIn ELSE 0 END) AS PriceIn_plan                        -- с/с план
+
+                             , SUM (CASE WHEN Num = 1 THEN tmp.ContractCondition ELSE 0 END) AS ContractCondition_persent --бонус сети %
+                             , SUM (CASE WHEN Num = 2 THEN tmp.ContractCondition ELSE 0 END) AS ContractCondition         --бонус сети сумма
+
+                             , SUM (CASE WHEN Num = 2 THEN tmp.PriceWithVAT ELSE 0 END) AS PriceWithVAT -- цена с ндс с учетом скидки
+
+                             , SUM (CASE WHEN Num = 2 THEN tmp.SummaProfit ELSE 0 END) AS SummaProfit_fact                --прибыль факт
+                             , SUM (CASE WHEN Num = 4 THEN tmp.SummaProfit ELSE 0 END) AS SummaProfit_plan                --прибыль план
+                          FROM tmpMovement_Promo
+                              LEFT JOIN gpSelect_MI_PromoGoods_Calc(tmpMovement_Promo.Id, FALSE, TRUE, inSession) AS tmp ON 1 = 1
+                          WHERE tmp.Groupnum IN (1,2)  --факт / план 
+                          GROUP BY tmpMovement_Promo.Id, tmp.Id
+                        )
+
         , tmpMI_PromoGoods AS (SELECT MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
                                     , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
                                     , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
                                     , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
-                                    , Object_Measure.Id               AS MeasureId             --Единица измерения
+                                    , Object_Measure.Id                      AS MeasureId            --Единица измерения
                                     , Object_Measure.ValueData               AS Measure             --Единица измерения
                                     , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
                                     , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
@@ -351,6 +380,14 @@ BEGIN
                                     , SUM (MIFloat_AmountIn.ValueData)             AS AmountIn            --Кол-во возврат (факт)
                                     , SUM (MIFloat_AmountIn.ValueData
                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
+
+                                    , tmpMICalc.PriceIn_fact              -- с/с факт
+                                    , tmpMICalc.PriceIn_plan              -- с/с план
+                                    , tmpMICalc.ContractCondition_persent --бонус сети %
+                                    , tmpMICalc.ContractCondition         --бонус сети сумма
+                                    , tmpMICalc.PriceWithVAT AS   PriceWithVAT_calc           -- цена с ндс с учетом скидки
+                                    , tmpMICalc.SummaProfit_fact          --прибыль факт
+                                    , tmpMICalc.SummaProfit_plan          --прибыль план
 
                                FROM tmpMI AS MovementItem
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
@@ -408,7 +445,10 @@ BEGIN
 
                                       LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                                                   ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
-                                                                 AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                                                 AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()  
+
+                                      LEFT JOIN tmpMICalc ON tmpMICalc.MovementId = MovementItem.MovementId
+                                                         AND tmpMICalc.MovementItemId = MovementItem.Id
                                GROUP BY MovementItem.MovementId
                                       , MovementItem.ObjectId
                                       , Object_Goods.ObjectCode
@@ -423,6 +463,13 @@ BEGIN
                                       , MIFloat_PriceWithOutVAT.ValueData
                                       , MIFloat_PriceWithVAT.ValueData
                                       , MIFloat_PriceSale.ValueData
+                                      , tmpMICalc.PriceIn_fact              -- с/с факт
+                                      , tmpMICalc.PriceIn_plan              -- с/с план
+                                      , tmpMICalc.ContractCondition_persent --бонус сети %
+                                      , tmpMICalc.ContractCondition         --бонус сети сумма
+                                      , tmpMICalc.PriceWithVAT              -- цена с ндс с учетом скидки
+                                      , tmpMICalc.SummaProfit_fact          --прибыль факт
+                                      , tmpMICalc.SummaProfit_plan          --прибыль план
                                )
            -- эл. подпись, выбираем те что уже подписаны полностью 
            , tmpSign AS (SELECT tmpMovement.Id
@@ -633,7 +680,16 @@ BEGIN
 
           , Movement_Promo.PromoStateKindName   ::TVarChar
           , Movement_Promo.Color_PromoStateKind :: Integer
-          , tmpSign.strSign                     ::TVarChar-- -- эл.подписи  --
+          , tmpSign.strSign                     ::TVarChar-- -- эл.подписи  -- 
+          
+          , MI_PromoGoods.PriceIn_fact             ::TFloat                     -- с/с факт
+          , MI_PromoGoods.PriceIn_plan             ::TFloat                     -- с/с план
+          , MI_PromoGoods.ContractCondition_persent::TFloat                     --бонус сети %
+          , MI_PromoGoods.ContractCondition        ::TFloat                     --бонус сети сумма
+          , MI_PromoGoods.PriceWithVAT_calc        ::TFloat                     -- цена с ндс с учетом скидки
+          , MI_PromoGoods.SummaProfit_fact         ::TFloat                     --прибыль факт
+          , MI_PromoGoods.SummaProfit_plan         ::TFloat                     --прибыль план
+                                    
         FROM
             tmpMovement_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id

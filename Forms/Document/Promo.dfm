@@ -3,6 +3,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1362
+  ExplicitTop = -91
   ExplicitWidth = 1378
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -11,6 +12,7 @@
     Top = 139
     Width = 1362
     Height = 568
+    Properties.ActivePage = cxTabSheetCalc
     ExplicitTop = 139
     ExplicitWidth = 1362
     ExplicitHeight = 568
@@ -1456,16 +1458,6 @@
             Options.Editing = False
             Width = 108
           end
-          object calcTaxPromo: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
-            DataBinding.FieldName = 'TaxPromo'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 63
-          end
           object calcPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'PriceWithVAT'
@@ -1488,6 +1480,16 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 119
+          end
+          object calcTaxPromo: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'TaxPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
           end
           object calcSummaProfit: TcxGridDBColumn
             Caption = #1055#1088#1080#1073#1099#1083#1100', '#1075#1088#1085
@@ -4296,6 +4298,9 @@
         end>
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
     end
     object InsertRecord: TInsertRecord [23]
       Category = 'Goods'
@@ -10227,8 +10232,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1068
-    Top = 152
+    Left = 1076
+    Top = 208
   end
   object spSelect_MI_PromoPlan_Child: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoPlan_Child'
@@ -10443,8 +10448,8 @@
         ValueColumn = Repository
         EditRepository = cxEditRepository1
       end>
-    Left = 896
-    Top = 175
+    Left = 888
+    Top = 231
   end
   object spInsUpPromoStat_Master_calc: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_PromoStat_Master_calc'

@@ -3338,32 +3338,32 @@ end;
 
 procedure TLoadFormTest.LoadReportPromoFormTest;
 begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_MarketForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_MarketForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_MarketDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_MarketDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_PlanFactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_PlanFactForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_PlanFactDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_PlanFactDialogForm');
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturn_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturn_byPromoForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_TradeForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_Result_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_Result_TradeForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultDialogForm');
   //
@@ -3371,10 +3371,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoPlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoPlanForm');
   //
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
   }
