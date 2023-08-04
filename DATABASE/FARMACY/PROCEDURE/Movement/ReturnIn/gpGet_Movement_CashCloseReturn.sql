@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_CashCloseReturn(
     IN inMovementId        Integer  , -- ключ Документа
    OUT outSummaTotal       TFloat   ,
    OUT outPaidType         Integer  ,
+   OUT outRRN              TVarChar  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -26,9 +27,11 @@ BEGIN
       SELECT Movement_ReturnIn.StatusId
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , COALESCE(Object_PaidTypeCheck.ObjectCode, 0)  AS PaidTypeCheck
+           , COALESCE(MovementString_RRN.ValueData, '')  AS RRN
       INTO vbStatusId
          , outSummaTotal
          , outPaidType
+         , outRRN
       FROM Movement AS Movement_ReturnIn
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
@@ -44,6 +47,11 @@ BEGIN
                                          ON MovementLinkObject_PaidTypeCheck.MovementId = MovementCheck.Id
                                         AND MovementLinkObject_PaidTypeCheck.DescId = zc_MovementLinkObject_PaidType()
             LEFT JOIN Object AS Object_PaidTypeCheck ON Object_PaidTypeCheck.Id = MovementLinkObject_PaidTypeCheck.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_RRN
+                                     ON MovementString_RRN.MovementId = MovementCheck.Id
+                                    AND MovementString_RRN.DescId = zc_MovementString_RRN()
+                                    
       WHERE Movement_ReturnIn.Id = inMovementId
         AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
       ;
@@ -63,4 +71,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_CashCloseReturn (inMovementId:= 19806544 , inSession:= '3')
+-- SELECT * FROM gpGet_Movement_CashCloseReturn (inMovementId:= 32946342 , inSession:= '3')

@@ -45,7 +45,7 @@ type
   public
     { Public declarations }
     function PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-      PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; out AZReport : Integer;
+      PaidType: TPaidType; out AFiscalNumber, ACheckNumber, ARRN: String; out AZReport : Integer;
       APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
     procedure Add_Log_XML(AMessage: String);
 
@@ -111,7 +111,7 @@ begin
 end;
 
 procedure TCashCloseSaleInsuranceCompaniesDialogForm.actPrintReceiptExecute(Sender: TObject);
-  var cFiscalNumber, cCheckNumber: String; nZReport : Integer;
+  var cFiscalNumber, cCheckNumber, cRRN: String; nZReport : Integer;
 begin
   inherited;
 
@@ -126,7 +126,7 @@ begin
   end;
 
   if not PutCheckToCash(FSummaTotal, edSalerCashAdd.Value,
-    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, nZReport) then Exit;
+    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, cRRN, nZReport) then Exit;
 
   // Пропись в чеке информации по пробивке
   try
@@ -145,6 +145,7 @@ begin
     if rgPaidType.ItemIndex = 2 then
       spUpdate_CashRegister.ParamByName('inTotalSummPayAdd').Value := edSalerCashAdd.Value
     else spUpdate_CashRegister.ParamByName('inTotalSummPayAdd').Value := 0;
+    spUpdate_CashRegister.ParamByName('inRRN').Value := cRRN;
     spUpdate_CashRegister.Execute;
   Except ON E: Exception DO
     MessageDlg(E.Message,mtError,[mbOk],0);
@@ -198,7 +199,7 @@ begin
 end;
 
 function TCashCloseSaleInsuranceCompaniesDialogForm.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; out AZReport : Integer;
+  PaidType: TPaidType; out AFiscalNumber, ACheckNumber, ARRN: String; out AZReport : Integer;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
   str_log_xml, cTextCheck: String;
@@ -232,6 +233,7 @@ begin
   ACheckNumber := '';
   cTextCheck := '';
   AZReport := 0;
+  ARRN := '';
   try
     try
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
@@ -344,6 +346,7 @@ begin
           if not PayPosTerminal(pPosTerm, SalerCash - SalerCashAdd) then
             exit;
           cTextCheck := pPosTerm.TextCheck;
+          ARRN := pPosTerm.RRN;
         finally
           if pPosTerm <> Nil then
             pPosTerm := Nil;

@@ -16,10 +16,11 @@ type
       function GetProcessType : TPosProcessType;
       function GetProcessState : TPosProcessState;
       function GetCanceled : Boolean;
+      function GetRRN : string;
 
       function CheckConnection : Boolean;
       function Payment(ASumma : Currency) : Boolean;
-      function Refund(ASumma : Currency) : Boolean;
+      function Refund(ASumma : Currency; ARRN : String) : Boolean;
       function ServiceMessage : Boolean;
       procedure Cancel;
       property OnMsgDescriptionProc: TMsgDescriptionProc read GetMsgDescriptionProc write SetMsgDescriptionProc;
@@ -28,6 +29,7 @@ type
       property ProcessState : TPosProcessState read GetProcessState;
       property TextCheck : String read GetTextCheck;
       property Canceled : Boolean read GetCanceled;
+      property RRN : String read GetRRN;
    end;
 
 implementation

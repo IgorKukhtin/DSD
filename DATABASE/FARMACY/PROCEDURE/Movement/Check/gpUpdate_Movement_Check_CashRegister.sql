@@ -1,15 +1,17 @@
 -- Function: gpComplete_Movement_IncomeAdmin()
 
 --DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_CashRegister(
     IN inMovementId        Integer              , -- ключ Документа
     IN inPaidType          Integer   , -- тип оплаты
     IN inCashRegister      TVarChar  , -- Серийник кассового аппарата
-    IN inZReport           Integer,  -- Z отчет
+    IN inZReport           Integer   ,  -- Z отчет
     IN inFiscalCheckNumber TVarChar  , -- Номер фискального чека
     IN inTotalSummPayAdd   TFloat    , -- Доплата по чеку
+    IN inRRN        	   TVarChar  , -- RRN уникальный номер транзакции
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -59,13 +61,19 @@ BEGIN
 	   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayAdd(), inMovementId, inTotalSummPayAdd);
 	END IF;
 
+    IF COALESCE (inRRN, '') <> ''
+    THEN
+      -- сохранили <>
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_RRN(), inMovementId, inRRN);
+    END IF;
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, TVarChar, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
