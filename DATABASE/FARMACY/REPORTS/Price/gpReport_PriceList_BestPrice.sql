@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_PriceList_BestPrice(
   RETURNS TABLE (ContractId Integer, ContractCode Integer, ContractName TVarChar
                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
                , Price TFloat, PriceMin TFloat, PercChange TFloat, DatePriceMin TDateTime
+               , MakerPromoName TVarChar
               )
 AS
 $BODY$
@@ -127,6 +128,17 @@ BEGIN
     raise notice 'Value 2: % %', CLOCK_TIMESTAMP(), (select Count(*) FROM _tmpResult);
 
     RETURN QUERY 
+    WITH GoodsPromoAll AS (SELECT Object_Goods_Retail.GoodsMainId AS GoodsId  -- главный товар
+                                , Object_Maker.ValueData          AS MakerPromoName
+                                , tmp.GoodsGroupPromoName
+                                , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Retail.GoodsMainId ORDER BY tmp.MovementId DESC) AS Ord
+                           FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                INNER JOIN Object_Goods_Retail AS Object_Goods_Retail
+                                                               ON Object_Goods_Retail.Id = tmp.GoodsId
+                                INNER JOIN Object AS Object_Maker
+                                                  ON Object_Maker.Id = tmp.MakerId
+                           )
+
     SELECT _tmpResult.ContractId 
          , Object_Contract.ObjectCode
          , Object_Contract.ValueData
@@ -137,11 +149,15 @@ BEGIN
          , _tmpResult.PriceMin
          , (_tmpResult.PriceMin / _tmpResult.Price * 100 - 100)::TFloat  AS PercChange
          , _tmpResult.DatePriceMin
+         , GoodsPromoAll.MakerPromoName
     FROM _tmpResult 
     
          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = _tmpResult.ContractId 
 
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpResult.GoodsId 
+         
+         LEFT JOIN GoodsPromoAll ON GoodsPromoAll.GoodsId = _tmpResult.GoodsId 
+                                AND GoodsPromoAll.Ord = 1
            
     WHERE _tmpResult.PriceMin <= round(_tmpResult.Price * (100 + inProcent) / 100, 2)
       AND _tmpResult.Price > 0

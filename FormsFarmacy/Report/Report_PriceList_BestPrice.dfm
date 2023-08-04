@@ -1,27 +1,27 @@
 inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
   Caption = #1054#1090#1095#1077#1090' <'#1051#1091#1095#1096#1072#1103' '#1094#1077#1085#1072'>'
   ClientHeight = 480
-  ClientWidth = 908
+  ClientWidth = 1022
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 926
+  ExplicitWidth = 1040
   ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 908
+    Width = 1022
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 908
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 908
+    ClientRectRight = 1022
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 908
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 908
+        Width = 1022
         Height = 421
         ExplicitWidth = 908
         ExplicitHeight = 421
@@ -273,12 +273,20 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
             Options.Editing = False
             Width = 85
           end
+          object MakerPromoName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090
+            DataBinding.FieldName = 'MakerPromoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 106
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 908
+    Width = 1022
     Height = 33
     ExplicitWidth = 908
     ExplicitHeight = 33
