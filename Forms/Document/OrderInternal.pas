@@ -161,6 +161,11 @@ type
     bbUpdateAmountAll_diff: TdxBarButton;
     bbUpdateAmountPartner_dif: TdxBarButton;
     MultiUpdateAmountPartner_dif: TMultiAction;
+    AmountOrderPromo: TcxGridDBColumn;
+    AmountSalePromo: TcxGridDBColumn;
+    AmountProductionOut: TcxGridDBColumn;
+    CountForecastOrderPromo: TcxGridDBColumn;
+    CountForecastPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public
