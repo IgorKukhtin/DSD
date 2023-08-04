@@ -336,7 +336,7 @@ BEGIN
                              , SUM (CASE WHEN Num = 2 THEN tmp.SummaProfit ELSE 0 END) AS SummaProfit_fact                --прибыль факт
                              , SUM (CASE WHEN Num = 4 THEN tmp.SummaProfit ELSE 0 END) AS SummaProfit_plan                --прибыль план
                           FROM tmpMovement_Promo
-                              LEFT JOIN gpSelect_MI_PromoGoods_Calc(tmpMovement_Promo.Id, FALSE, TRUE, inSession) AS tmp ON 1 = 1
+                              LEFT JOIN gpSelect_MI_PromoGoods_Calc_all(tmpMovement_Promo.Id, FALSE, TRUE, inSession) AS tmp ON 1 = 1
                           WHERE tmp.Groupnum IN (1,2)  --факт / план 
                           GROUP BY tmpMovement_Promo.Id, tmp.Id
                         )
