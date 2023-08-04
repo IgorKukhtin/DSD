@@ -113,6 +113,8 @@ begin
       AddBoolField(LocalDataBaseHead, 'ISPAPERRSP');  //	Бумажный рецепт по СП
       //***19.02.23
       AddIntField(LocalDataBaseHead,  'USERKEYID');   //Чей файловый ключ использовался при пробитии чека.
+      //***04.08.23
+      AddStrField(LocalDataBaseHead,  'RRN', 25);     //RRN уникальный номер транзакции
 
       LocalDataBaseHead.CreateTable;
     end
@@ -190,15 +192,17 @@ begin
         //***04.10.21
         if FindField('MEDPRSPID') = nil then AddIntField(LFieldDefs,  'MEDPRSPID');     //Медицинская программа соц. проектов
         //***26.0.21
-        if FindField('ISMANUAL') = nil then AddBoolField(LFieldDefs, 'ISMANUAL');   //Ручной выбор медикамента
+        if FindField('ISMANUAL') = nil then AddBoolField(LFieldDefs, 'ISMANUAL');       //Ручной выбор медикамента
         //***27.10.21
         if FindField('CAT1303ID') = nil then AddIntField(LFieldDefs,  'CAT1303ID');     //Категория 1303
         //***14.12.21
-        if FindField('ISERRORRO') = nil then AddBoolField(LFieldDefs,  'ISERRORRO');     //ВИП чек по ошибке РРО
+        if FindField('ISERRORRO') = nil then AddBoolField(LFieldDefs,  'ISERRORRO');    //ВИП чек по ошибке РРО
         //***15.03.22
-        if FindField('ISPAPERRSP') = nil then AddBoolField(LFieldDefs,  'ISPAPERRSP');    //	Бумажный рецепт по СП
+        if FindField('ISPAPERRSP') = nil then AddBoolField(LFieldDefs,  'ISPAPERRSP');  //	Бумажный рецепт по СП
         //***19.02.23
         if FindField('USERKEYID') = nil then AddIntField(LFieldDefs,  'USERKEYID');     //Чей файловый ключ использовался при пробитии чека.
+        //***04.08.23
+        if FindField('RRN') = nil then AddIntField(LFieldDefs,  'RRN');                 //RRN уникальный номер транзакции
         //***10.09.22
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -295,7 +299,9 @@ begin
         //***15.03.22
         (FindField('ISPAPERRSP') = nil) or
         //***19.02.23
-        (FindField('USERKEYID') = nil));
+        (FindField('USERKEYID') = nil) or
+        //***04.08.23
+        (FindField('RRN') = nil));
 
       Close;
 

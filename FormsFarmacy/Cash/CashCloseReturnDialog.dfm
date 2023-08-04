@@ -226,6 +226,12 @@ inherited CashCloseReturnDialogForm: TCashCloseReturnDialogForm
         Name = 'outPaidType'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRRN'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 211
@@ -301,6 +307,13 @@ inherited CashCloseReturnDialogForm: TCashCloseReturnDialogForm
         Name = 'inTotalSummPayAdd'
         Value = Null
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRRN'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

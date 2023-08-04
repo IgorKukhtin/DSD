@@ -53,7 +53,7 @@ BEGIN
      UNION ALL
      SELECT 14, (CURRENT_DATE + INTERVAL '17 HOUR')::TDateTime, '568330367,300408824,1612960715'::TVarChar, ''::TVarChar
      UNION ALL
-     SELECT 15, CURRENT_DATE::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CompleteFullInventory (:OperDate, ''3'')'::TVarChar
+     SELECT 15, CURRENT_TIMESTAMP::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CompleteFullInventory (:OperDate, ''3'')'::TVarChar
      
 /*     UNION ALL
      SELECT 100, CURRENT_DATE::TDateTime, ''::TVarChar, 'SELECT * FROM gpSelect_TelegramBot_TestMessage (:OperDate, ''3'')'::TVarChar*/
