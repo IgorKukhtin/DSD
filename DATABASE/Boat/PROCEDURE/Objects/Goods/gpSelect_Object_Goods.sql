@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , isReceiptGoods_group  Boolean
                -- Сборка (да/нет) - Участвует в сборке Узла/Модели или в опциях
              , isReceiptGoods        Boolean
-              -- Опция (да/нет) - Участвует в опциях
+               -- Опция (да/нет) - Участвует в опциях
              , isProdOptions         Boolean
                -- Архив (да/нет)
              , isArc Boolean
@@ -157,7 +157,7 @@ BEGIN
                                 HAVING COUNT (*) > 1
                                )
      -- если это узел
-   , tmpReceiptGoods_group AS (-- в сборке узла
+   , tmpReceiptGoods_group AS (-- узел в сборке
                                SELECT DISTINCT ObjectLink_Goods.ChildObjectId AS GoodsId
                                FROM Object AS Object_ReceiptGoods
                                     LEFT JOIN ObjectLink AS ObjectLink_Goods
@@ -182,7 +182,7 @@ BEGIN
                                WHERE Object_ReceiptGoodsChild.DescId   = zc_Object_ReceiptGoodsChild()
                                  AND Object_ReceiptGoodsChild.isErased = FALSE
                               )
-      -- если Товар участвует в сборке
+      -- если Товар участвует в сборке + Опции
     , tmpReceiptGoods_all AS (-- Сборка Модели
                               SELECT ObjectLink_ReceiptProdModelChild_Object.ChildObjectId AS GoodsId_from
                                    , 0 AS GoodsId_to
@@ -232,7 +232,8 @@ BEGIN
 
                              UNION ALL
                               -- Опции
-                              SELECT 0 AS GoodsId_from
+                              SELECT DISTINCT
+                                     0 AS GoodsId_from
                                    , 0 AS GoodsId_to
                                    , ObjectLink_ProdOptions_Goods.ChildObjectId AS GoodsId_child
                                    , TRUE AS isProdOptions
@@ -244,7 +245,7 @@ BEGIN
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
                              )
-          -- если Товар участвует в сборке
+          -- если Товар участвует в сборке + Опции
         , tmpReceiptGoods AS (-- Сборка Модели
                               SELECT DISTINCT tmpReceiptGoods_all.GoodsId_from AS GoodsId
                               FROM tmpReceiptGoods_all
@@ -472,7 +473,7 @@ BEGIN
             , SUBSTRING (Object_Goods.ValueData, 1, 128) :: TVarChar AS Name
             , zfCalc_GoodsName_all (ObjectString_Article.ValueData, SUBSTRING (Object_Goods.ValueData, 1, 128) ) AS Name_all
               --
-            , CASE WHEN vbUserId = 5 AND 1=0 THEN LOWER (ObjectString_Article.ValueData) ELSE ObjectString_Article.ValueData END :: TVarChar AS Article
+            , ObjectString_Article.ValueData      AS Article
             , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
               --
             , (CASE WHEN tmpGoods_err_1.Article   IS NOT NULL
@@ -517,7 +518,7 @@ BEGIN
             , CASE WHEN tmpReceiptGoods.GoodsId > 0       THEN TRUE ELSE FALSE END :: Boolean AS isReceiptGoods
               -- Опция (да/нет) - Участвует в опциях
             , COALESCE (tmpReceiptGoods_all.isProdOptions, FALSE)                  :: Boolean AS isProdOptions
-
+              -- Архив (да/нет)
             , COALESCE (ObjectBoolean_Arc.ValueData, FALSE) :: Boolean AS isArc
 
             , ObjectFloat_Feet.ValueData    ::TFloat AS Feet
@@ -788,10 +789,13 @@ BEGIN
              LEFT JOIN tmpGoods_err_2 ON tmpGoods_err_2.GoodsCode = Object_Goods.ObjectCode
              LEFT JOIN tmpGoods_err_3 ON tmpGoods_err_3.EAN       = ObjectString_EAN.ValueData
 
+             -- если Товар участвует в сборке + Опции
              LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
-             LEFT JOIN tmpReceiptGoods_group ON tmpReceiptGoods_group.GoodsId = Object_Goods.Id
+             -- если Опции
              LEFT JOIN tmpReceiptGoods_all ON tmpReceiptGoods_all.GoodsId_child = Object_Goods.Id
                                           AND tmpReceiptGoods_all.isProdOptions = TRUE
+             -- если это узел
+             LEFT JOIN tmpReceiptGoods_group ON tmpReceiptGoods_group.GoodsId = Object_Goods.Id
 
              LEFT JOIN tmpUnit_receipt  ON tmpUnit_receipt.GoodsId  = Object_Goods.Id
              LEFT JOIN tmpGoods_receipt ON tmpGoods_receipt.GoodsId = Object_Goods.Id

@@ -7,10 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_ReceiptService(
     IN inIsLimit_100 Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , DescName TVarChar
              , Article TVarChar, Article_all TVarChar, ArticleVergl TVarChar, EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
              , FeeNumber TVarChar, GoodsGroupNameFull TVarChar, Comment TVarChar
+             , ModelName_calc TVarChar
              , PartnerDate TDateTime
              , isArc Boolean
              , AmountMin TFloat, AmountRefer TFloat
@@ -28,6 +29,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DiscountPartnerId Integer, DiscountPartnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
+               -- Узел (да/нет)
+             , isReceiptGoods_group  Boolean
+               -- Сборка (да/нет) - Участвует в сборке Узла/Модели или в опциях
+             , isReceiptGoods        Boolean
+               -- Опция (да/нет) - Участвует в опциях
+             , isProdOptions         Boolean
+               --
              , isErased Boolean
               )
 AS
@@ -52,14 +60,111 @@ BEGIN
                               FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                        , inOperDate   := CURRENT_DATE) AS tmp
                               )
-         , tmpReceiptGoods AS (SELECT DISTINCT ObjectLink_Goods.ChildObjectId AS GoodsId
+     -- если это узел
+   , tmpReceiptGoods_group AS (-- узел в сборке
+                               SELECT DISTINCT ObjectLink_Goods.ChildObjectId AS GoodsId
                                FROM Object AS Object_ReceiptGoods
                                     LEFT JOIN ObjectLink AS ObjectLink_Goods
-                                                         ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
-                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
+                                                         ON ObjectLink_Goods.ObjectId      = Object_ReceiptGoods.Id
+                                                        AND ObjectLink_Goods.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                                                        AND ObjectLink_Goods.ChildObjectId > 0
                                WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
                                  AND Object_ReceiptGoods.isErased = FALSE
+                              UNION
+                               -- в сборке узла - ПФ
+                               SELECT DISTINCT ObjectLink_GoodsChild.ChildObjectId AS GoodsId
+                               FROM Object AS Object_ReceiptGoodsChild
+                                    INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                          ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                         AND ObjectLink_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                    INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                                                                            AND Object_ReceiptGoods.isErased = FALSE
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                          ON ObjectLink_GoodsChild.ObjectId      = Object_ReceiptGoodsChild.Id
+                                                         AND ObjectLink_GoodsChild.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                                                         AND ObjectLink_GoodsChild.ChildObjectId > 0
+                               WHERE Object_ReceiptGoodsChild.DescId   = zc_Object_ReceiptGoodsChild()
+                                 AND Object_ReceiptGoodsChild.isErased = FALSE
                               )
+      -- если Товар участвует в сборке + Опции
+    , tmpReceiptGoods_all AS (-- Сборка Модели
+                              SELECT ObjectLink_ReceiptProdModelChild_Object.ChildObjectId AS GoodsId_from
+                                   , 0 AS GoodsId_to
+                                   , 0 AS GoodsId_child
+                                   , FALSE AS isProdOptions
+                              FROM Object AS Object_ReceiptProdModel
+                                   INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_ReceiptProdModel
+                                                         ON ObjectLink_ReceiptProdModelChild_ReceiptProdModel.ChildObjectId = Object_ReceiptProdModel.Id
+                                                        AND ObjectLink_ReceiptProdModelChild_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                   INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id       = ObjectLink_ReceiptProdModelChild_ReceiptProdModel.ObjectId
+                                                                                    AND Object_ReceiptProdModelChild.isErased = FALSE
+                                   INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_Object
+                                                         ON ObjectLink_ReceiptProdModelChild_Object.ObjectId = Object_ReceiptProdModelChild.Id
+                                                        AND ObjectLink_ReceiptProdModelChild_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+
+
+
+                              WHERE Object_ReceiptProdModel.DescId   = zc_Object_ReceiptProdModelChild()
+                                AND Object_ReceiptProdModel.isErased = FALSE
+
+                             UNION ALL
+                              -- Сборка узлов
+                              SELECT ObjectLink_ReceiptGoodsChild_Object.ChildObjectId     AS GoodsId_from
+                                   , ObjectLink_ReceiptGoods_Object.ChildObjectId          AS GoodsId_to
+                                   , ObjectLink_ReceiptGoodsChild_GoodsChild.ChildObjectId AS GoodsId_child
+                                   , FALSE AS isProdOptions
+                              FROM Object AS Object_ReceiptGoods
+                                   INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
+                                                         ON ObjectLink_ReceiptGoods_Object.ObjectId = Object_ReceiptGoods.Id
+                                                        AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
+
+                                   INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptGoods
+                                                         ON ObjectLink_ReceiptGoodsChild_ReceiptGoods.ChildObjectId = Object_ReceiptGoods.Id
+                                                        AND ObjectLink_ReceiptGoodsChild_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                   INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                                                AND Object_ReceiptGoodsChild.isErased = FALSE
+                                   INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_Object
+                                                         ON ObjectLink_ReceiptGoodsChild_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                                                        AND ObjectLink_ReceiptGoodsChild_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_GoodsChild
+                                                        ON ObjectLink_ReceiptGoodsChild_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                       AND ObjectLink_ReceiptGoodsChild_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+
+                              WHERE Object_ReceiptGoods.DescId   = zc_Object_ReceiptGoods()
+                                AND Object_ReceiptGoods.isErased = FALSE
+
+                             UNION ALL
+                              -- Опции
+                              SELECT DISTINCT
+                                     0 AS GoodsId_from
+                                   , 0 AS GoodsId_to
+                                   , ObjectLink_ProdOptions_Goods.ChildObjectId AS GoodsId_child
+                                   , TRUE AS isProdOptions
+                              FROM Object AS Object_ProdOptions
+                                   INNER JOIN ObjectLink AS ObjectLink_ProdOptions_Goods
+                                                         ON ObjectLink_ProdOptions_Goods.ObjectId = Object_ProdOptions.Id
+                                                        AND ObjectLink_ProdOptions_Goods.DescId   = zc_ObjectLink_ProdOptions_Goods()
+
+                              WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
+                                AND Object_ProdOptions.isErased = FALSE
+                             )
+          -- если Товар участвует в сборке + Опции
+        , tmpReceiptGoods AS (-- Сборка Модели
+                              SELECT DISTINCT tmpReceiptGoods_all.GoodsId_from AS GoodsId
+                              FROM tmpReceiptGoods_all
+                              WHERE tmpReceiptGoods_all.GoodsId_from > 0
+                             UNION
+                              -- Сборка узлов
+                              SELECT DISTINCT tmpReceiptGoods_all.GoodsId_to AS GoodsId
+                              FROM tmpReceiptGoods_all
+                              WHERE tmpReceiptGoods_all.GoodsId_to > 0
+                             UNION
+                              -- Опции
+                              SELECT DISTINCT tmpReceiptGoods_all.GoodsId_child AS GoodsId
+                              FROM tmpReceiptGoods_all
+                              WHERE tmpReceiptGoods_all.GoodsId_child > 0
+                             )
          , tmpGoods_limit AS (SELECT Object_Goods.*
                               FROM Object AS Object_Goods
                               WHERE Object_Goods.DescId = zc_Object_Goods()
@@ -106,9 +211,8 @@ BEGIN
           , tmpGoods AS (SELECT Object_Goods.Id                     AS Id
                               , Object_Goods.ObjectCode             AS Code
                               , Object_Goods.ValueData              AS Name
-                              , CASE WHEN tmpReceiptGoods.GoodsId > 0 THEN 'Узел' ELSE ObjectDesc.ItemName END :: TVarChar AS DescName
+                              , CASE WHEN tmpReceiptGoods_group.GoodsId > 0 THEN 'Узел' ELSE ObjectDesc.ItemName END :: TVarChar AS DescName
                               , ObjectString_Article.ValueData      AS Article
-                              , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
                               , ObjectString_ArticleVergl.ValueData AS ArticleVergl
                               , ObjectString_EAN.ValueData          AS EAN
                               , ObjectString_ASIN.ValueData         AS ASIN
@@ -283,7 +387,7 @@ BEGIN
 
                                LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
-                               LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
+                               LEFT JOIN tmpReceiptGoods_group ON tmpReceiptGoods_group.GoodsId = Object_Goods.Id
 
                                LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
                         )
@@ -292,9 +396,10 @@ BEGIN
        SELECT tmpGoods.Id
             , tmpGoods.Code
             , SUBSTRING (tmpGoods.Name, 1, 128) :: TVarChar AS Name
+            , zfCalc_GoodsName_all (tmpGoods.Article, SUBSTRING (tmpGoods.Name, 1, 128)) AS Name_all
             , tmpGoods.DescName
             , tmpGoods.Article
-            , tmpGoods.Article_all
+            , zfCalc_Article_all (COALESCE (tmpGoods.Article, '') || '_' || COALESCE (tmpGoods.ArticleVergl, '')) ::TVarChar AS Article_all
             , tmpGoods.ArticleVergl
             , tmpGoods.EAN
             , tmpGoods.ASIN
@@ -302,6 +407,22 @@ BEGIN
             , tmpGoods.FeeNumber
             , tmpGoods.GoodsGroupNameFull
             , SUBSTRING (tmpGoods.Comment, 1, 128) :: TVarChar AS Comment
+
+            , CASE WHEN tmpGoods.Comment ILIKE '%Hypalon%'
+                     OR tmpGoods.Comment ILIKE '%HULL%'
+                     OR tmpGoods.Comment ILIKE '%DECK%'
+                     OR tmpGoods.Comment ILIKE '%STEERING CONSOLE%'
+                     OR tmpGoods.Comment ILIKE '%Kreslo%'
+                     OR tmpGoods.Comment ILIKE '%Teak%'
+                   THEN CASE SPLIT_PART (SPLIT_PART (tmpGoods.Article, 'AGL-', 2), '-', 1)
+                             WHEN '305' THEN '305C'
+                             WHEN '330' THEN '330C'
+                             WHEN '355' THEN '355C'
+                             WHEN '360' THEN '360D'
+                             ELSE SPLIT_PART (SPLIT_PART (tmpGoods.Article, 'AGL-', 2), '-', 1)
+                        END
+                   ELSE ''
+              END :: TVarChar AS ModelName_calc
 
             , tmpGoods.PartnerDate
             , tmpGoods.isArc
@@ -349,14 +470,30 @@ BEGIN
             , tmpGoods.InfoMoneyName
             , tmpGoods.InfoMoneyId
 
+              -- Узел (да/нет)
+            , CASE WHEN tmpReceiptGoods_group.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isReceiptGoods_group
+              -- Сборка (да/нет) - Участвует в сборке Узла/Модели или в опциях
+            , CASE WHEN tmpReceiptGoods.GoodsId > 0       THEN TRUE ELSE FALSE END :: Boolean AS isReceiptGoods
+              -- Опция (да/нет) - Участвует в опциях
+            , COALESCE (tmpReceiptGoods_all.isProdOptions, FALSE)                  :: Boolean AS isProdOptions
+              --
             , tmpGoods.isErased
+
        FROM tmpGoods
+             -- если Товар участвует в сборке + Опции
+             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpGoods.Id
+             -- если Опции
+             LEFT JOIN tmpReceiptGoods_all ON tmpReceiptGoods_all.GoodsId_child = tmpGoods.Id
+                                          AND tmpReceiptGoods_all.isProdOptions = TRUE
+             -- если это узел
+             LEFT JOIN tmpReceiptGoods_group ON tmpReceiptGoods_group.GoodsId = tmpGoods.Id
 
       UNION
               -- Работы/Услуги
        SELECT Object_ReceiptService.Id               AS Id
             , Object_ReceiptService.ObjectCode       AS Code
             , Object_ReceiptService.ValueData        AS Name
+            , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_ReceiptService.ValueData) AS Name_all
             , ObjectDesc.ItemName                    AS DescName
             , ObjectString_Article.ValueData         AS Article
             , ObjectString_Article.ValueData         AS Article_all
@@ -369,6 +506,7 @@ BEGIN
             , '' ::TVarChar AS GoodsGroupNameFull
 
             , COALESCE (ObjectString_Comment.ValueData, NULL) :: TVarChar AS Comment
+            , '' :: TVarChar AS ModelName_calc
 
             , NULL  :: TDateTime AS PartnerDate
             , FALSE :: Boolean   AS isArc
@@ -410,7 +548,12 @@ BEGIN
             , '' ::TVarChar AS InfoMoneyName
             , 0  ::Integer  AS InfoMoneyId
 
+            , FALSE :: Boolean AS isReceiptGoods_group
+            , FALSE :: Boolean AS isReceiptGoods
+            , FALSE :: Boolean AS isProdOptions
+
             , Object_ReceiptService.isErased         AS isErased
+
        FROM Object AS Object_ReceiptService
            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ReceiptService.DescId
 
@@ -429,6 +572,7 @@ BEGIN
        SELECT 0                     AS Id
             , 0                     AS Code
             , 'УДАЛИТЬ' ::TVarChar  AS Name
+            , '' ::TVarChar         AS Name_all
             , '' ::TVarChar         AS DescName
             , '' ::TVarChar         AS Article
             , '' ::TVarChar         AS Article_all
@@ -441,6 +585,7 @@ BEGIN
             , '' ::TVarChar    AS GoodsGroupNameFull
 
             , '' ::TVarChar    AS Comment
+            , '' :: TVarChar   AS ModelName_calc
 
             , NULL  :: TDateTime AS PartnerDate
             , FALSE :: Boolean   AS isArc
@@ -481,6 +626,10 @@ BEGIN
             , '' ::TVarChar AS InfoMoneyDestinationName
             , '' ::TVarChar AS InfoMoneyName
             , 0  ::Integer  AS InfoMoneyId
+
+            , FALSE :: Boolean AS isReceiptGoods_group
+            , FALSE :: Boolean AS isReceiptGoods
+            , FALSE :: Boolean AS isProdOptions
 
             , FALSE         AS isErased
       ;

@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, NPP Integer, NPP_calc Integer, Comment TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar , Article_all TVarChar
+             , ArticleVergl TVarChar
              , ProdColorName TVarChar
              , Comment_goods TVarChar
              , MeasureName TVarChar
@@ -81,7 +82,8 @@ BEGIN
          , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
          , ObjectString_Article.ValueData        ::TVarChar  AS Article 
-         , zfCalc_Article_all (ObjectString_Article.ValueData) ::TVarChar AS Article_all
+         , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
+         , ObjectString_ArticleVergl.ValueData   :: TVarChar AS ArticleVergl
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , ObjectString_Goods_Comment.ValueData              AS Comment_goods
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
@@ -186,6 +188,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Article
                                  ON ObjectString_Article.ObjectId = Object_Object.Id
                                 AND ObjectString_Article.DescId = zc_ObjectString_Article()
+          LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                 ON ObjectString_ArticleVergl.ObjectId = Object_Object.Id
+                                AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Object.Id

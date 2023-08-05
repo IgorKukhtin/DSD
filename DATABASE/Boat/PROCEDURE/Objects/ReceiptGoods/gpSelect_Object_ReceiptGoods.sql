@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased Boolean
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
-             , Article TVarChar
+             , Article TVarChar, Article_all TVarChar
+             , ArticleVergl TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
              , Comment_goods TVarChar
@@ -215,7 +216,7 @@ BEGIN
          , Object_Goods.ObjectCode ::Integer  AS GoodsCode
          , Object_Goods.ValueData  ::TVarChar AS GoodsName
          , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) ::TVarChar AS GoodsName_all
-         
+
          , tmpReceiptProdModel.GoodsId          AS GoodsId_group
          , tmpReceiptProdModel.GoodsCode        AS GoodsCode_group
          , tmpReceiptProdModel.GoodsName        AS GoodsName_group
@@ -243,6 +244,8 @@ BEGIN
          , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
          , ObjectString_Article.ValueData        ::TVarChar  AS Article
+         , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
+         , ObjectString_ArticleVergl.ValueData   :: TVarChar AS ArticleVergl
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
          , ObjectString_Goods_Comment.ValueData  ::TVarChar  AS Comment_goods
@@ -317,6 +320,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Article
                                  ON ObjectString_Article.ObjectId = Object_Goods.Id
                                 AND ObjectString_Article.DescId = zc_ObjectString_Article()
+          LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                 ON ObjectString_ArticleVergl.ObjectId = Object_Goods.Id
+                                AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
