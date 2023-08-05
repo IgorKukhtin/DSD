@@ -29,7 +29,7 @@ object SendJournalForm: TSendJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -39,7 +39,7 @@ object SendJournalForm: TSendJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False

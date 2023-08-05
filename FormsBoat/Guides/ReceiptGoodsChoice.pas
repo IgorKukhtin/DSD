@@ -126,6 +126,8 @@ type
     GoodsCode_group: TcxGridDBColumn;
     GoodsName_group: TcxGridDBColumn;
     ProdColorName: TcxGridDBColumn;
+    Article_all: TcxGridDBColumn;
+    ArticleVergl: TcxGridDBColumn;
   private
     { Private declarations }
   public

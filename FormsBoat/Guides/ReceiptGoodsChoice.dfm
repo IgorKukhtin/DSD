@@ -149,6 +149,25 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           HeaderAlignmentVert = vaCenter
           Width = 80
         end
+        object ArticleVergl: TcxGridDBColumn
+          Caption = 'Vergl. Nr'
+          DataBinding.FieldName = 'ArticleVergl'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+          Options.Editing = False
+          Width = 70
+        end
+        object Article_all: TcxGridDBColumn
+          Caption = '***Artikel Nr'
+          DataBinding.FieldName = 'Article_all'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object GoodsGroupNameFull: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
           DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -186,7 +205,7 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           Width = 164
         end
         object Article_group: TcxGridDBColumn
-          Caption = '***Artikel Nr'
+          Caption = 'Artikel Nr***'
           DataBinding.FieldName = 'Article_group'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -196,7 +215,7 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           Width = 80
         end
         object GoodsCode_group: TcxGridDBColumn
-          Caption = '***Interne Nr'
+          Caption = 'Interne Nr***'
           DataBinding.FieldName = 'GoodsCode_group'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -206,7 +225,7 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
           Width = 80
         end
         object GoodsName_group: TcxGridDBColumn
-          Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'***'
           DataBinding.FieldName = 'GoodsName_group'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -1397,7 +1416,9 @@ object ReceiptGoodsChoiceForm: TReceiptGoodsChoiceForm
     ColumnList = <
       item
         Column = Article
-        TextEdit = edSearchArticle
+      end
+      item
+        Column = Article_all
       end
       item
         Column = Name

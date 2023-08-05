@@ -60,16 +60,41 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         Options.Editing = False
         Width = 105
       end
+      object isReceiptGoods_group: TcxGridDBColumn
+        Caption = #1059#1079#1077#1083' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isReceiptGoods_group'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object isReceiptGoods: TcxGridDBColumn
+        Caption = #1057#1073#1086#1088#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isReceiptGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object isProdOptions: TcxGridDBColumn
+        Caption = #1054#1087#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isProdOptions'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         Options.Editing = False
         Width = 150
       end
       object GoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
+        Caption = '***'#1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -80,11 +105,12 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object Code: TcxGridDBColumn
         Caption = 'Interne Nr'
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
         Options.Editing = False
-        Width = 63
+        Width = 70
       end
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
@@ -92,7 +118,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 100
       end
       object Article_all: TcxGridDBColumn
         Caption = '***Artikel Nr'
@@ -106,7 +132,6 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object ArticleVergl: TcxGridDBColumn
         Caption = 'Vergl. Nr'
         DataBinding.FieldName = 'ArticleVergl'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
@@ -120,6 +145,14 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 206
+      end
+      object ModelName_calc: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100
+        DataBinding.FieldName = 'ModelName_calc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object GoodsTagName: TcxGridDBColumn
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
@@ -142,6 +175,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -150,6 +184,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object ProdColorName: TcxGridDBColumn
         Caption = 'Farbe'
         DataBinding.FieldName = 'ProdColorName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -158,6 +193,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object GoodsSizeName: TcxGridDBColumn
         Caption = 'Gr'#246#223'e'
         DataBinding.FieldName = 'GoodsSizeName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -165,6 +201,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object PartnerName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'PartnerName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -247,6 +284,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
@@ -271,6 +309,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
@@ -295,6 +334,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
@@ -325,6 +365,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       end
       object EAN: TcxGridDBColumn
         DataBinding.FieldName = 'EAN'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -361,6 +402,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -387,6 +429,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -395,6 +438,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       object IsArc: TcxGridDBColumn
         Caption = #1040#1088#1093#1080#1074
         DataBinding.FieldName = 'isArc'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1275,29 +1319,26 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
-    Column = Article_all
+    Column = Article
+    ColumnList = <
+      item
+        Column = Article
+      end
+      item
+        Column = Article_all
+      end
+      item
+        Column = Code
+        TextEdit = edSearchCode
+      end
+      item
+        Column = Name
+        TextEdit = edSearchName
+      end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 352
     Top = 240
-  end
-  object FieldFilter_Code: TdsdFieldFilter
-    TextEdit = edSearchCode
-    DataSet = ClientDataSet
-    Column = Code
-    ActionNumber1 = dsdChoiceGuides
-    CheckBoxList = <>
-    Left = 416
-    Top = 272
-  end
-  object FieldFilter_Name: TdsdFieldFilter
-    TextEdit = edSearchName
-    DataSet = ClientDataSet
-    Column = Name
-    ActionNumber1 = dsdChoiceGuides
-    CheckBoxList = <>
-    Left = 504
-    Top = 296
   end
   object spCheckDesc: TdsdStoredProc
     StoredProcName = 'gpCheckDesc_Object_Goods'

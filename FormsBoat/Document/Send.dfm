@@ -4514,8 +4514,11 @@ object SendForm: TSendForm
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = MasterCDS
-    Column = Article_all
+    Column = Article
     ColumnList = <
+      item
+        Column = Article
+      end
       item
         Column = Article_all
       end>

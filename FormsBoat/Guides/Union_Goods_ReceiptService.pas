@@ -103,8 +103,6 @@ type
     edSearchCode: TcxTextEdit;
     edSearchName: TcxTextEdit;
     lbSearchName: TcxLabel;
-    FieldFilter_Code: TdsdFieldFilter;
-    FieldFilter_Name: TdsdFieldFilter;
     spCheckDesc: TdsdStoredProc;
     actCheckDesc: TdsdExecStoredProc;
     macInsert: TMultiAction;
@@ -112,6 +110,10 @@ type
     macSetErased: TMultiAction;
     macSetUnErased: TMultiAction;
     Panel1: TPanel;
+    isReceiptGoods_group: TcxGridDBColumn;
+    isReceiptGoods: TcxGridDBColumn;
+    isProdOptions: TcxGridDBColumn;
+    ModelName_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

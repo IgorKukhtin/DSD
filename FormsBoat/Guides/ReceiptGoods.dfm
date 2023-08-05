@@ -214,6 +214,16 @@
           HeaderAlignmentVert = vaCenter
           Width = 80
         end
+        object ArticleVergl: TcxGridDBColumn
+          Caption = 'Vergl. Nr'
+          DataBinding.FieldName = 'ArticleVergl'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+          Options.Editing = False
+          Width = 70
+        end
         object GoodsGroupNameFull: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
           DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -275,7 +285,7 @@
           Width = 164
         end
         object Article_group: TcxGridDBColumn
-          Caption = '***Artikel Nr'
+          Caption = 'Artikel Nr***'
           DataBinding.FieldName = 'Article_group'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -290,7 +300,7 @@
           Width = 80
         end
         object GoodsCode_group: TcxGridDBColumn
-          Caption = '***Interne Nr'
+          Caption = 'Interne Nr***'
           DataBinding.FieldName = 'GoodsCode_group'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -306,7 +316,7 @@
           Width = 70
         end
         object GoodsName_group: TcxGridDBColumn
-          Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'***'
           DataBinding.FieldName = 'GoodsName_group'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -737,6 +747,15 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
+        end
+        object ArticleVergl_ch1: TcxGridDBColumn
+          Caption = 'Vergl. Nr'
+          DataBinding.FieldName = 'ArticleVergl'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
         object Article_all_ch1: TcxGridDBColumn
           Caption = '***Artikel Nr'
@@ -1259,7 +1278,7 @@
           Options.Editing = False
           Width = 60
         end
-        object Article_2: TcxGridDBColumn
+        object Article_ch2: TcxGridDBColumn
           Caption = 'Artikel Nr'
           DataBinding.FieldName = 'Article'
           PropertiesClassName = 'TcxButtonEditProperties'
@@ -4327,8 +4346,11 @@
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = Child1CDS
-    Column = Article_all_ch1
+    Column = Article_ch1
     ColumnList = <
+      item
+        Column = Article_ch1
+      end
       item
         Column = Article_all_ch1
       end>

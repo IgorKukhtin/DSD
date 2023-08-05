@@ -128,7 +128,7 @@ type
     NPP_calc_ch2: TcxGridDBColumn;
     GoodsGroupNameFull_ch2: TcxGridDBColumn;
     GoodsGroupName_2: TcxGridDBColumn;
-    Article_2: TcxGridDBColumn;
+    Article_ch2: TcxGridDBColumn;
     GoodsCode_ch2: TcxGridDBColumn;
     GoodsName_ch2: TcxGridDBColumn;
     ProdColorName_ch2: TcxGridDBColumn;
@@ -256,6 +256,8 @@ type
     macErasedGoods_child1: TMultiAction;
     bb: TdxBarButton;
     Value_child_ch1: TcxGridDBColumn;
+    ArticleVergl: TcxGridDBColumn;
+    ArticleVergl_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

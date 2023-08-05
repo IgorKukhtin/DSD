@@ -128,7 +128,11 @@ type
     edSearchName: TcxTextEdit;
     bbSearchNameLabel: TdxBarControlContainerItem;
     bbSearchName: TdxBarControlContainerItem;
+    isReceiptGoods_group: TcxGridDBColumn;
     isReceiptGoods: TcxGridDBColumn;
+    isProdOptions: TcxGridDBColumn;
+    ModelName_calc: TcxGridDBColumn;
+    Name_all: TcxGridDBColumn;
   private
     { Private declarations }
   public
