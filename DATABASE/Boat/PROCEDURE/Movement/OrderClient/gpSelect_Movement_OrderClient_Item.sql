@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient_Item(
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumberPartner TVarChar
              , BarCode TVarChar
-             , OperDate TDateTime
+             , OperDate TDateTime, DateBegin TDateTime
              , StatusCode Integer, StatusName TVarChar
              , NPP TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
@@ -287,6 +287,7 @@ BEGIN
              , tmpMovement_OrderClient.InvNumberPartner
              , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpMovement_OrderClient.Id) AS BarCode
              , tmpMovement_OrderClient.OperDate
+             , ObjectDate_DateBegin.ValueData             AS DateBegin
              , Object_Status.ObjectCode                   AS StatusCode
              , Object_Status.ValueData                    AS StatusName
 
@@ -401,6 +402,9 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                   ON ObjectDate_DateSale.ObjectId = Object_Product.Id
                                  AND ObjectDate_DateSale.DescId   = zc_ObjectDate_Product_DateSale()
+             LEFT JOIN ObjectDate AS ObjectDate_DateBegin
+                                  ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
+                                 AND ObjectDate_DateBegin.DescId   = zc_ObjectDate_Product_DateBegin()
              LEFT JOIN ObjectString AS ObjectString_CIN
                                     ON ObjectString_CIN.ObjectId = Object_Product.Id
                                    AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()

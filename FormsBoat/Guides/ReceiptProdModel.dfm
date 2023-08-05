@@ -483,6 +483,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -494,6 +497,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
@@ -897,6 +901,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         object Value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -905,6 +912,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         object Value_service_ch1: TcxGridDBColumn
           Caption = 'Value (service)'
           DataBinding.FieldName = 'Value_service'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -917,6 +928,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
@@ -3460,6 +3472,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     TextEdit = edSearchArticle
     DataSet = GoodsCDS
     Column = Article_all_ch1
+    ColumnList = <
+      item
+        Column = Article_all_ch1
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 352

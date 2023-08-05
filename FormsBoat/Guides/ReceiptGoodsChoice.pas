@@ -120,6 +120,12 @@ type
     edSearchReceiptGoods: TcxTextEdit;
     edSearchGoodsName: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
+    Comment_goods: TcxGridDBColumn;
+    ProdColorName_pcp: TcxGridDBColumn;
+    Article_group: TcxGridDBColumn;
+    GoodsCode_group: TcxGridDBColumn;
+    GoodsName_group: TcxGridDBColumn;
+    ProdColorName: TcxGridDBColumn;
   private
     { Private declarations }
   public

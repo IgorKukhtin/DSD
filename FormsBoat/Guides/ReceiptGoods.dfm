@@ -468,8 +468,9 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
+          HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080
           Options.Editing = False
-          Width = 179
+          Width = 100
         end
         object InsertDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'

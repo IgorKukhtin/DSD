@@ -143,8 +143,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 57
-    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -172,12 +170,12 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object StateText: TcxGridDBColumn
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
         DataBinding.FieldName = 'StateText'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 120
       end
       object NPP: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
@@ -185,6 +183,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080' ('#1060#1072#1082#1090')'
@@ -214,7 +213,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 75
       end
       object InvNumberPartner: TcxGridDBColumn
         Caption = 'External Nr'
@@ -234,6 +233,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
         DataBinding.FieldName = 'OperDate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -241,13 +241,16 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       object DateBegin: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
         DataBinding.FieldName = 'DateBegin'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1090#1089#1103' '#1079#1072#1074#1077#1088#1096#1080#1090#1100' '#1089#1073#1086#1088#1082#1091' '#1083#1086#1076#1082#1080
         Width = 70
       end
       object FromName: TcxGridDBColumn
         Caption = 'Kunden'
         DataBinding.FieldName = 'FromName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090' '#1082#1086#1075#1086
@@ -270,15 +273,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object CIN: TcxGridDBColumn
-        Caption = 'CIN Nr.'
-        DataBinding.FieldName = 'CIN'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
       object EngineNum: TcxGridDBColumn
         Caption = 'Engine Nr.'
         DataBinding.FieldName = 'EngineNum'
@@ -300,6 +294,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       object ProductName: TcxGridDBColumn
         Caption = 'Boat'
         DataBinding.FieldName = 'ProductName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -322,6 +317,14 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object CIN: TcxGridDBColumn
+        Caption = 'CIN Nr.'
+        DataBinding.FieldName = 'CIN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1047#1072#1082#1072#1079')'
@@ -379,7 +382,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 130
       end
       object ObjectName_ch3: TcxGridDBColumn
         Caption = #1059#1079#1077#1083
@@ -387,7 +390,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 200
+        Width = 300
       end
       object DescName_ch3: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -454,7 +457,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 200
       end
       object Amount_basis_ch3: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1072#1073#1083#1086#1085
@@ -962,14 +965,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           Component = ClientDataSet
           ComponentItem = 'Comment_Invoice'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AmountIn'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'TotalSumm'
-          DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item

@@ -64,8 +64,8 @@ BEGIN
                               FROM Object AS Object_Goods
                               WHERE Object_Goods.DescId = zc_Object_Goods()
                                 AND Object_Goods.isErased = FALSE
-                              ORDER BY CASE WHEN vbUserId = 5 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
-                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=1 THEN 20000 ELSE 350000 END
+                              ORDER BY CASE WHEN vbUserId = 5 AND 1=0 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
+                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 25000 ELSE 350000 END
                              )
      , tmpGoods_all AS (SELECT tmpGoods_limit.*
                         FROM tmpGoods_limit
@@ -84,17 +84,23 @@ BEGIN
                              INNER JOIN ObjectString AS ObjectString_Article
                                                      ON ObjectString_Article.ObjectId = Object_Goods.Id
                                                     AND ObjectString_Article.DescId = zc_ObjectString_Article()
-                                                    AND (ObjectString_Article.ValueData ILIKE 'AGL000%'
+                                                    AND (ObjectString_Article.ValueData ILIKE 'AGL%'
                                                       OR ObjectString_Article.ValueData ILIKE 'BEL%'
+                                                      OR ObjectString_Article.ValueData ILIKE '%x-7%'
+                                                      OR ObjectString_Article.ValueData ILIKE '%74976%'
+                                                      --
                                                       OR Object_Goods.ObjectCode < 0
+                                                      OR Object_GoodsGroup.ValueData ILIKE '%ÏÔ%'
+                                                      --
                                                       OR Object_Goods.ValueData ILIKE '%ÏÔ%'
                                                       OR Object_Goods.ValueData ILIKE '%motor%'
-                                                      OR Object_GoodsGroup.ValueData ILIKE '%ÏÔ%'
+                                                      OR Object_Goods.ValueData ILIKE '%RAL%'
                                                       OR Object_Goods.ValueData ILIKE '%ndige Inspektionsluke%'
+                                                    --OR Object_Goods.ValueData ILIKE '%Bonding Paste%'
                                                       OR Object_Goods.ValueData ILIKE '%FA®-%'
                                                         )
                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                        --AND inIsLimit_100 = TRUE
+                          AND inIsLimit_100 = FALSE
                        )
             -- Êîìïëåêòóþùèå
           , tmpGoods AS (SELECT Object_Goods.Id                     AS Id

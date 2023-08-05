@@ -105,6 +105,11 @@ type
     spSelectPrint_Master: TdsdStoredProc;
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    InvNumber_parent: TcxGridDBColumn;
+    DescName_parent: TcxGridDBColumn;
+    FromName_parent: TcxGridDBColumn;
+    ProductName_parent: TcxGridDBColumn;
+    ModelName_parent: TcxGridDBColumn;
   private
   public
   end;

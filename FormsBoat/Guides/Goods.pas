@@ -153,6 +153,7 @@ type
     isProdOptions: TcxGridDBColumn;
     isReceiptGoods_group: TcxGridDBColumn;
     Name_all: TcxGridDBColumn;
+    ModelName_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

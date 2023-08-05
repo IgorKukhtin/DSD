@@ -23,6 +23,9 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- сохранили в шапке
+     UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId AND COALESCE (Movement.ParentId, 0) <> inMovementId_OrderClient;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, inAmount, NULL,inUserId);
 

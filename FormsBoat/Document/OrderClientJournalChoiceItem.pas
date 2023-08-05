@@ -97,7 +97,7 @@ type
     Comment_goods: TcxGridDBColumn;
     ReceiptGoodsName: TcxGridDBColumn;
     ReceiptGoodsCode: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    StateText: TcxGridDBColumn;
     StateColor: TcxGridDBColumn;
     DateBegin: TcxGridDBColumn;
     ModelName: TcxGridDBColumn;

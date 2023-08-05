@@ -477,15 +477,16 @@ object SendForm: TSendForm
             Width = 80
           end
           object GoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             Options.Editing = False
             Width = 108
           end
           object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'
+            Caption = '***'#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -629,6 +630,14 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
+          object Comment_goods: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1077#1083')'
+            DataBinding.FieldName = 'Comment_goods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
           object OperPrice: TcxGridDBColumn
             Caption = 'Netto EK'
             DataBinding.FieldName = 'OperPrice'
@@ -667,8 +676,8 @@ object SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
-            Width = 70
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Width = 100
           end
           object CIN: TcxGridDBColumn
             Caption = 'CIN Nr.'
@@ -682,10 +691,18 @@ object SendForm: TSendForm
           object ProductName: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOrderClientChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Width = 100
           end
           object FromName: TcxGridDBColumn
@@ -693,17 +710,9 @@ object SendForm: TSendForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090' '#1082#1086#1075#1086
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 120
-          end
-          object Comment_goods: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1077#1083')'
-            DataBinding.FieldName = 'Comment_goods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 150
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -1380,8 +1389,11 @@ object SendForm: TSendForm
       ImageIndex = 57
     end
     object bbOpenFormInvoice: TdxBarButton
-      Action = actOpenFormInvoice
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
       Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
+      Visible = ivAlways
+      ImageIndex = 25
     end
     object bbOpenFormService: TdxBarButton
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
@@ -1621,9 +1633,6 @@ object SendForm: TSendForm
         end
         item
           StoredProc = spBarcode_null
-        end
-        item
-          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -2049,7 +2058,7 @@ object SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm'
+      Caption = 'actOrderClientChoiceForm'
       FormName = 'TOrderClientJournalChoiceForm'
       FormNameParam.Value = 'TOrderClientJournalChoiceForm'
       FormNameParam.DataType = ftString
@@ -2093,31 +2102,6 @@ object SendForm: TSendForm
           ComponentItem = 'CIN'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          ParamType = ptUnknown
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          ParamType = ptUnknown
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectCode'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsCode'
-          ParamType = ptUnknown
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2125,7 +2109,7 @@ object SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm'
+      Caption = 'actOrderClientChoiceItemForm'
       FormName = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.DataType = ftString
@@ -2227,32 +2211,6 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object actOpenFormInvoice: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      ImageIndex = 25
-      FormName = 'TInvoiceForm'
-      FormNameParam.Value = 'TInvoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = edOperDate
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
     object actCompleteCost: TdsdChangeMovementStatus
       Category = 'DSDLib'

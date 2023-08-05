@@ -22,6 +22,12 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- Проверка
+     IF COALESCE (inReceiptProdModelId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Шаблон сборки Модели или Узла>.';
+     END IF;
+
+     -- Проверка
      IF EXISTS (SELECT 1
                 FROM MovementItem
                      LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -62,7 +68,7 @@ BEGIN
          END IF;
 
          -- сохранили в шапке
-         UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId;
+         UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId AND COALESCE (Movement.ParentId, 0) <> inMovementId_OrderClient;
 
      ELSE -- IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.ParentId > 0) THEN
      
@@ -72,7 +78,7 @@ BEGIN
          -- inMovementId_OrderClient:= 0;
 
          -- сохранили в шапке
-         UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId;
+         UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId AND COALESCE (Movement.ParentId, 0) <> inMovementId_OrderClient;
 
      END IF;
 

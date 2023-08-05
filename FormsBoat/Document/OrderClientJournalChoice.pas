@@ -102,9 +102,10 @@ type
     miUpdate: TMenuItem;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    StateText: TcxGridDBColumn;
     StateColor: TcxGridDBColumn;
     DateBegin: TcxGridDBColumn;
+    ModelName: TcxGridDBColumn;
   private
   public
   end;

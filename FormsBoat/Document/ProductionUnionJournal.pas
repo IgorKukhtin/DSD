@@ -104,6 +104,7 @@ type
     VATPercent: TcxGridDBColumn;
     TotalSummMVAT: TcxGridDBColumn;
     TotalSummPVAT: TcxGridDBColumn;
+    ModelName_parent: TcxGridDBColumn;
   private
   public
   end;

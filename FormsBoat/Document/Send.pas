@@ -106,7 +106,6 @@ type
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
     bbMIContainerCost: TdxBarButton;
-    actOpenFormInvoice: TdsdOpenForm;
     bbOpenFormInvoice: TdxBarButton;
     bbOpenFormService: TdxBarButton;
     actCompleteCost: TdsdChangeMovementStatus;
