@@ -26,6 +26,7 @@ type
     FTextCheck: String;
     FServiceMessage : Boolean;
     FRunServiceMessage: TDateTime;
+    FRRN: String;
 
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
@@ -34,16 +35,17 @@ type
     function GetProcessType : TPosProcessType;
     function GetProcessState : TPosProcessState;
     function GetCanceled : Boolean;
+    function GetRRN : string;
     procedure IdThreadComponentRun(Sender: TIdThreadComponent);
   protected
     function CheckConnection : Boolean;
     function Payment(ASumma : Currency) : Boolean;
-    function Refund(ASumma : Currency) : Boolean;
+    function Refund(ASumma : Currency; ARRN : String) : Boolean;
     function ServiceMessage : Boolean;
     procedure Cancel;
   public
     constructor Create(APOSTerminalCode : Integer);
-    function DoPayment(ASumma : Currency; ARefund : Boolean) : Boolean;
+    function DoPayment(ASumma : Currency; ARefund : Boolean; ARRN : String) : Boolean;
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
@@ -81,6 +83,7 @@ begin
   FPOSTerminalCode := APOSTerminalCode;
   FRadBufer := '';
   FTextCheck := '';
+  FRRN := '';
   FServiceMessage := False;
   FRunServiceMessage := IncSecond(Now, 3);
 end;
@@ -118,6 +121,11 @@ end;
 function TPos_PrivatBank_JSON.GetCanceled : Boolean;
 begin
   Result := FCancel;
+end;
+
+function TPos_PrivatBank_JSON.GetRRN : string;
+begin
+  Result := FRRN;
 end;
 
 procedure TPos_PrivatBank_JSON.AfterConstruction;
@@ -271,18 +279,27 @@ begin
             FTextCheck := FTextCheck + #13'Сума ';
             if (JSONParams.Get('amount') <> nil) then
               FTextCheck := FTextCheck + JSONParams.Get('amount').JsonValue.Value;
-            FTextCheck := FTextCheck + #13'ЕПЗ ';
-            if (JSONParams.Get('pan') <> nil) then
-              FTextCheck := FTextCheck + GetMasked_Pan(JSONParams.Get('pan'), JSONParams.Get('receipt'));
+            if (JSONParams.Get('pan') <> nil) and (JSONParams.Get('pan').JsonValue.Value <> '') then
+            begin
+              FTextCheck := FTextCheck + #13'ЕПЗ ';
+              if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Purchase') then
+                FTextCheck := FTextCheck + GetMasked_Pan(JSONParams.Get('pan'), JSONParams.Get('receipt'))
+              else FTextCheck := FTextCheck + JSONParams.Get('pan').JsonValue.Value;
+            end;
             FTextCheck := FTextCheck + #13'Платіжна система ';
             if (JSONParams.Get('paymentSystem') <> nil) then
               FTextCheck := FTextCheck + JSONParams.Get('paymentSystem').JsonValue.Value;
-            FTextCheck := FTextCheck + #13'Код авторізації ';
-            if (JSONParams.Get('approvalCode') <> nil) then
+            if (JSONParams.Get('approvalCode') <> nil) and (JSONParams.Get('approvalCode').JsonValue.Value <> '') then
+            begin
+              FTextCheck := FTextCheck + #13'Код авторізації ';
               FTextCheck := FTextCheck + JSONParams.Get('approvalCode').JsonValue.Value;
-            FTextCheck := FTextCheck + #13'RRN ';
-            if (JSONParams.Get('rrn') <> nil) then
+            end;
+            if (JSONParams.Get('rrn') <> nil) and (JSONParams.Get('rrn').JsonValue.Value <> '') then
+            begin
+              FTextCheck := FTextCheck + #13'RRN ';
               FTextCheck := FTextCheck + JSONParams.Get('rrn').JsonValue.Value;
+              FRRN := JSONParams.Get('rrn').JsonValue.Value;
+            end;
             FTextCheck := FTextCheck + #13'Чек ';
             if (JSONParams.Get('invoiceNumber') <> nil) then
               FTextCheck := FTextCheck + JSONParams.Get('invoiceNumber').JsonValue.Value;
@@ -355,7 +372,7 @@ begin
   end;
 end;
 
-function TPos_PrivatBank_JSON.DoPayment(ASumma : Currency; ARefund : Boolean) : Boolean;
+function TPos_PrivatBank_JSON.DoPayment(ASumma : Currency; ARefund : Boolean; ARRN : String) : Boolean;
   var JSONObject, JSONParams: TJSONObject; JSONPair: TJSONPair;
       JsonToSend: TStringStream;
 begin
@@ -365,6 +382,11 @@ begin
     JSONParams.AddPair('amount', TJSONString.Create(FormatCurr('0.00', ASumma)));
     JSONParams.AddPair('discount', TJSONString.Create('0'));
     JSONParams.AddPair('merchantId', TJSONString.Create('0'));
+    if ARefund then
+    begin
+      JSONParams.AddPair('rrn', TJSONString.Create(ARRN));
+      JSONParams.AddPair('subMerchant', TJSONString.Create(''));
+    end;
 
     JSONObject := TJSONObject.Create;
     if ARefund then JSONObject.AddPair('method', 'Refund')
@@ -407,15 +429,15 @@ begin
   if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение оплаты сумма ' + FormatCurr('0.00', ASumma));
   Add_PosLog('Выполнение оплаты сумма ' + FormatCurr('0.00', ASumma));
 
-  Result := DoPayment(ASumma, False);
+  Result := DoPayment(ASumma, False, '');
 end;
 
-function TPos_PrivatBank_JSON.Refund(ASumma : Currency) : Boolean;
+function TPos_PrivatBank_JSON.Refund(ASumma : Currency; ARRN : String) : Boolean;
 begin
   if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение возврата сумма ' + FormatCurr('0.00', ASumma));
   Add_PosLog('Выполнение возврата сумма ' + FormatCurr('0.00', ASumma));
 
-  Result := DoPayment(ASumma, True);
+  Result := DoPayment(ASumma, True, ARRN);
 end;
 
 function TPos_PrivatBank_JSON.ServiceMessage : Boolean;

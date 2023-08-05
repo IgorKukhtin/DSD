@@ -22,6 +22,7 @@ type
     FShowInfo : TThreadProcedure;
     FEndPayPosTerm : TThreadProcedure;
     FMsgDescription : string;
+    FRRN : string;
 
     procedure Execute; override;
   public
@@ -53,7 +54,7 @@ type
 
 var PayPosTermProcessForm : TPayPosTermProcessForm;
 
-function PayPosTerminal(PosTerm: IPos;  ASalerCash : currency; ARefund : boolean = False) : Boolean;
+function PayPosTerminal(PosTerm: IPos;  ASalerCash : currency; ARefund : boolean = False; ARRN : String = '') : Boolean;
 
 implementation
 
@@ -86,6 +87,7 @@ begin
   FSalerCash := 0;
   FPeyResult := False;
   FMsgDescription := '';
+  FRRN := '';
 end;
 
 destructor TPosTermThread.Destroy;
@@ -121,7 +123,7 @@ begin
         end else
         if FRefund then
         begin
-          FPosTerm.Refund(FSalerCash);
+          FPosTerm.Refund(FSalerCash, FRRN);
         end else
         begin
           FPosTerm.Payment(FSalerCash);
@@ -137,7 +139,7 @@ begin
       begin
         if (FSalerCash > 0) then
         begin
-          if FRefund then FPosTerm.Refund(FSalerCash)
+          if FRefund then FPosTerm.Refund(FSalerCash, FRRN)
           else FPosTerm.Payment(FSalerCash);
         end;
       end;
@@ -235,7 +237,7 @@ begin
   end;
 end;
 
-function PayPosTerminal(PosTerm: IPos;  ASalerCash : currency; ARefund : boolean = False) : Boolean;
+function PayPosTerminal(PosTerm: IPos;  ASalerCash : currency; ARefund : boolean = False; ARRN : String = '') : Boolean;
 Begin
   if NOT assigned(PayPosTermProcessForm) then
     PayPosTermProcessForm := TPayPosTermProcessForm.Create(Application);
@@ -247,6 +249,7 @@ Begin
       FPosTermThread.FPosTerm := PosTerm;
       FPosTermThread.FSalerCash := ASalerCash;
       FPosTermThread.FRefund := ARefund;
+      FPosTermThread.FRRN := ARRN;
       FPosTermThread.FEndPayPosTerm := EndPayPosTerm;
       PosTerm.OnMsgDescriptionProc := FPosTermThread.MsgDescriptionProc;
 

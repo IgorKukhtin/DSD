@@ -1027,7 +1027,7 @@ type
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
       AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-      ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AUserKeyId : Integer;
+      ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AUserKeyId : Integer; ARRN: string;
       AZReport : Integer; AFiscalCheckNumber: String; AID: Integer; out AUID: String): Boolean;
 
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
@@ -1723,6 +1723,7 @@ begin
         FErrorRRO, // isErrorRRO
         FormParams.ParamByName('isPaperRecipeSP').Value,
         FormParams.ParamByName('UserKeyId').Value,
+        FormParams.ParamByName('RRN').Value,
         0,     // ZReport
         '',    // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -1834,6 +1835,7 @@ begin
   FormParams.ParamByName('isPaperRecipeSP').Value := False;
   FormParams.ParamByName('MobileDiscount').Value := 0;
   FormParams.ParamByName('isMobileFirstOrder').Value := False;
+  FormParams.ParamByName('RRN').Value := '';
 
   ClearFilterAll;
 
@@ -4335,6 +4337,7 @@ begin
           False, // isErrorRRO
           FormParams.ParamByName('isPaperRecipeSP').Value,
           FormParams.ParamByName('UserKeyId').Value,
+          FormParams.ParamByName('RRN').Value,
           ZReport,     // Номер Z отчета
           CheckNumber, // FiscalCheckNumber
           FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -6265,6 +6268,7 @@ begin
     , False // isErrorRRO
     , FormParams.ParamByName('isPaperRecipeSP').Value
     , FormParams.ParamByName('UserKeyId').Value
+    , FormParams.ParamByName('RRN').Value
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -6385,6 +6389,7 @@ begin
     , False // isErrorRRO
     , FormParams.ParamByName('isPaperRecipeSP').Value
     , FormParams.ParamByName('UserKeyId').Value
+    , FormParams.ParamByName('RRN').Value
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -7637,6 +7642,7 @@ begin
     , False // isErrorRRO
     , FormParams.ParamByName('isPaperRecipeSP').Value
     , FormParams.ParamByName('UserKeyId').Value
+    , FormParams.ParamByName('RRN').Value
     , 0 // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -10928,6 +10934,7 @@ begin
   FormParams.ParamByName('isPaperRecipeSP').Value := False;
   FormParams.ParamByName('MobileDiscount').Value := 0;
   FormParams.ParamByName('isMobileFirstOrder').Value := False;
+  FormParams.ParamByName('RRN').Value := '';
 
   FFiscalNumber := '';
   FPromoForSale := False;
@@ -11442,6 +11449,7 @@ begin
             exit;
           end;
           cTextCheck := pPosTerm.TextCheck;
+          FormParams.ParamByName('RRN').Value := pPosTerm.RRN;
           Add_Log('Успешно оплатили POS терминалом');
         finally
           if pPosTerm <> Nil then
@@ -12530,7 +12538,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
   AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-  ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AUserKeyId : Integer;
+  ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AUserKeyId : Integer; ARRN : String;
   AZReport : Integer; AFiscalCheckNumber: String; AID: Integer; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -12808,7 +12816,8 @@ begin
           ACategory1303Id,          // Категория 1303
           AisErrorRRO,              // ВИП чек по ошибке РРО
           AisPaperRecipeSP,         // Бумажный рецепт по СП
-          AUserKeyId
+          AUserKeyId,               // Чей файловый ключ использовался при пробитии чека
+          ARRN                      // RRN уникальный номер транзакции
           ]));
       End
       else
@@ -12936,6 +12945,8 @@ begin
         FLocalDataBaseHead.FieldByName('ISPAPERRSP').Value := AisPaperRecipeSP;
         //Чей файловый ключ использовался при пробитии чека.
         FLocalDataBaseHead.FieldByName('USERKEYID').Value := AUserKeyId;
+        //RRN уникальный номер транзакции
+        FLocalDataBaseHead.FieldByName('RRN').Value := ARRN;
         FLocalDataBaseHead.Post;
       End;
     except

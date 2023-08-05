@@ -22,11 +22,12 @@ type
     function GetProcessType : TPosProcessType;
     function GetProcessState : TPosProcessState;
     function GetCanceled : Boolean;
+    function GetRRN : string;
   protected
     function WaitPosResponsePrivat() : Integer;
     function CheckConnection : Boolean;
     function Payment(ASumma : Currency) : Boolean;
-    function Refund(ASumma : Currency) : Boolean;
+    function Refund(ASumma : Currency; ARRN : String) : Boolean;
     function ServiceMessage : Boolean;
     procedure Cancel;
   public
@@ -73,6 +74,11 @@ end;
 function TPos_ECRCommX_BPOS1Lib.GetProcessState : TPosProcessState;
 begin
   Result := ppsUndefined;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.GetRRN : string;
+begin
+  Result := FLastPosRRN;
 end;
 
 function TPos_ECRCommX_BPOS1Lib.GetCanceled : Boolean;
@@ -157,7 +163,7 @@ begin
   end;
 end;
 
-function TPos_ECRCommX_BPOS1Lib.Refund(ASumma : Currency) : Boolean;
+function TPos_ECRCommX_BPOS1Lib.Refund(ASumma : Currency; ARRN : String) : Boolean;
 var
   Summa : Integer;
 begin
@@ -168,7 +174,7 @@ begin
     FPOS.CommOpen(iniPosPortNumber(FPOSTerminalCode), iniPosPortSpeed(FPOSTerminalCode));
     if WaitPosResponsePrivat() = 0 then
     begin
-      FPOS.Refund( Summa, 0, 0 );
+      FPOS.Refund( Summa, 0, 0, ARRN);
       if WaitPosResponsePrivat() <> 0 then Exit;
 
       FLastPosRRN := FPOS.RRN;

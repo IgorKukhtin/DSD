@@ -1,7 +1,8 @@
 -- Function: gpComplete_Movement_ReturnIn_Cash()
 
 --DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn_Cash (Integer, Integer, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn_Cash (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn_Cash (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn_Cash (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnIn_Cash(
     IN inMovementId        Integer              , -- ключ Документа
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnIn_Cash(
     IN inZReport           Integer              , -- Z отчет
     IN inFiscalCheckNumber TVarChar             , -- Номер фискального чека
     IN inTotalSummPayAdd   TFloat               , -- Доплата по чеку
+    IN inRRN        	   TVarChar             , -- RRN уникальный номер транзакции
     IN inSession           TVarChar               -- сессия пользователя
 )
 RETURNS  VOID
@@ -72,6 +74,12 @@ BEGIN
 
     -- сохранили Доплату по чеку
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayAdd(), inMovementId, inTotalSummPayAdd);
+
+    IF COALESCE (inRRN, '') <> ''
+    THEN
+      -- сохранили <>
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_RRN(), inMovementId, inRRN);
+    END IF;
 
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSummReturnIn (inMovementId);

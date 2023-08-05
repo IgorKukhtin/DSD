@@ -222,9 +222,9 @@ end;
 procedure TMainForm.btnAllClick(Sender: TObject);
 var
   Ini: TIniFile;
-  DtartDate : TDateTime;
+  StartDate : TDateTime;
 begin
-  DtartDate := Now;
+  StartDate := Now;
   try
     FError := False;
 
@@ -235,7 +235,7 @@ begin
     while not qrySendList.Eof do
     begin
 
-      if (qrySendList.FieldByName('DateSend').AsDateTime < DtartDate) and
+      if (qrySendList.FieldByName('DateSend').AsDateTime < StartDate) and
          (qrySendList.FieldByName('DateSend').AsDateTime > FDate) then
       begin
         btnExecuteClick(Nil);
@@ -249,7 +249,7 @@ begin
 
     if not FError then
     begin
-      FDate := DtartDate;
+      FDate := StartDate;
       Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees.ini');
       try
         Ini.WriteDateTime('Options', 'Date', FDate);
@@ -354,13 +354,15 @@ begin
     end;
   end else
   begin
-    cxPageControl1.Properties.ActivePage := cxTabSheet1;
+    cxPageControl1.Properties.ActivePage := cxTabSheet6;
     try
       qryReport_Upload.Close;
       qryReport_Upload.SQL.Text := qrySendList.FieldByName('SQL').AsString;
       if Assigned(qryReport_Upload.Params.FindParam('OperDate')) then
         qryReport_Upload.ParamByName('OperDate').Value := FDate;
       qryReport_Upload.Open;
+      if not qryReport_Upload.IsEmpty then
+        cxMessage.Text := qryReport_Upload.FieldByName('Message').AsString;
     except
       on E: Exception do Add_Log(E.Message);
     end;

@@ -322,6 +322,13 @@ inherited CashCloseJeckdawsDialogForm: TCashCloseJeckdawsDialogForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRRN'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 352

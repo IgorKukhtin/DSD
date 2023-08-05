@@ -45,7 +45,8 @@ type
   public
     { Public declarations }
     function PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-      PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; out AZReport : Integer;
+      PaidType: TPaidType; out AFiscalNumber, ACheckNumber, ARRN: String;
+      out AZReport : Integer;
       APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
     procedure Add_Log_XML(AMessage: String);
 
@@ -111,12 +112,12 @@ begin
 end;
 
 procedure TCashCloseReturnDialogForm.actPrintReceiptExecute(Sender: TObject);
-  var cFiscalNumber, cCheckNumber: String; nZReport : Integer;
+  var cFiscalNumber, cCheckNumber, cRRN: String; nZReport : Integer;
 begin
   inherited;
 
   if not PutCheckToCash(FSummaTotal, edSalerCashAdd.Value,
-    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, nZReport) then Exit;
+    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, cRRN, nZReport) then Exit;
 
   // Проведение чека
   try
@@ -135,6 +136,7 @@ begin
     if rgPaidType.ItemIndex = 2 then
       spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := edSalerCashAdd.Value
     else spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := 0;
+    spComplete_Movement.ParamByName('inRRN').Value := cRRN;
     spComplete_Movement.Execute;
   Except ON E: Exception DO
     MessageDlg(E.Message,mtError,[mbOk],0);
@@ -188,7 +190,8 @@ begin
 end;
 
 function TCashCloseReturnDialogForm.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; out AZReport : Integer;
+  PaidType: TPaidType; out AFiscalNumber, ACheckNumber, ARRN: String;
+  out AZReport : Integer;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
   str_log_xml, cTextCheck: String;
@@ -199,7 +202,6 @@ var
   function PutOneRecordToCash: Boolean; // Продажа одного наименования
   var
     сAccommodationName: string;
-    nDisc: Currency;
   begin
     // посылаем строку в кассу и если все OK, то ставим метку о продаже
     if not Assigned(Cash) or Cash.AlwaysSold then
@@ -227,6 +229,7 @@ begin
   ACheckNumber := '';
   cTextCheck := '';
   AZReport := 0;
+  ARRN := '';
   try
     try
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
@@ -307,6 +310,7 @@ begin
             'В чеке не найден товар на который можно применить скидку (наценку) по округлению копеек...');
           exit;
         end;
+
       end;
 
       if nSumAll <> FSummaTotal then
@@ -337,9 +341,10 @@ begin
             exit;
           end;
 
-          if not PayPosTerminal(pPosTerm, SalerCash - SalerCashAdd, True) then
+          if not PayPosTerminal(pPosTerm, SalerCash - SalerCashAdd, True, spGet_Movement.ParamByName('outRRN').Value) then
             exit;
           cTextCheck := pPosTerm.TextCheck;
+          ARRN := pPosTerm.RRN;
         finally
           if pPosTerm <> Nil then
             pPosTerm := Nil;

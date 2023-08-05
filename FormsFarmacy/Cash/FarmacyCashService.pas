@@ -103,7 +103,9 @@ type
     //***15.03.22
     ISPAPERRSP  : boolean;       //Бумажный рецепт по СП
     //***19.02.23
-    USERKEYID  : integer;         //Чей файловый ключ использовался при пробитии чека.
+    USERKEYID  : integer;        //Чей файловый ключ использовался при пробитии чека.
+    //***04.08.23
+    RRN  : String[25];           //RRN уникальный номер транзакции
 
   end;
   TBodyRecord = record
@@ -1559,6 +1561,8 @@ begin
                 ISPAPERRSP := FieldByName('ISPAPERRSP').AsBoolean;
                 //***19.02.23
                 USERKEYID := FieldByName('USERKEYID').AsInteger;
+                //***04.08.23
+                RRN := FieldByName('RRN').AsString;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1755,6 +1759,8 @@ begin
                   dsdSave.Params.AddParam('inisPaperRecipeSP', ftBoolean, ptInput, Head.ISPAPERRSP);
                   //***19.02.23
                   dsdSave.Params.AddParam('inUserKeyId', ftInteger, ptInput, Head.USERKEYID);
+                  //***04.08.23
+                  dsdSave.Params.AddParam('inRRN', ftString, ptInput, Head.RRN);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
