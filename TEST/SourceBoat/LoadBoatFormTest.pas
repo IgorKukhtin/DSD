@@ -998,7 +998,7 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_TranslateObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_TranslateObjectForm');
 
@@ -1010,7 +1010,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptService_limitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptService_limitForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_ClientPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_ClientPartnerForm');
   {
