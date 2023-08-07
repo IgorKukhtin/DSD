@@ -286,7 +286,7 @@ BEGIN
                          , tmpData.GoodsKindName
                          , tmpData.GoodsKindCompleteName
 
-                         , tmpData.PriceIn2            AS PriceIn  
+                         , COALESCE (tmpData.PriceIn2,0)        AS PriceIn  
                          , tmpData.ChangePrice
 
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
@@ -390,7 +390,7 @@ BEGIN
                          , tmpData.GoodsKindName
                          , tmpData.GoodsKindCompleteName
 
-                         , tmpData.PriceIn1            AS PriceIn  
+                         , COALESCE (tmpData.PriceIn1,0)  AS PriceIn  
                          , tmpData.ChangePrice
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
                          /*, (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
@@ -558,3 +558,114 @@ $BODY$
 
 -- тест
 --select * from gpSelect_MI_PromoGoods_Calc_all(25214379  , 'False' ,  'true' , '5');
+
+
+/*
+WITH
+    ---- Значение (% скидки / % компенсации)
+    tmpMIChild AS (SELECT SUM (MovementItem.Amount) AS Amount        -- Значение (% скидки / % компенсации)
+                   FROM  MovementItem
+                   WHERE MovementItem.MovementId = 25571458 
+                     AND MovementItem.DescId = zc_MI_Child()
+                     AND MovementItem.isErased = FALSE
+                  )
+    -- все данные
+  , tmpData_Full AS (SELECT MovementItem.Id                        AS Id                     --идентификатор
+                          , MovementItem.ObjectId                  AS GoodsId                --ИД объекта <товар>
+                          , Object_Goods.ObjectCode::Integer       AS GoodsCode              --код объекта  <товар>
+                          , Object_Goods.ValueData                 AS GoodsName              --наименование объекта <товар>
+                          , Object_GoodsKind.ValueData             AS GoodsKindName          --Наименование обьекта <Вид товара>
+                          , Object_GoodsKindComplete.ValueData     AS GoodsKindCompleteName  --Наименование обьекта <Вид товара(Примечание)>
+                                 
+                          , MovementItem.Amount                    AS Amount                 --% скидки на товар
+                          
+                          , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
+                          , MIFloat_PriceIn2.ValueData             AS PriceIn2               --Себ-ть - 2 прод, грн/кг
+                          , MIFloat_ChangePrice.ValueData          AS ChangePrice            --
+                          --, (MIFloat_Price.ValueData)                AS Price                  --Цена в прайсе
+                            -- Цена в прайсе c НДС
+                          --, ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100)  / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END, 2) :: TFloat AS Price
+                          
+                          , (MIFloat_PriceWithVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END) :: TFloat AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
+                    
+                          , SUM (MIFloat_AmountPlanMax.ValueData) OVER (PARTITION BY MovementItem.ObjectId)  AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
+
+                         
+                          , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
+                          , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
+                          --, MIFloat_TaxPromo.ValueData             AS TaxPromo               -- % cкидки
+                          , MovementItem.Amount                    AS TaxPromo               -- % cкидки из мастера
+                          , tmpMIChild.Amount                      AS PromoCondition         -- % дополнительной скидки
+                          
+                          , (MIFloat_PriceWithVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END * COALESCE (MIFloat_TaxRetIn.ValueData,0) /100) AS AmountRetIn 
+                          
+                          , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки
+                           /* выводить товар 1 раз, даже если zc_MI_Master.ObjectId несколько - из за видов упак*/
+                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id)    AS Ord_goods  -- для вывода только 1 раз товара
+     
+                     FROM MovementItem
+                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+     
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
+                                                      ON MIFloat_PriceIn1.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceIn2
+                                                      ON MIFloat_PriceIn2.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceIn2.DescId = zc_MIFloat_PriceIn2()
+                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePrice
+                                                      ON MIFloat_ChangePrice.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_ChangePrice.DescId = zc_MIFloat_ChangePrice()
+                                                     
+                  
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                      ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()  ---zc_MIFloat_PriceWithOutVAT() ---
+                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+                                                     
+                                        
+                          LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
+                                                      ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_ContractCondition.DescId = zc_MIFloat_ContractCondition()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
+                                                      ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TaxPromo
+                                                      ON MIFloat_TaxPromo.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_TaxPromo.DescId = zc_MIFloat_TaxPromo()
+     
+                           /*LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
+                                                       ON MIFloat_AmountSale.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()*/
+                                        
+                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+     
+                          LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
+                                                      ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+             
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                           ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                          LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
+     
+                          LEFT JOIN tmpMIChild ON 1=0 
+                          
+                     WHERE MovementItem.MovementId = 25571458 
+                       AND MovementItem.DescId = zc_MI_Master()
+                       AND MovementItem.isErased = FALSE
+and MovementItem.Id in (261953989,261966484, 261966484)
+                     
+)
+
+select * from tmpData_Full
+
+*/
