@@ -1803,8 +1803,8 @@ end if;
                 , tmpMIContainer_all.LocationId_by
       ;
       
-      DROP TABLE _tmpListContainer;
-      DROP TABLE _tmpcontainer;
+     -- DROP TABLE _tmpListContainer;
+     -- DROP TABLE _tmpcontainer;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -187,10 +187,22 @@ BEGIN
     -- !!!определяется!!!
     vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
 
-    -- таблица -
-    CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
-
+    -- таблица - 
+    IF EXISTS (SELECT 1 FROM _tmpLocation)
+     THEN
+         DELETE FROM _tmpLocation;
+     ELSE
+         CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
+    END IF;
+    
+    IF EXISTS (SELECT 1 FROM _tmpLocation_by)
+     THEN
+         DELETE FROM _tmpLocation_by;
+     ELSE
+         CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
+    END IF;
+        
+    
     -- группа подразделений или подразделение или место учета (МО, Авто)
     IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
     THEN
