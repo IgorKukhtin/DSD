@@ -324,7 +324,10 @@ BEGIN
 
         --данные с закладки 2,1 - Калькулятор скидка
         , tmpMICalc AS (SELECT tmpMovement_Promo.Id    AS MovementId
-                             , tmp.Id                  AS MovementItemId      --, tmp.GoodsKindId
+                             , tmp.Id                  AS MovementItemId      --, tmp.GoodsKindId 
+                             , tmp.GoodsId
+                             , ROW_NUMBER() OVER (PARTITION BY tmpMovement_Promo.Id, tmp.GoodsId ORDER BY tmpMovement_Promo.Id, tmp.Id)  AS Ord
+                             
                              , SUM (CASE WHEN Num = 2 THEN tmp.PriceIn ELSE 0 END) AS PriceIn_fact                        -- с/с факт
                              , SUM (CASE WHEN Num = 4 THEN tmp.PriceIn ELSE 0 END) AS PriceIn_plan                        -- с/с план
 
@@ -338,7 +341,7 @@ BEGIN
                           FROM tmpMovement_Promo
                               LEFT JOIN gpSelect_MI_PromoGoods_Calc_all(tmpMovement_Promo.Id, FALSE, TRUE, inSession) AS tmp ON 1 = 1
                           WHERE tmp.Groupnum IN (1,2)  --факт / план 
-                          GROUP BY tmpMovement_Promo.Id, tmp.Id
+                          GROUP BY tmpMovement_Promo.Id, tmp.Id, tmp.GoodsId
                         )
 
         , tmpMI_PromoGoods AS (SELECT MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
@@ -381,13 +384,13 @@ BEGIN
                                     , SUM (MIFloat_AmountIn.ValueData
                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
 
-                                    , tmpMICalc.PriceIn_fact              -- с/с факт
-                                    , tmpMICalc.PriceIn_plan              -- с/с план
-                                    , tmpMICalc.ContractCondition_persent --бонус сети %
-                                    , tmpMICalc.ContractCondition         --бонус сети сумма
-                                    , tmpMICalc.PriceWithVAT AS   PriceWithVAT_calc           -- цена с ндс с учетом скидки
-                                    , tmpMICalc.SummaProfit_fact          --прибыль факт
-                                    , tmpMICalc.SummaProfit_plan          --прибыль план
+                                    , CASE WHEN COALESCE (tmpMICalc.PriceIn_fact,0) <> 0              THEN tmpMICalc.PriceIn_fact              ELSE COALESCE (tmpMICalc_inf.PriceIn_fact,0)              END AS PriceIn_fact              -- с/с факт
+                                    , CASE WHEN COALESCE (tmpMICalc.PriceIn_plan,0) <> 0              THEN tmpMICalc.PriceIn_plan              ELSE COALESCE (tmpMICalc_inf.PriceIn_plan,0)              END AS PriceIn_plan              -- с/с план
+                                    , CASE WHEN COALESCE (tmpMICalc.ContractCondition_persent,0) <> 0 THEN tmpMICalc.ContractCondition_persent ELSE COALESCE (tmpMICalc_inf.ContractCondition_persent,0) END AS ContractCondition_persent --бонус сети %
+                                    , CASE WHEN COALESCE (tmpMICalc.ContractCondition,0) <> 0         THEN tmpMICalc.ContractCondition         ELSE COALESCE (tmpMICalc_inf.ContractCondition,0)         END AS ContractCondition         --бонус сети сумма
+                                    , CASE WHEN COALESCE (tmpMICalc.PriceWithVAT,0) <> 0              THEN tmpMICalc.PriceWithVAT              ELSE COALESCE (tmpMICalc_inf.PriceWithVAT,0)              END AS PriceWithVAT_calc         -- цена с ндс с учетом скидки
+                                    , CASE WHEN COALESCE (tmpMICalc.SummaProfit_fact,0) <> 0          THEN tmpMICalc.SummaProfit_fact          ELSE COALESCE (tmpMICalc_inf.SummaProfit_fact,0)          END AS SummaProfit_fact          --прибыль факт
+                                    , CASE WHEN COALESCE (tmpMICalc.SummaProfit_plan,0) <> 0          THEN tmpMICalc.SummaProfit_plan          ELSE COALESCE (tmpMICalc_inf.SummaProfit_plan,0)          END AS SummaProfit_plan          --прибыль план
 
                                FROM tmpMI AS MovementItem
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
@@ -449,6 +452,12 @@ BEGIN
 
                                       LEFT JOIN tmpMICalc ON tmpMICalc.MovementId = MovementItem.MovementId
                                                          AND tmpMICalc.MovementItemId = MovementItem.Id
+                                      LEFT JOIN (SELECT tmpMICalc.*
+                                                 FROM tmpMICalc
+                                                 WHERE tmpMICalc.Ord = 1) AS tmpMICalc_inf 
+                                                                          ON tmpMICalc_inf.MovementId = MovementItem.MovementId
+                                                                         AND tmpMICalc_inf.GoodsId = MovementItem.ObjectId
+                                      
                                GROUP BY MovementItem.MovementId
                                       , MovementItem.ObjectId
                                       , Object_Goods.ObjectCode
@@ -463,13 +472,13 @@ BEGIN
                                       , MIFloat_PriceWithOutVAT.ValueData
                                       , MIFloat_PriceWithVAT.ValueData
                                       , MIFloat_PriceSale.ValueData
-                                      , tmpMICalc.PriceIn_fact              -- с/с факт
-                                      , tmpMICalc.PriceIn_plan              -- с/с план
-                                      , tmpMICalc.ContractCondition_persent --бонус сети %
-                                      , tmpMICalc.ContractCondition         --бонус сети сумма
-                                      , tmpMICalc.PriceWithVAT              -- цена с ндс с учетом скидки
-                                      , tmpMICalc.SummaProfit_fact          --прибыль факт
-                                      , tmpMICalc.SummaProfit_plan          --прибыль план
+                                      , CASE WHEN COALESCE (tmpMICalc.PriceIn_fact,0) <> 0              THEN tmpMICalc.PriceIn_fact              ELSE COALESCE (tmpMICalc_inf.PriceIn_fact,0)              END -- с/с факт
+                                      , CASE WHEN COALESCE (tmpMICalc.PriceIn_plan,0) <> 0              THEN tmpMICalc.PriceIn_plan              ELSE COALESCE (tmpMICalc_inf.PriceIn_plan,0)              END -- с/с план
+                                      , CASE WHEN COALESCE (tmpMICalc.ContractCondition_persent,0) <> 0 THEN tmpMICalc.ContractCondition_persent ELSE COALESCE (tmpMICalc_inf.ContractCondition_persent,0) END --бонус сети %
+                                      , CASE WHEN COALESCE (tmpMICalc.ContractCondition,0) <> 0         THEN tmpMICalc.ContractCondition         ELSE COALESCE (tmpMICalc_inf.ContractCondition,0)         END --бонус сети сумма
+                                      , CASE WHEN COALESCE (tmpMICalc.PriceWithVAT,0) <> 0              THEN tmpMICalc.PriceWithVAT              ELSE COALESCE (tmpMICalc_inf.PriceWithVAT,0)              END -- цена с ндс с учетом скидки
+                                      , CASE WHEN COALESCE (tmpMICalc.SummaProfit_fact,0) <> 0          THEN tmpMICalc.SummaProfit_fact          ELSE COALESCE (tmpMICalc_inf.SummaProfit_fact,0)          END --прибыль факт
+                                      , CASE WHEN COALESCE (tmpMICalc.SummaProfit_plan,0) <> 0          THEN tmpMICalc.SummaProfit_plan          ELSE COALESCE (tmpMICalc_inf.SummaProfit_plan,0)          END --прибыль план
                                )
            -- эл. подпись, выбираем те что уже подписаны полностью 
            , tmpSign AS (SELECT tmpMovement.Id
