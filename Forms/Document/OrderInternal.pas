@@ -166,6 +166,8 @@ type
     AmountProductionOut: TcxGridDBColumn;
     CountForecastOrderPromo: TcxGridDBColumn;
     CountForecastPromo: TcxGridDBColumn;
+    CountForecast_minus: TcxGridDBColumn;
+    CountForecastOrder_minus: TcxGridDBColumn;
   private
     { Private declarations }
   public

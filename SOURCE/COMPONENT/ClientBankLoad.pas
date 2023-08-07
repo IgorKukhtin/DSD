@@ -1232,7 +1232,8 @@ end;
 function TRaiffeisenBankLoad.GetBankAccount: string;
 begin
   if IsDebet then
-    result := FDataSet.FieldByName('KL_CHK').AsString
+    //result := FDataSet.FieldByName('KL_CHK').AsString
+    result := FDataSet.FieldByName('KL_CHK_K').AsString
   else
     result := FDataSet.FieldByName('KL_CHK_K').AsString
 end;
@@ -1242,13 +1243,15 @@ begin
   if not IsDebet then
     result := FDataSet.FieldByName('KL_CHK').AsString
   else
-    result := FDataSet.FieldByName('KL_CHK_K').AsString
+    //result := FDataSet.FieldByName('KL_CHK_K').AsString
+    result := FDataSet.FieldByName('KL_CHK').AsString
 end;
 
 function TRaiffeisenBankLoad.GetBankMFO: string;
 begin
   if IsDebet then
-    result := FDataSet.FieldByName('MFO').AsString
+    //result := FDataSet.FieldByName('MFO').AsString
+    result := FDataSet.FieldByName('MFO_K').AsString
   else
     result := FDataSet.FieldByName('MFO_K').AsString
 end;
@@ -1256,7 +1259,8 @@ end;
 function TRaiffeisenBankLoad.GetBankMFOMain: string;
 begin
   if IsDebet then
-    result := FDataSet.FieldByName('MFO_K').AsString
+    //result := FDataSet.FieldByName('MFO_K').AsString
+    result := FDataSet.FieldByName('MFO').AsString
   else
     result := FDataSet.FieldByName('MFO').AsString
 end;
@@ -1264,7 +1268,8 @@ end;
 function TRaiffeisenBankLoad.GetBankName: string;
 begin
   if IsDebet then
-    result := FDataSet.FieldByName('MFO_NM').AsString
+    //result := FDataSet.FieldByName('MFO_NM').AsString
+    result := FDataSet.FieldByName('MFO_NM_K').AsString
   else
     result := FDataSet.FieldByName('MFO_NM_K').AsString;
 end;
@@ -1292,7 +1297,8 @@ end;
 function TRaiffeisenBankLoad.GetJuridicalName: string;
 begin
   if IsDebet then
-    result := FDataSet.FieldByName('KL_NM').AsString
+    //result := FDataSet.FieldByName('KL_NM').AsString
+    result := FDataSet.FieldByName('KL_NM_K').AsString
   else
     result := FDataSet.FieldByName('KL_NM_K').AsString;
 end;
@@ -1300,7 +1306,8 @@ end;
 function TRaiffeisenBankLoad.GetOKPO: string;
 begin
   if IsDebet then
-    result := trim(FDataSet.FieldByName('KL_OKP').AsString)
+    //result := trim(FDataSet.FieldByName('KL_OKP').AsString)
+    result := trim(FDataSet.FieldByName('KL_OKP_K').AsString)
   else
     result := trim(FDataSet.FieldByName('KL_OKP_K').AsString);
 end;
@@ -1319,7 +1326,7 @@ end;
 
 function TRaiffeisenBankLoad.IsDebet: boolean;
 begin
-  result := FDataSet.FieldByName('DK').AsInteger = 2
+  result := FDataSet.FieldByName('DK').AsInteger = 1
 end;
 
 { TOshadBankLoad }
