@@ -167,7 +167,6 @@ uses
   InfoMoney in '..\..\FormsBoat\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   InfoMoney_Object in '..\..\FormsBoat\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoneyEdit in '..\..\FormsBoat\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
-  GoodsGroup in '..\..\FormsBoat\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
   GoodsGroup_Object in '..\..\FormsBoat\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm: TParentForm},
   GoodsGroupEdit in '..\..\FormsBoat\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   InfoMoneyGroupEdit in '..\..\FormsBoat\Guides\InfoMoneyGroupEdit.pas' {InfoMoneyGroupEditForm: TParentForm},
@@ -329,7 +328,7 @@ uses
   MaterialOptions in '..\..\FormsBoat\Guides\MaterialOptions.pas' {MaterialOptionsForm: TParentForm},
   ProdOptions_Comment in '..\..\FormsBoat\Guides\ProdOptions_Comment.pas' {ProdOptions_CommentForm: TParentForm},
   ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
-  GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm},
+  GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupListForm: TParentForm},
   MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
   OrderInternalJournal in '..\..\FormsBoat\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
   OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm},
@@ -367,7 +366,9 @@ uses
   Report_PartnerDialog in '..\..\FormsBoat\Report\Report_PartnerDialog.pas' {Report_PartnerDialogForm: TParentForm},
   Report_Partner in '..\..\FormsBoat\Report\Report_Partner.pas' {Report_PartnerForm: TParentForm},
   Report_CollationByPartner in '..\..\FormsBoat\Report\Report_CollationByPartner.pas' {Report_CollationByPartnerForm: TParentForm},
-  Report_CollationByPartnerDialog in '..\..\FormsBoat\Report\Report_CollationByPartnerDialog.pas' {Report_CollationByPartnerDialogForm: TParentForm};
+  Report_CollationByPartnerDialog in '..\..\FormsBoat\Report\Report_CollationByPartnerDialog.pas' {Report_CollationByPartnerDialogForm: TParentForm},
+  GoodsGroup in '..\..\FormsBoat\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
+  GoodsGroup_List in '..\..\FormsBoat\Guides\GoodsGroup_List.pas' {GoodsGroup_ListForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
