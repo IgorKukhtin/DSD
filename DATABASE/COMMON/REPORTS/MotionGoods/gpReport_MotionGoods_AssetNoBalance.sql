@@ -188,11 +188,26 @@ BEGIN
     vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
 
     -- таблица -
-    CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
+    --CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
+    --CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
+    
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpLocation'))
+     THEN
+         DELETE FROM _tmpLocation;
+     ELSE
+         CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
+    END IF;
+    
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpLocation_by'))
+     THEN
+         DELETE FROM _tmpLocation_by;
+     ELSE
+        CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP; 
+    END IF;
+
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-/*    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
+    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
     THEN
         INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
            SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
@@ -212,7 +227,9 @@ BEGIN
                       END AS DescId
                     , tmpDesc.ContainerDescId
                FROM Object
-                    LEFT JOIN (SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE
+                             UNION SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE
+                              ) AS tmpDesc ON 1 = 1
                WHERE Object.Id = inLocationId
               ;
         ELSE
@@ -231,7 +248,8 @@ BEGIN
     END IF;
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpLocation;
-  */
+      
+  
 
     -- группа подразделений или подразделение ...by
     IF inUnitGroupId_by <> 0
@@ -254,35 +272,6 @@ BEGIN
     WITH tmpPriceStart AS (SELECT NULL :: Integer AS GoodsId, NULL :: TFloat AS Price WHERE 1 = 0)
          , tmpPriceEnd AS (SELECT NULL :: Integer AS GoodsId, NULL :: TFloat AS Price WHERE 1 = 0)  
          
-         , _tmpLocation AS (  ---LocationId, DescId, ContainerDescId)
-                            SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
-                                 , zc_ContainerLinkObject_Unit()       AS DescId
-                                 , tmpDesc.ContainerDescId             AS ContainerDescId
-                            FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                                 LEFT JOIN (SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-                            WHERE COALESCE (inUnitGroupId,0) <> 0 AND COALESCE (inLocationId, 0) = 0
-                         UNION ALL
-                            SELECT Object.Id AS LocationId
-                                 , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit()
-                                        WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
-                                        WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
-                                   END AS DescId
-                                 , tmpDesc.ContainerDescId
-                            FROM Object
-                                 LEFT JOIN (SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-                            WHERE Object.Id = inLocationId  AND COALESCE (inLocationId, 0)  <> 0
-                         UNION ALL
-                            SELECT tmp.LocationId, tmp.DescId, tmpDesc.ContainerDescId
-                            FROM (SELECT zc_Juridical_Basis() AS LocationId, zc_ContainerLinkObject_Unit() AS DescId
-                                 UNION ALL
-                                  SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Unit() AS DescId FROM Object WHERE Object.DescId = zc_Object_Unit()
-                                 UNION ALL
-                                  SELECT Object.Id, zc_ContainerLinkObject_Member() AS DescId FROM Object WHERE Object.DescId = zc_Object_Member()
-                                 ) AS tmp
-                                 LEFT JOIN (SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-                            WHERE COALESCE (inUnitGroupId,0) = 0 AND COALESCE (inLocationId, 0) = 0
-                           )
-         
          -- !!!криво хардкодим ОС и все что для них!!!
        , tmpReport_all AS (SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= -1 * zc_Enum_AccountGroup_10000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId
@@ -294,7 +283,8 @@ BEGIN
                                                                  , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 9354099 ELSE inGoodsGroupId END
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp
                           )
-
+        
+        
        , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR ContainerId_count <> ContainerId)
        , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND ContainerId_count = ContainerId)
        , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId

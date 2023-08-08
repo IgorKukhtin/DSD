@@ -162,7 +162,8 @@ BEGIN
                    FROM Object
                         -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
                         LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE inUserId = zfCalc_UserAdmin() :: Integer
-                             UNION SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE inUserId = zfCalc_UserAdmin() :: Integer) AS tmpDesc ON 1 = 1
+                             UNION SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE inUserId = zfCalc_UserAdmin() :: Integer
+                                  ) AS tmpDesc ON 1 = 1
                    WHERE Object.Id = inLocationId
                  /*UNION
                    SELECT lfSelect.UnitId               AS LocationId
@@ -195,10 +196,25 @@ BEGIN
         inIsInfoMoney:= FALSE;
     END IF;
 
-
+                
     -- таблица -
-    CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    --CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    --CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpListContainer'))
+     THEN
+         DELETE FROM _tmpListContainer;
+     ELSE
+         CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    END IF;
+    
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainer'))
+     THEN
+         DELETE FROM _tmpContainer;
+     ELSE
+        CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    END IF;
+       
 
 
     -- группа товаров или товар или все товары из проводок
@@ -1803,8 +1819,8 @@ end if;
                 , tmpMIContainer_all.LocationId_by
       ;
       
-      DROP TABLE _tmpListContainer;
-      DROP TABLE _tmpcontainer;
+      --DROP TABLE _tmpListContainer;
+      --DROP TABLE _tmpcontainer;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

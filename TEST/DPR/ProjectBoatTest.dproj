@@ -490,10 +490,6 @@
 				<Form>InfoMoneyEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup.pas">
-				<Form>GoodsGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup_Object.pas">
 				<Form>GoodsGroup_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1117,7 +1113,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroupChoice.pas">
-				<Form>GoodsGroupChoiceForm</Form>
+				<Form>GoodsGroupListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\MaterialOptionsChoice.pas">
@@ -1252,6 +1248,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Report\Report_CollationByPartnerDialog.pas">
 				<Form>Report_CollationByPartnerDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup.pas">
+				<Form>GoodsGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup_List.pas">
+				<Form>GoodsGroup_ListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
