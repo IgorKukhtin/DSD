@@ -43,7 +43,7 @@ BEGIN
 
 
      -- таблица -
-     CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat, AmountOrderPromo TFloat, AmountSalePromo TFloat, AmountProductionOut TFloat) ON COMMIT DROP;
 
      --
                                  WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup)
@@ -138,6 +138,24 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Branch6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Branch7.ValueData, 0)
                                                    ) AS AmountSale
+
+                                            , SUM (COALESCE (ObjectFloat_OrderPromo1.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_OrderPromo4.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0)
+                                                  ) AS AmountOrderPromo
+                                            , SUM (COALESCE (ObjectFloat_Promo1.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_Promo2.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_Promo3.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_Promo4.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_Promo5.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_Promo6.ValueData, 0)
+                                                 + COALESCE (ObjectFloat_Promo7.ValueData, 0)
+                                                  ) AS AmountSalePromo
+                                            , 0 AS AmountProductionOut
 
                                        FROM tmpGoods
                                             INNER JOIN ObjectLink AS ObjectLink_Goods
@@ -389,6 +407,10 @@ BEGIN
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                                             , 0                                                   AS AmountOrder
                                             , SUM (COALESCE (MovementItem.Amount, 0))             AS AmountSale
+                                            , 0                                                   AS AmountOrderPromo
+                                            , 0                                                   AS AmountSalePromo
+                                            , SUM (COALESCE (MovementItem.Amount, 0))             AS AmountProductionOut
+
                                        FROM Movement
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                           ON MovementLinkObject_From.MovementId = Movement.Id
@@ -432,16 +454,24 @@ BEGIN
                                        GROUP BY MovementItem.ObjectId
                                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                       )
-       INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecast)
+       INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecast
+                         , AmountOrderPromo, AmountSalePromo, AmountProductionOut
+                          )
          SELECT tmpMI.MovementItemId
                , COALESCE (tmpMI.GoodsId,tmpAll.GoodsId)          AS GoodsId
                , COALESCE (tmpMI.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
                , COALESCE (tmpAll.AmountOrder, 0)                 AS AmountForecastOrder
                , COALESCE (tmpAll.AmountSale, 0)                  AS AmountForecast
+               , COALESCE (tmpAll.AmountOrderPromo)               AS AmountOrderPromo
+               , COALESCE (tmpAll.AmountSalePromo)                AS AmountSalePromo
+               , COALESCE (tmpAll.AmountProductionOut)            AS AmountProductionOut
          FROM (SELECT tmpMIAll.GoodsId
                     , tmpMIAll.GoodsKindId
-                    , SUM (tmpMIAll.AmountOrder) AS AmountOrder
-                    , SUM (tmpMIAll.AmountSale)  AS AmountSale
+                    , SUM (tmpMIAll.AmountOrder)         AS AmountOrder
+                    , SUM (tmpMIAll.AmountSale)          AS AmountSale
+                    , SUM (tmpMIAll.AmountOrderPromo)    AS AmountOrderPromo
+                    , SUM (tmpMIAll.AmountSalePromo)     AS AmountSalePromo
+                    , SUM (tmpMIAll.AmountProductionOut) AS AmountProductionOut
                FROM tmpMIAll
                GROUP BY tmpMIAll.GoodsId
                       , tmpMIAll.GoodsKindId
@@ -467,12 +497,16 @@ BEGIN
                                                                               END
                                                  , inAmount_ParamSecond    := NULL
                                                  , inDescId_ParamSecond    := NULL
-                                                 , inAmount_ParamAdd       := 0
-                                                 , inDescId_ParamAdd       := 0
-                                                 , inAmount_ParamNext      := 0
-                                                 , inDescId_ParamNext      := 0
-                                                 , inAmount_ParamNextPromo := 0
-                                                 , inDescId_ParamNextPromo := 0
+                                                   -- !!!не ошибка, здесь добавленный Расход на производство в статистику Продаж!!!
+                                                 , inAmount_ParamAdd       := COALESCE (tmpAll.AmountProductionOut, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamAdd       := zc_MIFloat_Plan1()
+                                                   -- !!!не ошибка, здесь заявки  Акции!!!
+                                                 , inAmount_ParamNext      := COALESCE (tmpAll.AmountOrderPromo, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamNext      := zc_MIFloat_Promo1()
+                                                   -- !!!не ошибка, здесь продажи Акции!!!
+                                                 , inAmount_ParamNextPromo := COALESCE (tmpAll.AmountSalePromo, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamNextPromo := zc_MIFloat_Promo2()
+                                                   --
                                                  , inIsPack                := CASE WHEN vbIsBasis = FALSE THEN vbIsPack ELSE NULL  END
                                                  , inIsParentMulti         := CASE WHEN vbIsBasis = FALSE THEN TRUE     ELSE FALSE END
                                                  , inUserId                := vbUserId

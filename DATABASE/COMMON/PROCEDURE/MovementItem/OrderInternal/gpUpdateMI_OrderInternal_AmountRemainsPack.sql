@@ -73,7 +73,7 @@ BEGIN
                     -- 
                   , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_start
                     -- 
-                  , CASE WHEN tmpUnit_RK.UnitId > 0 THEN Container.Amount ELSE 0 END - SUM (CASE WHEN tmpUnit_RK.UnitId > 0 THEN MIContainer.Amount ELSE 0 END) AS AmountRK_start
+                  , CASE WHEN tmpUnit_RK.UnitId > 0 THEN Container.Amount ELSE 0 END - SUM (CASE WHEN tmpUnit_RK.UnitId > 0 THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountRK_start
                     -- 
                   , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_next
                   , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE
@@ -102,11 +102,11 @@ BEGIN
                                                  AND MIContainer.OperDate    >= inOperDate
 
                   -- ЦЕХ колбаса+дел-сы
-                  LEFT JOIN tmpUnit_CEH   ON tmpUnit_CEH.UnitId   = MIContainer.ObjectExtId_Analyzer
+                  LEFT JOIN tmpUnit_CEH   ON tmpUnit_CEH.UnitId   = CLO_Unit.ObjectId
                   -- Склады База + Реализации
-                  LEFT JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MIContainer.WhereObjectId_Analyzer
+                  LEFT JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = CLO_Unit.ObjectId
                   -- Склад Реализации
-                  LEFT JOIN tmpUnit_RK ON tmpUnit_RK.UnitId = MIContainer.WhereObjectId_Analyzer
+                  LEFT JOIN tmpUnit_RK ON tmpUnit_RK.UnitId = CLO_Unit.ObjectId
                   
 
              WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!

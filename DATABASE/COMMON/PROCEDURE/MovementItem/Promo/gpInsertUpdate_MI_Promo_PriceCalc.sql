@@ -357,7 +357,7 @@ BEGIN
 
 
     IF (1=0 AND vbUserId = 5) OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
-       AND vbUserId <> 5
+       AND vbUserId <> 5 AND vbUserId <> 6604558 -- Голота К.О.
     THEN
         RAISE EXCEPTION 'Ошибка.Документ в статусе <%>. Проверка: <%> <%>.'
           , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
@@ -652,11 +652,13 @@ BEGIN
         ;
 
 
-    IF vbUserId = 5
+    IF vbUserId IN (5, 6604558) -- Голота К.О.
     THEN
-        RAISE EXCEPTION 'Ошибка.Admin <%>   <%> <%> <%>   <%> <%>   <%> <%> <%>'
+        RAISE EXCEPTION 'Проверка.% условие %: <%>  % факт: <%> % план: <%> % затраты(новая схема): <%> % период расчет с/с: <%>  -  <%>  % цена с/с: <%> % цена затраты(старая схема): <%> % цена с/с + затраты(старая схема): <%>'
             -- условие %
-          , (SELECT DISTINCT MIF.ValueData
+          , CHR (13)
+          , '%'
+          , (SELECT DISTINCT zfConvert_FloatToString (MIF.ValueData)
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
                                               ON MIF.MovementItemId = MovementItem.Id
@@ -667,18 +669,7 @@ BEGIN
              --ORDER BY MovementItem.Id LIMIT 1
             )
             -- факт
-          , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
-             FROM MovementItem
-                  LEFT JOIN MovementItemFloat AS MIF
-                                              ON MIF.MovementItemId = MovementItem.Id
-                                             AND MIF.DescId         = zc_MIFloat_PriceIn1()
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId = zc_MI_Master()
-               AND MovementItem.isErased = FALSE
-             --ORDER BY MovementItem.Id
-             --LIMIT 1
-            )
-            -- план
+          , CHR (13)
           , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
@@ -690,7 +681,21 @@ BEGIN
              -- ORDER BY MovementItem.Id
              --LIMIT 1
             )
+            -- план
+          , CHR (13)
+          , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
+             FROM MovementItem
+                  LEFT JOIN MovementItemFloat AS MIF
+                                              ON MIF.MovementItemId = MovementItem.Id
+                                             AND MIF.DescId         = zc_MIFloat_PriceIn1()
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId = zc_MI_Master()
+               AND MovementItem.isErased = FALSE
+             --ORDER BY MovementItem.Id
+             --LIMIT 1
+            )
             -- затраты - новая схема
+          , CHR (13)
           , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
@@ -701,15 +706,19 @@ BEGIN
                AND MovementItem.isErased = FALSE
             )
 
+          , CHR (13)
           , zfConvert_DateToString (vbStartDate)
           , zfConvert_DateToString (vbEndDate)
 
-          , (SELECT STRING_AGG (zfConvert_FloatToString (Price3_cost), ' ; ')
-             FROM _tmpData
-            )
+          , CHR (13)
           , (SELECT STRING_AGG (zfConvert_FloatToString (PriceSale_cost), ' ; ')
              FROM _tmpData
             )
+          , CHR (13)
+          , (SELECT STRING_AGG (zfConvert_FloatToString (Price3_cost), ' ; ')
+             FROM _tmpData
+            )
+          , CHR (13)
           , (SELECT STRING_AGG (zfConvert_FloatToString (Price_cost), ' ; ')
              FROM _tmpData
             )

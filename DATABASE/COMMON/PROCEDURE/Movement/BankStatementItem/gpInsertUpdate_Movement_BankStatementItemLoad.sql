@@ -38,6 +38,7 @@ $BODY$
    DECLARE vbParValue TFloat;
    DECLARE vbCurrencyPartnerValue TFloat;
    DECLARE vbParPartnerValue TFloat;
+   DECLARE vbStr_tmp TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
@@ -58,10 +59,33 @@ BEGIN
                            LIMIT 1 -- ???надо бы исправить???
                           );
  
+    /*IF COALESCE (vbMainBankAccountId, 0) = 0
+    THEN
+        vbStr_tmp        := inBankAccountMain;
+        inBankAccountMain:= inBankAccount;
+        inBankAccount    := vbStr_tmp;
+        --
+        vbStr_tmp    := inBankMFOMain;
+        inBankMFOMain:= inBankMFO;
+        inBankMFO    := vbStr_tmp;
+        --
+        --inBankName:= ???;
+
+        -- 1. Найти счет от кого и кому в справочнике счетов.
+        vbMainBankAccountId:= (SELECT View_BankAccount.Id
+                               FROM Object_BankAccount_View AS View_BankAccount
+                               WHERE View_BankAccount.Name        = TRIM (inBankAccountMain)
+                                 AND View_BankAccount.isCorporate = TRUE
+                               ORDER BY 1
+                               LIMIT 1 -- ???надо бы исправить???
+                              );
+
+    END IF;*/
+
     -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbMainBankAccountId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', TRIM (inBankAccountMain), chr(13);
+        RAISE EXCEPTION 'Счет <%> не указан в справочнике счетов.%Загрузка не возможна.%Счет клитента <%>', TRIM (inBankAccountMain), chr(13), chr(13), TRIM (inBankAccount);
     END IF;
  
  
@@ -161,7 +185,36 @@ BEGIN
 
 
     -- сохранили свойство <Сумма операции>
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), vbMovementItemId, inAmount);
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), vbMovementItemId
+                                        , CASE WHEN 0 < (WITH tmpMember AS (SELECT ObjectLink_MemberMinus_From.ChildObjectId AS MemberId, ObjectString.ValueData
+                                                                            FROM ObjectString
+                                                                                 JOIN ObjectLink AS ObjectLink_MemberMinus_From
+                                                                                                 ON ObjectLink_MemberMinus_From.ObjectId = ObjectString.ObjectId
+                                                                                                AND ObjectLink_MemberMinus_From.DescId = zc_ObjectLink_MemberMinus_From()
+                                                                                 JOIN Object AS Object_MemberMinus ON Object_MemberMinus.Id       = ObjectString.ObjectId
+                                                                                                                  AND Object_MemberMinus.isErased = FALSE
+                                                                            WHERE ObjectString.ValueData <> ''
+                                                                              AND ObjectString.DescId = zc_ObjectString_MemberMinus_DetailPayment()
+                                                                           )
+                                                         SELECT tmpMember.MemberId FROM tmpMember WHERE TRIM (inComment) ILIKE TRIM (tmpMember.ValueData) LIMIT 1 -- на всякий случай
+                                                         -- SELECT tmp.PersonalId FROM gpGet_Object_Member ((SELECT tmpMember.MemberId FROM tmpMember), inSession) AS tmp
+                                                        )
+                                               THEN -1 * ABS (inAmount)
+
+                                               WHEN 0 < (WITH tmpMember AS (SELECT ObjectString.ObjectId AS MemberId
+                                                                            FROM ObjectString
+                                                                                 JOIN Object AS Object_Member ON Object_Member.Id       = ObjectString.ObjectId
+                                                                                                             AND Object_Member.isErased = FALSE
+                                                                            WHERE ObjectString.ValueData ILIKE inOKPO AND inOKPO <> ''
+                                                                              AND ObjectString.DescId = zc_ObjectString_Member_INN()
+                                                                           )
+                                                         SELECT tmpMember.MemberId FROM tmpMember LIMIT 1 -- на всякий случай
+                                                        )
+                                               THEN -1 * ABS (inAmount)
+                                               
+                                               ELSE inAmount
+                                          END 
+                                         );
     -- сохранили свойство <Сумма операции>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), vbMovementItemId, vbAmountCurrency);
      -- сохранили свойство <ОКПО>
@@ -221,6 +274,20 @@ BEGIN
                          SELECT tmpMember.MemberId FROM tmpMember WHERE TRIM (inComment) ILIKE TRIM (tmpMember.ValueData) LIMIT 1 -- на всякий случай
                          -- SELECT tmp.PersonalId FROM gpGet_Object_Member ((SELECT tmpMember.MemberId FROM tmpMember), inSession) AS tmp
                         );
+                        
+        -- еще раз через INN
+        /*vbJuridicalId:= CASE WHEN vbJuridicalId > 0 THEN vbJuridicalId
+                            ELSE (WITH tmpMember AS (SELECT ObjectString.ObjectId AS MemberId
+                                                     FROM ObjectString
+                                                          JOIN Object AS Object_Member ON Object_Member.Id       = ObjectString.ObjectId
+                                                                                      AND Object_Member.isErased = FALSE
+                                                     WHERE ObjectString.ValueData ILIKE inOKPO AND inOKPO <> ''
+                                                       AND ObjectString.DescId = zc_ObjectString_Member_INN()
+                                                    )
+                                  SELECT tmpMember.MemberId FROM tmpMember LIMIT 1 -- на всякий случай
+                                 )
+                        END;*/
+
         -- если нашли, УП статья будет такой
         IF vbJuridicalId > 0
         THEN
@@ -537,7 +604,7 @@ BEGIN
     PERFORM lpInsert_MovementProtocol (vbMovementItemId, vbUserId, TRUE);
 
 
- if vbUserId = 5 AND 1=0
+ if vbUserId = 5 AND 1=0 AND inBankAccountMain <> 'UA423808050000000026003707397'
  then
     RAISE EXCEPTION 'ok1 %   %    %    %  %',  lfGet_Object_ValueData (vbJuridicalId), vbContractId, lfGet_Object_ValueData (vbContractId), lfGet_Object_ValueData (vbInfoMoneyId), inComment;
  end if;

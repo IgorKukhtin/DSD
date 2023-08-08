@@ -970,7 +970,12 @@ end if;
      END IF;
 
      -- сохранили свойство
-     IF inDescId_ParamAdd <> 0
+     IF inDescId_ParamAdd = zc_MIFloat_Plan1() AND (inAmount_ParamAdd <> 0 OR ioId <> 0)
+     THEN
+         -- !!!не ошибка, здесь добавленный Расход на производство в статистику Продаж!!!
+         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamAdd, ioId, inAmount_ParamAdd);
+
+     ELSEIF inDescId_ParamAdd <> 0
      THEN
          -- вернулись к старой схеме, за одно и проверим
          ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
@@ -984,7 +989,12 @@ end if;
      END IF;
 
      -- сохранили свойство
-     IF inDescId_ParamNext <> 0
+     IF inDescId_ParamNext = zc_MIFloat_Promo1() AND (inAmount_ParamNext <> 0 OR ioId <> 0)
+     THEN
+         -- !!!не ошибка, здесь заявки Акции!!!
+         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamNext, ioId, inAmount_ParamNext);
+
+     ELSEIF inDescId_ParamNext <> 0
      THEN
          -- вернулись к старой схеме, за одно и проверим
          ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
@@ -993,7 +1003,12 @@ end if;
      END IF;
 
      -- сохранили свойство
-     IF inDescId_ParamNextPromo <> 0
+     IF inDescId_ParamNextPromo = zc_MIFloat_Promo2() AND (inAmount_ParamNextPromo <> 0 OR ioId <> 0)
+     THEN
+         -- !!!не ошибка, здесь продажи Акции!!!
+         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamNextPromo, ioId, inAmount_ParamNextPromo);
+
+     ELSEIF inDescId_ParamNextPromo <> 0
      THEN
          -- вернулись к старой схеме, за одно и проверим
          ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
