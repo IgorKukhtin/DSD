@@ -1,11 +1,13 @@
 -- Function: gpSelect_Object_ModelServiceItemChild()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemChild(TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemChild(Boolean,TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemChild(Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemChild(Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemChild(
-    IN inIsShowAll   Boolean,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inIsShowAll        Boolean, 
+    IN inIsShowbyGroup    Boolean,       --показать товары приход / расход
+    IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , Comment TVarChar
@@ -22,7 +24,27 @@ RETURNS TABLE (Id Integer
              , FromStorageLineId Integer, FromStorageLineName TVarChar
              , ToStorageLineId Integer, ToStorageLineName TVarChar
 
-             , isErased boolean
+             , isErased boolean 
+             
+             , GoodsCode_to          Integer
+             , GoodsName_to          TVarChar
+             , GoodsGroupName_to     TVarChar      
+             , GoodsGroupNameFull_to TVarChar   
+             , GroupStatName_to      TVarChar   
+             , GoodsGroupAnalystName_to  TVarChar
+             , TradeMarkName_to      TVarChar  
+             , GoodsTagName_to       TVarChar   
+             , GoodsPlatformName_to  TVarChar  
+             --
+             , GoodsCode_from        Integer
+             , GoodsName_from        TVarChar
+             , GoodsGroupName_from   TVarChar     
+             , GoodsGroupNameFull_from  TVarChar  
+             , GroupStatName_from       TVarChar   
+             , GoodsGroupAnalystName_from  TVarChar
+             , TradeMarkName_from     TVarChar     
+             , GoodsTagName_from      TVarChar     
+             , GoodsPlatformName_from TVarChar
              ) AS
 $BODY$
 BEGIN
@@ -30,7 +52,80 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ModelServiceItemChild());
 
-   RETURN QUERY
+   RETURN QUERY 
+   WITH
+   tmpObject AS (SELECT Object_ModelServiceItemChild.* 
+                      , ObjectLink_ModelServiceItemChild_From.ChildObjectId AS FromId
+                      , ObjectLink_ModelServiceItemChild_To.ChildObjectId   AS ToId
+                 FROM Object AS Object_ModelServiceItemChild
+                      LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
+                                           ON ObjectLink_ModelServiceItemChild_From.ObjectId = Object_ModelServiceItemChild.Id
+                                          AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
+            
+                      LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
+                                           ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
+                                          AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
+                 WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
+                   AND (Object_ModelServiceItemChild.isErased = False OR inIsShowAll = True)
+                 )      
+, tmpGoods AS (SELECT  tmp.GoodsGroupId
+                     , Object_Goods.Id             AS GoodsId
+                     , Object_Goods.ObjectCode     AS GoodsCode
+                     , Object_Goods.ValueData :: TVarChar AS GoodsName
+                     , Object_GoodsGroup.ValueData AS GoodsGroupName
+                     , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                     , Object_GoodsGroupStat.ValueData AS GroupStatName
+                     , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
+
+                     , Object_TradeMark.ValueData      AS TradeMarkName
+                     , Object_GoodsTag.ValueData       AS GoodsTagName
+                     , Object_GoodsPlatform.ValueData  AS GoodsPlatformName
+               FROM (
+                     SELECT tmpObject.Id AS GoodsGroupId, tmp.GoodsId 
+                     FROM (SELECT DISTINCT tmpObject.ToId AS Id FROM tmpObject
+                     UNION SELECT DISTINCT tmpObject.FromId AS Id FROM tmpObject) AS tmpObject
+                          LEFT JOIN lfSelect_Object_Goods_byGoodsGroup (tmpObject.Id) AS tmp ON 1 = 1
+                     WHERE COALESCE (tmp.GoodsId,0) <> 0 
+                       AND inIsShowbyGroup = TRUE
+                     ) AS tmp
+                     LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                          ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                         AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                     LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                                          ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
+                                         AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+                     LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                          ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
+                                         AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+                     LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+        
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                          ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                                         AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+                     LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+        
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                          ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                         AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                     LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+        
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                          ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object_Goods.Id
+                                         AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+                     LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+        
+                     LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                            ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                           AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                )  
+
+
      SELECT
            Object_ModelServiceItemChild.Id    AS Id
 
@@ -42,7 +137,7 @@ BEGIN
                 ELSE COALESCE (Object_GoodsGroup_Parent_from_next2.ValueData || '', '')
                   || COALESCE (Object_GoodsGroup_Parent_from_next.ValueData || '', '')
                   || COALESCE (Object_GoodsGroup_Parent_from.ValueData || '', '') || Object_From.ValueData
-                  || CASE WHEN Object_From.ObjectCode > 0 THEN '' ELSE '' END
+                  || CASE WHEN Object_From.ObjectCode > 0 THEN '' ELSE '' END 
            END :: TVarChar AS FromName
 
          , Object_To.Id         AS ToId
@@ -73,17 +168,30 @@ BEGIN
          , Object_ToStorageLine.ValueData           AS ToStorageLineName
 
          , Object_ModelServiceItemChild.isErased AS isErased
-
-     FROM OBJECT AS Object_ModelServiceItemChild
-          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
-                               ON ObjectLink_ModelServiceItemChild_From.ObjectId = Object_ModelServiceItemChild.Id
-                              AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = ObjectLink_ModelServiceItemChild_From.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
-                               ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
-                              AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ModelServiceItemChild_To.ChildObjectId
+         --
+         , tmpGoods_to.GoodsCode              AS GoodsCode_to
+         , tmpGoods_to.GoodsName              AS GoodsName_to
+         , tmpGoods_to.GoodsGroupName         AS GoodsGroupName_to       
+         , tmpGoods_to.GoodsGroupNameFull     AS GoodsGroupNameFull_to   
+         , tmpGoods_to.GroupStatName          AS GroupStatName_to        
+         , tmpGoods_to.GoodsGroupAnalystName  AS GoodsGroupAnalystName_to
+         , tmpGoods_to.TradeMarkName          AS TradeMarkName_to        
+         , tmpGoods_to.GoodsTagName           AS GoodsTagName_to         
+         , tmpGoods_to.GoodsPlatformName      AS GoodsPlatformName_to   
+         --
+         , tmpGoods_from.GoodsCode              AS GoodsCode_from
+         , tmpGoods_from.GoodsName              AS GoodsName_from
+         , tmpGoods_from.GoodsGroupName         AS GoodsGroupName_from       
+         , tmpGoods_from.GoodsGroupNameFull     AS GoodsGroupNameFull_from   
+         , tmpGoods_from.GroupStatName          AS GroupStatName_from        
+         , tmpGoods_from.GoodsGroupAnalystName  AS GoodsGroupAnalystName_from
+         , tmpGoods_from.TradeMarkName          AS TradeMarkName_from        
+         , tmpGoods_from.GoodsTagName           AS GoodsTagName_from         
+         , tmpGoods_from.GoodsPlatformName      AS GoodsPlatformName_from   
+                     
+     FROM tmpObject AS Object_ModelServiceItemChild
+          LEFT JOIN Object AS Object_From ON Object_From.Id = Object_ModelServiceItemChild.FromId
+          LEFT JOIN Object AS Object_To ON Object_To.Id = Object_ModelServiceItemChild.ToId
 
           LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_FromGoodsKind
                                ON ObjectLink_ModelServiceItemChild_FromGoodsKind.ObjectId = Object_ModelServiceItemChild.Id
@@ -155,8 +263,10 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_ModelServiceItemChild.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemChild_Comment()
 
-     WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
-      AND (Object_ModelServiceItemChild.isErased = False OR inIsShowAll = True);
+          --
+          LEFT JOIN tmpGoods AS tmpGoods_to ON tmpGoods_to.GoodsGroupId = Object_To.Id AND COALESCE (Object_From.Id,0) = 0
+          LEFT JOIN tmpGoods AS tmpGoods_from ON tmpGoods_from.GoodsGroupId = Object_From.Id AND COALESCE (Object_To.Id,0) = 0 
+      ;
 
 END;
 $BODY$
@@ -165,6 +275,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.08.23         *
  02.06.17         * add inIsShowAll
  26.05.17         * add StorageLine
  27.12.16         *

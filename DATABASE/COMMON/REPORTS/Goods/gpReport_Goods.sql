@@ -187,7 +187,106 @@ BEGIN
                           )
  
      -- –≈«”À‹“¿“
-     SELECT gpReport.*
+     SELECT -- gpReport.*  
+ 
+          gpReport.MovementId
+        , gpReport.InvNumber  ::TVarChar
+        , gpReport.OperDate
+        , gpReport.OperDatePartner ::TDateTime
+        , gpReport.isPeresort
+        , gpReport.MovementDescName ::TVarChar AS MovementDescName
+
+        , gpReport.MovementDescName_order  ::TVarChar AS MovementDescName_order
+
+        , gpReport.isActive
+        , gpReport.isRemains
+        , gpReport.isRePrice
+        , gpReport.isInv
+
+        , gpReport.LocationDescName
+        , gpReport.LocationCode
+        , gpReport.LocationName
+        , gpReport.CarCode
+        , gpReport.CarName
+        , gpReport.ObjectByDescName
+        , gpReport.ObjectByCode
+        , gpReport.ObjectByName
+
+        , gpReport.PaidKindName          --20
+
+        , gpReport.GoodsCode
+        , gpReport.GoodsName
+        , gpReport.GoodsKindName
+        , gpReport.GoodsKindName_complete
+        , gpReport.PartionGoods ::TVarChar
+        /*, gpReport.StorageId           ::Integer
+        , gpReport.StorageName         ::TVarChar
+        , gpReport.PartionModelId      ::Integer
+        , gpReport.PartionModelName    ::TVarChar
+        , gpReport.UnitId_partion      ::Integer
+        , gpReport.UnitName_partion    ::TVarChar
+        , gpReport.BranchName_partion ::TVarChar
+        , gpReport.PartNumber_partion  ::TVarChar
+        */                                       
+        , 0    ::Integer AS StorageId           
+        , ''  ::TVarChar AS  StorageName       
+        , 0   ::Integer  AS PartionModelId    
+        , ''  ::TVarChar AS PartionModelName  
+        , 0   ::Integer  AS UnitId_partion    
+        , ''  ::TVarChar AS UnitName_partion  
+        , ''  ::TVarChar AS BranchName_partion
+        , ''  ::TVarChar AS PartNumber_partion
+        
+        , gpReport.GoodsCode_parent
+        , gpReport.GoodsName_parent
+        , gpReport.GoodsKindName_parent
+
+        , gpReport.Price            ::TFloat AS Price
+        , gpReport.Price_branch     ::TFloat AS Price_branch
+        , gpReport.Price_end         ::TFloat AS Price_end
+        , gpReport.Price_branch_end  ::TFloat AS Price_branch_end
+        , gpReport.Price_partner    ::TFloat AS Price_partner
+        , gpReport.SummPartnerIn    ::TFloat  AS SummPartnerIn    
+        , gpReport.SummPartnerOut   ::TFloat  AS SummPartnerOut   
+        , gpReport.AmountStart      ::TFloat  AS AmountStart      
+        , gpReport.AmountIn         ::TFloat  AS AmountIn         
+        , gpReport.AmountOut        ::TFloat  AS AmountOut        
+        , gpReport.AmountEnd        ::TFloat  AS AmountEnd        
+        , gpReport.Amount           ::TFloat  AS Amount 
+        , gpReport.SummStart        ::TFloat  AS SummStart        
+        , gpReport.SummStart_branch ::TFloat  AS SummStart_branch 
+        , gpReport.SummIn           ::TFloat  AS SummIn           
+        , gpReport.SummIn_branch    ::TFloat  AS SummIn_branch    
+        , gpReport.SummOut          ::TFloat  AS SummOut          
+        , gpReport.SummOut_branch   ::TFloat  AS SummOut_branch   
+        , gpReport.SummEnd          ::TFloat  AS SummEnd          
+        , gpReport.SummEnd_branch   ::TFloat  AS SummEnd_branch   
+        , gpReport.Summ             ::TFloat  AS Summ             
+        , gpReport.Summ_branch      ::TFloat  AS Summ_branch      
+
+        , gpReport.Amount_Change :: TFloat AS Amount_Change, gpReport.Summ_Change_branch :: TFloat AS Summ_Change_branch, gpReport.Summ_Change_zavod :: TFloat AS Summ_Change_zavod
+        , gpReport.Amount_40200 :: TFloat AS Amount_40200,  gpReport.Summ_40200_branch  :: TFloat AS Summ_40200_branch,  gpReport.Summ_40200_zavod  :: TFloat AS Summ_40200_zavod
+        , gpReport.Amount_Loss  :: TFloat AS Amount_Loss,   gpReport.Summ_Loss_branch   :: TFloat AS Summ_Loss_branch,   gpReport.Summ_Loss_zavod   :: TFloat AS Summ_Loss_zavod 
+
+        , gpReport.isPage3
+        , gpReport.isExistsPage3
+
+        , gpReport.KVK
+        , gpReport.PersonalKVKId
+        , gpReport.PersonalKVKName
+        , gpReport.PositionCode_KVK
+        , gpReport.PositionName_KVK
+        , gpReport.UnitCode_KVK
+        , gpReport.UnitName_KVK
+
+        --¿ÍˆËˇ
+        , gpReport.InvNumber_Full  ::TVarChar
+        , gpReport.StartSale_promo ::TDateTime
+        , gpReport.EndSale_promo   ::TDateTime
+        --
+        , gpReport.DayOfWeekName_doc ::TVarChar 
+        , gpReport.DayOfWeekName_partner  ::TVarChar
+     
           , tmpProtocol.OperDate      ::TDateTime AS OperDate_Protocol
           , tmpProtocol.UserName      ::TVarChar  AS UserName_Protocol
           , tmpProtocol.OperDate_auto ::TDateTime AS OperDate_Protocol_auto
@@ -1114,7 +1213,7 @@ BEGIN
         , tmpDataAll.ObjectByCode
         , tmpDataAll.ObjectByName
 
-        , tmpDataAll.PaidKindName
+        , tmpDataAll.PaidKindName          --20
 
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
@@ -1220,12 +1319,7 @@ BEGIN
         , tmpDataAll.GoodsCode_parent
         , tmpDataAll.GoodsName_parent
         , tmpDataAll.GoodsKindName_parent
-       /* , tmpDataAll.Price
-        , tmpDataAll.Price_branch
-        , tmpDataAll.Price_end
-        , tmpDataAll.Price_branch_end
-        , tmpDataAll.Price_partner
-        */, tmpDataAll.isPage3
+        , tmpDataAll.isPage3
         , tmpDataAll.isExistsPage3
 
         , tmpDataAll.KVK

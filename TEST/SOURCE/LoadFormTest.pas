@@ -4321,10 +4321,11 @@ begin
 end;
 procedure TLoadFormTest.LoadModelServiceFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelService_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelService_ObjectForm');
  exit;
- {
+
  //Типы модели начисления
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceKindForm');
@@ -4334,6 +4335,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceEditForm');
+  exit;
    {
   //Типы выбора данных
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSelectKindForm'));

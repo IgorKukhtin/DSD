@@ -131,6 +131,17 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     isTrainee: TcxGridDBColumn;
+    GoodsCode_to: TcxGridDBColumn;
+    GoodsName_to: TcxGridDBColumn;
+    GoodsGroupName_to: TcxGridDBColumn;
+    GoodsGroupNameFull_to: TcxGridDBColumn;
+    GroupStatName_to: TcxGridDBColumn;
+    GoodsGroupAnalystName_to: TcxGridDBColumn;
+    TradeMarkName_to: TcxGridDBColumn;
+    GoodsTagName_to: TcxGridDBColumn;
+    GoodsPlatformName_to: TcxGridDBColumn;
+    actShowbyGroup: TBooleanStoredProcAction;
+    bbShowbyGroup: TdxBarButton;
   private
     { Private declarations }
   public
