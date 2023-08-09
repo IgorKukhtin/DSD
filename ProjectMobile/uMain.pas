@@ -1904,6 +1904,8 @@ begin
   // установки иконки для кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
 
+  if  Assigned(AItem.Objects.FindDrawable('StatusId')) then ChangeStatusIcon(AItem);
+
   AItem.Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
 end;
 
@@ -1928,6 +1930,8 @@ procedure TfrmMain.lwOrderExternalListUpdateObjects(const Sender: TObject;
 begin
   // установки иконки для кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+
+  if  Assigned(AItem.Objects.FindDrawable('StatusId')) then ChangeStatusIcon(AItem);
 
   DeleteButtonHide(AItem);
 end;
@@ -1979,6 +1983,8 @@ procedure TfrmMain.lwCashListUpdateObjects(const Sender: TObject;
 begin
   // установить иконку кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+
+  if  Assigned(AItem.Objects.FindDrawable('StatusId')) then ChangeStatusIcon(AItem);
 
   DeleteButtonHide(AItem);
 end;
@@ -2413,6 +2419,8 @@ begin
   // установки иконки для кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
 
+  if  Assigned(AItem.Objects.FindDrawable('StatusId')) then ChangeStatusIcon(AItem);
+
   AItem.Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
 end;
 
@@ -2437,6 +2445,8 @@ procedure TfrmMain.lwReturnInListUpdateObjects(const Sender: TObject;
 begin
   // установить иконку кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+
+  if  Assigned(AItem.Objects.FindDrawable('StatusId')) then ChangeStatusIcon(AItem);
 
   DeleteButtonHide(AItem);
 end;
@@ -2525,6 +2535,8 @@ begin
   // установить иконку кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
 
+  if  Assigned(AItem.Objects.FindDrawable('StatusId')) then ChangeStatusIcon(AItem);
+
   DeleteButtonHide(AItem);
 end;
 
@@ -2553,6 +2565,8 @@ begin
   // установить иконку кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
   TListItemText(AItem.Objects.FindDrawable('Lable')).Text := 'Фактический остаток';
+
+  if  Assigned(AItem.Objects.FindDrawable('StatusId')) then ChangeStatusIcon(AItem);
 
   AItem.Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
 end;
@@ -5465,13 +5479,13 @@ begin
       '((IFNULL(Object_Partner.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') + ' +
       '((IFNULL(Object_Partner.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ') * ' +
       '((IFNULL(Object_Partner.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')' +
-      ', Name';
+      ', Name, Address';
 
 
 
   end
   else
-    sQuery := sQuery + ' order by Name';
+    sQuery := sQuery + ' order by Name, Address';
 
   DM.qryPartner.SQL.Text := sQuery;
   DM.qryPartner.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;

@@ -51,7 +51,7 @@ BEGIN
     
          INNER JOIN tmpProtocol ON tmpProtocol.Id = Movement.ID
                                AND tmpProtocol.Ord = 1
-                               AND tmpProtocol.OperDate >= inOperDate
+                               AND tmpProtocol.OperDate >= inOperDate - INTERVAL '45 MIN'
     
     ;
       
@@ -75,4 +75,4 @@ $BODY$
 -- тест
 -- 
 
-SELECT * FROM gpReport_TelegramBot_CompleteFullInventory('26.07.2023', '3');
+SELECT * FROM gpReport_TelegramBot_CompleteFullInventory('05.08.2023 20:29:37', '3');

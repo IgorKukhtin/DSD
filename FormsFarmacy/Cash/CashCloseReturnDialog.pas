@@ -116,8 +116,13 @@ procedure TCashCloseReturnDialogForm.actPrintReceiptExecute(Sender: TObject);
 begin
   inherited;
 
+  if (rgPaidType.ItemIndex > 0) then
+  begin
+    if not ChoiceBankPOSTerminalExecute(FBankPOSTerminal, FPOSTerminalCode) then Exit;
+  end;
+
   if not PutCheckToCash(FSummaTotal, edSalerCashAdd.Value,
-    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, cRRN, nZReport) then Exit;
+    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, cRRN, nZReport, FPOSTerminalCode) then Exit;
 
   // Проведение чека
   try
@@ -230,6 +235,7 @@ begin
   cTextCheck := '';
   AZReport := 0;
   ARRN := '';
+
   try
     try
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
