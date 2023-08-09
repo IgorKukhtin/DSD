@@ -5,15 +5,15 @@ unit Pos_PrivatBank_JSON;
 interface
 
 uses Winapi.Windows, Winapi.ActiveX, System.Variants, System.SysUtils, System.Win.ComObj,
-     System.Classes, PosInterface, IdTCPClient, IdThreadComponent, IdGlobal, Vcl.Forms,
-     DateUtils, System.TypInfo,
+     System.Classes, PosInterface, Vcl.Forms, DateUtils, System.TypInfo, ncSockets,
+     Vcl.ExtCtrls, IdGlobal,
      {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
 
 type
   TPos_PrivatBank_JSON = class(TInterfacedObject, IPos)
   private
-    FIdTCPClient: TIdTCPClient;
-    FidThreadComponent: TIdThreadComponent;
+    FTCPClient: TncTCPClient;
+    FTimer: TTimer;
     FLastPosError : String;
     FHost : String;
     FPort : Integer;
@@ -36,7 +36,8 @@ type
     function GetProcessState : TPosProcessState;
     function GetCanceled : Boolean;
     function GetRRN : string;
-    procedure IdThreadComponentRun(Sender: TIdThreadComponent);
+    procedure OnReadData(Sender: TObject; aLine: TncLine; const aBuf: TBytes; aBufCount: Integer);
+    procedure OnTimer(Sender: TObject);
   protected
     function CheckConnection : Boolean;
     function Payment(ASumma : Currency) : Boolean;
@@ -132,12 +133,15 @@ procedure TPos_PrivatBank_JSON.AfterConstruction;
 begin
   inherited AfterConstruction;
 
-  FIdTCPClient := TIdTCPClient.Create;
+  FTCPClient := TncTCPClient.Create(Nil);
+  FTCPClient.OnReadData := OnReadData;
   FHost := iniPosHost(FPOSTerminalCode);
   FPort := iniPosPortNumber(FPOSTerminalCode);
 
-  FidThreadComponent := TIdThreadComponent.Create();
-  FidThreadComponent.OnRun := IdThreadComponentRun;
+  FTimer := TTimer.Create(Nil);
+  FTimer.Enabled := False;
+  FTimer.Interval := 300;
+  FTimer.OnTimer := OnTimer;
 
   FCancel := False;
   FProcessState := ppsUndefined;
@@ -146,17 +150,27 @@ end;
 procedure TPos_PrivatBank_JSON.BeforeDestruction;
 begin
   try
-    if FidThreadComponent.Active then FidThreadComponent.Active := False;
-    FreeAndNil(FIdTCPClient);
-    FreeAndNil(FIdThreadComponent);
+    if FTCPClient.Active then FTCPClient.Active := False;
+    FreeAndNil(FTCPClient);
   except on E:Exception do Add_PosLog('Ошибка закрытия обработки: ' + e.Message);
   end;
   inherited BeforeDestruction;
 end;
 
-procedure TPos_PrivatBank_JSON.IdThreadComponentRun(Sender: TIdThreadComponent);
-var JSONObject, JSONParams: TJSONObject;
-    Buffer: TIdBytes; S: String;
+procedure TPos_PrivatBank_JSON.OnTimer(Sender: TObject);
+begin
+
+  // Посылаем запрос об информации с устройства
+  if FServiceMessage and (FProcessState = ppsWaiting) and (FRunServiceMessage <= Now) then
+  begin
+    ServiceMessage;
+    FRunServiceMessage := IncSecond(Now, 3);
+  end;
+
+end;
+
+procedure TPos_PrivatBank_JSON.OnReadData(Sender: TObject; aLine: TncLine; const aBuf: TBytes; aBufCount: Integer);
+var JSONObject, JSONParams: TJSONObject; S: String; Buffer: TIdBytes;
 
    function GetMasked_Pan(APan, AReceipt: TJSONPair) : string;
    begin
@@ -170,25 +184,16 @@ var JSONObject, JSONParams: TJSONObject;
 
 begin
 
-  // Посылаем запрос об информации с устройства
-  if FServiceMessage and (FProcessState = ppsWaiting) and (FRunServiceMessage <= Now) then
-  begin
-    ServiceMessage;
-    FRunServiceMessage := IncSecond(Now, 3);
-  end;
-
-  // Проверка буфера
-  if not FIdTCPClient.IOHandler.CheckForDataOnSource then Exit;
-
   Add_PosLog('Читаем.');
   try
+    SetLength(Buffer, aBufCount);
+    Move(aBuf[0], Buffer[0], aBufCount);
     try
-      FIdTCPClient.IOHandler.ReadBytes(Buffer, -1, false);
-      FRadBufer:= FRadBufer + IdGlobal.BytesToString(Buffer, IndyTextEncoding_UTF8);
+      FRadBufer:= FRadBufer +  IdGlobal.BytesToString(Buffer, IndyTextEncoding_UTF8);
     finally
       SetLength(Buffer, 0);
     end;
-  except on E:Exception do FLastPosError := e.Message;
+  except on E:Exception do FLastPosError := 'Ошибка чтения данных: ' + e.Message;
   end;
 
   if FLastPosError <> '' then
@@ -210,7 +215,7 @@ begin
         try
           if (JSONObject.Get('error') <> nil) and (JSONObject.Get('error').JsonValue.Value = 'false')  then
           begin
-            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('CheckConnection') then
+            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('PingDevice') then
               FProcessState := ppsOkConnection
             else if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Purchase') then
               FProcessState := ppsOkPayment
@@ -260,7 +265,8 @@ begin
                (LowerCase(JSONObject.Get('method').JsonValue.Value) <> LowerCase('Refund')) then Exit;
 
             JSONParams := JSONObject.Get('params').JsonValue as TJSONObject;
-            if (JSONParams = nil) or (JSONParams.Get('merchant') = nil) or (JSONParams.Get('merchant').JsonValue.Value = '') then
+            if (JSONParams = nil) or (JSONParams.Count <= 0) or
+               (JSONParams.Get('merchant') = nil) or (JSONParams.Get('merchant').JsonValue.Value = '') then
             begin
               if (JSONObject.Get('errorDescription') <> nil) and (JSONObject.Get('errorDescription').JsonValue.Value <> '')  then
                 FLastPosError := JSONObject.Get('errorDescription').JsonValue.Value
@@ -311,8 +317,9 @@ begin
           end else
           begin
             FLastPosError := 'Ошибка: ';
-            if JSONObject.Get('errorDescription') <> nil  then
-              FLastPosError := ' ' + JSONObject.Get('errorDescription').JsonValue.Value;
+            if (JSONObject.Get('errorDescription') <> nil) and (JSONObject.Get('errorDescription').JsonValue.Value <> '') then
+              FLastPosError := ' ' + JSONObject.Get('errorDescription').JsonValue.Value
+            else FLastPosError := FLastPosError + ' Без описания с АПИ.';
           end;
         finally
           JSONObject.Free;
@@ -324,43 +331,40 @@ begin
       if FLastPosError <> '' then FProcessState := ppsError;
     end;
   end;
-
 end;
 
 function TPos_PrivatBank_JSON.CheckConnection : Boolean;
-  var JSONObject: TJSONObject; JSONPair: TJSONPair;
-      JsonToSend: TStringStream;
+  var JSONObject: TJSONObject; aBuf: TBytes;
 begin
 
   if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Проверка связи с терминалом');
 
   try
     JSONObject := TJSONObject.Create;
-    JSONObject.AddPair('method', 'CheckConnection');
+    JSONObject.AddPair('method', 'PingDevice');
     JSONObject.AddPair('step', TJSONNumber.Create(0));
 
-    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
+    aBuf := TEncoding.UTF8.GetBytes(JSONObject.ToString + #0);
     try
       try
-        FIdTCPClient.Host := FHost;
-        FIdTCPClient.Port := FPort;
+        FTCPClient.Host := FHost;
+        FTCPClient.Port := FPort;
         Add_PosLog('Хост - ' + FHost + '; Порт - ' + IntToStr(FPort));
-        FIdTCPClient.ConnectTimeout := 5000;
-        FIdTCPClient.Connect;
+        FTCPClient.Active := True;
 
-        Add_PosLog(JsonToSend.DataString);
-        if FIdTCPClient.Connected then
+        Add_PosLog(JSONObject.ToString);
+        if FTCPClient.Active then
         begin
-          FIdThreadComponent.Active  := True;
-          FIdTCPClient.IOHandler.Write(JsonToSend);
+          FTCPClient.Send(aBuf);
+          FTimer.Enabled := True;
           FProcessState := ppsWaiting;
         end;
       except on E:Exception do FLastPosError := 'Ошибка проверки связи : ' + e.Message +
-        '; ' + FIdTCPClient.Host + '; ' + IntToStr(FIdTCPClient.Port) + '; ' + GetEnumName(TypeInfo(TIdIPVersion), Ord(FIdTCPClient.IPVersion));
+        '; ' + FTCPClient.Host + '; ' + IntToStr(FTCPClient.Port);
       end;
     finally
       JSONObject.Free;
-      JsonToSend.Free;
+      SetLength(aBuf, 0);
     end;
   except on E:Exception do FLastPosError := 'Ошибка проверки связи : ' + e.Message;
   end;
@@ -373,8 +377,7 @@ begin
 end;
 
 function TPos_PrivatBank_JSON.DoPayment(ASumma : Currency; ARefund : Boolean; ARRN : String) : Boolean;
-  var JSONObject, JSONParams: TJSONObject; JSONPair: TJSONPair;
-      JsonToSend: TStringStream;
+  var JSONObject, JSONParams: TJSONObject; aBuf: TBytes;
 begin
 
   try
@@ -394,14 +397,14 @@ begin
     JSONObject.AddPair('step', TJSONNumber.Create(0));
     JSONObject.AddPair('params', JSONParams);
 
-    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
+    aBuf := TEncoding.UTF8.GetBytes(JSONObject.ToString + #0);
     try
       try
 
-        Add_PosLog(JsonToSend.DataString);
-        if FIdTCPClient.Connected then
+        Add_PosLog(JSONObject.ToString);
+        if FTCPClient.Active then
         begin
-          FIdTCPClient.IOHandler.Write(JsonToSend);
+          FTCPClient.Send(aBuf);
           FProcessState := ppsWaiting;
           FServiceMessage := True;
           FRunServiceMessage := IncSecond(Now, 3);
@@ -411,7 +414,7 @@ begin
       end;
     finally
       JSONObject.Free;
-      JsonToSend.Free;
+      SetLength(aBuf, 0);
     end;
   except on E:Exception do FLastPosError := 'Ошибка выполнения оплаты (возврата) : ' + e.Message;
   end;
@@ -441,8 +444,7 @@ begin
 end;
 
 function TPos_PrivatBank_JSON.ServiceMessage : Boolean;
-  var JSONObject, JSONParams: TJSONObject; JSONPair: TJSONPair;
-      JsonToSend: TStringStream;
+  var JSONObject, JSONParams: TJSONObject; aBuf: TBytes;
 begin
 
   if FCancel Then Exit;
@@ -457,14 +459,14 @@ begin
     JSONObject.AddPair('step', TJSONNumber.Create(0));
     JSONObject.AddPair('params', JSONParams);
 
-    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
+    aBuf := TEncoding.UTF8.GetBytes(JSONObject.ToString + #0);
     try
       try
 
-        Add_PosLog(JsonToSend.DataString);
-        if FIdTCPClient.Connected then
+        Add_PosLog(JSONObject.ToString);
+        if FTCPClient.Active then
         begin
-          FIdTCPClient.IOHandler.Write(JsonToSend);
+          FTCPClient.Send(aBuf);
           FProcessState := ppsWaiting;
         end;
 
@@ -472,7 +474,7 @@ begin
       end;
     finally
       JSONObject.Free;
-      JsonToSend.Free;
+      SetLength(aBuf, 0);
     end;
   except on E:Exception do FLastPosError := 'Ошибка Вызова service message : ' + e.Message;
   end;
@@ -485,8 +487,7 @@ begin
 end;
 
 procedure TPos_PrivatBank_JSON.Cancel;
-  var JSONObject, JSONParams: TJSONObject; JSONPair: TJSONPair;
-      JsonToSend: TStringStream;
+  var JSONObject, JSONParams: TJSONObject; aBuf: TBytes;
 begin
 
   if FCancel Then Exit;
@@ -502,14 +503,14 @@ begin
     JSONObject.AddPair('step', TJSONNumber.Create(0));
     JSONObject.AddPair('params', JSONParams);
 
-    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
+    aBuf := TEncoding.UTF8.GetBytes(JSONObject.ToString + #0);
     try
       try
 
-        Add_PosLog(JsonToSend.DataString);
-        if FIdTCPClient.Connected then
+        Add_PosLog(JSONObject.ToString);
+        if FTCPClient.Active then
         begin
-          FIdTCPClient.IOHandler.Write(JsonToSend);
+          FTCPClient.Send(aBuf);
           FProcessState := ppsWaiting;
         end;
 
@@ -517,7 +518,7 @@ begin
       end;
     finally
       JSONObject.Free;
-      JsonToSend.Free;
+      SetLength(aBuf, 0);
     end;
   except on E:Exception do FLastPosError := 'Ошибка отмены выполнения оерации : ' + e.Message;
   end;
