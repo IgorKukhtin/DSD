@@ -187,6 +187,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = ReturnIn_SummIn_pav
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_TT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -353,6 +358,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = ReturnIn_SummIn_pav
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_TT
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1236,6 +1246,13 @@
             HeaderHint = #1089#1091#1084#1084#1072' '#1053#1044#1057' '#1074#1086#1079#1074#1088#1072#1090#1072
             Options.Editing = False
             VisibleForCustomization = False
+            Width = 70
+          end
+          object Count_TT: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1058#1058' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'Count_TT'
+            Visible = False
+            Options.Editing = False
             Width = 70
           end
         end

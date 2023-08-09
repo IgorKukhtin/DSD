@@ -64,7 +64,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Return_SummMVAT TFloat, Return_SummVAT TFloat
              , SaleReturn_Weight  TFloat -- Продажи за вычетом возврата, кг
              , SaleReturn_Summ    TFloat -- Продажи за вычетом возврата, грн
-             , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн
+             , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн  
+             , Count_TT           TFloat -- Кол-во ТТ для товара
              , isTop Boolean
              , PaidKindId Integer, PaidKindName TVarChar
              , OperDate TDateTime
@@ -145,6 +146,7 @@ BEGIN
             , 0 :: TFloat AS SaleReturn_Weight
             , 0 :: TFloat AS SaleReturn_Summ 
             , 0 :: TFloat AS Sale_Summ_opt
+            , 0 :: TFloat AS Count_TT
             , FALSE AS isTop
             , 0 AS PaidKindId
             , '' ::TVarChar AS PaidKindName
@@ -184,6 +186,7 @@ BEGIN
             , 0 :: TFloat AS SaleReturn_Weight
             , 0 :: TFloat AS SaleReturn_Summ 
             , 0 :: TFloat AS Sale_Summ_opt
+            , 0 :: TFloat AS Count_TT
             , FALSE AS isTop
             , 0 AS PaidKindId, ''   ::TVarChar AS PaidKindName
             , NULL ::TDateTime AS OperDate 
@@ -424,10 +427,16 @@ BEGIN
                                                                   ) AS gpReport
                                WHERE vbEndDate_olap < inEndDate
                               )
-          , tmpData AS (SELECT * FROM tmpReport_olap
-                       UNION ALL
-                        SELECT * FROM tmpReport_after WHERE vbEndDate_olap < inEndDate
+          , tmpData AS (SELECT tmp.*
+                             , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId
+                                                , tmp.PartnerId
+                                                , tmp.GoodsId) AS Ord
+                        FROM (SELECT * FROM tmpReport_olap
+                             UNION ALL
+                              SELECT * FROM tmpReport_after WHERE vbEndDate_olap < inEndDate
+                             ) AS tmp
                        )
+
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
             , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
@@ -468,7 +477,8 @@ BEGIN
             , (SUM (gpReport.Sale_AmountPartner_Weight) - SUM (gpReport.Return_AmountPartner_Weight)) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
             , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
             , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
-
+            
+            , CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END ::TFloat AS Count_TT 
             , gpReport.isTop
             
             , gpReport.PaidKindId
@@ -522,6 +532,7 @@ BEGIN
               , gpReport.DayOfWeekName_Full
               , Object_Section.Id
               , Object_Section.ValueData
+              , CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END
                ;
        --
        RETURN;
@@ -687,7 +698,11 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
-                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END ::TDateTime AS OperDate
+                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END ::TDateTime AS OperDate 
+                              
+                              , ROW_NUMBER() OVER (PARTITION BY COALESCE (ContainerLO_Juridical.ObjectId, 0)
+                                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_ChangePercent() THEN ContainerLO_Juridical.ObjectId WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                                 , MIContainer.ObjectId_Analyzer) AS Ord
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -793,6 +808,7 @@ BEGIN
                               , SUM (tmpOperationGroup2.Return_SummCost) AS Return_SummCost
                               , SUM (tmpOperationGroup2.Return_SummCost_40200) AS Return_SummCost_40200
 
+                              , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END AS Count_TT
                          FROM tmpOperationGroup2
                               LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
                                                             ON ContainerLinkObject_Contract.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
@@ -829,6 +845,7 @@ BEGIN
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                                 , ContainerLO_PaidKind.ObjectId
                                 , tmpOperationGroup2.OperDate
+                                , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
                         )
 
            -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
@@ -960,6 +977,8 @@ BEGIN
          
          , (COALESCE (tmpOperationGroup.Sale_Summ,0) + COALESCE (tmpOperationGroup.Sale_Summ_10200,0) + COALESCE (tmpOperationGroup.Sale_Summ_10250,0) + COALESCE (tmpOperationGroup.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
+         , tmpOperationGroup.Count_TT ::TFloat AS Count_TT
+         
          , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
          , Object_PaidKind.Id        AS PaidKindId
          , Object_PaidKind.ValueData AS PaidKindName
