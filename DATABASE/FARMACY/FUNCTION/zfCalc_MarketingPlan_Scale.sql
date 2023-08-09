@@ -172,10 +172,10 @@ BEGIN
     IF ROUND(inTotalExecutionLine, 2) >= 75 + vbPrizeThreshold
     THEN
       vbTotal := inBonusAmountTab;
-    ELSEIF inBonusAmountTab > 500 
+    ELSEIF inAddBonusPercentTab > 500 
     THEN
       vbTotal := inAddBonusPercentSum;
-    ELSEIF inBonusAmountTab > 250 
+    ELSEIF inAddBonusPercentTab > 250 
     THEN
       vbTotal := inAddBonusPercentTab;
     END IF;
