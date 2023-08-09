@@ -294,6 +294,14 @@ object ModelServiceForm: TModelServiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object DescName_to: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1087#1088#1080#1093#1086#1076' '
+        DataBinding.FieldName = 'DescName_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object FromCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'FromCode'
@@ -364,6 +372,14 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object DescName_from: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'DescName_from'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
       object ToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1087#1088#1080#1093'.)'
@@ -798,6 +814,14 @@ object ModelServiceForm: TModelServiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcelChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -889,6 +913,10 @@ object ModelServiceForm: TModelServiceForm
     end
     object bbShowbyGroup: TdxBarButton
       Action = actShowbyGroup
+      Category = 0
+    end
+    object bbGridToExcelChild: TdxBarButton
+      Action = dsdGridToExcelChild
       Category = 0
     end
   end
@@ -1038,6 +1066,14 @@ object ModelServiceForm: TModelServiceForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ModelServiceItemChildDS
+    end
+    object dsdGridToExcelChild: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGridStaffListCost
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1090#1086#1074#1072#1088#1099' '#1055#1088#1080#1093#1086#1076'/ '#1056#1072#1089#1093#1086#1076
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1090#1086#1074#1072#1088#1099' '#1055#1088#1080#1093#1086#1076'/ '#1056#1072#1089#1093#1086#1076
+      ImageIndex = 6
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1692,14 +1728,14 @@ object ModelServiceForm: TModelServiceForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 65
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 64
+      ImageIndexFalse = 65
     end
     object actShowbyGroup: TBooleanStoredProcAction
       Category = 'DSDLib'

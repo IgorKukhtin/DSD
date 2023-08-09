@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemChild(
 )
 RETURNS TABLE (Id Integer
              , Comment TVarChar
-             , FromId Integer, FromCode Integer, FromName TVarChar
-             , ToId Integer, ToCode Integer, ToName TVarChar
+             , FromId Integer, FromCode Integer, FromName TVarChar, DescName_from TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar, DescName_to TVarChar
 
              , FromGoodsKindId Integer, FromGoodsKindName TVarChar
              , ToGoodsKindId Integer, ToGoodsKindName TVarChar
@@ -139,6 +139,7 @@ BEGIN
                   || COALESCE (Object_GoodsGroup_Parent_from.ValueData || ' ', '') || Object_From.ValueData
                   || CASE WHEN Object_From.ObjectCode > 0 THEN '' ELSE '' END 
            END :: TVarChar AS FromName
+         , ObjectDesc_From.ItemName  ::TVarChar AS DescName_from
 
          , Object_To.Id         AS ToId
          , CASE WHEN Object_To.ObjectCode > 0 THEN Object_To.ObjectCode ELSE Object_To.Id END :: Integer AS ToCode
@@ -148,6 +149,7 @@ BEGIN
                   || COALESCE (Object_GoodsGroup_Parent_to.ValueData || ' ', '') || Object_To.ValueData
                   || CASE WHEN Object_To.ObjectCode > 0 THEN '' ELSE '' END
            END :: TVarChar AS ToName
+         , ObjectDesc_To.ItemName  ::TVarChar AS DescName_to 
 
          , Object_FromGoodsKind.Id          AS FromGoodsKindId
          , Object_FromGoodsKind.ValueData   AS FromGoodsKindName
@@ -190,8 +192,10 @@ BEGIN
          , tmpGoods_from.GoodsPlatformName      AS GoodsPlatformName_from   
                      
      FROM tmpObject AS Object_ModelServiceItemChild
-          LEFT JOIN Object AS Object_From ON Object_From.Id = Object_ModelServiceItemChild.FromId
-          LEFT JOIN Object AS Object_To ON Object_To.Id = Object_ModelServiceItemChild.ToId
+          LEFT JOIN Object AS Object_From ON Object_From.Id = Object_ModelServiceItemChild.FromId 
+          LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
+          LEFT JOIN Object AS Object_To ON Object_To.Id = Object_ModelServiceItemChild.ToId 
+          LEFT JOIN ObjectDesc AS ObjectDesc_To ON ObjectDesc_To.Id = Object_To.DescId
 
           LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_FromGoodsKind
                                ON ObjectLink_ModelServiceItemChild_FromGoodsKind.ObjectId = Object_ModelServiceItemChild.Id

@@ -142,6 +142,10 @@ type
     GoodsPlatformName_to: TcxGridDBColumn;
     actShowbyGroup: TBooleanStoredProcAction;
     bbShowbyGroup: TdxBarButton;
+    DescName_from: TcxGridDBColumn;
+    DescName_to: TcxGridDBColumn;
+    dsdGridToExcelChild: TdsdGridToExcel;
+    bbGridToExcelChild: TdxBarButton;
   private
     { Private declarations }
   public
