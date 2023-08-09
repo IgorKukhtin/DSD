@@ -350,7 +350,8 @@ BEGIN
                                                                       , inIsPartner
                                                                       , inIsTradeMark
                                                                       , inIsGoods
-                                                                      , inIsGoodsKind
+                                                                      --, inIsGoodsKind
+                                                                      , CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
                                                                       , inIsContract
                                                                       , vbIsJuridical_Branch
                                                                       , vbIsJuridical_where
@@ -414,7 +415,8 @@ BEGIN
                                                                  , inIsPartner
                                                                  , inIsTradeMark
                                                                  , inIsGoods
-                                                                 , inIsGoodsKind
+                                                                 --, inIsGoodsKind
+                                                                 , CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
                                                                  , inIsContract
                                                                  , FALSE -- inIsOLAP
                                                                  , inIsDate
@@ -429,7 +431,9 @@ BEGIN
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
             , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-            , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+            , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE gpReport.GoodsKindId END AS GoodsKindId
+            , STRING_AGG (DISTINCT gpReport.GoodsKindName, ' ;' ) ::TVarChar AS GoodsKindName
+            , gpReport.MeasureName
             , gpReport.TradeMarkId, gpReport.TradeMarkName
             , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
             , gpReport.GoodsPlatformName
@@ -492,7 +496,9 @@ BEGIN
 
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-              , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+              , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE gpReport.GoodsKindId END
+              --, gpReport.GoodsKindName
+              , gpReport.MeasureName
               , gpReport.TradeMarkId, gpReport.TradeMarkName
               , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
               , gpReport.GoodsPlatformName
@@ -746,7 +752,10 @@ BEGIN
 
                               , _tmpGoods.TradeMarkId
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
+                              
                               , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
+                              , STRING_AGG (DISTINCT Object_GoodsKind.ValueData, ' ;') ::TVarChar AS GoodsKindName
+ 
                               , ContainerLO_PaidKind.ObjectId AS PaidKindId
                               , tmpOperationGroup2.OperDate
 
@@ -804,6 +813,8 @@ BEGIN
                               LEFT JOIN _tmpPartner ON _tmpPartner.PartnerId = tmpOperationGroup2.PartnerId
                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpOperationGroup2.GoodsId
 
+                              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup2.GoodsKindId
+                                                                  AND (inIsGoods = TRUE OR inIsGoodsKind = TRUE)
 
                          WHERE (_tmpPartner.PartnerId > 0 OR vbIsPartner_where = FALSE)
                            AND (_tmpGoods.GoodsId > 0 OR vbIsGoods_where = FALSE)
@@ -835,8 +846,10 @@ BEGIN
           , Object_Goods.Id                    AS GoodsId
           , Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
-          , Object_GoodsKind.Id                AS GoodsKindId
-          , Object_GoodsKind.ValueData         AS GoodsKindName
+          --, Object_GoodsKind.Id                AS GoodsKindId
+          --, Object_GoodsKind.ValueData         AS GoodsKindName
+          , tmpOperationGroup.GoodsKindId    ::Integer
+          , tmpOperationGroup.GoodsKindName  ::TVarChar
           , Object_Measure.ValueData           AS MeasureName
           , Object_TradeMark.Id                AS TradeMarkId
           , Object_TradeMark.ValueData         AS TradeMarkName
@@ -964,7 +977,7 @@ BEGIN
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpOperationGroup.BusinessId
           
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
-          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
+          --LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpOperationGroup.PaidKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst

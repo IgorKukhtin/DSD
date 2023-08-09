@@ -231,17 +231,25 @@
     Width = 87
   end
   object cbIsDate: TcxCheckBox
-    Left = 143
+    Left = 133
     Top = 26
     Caption = #1055#1086' '#1076#1072#1090#1072#1084
     TabOrder = 26
     Width = 74
   end
+  object cbContract: TcxCheckBox
+    Left = 133
+    Top = 65
+    Caption = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 27
+    Width = 96
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 152
-    Top = 64
+    Left = 160
+    Top = 160
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 224
@@ -450,6 +458,14 @@
         Name = 'isDate'
         Value = Null
         Component = cbIsDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isContract'
+        Value = Null
+        Component = cbContract
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

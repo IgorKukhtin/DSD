@@ -208,6 +208,13 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 118
           end
+          object ModelServiceItemChild_FromCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088': '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'ModelServiceItemChild_FromCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object ModelServiceItemChild_FromName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088': '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'ModelServiceItemChild_FromName'
@@ -243,6 +250,13 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object ModelServiceItemChild_ToCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088': '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'ModelServiceItemChild_ToCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 53
           end
           object ModelServiceItemChild_ToName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088': '#1087#1088#1080#1093#1086#1076
@@ -1334,8 +1348,8 @@ inherited Report_WageForm: TReport_WageForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 304
+    Left = 192
+    Top = 296
   end
   object spPersonalServiceErased: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_PersonalService_Child_Erased'
