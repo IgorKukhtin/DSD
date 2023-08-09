@@ -134,9 +134,9 @@ BEGIN
          , Object_From.Id          AS FromId
          , CASE WHEN Object_From.ObjectCode > 0 THEN Object_From.ObjectCode ELSE Object_From.Id END :: Integer AS FromCode
          , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_From.ObjectCode :: TvarChar || ') ' ||*/ Object_From.ValueData
-                ELSE COALESCE (Object_GoodsGroup_Parent_from_next2.ValueData || '', '')
-                  || COALESCE (Object_GoodsGroup_Parent_from_next.ValueData || '', '')
-                  || COALESCE (Object_GoodsGroup_Parent_from.ValueData || '', '') || Object_From.ValueData
+                ELSE COALESCE (Object_GoodsGroup_Parent_from_next2.ValueData || ' ', '')
+                  || COALESCE (Object_GoodsGroup_Parent_from_next.ValueData || ' ', '')
+                  || COALESCE (Object_GoodsGroup_Parent_from.ValueData || ' ', '') || Object_From.ValueData
                   || CASE WHEN Object_From.ObjectCode > 0 THEN '' ELSE '' END 
            END :: TVarChar AS FromName
 
@@ -283,4 +283,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ModelServiceItemChild (False,'2')
+-- SELECT * FROM gpSelect_Object_ModelServiceItemChild (False, False,'2')
