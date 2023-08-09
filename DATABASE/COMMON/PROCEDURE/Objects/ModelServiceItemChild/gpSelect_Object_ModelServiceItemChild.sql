@@ -268,8 +268,11 @@ BEGIN
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemChild_Comment()
 
           --
-          LEFT JOIN tmpGoods AS tmpGoods_to ON tmpGoods_to.GoodsGroupId = Object_To.Id AND COALESCE (Object_From.Id,0) = 0
-          LEFT JOIN tmpGoods AS tmpGoods_from ON tmpGoods_from.GoodsGroupId = Object_From.Id AND COALESCE (Object_To.Id,0) = 0 
+          --LEFT JOIN tmpGoods AS tmpGoods_to ON tmpGoods_to.GoodsGroupId = Object_To.Id AND COALESCE (Object_From.Id,0) = 0
+          --LEFT JOIN tmpGoods AS tmpGoods_from ON tmpGoods_from.GoodsGroupId = Object_From.Id AND COALESCE (Object_To.Id,0) = 0 
+          LEFT JOIN tmpGoods AS tmpGoods_to ON tmpGoods_to.GoodsGroupId = Object_To.Id
+          LEFT JOIN tmpGoods AS tmpGoods_from ON tmpGoods_from.GoodsGroupId = Object_From.Id 
+                                            AND (tmpGoods_from.GoodsId = tmpGoods_to.GoodsId OR COALESCE (tmpGoods_to.GoodsId,0) = 0)
       ;
 
 END;
