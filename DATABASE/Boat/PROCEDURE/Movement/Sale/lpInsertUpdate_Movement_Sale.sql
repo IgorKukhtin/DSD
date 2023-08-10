@@ -107,24 +107,21 @@ BEGIN
           END IF;
 
      --
-     PERFORM lpInsertUpdate_MovementItem_Sale (COALESCE (vbMovementItemId, 0)
-                                             , ioId
-                                             , vbProductId
-                                             , tmp.Amount ::TFloat
-                                             , tmp.OperPrice
-                                             , tmp.OperPriceList
-                                             , tmp.BasisPrice
-                                             , tmp.CountForPrice
-                                             , '' ::TVarChar
-                                             , inUserId
+     PERFORM lpInsertUpdate_MovementItem_Sale (COALESCE (vbMovementItemId, 0) ::Integer
+                                             , ioId                           ::Integer
+                                             , vbProductId                    ::Integer
+                                             , tmp.Amount                     ::TFloat
+                                             , tmp.OperPrice                  ::TFloat
+                                             , tmp.OperPriceList              ::TFloat
+                                             , tmp.BasisPrice                 ::TFloat
+                                             , tmp.CountForPrice              ::TFloat
+                                             , ''                             ::TVarChar
+                                             , inUserId                       ::Integer
                                              )
-     FROM gpSelect_MovementItem_OrderClient (inMovementId:= inParentId , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inUserId :: TVarChar) AS tmp
+     FROM gpSelect_MI_OrderClient_Master (inMovementId:= inParentId , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inUserId :: TVarChar) AS tmp
      WHERE tmp.DescId = zc_Object_Product();
 
      END IF;
-
-
-
                                                       
 END;
 $BODY$

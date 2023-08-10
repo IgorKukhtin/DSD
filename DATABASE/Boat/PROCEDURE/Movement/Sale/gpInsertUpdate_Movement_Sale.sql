@@ -16,8 +16,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbOldContractId Integer;
-   DECLARE vbDeferment Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -29,7 +27,8 @@ BEGIN
                                        , inParentId
                                        , inInvNumber
                                        , inOperDate
-                                       , inFromId, inToId
+                                       , inFromId
+                                       , inToId
                                        , inComment
                                        , vbUserId);
 
