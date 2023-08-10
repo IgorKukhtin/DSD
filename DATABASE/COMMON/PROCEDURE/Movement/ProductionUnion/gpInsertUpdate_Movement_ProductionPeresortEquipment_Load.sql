@@ -129,8 +129,8 @@ BEGIN
                      FROM gpInsertUpdate_Object_Maker (ioId      := 0    :: Integer
                                                      , inCode    := 0    :: Integer
                                                      , inName    := TRIM (inMakerName) ::TVarChar  
-                                                     , inCountryId := NULL ::TVarChar
-                                                     , inSession := inSession             :: TVarChar
+                                                     , inCountryId := NULL             ::Integer
+                                                     , inSession := inSession          :: TVarChar
                                                       ) AS tmp);
     END IF;
     
