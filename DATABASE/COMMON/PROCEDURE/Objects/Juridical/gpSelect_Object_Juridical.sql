@@ -24,8 +24,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
-               OKPO TVarChar, INN TVarChar, InvNumberBranch TVarChar,
-               OKPO_inf TVarChar, INN_inf TVarChar, isDiff Boolean,
+               JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar, InvNumberBranch TVarChar,
+               JuridicalAddress_inf TVarChar, OKPO_inf TVarChar, INN_inf TVarChar, isDiff Boolean,
                PriceListId Integer, PriceListName TVarChar,
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                PriceListId_Prior Integer, PriceListName_Prior TVarChar,
@@ -189,12 +189,14 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
        , Object_InfoMoney_View.InfoMoneyName_all
 
+       , ObjectHistory_JuridicalDetails_View.JuridicalAddress
        , ObjectHistory_JuridicalDetails_View.OKPO
        , ObjectHistory_JuridicalDetails_View.INN
        , ObjectHistory_JuridicalDetails_View.InvNumberBranch
 
-       , OH_JuridicalDetails.OKPO       AS OKPO_inf
-       , OH_JuridicalDetails.INN        AS INN_inf
+       , OH_JuridicalDetails.JuridicalAddress  AS JuridicalAddress_inf
+       , OH_JuridicalDetails.OKPO              AS OKPO_inf
+       , OH_JuridicalDetails.INN               AS INN_inf
        , CASE WHEN (COALESCE(OH_JuridicalDetails.OKPO,'') <> COALESCE(ObjectHistory_JuridicalDetails_View.OKPO,'')) 
                 OR (TRIM (COALESCE(OH_JuridicalDetails.INN,'')) <> TRIM (COALESCE(ObjectHistory_JuridicalDetails_View.INN,'')))
               THEN TRUE
@@ -344,7 +346,7 @@ BEGIN
                             AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
-        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+        LEFT JOIN ObjectHistory_JuridicalDetails_View_two AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                              ON ObjectLink_Juridical_PriceList.ObjectId = Object_Juridical.Id
