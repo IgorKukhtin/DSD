@@ -429,11 +429,15 @@ END IF;
 
           LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
           LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+
+          LEFT JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = MLO_From.ObjectId
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
        --***** AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
+       AND tmpUnit_branch.UnitId IS NULL
        AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
     UNION
@@ -574,6 +578,7 @@ END IF;
        -- AND inIsBefoHistoryCost = TRUE -- *****
        AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
        AND inGroupId <> 4
+       AND inGroupId <> -1
 
 /*
      SELECT Movement.Id AS MovementId
@@ -581,6 +586,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , MovementDesc.ItemName AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           JOIN MovementLinkMovement on MovementLinkMovement.MovementChildId = Movement.Id AND MovementLinkMovement.Descid = zc_MovementLinkMovement_Production()
           JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
