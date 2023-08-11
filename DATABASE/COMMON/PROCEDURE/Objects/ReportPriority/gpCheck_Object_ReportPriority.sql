@@ -20,7 +20,7 @@ BEGIN
       --inProcName:= '';
 
       RETURN QUERY
-        WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active')
+        WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active' AND COALESCE (client_addr :: TVarChar, '') NOT ILIKE '192.168.0.199%')
          , tmpCount_all AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '(%')
                                                                                  --
                                                                                  AND inProcName NOT ILIKE '%Inventory%'
