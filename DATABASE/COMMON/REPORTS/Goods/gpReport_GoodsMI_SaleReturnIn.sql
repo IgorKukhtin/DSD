@@ -64,7 +64,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Return_SummMVAT TFloat, Return_SummVAT TFloat
              , SaleReturn_Weight  TFloat -- Продажи за вычетом возврата, кг
              , SaleReturn_Summ    TFloat -- Продажи за вычетом возврата, грн
-             , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн
+             , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн  
+             , Count_TT           TFloat -- Кол-во ТТ для товара
              , isTop Boolean
              , PaidKindId Integer, PaidKindName TVarChar
              , OperDate TDateTime
@@ -145,6 +146,7 @@ BEGIN
             , 0 :: TFloat AS SaleReturn_Weight
             , 0 :: TFloat AS SaleReturn_Summ 
             , 0 :: TFloat AS Sale_Summ_opt
+            , 0 :: TFloat AS Count_TT
             , FALSE AS isTop
             , 0 AS PaidKindId
             , '' ::TVarChar AS PaidKindName
@@ -184,6 +186,7 @@ BEGIN
             , 0 :: TFloat AS SaleReturn_Weight
             , 0 :: TFloat AS SaleReturn_Summ 
             , 0 :: TFloat AS Sale_Summ_opt
+            , 0 :: TFloat AS Count_TT
             , FALSE AS isTop
             , 0 AS PaidKindId, ''   ::TVarChar AS PaidKindName
             , NULL ::TDateTime AS OperDate 
@@ -350,7 +353,8 @@ BEGIN
                                                                       , inIsPartner
                                                                       , inIsTradeMark
                                                                       , inIsGoods
-                                                                      , inIsGoodsKind
+                                                                      --, inIsGoodsKind
+                                                                      , CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
                                                                       , inIsContract
                                                                       , vbIsJuridical_Branch
                                                                       , vbIsJuridical_where
@@ -414,7 +418,8 @@ BEGIN
                                                                  , inIsPartner
                                                                  , inIsTradeMark
                                                                  , inIsGoods
-                                                                 , inIsGoodsKind
+                                                                 --, inIsGoodsKind
+                                                                 , CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
                                                                  , inIsContract
                                                                  , FALSE -- inIsOLAP
                                                                  , inIsDate
@@ -422,14 +427,22 @@ BEGIN
                                                                   ) AS gpReport
                                WHERE vbEndDate_olap < inEndDate
                               )
-          , tmpData AS (SELECT * FROM tmpReport_olap
-                       UNION ALL
-                        SELECT * FROM tmpReport_after WHERE vbEndDate_olap < inEndDate
+          , tmpData AS (SELECT tmp.*
+                             , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId
+                                                , tmp.PartnerId
+                                                , tmp.GoodsId) AS Ord
+                        FROM (SELECT * FROM tmpReport_olap
+                             UNION ALL
+                              SELECT * FROM tmpReport_after WHERE vbEndDate_olap < inEndDate
+                             ) AS tmp
                        )
+
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
             , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-            , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+            , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE gpReport.GoodsKindId END AS GoodsKindId
+            , STRING_AGG (DISTINCT gpReport.GoodsKindName, ' ;' ) ::TVarChar AS GoodsKindName
+            , gpReport.MeasureName
             , gpReport.TradeMarkId, gpReport.TradeMarkName
             , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
             , gpReport.GoodsPlatformName
@@ -464,7 +477,8 @@ BEGIN
             , (SUM (gpReport.Sale_AmountPartner_Weight) - SUM (gpReport.Return_AmountPartner_Weight)) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
             , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
             , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
-
+            
+            , CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END ::TFloat AS Count_TT 
             , gpReport.isTop
             
             , gpReport.PaidKindId
@@ -492,7 +506,9 @@ BEGIN
 
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-              , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+              , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE gpReport.GoodsKindId END
+              --, gpReport.GoodsKindName
+              , gpReport.MeasureName
               , gpReport.TradeMarkId, gpReport.TradeMarkName
               , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
               , gpReport.GoodsPlatformName
@@ -516,6 +532,7 @@ BEGIN
               , gpReport.DayOfWeekName_Full
               , Object_Section.Id
               , Object_Section.ValueData
+              , CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END
                ;
        --
        RETURN;
@@ -681,7 +698,11 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
-                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END ::TDateTime AS OperDate
+                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END ::TDateTime AS OperDate 
+                              
+                              , ROW_NUMBER() OVER (PARTITION BY COALESCE (ContainerLO_Juridical.ObjectId, 0)
+                                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_ChangePercent() THEN ContainerLO_Juridical.ObjectId WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                                 , MIContainer.ObjectId_Analyzer) AS Ord
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -746,7 +767,10 @@ BEGIN
 
                               , _tmpGoods.TradeMarkId
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
+                              
                               , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
+                              , STRING_AGG (DISTINCT Object_GoodsKind.ValueData, ' ;') ::TVarChar AS GoodsKindName
+ 
                               , ContainerLO_PaidKind.ObjectId AS PaidKindId
                               , tmpOperationGroup2.OperDate
 
@@ -784,6 +808,7 @@ BEGIN
                               , SUM (tmpOperationGroup2.Return_SummCost) AS Return_SummCost
                               , SUM (tmpOperationGroup2.Return_SummCost_40200) AS Return_SummCost_40200
 
+                              , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END AS Count_TT
                          FROM tmpOperationGroup2
                               LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
                                                             ON ContainerLinkObject_Contract.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
@@ -804,6 +829,8 @@ BEGIN
                               LEFT JOIN _tmpPartner ON _tmpPartner.PartnerId = tmpOperationGroup2.PartnerId
                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpOperationGroup2.GoodsId
 
+                              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup2.GoodsKindId
+                                                                  AND (inIsGoods = TRUE OR inIsGoodsKind = TRUE)
 
                          WHERE (_tmpPartner.PartnerId > 0 OR vbIsPartner_where = FALSE)
                            AND (_tmpGoods.GoodsId > 0 OR vbIsGoods_where = FALSE)
@@ -818,6 +845,7 @@ BEGIN
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                                 , ContainerLO_PaidKind.ObjectId
                                 , tmpOperationGroup2.OperDate
+                                , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
                         )
 
            -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
@@ -835,8 +863,10 @@ BEGIN
           , Object_Goods.Id                    AS GoodsId
           , Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
-          , Object_GoodsKind.Id                AS GoodsKindId
-          , Object_GoodsKind.ValueData         AS GoodsKindName
+          --, Object_GoodsKind.Id                AS GoodsKindId
+          --, Object_GoodsKind.ValueData         AS GoodsKindName
+          , tmpOperationGroup.GoodsKindId    ::Integer
+          , tmpOperationGroup.GoodsKindName  ::TVarChar
           , Object_Measure.ValueData           AS MeasureName
           , Object_TradeMark.Id                AS TradeMarkId
           , Object_TradeMark.ValueData         AS TradeMarkName
@@ -947,6 +977,8 @@ BEGIN
          
          , (COALESCE (tmpOperationGroup.Sale_Summ,0) + COALESCE (tmpOperationGroup.Sale_Summ_10200,0) + COALESCE (tmpOperationGroup.Sale_Summ_10250,0) + COALESCE (tmpOperationGroup.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
+         , tmpOperationGroup.Count_TT ::TFloat AS Count_TT
+         
          , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
          , Object_PaidKind.Id        AS PaidKindId
          , Object_PaidKind.ValueData AS PaidKindName
@@ -964,7 +996,7 @@ BEGIN
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpOperationGroup.BusinessId
           
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
-          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
+          --LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpOperationGroup.PaidKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst

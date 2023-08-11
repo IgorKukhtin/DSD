@@ -1562,7 +1562,7 @@ begin
                 //***19.02.23
                 USERKEYID := FieldByName('USERKEYID').AsInteger;
                 //***04.08.23
-                RRN := FieldByName('RRN').AsString;
+                RRN := trim(FieldByName('RRN').AsString);
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;

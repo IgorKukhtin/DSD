@@ -46,9 +46,11 @@ RETURNS TABLE(
     ,SelectKindName                 TVarChar
     ,Ratio                          TFloat
     ,ModelServiceItemChild_FromId   Integer
+    ,ModelServiceItemChild_FromCode Integer
     ,ModelServiceItemChild_FromDescId Integer
     ,ModelServiceItemChild_FromName TVarChar
     ,ModelServiceItemChild_ToId     Integer
+    ,ModelServiceItemChild_ToCode   Integer
     ,ModelServiceItemChild_ToDescId Integer
     ,ModelServiceItemChild_ToName   TVarChar
 
@@ -119,9 +121,11 @@ BEGIN
        ,isActive Boolean
        ,Ratio TFloat
        ,ModelServiceItemChild_FromId     Integer
+       ,ModelServiceItemChild_FromCode   Integer
        ,ModelServiceItemChild_FromDescId Integer
        ,ModelServiceItemChild_FromName   TVarChar
        ,ModelServiceItemChild_ToId       Integer
+       ,ModelServiceItemChild_ToCode     Integer
        ,ModelServiceItemChild_ToDescId   Integer
        ,ModelServiceItemChild_ToName     TVarChar
        ,StorageLineId_From               Integer
@@ -187,9 +191,11 @@ AS  (SELECT
         END                                                 AS isActive              -- Тип выбора данных
        ,ObjectFloat_Ratio.ValueData                         AS Ratio                 -- Коэффициент для выбора данных
        ,ModelServiceItemChild_From.Id                       AS ModelServiceItemChild_FromId       -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
+       ,ModelServiceItemChild_From.ObjectCode               AS ModelServiceItemChild_FromCode
        ,ModelServiceItemChild_From.DescId                   AS ModelServiceItemChild_FromDescId
        ,ModelServiceItemChild_From.ValueData                AS ModelServiceItemChild_FromName
        ,ModelServiceItemChild_To.Id                         AS ModelServiceItemChild_ToId         -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
+       ,ModelServiceItemChild_To.ObjectCode                 AS ModelServiceItemChild_ToCode
        ,ModelServiceItemChild_To.DescId                     AS ModelServiceItemChild_ToDescId
        ,ModelServiceItemChild_To.ValueData                  AS ModelServiceItemChild_ToName
 
@@ -1391,11 +1397,13 @@ AS  (SELECT
         -- вот товар
        ,COALESCE (ServiceModelMovement.GoodsId_from, Setting.ModelServiceItemChild_FromId) AS ModelServiceItemChild_FromId
         -- 
+       ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
         -- вот товар
        ,COALESCE (ServiceModelMovement.GoodsId_to, Setting.ModelServiceItemChild_ToId) AS ModelServiceItemChild_ToId
         -- 
+       ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
@@ -1647,9 +1655,11 @@ AS  (SELECT
        ,Setting.SelectKindName
        ,Setting.Ratio
        ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
        ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
@@ -1768,9 +1778,11 @@ AS  (SELECT
        ,Setting.SelectKindName
        ,Setting.Ratio
        ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
        ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
@@ -1892,9 +1904,11 @@ AS  (SELECT
        ,Setting.SelectKindName
        ,Setting.Ratio
        ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
-       ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToId 
+       ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
@@ -1946,6 +1960,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.08.23         *
  29.04.20         * zc_Movement_SendAsset
  20.06.16                                        *
 */

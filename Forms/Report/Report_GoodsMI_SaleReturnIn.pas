@@ -140,6 +140,7 @@ type
     cbIsDate: TcxCheckBox;
     OperDate: TcxGridDBColumn;
     DayOfWeekName_full: TcxGridDBColumn;
+    Count_TT: TcxGridDBColumn;
   private
     { Private declarations }
   public

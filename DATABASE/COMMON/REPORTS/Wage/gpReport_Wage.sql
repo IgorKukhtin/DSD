@@ -46,7 +46,9 @@ RETURNS TABLE(
     ,FromName                       TVarChar
     ,ToName                         TVarChar
     ,MovementDescName               TVarChar
+    ,ModelServiceItemChild_FromCode Integer
     ,ModelServiceItemChild_FromName TVarChar
+    ,ModelServiceItemChild_ToCode   Integer
     ,ModelServiceItemChild_ToName   TVarChar
     ,StorageLineName_From           TVarChar
     ,StorageLineName_To             TVarChar
@@ -130,9 +132,11 @@ BEGIN
         , SelectKindName                 TVarChar
         , Ratio                          TFloat
         , ModelServiceItemChild_FromId       Integer
+        , ModelServiceItemChild_FromCode     Integer
         , ModelServiceItemChild_FromDescId   Integer
         , ModelServiceItemChild_FromName     TVarChar
         , ModelServiceItemChild_ToId         Integer
+        , ModelServiceItemChild_ToCode       Integer
         , ModelServiceItemChild_ToDescId     Integer
         , ModelServiceItemChild_ToName       TVarChar
         , StorageLineId_From                 Integer
@@ -191,8 +195,8 @@ BEGIN
            --
          , Report_1.ServiceModelCode, Report_1.ServiceModelName, Report_1.Price
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
-         , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
-         , Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
+         , Report_1.ModelServiceItemChild_FromId, Report_1.ModelServiceItemChild_FromCode,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName
+         ,Report_1.ModelServiceItemChild_ToId,Report_1.ModelServiceItemChild_ToCode, Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
          , Report_1.StorageLineId_From, Report_1.StorageLineName_From, Report_1.StorageLineId_To, Report_1.StorageLineName_To
          , Report_1.GoodsKind_FromId, Report_1.GoodsKind_FromName, Report_1.GoodsKindComplete_FromId, Report_1.GoodsKindComplete_FromName
          , Report_1.GoodsKind_ToId, Report_1.GoodsKind_ToName, Report_1.GoodsKindComplete_ToId, Report_1.GoodsKindComplete_ToName
@@ -256,9 +260,11 @@ BEGIN
        , Res_1.Ratio
 
        , Res_1.ModelServiceItemChild_FromId
+       , Res_1.ModelServiceItemChild_FromCode
        , Res_1.ModelServiceItemChild_FromDescId
        , Res_1.ModelServiceItemChild_FromName
        , Res_1.ModelServiceItemChild_ToId
+       , Res_1.ModelServiceItemChild_ToCode
        , Res_1.ModelServiceItemChild_ToDescId
        , Res_1.ModelServiceItemChild_ToName
 
@@ -338,9 +344,11 @@ BEGIN
        , 0  :: TFloat   AS Ratio
 
        , 0  :: Integer  AS ModelServiceItemChild_FromId
+       , 0  :: Integer  AS ModelServiceItemChild_FromCode
        , 0  :: Integer  AS ModelServiceItemChild_FromDescId
        , '' :: TVarChar AS ModelServiceItemChild_FromName
        , 0  :: Integer  AS ModelServiceItemChild_ToId
+       , 0  :: Integer  AS ModelServiceItemChild_ToCode
        , 0  :: Integer  AS ModelServiceItemChild_ToDescId
        , '' :: TVarChar AS ModelServiceItemChild_ToName
 
@@ -545,8 +553,14 @@ BEGIN
                 ELSE NULL::TVarChar END                         AS MovementDescName
 
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN COALESCE (Object_Goods_from.ObjectCode, Res.ModelServiceItemChild_FromCode)
+                ELSE NULL::Integer END                         AS ModelServiceItemChild_FromCode
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_from.ValueData, Res.ModelServiceItemChild_FromName)
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_FromName
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN COALESCE (Object_Goods_to.ObjectCode, Res.ModelServiceItemChild_ToCode)
+                ELSE NULL::Integer END                         AS ModelServiceItemChild_ToCode
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_to.ValueData, Res.ModelServiceItemChild_ToName)
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_ToName
@@ -650,10 +664,16 @@ BEGIN
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_from.ValueData, Res.ModelServiceItemChild_FromName)
                 ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN COALESCE (Object_Goods_from.ObjectCode, Res.ModelServiceItemChild_FromCode)
+                ELSE NULL::Integer END
                 -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_to.ValueData, Res.ModelServiceItemChild_ToName)
-                ELSE NULL::TVarChar END
+                ELSE NULL::TVarChar END 
+                ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN COALESCE (Object_Goods_to.ObjectCode, Res.ModelServiceItemChild_ToCode)
+                ELSE NULL::Integer END
 
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.StorageLineName_From
@@ -766,7 +786,9 @@ BEGIN
            ,tmpRes.FromName
            ,tmpRes.ToName
            ,tmpRes.MovementDescName
+           ,tmpRes.ModelServiceItemChild_FromCode 
            ,tmpRes.ModelServiceItemChild_FromName
+           ,tmpRes.ModelServiceItemChild_ToCode
            ,tmpRes.ModelServiceItemChild_ToName
 
            ,tmpRes.StorageLineName_From
@@ -900,7 +922,9 @@ BEGIN
            ,'' :: TVarChar AS FromName
            ,'' :: TVarChar AS ToName
            ,'' :: TVarChar AS MovementDescName
+           , 0 :: Integer AS ModelServiceItemChild_FromCode
            ,'' :: TVarChar AS ModelServiceItemChild_FromName
+           , 0 :: Integer AS ModelServiceItemChild_ToCode
            ,'' :: TVarChar AS ModelServiceItemChild_ToName
 
            ,'' :: TVarChar AS StorageLineName_From

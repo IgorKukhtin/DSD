@@ -130,8 +130,13 @@ begin
     end;
   end;
 
+  if (rgPaidType.ItemIndex > 0) then
+  begin
+    if not ChoiceBankPOSTerminalExecute(FBankPOSTerminal, FPOSTerminalCode) then Exit;
+  end;
+
   if not PutCheckToCash(FSummaTotal, edSalerCashAdd.Value,
-    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, cRRN, nZReport) then Exit;
+    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, cRRN, nZReport, FPOSTerminalCode) then Exit;
 
   // Пропись в чеке информации по пробивке
   try

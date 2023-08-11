@@ -273,7 +273,12 @@ object ModelServiceForm: TModelServiceForm
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = clmsicFromName
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
@@ -284,10 +289,19 @@ object ModelServiceForm: TModelServiceForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object DescName_to: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1087#1088#1080#1093#1086#1076' '
+        DataBinding.FieldName = 'DescName_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object FromCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'FromCode'
@@ -297,6 +311,7 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object clmsicFromName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
@@ -358,6 +373,14 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object DescName_from: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'DescName_from'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object ToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'ToCode'
@@ -367,6 +390,7 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object clmsicToName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
@@ -443,6 +467,150 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
+      end
+      object GoodsCode_to: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'. '#1087#1088#1080#1093#1086#1076' ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsCode_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsName_to: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088' '#1087#1088#1080#1093#1086#1076' ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsGroupName_to: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsGroupName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsGroupNameFull_to: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsGroupNameFull_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GroupStatName_to: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GroupStatName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsGroupAnalystName_to: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsGroupAnalystName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object TradeMarkName_to: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'TradeMarkName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsTagName_to: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072' '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsTagName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsPlatformName_to: TcxGridDBColumn
+        Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072' '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsPlatformName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsCode_from: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'. '#1088#1072#1089#1093#1086#1076' ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsCode_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsName_from: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088' '#1088#1072#1089#1093#1086#1076' ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsName_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsGroupName_from: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'#1088#1072#1089#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsGroupName_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsGroupNameFull_from: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') '#1090#1086#1074'.'#1087#1088#1080#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsGroupNameFull_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GroupStatName_from: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1090#1086#1074'.'#1088#1072#1089#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GroupStatName_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsGroupAnalystName_from: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' '#1090#1086#1074'.'#1088#1072#1089#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsGroupAnalystName_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object TradeMarkName_from: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' '#1090#1086#1074'.'#1088#1072#1089#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'TradeMarkName_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsTagName_from: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072' '#1090#1086#1074'.'#1088#1072#1089#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsTagName_from'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsPlatformName_from: TcxGridDBColumn
+        Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072' '#1090#1086#1074'.'#1088#1072#1089#1093'. ('#1080#1085#1092')'
+        DataBinding.FieldName = 'GoodsPlatformName_to'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -613,6 +781,14 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbShowbyGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGroupFromChoice'
         end
         item
@@ -634,6 +810,14 @@ object ModelServiceForm: TModelServiceForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcelChild'
         end
         item
           Visible = True
@@ -725,6 +909,14 @@ object ModelServiceForm: TModelServiceForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbShowbyGroup: TdxBarButton
+      Action = actShowbyGroup
+      Category = 0
+    end
+    object bbGridToExcelChild: TdxBarButton
+      Action = dsdGridToExcelChild
       Category = 0
     end
   end
@@ -874,6 +1066,14 @@ object ModelServiceForm: TModelServiceForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ModelServiceItemChildDS
+    end
+    object dsdGridToExcelChild: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGridStaffListCost
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1090#1086#1074#1072#1088#1099' '#1055#1088#1080#1093#1086#1076'/ '#1056#1072#1089#1093#1086#1076
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1090#1086#1074#1072#1088#1099' '#1055#1088#1080#1093#1086#1076'/ '#1056#1072#1089#1093#1086#1076
+      ImageIndex = 6
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1528,12 +1728,31 @@ object ModelServiceForm: TModelServiceForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 65
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 64
+      ImageIndexFalse = 65
+    end
+    object actShowbyGroup: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectModelServiceItemChild
+      StoredProcList = <
+        item
+          StoredProc = spSelectModelServiceItemChild
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -1581,10 +1800,13 @@ object ModelServiceForm: TModelServiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 216
   end
@@ -1754,6 +1976,14 @@ object ModelServiceForm: TModelServiceForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowbyGroup'
+        Value = Null
+        Component = actShowbyGroup
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 594
@@ -1893,10 +2123,13 @@ object ModelServiceForm: TModelServiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 888
     Top = 256
   end
@@ -1919,10 +2152,13 @@ object ModelServiceForm: TModelServiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 816
     Top = 472
   end

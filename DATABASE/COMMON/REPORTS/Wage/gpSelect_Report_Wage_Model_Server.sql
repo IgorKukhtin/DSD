@@ -46,9 +46,11 @@ RETURNS TABLE(
     ,SelectKindName                 TVarChar
     ,Ratio                          TFloat
     ,ModelServiceItemChild_FromId   Integer
+    ,ModelServiceItemChild_FromCode   Integer
     ,ModelServiceItemChild_FromDescId Integer
     ,ModelServiceItemChild_FromName TVarChar
     ,ModelServiceItemChild_ToId     Integer
+    ,ModelServiceItemChild_ToCOde     Integer
     ,ModelServiceItemChild_ToDescId Integer
     ,ModelServiceItemChild_ToName   TVarChar
 
@@ -118,10 +120,12 @@ BEGIN
        ,SelectKindName TVarChar
        ,isActive Boolean
        ,Ratio TFloat
-       ,ModelServiceItemChild_FromId     Integer
+       ,ModelServiceItemChild_FromId     Integer   
+       ,ModelServiceItemChild_FromCode   Integer
        ,ModelServiceItemChild_FromDescId Integer
        ,ModelServiceItemChild_FromName   TVarChar
        ,ModelServiceItemChild_ToId       Integer
+       ,ModelServiceItemChild_ToCode     Integer
        ,ModelServiceItemChild_ToDescId   Integer
        ,ModelServiceItemChild_ToName     TVarChar
        ,StorageLineId_From               Integer
@@ -142,7 +146,9 @@ BEGIN
     -- получили Настройки
     INSERT INTO Setting_Wage_1 (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName, Count_Member,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
                               , ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName, SelectKindId, SelectKindCode, SelectKindName, isActive
-                              , Ratio,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
+                              , Ratio
+                              , ModelServiceItemChild_FromId, ModelServiceItemChild_FromCode, ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName
+                              , ModelServiceItemChild_ToId,ModelServiceItemChild_ToCode, ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
                               , StorageLineId_From, StorageLineName_From, StorageLineId_To, StorageLineName_To
                               , GoodsKind_FromId, GoodsKind_FromName, GoodsKindComplete_FromId, GoodsKindComplete_FromName
                               , GoodsKind_ToId, GoodsKind_ToName, GoodsKindComplete_ToId, GoodsKindComplete_ToName
@@ -182,10 +188,12 @@ BEGIN
                   THEN FALSE
         END                                                 AS isActive              -- Тип выбора данных
        ,ObjectFloat_Ratio.ValueData                         AS Ratio                 -- Коэффициент для выбора данных
-       ,ModelServiceItemChild_From.Id                       AS ModelServiceItemChild_FromId       -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
+       ,ModelServiceItemChild_From.Id                       AS ModelServiceItemChild_FromId       -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления) 
+       ,ModelServiceItemChild_From.ObjectCode               AS ModelServiceItemChild_FromCode
        ,ModelServiceItemChild_From.DescId                   AS ModelServiceItemChild_FromDescId
        ,ModelServiceItemChild_From.ValueData                AS ModelServiceItemChild_FromName
        ,ModelServiceItemChild_To.Id                         AS ModelServiceItemChild_ToId         -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
+       ,ModelServiceItemChild_To.ObjectCode                 AS ModelServiceItemChild_ToCode
        ,ModelServiceItemChild_To.DescId                     AS ModelServiceItemChild_ToDescId
        ,ModelServiceItemChild_To.ValueData                  AS ModelServiceItemChild_ToName
 
@@ -1406,11 +1414,13 @@ BEGIN
        ,Setting.Ratio
         -- вот товар
        ,COALESCE (ServiceModelMovement.GoodsId_from, Setting.ModelServiceItemChild_FromId) AS ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode
         -- 
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
         -- вот товар
        ,COALESCE (ServiceModelMovement.GoodsId_to, Setting.ModelServiceItemChild_ToId) AS ModelServiceItemChild_ToId
+       , Setting.ModelServiceItemChild_ToCode
         -- 
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
@@ -1660,9 +1670,11 @@ BEGIN
        ,Setting.SelectKindName
        ,Setting.Ratio
        ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode 
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
        ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
@@ -1783,9 +1795,11 @@ BEGIN
        ,Setting.SelectKindName
        ,Setting.Ratio
        ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
        ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
@@ -1906,10 +1920,12 @@ BEGIN
        ,Setting.SelectKindId
        ,Setting.SelectKindName
        ,Setting.Ratio
-       ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromId   
+       ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
        ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 

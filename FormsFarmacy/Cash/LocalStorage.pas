@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes, System.SysUtils, Vcl.Forms, Vcl.Dialogs,
-  IniUtils, VKDBFDataSet, LocalWorkUnit;
+  IniUtils, VKDBFDataSet, LocalWorkUnit, db;
 
 function InitLocalDataBaseHead(Owner: TPersistent; LocalDataBaseHead: TVKSmartDBF): Boolean;
 function InitLocalDataBaseBody(Owner: TPersistent; LocalDataBaseBody: TVKSmartDBF): Boolean;
@@ -202,7 +202,7 @@ begin
         //***19.02.23
         if FindField('USERKEYID') = nil then AddIntField(LFieldDefs,  'USERKEYID');     //Чей файловый ключ использовался при пробитии чека.
         //***04.08.23
-        if FindField('RRN') = nil then AddIntField(LFieldDefs,  'RRN');                 //RRN уникальный номер транзакции
+        if FindField('RRN') = nil then AddStrField(LFieldDefs,  'RRN', 25);             //RRN уникальный номер транзакции
         //***10.09.22
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -302,6 +302,15 @@ begin
         (FindField('USERKEYID') = nil) or
         //***04.08.23
         (FindField('RRN') = nil));
+
+//      if (FindField('RRN') <> nil) and (FindField('RRN').Size <> 25) then
+//      begin
+//        Result := False;
+//        Close;
+//        DeleteFile(iniLocalDataBaseHead);
+//        MessageDlg('Исправлена структура хранилища. Перезайдите в программу.', mtError, [mbOk], 0);;
+//        Exit;
+//      end;
 
       Close;
 
