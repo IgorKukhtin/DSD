@@ -210,6 +210,7 @@ BEGIN
                                                                            )
                                                          SELECT tmpMember.MemberId FROM tmpMember LIMIT 1 -- на всякий случай
                                                         )
+                                                AND inComment ILIKE '%Зарплата на%'
                                                THEN -1 * ABS (inAmount)
                                                
                                                ELSE inAmount
