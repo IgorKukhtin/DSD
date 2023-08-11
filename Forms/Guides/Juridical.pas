@@ -138,6 +138,8 @@ type
     edShowDate: TcxDateEdit;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
+    JuridicalAddress: TcxGridDBColumn;
+    JuridicalAddress_inf: TcxGridDBColumn;
   private
     { Private declarations }
   public

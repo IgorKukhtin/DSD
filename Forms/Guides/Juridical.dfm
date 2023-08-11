@@ -127,6 +127,22 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 40
       end
+      object JuridicalAddress: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089
+        DataBinding.FieldName = 'JuridicalAddress'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object JuridicalAddress_inf: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1085#1072' '#1076#1072#1090#1091
+        DataBinding.FieldName = 'JuridicalAddress_inf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object InvNumberBranch: TcxGridDBColumn
         Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
         DataBinding.FieldName = 'InvNumberBranch'
