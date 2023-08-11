@@ -77,6 +77,7 @@ BEGIN
       and T.table_name NOT ILIKE 'containerdesc'
       and T.table_name NOT ILIKE 'historycost'
       and T.table_name NOT ILIKE 'movementdesc'*/
+
 /*      
 where T.table_name ILIKE 'movementitemstring'
    OR T.table_name ILIKE 'movementstringdesc'
@@ -120,22 +121,23 @@ where T.table_name ILIKE 'movementitemcontainer'
 -- truncate table resourseprotocol
 -- truncate table resourseitemprotocol
 
--- where  T.table_name ILIKE 'soldtable'
--- where  T.table_name ILIKE 'MovementItemProtocol'
-/*   OR T.table_name ILIKE 'wms_from_host_error'
-   OR T.table_name ILIKE 'wms_mi_incoming'
-   OR T.table_name ILIKE 'wms_mi_weighingproduction'
-   OR T.table_name ILIKE 'wms_movement_weighingproduction'
-   OR T.table_name ILIKE 'wms_movement_weighingproduction22'
-   OR T.table_name ILIKE 'wms_object_goodsbygoodskind'
-   OR T.table_name ILIKE 'wms_to_host_error'
-   OR T.table_name ILIKE 'wms_to_host_message'
+/* where  T.table_name ILIKE 'resourseprotocol'
+     OR T.table_name ILIKE 'tmpprotocol'
+     OR T.table_name ILIKE 'userprotocol'
+     OR T.table_name ILIKE 'soldtable'
+     OR T.table_name ILIKE 'movementBlob'
 */
 
 -- cloud   
--- where T.table_name ILIKE '_micontainer_20_03_2020_test'
---   OR T.table_name ILIKE 'loginprotocol'
-
+-- where T.table_name NOT ILIKE 'movementitemfloat'
+/*   AND T.table_name NOT ILIKE 'ObjectBlob'
+   and T.table_name NOT ILIKE 'container'
+   and T.table_name NOT ILIKE 'containerdesc'
+   and T.table_name NOT ILIKE 'containerlinkobject'
+   and T.table_name NOT ILIKE 'movement'
+   and T.table_name NOT ILIKE 'historycost'
+   and T.table_name NOT ILIKE 'loginprotocol'
+*/
 
     group by T.table_name, B.table_name
   order by case when T.table_name ilike 'resourseitemprotocol' then 102 

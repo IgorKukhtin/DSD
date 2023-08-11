@@ -17,6 +17,11 @@ BEGIN
          , STRING_AGG (tmp.COLUMN_NAME , ',''||''' ORDER BY COLUMN_POSITION)    :: Text                   AS COLUMN_NAME
          , STRING_AGG ( 'CASE WHEN CAST (' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || ' AS Text) IS NULL'
                         || ' THEN ' || _replica.zfStr_CHR_39 ('NULL')
+
+                        -- ставится всегда NULL
+                        -- || ' WHEN ' || _replica.zfStr_CHR_39 (tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME) || ' ilike ' || _replica.zfStr_CHR_39 ('movement.parentid')
+                        -- || ' THEN ' || _replica.zfStr_CHR_39 ('NULL')
+
                         || ' ELSE replace (CAST (' || CASE WHEN tmp.COLUMN_TYPENAME ILIKE 'TVarChar'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'TDateTime'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'INTERVAL'
