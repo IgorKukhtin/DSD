@@ -140,6 +140,14 @@ object Asset_ObjectForm: TAsset_ObjectForm
         Options.Editing = False
         Width = 80
       end
+      object PartionModelName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' ('#1087#1072#1088#1090#1080#1103')'
+        DataBinding.FieldName = 'PartionModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object AssetTypeName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1054#1057
         DataBinding.FieldName = 'AssetTypeName'

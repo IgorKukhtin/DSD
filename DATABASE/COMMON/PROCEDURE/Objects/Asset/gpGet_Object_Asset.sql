@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AssetGroupId Integer, AssetGroupCode Integer, AssetGroupName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
-             , CarId Integer, CarName TVarChar
+             , CarId Integer, CarName TVarChar 
+             , PartionModelId Integer, PartionModelName TVarChar
              , AssetTypeId Integer, AssetTypeName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
@@ -44,6 +45,9 @@ $BODY$BEGIN
 
            , CAST (0 as Integer)    AS CarId
            , CAST ('' as TVarChar)  AS CarName
+
+           , 0    :: Integer        AS PartionModelId
+           , ''  :: TVarChar        AS PartionModelName
 
            , CAST (0 as Integer)    AS AssetTypeId
            , CAST ('' as TVarChar)  AS AssetTypeName
@@ -86,6 +90,9 @@ $BODY$BEGIN
          , Object_Car.Id               AS CarId
          , Object_Car.ValueData        AS CarName
 
+         , Object_PartionModel.Id         AS PartionModelId
+         , Object_PartionModel.ValueData  AS PartionModelName
+         
          , Object_AssetType.Id         AS AssetTypeId
          , Object_AssetType.ValueData  AS AssetTypeName
 
@@ -131,9 +138,14 @@ $BODY$BEGIN
                               AND ObjectLink_Asset_AssetType.DescId = zc_ObjectLink_Asset_AssetType()
           LEFT JOIN Object AS Object_AssetType ON Object_AssetType.Id = ObjectLink_Asset_AssetType.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Asset_PartionModel
+                               ON ObjectLink_Asset_PartionModel.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_PartionModel.DescId = zc_ObjectLink_Asset_PartionModel()
+          LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_Asset_PartionModel.ChildObjectId
+
           LEFT JOIN ObjectDate AS ObjectDate_Release
-                                ON ObjectDate_Release.ObjectId = Object_Asset.Id
-                               AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()
+                               ON ObjectDate_Release.ObjectId = Object_Asset.Id
+                              AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()
 
           LEFT JOIN ObjectString AS ObjectString_InvNumber
                                  ON ObjectString_InvNumber.ObjectId = Object_Asset.Id

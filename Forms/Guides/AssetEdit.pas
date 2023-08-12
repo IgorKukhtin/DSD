@@ -73,6 +73,9 @@ type
     cxLabel15: TcxLabel;
     edKW: TcxCurrencyEdit;
     cbisDocGoods: TcxCheckBox;
+    edPartionModel: TcxButtonEdit;
+    cxLabel16: TcxLabel;
+    GuidesPartionModel: TdsdGuides;
   private
     { Private declarations }
   public

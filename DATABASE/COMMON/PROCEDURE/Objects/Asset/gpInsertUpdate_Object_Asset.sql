@@ -4,7 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
  INOUT ioId                  Integer   ,    -- ключ объекта < Основные средства>
@@ -23,7 +25,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
     IN inJuridicalId         Integer   ,    -- ссылка на Юридические лица
     IN inMakerId             Integer   ,    -- ссылка на Производитель (ОС)
     IN inCarId               Integer   ,    -- ссылка на авто
-    IN inAssetTypeId         Integer   ,    -- Тип ОС
+    IN inAssetTypeId         Integer   ,    -- Тип ОС  
+    IN inPartionModelId      Integer   ,    -- модель
     
     IN inPeriodUse           TFloat   ,     -- период эксплуатации
     IN inProduction          TFloat   ,     -- Производительность, кг
@@ -65,6 +68,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Juridical(), ioId, inJuridicalId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Maker(), ioId, inMakerId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_AssetType(), ioId, inAssetTypeId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_PartionModel(), ioId, inPartionModelId);
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Car(), ioId, inCarId);
 
@@ -91,6 +96,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.08.23         *
  03.10.22         *
  17.11.20         *
  29.04.20         * add Production

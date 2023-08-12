@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
+             , PartionModelId Integer, PartionModelCode Integer, PartionModelName TVarChar
              , AssetTypeId Integer, AssetTypeCode Integer, AssetTypeName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
@@ -39,7 +40,10 @@ BEGIN
          , tmp.CarId
          , tmp.CarCode
          , tmp.CarName
-         , tmp.CarModelName
+         , tmp.CarModelName 
+         , tmp.PartionModelId
+         , tmp.PartionModelCode
+         , tmp.PartionModelName
          , tmp.AssetTypeId
          , tmp.AssetTypeCode
          , tmp.AssetTypeName
