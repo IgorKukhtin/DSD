@@ -4,7 +4,7 @@
   ClientHeight = 684
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 719
+  ExplicitHeight = 723
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -761,7 +761,6 @@
     end
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitTop = 0
       ExplicitWidth = 1366
       ExplicitHeight = 521
       inherited cxGrid: TcxGrid
@@ -1294,9 +1293,6 @@
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -1453,9 +1449,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1570,9 +1563,6 @@
           ClientRectTop = 24
           object tsConditionPromo: TcxTabSheet
             Caption = '&3. '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cxGridConditionPromo: TcxGrid
               Left = 0
               Top = 0
@@ -1663,9 +1653,6 @@
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
             Caption = '&4. '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grAdvertising: TcxGrid
               Left = 0
               Top = 0
@@ -3649,7 +3636,7 @@
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStartPromo
           DataType = ftDateTime
           ParamType = ptInput
@@ -3657,7 +3644,7 @@
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEndPromo
           DataType = ftDateTime
           ParamType = ptInput
@@ -3781,7 +3768,7 @@
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -4292,7 +4279,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -4358,49 +4345,49 @@
       end
       item
         Name = 'StartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deStartPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deEndPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'StartSale'
-        Value = 'NULL'
+        Value = Null
         Component = deStartSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndSale'
-        Value = 'NULL'
+        Value = Null
         Component = deEndSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndReturn'
-        Value = 'NULL'
+        Value = Null
         Component = deEndReturn
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -4484,7 +4471,7 @@
       end
       item
         Name = 'MonthPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deMonthPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -4505,7 +4492,7 @@
       end
       item
         Name = 'CheckDate'
-        Value = 'NULL'
+        Value = Null
         Component = deCheck
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -4631,7 +4618,7 @@
       end
       item
         Name = 'inStartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deStartPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -4639,7 +4626,7 @@
       end
       item
         Name = 'inEndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deEndPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -4647,7 +4634,7 @@
       end
       item
         Name = 'inStartSale'
-        Value = 'NULL'
+        Value = Null
         Component = deStartSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -4655,7 +4642,7 @@
       end
       item
         Name = 'inEndSale'
-        Value = 'NULL'
+        Value = Null
         Component = deEndSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -4663,7 +4650,7 @@
       end
       item
         Name = 'inEndReturn'
-        Value = 'NULL'
+        Value = Null
         Component = deEndReturn
         DataType = ftDateTime
         ParamType = ptInput
@@ -4671,7 +4658,7 @@
       end
       item
         Name = 'inOperDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -4679,7 +4666,7 @@
       end
       item
         Name = 'inOperDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -4687,7 +4674,7 @@
       end
       item
         Name = 'inMonthPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deMonthPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -4695,7 +4682,7 @@
       end
       item
         Name = 'inCheckDate'
-        Value = 'NULL'
+        Value = Null
         Component = deCheck
         DataType = ftDateTime
         ParamType = ptInput
@@ -4843,43 +4830,11 @@
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Promo_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 374
     Top = 192
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Promo_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 462
     Top = 200
   end
@@ -5113,10 +5068,10 @@
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    FormNameParam.Value = 'TPersonalForm'
+    FormNameParam.Value = 'TPersonal_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -5401,6 +5356,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -5564,6 +5520,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -5852,6 +5809,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -5925,6 +5883,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = calcPriceIn
@@ -6136,6 +6095,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -6198,6 +6158,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -6301,6 +6262,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = ссPriceIn

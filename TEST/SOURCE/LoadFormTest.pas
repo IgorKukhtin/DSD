@@ -3660,15 +3660,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerDialogForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
    {
@@ -4251,25 +4252,27 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileMemberDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileMemberDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileMovement_DateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileMovement_DateDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePackEditForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoJournalForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoForm');
+  exit;
   //
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalForm'));
@@ -4386,16 +4389,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutEditForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
- exit;
+  exit;
   //  Установить пароль для подтверждения в Scale
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPswDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPswDialogForm');
