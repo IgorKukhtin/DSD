@@ -2687,6 +2687,17 @@ end if;
                     -- найдем любой ОДИН
                     LEFT JOIN Container ON Container.ParentId = _tmpItem.ContainerId_Goods
                                        AND Container.DescId   = zc_Container_Summ()
+                    -- эту статью нельзя
+                    INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                   ON CLO_InfoMoney.ContainerId = Container.Id
+                                                  AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                  AND CLO_InfoMoney.ObjectId    <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                    -- эту статью нельзя
+                    INNER JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
+                                                   ON CLO_InfoMoneyDetail.ContainerId = Container.Id
+                                                  AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                                                  AND CLO_InfoMoneyDetail.ObjectId    <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                    -- эти счета нельзя
                     LEFT JOIN ObjectLink AS ObjectLink_AccountGroup ON ObjectLink_AccountGroup.ObjectId      = Container.ObjectId
                                                                    AND ObjectLink_AccountGroup.DescId        = zc_ObjectLink_Account_AccountGroup()
                                                                    -- Прибыль будущих периодов + Транзит
@@ -2699,6 +2710,8 @@ end if;
                  AND _tmpItemSumm.MovementItemId IS NULL
                  -- находим по другим счетам
                  AND ObjectLink_AccountGroup.ObjectId IS NULL
+                 -- !!!временно, пока только с поиском, потом прикрутим Insert!!!
+                 AND Container.Id > 0
                GROUP BY _tmpItem.MovementItemId
                       , _tmpItem.ContainerId_Goods
                       , _tmpItem.isLossMaterials
@@ -4002,7 +4015,7 @@ end if;
 
 
      --
-     IF EXISTS (SELECT FROM _tmpMIContainer_insert WHERE _tmpMIContainer_insert.ContainerId = 0)
+     IF EXISTS (SELECT 1 FROM _tmpMIContainer_insert WHERE _tmpMIContainer_insert.ContainerId = 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Для товара <%> необходимо ввести цену.'
                         , lfGet_Object_ValueData_sh ((SELECT _tmpItem.GoodsId FROM _tmpMIContainer_insert JOIN _tmpItem ON _tmpItem.ContainerId_Goods = _tmpMIContainer_insert.ContainerIntId_Analyzer WHERE _tmpMIContainer_insert.ContainerId = 0 LIMIT 1))

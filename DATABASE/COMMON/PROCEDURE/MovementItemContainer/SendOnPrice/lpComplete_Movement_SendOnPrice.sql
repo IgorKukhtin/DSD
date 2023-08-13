@@ -1802,3 +1802,4 @@ where MovementItemContainer.MovementItemId = tmp.MovementItemId
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 3313, inSession:= '2')
 -- SELECT * FROM lpComplete_Movement_SendOnPrice (inMovementId:= 3313, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3313, inSession:= '2')
+-- select * from gpComplete_All_Sybase(25864670,False,'444873')

@@ -2024,6 +2024,17 @@ BEGIN
                  -- найдем любой ОДИН
                  LEFT JOIN Container ON Container.ParentId = _tmpItem.ContainerId_Goods
                                     AND Container.DescId   = zc_Container_Summ()
+                 -- эту статью нельзя
+                 INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                ON CLO_InfoMoney.ContainerId = Container.Id
+                                               AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                               AND CLO_InfoMoney.ObjectId    <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                 -- эту статью нельзя
+                 INNER JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
+                                                ON CLO_InfoMoneyDetail.ContainerId = Container.Id
+                                               AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                                               AND CLO_InfoMoneyDetail.ObjectId    <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                 -- эти счета нельзя
                  LEFT JOIN ObjectLink AS ObjectLink_AccountGroup ON ObjectLink_AccountGroup.ObjectId      = Container.ObjectId
                                                                 AND ObjectLink_AccountGroup.DescId        = zc_ObjectLink_Account_AccountGroup()
                                                                 -- Прибыль будущих периодов + Транзит

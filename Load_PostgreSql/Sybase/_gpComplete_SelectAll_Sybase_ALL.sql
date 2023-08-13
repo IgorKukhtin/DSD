@@ -180,6 +180,36 @@ END IF;
                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                           )*/
+     , tmpInv_main AS (
+                       -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
+                       SELECT DISTINCT tmpUnit_from.UnitId
+                       FROM Movement
+                            LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                                    AND MLO_From.DescId = zc_MovementLinkObject_From()
+                            LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
+                       
+                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset()) -- , zc_Movement_SendOnPrice()
+                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                         AND (tmpUnit_from.UnitId > 0
+                           OR Movement.DescId = zc_Movement_SaleAsset()
+                             )
+                         AND 1=0
+                       
+                      UNION
+                       -- 1.3. To: ReturnIn
+                       SELECT tmpUnit_To.UnitId
+                       FROM Movement
+                            LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                                  AND MLO_To.DescId = zc_MovementLinkObject_To()
+                            LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         AND Movement.DescId IN (zc_Movement_ReturnIn())
+                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                         AND tmpUnit_To.UnitId > 0
+                         AND 1=0
+                      )
+
      -- Результат
      SELECT tmp.MovementId
           , tmp.OperDate
@@ -581,7 +611,32 @@ END IF;
        AND inGroupId <> -1
 
 /*
+     -- !!!Inventory!!!
      SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , 0  AS BranchCode
+          , '' AS BranchName
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+          INNER JOIN tmpInv_main ON tmpInv_main.UnitId = MLO_From.ObjectId
+
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND Movement.DescId IN (zc_Movement_Inventory())
+*/
+
+/*     SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code

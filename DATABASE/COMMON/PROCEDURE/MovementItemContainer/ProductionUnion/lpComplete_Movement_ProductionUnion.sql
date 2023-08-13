@@ -585,7 +585,11 @@ BEGIN
                                , Container.Amount  AS Amount_container
                                , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()), Container.Id) AS AmountSUM
                                  -- !!!Íàäî îòëîâèòü ÏÎÑËÅÄÍÈÉ!!!
-                               , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId
+                                                    ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC
+                                                           , CASE WHEN Object_PartionGoods.ValueData ILIKE 'óï%' THEN 1 ELSE 0 END
+                                                           , Container.Id DESC
+                                                   ) AS Ord
                                  --
                                , CLO_PartionGoods.ObjectId AS PartionGoodsId
                           FROM tmpMI_summ AS tmpMI
@@ -603,6 +607,8 @@ BEGIN
                                                              AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                        AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                               LEFT JOIN Object as Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+
                           WHERE (CLO_Member.ObjectId    = vbMemberId_From
                              AND vbMemberId_From        > 0
                                 )
