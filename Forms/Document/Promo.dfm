@@ -7645,10 +7645,10 @@
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    FormNameParam.Value = 'TPersonalForm'
+    FormNameParam.Value = 'TPersonal_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -7669,8 +7669,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 108
-    Top = 48
+    Left = 100
+    Top = 72
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'

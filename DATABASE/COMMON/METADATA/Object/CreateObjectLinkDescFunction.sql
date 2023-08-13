@@ -716,6 +716,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Asset_AssetType() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Asset_AssetType', 'Связь основных средств с Типом основных средств', zc_Object_Asset(), zc_Object_AssetType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Asset_AssetType');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Asset_PartionModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Asset_PartionModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Asset_PartionModel', 'Связь основных средств с Моделью', zc_Object_Asset(), zc_Object_PartionModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Asset_PartionModel');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PartionGoods_GoodsKindComplete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionGoods_GoodsKindComplete'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PartionGoods_GoodsKindComplete', 'Вид товара(готовая продукция)', zc_Object_PartionGoods(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionGoods_GoodsKindComplete');
@@ -2945,6 +2950,7 @@ SELECT 'zc_ObjectLink_CashSettings_UnitComplInvent', 'Проведение полной инвентар
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.08.23         * zc_ObjectLink_Asset_PartionModel
  13.06.23                                                                                      * zc_ObjectLink_CashSettings_UnitComplInvent
  18.05.23         * zc_ObjectLink_Storage_AreaUnit
  18.04.23                                                                                      * zc_ObjectLink_CommentCheck_CommentTR

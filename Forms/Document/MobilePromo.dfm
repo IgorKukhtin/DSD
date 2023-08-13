@@ -3,7 +3,6 @@ inherited MobilePromoForm: TMobilePromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 560
   ClientWidth = 747
-  ExplicitTop = -82
   ExplicitWidth = 763
   ExplicitHeight = 599
   PixelsPerInch = 96
@@ -1398,7 +1397,7 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1458,48 +1457,48 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'StartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deStartPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deEndPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'StartSale'
-        Value = 'NULL'
+        Value = Null
         Component = deStartSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndSale'
-        Value = 'NULL'
+        Value = Null
         Component = deEndSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndReturn'
-        Value = 'NULL'
+        Value = Null
         Component = deEndReturn
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateStart'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateEnd'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1547,14 +1546,14 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'PersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTradeName'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1562,7 +1561,7 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'PersonalId'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1570,7 +1569,7 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'PersonalName'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end>
@@ -1618,7 +1617,7 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'inStartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deStartPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -1626,7 +1625,7 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'inEndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deEndPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -1634,7 +1633,7 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'inStartSale'
-        Value = 'NULL'
+        Value = Null
         Component = deStartSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -1642,7 +1641,7 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'inEndSale'
-        Value = 'NULL'
+        Value = Null
         Component = deEndSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -1650,7 +1649,7 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'inEndReturn'
-        Value = 'NULL'
+        Value = Null
         Component = deEndReturn
         DataType = ftDateTime
         ParamType = ptInput
@@ -1658,14 +1657,14 @@ inherited MobilePromoForm: TMobilePromoForm
       end
       item
         Name = 'inOperDateStart'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateEnd'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1701,7 +1700,7 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'inPersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1709,7 +1708,7 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'inPersonalId'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1928,19 +1927,19 @@ inherited MobilePromoForm: TMobilePromoForm
     Left = 876
     Top = 196
   end
-  object PersonalTradeGuides: TdsdGuides
+  object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    FormNameParam.Value = 'TPersonalForm'
+    FormNameParam.Value = 'TPersonal_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1949,7 +1948,7 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1958,7 +1957,7 @@ inherited MobilePromoForm: TMobilePromoForm
     Left = 260
     Top = 48
   end
-  object PersonalGuides: TdsdGuides
+  object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
     FormNameParam.Value = 'TPersonalForm'
@@ -1970,7 +1969,7 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1979,7 +1978,7 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2145,14 +2144,14 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'outPersonalMarketingId'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outPersonalMarketingName'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2160,14 +2159,14 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'outPersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outPersonalTradeName'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2183,10 +2182,13 @@ inherited MobilePromoForm: TMobilePromoForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 262
     Top = 473
   end
@@ -2196,10 +2198,13 @@ inherited MobilePromoForm: TMobilePromoForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 278
     Top = 345
   end
@@ -2316,10 +2321,13 @@ inherited MobilePromoForm: TMobilePromoForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 510
     Top = 449
   end

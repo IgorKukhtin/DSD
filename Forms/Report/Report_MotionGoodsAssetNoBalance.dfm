@@ -25,6 +25,7 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
     Height = 465
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -686,6 +687,7 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -766,6 +768,7 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         DataBinding.FieldName = 'Release_Partion'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 66
       end
       object Model_Partion: TcxGridDBColumn
@@ -783,6 +786,25 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object PartionModelName_asset: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' '#1054#1057' ('#1087#1072#1088#1090#1080#1103')'
+        DataBinding.FieldName = 'PartionModelName_asset'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object KW_asset: TcxGridDBColumn
+        Caption = #1052#1086#1097#1085#1086#1089#1090#1100' '#1054#1057', '#1082#1042#1090
+        DataBinding.FieldName = 'KW_asset'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+        Options.Editing = False
+        Width = 86
       end
       object AssetToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054#1057')'

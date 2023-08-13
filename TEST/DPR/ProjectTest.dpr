@@ -1451,7 +1451,8 @@ uses
   BodyTypeEdit in '..\..\Forms\Guides\BodyTypeEdit.pas' {BodyTypeEditForm: TParentForm},
   BodyType in '..\..\Forms\Guides\BodyType.pas' {BodyTypeForm: TParentForm},
   Report_Personal_MoneySumm in '..\..\Forms\Report\Report_Personal_MoneySumm.pas' {Report_Personal_MoneySummForm: TParentForm},
-  Report_Personal_ServiceSumm in '..\..\Forms\Report\Report_Personal_ServiceSumm.pas' {Report_Personal_ServiceSummForm: TParentForm};
+  Report_Personal_ServiceSumm in '..\..\Forms\Report\Report_Personal_ServiceSumm.pas' {Report_Personal_ServiceSummForm: TParentForm},
+  Personal_Choice in '..\..\Forms\Guides\Personal_Choice.pas' {Personal_ChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

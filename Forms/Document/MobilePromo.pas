@@ -13,7 +13,17 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxSplitter;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxSplitter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMobilePromoForm = class(TAncestorDocumentForm)
@@ -25,12 +35,12 @@ type
     deStartSale: TcxDateEdit;
     cxLabel8: TcxLabel;
     deEndSale: TcxDateEdit;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     cxLabel14: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
     cxLabel16: TcxLabel;
     edPersonal: TcxButtonEdit;
-    PersonalGuides: TdsdGuides;
+    GuidesPersonal: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     PriceWithOutVAT: TcxGridDBColumn;

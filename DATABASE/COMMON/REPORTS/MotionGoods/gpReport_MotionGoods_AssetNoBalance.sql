@@ -24,7 +24,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar
              , PartionGoodsDate TDateTime                       -- дата ввода в эксплуатацию 
-             , MovementPartionGoods_InvNumber TVarChar
+             , MovementPartionGoods_InvNumber TVarChar 
+             , PartionModelName_asset TVarChar, KW_asset TFloat
              , AssetToCode Integer, AssetToName TVarChar
              , AssetToGroupName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
@@ -39,7 +40,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Release_Partion TDateTime
              , Price_Partion        TFloat
              , PartNumber_Partion   TVarChar
-             , Model_Partion        TVarChar 
+             , Model_Partion        TVarChar  
              , PartnerName_Partion      TVarChar
              , UnitName_Storage     TVarChar
              , BranchName_Storage   TVarChar 
@@ -396,6 +397,9 @@ BEGIN
         , COALESCE (ObjectString_Asset_InvNumber.ValueData, '') :: TVarChar AS PartionGoodsName
         , COALESCE(ObjectDate_PartionGoods_Value.ValueData,Null) ::TDateTime AS PartionGoodsDate   --дата ввода в эксплуатацию
         , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
+
+        , Object_Asset_PartionModel.ValueData   ::TVarChar AS PartionModelName_asset
+        , COALESCE (ObjectFloat_KW.ValueData,0) :: TFloat  AS KW_asset
 
         , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
@@ -877,8 +881,17 @@ BEGIN
 
         LEFT JOIN ObjectDate AS ObjectDate_Release
                              ON ObjectDate_Release.ObjectId = ObjectLink_Goods.ChildObjectId
-                            AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()
+                            AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()  
 
+        LEFT JOIN ObjectLink AS ObjectLink_Asset_PartionModel
+                             ON ObjectLink_Asset_PartionModel.ObjectId = ObjectLink_Goods.ChildObjectId
+                            AND ObjectLink_Asset_PartionModel.DescId = zc_ObjectLink_Asset_PartionModel()
+        LEFT JOIN Object AS Object_Asset_PartionModel ON Object_Asset_PartionModel.Id = ObjectLink_Asset_PartionModel.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_KW
+                              ON ObjectFloat_KW.ObjectId = ObjectLink_Goods.ChildObjectId
+                             AND ObjectFloat_KW.DescId = zc_ObjectFloat_Asset_KW()
+  
         LEFT JOIN ObjectString AS ObjectString_Storage_Address
                                ON ObjectString_Storage_Address.ObjectId = Object_Storage.Id 
                               AND ObjectString_Storage_Address.DescId = zc_ObjectString_Storage_Address()

@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
+             , PartionModelId Integer, PartionModelCode Integer, PartionModelName TVarChar
              , AssetTypeId Integer, AssetTypeCode Integer, AssetTypeName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
@@ -44,6 +45,10 @@ BEGIN
          , Object_Car.ObjectCode       AS CarCode
          , Object_Car.ValueData        AS CarName
          , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
+
+         , Object_PartionModel.Id               AS PartionModelId
+         , Object_PartionModel.ObjectCode       AS PartionModelCode
+         , Object_PartionModel.ValueData        AS PartionModelName
 
          , Object_AssetType.Id             AS AssetTypeId
          , Object_AssetType.ObjectCode     AS AssetTypeCode
@@ -85,6 +90,11 @@ BEGIN
                                ON ObjectLink_Asset_Car.ObjectId = Object_Asset.Id
                               AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
           LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Asset_Car.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Asset_PartionModel
+                               ON ObjectLink_Asset_PartionModel.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_PartionModel.DescId = zc_ObjectLink_Asset_PartionModel()
+          LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_Asset_PartionModel.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel
                                ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
@@ -169,6 +179,10 @@ BEGIN
          , ''  :: TVarChar AS CarName
          , ''  :: TVarChar AS CarModelName
 
+         , 0    :: Integer AS PartionModelId
+         , NULL :: Integer AS PartionModelCode
+         , ''  :: TVarChar AS PartionModelName
+
          , 0    :: Integer AS AssetTypeId
          , NULL :: Integer AS AssetTypeCode
          , ''  :: TVarChar AS AssetTypeName
@@ -198,6 +212,7 @@ ALTER FUNCTION gpSelect_Object_Asset(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.08.23         *
  03.10.22         *
  04.05.22         *
  17.11.20         * add

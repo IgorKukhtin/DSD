@@ -135,15 +135,15 @@
     Width = 296
   end
   object cxLabel8: TcxLabel
-    Left = 40
+    Left = 189
     Top = 220
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
-    Left = 40
-    Top = 237
+    Left = 189
+    Top = 238
     TabOrder = 19
-    Width = 296
+    Width = 147
   end
   object cxLabel9: TcxLabel
     Left = 41
@@ -199,7 +199,7 @@
   end
   object cxLabel12: TcxLabel
     Left = 43
-    Top = 387
+    Top = 388
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
   end
   object edCar: TcxButtonEdit
@@ -233,13 +233,13 @@
     Width = 101
   end
   object cxLabel14: TcxLabel
-    Left = 44
-    Top = 431
+    Left = 41
+    Top = 433
     Caption = #1058#1080#1087' '#1054#1057
   end
   object edAssetType: TcxButtonEdit
-    Left = 41
-    Top = 448
+    Left = 40
+    Top = 454
     Properties.Buttons = <
       item
         Default = True
@@ -276,6 +276,23 @@
     ShowHint = True
     TabOrder = 34
     Width = 117
+  end
+  object edPartionModel: TcxButtonEdit
+    Left = 40
+    Top = 238
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 35
+    Width = 138
+  end
+  object cxLabel16: TcxLabel
+    Left = 43
+    Top = 224
+    Caption = #1052#1086#1076#1077#1083#1100' ('#1087#1072#1088#1090#1080#1103')'
   end
   object ActionList: TActionList
     Left = 344
@@ -422,6 +439,14 @@
         Name = 'inAssetTypeId'
         Value = Null
         Component = GuidesAssetType
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelIn'
+        Value = Null
+        Component = GuidesPartionModel
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -642,6 +667,21 @@
         Component = cbisDocGoods
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionModelId'
+        Value = Null
+        Component = GuidesPartionModel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionModelName'
+        Value = Null
+        Component = GuidesPartionModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 336
@@ -692,8 +732,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 282
+    Left = 200
+    Top = 266
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -810,5 +850,34 @@
       end>
     Left = 161
     Top = 448
+  end
+  object GuidesPartionModel: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartionModel
+    FormNameParam.Value = 'TPartionModelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionModelForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartionModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartionModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 96
+    Top = 230
   end
 end
