@@ -762,6 +762,20 @@ object MainForm: TMainForm
       Height = 13
       Caption = #1087#1086
     end
+    object Count_errLabel: TLabel
+      Left = 6
+      Top = 48
+      Width = 49
+      Height = 13
+      Caption = 'Count_err:'
+    end
+    object DeadlockLabel: TLabel
+      Left = 6
+      Top = 77
+      Width = 49
+      Height = 13
+      Caption = 'Deadlock:'
+    end
     object cbAllDocument: TCheckBox
       Tag = 2
       Left = 3
@@ -781,8 +795,8 @@ object MainForm: TMainForm
     end
     object cbIncomeBN: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 61
+      Left = -1
+      Top = 121
       Width = 235
       Height = 17
       Caption = '1.1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1041#1053
@@ -810,8 +824,8 @@ object MainForm: TMainForm
     end
     object cbIncomePacker: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 99
+      Left = 6
+      Top = 137
       Width = 235
       Height = 17
       Caption = '1.3. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1079#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1103
@@ -887,8 +901,8 @@ object MainForm: TMainForm
     end
     object cbReturnOutBN: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 79
+      Left = 12
+      Top = 130
       Width = 235
       Height = 17
       Caption = '1.2. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' - '#1041#1053
@@ -997,8 +1011,8 @@ object MainForm: TMainForm
       Visible = False
     end
     object cbOnlyInsertDocument: TCheckBox
-      Left = 3
-      Top = 41
+      Left = 6
+      Top = 114
       Width = 235
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1085#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
@@ -1264,8 +1278,8 @@ object MainForm: TMainForm
     end
     object cbIncomeNal: TCheckBox
       Tag = 20
-      Left = 6
-      Top = 118
+      Left = 14
+      Top = 146
       Width = 235
       Height = 17
       Caption = '1.4. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1053#1040#1051
@@ -1279,8 +1293,8 @@ object MainForm: TMainForm
     end
     object cbReturnOutNal: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 140
+      Left = 6
+      Top = 156
       Width = 235
       Height = 17
       Caption = '1.5. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' - '#1053#1040#1051
@@ -1294,8 +1308,8 @@ object MainForm: TMainForm
     end
     object cbPartner_Income: TCheckBox
       Tag = 20
-      Left = 25
-      Top = 160
+      Left = 33
+      Top = 169
       Width = 213
       Height = 17
       Caption = '!!!'#1085#1086#1074#1099#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080'/'#1076#1086#1075#1086#1074#1086#1088#1072' '#1053#1040#1051'!!!'
@@ -1612,6 +1626,22 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 56
+    end
+    object Count_errEdit: TEdit
+      Left = 60
+      Top = 45
+      Width = 80
+      Height = 21
+      TabOrder = 57
+      Text = '0'
+    end
+    object DeadlockEdit: TEdit
+      Left = 60
+      Top = 74
+      Width = 80
+      Height = 21
+      TabOrder = 58
+      Text = '0'
     end
   end
   object CompleteDocumentPanel: TPanel

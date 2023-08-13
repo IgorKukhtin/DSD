@@ -259,6 +259,10 @@ type
     toSqlQuery_three: TZQuery;
     Label7: TLabel;
     MovementId_startEdit: TEdit;
+    Count_errLabel: TLabel;
+    Count_errEdit: TEdit;
+    DeadlockLabel: TLabel;
+    DeadlockEdit: TEdit;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -287,6 +291,8 @@ type
     zc_Enum_GlobalConst_StartDate_Auto_PrimeCost : TDateTime;
     zc_Enum_Process_Auto_PrimeCost:String;
 
+    Count_err : Integer;
+    Count_err_Deadlock : Integer;
     MovementId_start : Integer;
     GroupId_branch : Integer;
     beginVACUUM : Integer;
@@ -1023,6 +1029,12 @@ begin
               do begin
                 Connection.Connected:=false;
                 //
+                Count_err          := Count_err + 1;
+                if Pos('Deadlock', E.Message) > 0 then Count_err_Deadlock:= Count_err_Deadlock + 1;
+                //
+                Count_errEdit.Text:= IntToStr(Count_err);
+                DeadlockEdit.Text:= IntToStr(Count_err_Deadlock);
+                //
                 myLogMemo_add(' err fExecSqToQuery_two ' +#10+#13+mySql);
                 myLogMemo_add('');
                 myLogMemo_add(E.Message);
@@ -1635,6 +1647,10 @@ var
 begin
      //
      //exit;
+     //
+     //
+     Count_err          := 0;
+     Count_err_Deadlock := 0;
      //
      cbHistoryCost_0.Checked   := (ParamStr(5) = 'h_0')or(ParamStr(6) = 'h_0')or(ParamStr(7) = 'h_0')or(ParamStr(8) = 'h_0')or(ParamStr(9) = 'h_0')or(ParamStr(10) = 'h_0')or(ParamStr(11) = 'h_0');
      cbHistoryCost_8379.Checked:= (ParamStr(2) = 'h_8379')or(ParamStr(6) = 'h_8379')or(ParamStr(7) = 'h_8379')or(ParamStr(8) = 'h_8379')or(ParamStr(9) = 'h_8379')or(ParamStr(10) = 'h_8379')or(ParamStr(11) = 'h_8379');
@@ -3451,7 +3467,7 @@ begin
                            begin
                                count_begin:= count_begin + 1;
                                //
-                               if count_begin >= 80 then
+                               if count_begin >= 400 then
                                begin
                                     count_begin:= 0;
                                     fExecSqToQuery_noErr_three(' DO $$ BEGIN'

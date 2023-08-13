@@ -98,7 +98,6 @@ type
     BarSubItemBoat: TdxBarSubItem;
     BarSubItemColor: TdxBarSubItem;
     BarSubItemOption: TdxBarSubItem;
-    bbShowAllBoatSale: TdxBarButton;
     isMain: TcxGridDBColumn;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;

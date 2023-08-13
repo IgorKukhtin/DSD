@@ -1989,13 +1989,6 @@
           ItemName = 'bbSetUnErasedOpt'
         end>
     end
-    object bbShowAllBoatSale: TdxBarButton
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
-      Category = 0
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
-      Visible = ivAlways
-      ImageIndex = 63
-    end
     object bbInsertRecordProdColorPattern: TdxBarButton
       Action = InsertRecordProdColorPattern
       Category = 0
