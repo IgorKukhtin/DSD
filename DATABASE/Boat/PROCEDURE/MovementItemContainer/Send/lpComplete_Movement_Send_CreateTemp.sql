@@ -24,7 +24,7 @@ BEGIN
                                    , Amount TFloat
                                    , PartNumber TVarChar
                                    , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                   , MovementId_order Integer
+                                   , MovementId_order_to Integer
                                     ) ON COMMIT DROP;
          -- таблица - партии
          CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ParentId Integer
@@ -33,7 +33,7 @@ BEGIN
                                          , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
                                          , AccountId_From Integer, AccountId_To Integer
                                          , Amount TFloat
-                                         , MovementId_order Integer
+                                         , MovementId_order_from Integer, MovementId_order_to Integer
                                           ) ON COMMIT DROP;
 
          -- таблица - сколько осталось переместить из резервов для Заказов клиента

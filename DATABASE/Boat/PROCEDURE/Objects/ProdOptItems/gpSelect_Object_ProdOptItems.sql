@@ -818,6 +818,20 @@ $BODY$
  08.10.20         *
 */
 
+/*
+-- update 
+SELECT ObjectLink.ChildObjectId, GoodsId, * 
+-- , lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Goods(), gpSelect.Id, ObjectLink.ChildObjectId)
+
+FROM gpSelect_Object_ProdOptItems (0, false, false, false, zfCalc_UserAdmin()) as gpSelect
+join ObjectLink on ObjectLink.ObjectId =  ProdOptionsId
+and ObjectLink.DescId = zc_ObjectLink_ProdOptions_Goods()
+and coalesce (ObjectLink.ChildObjectId, 0) <> coalesce (GoodsId, 0)
+
+where ProdOptionsId > 0 
+and ProdColorPatternId is null
+-- and GoodsId is null
+*/
 -- тест
 -- SELECT * FROM gpSelect_Object_ProdOptItems (0, true, false,true, zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ProdOptItems (0, false, false, false, zfCalc_UserAdmin())

@@ -62,7 +62,7 @@ RETURNS TABLE (PartionId            Integer
              , Comment_Partion         TVarChar
              , VATPercent_Partion      TFloat
 
-             , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar
+             , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar, ModelName_OrderClient TVarChar
               )
 AS
 $BODY$
@@ -134,11 +134,19 @@ BEGIN
                           )
      -- остатки
    , tmpContainer_All AS (SELECT Container.*
+                               , COALESCE (Object_PartionMovement.ObjectCode, 0) AS MovementId_order
                           FROM Container
                                -- Ограничение - Подразделение
                                INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
                                -- Ограничение - Товары
                                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
+
+                               LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
+                                                             ON CLO_PartionMovement.ContainerId = Container.Id
+                                                            AND CLO_PartionMovement.DescId      = zc_ContainerLinkObject_PartionMovement()
+                                                            -- если надо развернуть по Заказам клиента
+                                                            AND inIsOrderClient = TRUE
+                               LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = CLO_PartionMovement.ObjectId
 
                            WHERE Container.DescId = zc_Container_Count()
                              -- только остатки или все
@@ -192,6 +200,7 @@ BEGIN
    , tmpContainer AS (SELECT Container.PartionId            AS PartionId
                            , Container.ObjectId             AS GoodsId
                            , Container.WhereObjectId        AS UnitId
+                           , Container.MovementId_order     AS MovementId_order
                              -- Остаток кол-во
                            , Container.Amount               AS Remains
                              -- Остаток сумма
@@ -261,33 +270,38 @@ BEGIN
                          WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpContainer.PartionId FROM tmpContainer)
                            AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                         )
-       , tmpMIFloat_OrderClient AS (SELECT MIFloat_MovementId.MovementItemId
-                                         , MIFloat_MovementId.ValueData ::Integer
-                                         , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
-                                         , Object_From.ValueData                                     AS FromName
-                                         , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
-                                         , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
-                                    FROM MovementItemFloat AS MIFloat_MovementId
-                                         LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData ::Integer
+    -- Заказ Клиента
+  , tmpMIFloat_OrderClient AS (SELECT tmpList.MovementId_order
+                                    , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+                                    , Object_From.ValueData                                                           AS FromName_OrderClient
+                                    , zfCalc_ValueData_isErased (Object_Product.ValueData,   Object_Product.isErased) AS ProductName_OrderClient
+                                    , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN_OrderClient
+                                    , Object_Model.ValueData                                                          AS ModelName_OrderClient
+                               FROM (SELECT DISTINCT tmpContainer_All.MovementId_order FROM tmpContainer_All) AS tmpList
 
-                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                      ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
-                                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                         LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                    LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpList.MovementId_order
 
-                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                                                      ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
-                                                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
-                                         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-                                         LEFT JOIN ObjectString AS ObjectString_CIN
-                                                                ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                                               AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                                                 ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
+                                                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                                    LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
 
-                                    WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpContainer.PartionId FROM tmpContainer)
-                                      AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                                      AND inIsOrderClient = TRUE
-                                   )
+                                    LEFT JOIN ObjectString AS ObjectString_CIN
+                                                           ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                                          AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                         ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                                        AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
+                                    LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+
+                               WHERE inIsOrderClient = TRUE
+                              )
            , tmpData AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
 
@@ -330,10 +344,11 @@ BEGIN
                               , SUM (tmpContainer.Amount_reserve)  AS Amount_reserve
 
                                 -- OrderClient
-                              , MIFloat_MovementId.InvNumberFull_OrderClient AS InvNumberFull_OrderClient
-                              , MIFloat_MovementId.FromName                  AS FromName_OrderClient
-                              , MIFloat_MovementId.ProductName               AS ProductName_OrderClient
-                              , MIFloat_MovementId.CIN                       AS CIN_OrderClient
+                              , MIFloat_MovementId.InvNumberFull_OrderClient
+                              , MIFloat_MovementId.FromName_OrderClient
+                              , MIFloat_MovementId.ProductName_OrderClient
+                              , MIFloat_MovementId.CIN_OrderClient
+                              , MIFloat_MovementId.ModelName_OrderClient
   
                          FROM tmpContainer
                               LEFT JOIN tmpMIString AS MIString_PartNumber
@@ -341,8 +356,7 @@ BEGIN
                               LEFT JOIN MovementItem ON MovementItem.Id = tmpContainer.PartionId
 
                               LEFT JOIN tmpMIFloat_OrderClient AS MIFloat_MovementId
-                                                               ON MIFloat_MovementId.MovementItemId = tmpContainer.PartionId
-                                                              AND COALESCE (MIFloat_MovementId.ValueData,0) <> 0
+                                                               ON MIFloat_MovementId.MovementId_order = tmpContainer.MovementId_order
                          GROUP BY tmpContainer.UnitId
                                 , tmpContainer.GoodsId
 
@@ -366,12 +380,12 @@ BEGIN
                                 , tmpContainer.GoodsTagId
                                 , tmpContainer.GoodsTypeId
                                 , tmpContainer.ProdColorId
-
                                   -- OrderClient
                                 , MIFloat_MovementId.InvNumberFull_OrderClient
-                                , MIFloat_MovementId.FromName
-                                , MIFloat_MovementId.ProductName
-                                , MIFloat_MovementId.CIN
+                                , MIFloat_MovementId.FromName_OrderClient
+                                , MIFloat_MovementId.ProductName_OrderClient
+                                , MIFloat_MovementId.CIN_OrderClient
+                                , MIFloat_MovementId.ModelName_OrderClient
                   )
         -- Результат
         SELECT
@@ -465,6 +479,7 @@ BEGIN
            , tmpData.FromName_OrderClient        ::TVarChar
            , tmpData.ProductName_OrderClient     ::TVarChar
            , tmpData.CIN_OrderClient             ::TVarChar
+           , tmpData.ModelName_OrderClient       ::TVarChar
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit       ON Object_Unit.Id       = tmpData.UnitId

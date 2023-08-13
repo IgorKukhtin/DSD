@@ -16,17 +16,18 @@ $BODY$
   DECLARE vbJuridicalId_Basis        Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId               Integer; -- значение пока НЕ определяется
 
-  DECLARE vbMovementItemId   Integer;
-  DECLARE vbParentId         Integer;
-  DECLARE vbMovementId_order Integer;
-  DECLARE vbGoodsId          Integer;
-  DECLARE vbPartionId        Integer;
-  DECLARE vbPartNumber       TVarChar;
-  DECLARE vbAmount           TFloat;
-  DECLARE vbAmount_partion   TFloat;
+  DECLARE vbMovementItemId        Integer;
+  DECLARE vbParentId              Integer;
+  DECLARE vbMovementId_order_from Integer;
+  DECLARE vbMovementId_order_to   Integer;
+  DECLARE vbGoodsId               Integer;
+  DECLARE vbPartionId             Integer;
+  DECLARE vbPartNumber            TVarChar;
+  DECLARE vbAmount                TFloat;
+  DECLARE vbAmount_partion        TFloat;
 
-  DECLARE curItem            RefCursor;
-  DECLARE curPartion         RefCursor;
+  DECLARE curItem                 RefCursor;
+  DECLARE curPartion              RefCursor;
 BEGIN
 
      -- Параметры из документа
@@ -146,7 +147,6 @@ BEGIN
                                   , Amount
                                   , PartNumber
                                   , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
-                                  , MovementId_order
                                    )
         -- результат
         SELECT MovementItem.Id                  AS MovementItemId
@@ -161,9 +161,6 @@ BEGIN
              , View_InfoMoney.InfoMoneyDestinationId
                -- Статьи назначения
              , View_InfoMoney.InfoMoneyId
-
-              -- MovementId заказ Клиента
-            , _tmpItem_pr.MovementId_order
 
         FROM MovementItem
              INNER JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = MovementItem.ParentId
@@ -183,7 +180,7 @@ BEGIN
           AND MovementItem.isErased   = FALSE
        ;
 
-     -- заполняем таблицу - элементы документа - ЗП
+     -- заполняем таблицу - элементы документа - ЗП + Работы
      INSERT INTO _tmpItem_Detail (MovementItemId, ParentId
                                 , ReceiptServiceId, PersonalId, PartnerId
                                 , Amount
@@ -259,71 +256,36 @@ BEGIN
      END IF;
 
 
-     -- определили - !!!нужна ли партия MovementId_order!!!
-     UPDATE _tmpItem_Child_mi SET isId_order = tmpItem_Child_mi.isId_order
-
-     FROM (WITH tmpItem AS (SELECT DISTINCT _tmpItem_Child_mi.GoodsId FROM _tmpItem_Child_mi)
-              , tmpMI AS (SELECT DISTINCT _tmpItem_Child_mi.GoodsId
-                          FROM _tmpItem_Child_mi
-                               INNER JOIN MovementItem ON MovementItem.ObjectId = _tmpItem_Child_mi.GoodsId
-                                                      AND MovementItem.DescId   = zc_MI_Master()
-                                                      AND MovementItem.isErased = FALSE
-                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
-                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                  AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 YEAR' AND vbOperDate + INTERVAL '1 YEAR'
-                                                  AND Movement.DescId   IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
-                         UNION ALL
-                          -- виртуальные" узлы
-                          SELECT DISTINCT
-                                 OL.ChildObjectId
-                          FROM ObjectLink AS OL
-                               -- Не удален
-                               INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = OL.ObjectId
-                                                                            AND Object_ReceiptGoodsChild.isErased = FALSE
-
-                               INNER JOIN ObjectLink AS OL_ReceiptGoodsChild_ReceiptGoods
-                                                     ON OL_ReceiptGoodsChild_ReceiptGoods.ObjectId = OL.ObjectId
-                                                    AND OL_ReceiptGoodsChild_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-                               -- Не удален
-                               INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = OL_ReceiptGoodsChild_ReceiptGoods.ChildObjectId
-                                                                       AND Object_ReceiptGoods.isErased = FALSE
-                          WHERE OL.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
-                            AND OL.ChildObjectId > 0
-                         )
-           --
-           SELECT tmpItem.GoodsId
-                , CASE WHEN tmpMI.GoodsId > 0 THEN TRUE ELSE FALSE END AS isId_order
-           FROM tmpItem
-                LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpItem.GoodsId
-          ) AS tmpItem_Child_mi
-     WHERE _tmpItem_Child_mi.GoodsId = tmpItem_Child_mi.GoodsId
-    ;
-
 
      -- 2.заполняем таблицу - элементы по партиям
 
      -- курсор1 - элементы документа
      OPEN curItem FOR SELECT _tmpItem.MovementItemId, _tmpItem.ParentId
-                           , _tmpItem.GoodsId, _tmpItem.PartNumber, _tmpItem.MovementId_order
+                           , _tmpItem.GoodsId, _tmpItem.PartNumber
+                             -- из мастера
+                           , _tmpItem_pr.MovementId_order AS MovementId_order_to
+                             --
                            , _tmpItem.Amount
                       FROM _tmpItem_Child_mi AS _tmpItem
+                           INNER JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem.ParentId
                      ;
      -- начало цикла по курсору1 - элементы документа
      LOOP
      -- данные по партиям
-     FETCH curItem INTO vbMovementItemId, vbParentId, vbGoodsId, vbPartNumber, vbMovementId_order, vbAmount;
+     FETCH curItem INTO vbMovementItemId, vbParentId, vbGoodsId, vbPartNumber, vbMovementId_order_to, vbAmount;
      -- если данные закончились, тогда выход
      IF NOT FOUND THEN EXIT; END IF;
 
 
      -- курсор2 - подбор остатков по партиям
      OPEN curPartion FOR
-        SELECT Container.PartionId, Container.Amount - COALESCE (tmp.Amount, 0) AS Amount
+        SELECT Container.PartionId, COALESCE (CLO_PartionMovement.ObjectId, 0) AS MovementId_order_from, Container.Amount - COALESCE (tmp.Amount, 0) AS Amount
         FROM Container
-             -- св-во партии
-             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                         ON MIFloat_MovementId.MovementItemId = Container.PartionId
-                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+             -- св-во Container
+             LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
+                                           ON CLO_PartionMovement.ContainerId = Container.Id
+                                          AND CLO_PartionMovement.DescId      = zc_ContainerLinkObject_PartionMovement()
+             LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = CLO_PartionMovement.ObjectId
              -- св-во партии
              LEFT JOIN MovementItemString AS MIString_PartNumber
                                           ON MIString_PartNumber.MovementItemId = Container.PartionId
@@ -338,20 +300,36 @@ BEGIN
         WHERE Container.ObjectId      = vbGoodsId
           AND Container.WhereObjectId = vbUnitId_From
           AND Container.Amount  - COALESCE (tmp.Amount, 0) > 0
+          --
+          AND (-- партия MovementId соответсвует, и она НЕ нулевая
+               (CLO_PartionMovement.ObjectId = vbMovementId_order_to AND vbMovementId_order_to > 0)
+               -- партия MovementId в остатках нулевая
+            OR COALESCE (CLO_PartionMovement.ObjectId, 0) = 0
+              )
+
+
         ORDER BY -- если MovementId_order совпадает
-                 CASE WHEN MIFloat_MovementId.ValueData = vbMovementId_order AND vbMovementId_order <> 0 THEN 0 ELSE 1 END
+                 CASE WHEN Object_PartionMovement.ObjectCode = vbMovementId_order_to AND vbMovementId_order_to <> 0 THEN 0 ELSE 1 END
+                 -- если MovementId_order есть, подбираем сначала партии с пустым MovementId_order
+               , CASE WHEN COALESCE (Object_PartionMovement.ObjectCode, 0) = 0 AND vbMovementId_order_to <> 0 THEN 0 ELSE 1 END
+
                  -- если PartNumber совпадает
                , CASE WHEN MIString_PartNumber.ValueData = vbPartNumber AND vbPartNumber <> '' THEN 0 ELSE 1 END
+                 -- если PartNumber есть, подбираем сначала партии с пустым PartNumber
+               , CASE WHEN COALESCE (MIString_PartNumber.ValueData, '') = '' AND vbPartNumber <> '' THEN 0 ELSE 1 END
+
                  -- если MovementId_order не установлен, подбираем сначала партии с пустым MovementId_order
-               , CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0)  = 0 AND vbMovementId_order = 0 THEN 0 ELSE 1 END
+               , CASE WHEN COALESCE (Object_PartionMovement.ObjectCode, 0) = 0 AND vbMovementId_order_to = 0 THEN 0 ELSE 1 END
                  -- если PartNumber не установлен, подбираем сначала партии с пустым PartNumber
                , CASE WHEN COALESCE (MIString_PartNumber.ValueData, '') = '' AND vbPartNumber = '' THEN 0 ELSE 1 END
+
                , Container.PartionId ASC
-       ;
+              ;
+
          -- начало цикла по курсору2. - остатки по партиям
          LOOP
              -- данные - сколько есть в остатках
-             FETCH curPartion INTO vbPartionId, vbAmount_partion;
+             FETCH curPartion INTO vbPartionId, vbMovementId_order_from, vbAmount_partion;
              -- если остатки закончились, или все кол-во уже переместили тогда выход
              IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
 
@@ -363,15 +341,17 @@ BEGIN
                                            , GoodsId, PartionId
                                            , Amount
                                            , MovementId_order
+                                           , isPartion_new
                                             )
-                    SELECT vbMovementItemId     AS MovementItemId
-                         , vbParentId           AS ParentId
-                         , vbGoodsId            AS GoodsId
-                         , vbPartionId          AS PartionId
+                    SELECT vbMovementItemId        AS MovementItemId
+                         , vbParentId              AS ParentId
+                         , vbGoodsId               AS GoodsId
+                         , vbPartionId             AS PartionId
                            -- нашли нужное кол-во
-                         , vbAmount             AS Amount
+                         , vbAmount                AS Amount
                            --
-                         , vbMovementId_order   AS MovementId_order
+                         , vbMovementId_order_from AS MovementId_order
+                         , FALSE
                           ;
                  -- обнуляем кол-во, больше не надо искать
                  vbAmount:= 0;
@@ -381,18 +361,22 @@ BEGIN
                                            , GoodsId, PartionId
                                            , Amount
                                            , MovementId_order
+                                           , isPartion_new
                                             )
-                    SELECT vbMovementItemId     AS MovementItemId
-                         , vbParentId           AS ParentId
-                         , vbGoodsId            AS GoodsId
-                         , vbPartionId          AS PartionId
+                    SELECT vbMovementItemId        AS MovementItemId
+                         , vbParentId              AS ParentId
+                         , vbGoodsId               AS GoodsId
+                         , vbPartionId             AS PartionId
                            -- переносим весь остаток по этой партии
-                         , vbAmount_partion     AS Amount
+                         , vbAmount_partion        AS Amount
                            --
-                         , vbMovementId_order   AS MovementId_order
+                         , vbMovementId_order_from AS MovementId_order
+                         , FALSE
                           ;
+
                  -- уменьшаем нужное кол-во на остаток и продолжаем подбор
                  vbAmount:= vbAmount - vbAmount_partion;
+
              END IF;
 
 
@@ -409,43 +393,56 @@ BEGIN
                                , GoodsId, PartionId
                                , Amount
                                , MovementId_order
+                               , isPartion_new
                                 )
-        SELECT _tmpItem.MovementItemId AS MovementItemId -- Сформируем позже
-             , _tmpItem.ParentId       AS ParentId
-             , _tmpItem.GoodsId
+        SELECT _tmpItem_Child_mi.MovementItemId AS MovementItemId -- Сформируем позже
+             , _tmpItem_Child_mi.ParentId       AS ParentId
+             , _tmpItem_Child_mi.GoodsId
                -- !!!ПАРТИЯ создается ?расходным документом?
-             , COALESCE (_tmpItem_partion_mov.MovementItemId, _tmpItem_partion.MovementItemId) AS PartionId
+             , COALESCE (tmpItem_Child.PartionId, tmpItem_partion_new.MovementItemId) AS PartionId
                -- сколько в этой партии осталось создать
-             , _tmpItem.Amount - COALESCE (tmp.Amount, 0)
-               --
-             , _tmpItem.MovementId_order
-        FROM _tmpItem_Child_mi AS _tmpItem
+             , _tmpItem_Child_mi.Amount - COALESCE (tmp.Amount, 0)
+               -- из мастера
+             , _tmpItem_pr.MovementId_order
+               -- условие - когда надо создать партии
+             , CASE WHEN tmpItem_partion_new.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isPartion_new
+
+        FROM _tmpItem_Child_mi
+             -- мастер
+             LEFT JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem_Child_mi.ParentId
              -- сколько партий подобрали, их надо вычесть
              LEFT JOIN (SELECT _tmpItem_Child.MovementItemId, SUM (_tmpItem_Child.Amount) AS Amount
                         FROM _tmpItem_Child
                         GROUP BY _tmpItem_Child.MovementItemId
                        ) AS tmp
-                         ON tmp.MovementItemId = _tmpItem.MovementItemId
-             -- партия !!!только!!! ОДНА
-             LEFT JOIN (SELECT MAX (_tmpItem_Child_mi.MovementItemId) AS MovementItemId, _tmpItem_Child_mi.GoodsId
-                        FROM _tmpItem_Child_mi
-                        WHERE _tmpItem_Child_mi.isId_order = FALSE
-                        GROUP BY _tmpItem_Child_mi.GoodsId
-                       ) AS _tmpItem_partion
-                         ON _tmpItem_partion.GoodsId = _tmpItem.GoodsId
+                         ON tmp.MovementItemId = _tmpItem_Child_mi.MovementItemId
+             -- партия !!!только!!! ОДНА - если ее нашли, по ней и сделаем МИНУС
+             LEFT JOIN (SELECT MAX (_tmpItem_Child.PartionId) AS PartionId, _tmpItem_pr.MovementId_order, _tmpItem_Child.GoodsId
+                        FROM _tmpItem_Child
+                             LEFT JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem_Child.ParentId
+                        GROUP BY _tmpItem_pr.MovementId_order, _tmpItem_Child.GoodsId
+                       ) AS tmpItem_Child
+                         ON tmpItem_Child.MovementId_order = _tmpItem_pr.MovementId_order
+                        AND tmpItem_Child.GoodsId          = _tmpItem_Child_mi.GoodsId
 
-             -- партия !!!только!!! ОДНА
-             LEFT JOIN (SELECT MAX (_tmpItem_Child_mi.MovementItemId) AS MovementItemId, _tmpItem_Child_mi.GoodsId, _tmpItem_Child_mi.MovementId_order
+             -- партия !!!только!!! ОДНА (т.к. товары дублируются) - с этим MovementItemId ее создадим
+             LEFT JOIN (SELECT MAX (_tmpItem_Child_mi.MovementItemId) AS MovementItemId, _tmpItem_pr.MovementId_order, _tmpItem_Child_mi.GoodsId
                         FROM _tmpItem_Child_mi
-                        WHERE _tmpItem_Child_mi.isId_order = TRUE
-                        GROUP BY _tmpItem_Child_mi.GoodsId, _tmpItem_Child_mi.MovementId_order
-                       ) AS _tmpItem_partion_mov
-                         ON _tmpItem_partion_mov.GoodsId          = _tmpItem.GoodsId
-                       -- здесь еще условие Id_order
-                       AND _tmpItem_partion_mov.MovementId_order = _tmpItem.MovementId_order
+                             LEFT JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem_Child_mi.ParentId
+                        GROUP BY _tmpItem_pr.MovementId_order, _tmpItem_Child_mi.GoodsId
+                       ) AS tmpItem_partion_new
+                         ON tmpItem_partion_new.MovementId_order = _tmpItem_pr.MovementId_order
+                        AND tmpItem_partion_new.GoodsId          = _tmpItem_Child_mi.GoodsId
+                        -- если не нашли существующую
+                        AND tmpItem_Child.GoodsId IS NULL
 
-        WHERE _tmpItem.Amount - COALESCE (tmp.Amount, 0) > 0
+        WHERE _tmpItem_Child_mi.Amount - COALESCE (tmp.Amount, 0) > 0
        ;
+
+         /*RAISE EXCEPTION 'Ошибка. %  <%>'
+                       , (SELECT count(*) FROM _tmpItem_Child where MovementId_order > 0)
+                       , (SELECT count(*) FROM _tmpItem_Child where coalesce (MovementId_order, 0) = 0)
+                        ;*/
 
 
      -- проверка - если партия создается, тогда она ОДНА для GoodsId + MovementId_order
@@ -456,11 +453,34 @@ BEGIN
                 HAVING COUNT(*) > 1
                )
      THEN
-         RAISE EXCEPTION 'Ошибка.Партия создается, но она НЕ ОДНА для GoodsId + MovementId_order.';
+         RAISE EXCEPTION 'Ошибка.Партия создается, но она НЕ ОДНА для GoodsId + MovementId_order.%<%>%<%>'
+                       , CHR (13)
+                       , (SELECT lfGet_Object_ValueData (tmp.GoodsId)
+                          FROM (SELECT _tmpItem_Child.GoodsId, _tmpItem_Child.MovementId_order
+                                FROM _tmpItem_Child
+                                WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
+                                GROUP BY _tmpItem_Child.GoodsId, _tmpItem_Child.MovementId_order
+                                HAVING COUNT(*) > 1
+                               ) AS tmp
+                          ORDER BY tmp.GoodsId, tmp.MovementId_order
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , (SELECT tmp.MovementId_order
+                          FROM (SELECT _tmpItem_Child.GoodsId, _tmpItem_Child.MovementId_order
+                                FROM _tmpItem_Child
+                                WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
+                                GROUP BY _tmpItem_Child.GoodsId, _tmpItem_Child.MovementId_order
+                                HAVING COUNT(*) > 1
+                               ) AS tmp
+                          ORDER BY tmp.GoodsId, tmp.MovementId_order
+                          LIMIT 1
+                         )
+                         ;
      END IF;
 
 
-     -- RAISE EXCEPTION 'test.<%> <%>', (SELECT SUM (_tmpItem_Child_mi.Amount) FROM _tmpItem_Child_mi), (SELECT SUM (_tmpItem_Child.Amount) FROM _tmpItem_Child);
+--  RAISE EXCEPTION 'Ошибка. <%>', (SELECT sum(Amount) FROM _tmpItem_Child where MovementItemId = 547014);
 
      -- проверка - одинаковое кол-во _tmpItem_Child_mi + _tmpItem_Child
      IF EXISTS (SELECT 1
@@ -470,7 +490,68 @@ BEGIN
                 WHERE COALESCE (_tmpItem.Amount, 0) <> COALESCE (tmpRes.Amount, 0)
                )
      THEN
-         RAISE EXCEPTION 'Ошибка.Кол-во в элементах не может отличаться от кол-ва в партиях.';
+         RAISE EXCEPTION 'Ошибка.Кол-во в элементах не может отличаться от кол-ва в партиях.%<%> %MovementId_order = <%> %MovementItemId = <%> %Amount = <%> %Amount_partion = <%>'
+                       , CHR (13)
+                       , (SELECT lfGet_Object_ValueData (tmp.GoodsId)
+                          FROM (SELECT COALESCE (_tmpItem.GoodsId, tmpRes.GoodsId) AS GoodsId, tmpRes.MovementId_order, COALESCE (_tmpItem.MovementItemId, tmpRes.MovementItemId) AS MovementItemId
+                                     , _tmpItem.Amount, tmpRes.Amount AS Amount_partion
+                                FROM _tmpItem_Child_mi AS _tmpItem
+                                     FULL JOIN (SELECT _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId, SUM (_tmpItem_Child.Amount) AS Amount FROM _tmpItem_Child GROUP BY _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId
+                                               ) AS tmpRes ON tmpRes.MovementItemId = _tmpItem.MovementItemId
+                                WHERE COALESCE (_tmpItem.Amount, 0) <> COALESCE (tmpRes.Amount, 0)
+                               ) AS tmp
+                          ORDER BY tmp.MovementItemId, tmp.GoodsId, tmp.MovementId_order
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , (SELECT tmp.MovementId_order
+                          FROM (SELECT _tmpItem.GoodsId, tmpRes.MovementId_order, COALESCE (_tmpItem.MovementItemId, tmpRes.MovementItemId) AS MovementItemId
+                                     , _tmpItem.Amount, tmpRes.Amount AS Amount_partion
+                                FROM _tmpItem_Child_mi AS _tmpItem
+                                     FULL JOIN (SELECT _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId, SUM (_tmpItem_Child.Amount) AS Amount FROM _tmpItem_Child GROUP BY _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId
+                                               ) AS tmpRes ON tmpRes.MovementItemId = _tmpItem.MovementItemId
+                                WHERE COALESCE (_tmpItem.Amount, 0) <> COALESCE (tmpRes.Amount, 0)
+                               ) AS tmp
+                          ORDER BY tmp.MovementItemId, tmp.GoodsId, tmp.MovementId_order
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , (SELECT tmp.MovementItemId
+                          FROM (SELECT _tmpItem.GoodsId, tmpRes.MovementId_order, COALESCE (_tmpItem.MovementItemId, tmpRes.MovementItemId) AS MovementItemId
+                                     , _tmpItem.Amount, tmpRes.Amount AS Amount_partion
+                                FROM _tmpItem_Child_mi AS _tmpItem
+                                     FULL JOIN (SELECT _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId, SUM (_tmpItem_Child.Amount) AS Amount FROM _tmpItem_Child GROUP BY _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId
+                                               ) AS tmpRes ON tmpRes.MovementItemId = _tmpItem.MovementItemId
+                                WHERE COALESCE (_tmpItem.Amount, 0) <> COALESCE (tmpRes.Amount, 0)
+                               ) AS tmp
+                          ORDER BY tmp.MovementItemId, tmp.GoodsId, tmp.MovementId_order
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , (SELECT tmp.Amount
+                          FROM (SELECT _tmpItem.GoodsId, tmpRes.MovementId_order, COALESCE (_tmpItem.MovementItemId, tmpRes.MovementItemId) AS MovementItemId
+                                     , _tmpItem.Amount, tmpRes.Amount AS Amount_partion
+                                FROM _tmpItem_Child_mi AS _tmpItem
+                                     FULL JOIN (SELECT _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId, SUM (_tmpItem_Child.Amount) AS Amount FROM _tmpItem_Child GROUP BY _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId
+                                               ) AS tmpRes ON tmpRes.MovementItemId = _tmpItem.MovementItemId
+                                WHERE COALESCE (_tmpItem.Amount, 0) <> COALESCE (tmpRes.Amount, 0)
+                               ) AS tmp
+                          ORDER BY tmp.MovementItemId, tmp.GoodsId, tmp.MovementId_order
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , (SELECT tmp.Amount_partion
+                          FROM (SELECT _tmpItem.GoodsId, tmpRes.MovementId_order, COALESCE (_tmpItem.MovementItemId, tmpRes.MovementItemId) AS MovementItemId
+                                     , _tmpItem.Amount, tmpRes.Amount AS Amount_partion
+                                FROM _tmpItem_Child_mi AS _tmpItem
+                                     FULL JOIN (SELECT _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId, SUM (_tmpItem_Child.Amount) AS Amount FROM _tmpItem_Child GROUP BY _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order, _tmpItem_Child.GoodsId
+                                               ) AS tmpRes ON tmpRes.MovementItemId = _tmpItem.MovementItemId
+                                WHERE COALESCE (_tmpItem.Amount, 0) <> COALESCE (tmpRes.Amount, 0)
+                               ) AS tmp
+                          ORDER BY tmp.MovementItemId, tmp.GoodsId, tmp.MovementId_order
+                          LIMIT 1
+                         )
+                        ;
      END IF;
 
 
@@ -502,11 +583,6 @@ BEGIN
      FROM _tmpItem_pr
     ;
 
-     -- определили - !!!нужна ли партия MovementId_order!!!
-     UPDATE _tmpItem_Child SET isId_order = _tmpItem_Child_mi.isId_order
-     FROM _tmpItem_Child_mi
-     WHERE _tmpItem_Child_mi.GoodsId = _tmpItem_Child.GoodsId;
-
 /*
     RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>   <%>', (select count(*) from _tmpItem_Child where _tmpItem_Child.PartionId = 17959)
 , (select min (_tmpItem_Child.PartionId) from _tmpItem_Child where _tmpItem_Child.GoodsId = 14052)
@@ -515,7 +591,7 @@ BEGIN
 ;
 */
      -- если партия не нужна - !!!подставляем абсолютно любую - без партии Заказ Клиента!!!
-     UPDATE _tmpItem_Child SET PartionId = tmpItem_Child.PartionId_new
+     /*UPDATE _tmpItem_Child SET PartionId = tmpItem_Child.PartionId_new
      FROM (WITH tmpPartion AS (SELECT _tmpItem_Child.GoodsId             AS GoodsId
                                     , _tmpItem_Child.PartionId           AS PartionId_old
                                       -- нашли Партию
@@ -571,11 +647,11 @@ BEGIN
           ) AS tmpItem_Child
 
      WHERE _tmpItem_Child.PartionId = tmpItem_Child.PartionId_old
-    ;
+    ;*/
 
 
      -- если партия !!!нужна!!!подставляем любую - с учетом Заказ Клиента!!!
-     UPDATE _tmpItem_Child SET PartionId = tmpItem_Child.PartionId_new
+     /*UPDATE _tmpItem_Child SET PartionId = tmpItem_Child.PartionId_new
      FROM (WITH tmpPartion AS (SELECT _tmpItem_Child.MovementId_order    AS MovementId_order
                                     , _tmpItem_Child.PartionId           AS PartionId_old
                                       -- нашли Партию
@@ -621,7 +697,7 @@ BEGIN
 
      WHERE _tmpItem_Child.PartionId        = tmpItem_Child.PartionId_old
        AND _tmpItem_Child.MovementId_order = tmpItem_Child.MovementId_order
-    ;
+    ;*/
 
      -- Создали партии - !!!РАСХОД!!!
      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId    := tmpItem.PartionId
@@ -644,7 +720,7 @@ BEGIN
                                                  -- Тип НДС (!информативно!)
                                                , inTaxKindId         := zc_Enum_TaxKind_Basis()
                                                  -- Значение НДС (!информативно!)
-                                               , inTaxKindValue      := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis()  AND OFl.DescId = zc_ObjectFloat_TaxKind_Value())
+                                               , inTaxKindValue      := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis() AND OFl.DescId = zc_ObjectFloat_TaxKind_Value())
                                                  --
                                                , inUserId            := inUserId
                                                 )
@@ -653,6 +729,7 @@ BEGIN
                                  , COALESCE (ObjectFloat_EKPrice.ValueData, 0)    AS EKPrice
                                  , COALESCE (ObjectFloat_EmpfPrice .ValueData, 0) AS EmpfPrice
                             FROM _tmpItem_Child
+                                 -- 
                                  LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                        ON ObjectFloat_EKPrice.ObjectId = _tmpItem_Child.GoodsId
                                                       AND ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
@@ -660,7 +737,7 @@ BEGIN
                                                        ON ObjectFloat_EmpfPrice .ObjectId = _tmpItem_Child.GoodsId
                                                       AND ObjectFloat_EmpfPrice .DescId   =  zc_ObjectFloat_Goods_EmpfPrice ()
                             -- условие - когда надо создать партии
-                            WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
+                            WHERE _tmpItem_Child.isPartion_new = TRUE
                            )
                 -- загруженные цены Поставщика
               , tmpItemPrice AS (SELECT tmpItem.GoodsId
@@ -690,7 +767,7 @@ BEGIN
     ;
 
      -- Создали св-во у партии - !!!РАСХОД!!!
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), _tmpItem_Child.MovementItemId, CASE WHEN _tmpItem_Child.isId_order = TRUE THEN _tmpItem_Child.MovementId_order ELSE 0 END)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), _tmpItem_Child.MovementItemId, COALESCE (_tmpItem_Child.MovementId_order, 0))
      FROM _tmpItem_Child
      WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
     ;
@@ -707,21 +784,34 @@ BEGIN
                                                                                    , inInfoMoneyDestinationId := _tmpItem_pr.InfoMoneyDestinationId
                                                                                    , inGoodsId                := _tmpItem_pr.GoodsId
                                                                                    , inPartionId              := _tmpItem_pr.PartionId
+                                                                                   , inMovementId_order       := _tmpItem_pr.MovementId_order
                                                                                    , inIsReserve              := FALSE
                                                                                    , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                     );
+
      -- 1.2. определяется ContainerId_Goods для количественного учета - РАСХОД
-     UPDATE _tmpItem_Child SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
-                                                                                      , inUnitId                 := vbUnitId_From
-                                                                                      , inMemberId               := NULL
-                                                                                      , inInfoMoneyDestinationId := _tmpItem_Child_mi.InfoMoneyDestinationId
-                                                                                      , inGoodsId                := _tmpItem_Child.GoodsId
-                                                                                      , inPartionId              := _tmpItem_Child.PartionId
-                                                                                      , inIsReserve              := FALSE
-                                                                                      , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
-                                                                                       )
-     FROM _tmpItem_Child_mi
-     WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child_mi.MovementItemId
+     UPDATE _tmpItem_Child SET ContainerId_Goods = tmpItem_Child_mi.ContainerId_Goods
+     FROM (SELECT lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
+                                                     , inUnitId                 := vbUnitId_From
+                                                     , inMemberId               := NULL
+                                                     , inInfoMoneyDestinationId := tmpItem_Child_mi.InfoMoneyDestinationId
+                                                     , inGoodsId                := tmpItem_Child_mi.GoodsId
+                                                     , inPartionId              := tmpItem_Child_mi.PartionId
+                                                     , inMovementId_order       := tmpItem_Child_mi.MovementId_order
+                                                     , inIsReserve              := FALSE
+                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
+                                                      ) AS ContainerId_Goods
+                , tmpItem_Child_mi.PartionId
+           FROM (SELECT DISTINCT
+                        _tmpItem_Child_mi.InfoMoneyDestinationId
+                      , _tmpItem_Child.GoodsId
+                      , _tmpItem_Child.PartionId
+                      , _tmpItem_Child.MovementId_order
+                FROM _tmpItem_Child
+                     JOIN _tmpItem_Child_mi ON _tmpItem_Child_mi.MovementItemId = _tmpItem_Child.MovementItemId
+               ) AS tmpItem_Child_mi
+          ) AS tmpItem_Child_mi
+     WHERE _tmpItem_Child.PartionId = tmpItem_Child_mi.PartionId
     ;
 
      -- 2.1. определяется AccountId для проводок по суммовому учету - ПРИХОД
@@ -805,25 +895,42 @@ BEGIN
                                                                                  , inContainerId_Goods      := _tmpItem_pr.ContainerId_Goods
                                                                                  , inGoodsId                := _tmpItem_pr.GoodsId
                                                                                  , inPartionId              := _tmpItem_pr.PartionId
+                                                                                 , inMovementId_order       := _tmpItem_pr.MovementId_order
                                                                                  , inIsReserve              := FALSE
                                                                                   );
+
      -- 3.2. определяется ContainerId_Summ для проводок по суммовому учету - РАСХОД
-     UPDATE _tmpItem_Child SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
-                                                                                    , inUnitId                 := vbUnitId_From
-                                                                                    , inMemberId               := NULL
-                                                                                    , inJuridicalId_basis      := vbJuridicalId_Basis
-                                                                                    , inBusinessId             := vbBusinessId
-                                                                                    , inAccountId              := _tmpItem_Child.AccountId
-                                                                                    , inInfoMoneyDestinationId := _tmpItem_Child_mi.InfoMoneyDestinationId
-                                                                                    , inInfoMoneyId            := _tmpItem_Child_mi.InfoMoneyId
-                                                                                    , inContainerId_Goods      := _tmpItem_Child.ContainerId_Goods
-                                                                                    , inGoodsId                := _tmpItem_Child.GoodsId
-                                                                                    , inPartionId              := _tmpItem_Child.PartionId
-                                                                                    , inIsReserve              := FALSE
-                                                                                     )
-     FROM _tmpItem_Child_mi
-     WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child_mi.MovementItemId
+     UPDATE _tmpItem_Child SET ContainerId_Summ = tmpItem_Child_mi.ContainerId_Summ
+     FROM (SELECT lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                                    , inUnitId                 := vbUnitId_From
+                                                    , inMemberId               := NULL
+                                                    , inJuridicalId_basis      := vbJuridicalId_Basis
+                                                    , inBusinessId             := vbBusinessId
+                                                    , inAccountId              := tmpItem_Child_mi.AccountId
+                                                    , inInfoMoneyDestinationId := tmpItem_Child_mi.InfoMoneyDestinationId
+                                                    , inInfoMoneyId            := tmpItem_Child_mi.InfoMoneyId
+                                                    , inContainerId_Goods      := tmpItem_Child_mi.ContainerId_Goods
+                                                    , inGoodsId                := tmpItem_Child_mi.GoodsId
+                                                    , inPartionId              := tmpItem_Child_mi.PartionId
+                                                    , inMovementId_order       := tmpItem_Child_mi.MovementId_order
+                                                    , inIsReserve              := FALSE
+                                                     ) AS ContainerId_Summ
+                , tmpItem_Child_mi.ContainerId_Goods
+           FROM (SELECT DISTINCT
+                        _tmpItem_Child.AccountId
+                      , _tmpItem_Child_mi.InfoMoneyDestinationId
+                      , _tmpItem_Child_mi.InfoMoneyId
+                      , _tmpItem_Child.ContainerId_Goods
+                      , _tmpItem_Child.GoodsId
+                      , _tmpItem_Child.PartionId
+                      , _tmpItem_Child.MovementId_order
+                FROM _tmpItem_Child
+                     JOIN _tmpItem_Child_mi ON _tmpItem_Child_mi.MovementItemId = _tmpItem_Child.MovementItemId
+               ) AS tmpItem_Child_mi
+          ) AS tmpItem_Child_mi
+     WHERE _tmpItem_Child.ContainerId_Goods = tmpItem_Child_mi.ContainerId_Goods
     ;
+
      -- 3.3. определяется ContainerId_Summ для проводок по суммовому учету - Кредиторы
      UPDATE _tmpItem_Detail SET ContainerId_Summ = CASE WHEN _tmpItem_Detail.PartnerId > 0
                                                         THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -865,7 +972,7 @@ BEGIN
                                                                                    , inDescId_1          := zc_ContainerLinkObject_Partner()
                                                                                      -- Partner Official Tax - кому выставляем долг за НДС
                                                                                    , inObjectId_1        := zc_Partner_VAT()
-                                                                                     -- 
+                                                                                     --
                                                                                    , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                                      -- Расчеты Налоги + НДС
                                                                                    , inObjectId_2        := zc_Enum_InfoMoney_50501()

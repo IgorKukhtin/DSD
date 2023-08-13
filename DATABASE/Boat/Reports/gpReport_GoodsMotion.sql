@@ -125,20 +125,28 @@ BEGIN
        , tmpPriceBasis AS (SELECT tmp.GoodsId
                                 , tmp.ValuePrice
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                    , inOperDate   := CURRENT_DATE) AS tmp
+                                                                    , inOperDate   := CURRENT_DATE
+                                                                     ) AS tmp
                                 INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
                           )
          -- список Container_Count
-       , tmpContainer_Count AS (SELECT Container.Id              AS ContainerId
-                                     , Container.WhereObjectId   AS LocationId
-                                     , Container.ObjectId        AS GoodsId
-                                     , Container.PartionId       AS PartionId
-                                     , Container.Amount          AS Amount
+       , tmpContainer_Count AS (SELECT Container.Id                                    AS ContainerId
+                                     , Container.WhereObjectId                         AS LocationId
+                                     , Container.ObjectId                              AS GoodsId
+                                     , Container.PartionId                             AS PartionId
+                                     , COALESCE (Object_PartionMovement.ObjectCode, 0) AS MovementId_order
+                                     , Container.Amount                                AS Amount
                                 FROM tmpGoods
                                      INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                                          AND Container.DescId = zc_Container_Count()
                                                          AND (Container.PartionId = inPartionId OR inPartionId = 0)
                                      INNER JOIN tmpWhere ON tmpWhere.LocationId = Container.WhereObjectId
+                                     LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
+                                                                   ON CLO_PartionMovement.ContainerId = Container.Id
+                                                                  AND CLO_PartionMovement.DescId      = zc_ContainerLinkObject_PartionMovement()
+                                                                  -- если надо развернуть по Заказам клиента
+                                                                  AND inIsOrderClient = TRUE
+                                     LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = CLO_PartionMovement.ObjectId
                                )
 
          -- проводки Container_Count
@@ -146,6 +154,7 @@ BEGIN
                               , tmpContainer_Count.LocationId
                               , tmpContainer_Count.GoodsId
                               , tmpContainer_Count.PartionId
+                              , tmpContainer_Count.MovementId_order
                                 -- за период
                               , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0
                                                THEN 1 * MIContainer.Amount
@@ -169,6 +178,7 @@ BEGIN
                                 , tmpContainer_Count.LocationId
                                 , tmpContainer_Count.GoodsId
                                 , tmpContainer_Count.PartionId
+                                , tmpContainer_Count.MovementId_order
                                 , tmpContainer_Count.Amount
                         )
          -- список Container_Summ
@@ -221,6 +231,7 @@ BEGIN
                                     , tmpMI_Count.LocationId
                                     , tmpMI_Count.GoodsId
                                     , tmpMI_Count.PartionId
+                                    , tmpMI_Count.MovementId_order
                                       --
                                     , tmpMI_Count.AmountStart
                                     , tmpMI_Count.AmountEnd
@@ -242,14 +253,15 @@ BEGIN
                       AND MIString_PartNumber.ValueData <> ''
                    )
     -- Заказ Клиента
-  , tmpMIFloat_OrderClient AS (SELECT MIFloat_MovementId.MovementItemId
+  , tmpMIFloat_OrderClient AS (SELECT tmpList.MovementId_order
                                     , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
-                                    , Object_From.ValueData AS FromName_OrderClient
+                                    , Object_From.ValueData                                                           AS FromName_OrderClient
                                     , zfCalc_ValueData_isErased (Object_Product.ValueData,   Object_Product.isErased) AS ProductName_OrderClient
                                     , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN_OrderClient
                                     , Object_Model.ValueData                                                          AS ModelName_OrderClient
-                               FROM MovementItemFloat AS MIFloat_MovementId
-                                    LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData ::Integer
+                               FROM (SELECT DISTINCT tmpContainer_Count.MovementId_order FROM tmpContainer_Count) AS tmpList
+
+                                    LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpList.MovementId_order
 
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                  ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
@@ -270,9 +282,7 @@ BEGIN
                                                         AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
                                     LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
 
-                               WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
-                                 AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                                 AND inIsOrderClient = TRUE
+                               WHERE inIsOrderClient = TRUE
                               )
           -- РЕЗУЛЬТАТ
         , tmpDataAll AS (SELECT tmpMIContainer_group.LocationId
@@ -294,6 +304,7 @@ BEGIN
                               , STRING_AGG (DISTINCT MIString_PartNumber.ValueData, '; ') AS PartNumber
 
                                 -- Заказ Клиента
+                              , tmpMIContainer_group.MovementId_order
                               , MIFloat_MovementId.InvNumberFull_OrderClient
                               , MIFloat_MovementId.FromName_OrderClient
                               , MIFloat_MovementId.ProductName_OrderClient
@@ -324,7 +335,7 @@ BEGIN
                                                     ON MIString_PartNumber.MovementItemId = tmpMIContainer_group.PartionId
                               -- Заказ Клиента
                               LEFT JOIN tmpMIFloat_OrderClient AS MIFloat_MovementId
-                                                               ON MIFloat_MovementId.MovementItemId = tmpMIContainer_group.PartionId
+                                                               ON MIFloat_MovementId.MovementId_order = tmpMIContainer_group.MovementId_order
                               -- элемент партии
                               LEFT JOIN MovementItem ON MovementItem.MovementId = Object_PartionGoods.MovementId
                                                     AND MovementItem.Id         = Object_PartionGoods.MovementItemId
@@ -349,6 +360,7 @@ BEGIN
                                 , CASE WHEN inIsPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
 
                                   -- Заказ Клиента
+                                , tmpMIContainer_group.MovementId_order
                                 , MIFloat_MovementId.InvNumberFull_OrderClient
                                 , MIFloat_MovementId.FromName_OrderClient
                                 , MIFloat_MovementId.ProductName_OrderClient

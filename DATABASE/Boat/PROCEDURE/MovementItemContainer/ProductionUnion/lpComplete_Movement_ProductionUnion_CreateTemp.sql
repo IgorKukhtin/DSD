@@ -33,8 +33,6 @@ BEGIN
                                             , Amount TFloat
                                             , PartNumber TVarChar
                                             , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                            , MovementId_order Integer
-                                            , isId_order Boolean
                                              ) ON COMMIT DROP;
          -- таблица - партии
          CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ParentId Integer
@@ -43,7 +41,7 @@ BEGIN
                                          , AccountId Integer
                                          , Amount TFloat
                                          , MovementId_order Integer
-                                         , isId_order Boolean
+                                         , isPartion_new Boolean
                                           ) ON COMMIT DROP;
          -- таблица - ЗП
          CREATE TEMP TABLE _tmpItem_Detail (MovementItemId Integer, ParentId Integer

@@ -504,6 +504,7 @@ BEGIN
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inPartionId              := _tmpItem.PartionId
+                                                                                , inMovementId_order       := 0
                                                                                 , inIsReserve              := FALSE
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  );
@@ -534,6 +535,7 @@ BEGIN
                                                                               , inContainerId_Goods      := _tmpItem.ContainerId_Goods
                                                                               , inGoodsId                := _tmpItem.GoodsId
                                                                               , inPartionId              := _tmpItem.PartionId
+                                                                              , inMovementId_order       := 0
                                                                               , inIsReserve              := FALSE
                                                                                );
 

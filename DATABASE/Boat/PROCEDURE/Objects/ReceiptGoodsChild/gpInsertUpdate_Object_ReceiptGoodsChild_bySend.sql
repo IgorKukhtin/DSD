@@ -20,32 +20,28 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    --данные из документа перемещени€
-   CREATE TEMP TABLE _tmpSendMI (Comment TVarChar
-                               , ObjectId Integer
-                               , Value TFloat, Value_servise TFloat
-                               , ForCount TFloat
-                                ) ON COMMIT DROP;
-    INSERT INTO _tmpSendMI (Comment, ObjectId, Value, Value_servise, ForCount )
-          SELECT gpSelect.Comment
-               , gpSelect.GoodsId  AS ObjectId
-               , gpSelect.Amount   AS Value
-               , 0                 AS Value_servise
-               , 1                 AS ForCount
-          FROM gpSelect_MovementItem_Send (inMovementId := inMovementId_Send :: Integer
-                                         , inShowAll    := False             :: Boolean
-                                         , inIsErased   := False             :: Boolean
-                                         , inSession    := inSession         :: TVarChar
-                                          ) AS gpSelect
-          WHERE gpSelect.isProdOptions = FALSE
-    ;
+   CREATE TEMP TABLE _tmpSendMI (ObjectId Integer, Value TFloat, ForCount TFloat) ON COMMIT DROP;
+   --
+   INSERT INTO _tmpSendMI (ObjectId, Value, ForCount)
+      SELECT gpSelect.GoodsId        AS ObjectId
+           , SUM (gpSelect.Amount)   AS Value
+           , 1                       AS ForCount
+      FROM gpSelect_MovementItem_Send (inMovementId := inMovementId_Send :: Integer
+                                     , inShowAll    := FALSE             :: Boolean
+                                     , inIsErased   := FALSE             :: Boolean
+                                     , inSession    := inSession         :: TVarChar
+                                      ) AS gpSelect
+      WHERE gpSelect.isProdOptions = FALSE
+      GROUP BY gpSelect.GoodsId
+     ;
 
-   --сохраненные записи
+   -- сохраненные записи
    CREATE TEMP TABLE _tmpReceiptGoodsChild (Id Integer, NPP Integer, Comment TVarChar
                                           , ObjectId Integer, ReceiptLevelId Integer, MaterialOptionsId Integer, ProdColorPatternId Integer, GoodsChildId Integer
                                           , Value TFloat, Value_servise TFloat
                                           , ForCount TFloat
                                            ) ON COMMIT DROP;
-    INSERT INTO _tmpReceiptGoodsChild (Id, NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_servise, ForCount )
+    INSERT INTO _tmpReceiptGoodsChild (Id, NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_servise, ForCount)
           SELECT Object_ReceiptGoodsChild.Id
                , ObjectFloat_NPP.ValueData      :: Integer AS NPP
                , Object_ReceiptGoodsChild.ValueData        AS Comment
@@ -59,10 +55,10 @@ BEGIN
                , ObjectFloat_ForCount.ValueData AS ForCount
           FROM Object AS Object_ReceiptGoodsChild
                INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
-                                     ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
-                                    AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                     ON ObjectLink_ReceiptGoods.ObjectId      = Object_ReceiptGoodsChild.Id
+                                    AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                    -- !!куда копируем!!
                                     AND ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId
-
                -- NPP
                INNER JOIN ObjectFloat AS ObjectFloat_NPP
                                       ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
@@ -104,30 +100,8 @@ BEGIN
             AND Object_ReceiptGoodsChild.isErased = FALSE
        ;
 
-  /*      -- удал€ем те NPP которых нет
-        UPDATE Object SET isErased = TRUE
-        WHERE Object.Id IN (SELECT _tmpReceiptGoodsChild.Id
-                            FROM _tmpReceiptGoodsChild
-                                 LEFT JOIN _tmpReceiptGoodsChild_mask ON _tmpReceiptGoodsChild_mask.NPP = _tmpReceiptGoodsChild.NPP
-                            WHERE _tmpReceiptGoodsChild_mask.ObjectId IS NULL
-                              -- без этой структуры
-                              AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
-                           UNION
-                            SELECT _tmpReceiptGoodsChild.Id
-                            FROM _tmpReceiptGoodsChild
-                                 -- если в новых данных есть такой NPP
-                                 INNER JOIN _tmpReceiptGoodsChild_mask ON _tmpReceiptGoodsChild_mask.NPP = _tmpReceiptGoodsChild.NPP
-                                                                      -- с такой структурой
-                                                                      AND _tmpReceiptGoodsChild_mask.ProdColorPatternId > 0
-                            -- без этой структуры
-                            WHERE _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
-                           )
-          AND Object.DescId = zc_Object_ReceiptGoodsChild()
-       ;
-       */
-
         -- ѕроверка
-        IF EXISTS (SELECT _tmpSendMI.ObjectId
+        /*IF EXISTS (SELECT _tmpSendMI.ObjectId
                    FROM _tmpSendMI
                         LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpSendMI.ObjectId
                                                        AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
@@ -146,28 +120,36 @@ BEGIN
                    LIMIT 1
                   )
                  ;
-        END IF;
+        END IF;*/
 
         -- мен€ем ¬—≈
-        PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (_tmpReceiptGoodsChild.Id, 0)
-                                                       , inComment            := COALESCE (_tmpReceiptGoodsChild.Comment, '')
-                                                       , inNPP                := _tmpReceiptGoodsChild.NPP
+        PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := 0
+                                                       , inComment            := '' :: TVarChar
+                                                       , inNPP                := (tmpSendMI.Ord + (SELECT MAX (_tmpReceiptGoodsChild.NPP) FROM _tmpReceiptGoodsChild)) :: Integer
                                                        , inReceiptGoodsId     := inReceiptGoodsId
-                                                       , inObjectId           := _tmpSendMI.ObjectId
+                                                       , inObjectId           := tmpSendMI.ObjectId
                                                        , inProdColorPatternId := NULL
-                                                       , inMaterialOptionsId  := _tmpReceiptGoodsChild.MaterialOptionsId
+                                                       , inMaterialOptionsId  := NULL
                                                        , inReceiptLevelId_top := 0
-                                                       , inReceiptLevelId     := _tmpReceiptGoodsChild.ReceiptLevelId
+                                                       , inReceiptLevelId     := NULL
                                                        , inGoodsChildId       := inGoodsChildId
-                                                       , ioValue              := _tmpSendMI.Value :: TVarChar
-                                                       , ioValue_service      := ''
-                                                       , ioForCount           := COALESCE (_tmpSendMI.ForCount, _tmpReceiptGoodsChild.ForCount)
+                                                       , ioValue              := tmpSendMI.Value :: TVarChar
+                                                       , ioValue_service      := ''              :: TVarChar
+                                                       , ioForCount           := tmpSendMI.ForCount
                                                        , inIsEnabled          := TRUE
                                                        , inSession            := inSession
                                                         ) AS Id
-        FROM _tmpSendMI
-             LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpSendMI.ObjectId
-                                            AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+        FROM (SELECT _tmpSendMI.ObjectId
+                   , _tmpSendMI.Value
+                   , _tmpSendMI.ForCount
+                     -- є п/п
+                   , ROW_NUMBER() OVER (ORDER BY _tmpSendMI.ObjectId ASC) AS Ord
+              FROM _tmpSendMI
+                   LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpSendMI.ObjectId
+                                                  AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+              -- !!!только Ќовые!!!
+              WHERE _tmpReceiptGoodsChild.ObjectId IS NULL
+             ) AS tmpSendMI
        ;
 
 END;

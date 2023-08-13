@@ -16,16 +16,17 @@ $BODY$
   DECLARE vbJuridicalId_Basis        Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId               Integer; -- значение пока НЕ определяется
 
-  DECLARE vbMovementItemId   Integer;
-  DECLARE vbMovementId_order Integer;
-  DECLARE vbGoodsId          Integer;
-  DECLARE vbPartionId        Integer;
-  DECLARE vbPartNumber       TVarChar;
-  DECLARE vbAmount           TFloat;
-  DECLARE vbAmount_partion   TFloat;
+  DECLARE vbMovementItemId        Integer;
+  DECLARE vbMovementId_order_from Integer;
+  DECLARE vbMovementId_order_to   Integer;
+  DECLARE vbGoodsId               Integer;
+  DECLARE vbPartionId             Integer;
+  DECLARE vbPartNumber            TVarChar;
+  DECLARE vbAmount                TFloat;
+  DECLARE vbAmount_partion        TFloat;
 
-  DECLARE curItem            RefCursor;
-  DECLARE curPartion         RefCursor;
+  DECLARE curItem                 RefCursor;
+  DECLARE curPartion              RefCursor;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -104,7 +105,7 @@ BEGIN
                          , Amount
                          , PartNumber
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
-                         , MovementId_order
+                         , MovementId_order_to
                           )
         -- результат
         SELECT MovementItem.Id                  AS MovementItemId
@@ -120,7 +121,7 @@ BEGIN
              , View_InfoMoney.InfoMoneyId
 
               -- MovementId заказ Клиента
-            , COALESCE (MIFloat_MovementId.ValueData, 0) AS MovementId_order
+            , COALESCE (MIFloat_MovementId.ValueData, 0) AS MovementId_order_to
 
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -151,26 +152,27 @@ BEGIN
      -- 2.заполняем таблицу - элементы по партиям
 
      -- курсор1 - элементы документа
-     OPEN curItem FOR SELECT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.PartNumber, _tmpItem.MovementId_order
+     OPEN curItem FOR SELECT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.PartNumber, _tmpItem.MovementId_order_to
                            , _tmpItem.Amount
                       FROM _tmpItem
                      ;
      -- начало цикла по курсору1 - элементы документа
      LOOP
      -- данные по партиям
-     FETCH curItem INTO vbMovementItemId, vbGoodsId, vbPartNumber, vbMovementId_order, vbAmount;
+     FETCH curItem INTO vbMovementItemId, vbGoodsId, vbPartNumber, vbMovementId_order_to, vbAmount;
      -- если данные закончились, тогда выход
      IF NOT FOUND THEN EXIT; END IF;
 
 
      -- курсор2 - подбор остатков по партиям
      OPEN curPartion FOR
-        SELECT Container.PartionId, Container.Amount - COALESCE (tmp.Amount, 0) AS Amount
+        SELECT Container.PartionId, COALESCE (CLO_PartionMovement.ObjectId, 0) AS MovementId_order_from, Container.Amount - COALESCE (tmp.Amount, 0) AS Amount
         FROM Container
-             -- св-во партии
-             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                         ON MIFloat_MovementId.MovementItemId = Container.PartionId
-                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+             -- св-во Container
+             LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
+                                           ON CLO_PartionMovement.ContainerId = Container.Id
+                                          AND CLO_PartionMovement.DescId      = zc_ContainerLinkObject_PartionMovement()
+             LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = CLO_PartionMovement.ObjectId
              -- св-во партии
              LEFT JOIN MovementItemString AS MIString_PartNumber
                                           ON MIString_PartNumber.MovementItemId = Container.PartionId
@@ -186,19 +188,27 @@ BEGIN
           AND Container.WhereObjectId = vbUnitId_From
           AND Container.Amount  - COALESCE (tmp.Amount, 0) > 0
         ORDER BY -- если MovementId_order совпадает
-                 CASE WHEN MIFloat_MovementId.ValueData = vbMovementId_order AND vbMovementId_order <> 0 THEN 0 ELSE 1 END
+                 CASE WHEN Object_PartionMovement.ObjectCode = vbMovementId_order_to AND vbMovementId_order_to <> 0 THEN 0 ELSE 1 END
+                 -- если MovementId_order есть, подбираем сначала партии с пустым MovementId_order
+               , CASE WHEN COALESCE (Object_PartionMovement.ObjectCode, 0) = 0 AND vbMovementId_order_to <> 0 THEN 0 ELSE 1 END
+
                  -- если PartNumber совпадает
                , CASE WHEN MIString_PartNumber.ValueData = vbPartNumber AND vbPartNumber <> '' THEN 0 ELSE 1 END
+                 -- если PartNumber есть, подбираем сначала партии с пустым PartNumber
+               , CASE WHEN COALESCE (MIString_PartNumber.ValueData, '') = '' AND vbPartNumber <> '' THEN 0 ELSE 1 END
+
                  -- если MovementId_order не установлен, подбираем сначала партии с пустым MovementId_order
-               , CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0)  = 0 AND vbMovementId_order = 0 THEN 0 ELSE 1 END
+               , CASE WHEN COALESCE (Object_PartionMovement.ObjectCode, 0) = 0 AND vbMovementId_order_to = 0 THEN 0 ELSE 1 END
                  -- если PartNumber не установлен, подбираем сначала партии с пустым PartNumber
                , CASE WHEN COALESCE (MIString_PartNumber.ValueData, '') = '' AND vbPartNumber = '' THEN 0 ELSE 1 END
+
                , Container.PartionId ASC
-       ;
+              ;
+
          -- начало цикла по курсору2. - остатки по партиям
          LOOP
              -- данные - сколько есть в остатках
-             FETCH curPartion INTO vbPartionId, vbAmount_partion;
+             FETCH curPartion INTO vbPartionId, vbMovementId_order_from, vbAmount_partion;
              -- если остатки закончились, или все кол-во уже переместили тогда выход
              IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
 
@@ -209,16 +219,17 @@ BEGIN
                  INSERT INTO _tmpItem_Child (MovementItemId, ParentId
                                            , GoodsId, PartionId
                                            , Amount
-                                           , MovementId_order
+                                           , MovementId_order_from, MovementId_order_to
                                             )
-                    SELECT 0                    AS MovementItemId -- Сформируем позже
-                         , vbMovementItemId     AS ParentId
-                         , vbGoodsId            AS GoodsId
-                         , vbPartionId          AS PartionId
+                    SELECT 0                       AS MovementItemId -- Сформируем позже
+                         , vbMovementItemId        AS ParentId
+                         , vbGoodsId               AS GoodsId
+                         , vbPartionId             AS PartionId
                            -- нашли нужное кол-во
-                         , vbAmount             AS Amount
+                         , vbAmount                AS Amount
                            --
-                         , vbMovementId_order   AS MovementId_order
+                         , vbMovementId_order_from AS MovementId_order_from
+                         , vbMovementId_order_to   AS MovementId_order_to
                           ;
                  -- обнуляем кол-во, больше не надо искать
                  vbAmount:= 0;
@@ -227,19 +238,22 @@ BEGIN
                  INSERT INTO _tmpItem_Child (MovementItemId, ParentId
                                            , GoodsId, PartionId
                                            , Amount
-                                           , MovementId_order
+                                           , MovementId_order_from, MovementId_order_to
                                             )
-                    SELECT 0                    AS MovementItemId -- Сформируем позже
-                         , vbMovementItemId     AS ParentId
-                         , vbGoodsId            AS GoodsId
-                         , vbPartionId          AS PartionId
+                    SELECT 0                       AS MovementItemId -- Сформируем позже
+                         , vbMovementItemId        AS ParentId
+                         , vbGoodsId               AS GoodsId
+                         , vbPartionId             AS PartionId
                            -- переносим весь остаток по этой партии
-                         , vbAmount_partion     AS Amount
+                         , vbAmount_partion        AS Amount
                            --
-                         , vbMovementId_order   AS MovementId_order
+                         , vbMovementId_order_from AS MovementId_orderfrom
+                         , vbMovementId_order_to   AS MovementId_order_to
                           ;
+
                  -- уменьшаем нужное кол-во на остаток и продолжаем подбор
                  vbAmount:= vbAmount - vbAmount_partion;
+
              END IF;
 
 
@@ -256,7 +270,7 @@ BEGIN
      INSERT INTO _tmpItem_Child (MovementItemId, ParentId
                                , GoodsId, PartionId
                                , Amount
-                               , MovementId_order
+                               , MovementId_order_from, MovementId_order_to
                                 )
         SELECT 0                       AS MovementItemId -- Сформируем позже
              , _tmpItem.MovementItemId AS ParentId
@@ -266,7 +280,8 @@ BEGIN
                -- сколько в этой партии осталось создать
              , _tmpItem.Amount - COALESCE (tmp.Amount, 0)
                --
-             , _tmpItem.MovementId_order
+             , 0 AS MovementId_order_from
+             , _tmpItem.MovementId_order_to
         FROM _tmpItem
              -- сколько партий подобрали, их надо вычесть
              LEFT JOIN (SELECT _tmpItem_Child.ParentId, SUM (_tmpItem_Child.Amount) AS Amount
@@ -275,13 +290,13 @@ BEGIN
                        ) AS tmp
                          ON tmp.ParentId = _tmpItem.MovementItemId
              -- партия !!!только!!! ОДНА
-             LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.GoodsId, _tmpItem.MovementId_order
+             LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.GoodsId, _tmpItem.MovementId_order_to
                         FROM _tmpItem
-                        GROUP BY _tmpItem.GoodsId, _tmpItem.MovementId_order
+                        GROUP BY _tmpItem.GoodsId, _tmpItem.MovementId_order_to
                        ) AS _tmpItem_partion
                          ON _tmpItem_partion.GoodsId = _tmpItem.GoodsId
                         -- здесь еще условие Id_order
-                        AND _tmpItem_partion.MovementId_order = _tmpItem.MovementId_order
+                        AND _tmpItem_partion.MovementId_order_to = _tmpItem.MovementId_order_to
         WHERE _tmpItem.Amount - COALESCE (tmp.Amount, 0) > 0
        ;
 
@@ -405,7 +420,7 @@ BEGIN
      UPDATE _tmpItem_Child SET MovementItemId = lpInsertUpdate_MI_Send_Child (ioId                     := _tmpItem_Child.MovementItemId
                                                                             , inParentId               := _tmpItem_Child.ParentId
                                                                             , inMovementId             := inMovementId
-                                                                            , inMovementId_OrderClient := _tmpItem_Child.MovementId_order
+                                                                            , inMovementId_OrderClient := _tmpItem_Child.MovementId_order_from
                                                                             , inObjectId               := _tmpItem_Child.GoodsId
                                                                             , inPartionId              := _tmpItem_Child.PartionId
                                                                               -- кол-во резерв
@@ -427,6 +442,7 @@ BEGIN
                                                                                           , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                           , inGoodsId                := _tmpItem_Child.GoodsId
                                                                                           , inPartionId              := _tmpItem_Child.PartionId
+                                                                                          , inMovementId_order       := _tmpItem_Child.MovementId_order_from
                                                                                           , inIsReserve              := FALSE
                                                                                           , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                            )
@@ -436,6 +452,7 @@ BEGIN
                                                                                           , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                           , inGoodsId                := _tmpItem_Child.GoodsId
                                                                                           , inPartionId              := _tmpItem_Child.PartionId
+                                                                                          , inMovementId_order       := _tmpItem_Child.MovementId_order_to
                                                                                           , inIsReserve              := FALSE
                                                                                           , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                            )
@@ -478,6 +495,7 @@ BEGIN
                                                                                         , inContainerId_Goods      := _tmpItem_Child.ContainerId_GoodsFrom
                                                                                         , inGoodsId                := _tmpItem_Child.GoodsId
                                                                                         , inPartionId              := _tmpItem_Child.PartionId
+                                                                                        , inMovementId_order       := _tmpItem_Child.MovementId_order_from
                                                                                         , inIsReserve              := FALSE
                                                                                          )
                              , ContainerId_SummTo   = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
@@ -491,6 +509,7 @@ BEGIN
                                                                                         , inContainerId_Goods      := _tmpItem_Child.ContainerId_GoodsTo
                                                                                         , inGoodsId                := _tmpItem_Child.GoodsId
                                                                                         , inPartionId              := _tmpItem_Child.PartionId
+                                                                                        , inMovementId_order       := _tmpItem_Child.MovementId_order_to
                                                                                         , inIsReserve              := FALSE
                                                                                          )
      FROM _tmpItem
