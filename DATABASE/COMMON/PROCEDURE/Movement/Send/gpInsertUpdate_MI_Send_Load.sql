@@ -36,8 +36,6 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Товар (<%>) <%> не найден.',inGoodsCode, inGoodsName;
      END IF;
 
- RAISE EXCEPTION 'Ошибка.Вид товара <%> не найден.', inGoodsKindName;
-
      IF (COALESCE (vbGoodsKindId,0) = 0 AND COALESCE (inGoodsKindName,'') <> '' )
      THEN
          RAISE EXCEPTION 'Ошибка.Вид товара <%> не найден.', inGoodsKindName;
@@ -53,7 +51,7 @@ BEGIN
                                              , inHeadCount           := 0              :: TFloat
                                              , ioPartionGoods        := NULL           :: TVarChar
                                              , ioPartNumber          := NULL           :: TVarChar
-                                             , inGoodsKindId         := COALESCE (vbGoodsKindId,0) = 0  ::Integer
+                                             , inGoodsKindId         := COALESCE (vbGoodsKindId,0)  ::Integer
                                              , inGoodsKindCompleteId := 0              ::Integer
                                              , inAssetId             := 0              ::Integer
                                              , inAssetId_two         := 0              ::Integer
@@ -63,7 +61,8 @@ BEGIN
                                              , inPartionGoodsId      := 0              ::Integer
                                              , inUserId              := vbUserId
                                               ) AS tmp; 
-                                              
+                                           
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

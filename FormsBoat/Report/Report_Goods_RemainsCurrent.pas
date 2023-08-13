@@ -160,6 +160,7 @@ type
     actOpenFormPartion: TdsdOpenForm;
     macOpenDocumentPartion: TMultiAction;
     bbOpenDocumentPartion: TdxBarButton;
+    ModelName_OrderClient: TcxGridDBColumn;
   private
     { Private declarations }
   public

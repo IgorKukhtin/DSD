@@ -4,6 +4,7 @@
   ClientWidth = 1189
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -295
   ExplicitWidth = 1205
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -154,7 +155,7 @@
             DataBinding.FieldName = 'InvNumberFull_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 100
           end
@@ -171,7 +172,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Width = 100
           end
           object ProductName_OrderClient: TcxGridDBColumn
@@ -180,8 +181,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 100
           end
@@ -190,6 +190,7 @@
             DataBinding.FieldName = 'ModelName_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 80
           end
@@ -199,7 +200,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 120
           end
@@ -559,6 +560,8 @@
             Caption = '***Artikel Nr'
             DataBinding.FieldName = 'Article_all'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end

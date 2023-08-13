@@ -251,7 +251,6 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             DataBinding.FieldName = 'ProductName_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 110

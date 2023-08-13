@@ -6,6 +6,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -237
   ExplicitWidth = 1147
   ExplicitHeight = 563
   PixelsPerInch = 96
@@ -366,7 +367,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'InvNumberFull_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1072#1088#1090#1080#1103' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 70
           end
@@ -375,7 +376,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'CIN_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1072#1088#1090#1080#1103' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 100
           end
@@ -384,8 +385,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'ProductName_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1055#1072#1088#1090#1080#1103' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 100
           end
@@ -394,9 +394,18 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'FromName_OrderClient'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1072#1088#1090#1080#1103' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 120
+          end
+          object ModelName_OrderClient: TcxGridDBColumn
+            Caption = 'Model'
+            DataBinding.FieldName = 'ModelName_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 70
           end
           object PriceTax: TcxGridDBColumn
             Caption = '% '#1085#1072#1094'.'
@@ -660,6 +669,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Caption = '***Artikel Nr'
             DataBinding.FieldName = 'Article_all'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -3044,6 +3055,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 280
