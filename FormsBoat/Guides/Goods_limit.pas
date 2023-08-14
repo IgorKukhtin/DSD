@@ -133,6 +133,8 @@ type
     isProdOptions: TcxGridDBColumn;
     ModelName_calc: TcxGridDBColumn;
     Name_all: TcxGridDBColumn;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

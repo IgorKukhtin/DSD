@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
-    IN inId          Integer,       -- Товар 
+    IN inId          Integer,       -- Товар   
+    IN inMaskId      Integer   ,    -- id для копирования
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -44,7 +46,8 @@ BEGIN
    WHERE Object.DescId     = zc_Object_PriceList() 
      AND Object.ObjectCode = 47;  --код 47 прайс-план калькуляции(сырье) 
 
-   IF COALESCE (inId, 0) = 0
+
+   IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) = 0))
    THEN
        RETURN QUERY 
        SELECT
@@ -97,8 +100,8 @@ BEGIN
            ;
    ELSE
        RETURN QUERY 
-       SELECT Object_Goods.Id                     AS Id
-            , Object_Goods.ObjectCode             AS Code
+       SELECT CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_Goods.Id END ::Integer AS Id
+            , CASE WHEN inMaskId <> 0 THEN lfGet_ObjectCode(0, zc_Object_Goods()) ELSE Object_Goods.ObjectCode END ::Integer AS Code
             , Object_Goods.ValueData              AS Name
             , ObjectString_Article.ValueData      AS Article
             , ObjectString_ArticleVergl.ValueData AS ArticleVergl
@@ -260,7 +263,7 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_MatchCode
                                     ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
                                    AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
-       WHERE Object_Goods.Id = inId;
+       WHERE Object_Goods.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
 
    END IF;
   
@@ -273,6 +276,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.08.23         * inMaskId
  11.11.20         *
 */
 
