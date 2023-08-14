@@ -149,7 +149,7 @@ BEGIN
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
                              )
-          -- если Товар участвует в сборке + Опции
+          -- если Товар участвует в сборке
         , tmpReceiptGoods AS (-- Сборка Модели
                               SELECT DISTINCT tmpReceiptGoods_all.GoodsId_from AS GoodsId
                               FROM tmpReceiptGoods_all
@@ -164,6 +164,8 @@ BEGIN
                               SELECT DISTINCT tmpReceiptGoods_all.GoodsId_child AS GoodsId
                               FROM tmpReceiptGoods_all
                               WHERE tmpReceiptGoods_all.GoodsId_child > 0
+                                -- !!!отключил!!!
+                                AND 1=0
                              )
          , tmpGoods_limit AS (SELECT Object_Goods.*
                               FROM Object AS Object_Goods
@@ -480,7 +482,7 @@ BEGIN
             , tmpGoods.isErased
 
        FROM tmpGoods
-             -- если Товар участвует в сборке + Опции
+             -- если Товар участвует в сборке
              LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpGoods.Id
              -- если Опции
              LEFT JOIN tmpReceiptGoods_all ON tmpReceiptGoods_all.GoodsId_child = tmpGoods.Id

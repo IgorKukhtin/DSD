@@ -131,6 +131,7 @@ type
     Sale_SummReal: TcxGridDBColumn;
     Sale_AmountPartnerR_Weight: TcxGridDBColumn;
     Sale_AmountPartnerR_Sh: TcxGridDBColumn;
+    MovementId_test: TcxGridDBColumn;
   private
     { Private declarations }
   public
