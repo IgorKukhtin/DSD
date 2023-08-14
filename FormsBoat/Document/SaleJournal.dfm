@@ -763,7 +763,7 @@ object SaleJournalForm: TSaleJournalForm
         end
         item
           Name = 'ShowAll'
-          Value = True
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
