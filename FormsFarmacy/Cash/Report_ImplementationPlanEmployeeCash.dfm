@@ -110,12 +110,12 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
-            Format = ',0.00'
+            Format = ',0.##'
             Kind = skSum
             Column = colAmountTheFineTab
           end
           item
-            Format = ',0.00'
+            Format = ',0.##'
             Kind = skSum
             Column = colBonusAmountTab
           end
@@ -212,8 +212,8 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
           Caption = #1042#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086
           DataBinding.FieldName = 'Amount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 3
-          Properties.DisplayFormat = ',0.000'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
@@ -227,8 +227,8 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
           Caption = #1052#1080#1085'. '#1055#1083#1072#1085' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
           DataBinding.FieldName = 'AmountPlanTab'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
@@ -242,7 +242,8 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
           Caption = #1052#1080#1085'. '#1055#1083#1072#1085
           DataBinding.FieldName = 'AmountPlan'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
@@ -255,8 +256,8 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
           Caption = #1055#1083#1072#1085' '#1076#1083#1103' '#1055#1088#1077#1084#1080#1080' '#1089' '#1091#1095'. '#1058#1072#1073#1077#1083#1103
           DataBinding.FieldName = 'AmountPlanAwardTab'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
@@ -270,7 +271,8 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
           Caption = #1055#1083#1072#1085' '#1076#1083#1103' '#1055#1088#1077#1084#1080#1080
           DataBinding.FieldName = 'AmountPlanAward'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
@@ -848,7 +850,7 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = PeriodChoice
+        Component = deStart
       end
       item
       end>
@@ -1071,5 +1073,12 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
     PackSize = 1
     Left = 272
     Top = 344
+  end
+  object RefreshDispatcher1: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ComponentList = <>
+    Left = 256
+    Top = 416
   end
 end

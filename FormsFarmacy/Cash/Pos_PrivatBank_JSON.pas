@@ -151,8 +151,11 @@ procedure TPos_PrivatBank_JSON.BeforeDestruction;
 begin
   try
     if FTCPClient.Active then FTCPClient.Active := False;
+    FTCPClient.OnReadData := Nil;
     FreeAndNil(FTCPClient);
-  except on E:Exception do Add_PosLog('Ошибка закрытия обработки: ' + e.Message);
+    FreeAndNil(FTimer);
+    Add_PosLog('*** Закрытие обработки ***');
+  except on E:Exception do Add_PosLog('*** Ошибка закрытия обработки: ' + e.Message + ' ***');
   end;
   inherited BeforeDestruction;
 end;

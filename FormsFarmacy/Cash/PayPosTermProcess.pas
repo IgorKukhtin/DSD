@@ -259,6 +259,7 @@ Begin
     end;
   finally
     PosTerm.OnMsgDescriptionProc := Nil;
+    FreeAndNil(PayPosTermProcessForm);
   end;
 End;
 

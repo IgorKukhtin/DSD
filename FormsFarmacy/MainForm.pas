@@ -1032,6 +1032,7 @@ type
     N381: TMenuItem;
     actReport_PriceList_BestPrice: TdsdOpenForm;
     N382: TMenuItem;
+    actReport_ImplementationPlanEmployeeOneUser: TdsdOpenStaticForm;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
@@ -1107,11 +1108,7 @@ end;
 procedure TMainForm.actReport_ImplementationPlanEmployeeExecute(
   Sender: TObject);
 begin
-  with TReport_ImplementationPlanEmployeeForm.Create(Self) do
-  try
-     Show;
-  finally
-  end;
+  actReport_ImplementationPlanEmployeeOneUser.Execute;
 end;
 
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
