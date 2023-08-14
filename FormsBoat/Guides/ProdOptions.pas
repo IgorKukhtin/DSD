@@ -88,6 +88,8 @@ type
     NPP_pcp: TcxGridDBColumn;
     actChoiceFormProdColor_goods: TOpenChoiceForm;
     actChoiceFormProdOptions_ñomment: TOpenChoiceForm;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

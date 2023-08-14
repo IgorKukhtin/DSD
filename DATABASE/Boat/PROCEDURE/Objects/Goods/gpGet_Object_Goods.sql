@@ -264,7 +264,6 @@ BEGIN
                                     ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
                                    AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
        WHERE Object_Goods.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
-
    END IF;
   
 END;
@@ -281,4 +280,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Goods (1, '2')
+-- SELECT * FROM gpGet_Object_Goods (1, 0, '2')
