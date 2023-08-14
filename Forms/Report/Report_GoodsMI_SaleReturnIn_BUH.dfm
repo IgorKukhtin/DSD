@@ -4,8 +4,9 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -468
   ExplicitWidth = 1378
-  ExplicitHeight = 422
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -182,6 +183,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_SummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummReal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -347,11 +353,15 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_SummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummReal
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -736,6 +746,17 @@
             Options.Editing = False
             Width = 70
           end
+          object Sale_SummReal: TcxGridDBColumn
+            Caption = '***'#1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'Sale_SummReal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Sale_SummMVAT: TcxGridDBColumn
             Caption = #1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_SummMVAT'
@@ -991,6 +1012,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Return_SummCost: TcxGridDBColumn
@@ -1084,21 +1106,15 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
-          end
-          object Sale_SummReal: TcxGridDBColumn
-            DataBinding.FieldName = 'Sale_SummReal'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 55
           end
           object Sale_AmountPartnerR_Weight: TcxGridDBColumn
             DataBinding.FieldName = 'Sale_AmountPartnerR_Weight'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 55
           end
@@ -1107,8 +1123,23 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object MovementId_test: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_test'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -1567,7 +1598,7 @@
         end
         item
           Name = 'isBuh'
-          Value = 'true'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1800,6 +1831,7 @@
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' - '#1076#1072#1085#1085#1099#1077' '#1085#1072' '#1089#1077#1081#1095#1072#1089' ('#1086#1085'-'#1083#1072#1081#1085', '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1076#1086#1083#1075#1086')'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' - '#1076#1072#1085#1085#1099#1077' '#1085#1072' '#1089#1077#1081#1095#1072#1089' ('#1086#1085'-'#1083#1072#1081#1085', '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1076#1086#1083#1075#1086')'
       ImageIndex = 41
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
