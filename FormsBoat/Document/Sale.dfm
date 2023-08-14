@@ -1446,6 +1446,7 @@ object SaleForm: TSaleForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
+      View = cxGridDBTableView
       Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -2493,7 +2494,11 @@ object SaleForm: TSaleForm
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
-    DataSets = <>
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
     OutputType = otResult
     Params = <
       item
@@ -2526,12 +2531,30 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioOperPrice'
+        Name = 'inOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
         DataType = ftFloat
-        ParamType = ptInputOutput
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBasisPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BasisPrice'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
