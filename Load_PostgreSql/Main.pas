@@ -3279,6 +3279,9 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
 begin
      if (isPartion = FALSE) and (isDiff = FALSE) then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
+     Count_err          := 0;
+     Count_err_Deadlock := 0;
+     //
      myEnabledCB(cbComplete_List);
      //
      myLogMemo_add('start cbComplete_List');
@@ -3517,6 +3520,13 @@ begin
      if isPartion = false
      then fExecSqToQuery_noErr_three(' UPDATE _RecalcPG_log SET Id = 0 WHERE GroupId = '+IntToStr(GroupId_branch));
      //
+     //
+     myLogMemo_add(' ');
+     myLogMemo_add(' ___ end all ___ ');
+     myLogMemo_add(' ');
+     myLogMemo_add(' Count_err : ' + Count_errEdit.Text);
+     myLogMemo_add(' Deadlock_err : ' + DeadlockEdit.Text);
+     myLogMemo_add('');
      //
      myDisabledCB(cbComplete_List);
 end;
