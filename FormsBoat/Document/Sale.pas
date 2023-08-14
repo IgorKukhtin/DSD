@@ -174,6 +174,11 @@ type
     GuidesParent: TdsdGuides;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
+    actPartionGoodsChoiceForm: TOpenChoiceForm;
+    actInsertRecordPartion: TInsertRecord;
+    macInsertRecordPartion: TMultiAction;
+    bbInsertRecordPartion: TdxBarButton;
+    bbPartionGoodsChoiceForm: TdxBarButton;
   private
   public
   end;
