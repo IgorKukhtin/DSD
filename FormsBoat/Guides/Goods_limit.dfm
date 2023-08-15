@@ -814,6 +814,14 @@ object Goods_limitForm: TGoods_limitForm
           ItemName = 'bbSetUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
@@ -962,6 +970,10 @@ object Goods_limitForm: TGoods_limitForm
       Category = 0
       Visible = ivAlways
       Control = edSearchName
+    end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1245,6 +1257,11 @@ object Goods_limitForm: TGoods_limitForm
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1265,6 +1282,11 @@ object Goods_limitForm: TGoods_limitForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
           Value = Null
           MultiSelectSeparator = ','
         end>
@@ -1504,6 +1526,37 @@ object Goods_limitForm: TGoods_limitForm
       ControlName.Value = 'FieldFilter_Article'
       ControlName.DataType = ftString
       ControlName.MultiSelectSeparator = ','
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object spSelect: TdsdStoredProc

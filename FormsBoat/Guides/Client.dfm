@@ -675,6 +675,24 @@ object ClientForm: TClientForm
           ComponentItem = 'TaxKindName_Info'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceWithVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceWithVAT'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_parent'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_parent'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

@@ -1145,6 +1145,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Name'
         Value = ''
         Component = edName

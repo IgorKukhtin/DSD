@@ -49,6 +49,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , ReturnPercent TFloat
              , Sale_SummMVAT TFloat, Sale_SummVAT TFloat
              , Return_SummMVAT TFloat, Return_SummVAT TFloat
+             , MovementId_test Integer
               )
 AS
 $BODY$
@@ -660,8 +661,11 @@ BEGIN
               --
               -- ñóììà ÍÄÑ
             , SUM (COALESCE (tmp.Return_SummVAT, 0)) :: TFloat
+              --
+            , MAX (tmp.MovementId_test) :: Integer AS MovementId_test
        FROM (
        SELECT Object_GoodsGroup.ValueData AS GoodsGroupName, ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+            , COALESCE (_tmpMI.MovementId_test, 0) AS MovementId_test
             , CASE WHEN COALESCE (tmp.Sale_Summ, 0) = 0 AND COALESCE (_tmpMI.Sale_SummVAT, 0) > 0
                    THEN _tmpMI.MovementId_test
                    ELSE COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode)

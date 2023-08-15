@@ -154,6 +154,8 @@ type
     isReceiptGoods_group: TcxGridDBColumn;
     Name_all: TcxGridDBColumn;
     ModelName_calc: TcxGridDBColumn;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

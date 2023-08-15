@@ -16,9 +16,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
+             , PriceWithVAT Boolean
+             , VATPercent TFloat
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime 
+             , Value_TaxKind TFloat, TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
              )
 
 AS
@@ -85,12 +88,19 @@ BEGIN
              , Object_To.ObjectCode                       AS ToCode
              , Object_To.ValueData                        AS ToName
 
+             , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
+             , MovementFloat_VATPercent.ValueData        AS VATPercent
+
              , MovementString_Comment.ValueData :: TVarChar AS Comment
              , Object_Insert.ValueData              AS InsertName
              , MovementDate_Insert.ValueData        AS InsertDate
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
 
+             , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
+             , Object_TaxKind.Id                            AS TaxKindId
+             , Object_TaxKind.ValueData                     AS TaxKindName
+             , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
         FROM Movement_Sale
 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
@@ -113,6 +123,14 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                 ON MovementFloat_TotalSummMVAT.MovementId = Movement_Sale.Id
                                AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+
+        LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                ON MovementFloat_VATPercent.MovementId = Movement_Sale.Id
+                               AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                  ON MovementBoolean_PriceWithVAT.MovementId = Movement_Sale.Id
+                                 AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement_Sale.Id
@@ -137,6 +155,19 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_Comment_parent
                                  ON MovementString_Comment_parent.MovementId = Movement_Parent.Id
                                 AND MovementString_Comment_parent.DescId = zc_MovementString_Comment()
+
+        --
+        LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                             ON ObjectLink_TaxKind.ObjectId = Object_To.Id
+                            AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+        LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+                            
+        LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                              ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
+                             AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
+        LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                               ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                              AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
        ;
 
 END;
@@ -146,6 +177,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.08.23         *
  12.08.21         *
 */
 

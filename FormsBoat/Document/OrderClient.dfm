@@ -90,8 +90,8 @@ object OrderClientForm: TOrderClientForm
       Caption = #1059#1095#1072#1089#1090#1086#1082' '#1091#1095#1077#1090#1072
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 1215
-      Top = 36
+      Left = 1104
+      Top = 28
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 6
       Visible = False
@@ -610,8 +610,8 @@ object OrderClientForm: TOrderClientForm
       Width = 70
     end
     object cxLabel23: TcxLabel
-      Left = 268
-      Top = 45
+      Left = 264
+      Top = 50
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edTaxKind: TcxButtonEdit
@@ -3510,13 +3510,13 @@ object OrderClientForm: TOrderClientForm
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     ShowHint = True
-    TabOrder = 12
+    TabOrder = 11
     Visible = False
     Width = 70
   end
   object cxLabel14: TcxLabel
     Left = 344
-    Top = 45
+    Top = 50
     Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057' (Kunden)'
   end
   object edInfo_TaxKind: TcxTextEdit
@@ -5830,6 +5830,7 @@ object OrderClientForm: TOrderClientForm
         Name = 'TaxKindName_info'
         Value = Null
         Component = edInfo_TaxKind
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -7399,8 +7400,8 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 293
-    Top = 47
+    Left = 277
+    Top = 63
   end
   object spSelectPrint_Invoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'
