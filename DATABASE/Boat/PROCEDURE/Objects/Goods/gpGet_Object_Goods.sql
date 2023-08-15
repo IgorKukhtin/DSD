@@ -281,4 +281,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Goods (1, '2')
+-- SELECT * FROM gpGet_Object_Goods (1, 1, '2')
