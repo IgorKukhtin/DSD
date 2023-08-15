@@ -17,7 +17,7 @@ object IncomeEditForm: TIncomeEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 156
+    Left = 155
     Top = 345
     Width = 75
     Height = 25
@@ -86,7 +86,7 @@ object IncomeEditForm: TIncomeEditForm
   end
   object ceDiscountTax: TcxCurrencyEdit
     Left = 155
-    Top = 90
+    Top = 87
     Hint = '% '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
@@ -306,11 +306,7 @@ object IncomeEditForm: TIncomeEditForm
     object actUpdate_summ_before: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUpdate_summ_before
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_summ_before
-        end>
+      StoredProcList = <>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116

@@ -275,6 +275,14 @@ type
     isProdOptions: TcxGridDBColumn;
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
+    spUpdate_summ_before: TdsdStoredProc;
+    spUpdate_summ_after: TdsdStoredProc;
+    EnterMoveNext1: TEnterMoveNext;
+    actUpdate_summ_after: TdsdInsertUpdateGuides;
+    HeaderExit11: THeaderExit;
+    HeaderExit: THeaderExit;
+    actUpdate_summ_before: TdsdDataSetRefresh;
+    HeaderSaver1: THeaderSaver;
   private
   public
   end;
