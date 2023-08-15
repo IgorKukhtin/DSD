@@ -113,14 +113,14 @@ $BODY$
    --
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsQuality_Quality(), ioId, inQualityId);
 
-   -- сохранили св-во <>
+   -- сохранили св-во <клипсованный товар>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsQuality_Klipsa(), ioId, inisKlipsa);
 
-   -- сохранили св-во для GoodsByGoodsKind <>
+   -- сохранили св-во для GoodsByGoodsKind <Вид оболонки, №4>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsByGoodsKind_Quality1(), vbGoodsByGoodsKindId, inValue1_gk);
-   -- сохранили св-во для GoodsByGoodsKind <>
+   -- сохранили св-во для GoodsByGoodsKind <Вид пакування/стан продукції >
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsByGoodsKind_Quality11(), vbGoodsByGoodsKindId, inValue11_gk);
-   -- сохранили св-во для GoodsByGoodsKind <>
+   -- сохранили св-во для GoodsByGoodsKind <срок годности в днях>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_NormInDays(), vbGoodsByGoodsKindId, inNormInDays_gk);
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbGoodsByGoodsKindId, vbUserId);

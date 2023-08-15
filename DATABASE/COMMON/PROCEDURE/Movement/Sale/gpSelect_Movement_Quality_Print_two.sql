@@ -243,9 +243,13 @@ tmpMI AS
             )
           , tmpMIGoodsByGoodsKind AS
                             (SELECT tmpMI.*
+                                    -- для вида товара - Вид оболонки, №4
                                   , ObjectString_GK_Value1.ValueData     AS Value1_gk
+                                    -- для вида товара - Вид пакування/стан продукції 
                                   , ObjectString_GK_Value11.ValueData    AS Value11_gk
+                                    -- для вида товара - срок годности в днях
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
+                                    -- Уменьшение на N дней от даты покупателя в качественном
                                   , ObjectFloat_GK_DaysQ.ValueData       AS DaysQ_gk
                              FROM tmpMI
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -432,9 +436,13 @@ tmpMI AS
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsPropertyValue.ValueData  AS Name
                                              , ObjectString_Article.ValueData       AS Article
+                                               -- Значение ГОСТ, ДСТУ,ТУ (КУ)
                                              , ObjectString_Quality.ValueData       AS Quality
+                                               -- Строк придатності (КУ)
                                              , ObjectString_Quality2.ValueData      AS Quality2
+                                               -- Умови зберігання (КУ)
                                              , ObjectString_Quality10.ValueData     AS Quality10
+                                               -- 
                                              , tmpGoodsProperty.MovementId
                                         FROM (SELECT tmpGoodsProperty.GoodsPropertyId, tmpGoodsProperty.MovementId
                                               FROM tmpGoodsProperty
@@ -572,9 +580,14 @@ tmpMI AS
               END                 :: TVarChar AS CodeUKTZED
 
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,   COALESCE (tmpObject_GoodsPropertyValue.Article, ''))      AS Article_Juridical
-           --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))     AS Quality2_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, ''))    AS Quality10_Juridical
+         --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
+
+             -- Строк придатності (КУ) - подставляется для вида товара - срок годности в днях
+           , CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб'
+                  ELSE COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))
+             END AS Quality2_Juridical
+             -- Умови зберігання (КУ)
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, '')) AS Quality10_Juridical
 
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
@@ -588,9 +601,12 @@ tmpMI AS
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount13
 
            , tmpMovement_QualityParams.OperDateIn
+             -- Уменьшение на N дней от даты покупателя в качественном
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk <> 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDateIn_str4
+             --
            , tmpMovement_QualityParams.OperDateOut
 
+             -- + для вида товара ПЛЮС срок годности в днях
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
            
              -- 2393 - КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт + 2222 + 2369
@@ -599,6 +615,7 @@ tmpMI AS
                   ELSE tmpMovement_QualityParams.OperDateIn
              END :: TDateTime AS OperDate_part
            
+             -- для вида товара - срок годности в днях
            , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб') :: TVarChar AS NormInDays_gk_str
 
            , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
@@ -612,8 +629,11 @@ tmpMI AS
 
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
+             -- Значение ГОСТ, ДСТУ,ТУ (КУ)
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+             -- для вида товара - Вид оболонки, №4 
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
+             --
            , tmpGoodsQuality.Value2
            , tmpGoodsQuality.Value3
            , tmpGoodsQuality.Value4
@@ -623,6 +643,7 @@ tmpMI AS
            , tmpGoodsQuality.Value8
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
+             -- для вида товара - Вид пакування/стан продукції 
            , tmpMIGoodsByGoodsKind.Value11_gk
 
            , tmpMovement_QualityParams.InvNumber            AS InvNumber_Quality

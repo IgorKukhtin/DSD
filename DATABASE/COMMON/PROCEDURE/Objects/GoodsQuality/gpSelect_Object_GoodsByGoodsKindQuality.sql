@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKindQuality(
     IN inSession       TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
-             , Value1_gk TVarChar, Value11_gk TVarChar, NormInDays_gk TFloat
+             , Value1_gk TVarChar, Value11_gk TVarChar, NormInDays_gk TFloat, DaysQ TFloat
              , Value1 TVarChar, Value2 TVarChar
              , Value3 TVarChar, Value4 TVarChar
              , Value5 TVarChar, Value6 TVarChar
@@ -58,6 +58,7 @@ BEGIN
            , ObjectString_GK_Value1.ValueData     AS Value1_gk
            , ObjectString_GK_Value11.ValueData    AS Value11_gk
            , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
+           , ObjectFloat_DaysQ.ValueData          AS DaysQ
 
            , ObjectString_Value1.ValueData AS Value1
            , ObjectString_Value2.ValueData AS Value2
@@ -146,6 +147,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
                                  ON ObjectFloat_GK_NormInDays.ObjectId = tmpGoodsByGoodsKind.GoodsByGoodsKindId
                                 AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaysQ
+                                 ON ObjectFloat_DaysQ.ObjectId = tmpGoodsByGoodsKind.GoodsByGoodsKindId
+                                AND ObjectFloat_DaysQ.DescId = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
 
        WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
          AND (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0);
@@ -194,9 +198,14 @@ BEGIN
            , COALESCE (Object_GoodsQuality.ValueData, '')::TVarChar  AS Name
            , COALESCE (Object_GoodsQuality.isErased, false)::Boolean AS isErased
 
+             -- Вид оболонки, №4
            , ObjectString_GK_Value1.ValueData     AS Value1_gk
+             -- Вид пакування/стан продукції 
            , ObjectString_GK_Value11.ValueData    AS Value11_gk
+             -- срок годности в днях
            , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
+             -- Уменьшение на N дней от даты покупателя в качественном
+           , ObjectFloat_DaysQ.ValueData          AS DaysQ
 
            , COALESCE (ObjectString_Value1.ValueData, '')::TVarChar  AS Value1
            , COALESCE (ObjectString_Value2.ValueData, '')::TVarChar  AS Value2
@@ -281,6 +290,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
                                  ON ObjectFloat_GK_NormInDays.ObjectId = tmpGoodsByGoodsKind.GoodsByGoodsKindId
                                 AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaysQ
+                                 ON ObjectFloat_DaysQ.ObjectId = tmpGoodsByGoodsKind.GoodsByGoodsKindId
+                                AND ObjectFloat_DaysQ.DescId = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
 
       WHERE (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0 OR GoodsQuality_Goods.ObjectId IS NULL)
      ;

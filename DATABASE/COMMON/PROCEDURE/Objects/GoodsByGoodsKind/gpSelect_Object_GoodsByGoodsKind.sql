@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
              , DaysQ TFloat
+             , Value1_gk TVarChar, Value11_gk TVarChar
+
              , NormRem TFloat, NormOut TFloat
              , NormPack TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
@@ -183,8 +185,15 @@ BEGIN
            , COALESCE (ObjectFloat_Height.ValueData,0)          ::TFloat  AS Height
            , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
+
+             -- срок годности в днях
            , COALESCE (ObjectFloat_NormInDays.ValueData,0)      ::TFloat  AS NormInDays
+             -- Уменьшение на N дней от даты покупателя в качественном
            , COALESCE (ObjectFloat_DaysQ.ValueData,0)           ::TFloat  AS DaysQ
+             -- Вид оболонки, №4
+           , ObjectString_GK_Value1.ValueData                             AS Value1_gk
+             -- Вид пакування/стан продукції 
+           , ObjectString_GK_Value11.ValueData                            AS Value11_gk
            
            , COALESCE (ObjectFloat_NormRem.ValueData,0)         ::TFloat  AS NormRem
            , COALESCE (ObjectFloat_NormOut.ValueData,0)         ::TFloat  AS NormOut
@@ -331,12 +340,21 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Width
                                   ON ObjectFloat_Width.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_Width.DescId = zc_ObjectFloat_GoodsByGoodsKind_Width()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
                                   ON ObjectFloat_NormInDays.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
             LEFT JOIN ObjectFloat AS ObjectFloat_DaysQ
                                   ON ObjectFloat_DaysQ.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_DaysQ.DescId = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
+
+            LEFT JOIN ObjectString AS ObjectString_GK_Value1
+                                   ON ObjectString_GK_Value1.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                  AND ObjectString_GK_Value1.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality1()
+            LEFT JOIN ObjectString AS ObjectString_GK_Value11
+                                   ON ObjectString_GK_Value11.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                  AND ObjectString_GK_Value11.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality11()
+
 
             LEFT JOIN ObjectFloat AS ObjectFloat_NormRem
                                   ON ObjectFloat_NormRem.ObjectId = Object_GoodsByGoodsKind_View.Id

@@ -81,6 +81,7 @@ type
     NormInDays_gk: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     Value11_gk: TcxGridDBColumn;
+    DaysQ: TcxGridDBColumn;
   private
     { Private declarations }
   public
