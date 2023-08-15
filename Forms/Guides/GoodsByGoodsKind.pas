@@ -70,6 +70,9 @@ type
     macStartLoadGoodsKindNew: TMultiAction;
     bbStartLoadGoodsKindNew: TdxBarButton;
     GoodsKindNewChoiceForm: TOpenChoiceForm;
+    NormInDays: TcxGridDBColumn;
+    Value1_gk: TcxGridDBColumn;
+    Value11_gk: TcxGridDBColumn;
   private
     { Private declarations }
   public
