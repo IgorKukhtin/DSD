@@ -35,7 +35,7 @@ BEGIN
          SELECT
                0                         AS Id
              , CAST (NEXTVAL ('movement_ProductionUnion_seq') AS TVarChar) AS InvNumber
-             , inOperDate   ::TDateTime   AS OperDate     --CURRENT_DATE
+             , CURRENT_DATE :: TDateTime AS OperDate
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
              , CAST ('' AS TVarChar)     AS InvNumberInvoice

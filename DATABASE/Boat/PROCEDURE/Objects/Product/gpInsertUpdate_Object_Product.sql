@@ -205,7 +205,7 @@ BEGIN
                                               , ioSummReal           := ioSummReal
                                               , inTransportSumm_load := inTransportSumm_load
                                               , inFromId             := inClientId
-                                              , inToId               := zc_Unit_Production()
+                                              , inToId               := 33349 -- Склад Лодки
                                               , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
                                               , inProductId          := ioId
                                               , inMovementId_Invoice := 0

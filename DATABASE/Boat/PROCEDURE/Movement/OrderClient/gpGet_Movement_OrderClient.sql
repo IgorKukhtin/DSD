@@ -92,7 +92,7 @@ BEGIN
                    0                         AS Id
                  , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber
                  , CAST ('' AS TVarChar)     AS InvNumberPartner
-                 , inOperDate   :: TDateTime AS OperDate
+                 , CURRENT_DATE :: TDateTime AS OperDate
                  , Object_Status.Code        AS StatusCode
                  , Object_Status.Name        AS StatusName
                  , CAST (False as Boolean)   AS PriceWithVAT
