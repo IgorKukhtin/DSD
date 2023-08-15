@@ -179,6 +179,14 @@ type
     macInsertRecordPartion: TMultiAction;
     bbInsertRecordPartion: TdxBarButton;
     bbPartionGoodsChoiceForm: TdxBarButton;
+    edVATPercent: TcxCurrencyEdit;
+    cxLabel29: TcxLabel;
+    cbPriceWithVAT: TcxCheckBox;
+    cxLabel23: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edInfo_TaxKind: TcxTextEdit;
   private
   public
   end;

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale(Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale(Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale(Integer, Integer, TVarChar, TDateTime, Integer, Integer, Boolean, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , --
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -28,7 +31,9 @@ BEGIN
                                        , inInvNumber
                                        , inOperDate
                                        , inFromId
-                                       , inToId
+                                       , inToId 
+                                       , inPriceWithVAT
+                                       , inVATPercent
                                        , inComment
                                        , vbUserId);
 
