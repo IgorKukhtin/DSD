@@ -13,8 +13,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , MovementId_Parent Integer, InvNumber_Parent TVarChar, Comment_parent TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , PriceWithVAT Boolean
+             , VATPercent TFloat
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
+             , Value_TaxKind TFloat, TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
               )
 AS
 $BODY$
@@ -41,10 +44,17 @@ BEGIN
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
              , CAST ('' AS TVarChar)     AS ToName
+             , CAST (False as Boolean)   AS PriceWithVAT
+             , ObjectFloat_TaxKind_Value.ValueData :: TFloat AS VATPercent
              , CAST ('' AS TVarChar)     AS Comment
              , Object_Insert.Id                AS InsertId
              , Object_Insert.ValueData         AS InsertName
              , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
+
+             , CAST (0 as TFloat)        AS Value_TaxKind
+             , 0                         AS TaxKindId
+             , CAST ('' as TVarChar)     AS TaxKindName
+             , CAST ('' as TVarChar)     AS TaxKindName_info
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                      ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
@@ -70,12 +80,20 @@ BEGIN
           , Object_To.Id                AS ToId      
           , Object_To.ValueData         AS ToName
 
+
+          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
+          , MovementFloat_VATPercent.ValueData        AS VATPercent
+          
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
           , Object_Insert.Id                     AS InsertId
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
 
+          , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
+          , Object_TaxKind.Id                            AS TaxKindId
+          , Object_TaxKind.ValueData                     AS TaxKindName
+          , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
         FROM Movement AS Movement_Sale 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_Sale.ParentId
@@ -89,6 +107,14 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement_Sale.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement_Sale.Id
@@ -106,6 +132,19 @@ BEGIN
                                      ON MovementString_Comment_parent.MovementId = Movement_Parent.Id
                                     AND MovementString_Comment_parent.DescId = zc_MovementString_Comment()
 
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                 ON ObjectLink_TaxKind.ObjectId = Object_To.Id
+                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+                                
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                  ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
+                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
+            LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                                   ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                  AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
+
         WHERE Movement_Sale.Id = inMovementId
           AND Movement_Sale.DescId = zc_Movement_Sale()
           ;
@@ -118,6 +157,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.08.23         * 
  12.08.21         *
 */
 

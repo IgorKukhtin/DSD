@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, Integer, TVarChar, TDateTime, Integer, Integer, Boolean, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому
+    IN inToId                Integer   , -- Кому 
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , --
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -31,6 +33,33 @@ BEGIN
                                                 );
      END IF;
 */
+/*
+     -- Проверка
+     IF COALESCE (inToId, 0) <> -1
+    AND COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                 FROM ObjectLink AS OL_Client_TaxKind
+                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
+                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                 WHERE OL_Client_TaxKind.ObjectId = inToId
+                                                   AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
+                                                ), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у Клиента = <%>.'
+                       , '%'
+                       , zfConvert_FloatToString (inVATPercent)
+                       , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                             FROM ObjectLink AS OL_Client_TaxKind
+                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
+                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                             WHERE OL_Client_TaxKind.ObjectId = inToId
+                                                               AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
+                                                            ), 0))
+                        ;
+     END IF;
+*/ 
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -43,6 +72,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+     -- сохранили свойство <Цена с НДС (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
+     -- сохранили значение <НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
 
   --------
 
@@ -62,7 +96,6 @@ BEGIN
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
          END IF;
      END IF;
-
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar, PLZName_full TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar, TaxKindName_Info TVarChar, TaxKind_Value TFloat
+             , TaxKindId Integer, TaxKindName TVarChar, TaxKindName_Info TVarChar, TaxKind_Value TFloat, PriceWithVAT Boolean
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
@@ -65,6 +65,7 @@ BEGIN
            , Object_TaxKind.ValueData            AS TaxKindName 
            , ObjectString_TaxKind_Info.ValueData AS TaxKindName_Info
            , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+           , CASE WHEN COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) <> 0 THEN TRUE ELSE FALSE END ::Boolean AS PriceWithVAT
 
            , Object_PaidKind.Id              AS PaidKindId
            , Object_PaidKind.ValueData       AS PaidKindName

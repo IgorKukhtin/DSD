@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpGet_Object_ProdOptions(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_ProdOptions(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ProdOptions(Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ProdOptions(
-    IN inId          Integer,       -- Названия Опций
+    IN inId          Integer,       -- Названия Опций 
+    IN inMaskId      Integer   ,    -- id для копирования
     IN inProModelId  Integer,       -- модель
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -30,7 +32,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ProdOptions());
 
-   IF COALESCE (inId, 0) = 0
+   IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) = 0))
    THEN
        RETURN QUERY
        SELECT
@@ -86,8 +88,8 @@ BEGIN
    ELSE
      RETURN QUERY
      SELECT
-           Object_ProdOptions.Id              AS Id
-         , Object_ProdOptions.ObjectCode      AS Code
+           CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_ProdOptions.Id END ::Integer AS Id
+         , CASE WHEN inMaskId <> 0 THEN lfGet_ObjectCode (0, zc_Object_ProdOptions()) ELSE Object_ProdOptions.ObjectCode END ::Integer AS Code
          , Object_ProdOptions.ValueData       AS Name
 
          , Object_Model.Id         ::Integer  AS ModelId
@@ -190,7 +192,7 @@ BEGIN
                               AND ObjectLink_ColorPattern_Model.DescId = zc_ObjectLink_ColorPattern_Model()
           LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_ColorPattern_Model.ChildObjectId
 
-       WHERE Object_ProdOptions.Id = inId;
+       WHERE Object_ProdOptions.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
 
    END IF;
 
@@ -209,4 +211,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ProdOptions (0, 0, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_ProdOptions (0, 0, 0, zfCalc_UserAdmin())

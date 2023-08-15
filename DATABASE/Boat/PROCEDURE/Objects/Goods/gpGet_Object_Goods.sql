@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
-    IN inId          Integer,       -- Товар   
+    IN inId          Integer,       -- Товар
     IN inMaskId      Integer   ,    -- id для копирования
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsTypeId  Integer, GoodsTypeName TVarChar
              , GoodsSizeId  Integer, GoodsSizeName TVarChar
              , ProdColorId Integer, ProdColorName TVarChar
-             , PartnerId Integer, PartnerName   TVarChar          
+             , PartnerId Integer, PartnerName   TVarChar
              , UnitId Integer, UnitName TVarChar
              , DiscountPartnerId Integer, DiscountPartnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
@@ -38,18 +38,18 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Goods());
-    
-   --ПРАЙС по умолчанию - код 47  прайс-план калькуляции(сырье) 
-   SELECT Object.Id, Object.ValueData 
-          INTO vbPriceListId, vbPriceListName 
+
+   --ПРАЙС по умолчанию - код 47  прайс-план калькуляции(сырье)
+   SELECT Object.Id, Object.ValueData
+          INTO vbPriceListId, vbPriceListName
    FROM Object
-   WHERE Object.DescId     = zc_Object_PriceList() 
-     AND Object.ObjectCode = 47;  --код 47 прайс-план калькуляции(сырье) 
+   WHERE Object.DescId     = zc_Object_PriceList()
+     AND Object.ObjectCode = 47;  --код 47 прайс-план калькуляции(сырье)
 
 
    IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) = 0))
    THEN
-       RETURN QUERY 
+       RETURN QUERY
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Goods()) AS Code
@@ -86,7 +86,7 @@ BEGIN
            , CAST (0 as Integer)      AS ProdColorId
            , CAST ('' as TVarChar)    AS ProdColorName
            , CAST (0 as Integer)      AS PartnerId
-           , CAST ('' as TVarChar)    AS PartnerName            
+           , CAST ('' as TVarChar)    AS PartnerName
            , CAST (0 as Integer)      AS UnitId
            , CAST ('' as TVarChar)    AS UnitName
            , CAST (0 as Integer)      AS DiscountPartnerId
@@ -99,7 +99,7 @@ BEGIN
            , CAST ('' as TVarChar)    AS EngineName
            ;
    ELSE
-       RETURN QUERY 
+       RETURN QUERY
        SELECT CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_Goods.Id END ::Integer AS Id
             , CASE WHEN inMaskId <> 0 THEN lfGet_ObjectCode(0, zc_Object_Goods()) ELSE Object_Goods.ObjectCode END ::Integer AS Code
             , Object_Goods.ValueData              AS Name
@@ -137,7 +137,7 @@ BEGIN
             , Object_ProdColor.Id                AS ProdColorId
             , Object_ProdColor.ValueData         AS ProdColorName
             , Object_Partner.Id                  AS PartnerId
-            , Object_Partner.ValueData           AS PartnerName            
+            , Object_Partner.ValueData           AS PartnerName
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
             , Object_DiscountPartner.Id           AS DiscountPartnerId
@@ -151,7 +151,7 @@ BEGIN
        FROM Object AS Object_Goods
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()  
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -202,7 +202,7 @@ BEGIN
                                   ON ObjectLink_Goods_DiscountPartner.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_DiscountPartner.DescId = zc_ObjectLink_Goods_DiscountPartner()
              LEFT JOIN Object AS Object_DiscountPartner ON Object_DiscountPartner.Id = ObjectLink_Goods_DiscountPartner.ChildObjectId
-             
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                   ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
@@ -224,7 +224,7 @@ BEGIN
                                    ON ObjectFloat_Refer.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_Refer.DescId   = zc_ObjectFloat_Goods_Refer()
              LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                   ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id 
+                                   ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
              LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                    ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
@@ -266,7 +266,7 @@ BEGIN
        WHERE Object_Goods.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
 
    END IF;
-  
+
 END;
 $BODY$
 

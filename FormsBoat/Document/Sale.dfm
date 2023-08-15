@@ -62,10 +62,10 @@ object SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 198
+      Width = 200
     end
     object edTo: TcxButtonEdit
-      Left = 614
+      Left = 616
       Top = 23
       Properties.Buttons = <
         item
@@ -74,7 +74,7 @@ object SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 171
+      Width = 200
     end
     object cxLabel3: TcxLabel
       Left = 407
@@ -85,7 +85,7 @@ object SaleForm: TSaleForm
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 614
+      Left = 616
       Top = 5
       Caption = 'Kunden'
     end
@@ -117,23 +117,23 @@ object SaleForm: TSaleForm
       Width = 174
     end
     object cxLabel16: TcxLabel
-      Left = 407
+      Left = 826
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 407
+      Left = 826
       Top = 63
       TabOrder = 11
-      Width = 378
+      Width = 271
     end
     object cxLabel17: TcxLabel
-      Left = 796
+      Left = 826
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 796
+      Left = 826
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -141,7 +141,7 @@ object SaleForm: TSaleForm
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 146
+      Width = 117
     end
     object cxLabel18: TcxLabel
       Left = 951
@@ -189,6 +189,59 @@ object SaleForm: TSaleForm
       Properties.ReadOnly = True
       TabOrder = 19
       Width = 200
+    end
+    object edVATPercent: TcxCurrencyEdit
+      Left = 544
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      TabOrder = 20
+      Width = 63
+    end
+    object cxLabel29: TcxLabel
+      Left = 544
+      Top = 45
+      Caption = '% '#1053#1044#1057' :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cbPriceWithVAT: TcxCheckBox
+      Left = 408
+      Top = 63
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 22
+      Width = 130
+    end
+    object cxLabel23: TcxLabel
+      Left = 616
+      Top = 45
+      Caption = #1058#1080#1087' '#1053#1044#1057
+    end
+    object edTaxKind: TcxButtonEdit
+      Left = 616
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 70
+    end
+    object cxLabel14: TcxLabel
+      Left = 691
+      Top = 45
+      Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057' (Kunden)'
+    end
+    object edInfo_TaxKind: TcxTextEdit
+      Left = 692
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 125
     end
   end
   object cxPageControl: TcxPageControl
@@ -1962,13 +2015,46 @@ object SaleForm: TSaleForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKind_Value'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = cbPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 656
     Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 584
+    Left = 920
     Top = 56
     object N1: TMenuItem
       Action = actRefresh
@@ -2119,6 +2205,22 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceWithVAT'
+        Value = Null
+        Component = cbPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2146,14 +2248,16 @@ object SaleForm: TSaleForm
         Control = edOperDate
       end
       item
-      end
-      item
         Control = edFrom
       end
       item
         Control = edTo
       end
       item
+        Control = cbPriceWithVAT
+      end
+      item
+        Control = edVATPercent
       end
       item
       end
@@ -2303,6 +2407,42 @@ object SaleForm: TSaleForm
         Component = ceComment_parent
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = cbPriceWithVAT
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName_info'
+        Value = Null
+        Component = edInfo_TaxKind
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -2329,8 +2469,8 @@ object SaleForm: TSaleForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 656
-    Top = 80
+    Left = 728
+    Top = 200
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetErased'
@@ -2738,8 +2878,54 @@ object SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = cbPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 284
     Top = 65535
+  end
+  object GuidesTaxKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTaxKind
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 645
+    Top = 63
   end
 end

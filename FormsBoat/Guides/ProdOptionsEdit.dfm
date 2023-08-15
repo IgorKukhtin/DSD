@@ -431,6 +431,14 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inProdModelId'
         Value = Null
         Component = GuidesModel
