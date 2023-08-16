@@ -135,6 +135,20 @@ object GoodsByGoodsKindQualityForm: TGoodsByGoodsKindQualityForm
         Options.Editing = False
         Width = 70
       end
+      object DaysQ: TcxGridDBColumn
+        Caption = '***'#1059#1084#1077#1085#1100#1096'. '#1044#1072#1090#1099' '#1087#1088#1086#1080#1079#1074' '#1074' '#1082#1072#1095#1077#1089#1090#1074'.'
+        DataBinding.FieldName = 'DaysQ'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = 
+          #1076#1083#1103' '#1074#1080#1076#1072' '#1090#1086#1074#1072#1088#1072' - '#1059#1084#1077#1085#1100#1096#1077#1085#1080#1077' '#1085#1072' N '#1076#1085#1077#1081' '#1086#1090' '#1076#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1082#1072#1095#1077 +
+          #1089#1090#1074#1077#1085#1085#1086#1084
+        Options.Editing = False
+        Width = 100
+      end
       object NormInDays_gk: TcxGridDBColumn
         Caption = '***'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093
         DataBinding.FieldName = 'NormInDays_gk'
@@ -202,14 +216,14 @@ object GoodsByGoodsKindQualityForm: TGoodsByGoodsKindQualityForm
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 150
       end
       object Value7: TcxGridDBColumn
         Caption = #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1089#1077#1088#1074#1077#1088#1091#1074#1072#1083#1100#1085#1072' '#1085#1072#1088#1110#1079#1082#1072', '#8470'12'
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 150
       end
       object Value8: TcxGridDBColumn
         Caption = 
@@ -218,7 +232,7 @@ object GoodsByGoodsKindQualityForm: TGoodsByGoodsKindQualityForm
         DataBinding.FieldName = 'Value8'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 140
+        Width = 180
       end
       object Value9: TcxGridDBColumn
         Caption = #1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1072' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1074' '#1075#1072#1079#1086#1074#1086#1084#1091' '#1089#1077#1088#1077#1076#1086#1074#1080#1097#1110', '#8470'15'
@@ -670,6 +684,7 @@ object GoodsByGoodsKindQualityForm: TGoodsByGoodsKindQualityForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

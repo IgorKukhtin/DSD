@@ -34,7 +34,7 @@ BEGIN
          SELECT
                0                         AS Id
              , CAST (NEXTVAL ('movement_Sale_seq') AS TVarChar) AS InvNumber
-             , inOperDate   ::TDateTime  AS OperDate     --CURRENT_DATE
+             , CURRENT_DATE :: TDateTime AS OperDate     --CURRENT_DATE
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
              , 0                         AS MovementId_Parent

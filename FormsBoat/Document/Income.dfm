@@ -239,7 +239,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 26
       Width = 70
@@ -256,7 +255,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 28
       Width = 70
@@ -273,7 +271,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 30
       Width = 70
@@ -300,7 +297,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 34
       Width = 70
@@ -312,7 +308,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 35
       Width = 70
@@ -324,7 +319,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 36
       Width = 70
@@ -341,7 +335,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 38
       Width = 70
@@ -358,7 +351,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 40
       Width = 70
@@ -375,7 +367,6 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 42
       Width = 70
@@ -3300,20 +3291,6 @@ object IncomeForm: TIncomeForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object macPrintStiker: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogPrint
-        end
-        item
-          Action = actPrintSticker
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
-      ImageIndex = 18
-    end
     object mactAdd_limit: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -3328,6 +3305,40 @@ object IncomeForm: TIncomeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 0
       WithoutNext = True
+    end
+    object macPrintStiker: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPrint
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
+      ImageIndex = 18
+    end
+    object actUpdate_summ_after: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_summ_after
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_summ_after
+        end>
+      Caption = 'Enter'
+    end
+    object actUpdate_summ_before: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   object MasterDS: TDataSource
@@ -4605,8 +4616,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 894
-    Top = 223
+    Left = 758
+    Top = 247
   end
   object CostDS: TDataSource
     DataSet = CostCDS
@@ -4889,7 +4900,7 @@ object IncomeForm: TIncomeForm
       item
         Control = ceTotalSummTaxMVAT
       end>
-    Left = 736
+    Left = 720
     Top = 40
   end
   object FieldFilter_Article: TdsdFieldFilter
@@ -5003,5 +5014,392 @@ object IncomeForm: TIncomeForm
       end>
     Left = 509
     Top = 55
+  end
+  object spUpdate_summ_before: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_summ'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBefore'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSummMVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummMVAT
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioDiscountTax'
+        Value = 0.000000000000000000
+        Component = ceDiscountTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTaxPVAT'
+        Value = 0.000000000000000000
+        Component = ceSummTaxPVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTaxMVAT'
+        Value = 0.000000000000000000
+        Component = ceSummTaxMVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPost'
+        Value = 0.000000000000000000
+        Component = ceSummPost
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPack'
+        Value = 0.000000000000000000
+        Component = ceSummPack
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummInsur'
+        Value = 0.000000000000000000
+        Component = ceSummInsur
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalDiscountTax'
+        Value = 0.000000000000000000
+        Component = ceTotalDiscountTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalSummTaxPVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummTaxPVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalSummTaxMVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummTaxMVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm2'
+        Value = 0.000000000000000000
+        Component = ceSumm2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm3'
+        Value = 0.000000000000000000
+        Component = ceSumm3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm4'
+        Value = 0.000000000000000000
+        Component = ceTotalSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 280
+  end
+  object spUpdate_summ_after: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_summ'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBefore'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSummMVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummMVAT
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioDiscountTax'
+        Value = 0.000000000000000000
+        Component = ceDiscountTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTaxPVAT'
+        Value = 0.000000000000000000
+        Component = ceSummTaxPVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTaxMVAT'
+        Value = 0.000000000000000000
+        Component = ceSummTaxMVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPost'
+        Value = 0.000000000000000000
+        Component = ceSummPost
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPack'
+        Value = 0.000000000000000000
+        Component = ceSummPack
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummInsur'
+        Value = 0.000000000000000000
+        Component = ceSummInsur
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalDiscountTax'
+        Value = 0.000000000000000000
+        Component = ceTotalDiscountTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalSummTaxPVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummTaxPVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalSummTaxMVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummTaxMVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm2'
+        Value = 0.000000000000000000
+        Component = ceSumm2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm3'
+        Value = 0.000000000000000000
+        Component = ceSumm3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm4'
+        Value = 0.000000000000000000
+        Component = ceTotalSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 248
+  end
+  object EnterMoveNext1: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceSummTaxPVAT
+      end
+      item
+        Control = ceSummTaxMVAT
+      end
+      item
+        Control = ceSummPost
+      end
+      item
+        Control = ceSummPack
+      end
+      item
+        Control = ceSummInsur
+      end
+      item
+        Control = ceTotalDiscountTax
+      end
+      item
+        Control = ceTotalSummTaxPVAT
+      end
+      item
+        Control = ceTotalSummTaxMVAT
+      end
+      item
+      end>
+    Left = 896
+    Top = 216
+  end
+  object HeaderExit11: THeaderExit
+    ExitList = <
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceSummTaxPVAT
+      end
+      item
+        Control = ceSummTaxMVAT
+      end
+      item
+        Control = ceSummPost
+      end
+      item
+        Control = ceSummPack
+      end
+      item
+        Control = ceSummInsur
+      end
+      item
+        Control = ceTotalDiscountTax
+      end
+      item
+        Control = ceTotalSummTaxPVAT
+      end
+      item
+        Control = ceTotalSummTaxMVAT
+      end>
+    Left = 896
+    Top = 408
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceSummTaxPVAT
+      end
+      item
+        Control = ceSummTaxMVAT
+      end
+      item
+        Control = ceSummPost
+      end
+      item
+        Control = ceSummPack
+      end
+      item
+        Control = ceSummInsur
+      end
+      item
+        Control = ceTotalDiscountTax
+      end
+      item
+        Control = ceTotalSummTaxPVAT
+      end
+      item
+        Control = ceTotalSummTaxMVAT
+      end>
+    Action = actUpdate_summ_before
+    Left = 976
+    Top = 296
+  end
+  object HeaderSaver1: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdate_summ_after
+    ControlList = <
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceSummTaxPVAT
+      end
+      item
+        Control = ceSummTaxMVAT
+      end
+      item
+        Control = ceSummPost
+      end
+      item
+        Control = ceSummPack
+      end
+      item
+        Control = ceSummInsur
+      end
+      item
+        Control = ceTotalDiscountTax
+      end
+      item
+        Control = ceTotalSummTaxPVAT
+      end
+      item
+        Control = ceTotalSummTaxMVAT
+      end>
+    GetStoredProc = spGet
+    Left = 976
+    Top = 417
   end
 end
