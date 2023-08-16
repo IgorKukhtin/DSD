@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_BUH (
     IN inIsPartner    Boolean   , --
     IN inIsTradeMark  Boolean   , --
     IN inIsGoods      Boolean   , --
-    IN inIsGoodsKind  Boolean   , --
+    IN inIsGoodsKind  Boolean   , --                               
     IN inIsContract   Boolean   , --
     IN inIsOLAP       Boolean   , --
     IN inSession      TVarChar    -- сессия пользователя
@@ -519,7 +519,7 @@ BEGIN
                                , tmpOperationGroup2.BranchId
                                , _tmpGoods.TradeMarkId
                                , CASE WHEN inIsGoods = TRUE     THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
-                               , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
+                               , CASE WHEN inIsGoodsKind = TRUE OR inIsGoods = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId        -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
 
 --                             , SUM (tmpOperationGroup2.Sale_Summ - tmpOperationGroup2.Sale_SummVAT)     AS Sale_SummMVAT
 
