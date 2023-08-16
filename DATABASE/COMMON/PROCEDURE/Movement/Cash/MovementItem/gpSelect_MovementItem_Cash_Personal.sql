@@ -38,8 +38,9 @@ $BODY$
 
    DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
-   DECLARE vbServiceDate TDateTime;
-   DECLARE vbOnly Boolean;
+   DECLARE vbServiceDate           TDateTime;
+   DECLARE vbIsOnly                Boolean;
+   DECLARE vbIsCardSecond          Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Cash());
@@ -70,8 +71,8 @@ BEGIN
      -- определяем
      vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inParentId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
-     -- определяем
-     vbOnly:= -- одинаковые ведомости
+     -- определяем - !!! НЕ схема премии!!!
+     vbIsOnly:= -- одинаковые ведомости
               vbPersonalServiceListId = COALESCE ((SELECT MLO_PersonalServiceList.ObjectId
                                                    FROM MovementItem
                                                         LEFT JOIN MovementItemLinkObject AS MLO_PersonalServiceList
@@ -86,6 +87,47 @@ BEGIN
               -- НЕ основная Ведомость
           AND NOT EXISTS (SELECT 1 FROM Object JOIN ObjectLink AS OL ON OL.ObjectId = Object.Id AND OL.DescId = zc_ObjectLink_Personal_PersonalServiceList() AND OL.ChildObjectId = vbPersonalServiceListId WHERE Object.DescId = zc_Object_Personal() AND Object.isErased = FALSE)
           ;
+
+     -- определяем - !!!ведомость Ф2!!!
+     vbIsCardSecond:= EXISTS (SELECT 1
+                              FROM Movement
+                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                          AND MovementItem.DescId = zc_MI_Master()
+                                                          AND MovementItem.isErased = FALSE
+
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                                                               ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+
+                                   /*LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                                               ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()*/
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                               ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+
+                                   /*LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                               ON MIFloat_SummAvCardSecond.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()*/
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                                               ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
+
+                                   /*LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
+                                                               ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()*/
+
+                                   /*LEFT JOIN MovementItemFloat AS MIFloat_SummAvance
+                                                               ON MIFloat_SummAvance.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
+                                                               ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()*/
+                              WHERE Movement.Id = inParentId
+                              AND (MIFloat_SummCardSecondRecalc.ValueData <> 0
+                                OR MIFloat_SummAvCardSecondRecalc.ValueData <> 0
+                                  )
+                             );
 
 
      -- Результат
@@ -542,7 +584,7 @@ BEGIN
                                                                  AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                               -- !!! НЕ схема премии!!!
-                              WHERE vbOnly = FALSE
+                              WHERE vbIsOnly = FALSE
 
                              UNION
                               SELECT CLO_ServiceDate.ContainerId
@@ -576,15 +618,15 @@ BEGIN
                                                                  AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                               -- !!! НЕ схема премии!!!
-                              WHERE vbOnly = FALSE
+                              WHERE vbIsOnly = FALSE
                              )
           /*tmpCash*/
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
 
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond()) AND (COALESCE (Object_PersonalServiceList.ValueData, '') NOT ILIKE '%Аванс%' OR vbUserId = -5) THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService())THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond()) AND vbPersonalServiceListId = Object_PersonalServiceList.Id AND (COALESCE (Object_PersonalServiceList.ValueData, '') NOT ILIKE '%Аванс%' OR vbUserId = -5) THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService())THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                    -- , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income
                                    , tmpContainer.PersonalId
                                    , tmpContainer.UnitId
@@ -644,7 +686,7 @@ BEGIN
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
 
                                 -- !!!схема премии!!!
-                                AND vbOnly = TRUE
+                                AND vbIsOnly = TRUE
 
                               GROUP BY MI_Child.ObjectId
                              )

@@ -41,7 +41,7 @@ BEGIN
           SELECT DISTINCT Movement_Sale.Id AS Id
           FROM Movement
               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                             ON MovementLinkMovement_Child.MovementId = Movement.Id 
+                                             ON MovementLinkMovement_Child.MovementId = Movement.Id
                                             AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
               INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child.MovementChildId
                                                   AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -57,12 +57,12 @@ BEGIN
           SELECT inMovementId AS Id
           WHERE inisAll = FALSE
          ;
-     
+
      -- параметр из документа
      vbIsLongUKTZED:= TRUE;
 
      -- определяется параметр
-     --vbGoodsPropertyId:= 
+     --vbGoodsPropertyId:=
      CREATE TEMP TABLE tmpGoodsProperty (MovementId Integer, GoodsPropertyId Integer) ON COMMIT DROP;
      INSERT INTO tmpGoodsProperty (MovementId, GoodsPropertyId)
        SELECT DISTINCT Movement.Id AS MovementId
@@ -73,7 +73,7 @@ BEGIN
                                      ) AS GoodsPropertyId
        FROM tmpMovement AS Movement
             LEFT JOIN MovementLinkMovement AS MLM_Child
-                                           ON MLM_Child.MovementChildId = Movement.Id 
+                                           ON MLM_Child.MovementChildId = Movement.Id
                                           AND MLM_Child.DescId          = zc_MovementLinkMovement_Child()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = MLM_Child.MovementId
@@ -103,7 +103,7 @@ BEGIN
                               , Article_Juridical  TVarChar
                               , Quality2_Juridical  TVarChar
                               , Quality10_Juridical  TVarChar
-                              , GoodsName TVarChar 
+                              , GoodsName TVarChar
                               , GoodsKindName TVarChar
                               , AmountPartner  TFloat
                               , AmountPartner_str TVarChar
@@ -152,8 +152,8 @@ BEGIN
                         , GoodsGroupName, MeasureName, GoodsCode, CodeUKTZED, Article_Juridical
                         , Quality2_Juridical, Quality10_Juridical
                         , GoodsName , GoodsKindName , AmountPartner, AmountPartner_str
-                        , Amount5 , Amount9, Amount13 
-                        , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end , OperDate_part 
+                        , Amount5 , Amount9, Amount13
+                        , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end , OperDate_part
                         , NormInDays_gk_str , CarModelName, CarName
                         , isJuridicalBasis, Main_str
                         , QualityCode, QualityName, QualityComment
@@ -167,7 +167,7 @@ BEGIN
           SELECT DISTINCT Movement_Sale.Id AS Id
           FROM Movement
               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                             ON MovementLinkMovement_Child.MovementId = Movement.Id 
+                                             ON MovementLinkMovement_Child.MovementId = Movement.Id
                                             AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
               INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child.MovementChildId
                                                   AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -183,7 +183,7 @@ BEGIN
           SELECT inMovementId AS Id
           WHERE inisAll = FALSE
          )
-     
+
    , tmpGoodsProperty AS(
        SELECT DISTINCT Movement.Id AS MovementId
             , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId
@@ -193,7 +193,7 @@ BEGIN
                                      ) AS GoodsPropertyId
        FROM tmpMovement AS Movement
             LEFT JOIN MovementLinkMovement AS MLM_Child
-                                           ON MLM_Child.MovementChildId = Movement.Id 
+                                           ON MLM_Child.MovementChildId = Movement.Id
                                           AND MLM_Child.DescId          = zc_MovementLinkMovement_Child()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = MLM_Child.MovementId
@@ -206,7 +206,7 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
       )
 
-,  
+,
 tmpMI AS
             (SELECT MovementItem.MovementId
                   , MovementItem.ObjectId
@@ -219,7 +219,7 @@ tmpMI AS
                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                          AND MovementItem.DescId     = zc_MI_Master()
                                          AND MovementItem.isErased   = FALSE
-                  
+
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -245,7 +245,7 @@ tmpMI AS
                             (SELECT tmpMI.*
                                     -- для вида товара - Вид оболонки, №4
                                   , ObjectString_GK_Value1.ValueData     AS Value1_gk
-                                    -- для вида товара - Вид пакування/стан продукції 
+                                    -- для вида товара - Вид пакування/стан продукції
                                   , ObjectString_GK_Value11.ValueData    AS Value11_gk
                                     -- для вида товара - срок годности в днях
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
@@ -258,7 +258,7 @@ tmpMI AS
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                   ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId	
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId
                                   LEFT JOIN ObjectString AS ObjectString_GK_Value1
                                                          ON ObjectString_GK_Value1.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                         AND ObjectString_GK_Value1.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality1()
@@ -442,7 +442,7 @@ tmpMI AS
                                              , ObjectString_Quality2.ValueData      AS Quality2
                                                -- Умови зберігання (КУ)
                                              , ObjectString_Quality10.ValueData     AS Quality10
-                                               -- 
+                                               --
                                              , tmpGoodsProperty.MovementId
                                         FROM (SELECT tmpGoodsProperty.GoodsPropertyId, tmpGoodsProperty.MovementId
                                               FROM tmpGoodsProperty
@@ -538,7 +538,7 @@ tmpMI AS
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
                               )
-   
+
            , tmpNewQuality AS (SELECT DISTINCT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                     JOIN ObjectBoolean AS ObjectBoolean_NewQuality
@@ -553,7 +553,7 @@ tmpMI AS
            , Movement.OperDate				                              AS OperDate
            , Movement.InvNumberPartner
            , Movement.OperDatePartner
-         
+
            , Movement.JuridicalName_From
            , Movement.JuridicalAddress_From
            , Movement.Phone_From
@@ -587,13 +587,14 @@ tmpMI AS
                   ELSE COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))
              END AS Quality2_Juridical
              -- Умови зберігання (КУ)
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, '')) AS Quality10_Juridical
+           , tmpGoodsQuality.Value10 AS Quality10_Juridical
+         --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, '')) AS Quality10_Juridical
 
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
              ) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END) :: TVarChar AS GoodsKindName
-           
+
            , tmpMI.AmountPartner                                                                                AS AmountPartner
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN tmpMI.AmountPartner:: TVarChar ELSE CAST (tmpMI.AmountPartner AS NUMERIC (16,0) ) ||' шт' END AS TVarChar) AS AmountPartner_str
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount5
@@ -608,13 +609,13 @@ tmpMI AS
 
              -- + для вида товара ПЛЮС срок годности в днях
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
-           
+
              -- 2393 - КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт + 2222 + 2369
            , CASE WHEN tmpNewQuality.GoodsId > 0
                        THEN tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl
                   ELSE tmpMovement_QualityParams.OperDateIn
              END :: TDateTime AS OperDate_part
-           
+
              -- для вида товара - срок годности в днях
            , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб') :: TVarChar AS NormInDays_gk_str
 
@@ -630,8 +631,8 @@ tmpMI AS
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
              -- Значение ГОСТ, ДСТУ,ТУ (КУ)
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
-             -- для вида товара - Вид оболонки, №4 
+           , COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+             -- для вида товара - Вид оболонки, №4
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
              --
            , tmpGoodsQuality.Value2
@@ -643,7 +644,7 @@ tmpMI AS
            , tmpGoodsQuality.Value8
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
-             -- для вида товара - Вид пакування/стан продукції 
+             -- для вида товара - Вид пакування/стан продукції
            , tmpMIGoodsByGoodsKind.Value11_gk
 
            , tmpMovement_QualityParams.InvNumber            AS InvNumber_Quality
@@ -657,17 +658,17 @@ tmpMI AS
            , tmpMovement_QualityParams.QualityNumber
            , tmpMovement_QualityParams.Comment              AS QualityComment_Movement
            , tmpMovement_QualityParams.ReportType
-           
+
            , Movement.InvNumber_Order
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
 
             LEFT JOIN tmpNewQuality ON tmpNewQuality.GoodsId = tmpMI.ObjectId
-            
+
             LEFT JOIN tmpMIGoodsByGoodsKind ON tmpMIGoodsByGoodsKind.ObjectId    = tmpMI.ObjectId
                                            AND tmpMIGoodsByGoodsKind.GoodsKindId = tmpMI.GoodsKindId
-            
+
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI.ObjectId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
@@ -679,7 +680,7 @@ tmpMI AS
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -714,8 +715,8 @@ tmpMI AS
              , Object_Goods.ValueData
              , Object_GoodsKind.ValueData
       ;
-      
-      
+
+
 ----Cursor 2
      CREATE TEMP TABLE tmpCursor2 (MovementId Integer
                               , InvNumber  TVarChar
@@ -729,7 +730,10 @@ tmpMI AS
                               , MeasureName  TVarChar
                               , GoodsCode  TVarChar
                               , CodeUKTZED TVarChar
-                              , GoodsName TVarChar 
+                              , Article_Juridical  TVarChar
+                              , Quality2_Juridical  TVarChar
+                              , Quality10_Juridical  TVarChar
+                              , GoodsName TVarChar
                               , GoodsKindName TVarChar
                               , AmountPartner  TFloat
                               , Amount5 TFloat
@@ -740,17 +744,28 @@ tmpMI AS
                               , OperDateOut TDateTime
                               , OperDate_end TDateTime
                               , NormInDays_gk_str TVarChar
-                            
+
                               , CarModelName TVarChar
                               , CarName TVarChar
                               , isJuridicalBasis Boolean
                               , Main_str TVarChar
-                              
+
                               , NumberPrint TFloat
                               , QualityCode TVarChar
                               , QualityName TVarChar
                               , QualityComment Text
-                              , Value17  Text, Value1 TVarChar, Value2 TVarChar, Value3 TVarChar, Value4 TVarChar, Value5 TVarChar, Value6 TVarChar, Value7 TVarChar, Value8 TVarChar, Value9 TVarChar, Value10 TVarChar
+                              , Value17  Text
+                              , Value1 TVarChar
+                              , Value2 TVarChar
+                              , Value3 TVarChar
+                              , Value4 TVarChar
+                              , Value5 TVarChar
+                              , Value6 TVarChar
+                              , Value7 TVarChar
+                              , Value8 TVarChar
+                              , Value9 TVarChar
+                              , Value10 TVarChar
+                              , Value11_gk TVarChar
                               , InvNumber_Quality TVarChar
                               , OperDate_Quality TDateTime
                               , OperDateCertificate TVarChar
@@ -766,14 +781,15 @@ tmpMI AS
 
      INSERT INTO tmpCursor2 (MovementId, InvNumber, OperDate, InvNumberPartner, OperDatePartner
                         , JuridicalName_From, JuridicalAddress_From, PartnerName
-                        , GoodsGroupName, MeasureName, GoodsCode, CodeUKTZED
+                        , GoodsGroupName, MeasureName, GoodsCode, CodeUKTZED, Article_Juridical
+                        , Quality2_Juridical, Quality10_Juridical
                         , GoodsName , GoodsKindName , AmountPartner
-                        , Amount5 , Amount9, Amount13 
-                        , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end 
+                        , Amount5 , Amount9, Amount13
+                        , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end
                         , NormInDays_gk_str , CarModelName, CarName
                         , isJuridicalBasis, Main_str , NumberPrint
                         , QualityCode, QualityName, QualityComment
-                        , Value17  , Value1 , Value2, Value3, Value4, Value5, Value6, Value7, Value8, Value9, Value10
+                        , Value17  , Value1 , Value2, Value3, Value4, Value5, Value6, Value7, Value8, Value9, Value10, Value11_gk
                         , InvNumber_Quality, OperDate_Quality, OperDateCertificate, CertificateNumber, CertificateSeries, CertificateSeriesNumber
                         , ExpertPrior, ExpertLast
                         , QualityNumber, QualityComment_Movement
@@ -784,7 +800,7 @@ tmpMI AS
           SELECT DISTINCT Movement_Sale.Id AS Id
           FROM Movement
               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                             ON MovementLinkMovement_Child.MovementId = Movement.Id 
+                                             ON MovementLinkMovement_Child.MovementId = Movement.Id
                                             AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
               INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child.MovementChildId
                                                   AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -800,7 +816,7 @@ tmpMI AS
           SELECT inMovementId AS Id
           WHERE inisAll = FALSE
          )
-     
+
    , tmpGoodsProperty AS(
        SELECT DISTINCT Movement.Id AS MovementId
             , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId
@@ -810,7 +826,7 @@ tmpMI AS
                                      ) AS GoodsPropertyId
        FROM tmpMovement AS Movement
             LEFT JOIN MovementLinkMovement AS MLM_Child
-                                           ON MLM_Child.MovementChildId = Movement.Id 
+                                           ON MLM_Child.MovementChildId = Movement.Id
                                           AND MLM_Child.DescId          = zc_MovementLinkMovement_Child()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = MLM_Child.MovementId
@@ -869,7 +885,7 @@ tmpMI AS
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                   ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId	
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId
                                   LEFT JOIN ObjectString AS ObjectString_GK_Value1
                                                          ON ObjectString_GK_Value1.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                         AND ObjectString_GK_Value1.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality1()
@@ -892,7 +908,7 @@ tmpMI AS
                                     , Object_Quality.ValueData    AS QualityName
                                     , OS_QualityComment.ValueData AS QualityComment
                                     , ObjectFloat_Quality_NumberPrint.ValueData AS NumberPrint
-                  
+
                                     , Object_GoodsQuality.ValueData AS Value17
                                     , ObjectString_Value1.ValueData AS Value1
                                     , ObjectString_Value2.ValueData AS Value2
@@ -908,13 +924,13 @@ tmpMI AS
                                      INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
                                                            ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
                                                           AND ObjectLink_GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
-                  
+
                                      LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = ObjectLink_GoodsQuality_Goods.ObjectId
-                  
+
                                      LEFT JOIN ObjectLink AS ObjectLink_GoodsQuality_Quality
                                                           ON ObjectLink_GoodsQuality_Quality.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                                          AND ObjectLink_GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-                  
+
                                      LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                      LEFT JOIN ObjectString AS OS_QualityComment
                                                             ON OS_QualityComment.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
@@ -923,7 +939,7 @@ tmpMI AS
                                                             ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                                            AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
                                                            AND ObjectFloat_Quality_NumberPrint.ValueData >= 2 -- !!!так захардкодил!!!
-                  
+
                                      LEFT JOIN ObjectString AS ObjectString_Value1
                                                             ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                                            AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
@@ -973,7 +989,7 @@ tmpMI AS
                                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                                                      ON MovementLinkMovement_Child.MovementChildId = Movement.Id
                                                                     AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
-                                     
+
                                      LEFT JOIN MovementDate AS MovementDate_OperDateIn
                                                             ON MovementDate_OperDateIn.MovementId =  MovementLinkMovement_Child.MovementId
                                                            AND MovementDate_OperDateIn.DescId = zc_MovementDate_OperDateIn()
@@ -983,19 +999,19 @@ tmpMI AS
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                                                   ON MovementLinkObject_Car.MovementId = MovementLinkMovement_Child.MovementId
                                                                  AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                   
+
                                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                                     ON MovementLinkMovement_Master.MovementId = MovementLinkMovement_Child.MovementId
                                                                    AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
                                                                   ON MovementLinkObject_Quality.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                  AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
-                   
+
                                      LEFT JOIN Movement AS Movement_QualityNumber
                                                         ON Movement_QualityNumber.OperDate = DATE_TRUNC ('DAY', MovementDate_OperDateIn.ValueData)
                                                        AND Movement_QualityNumber.DescId = zc_Movement_QualityNumber()
                                                        AND Movement_QualityNumber.StatusId = zc_Enum_Status_Complete()
-                   
+
                                      LEFT JOIN MovementString AS MS_QualityNumber
                                                               ON MS_QualityNumber.MovementId = COALESCE (Movement_QualityNumber.Id, MovementLinkMovement_Child.MovementId) -- tmpMovement_find.MovementId
                                                              AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
@@ -1014,7 +1030,7 @@ tmpMI AS
                                )
 
           , tmpMovement_QualityParams AS
-                                        (SELECT DISTINCT 
+                                        (SELECT DISTINCT
                                                 tmpMovement_find.QualityId
                                               , Movement.Id                                        AS Id
                                               , Movement.InvNumber                                 AS InvNumber
@@ -1049,12 +1065,19 @@ tmpMI AS
                                              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsPropertyValue.ValueData  AS Name
+                                             , ObjectString_Article.ValueData       AS Article
+                                               -- Значение ГОСТ, ДСТУ,ТУ (КУ)
+                                             , ObjectString_Quality.ValueData       AS Quality
+                                               -- Строк придатності (КУ)
+                                             , ObjectString_Quality2.ValueData      AS Quality2
+                                               -- Умови зберігання (КУ)
+                                             , ObjectString_Quality10.ValueData     AS Quality10
+                                               --
                                              , tmpGoodsProperty.MovementId
-                                        FROM (SELECT tmpGoodsProperty.GoodsPropertyId AS GoodsPropertyId
-                                                   , tmpGoodsProperty.MovementId
+                                        FROM (SELECT tmpGoodsProperty.GoodsPropertyId, tmpGoodsProperty.MovementId
                                               FROM tmpGoodsProperty
                                               WHERE tmpGoodsProperty.GoodsPropertyId <> 0
-                                              ) AS tmpGoodsProperty
+                                             ) AS tmpGoodsProperty
                                              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                                                    ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
@@ -1066,10 +1089,27 @@ tmpMI AS
                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                             LEFT JOIN ObjectString AS ObjectString_Article
+                                                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                                             LEFT JOIN ObjectString AS ObjectString_Quality
+                                                                    ON ObjectString_Quality.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Quality.DescId = zc_ObjectString_GoodsPropertyValue_Quality()
+                                                                   AND ObjectString_Quality.ValueData <> ''
+                                             LEFT JOIN ObjectString AS ObjectString_Quality2
+                                                                    ON ObjectString_Quality2.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Quality2.DescId = zc_ObjectString_GoodsPropertyValue_Quality2()
+                                             LEFT JOIN ObjectString AS ObjectString_Quality10
+                                                                    ON ObjectString_Quality10.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
                                        )
        -- список Названия для товаров (нужны если не найдем по GoodsKindId)
      , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
                                                   , tmpObject_GoodsPropertyValue.Name
+                                                  , tmpObject_GoodsPropertyValue.Article
+                                                  , tmpObject_GoodsPropertyValue.Quality
+                                                  , tmpObject_GoodsPropertyValue.Quality2
+                                                  , tmpObject_GoodsPropertyValue.Quality10
                                              FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Name <> '' GROUP BY GoodsId
                                                   ) AS tmpGoodsProperty_find
                                                   LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -1085,7 +1125,7 @@ tmpMI AS
                                    , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                               FROM tmpMovement
                                    INNER JOIN Movement ON Movement.Id = tmpMovement.Id
-                                   
+
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -1151,6 +1191,17 @@ tmpMI AS
                   ELSE '0'
               END :: TVarChar AS CodeUKTZED
 
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,   COALESCE (tmpObject_GoodsPropertyValue.Article, ''))      AS Article_Juridical
+         --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
+
+             -- Строк придатності (КУ) - подставляется для вида товара - срок годности в днях
+           , CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб'
+                  ELSE COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))
+             END AS Quality2_Juridical
+             -- Умови зберігання (КУ)
+           , tmpGoodsQuality.Value10 AS Quality10_Juridical
+         --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, '')) AS Quality10_Juridical
+
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
              ) :: TVarChar AS GoodsName
@@ -1169,7 +1220,7 @@ tmpMI AS
            , CASE WHEN COALESCE (tmpMIGoodsByGoodsKind.DaysQ_gk,0) = 0 THEN zfConvert_DateToString (Movement.OperDatePartner)
                   ELSE zfConvert_DateToString (Movement.OperDatePartner)||', '
                     || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk)     :: TVarChar || ' DAY') :: INTERVAl) ||', '
-                    || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl) 
+                    || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl)
              END :: TVarChar AS OperDateIn_str4
            , Movement.OperDate AS OperDateOut
 
@@ -1187,8 +1238,11 @@ tmpMI AS
            , tmpGoodsQuality.QualityCode
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
+             -- Значение ГОСТ, ДСТУ,ТУ (КУ)
            , tmpGoodsQuality.Value17
-           , tmpGoodsQuality.Value1
+             -- для вида товара - Вид оболонки, №4
+           , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
+             --
            , tmpGoodsQuality.Value2
            , tmpGoodsQuality.Value3
            , tmpGoodsQuality.Value4
@@ -1198,6 +1252,9 @@ tmpMI AS
            , tmpGoodsQuality.Value8
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
+
+             -- для вида товара - Вид пакування/стан продукції
+           , tmpMIGoodsByGoodsKind.Value11_gk
 
            , tmpMovement_QualityParams.InvNumber AS InvNumber_Quality
            , tmpMovement_QualityParams.OperDate AS OperDate_Quality
@@ -1229,7 +1286,7 @@ tmpMI AS
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -1255,7 +1312,7 @@ tmpMI AS
              , tmpGoodsQuality.QualityCode
              , Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
-      
+
      -- Данные: заголовок + строчная часть для ФОРМЫ 1
      OPEN Cursor1 FOR
       SELECT *

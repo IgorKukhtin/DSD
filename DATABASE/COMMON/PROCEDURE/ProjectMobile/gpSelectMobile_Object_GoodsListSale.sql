@@ -19,6 +19,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbStartDate TDateTime;
+   DECLARE vbEndDate TDateTime;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -29,6 +31,37 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
+      
+             WITH -- список доступных контрагентов для торгового агента
+                  tmpPartner AS (SELECT lfSelect.Id AS PartnerId
+                                 FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS lfSelect
+                                )
+                  -- список последних актуальных документов "Фактический остаток по ТТ"
+                , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
+                                      FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
+                                                 , Movement_StoreReal.Id AS StoreRealId
+                                                 , Movement_StoreReal.OperDate
+                                                 , ROW_NUMBER () OVER (PARTITION BY MovementLinkObject_Partner.ObjectId ORDER BY Movement_StoreReal.OperDate DESC) AS RowNum
+                                            FROM Movement AS Movement_StoreReal
+                                                 JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                         ON MovementLinkObject_Partner.MovementId = Movement_StoreReal.Id
+                                                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                                 JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_Partner.ObjectId
+                                            WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
+                                              AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete()
+                                              -- !!!обязательно ДО сегодняшнего дня!!!
+                                              AND Movement_StoreReal.OperDate BETWEEN CURRENT_DATE - INTERVAL '28 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
+                                           ) AS SR
+                                      WHERE SR.RowNum = 1
+                                     )
+             SELECT MIN (COALESCE (tmpStoreRealDoc.OperDate, (CURRENT_DATE - INTERVAL '7 DAY')::TDateTime))
+                  , CURRENT_DATE - INTERVAL '1 DAY'
+                    INTO vbStartDate, vbEndDate
+             FROM tmpPartner
+                  LEFT JOIN tmpStoreRealDoc ON tmpStoreRealDoc.PartnerId = tmpPartner.PartnerId
+            ;
+ 
+
            RETURN QUERY
              WITH -- список доступных контрагентов для торгового агента
                   tmpPartner AS (SELECT lfSelect.Id AS PartnerId
@@ -175,7 +208,7 @@ BEGIN
                                                              AND MI_StoreReal.DescId = zc_MI_Master()
                                                              AND MI_StoreReal.isErased = FALSE
                                                              AND MI_StoreReal.ObjectId > 0 
-                                                             AND COALESCE (MI_StoreReal.Amount, 0.0) > 0.0
+                                                             AND MI_StoreReal.Amount   > 0
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MI_StoreReal.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
@@ -187,12 +220,15 @@ BEGIN
                 , tmpSaleItem AS (SELECT tmpPartnerPeriod.PartnerId
                                        , MI_Sale.ObjectId                                              AS GoodsId
                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                 AS GoodsKindId
-                                       , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0.0))::TFloat AS AmountSale
+                                       , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData >= tmpPartnerPeriod.StartDate
+                                                    AND MovementDate_OperDatePartner.ValueData <= tmpPartnerPeriod.EndDate
+                                                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0.0)
+                                                   ELSE 0
+                                              END) :: TFloat AS AmountSale
                                   FROM tmpPartnerPeriod
                                        JOIN MovementDate AS MovementDate_OperDatePartner
                                                          ON MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                                        AND MovementDate_OperDatePartner.ValueData >= tmpPartnerPeriod.StartDate
-                                                        AND MovementDate_OperDatePartner.ValueData <= tmpPartnerPeriod.EndDate
+                                                        AND MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
                                        JOIN Movement AS Movement_Sale 
                                                      ON Movement_Sale.Id = MovementDate_OperDatePartner.MovementId
                                                     AND Movement_Sale.DescId = zc_Movement_Sale()
@@ -226,12 +262,15 @@ BEGIN
                 , tmpReturnInItem AS (SELECT tmpPartnerPeriod.PartnerId
                                            , MI_ReturnIn.ObjectId                                          AS GoodsId
                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                 AS GoodsKindId
-                                           , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0.0))::TFloat AS AmountReturnIn
+                                           , SUM (CASE WHEN MovementDate_OperDatePartner.ValueData >= tmpPartnerPeriod.StartDate
+                                                        AND MovementDate_OperDatePartner.ValueData <= tmpPartnerPeriod.EndDate
+                                                            THEN COALESCE (MIFloat_AmountPartner.ValueData, 0.0)
+                                                       ELSE 0
+                                                  END) :: TFloat AS AmountReturnIn
                                       FROM tmpPartnerPeriod
                                            JOIN MovementDate AS MovementDate_OperDatePartner
                                                              ON MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                                            AND MovementDate_OperDatePartner.ValueData >= tmpPartnerPeriod.StartDate
-                                                            AND MovementDate_OperDatePartner.ValueData <= tmpPartnerPeriod.EndDate
+                                                            AND MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
                                            JOIN Movement AS Movement_ReturnIn
                                                          ON Movement_ReturnIn.Id = MovementDate_OperDatePartner.MovementId
                                                         AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()

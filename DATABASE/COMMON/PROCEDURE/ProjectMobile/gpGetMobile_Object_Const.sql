@@ -85,8 +85,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
                               AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 5 OR vbUserId = 9457 THEN 893469 -- !!!ÂÐÅÌÅÍÍÎ - ÄËß ÒÅÑÒÀ!!! - Àäìèí    -> 893469  - Âîëîøèíà Å.À.
-                                                  WHEN vbUserId = 1123966 THEN 893469 -- !!!ÂÐÅÌÅÍÍÎ - ÄËß ÒÅÑÒÀ!!! - test_mob -> 1000168 - Ìîëäîâàí Å.À.
+     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 5 OR vbUserId = 9457 THEN 1059546 -- !!!ÂÐÅÌÅÍÍÎ - ÄËß ÒÅÑÒÀ!!! - Àäìèí    -> 1059546  - Èùèê Í.Í.
+                                                --WHEN vbUserId = 1123966 THEN 81169 -- !!!ÂÐÅÌÅÍÍÎ - ÄËß ÒÅÑÒÀ!!! - test_mob -> 1000168 - Ìîëäîâàí Å.À.
                                                   ELSE vbUserId
                                              END
        AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
@@ -178,16 +178,16 @@ BEGIN
       --      , LOWER ('http//integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
 
             , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')
-                                             ELSE LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')    END :: TVarChar AS WebService
+                                            ELSE LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')    END :: TVarChar AS WebService
 
             , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php') 
-                                             ELSE LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')   END :: TVarChar AS WebService_two
+                                            ELSE LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')   END :: TVarChar AS WebService_two
 
             , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')
-                                             ELSE LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')  END :: TVarChar AS WebService_three
+                                            ELSE LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')  END :: TVarChar AS WebService_three
 
             , CASE WHEN vbUserId = 5 OR 1=1 THEN LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')
-                                             ELSE LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php') END :: TVarChar AS WebService_four
+                                            ELSE LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php') END :: TVarChar AS WebService_four
 
 /*
             , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService
@@ -290,6 +290,7 @@ FCurCoordinatesMsg:= ' îøèáêà â ñëóæáå ïðè îïðåäåëåíèè Àäðåñà äëÿ: '+FloatToStr(
 -- òåñò
 -- SELECT * FROM ObjectString where DescId = zc_ObjectString_MobileConst_MobileVersion();
 -- UPDATE ObjectString SET ValueData = '1.61.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
+-- UPDATE ObjectString SET ValueData = '1.71.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= '1000168')
 -- D:\Project-Basis\Bin\aMobile.sdb
