@@ -485,7 +485,8 @@ BEGIN
                   ELSE COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))
              END AS Quality2_Juridical
              -- Умови зберігання (КУ)
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, '')) AS Quality10_Juridical
+           , tmpGoodsQuality.Value10 AS Quality10_Juridical
+        --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, '')) AS Quality10_Juridical
 
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
@@ -525,7 +526,7 @@ BEGIN
            , tmpGoodsQuality.QualityComment
 
              -- Значение ГОСТ, ДСТУ,ТУ (КУ)
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+           , COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
              -- для вида товара - Вид оболонки, №4 
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
@@ -986,8 +987,14 @@ BEGIN
 
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,   COALESCE (tmpObject_GoodsPropertyValue.Article, ''))      AS Article_Juridical
            --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))     AS Quality2_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, ''))    AS Quality10_Juridical
+
+             -- Строк придатності (КУ) - подставляется для вида товара - срок годности в днях
+           , CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб'
+                  ELSE COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))
+             END AS Quality2_Juridical
+             -- Умови зберігання (КУ)
+           , tmpGoodsQuality.Value10 AS Quality10_Juridical
+         --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, ''))    AS Quality10_Juridical
 
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
@@ -1028,9 +1035,9 @@ BEGIN
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
 
-         --, tmpGoodsQuality.Value17
-         --, tmpGoodsQuality.Value1
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+             -- Значение ГОСТ, ДСТУ,ТУ (КУ)
+           , COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+             -- для вида товара - Вид оболонки, №4 
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
            , tmpGoodsQuality.Value2
