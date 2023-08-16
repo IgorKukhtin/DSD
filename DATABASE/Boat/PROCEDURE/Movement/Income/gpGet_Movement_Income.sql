@@ -53,7 +53,7 @@ BEGIN
              , CAST ('' AS TVarChar)     AS InvNumberPartner 
              , CAST ('' AS TVarChar)     AS InvNumberPack
              , CAST ('' AS TVarChar)     AS InvNumberPack
-             , inOperDate   ::TDateTime   AS OperDate     --CURRENT_DATE
+             , CURRENT_DATE :: TDateTime AS OperDate
              , NULL ::TDateTime          AS OperDatePartner 
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName

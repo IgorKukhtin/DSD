@@ -18,39 +18,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
              , Value_TaxKind TFloat, TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
-             
-             , VATPercent_order TFloat --
-                 -- % скидки осн
-             , DiscountTax TFloat
-               -- % скидки доп
-             , DiscountNextTax TFloat
-               -- Cумма откорректированной скидки, без НДС
-             , SummTax TFloat
-               -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-             , SummReal TFloat
-             , SummReal_real TFloat
-              -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
-             , Basis_summ1_orig        TFloat
-               -- ИТОГО Без скидки, Сумма опций, без НДС
-             , Basis_summ2_orig        TFloat
-               -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
-             , Basis_summ_orig         TFloat
-
-               -- ИТОГО Сумма Скидки - без НДС
-             , SummDiscount1           TFloat
-             , SummDiscount2           TFloat
-             , SummDiscount3           TFloat
-             , SummDiscount_total      TFloat
-
-               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
-             , Basis_summ              TFloat
-               -- Сумма транспорт с сайта
-             , TransportSumm_load     TFloat
-
-              -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-             , Basis_summ_transport    TFloat
-               -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-             , BasisWVAT_summ_transport TFloat
               )
 AS
 $BODY$
@@ -67,7 +34,7 @@ BEGIN
          SELECT
                0                         AS Id
              , CAST (NEXTVAL ('movement_Sale_seq') AS TVarChar) AS InvNumber
-             , inOperDate   ::TDateTime  AS OperDate     --CURRENT_DATE
+             , CURRENT_DATE :: TDateTime AS OperDate     --CURRENT_DATE
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
              , 0                         AS MovementId_Parent
@@ -247,4 +214,8 @@ $BODY$
 */
 
 -- тест
+<<<<<<< HEAD
 -- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 812, inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')
+=======
+-- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 0, inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')
+>>>>>>> origin/master
