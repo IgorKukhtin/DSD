@@ -41,7 +41,7 @@ BEGIN
       RETURN QUERY
         SELECT COALESCE (mcPrivate.Code,              mcPublic.Code)                        AS Code
              , COALESCE (mcPrivate.Name,              mcPublic.Name)                        AS Name
-             , COALESCE (mcPrivate.MobileVersion,     mcPublic.MobileVersion)::TVarChar     AS MobileVersion
+             , CASE WHEN vbUserId = 5 THEN COALESCE (mcPrivate.MobileVersion,     mcPublic.MobileVersion) ELSE '1.61.0' END ::TVarChar     AS MobileVersion
              , COALESCE (mcPrivate.MobileAPKFileName, mcPublic.MobileAPKFileName)::TVarChar AS MobileAPKFileName
              , COALESCE (mcPrivate.OperDateDiff,      mcPublic.OperDateDiff)::Integer       AS OperDateDiff
              , COALESCE (mcPrivate.ReturnDayCount,    mcPublic.ReturnDayCount)::Integer     AS ReturnDayCount
