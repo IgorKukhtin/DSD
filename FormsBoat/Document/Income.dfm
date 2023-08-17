@@ -266,7 +266,7 @@ object IncomeForm: TIncomeForm
     end
     object ceSummTaxMVAT: TcxCurrencyEdit
       Left = 364
-      Top = 142
+      Top = 143
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
       Properties.DecimalPlaces = 4
@@ -435,7 +435,7 @@ object IncomeForm: TIncomeForm
       Caption = '1. Summe EK :'
     end
     object ceTotalSummMVAT: TcxCurrencyEdit
-      Left = 197
+      Left = 200
       Top = 95
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
@@ -2182,6 +2182,9 @@ object IncomeForm: TIncomeForm
         end
         item
           StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spUpdate_summ_after
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -3334,7 +3337,11 @@ object IncomeForm: TIncomeForm
     object actUpdate_summ_before: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spUpdate_summ_before
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_summ_before
+        end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
@@ -5369,7 +5376,7 @@ object IncomeForm: TIncomeForm
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
-    StoredProc = spUpdate_summ_after
+    StoredProc = spUpdate_summ_before
     ControlList = <
       item
         Control = ceDiscountTax
