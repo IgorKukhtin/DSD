@@ -45,7 +45,7 @@ BEGIN
                                                                               , inSession    := inUserId  ::TVarChar
                                                                                ) AS tmpMI_Main 
                         WHERE tmpMI_Main.InfoMoneyId = inInfoMoneyId
-                          AND tmpMI_Main.Amount > 0
+                          AND tmpMI_Main.Amount >= 0
                        )
          THEN   
               RAISE EXCEPTION 'Ошибка.Не найдено Основное условие аренды для <%> <%>'

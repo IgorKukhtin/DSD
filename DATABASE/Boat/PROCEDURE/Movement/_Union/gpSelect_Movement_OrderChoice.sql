@@ -17,13 +17,19 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumber
              , PriceWithVAT Boolean
              , VATPercent TFloat, DiscountTax TFloat
              , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
+             , TotalSummMVAT TFloat
+             , TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat 
+             , TotalSumm_debet TFloat, TotalSumm_credit TFloat
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ProductId Integer, ProductCode Integer, ProductName TVarChar, ProductCIN TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar, TaxKindName_Info TVarChar, TaxKindName_Comment TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              )
@@ -111,6 +117,9 @@ BEGIN
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
+             , CASE WHEN Movement.DescId = zc_Movement_OrderClient()  THEN MovementFloat_TotalSumm.ValueData ELSE 0 END   ::TFloat AS TotalSumm_debet
+             , CASE WHEN Movement.DescId = zc_Movement_OrderPartner() THEN MovementFloat_TotalSumm.ValueData ELSE 0 END  ::TFloat AS TotalSumm_credit
+             
 
              , Object_Object.Id                             AS ObjectId
              , Object_Object.ObjectCode                     AS ObjectCode
@@ -129,6 +138,25 @@ BEGIN
              , Movement_Invoice.Id                      AS MovementId_Invoice
              , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
              , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
+
+             , Object_TaxKind.Id                                 AS TaxKindId
+             , Object_TaxKind.ValueData               ::TVarChar AS TaxKindName
+             , ObjectString_TaxKind_Info.ValueData    ::TVarChar AS TaxKindName_info
+             , ObjectString_TaxKind_Comment.ValueData ::TVarChar AS TaxKindName_Comment
+
+             , Object_InfoMoney_View.InfoMoneyId
+             , Object_InfoMoney_View.InfoMoneyCode
+             , Object_InfoMoney_View.InfoMoneyName
+             , Object_InfoMoney_View.InfoMoneyName_all
+  
+             , Object_InfoMoney_View.InfoMoneyGroupId
+             , Object_InfoMoney_View.InfoMoneyGroupCode
+             , Object_InfoMoney_View.InfoMoneyGroupName
+  
+             , Object_InfoMoney_View.InfoMoneyDestinationId
+             , Object_InfoMoney_View.InfoMoneyDestinationCode
+             , Object_InfoMoney_View.InfoMoneyDestinationName
+
 
              , Object_Insert.ValueData              AS InsertName
              , MovementDate_Insert.ValueData        AS InsertDate
@@ -202,6 +230,24 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_CIN
                                     ON ObjectString_CIN.ObjectId = Object_Product.Id
                                    AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                  ON ObjectLink_TaxKind.ObjectId = Movement.ObjectId
+                                 AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
+             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+     
+             LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                                    ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                   AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
+     
+             LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
+                                    ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                   AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
+
+             LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                               ON ObjectLink_InfoMoney.ObjectId = Movement.ObjectId
+                              AND ObjectLink_InfoMoney.DescId IN (zc_ObjectLink_Client_InfoMoney(), zc_ObjectLink_Partner_InfoMoney())
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_InfoMoney.ChildObjectId
 
         WHERE Movement.ObjectId = inObjectId OR COALESCE (inObjectId, 0) = 0
        ;

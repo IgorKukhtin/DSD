@@ -55,6 +55,25 @@ BEGIN
              , 0                         AS TaxKindId
              , CAST ('' as TVarChar)     AS TaxKindName
              , CAST ('' as TVarChar)     AS TaxKindName_info
+
+             , CAST (0 as TFloat)        AS VATPercent_order
+             , CAST (0 as TFloat)        AS DiscountTax     
+             , CAST (0 as TFloat)        AS DiscountNextTax 
+             , CAST (0 as TFloat)        AS SummTax         
+             , CAST (0 as TFloat)        AS SummReal        
+             , CAST (0 as TFloat)        AS SummReal_real   
+             , CAST (0 as TFloat)        AS Basis_summ1_orig  
+             , CAST (0 as TFloat)        AS Basis_summ2_orig  
+             , CAST (0 as TFloat)        AS Basis_summ_orig   
+             , CAST (0 as TFloat)        AS SummDiscount1     
+             , CAST (0 as TFloat)        AS SummDiscount2     
+             , CAST (0 as TFloat)        AS SummDiscount3     
+             , CAST (0 as TFloat)        AS SummDiscount_total
+             , CAST (0 as TFloat)        AS Basis_summ        
+             , CAST (0 as TFloat)        AS TransportSumm_load
+             , CAST (0 as TFloat)        AS Basis_summ_transport
+             , CAST (0 as TFloat)        AS BasisWVAT_summ_transport
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                      ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
@@ -94,10 +113,39 @@ BEGIN
           , Object_TaxKind.Id                            AS TaxKindId
           , Object_TaxKind.ValueData                     AS TaxKindName
           , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
+          
+          -- данные из Заказа клиента - лодки
+          , tmpParent_Params.VATPercent      ::TFLoat AS VATPercent_order
+          , tmpParent_Params.DiscountTax     ::TFLoat
+          , tmpParent_Params.DiscountNextTax ::TFLoat
+            -- Cумма откорректированной скидки, без НДС
+          , tmpParent_Params.SummTax         :: TFLoat
+            -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
+          , tmpParent_Params.SummReal        :: TFloat
+          , tmpParent_Params.SummReal_real   :: TFLoat
+            -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
+          , tmpParent_Params.Basis_summ1_orig        ::TFloat
+            -- ИТОГО Без скидки, Сумма опций, без НДС
+          , tmpParent_Params.Basis_summ2_orig         ::TFloat
+            -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
+          , tmpParent_Params.Basis_summ_orig          ::TFloat
+            -- ИТОГО Сумма Скидки - без НДС
+          , tmpParent_Params.SummDiscount1            ::TFloat
+          , tmpParent_Params.SummDiscount2            ::TFloat
+          , tmpParent_Params.SummDiscount3            ::TFloat
+          , tmpParent_Params.SummDiscount_total       ::TFloat
+            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+          , tmpParent_Params.Basis_summ               ::TFLoat
+           -- Сумма транспорт с сайта
+          , tmpParent_Params.TransportSumm_load       ::TFLoat
+           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+          , tmpParent_Params.Basis_summ_transport     ::TFLoat
+            -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+          , tmpParent_Params.BasisWVAT_summ_transport ::TFLoat
         FROM Movement AS Movement_Sale 
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_Sale.ParentId
-
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
+ 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -145,6 +193,10 @@ BEGIN
                                    ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
                                   AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
 
+            --
+            LEFT JOIN gpGet_Movement_OrderClient(inMovementId := Movement_Parent.Id ::Integer, -- ключ Документа
+                                                inOperDate    := Movement_Parent.OperDate ::TDateTime ,
+                                                inSession     := inSession ::TVarChar) AS tmpParent_Params ON Movement_Parent.Id = Movement_Parent.Id  
         WHERE Movement_Sale.Id = inMovementId
           AND Movement_Sale.DescId = zc_Movement_Sale()
           ;
@@ -162,4 +214,8 @@ $BODY$
 */
 
 -- тест
+<<<<<<< HEAD
+-- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 812, inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')
+=======
 -- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 0, inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')
+>>>>>>> origin/master

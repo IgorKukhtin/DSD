@@ -168,7 +168,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
              , ContainerId_Summ Integer
-             , LineNum Integer
+             , LineNum Integer 
+             , NumGroup_print Integer
 
               )
 AS
@@ -624,6 +625,10 @@ BEGIN
         , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
+        , CASE WHEN Object_Goods.DescId = zc_Object_Car() THEN 1
+               WHEN Object_Goods.DescId = zc_Object_Asset() THEN 2
+               ELSE 3
+          END                                 ::Integer AS NumGroup_print
       FROM 
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
               , tmpMIContainer_all.ContainerId

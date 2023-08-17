@@ -187,6 +187,38 @@ type
     GuidesTaxKind: TdsdGuides;
     cxLabel14: TcxLabel;
     edInfo_TaxKind: TcxTextEdit;
+    cxLabel31: TcxLabel;
+    cxLabel32: TcxLabel;
+    cxLabel8: TcxLabel;
+    edBasis_summ_orig: TcxCurrencyEdit;
+    edBasis_summ2_orig: TcxCurrencyEdit;
+    edBasis_summ1_orig: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
+    cxLabel34: TcxLabel;
+    edDiscountTax: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
+    edSummDiscount3: TcxCurrencyEdit;
+    edSummDiscount2: TcxCurrencyEdit;
+    edSummDiscount1: TcxCurrencyEdit;
+    cxLabel38: TcxLabel;
+    cxLabel39: TcxLabel;
+    edBasis_summ: TcxCurrencyEdit;
+    edSummDiscount_total: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
+    cxLabel40: TcxLabel;
+    edSummTax: TcxCurrencyEdit;
+    cxLabel27: TcxLabel;
+    cxLabel28: TcxLabel;
+    edVATPercent_order: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    cxLabel30: TcxLabel;
+    edDiscountNextTax: TcxCurrencyEdit;
+    edSummReal: TcxCurrencyEdit;
+    edTransportSumm_load: TcxCurrencyEdit;
+    edBasis_summ_transport: TcxCurrencyEdit;
+    edBasisWVAT_summ_transport: TcxCurrencyEdit;
   private
   public
   end;

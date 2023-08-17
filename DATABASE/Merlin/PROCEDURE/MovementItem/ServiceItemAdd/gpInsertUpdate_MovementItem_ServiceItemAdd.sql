@@ -58,8 +58,9 @@ BEGIN
      WHERE outDateStart BETWEEN COALESCE (gpSelect.DateStart, zc_DateStart()) AND gpSelect.DateEnd
     ;
      -- проверка
-     IF COALESCE (vbAmount_base, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Базовые условия на дату = <%> не найдены.', zfConvert_DateToString (outDateStart);
+     IF vbAmount_base IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка.Базовые условия на дату = <%> не найдены.', zfConvert_DateToString (outDateStart);
      END IF;
 
      -- если надо только заполнить

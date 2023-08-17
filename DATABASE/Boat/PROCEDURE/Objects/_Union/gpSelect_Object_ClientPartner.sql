@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , TaxKind_Value TFloat
              , PaidKindId Integer, PaidKindName TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar 
+             , TaxKindName_Info TVarChar, TaxKindName_Comment TVarChar
              , isErased Boolean
 )
 AS
@@ -48,6 +49,8 @@ BEGIN
           , Object_PaidKind.ValueData       AS PaidKindName
           , Object_TaxKind.Id               AS TaxKindId
           , Object_TaxKind.ValueData        AS TaxKindName
+          , ObjectString_TaxKind_Info.ValueData    ::TVarChar AS TaxKindName_Info
+          , ObjectString_TaxKind_Comment.ValueData ::TVarChar AS TaxKindName_Comment
           , Object_ClientPartner.isErased
         FROM Object AS Object_ClientPartner
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ClientPartner.DescId
@@ -70,10 +73,17 @@ BEGIN
                                   ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
-          LEFT JOIN ObjectLink AS ObjectLink_PaidKind
-                               ON ObjectLink_PaidKind.ObjectId = Object_ClientPartner.Id
-                              AND ObjectLink_PaidKind.DescId IN (zc_ObjectLink_Client_PaidKind(),zc_ObjectLink_Partner_PaidKind())
-          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_PaidKind.ChildObjectId
+            LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                                   ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id 
+                                  AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
+            LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
+                                   ON ObjectString_TaxKind_Comment.ObjectId = Object_TaxKind.Id 
+                                  AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
+
+            LEFT JOIN ObjectLink AS ObjectLink_PaidKind
+                                 ON ObjectLink_PaidKind.ObjectId = Object_ClientPartner.Id
+                                AND ObjectLink_PaidKind.DescId IN (zc_ObjectLink_Client_PaidKind(),zc_ObjectLink_Partner_PaidKind())
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_PaidKind.ChildObjectId
 
         WHERE Object_ClientPartner.DescId in (zc_Object_Partner(),zc_Object_Client())
           AND (Object_ClientPartner.isErased = FALSE OR inisShowAll = TRUE);

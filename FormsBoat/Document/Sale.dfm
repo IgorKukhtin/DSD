@@ -3,7 +3,7 @@ object SaleForm: TSaleForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1050#1083#1080#1077#1085#1090#1091'>'
   ClientHeight = 457
-  ClientWidth = 1102
+  ClientWidth = 1152
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,8 +21,8 @@ object SaleForm: TSaleForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1102
-    Height = 97
+    Width = 1152
+    Height = 177
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -192,7 +192,7 @@ object SaleForm: TSaleForm
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 544
-      Top = 63
+      Top = 68
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -243,37 +243,403 @@ object SaleForm: TSaleForm
       TabOrder = 26
       Width = 125
     end
+    object cxLabel31: TcxLabel
+      Left = 14
+      Top = 106
+      Hint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+      Caption = '* Total LP (Basis) :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel32: TcxLabel
+      Left = 9
+      Top = 129
+      Hint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
+      Caption = '* Total LP (options) :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel8: TcxLabel
+      Left = 55
+      Top = 154
+      Hint = 
+        #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
+        ', '#1073#1077#1079' '#1053#1044#1057
+      Caption = '* Total LP :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edBasis_summ_orig: TcxCurrencyEdit
+      Left = 113
+      Top = 152
+      Hint = 
+        #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
+        ', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      Style.Color = clGradientInactiveCaption
+      TabOrder = 30
+      Width = 70
+    end
+    object edBasis_summ2_orig: TcxCurrencyEdit
+      Left = 113
+      Top = 128
+      Hint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 31
+      Width = 70
+    end
+    object edBasis_summ1_orig: TcxCurrencyEdit
+      Left = 115
+      Top = 102
+      Hint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 32
+      Width = 70
+    end
+    object cxLabel33: TcxLabel
+      Left = 193
+      Top = 106
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1086#1089#1085'. :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel34: TcxLabel
+      Left = 191
+      Top = 130
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1076#1086#1087'. :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edDiscountTax: TcxCurrencyEdit
+      Left = 281
+      Top = 103
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 35
+      Width = 44
+    end
+    object cxLabel20: TcxLabel
+      Left = 331
+      Top = 106
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1086#1089#1085#1086#1074#1085#1086#1084#1091' % '#1089#1082#1080#1076#1082#1080
+      Caption = #1057#1082#1080#1076#1082#1072' '#1086#1089#1085'. %  :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel21: TcxLabel
+      Left = 335
+      Top = 130
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1084#1091' % '#1089#1082#1080#1076#1082#1080
+      Caption = #1057#1082#1080#1076#1082#1072' '#1076#1086#1087'.% :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel22: TcxLabel
+      Left = 339
+      Top = 154
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1086#1087#1094#1080#1081' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
+      Caption = #1057#1082#1080#1076#1082#1072' '#1086#1087#1094#1080#1080' :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edSummDiscount3: TcxCurrencyEdit
+      Left = 423
+      Top = 153
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1086#1087#1094#1080#1081' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 39
+      Width = 70
+    end
+    object edSummDiscount2: TcxCurrencyEdit
+      Left = 423
+      Top = 128
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1084#1091' % '#1089#1082#1080#1076#1082#1080
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 40
+      Width = 70
+    end
+    object edSummDiscount1: TcxCurrencyEdit
+      Left = 423
+      Top = 103
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1086#1089#1085#1086#1074#1085#1086#1084#1091' % '#1089#1082#1080#1076#1082#1080
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 41
+      Width = 70
+    end
+    object cxLabel38: TcxLabel
+      Left = 507
+      Top = 104
+      Hint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
+      Caption = #1057#1082#1080#1076#1082#1072' '#1048#1058#1054#1043#1054' :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel39: TcxLabel
+      Left = 545
+      Top = 127
+      Hint = 
+        #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
+        #1057
+      Caption = 'Total LP :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edBasis_summ: TcxCurrencyEdit
+      Left = 595
+      Top = 126
+      Hint = 
+        #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
+        #1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      Style.Color = clGradientInactiveCaption
+      TabOrder = 44
+      Width = 70
+    end
+    object edSummDiscount_total: TcxCurrencyEdit
+      Left = 595
+      Top = 101
+      Hint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      Style.Color = clGradientInactiveCaption
+      TabOrder = 45
+      Width = 70
+    end
+    object cxLabel26: TcxLabel
+      Left = 680
+      Top = 127
+      Hint = 
+        #1048#1058#1054#1043#1054' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087 +
+        #1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+      Caption = 'Total LP ('#1074#1074#1086#1076') :'
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object cxLabel40: TcxLabel
+      Left = 693
+      Top = 104
+      Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+      Caption = #1057#1082#1080#1076#1082#1072' ('#1074#1074#1086#1076') :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edSummTax: TcxCurrencyEdit
+      Left = 783
+      Top = 100
+      Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 48
+      Width = 70
+    end
+    object cxLabel27: TcxLabel
+      Left = 859
+      Top = 104
+      Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090' :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel28: TcxLabel
+      Left = 874
+      Top = 128
+      Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+      Caption = 'Total LP :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edVATPercent_order: TcxCurrencyEdit
+      Left = 1085
+      Top = 100
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
+      TabOrder = 51
+      Width = 64
+    end
+    object cxLabel5: TcxLabel
+      Left = 1035
+      Top = 102
+      Caption = '% '#1053#1044#1057' :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel30: TcxLabel
+      Left = 1003
+      Top = 127
+      Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+      Caption = 'Total LP + Vat :'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edDiscountNextTax: TcxCurrencyEdit
+      Left = 279
+      Top = 129
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 54
+      Width = 44
+    end
+    object edSummReal: TcxCurrencyEdit
+      Left = 784
+      Top = 127
+      Hint = 
+        #1048#1058#1054#1043#1054' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087 +
+        #1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      Style.Color = clGradientInactiveCaption
+      TabOrder = 55
+      Width = 70
+    end
+    object edTransportSumm_load: TcxCurrencyEdit
+      Left = 925
+      Top = 101
+      Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      Style.Color = clGradientInactiveCaption
+      TabOrder = 56
+      Width = 70
+    end
+    object edBasis_summ_transport: TcxCurrencyEdit
+      Left = 925
+      Top = 126
+      Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      Style.Color = clGradientInactiveCaption
+      TabOrder = 57
+      Width = 70
+    end
+    object edBasisWVAT_summ_transport: TcxCurrencyEdit
+      Left = 1085
+      Top = 127
+      Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      Style.Color = clGradientInactiveCaption
+      TabOrder = 58
+      Width = 62
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 123
-    Width = 1102
-    Height = 334
+    Top = 203
+    Width = 1152
+    Height = 254
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 334
-    ClientRectRight = 1102
+    ExplicitTop = 235
+    ExplicitHeight = 222
+    ClientRectBottom = 254
+    ClientRectRight = 1152
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 198
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 1102
-        Height = 310
+        Width = 1152
+        Height = 230
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
+        ExplicitHeight = 198
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
-          Width = 1100
-          Height = 308
+          Width = 1150
+          Height = 228
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 196
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -2443,6 +2809,118 @@ object SaleForm: TSaleForm
         Component = edInfo_TaxKind
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = 0.000000000000000000
+        Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountNextTax'
+        Value = Null
+        Component = edDiscountNextTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Basis_summ1_orig'
+        Value = Null
+        Component = edBasis_summ1_orig
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Basis_summ2_orig'
+        Value = Null
+        Component = edBasis_summ2_orig
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Basis_summ_orig'
+        Value = Null
+        Component = edBasis_summ_orig
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummDiscount1'
+        Value = Null
+        Component = edSummDiscount1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummDiscount2'
+        Value = Null
+        Component = edSummDiscount2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummDiscount3'
+        Value = Null
+        Component = edSummDiscount3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummDiscount_total'
+        Value = Null
+        Component = edSummDiscount_total
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Basis_summ'
+        Value = Null
+        Component = edBasis_summ
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummTax'
+        Value = Null
+        Component = edSummTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummReal'
+        Value = Null
+        Component = edSummReal
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TransportSumm_load'
+        Value = Null
+        Component = edTransportSumm_load
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Basis_summ_transport'
+        Value = Null
+        Component = edBasis_summ_transport
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BasisWVAT_summ_transport'
+        Value = Null
+        Component = edBasisWVAT_summ_transport
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent_order'
+        Value = Null
+        Component = edVATPercent_order
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -2599,14 +3077,14 @@ object SaleForm: TSaleForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 980
-    Top = 89
+    Left = 948
+    Top = 185
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 1028
-    Top = 86
+    Left = 1100
+    Top = 174
   end
   object spSelectPrintOld: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'

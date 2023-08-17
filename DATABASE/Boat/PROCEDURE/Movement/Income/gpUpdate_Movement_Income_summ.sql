@@ -81,6 +81,12 @@ BEGIN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxPVAT(), inId, ioTotalSummTaxPVAT);
 
+         -- расчет Сумма скидки без НДС
+         ioSummTaxMVAT := zfCalc_SummDiscount(inTotalSummMVAT, ioDiscountTax);
+         -- расчет Сумма скидки с НДС
+         ioSummTaxPVAT := zfCalc_SummWVAT (ioSummTaxMVAT, vbVATPercent);
+
+
          -- Сумма с учетом скидки, без НДС
          outSumm2 := COALESCE (inTotalSummMVAT,0) - COALESCE (ioSummTaxMVAT,0) ;
          -- Итого сумма без НДС, с учетом расходов

@@ -15,10 +15,10 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inGoodsGroupId Integer   ,
     IN inPriceListId  Integer   ,
     IN inIsMO_all     Boolean   ,
-    IN inisComment    Boolean   , --показывать примечание
-    IN inisSubjectDoc Boolean   , --показывать основания Да/Нет
-    IN inisDateDoc    Boolean   , --показывать Дата док-та (да/нет)
-    IN inisInvnumber  Boolean   , --показывать № док док-та (да/нет)
+    IN inIsComment    Boolean   , --показывать примечание
+    IN inIsSubjectDoc Boolean   , --показывать основания Да/Нет
+    IN inIsDateDoc    Boolean   , --показывать Дата док-та (да/нет)
+    IN inIsInvNumber  Boolean   , --показывать № док док-та (да/нет)
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -40,10 +40,12 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , SubjectDocName  TVarChar
              , BranchCode_from Integer, BranchName_from TVarChar, UnitCode_from Integer, UnitName_from TVarChar, PositionName_from TVarChar
              , BranchCode_to Integer, BranchName_to TVarChar, UnitCode_to Integer, UnitName_to TVarChar, PositionName_to TVarChar
-             , OperDate  TDateTime, DayOfWeekName TVarChar, Invnumber TVarChar
+             , OperDate  TDateTime, DayOfWeekName TVarChar, InvNumber TVarChar
              , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , AssetId_two Integer, AssetCode_two Integer, AssetName_two TVarChar
-             )
+             , myCount     Integer
+             , Date_Insert TDateTime
+              )
 AS
 $BODY$
  DECLARE vbUserId    Integer;
@@ -66,7 +68,7 @@ BEGIN
 
       -- Маховская М.В.
       IF vbUserId IN (439917)
-         AND (inFromId <> 8451 -- ЦЕХ упаковки 
+         AND (inFromId <> 8451 -- ЦЕХ упаковки
            OR inToId   <> 8459 -- Розподільчий комплекс
              )
       THEN
@@ -189,7 +191,7 @@ BEGIN
                                    ) AS tmp
                                    LEFT JOIN MovementItem ON MovementItem.Id         = tmp.MovementItemId
                                                          AND MovementItem.MovementId = tmp.MovementId
-                                                         AND MovementItem.DescId     = zc_MI_Master() 
+                                                         AND MovementItem.DescId     = zc_MI_Master()
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                                     ON MILinkObject_Asset.MovementItemId = tmp.MovementItemId
                                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
@@ -207,22 +209,22 @@ BEGIN
                         , COALESCE (MIContainer.AccountId, 0)                                         AS AccountId
                         , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.AnalyzerId, 0) ELSE 0 END AS ArticleLossId
                         , COALESCE (MIContainer.ContainerId_Analyzer, 0) AS ContainerId_Analyzer -- !!!для ОПиУ!!!
- 
+
                         , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
                         , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN -1 * MIContainer.Amount ELSE 0 END) AS SummOut
- 
+
                         , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS AmountIn
                         , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS SummIn
- 
+
                         , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_SendAsset()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
                         , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_SendAsset()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss_loss
                         , 0 AS Summ_ProfitLoss_send
- 
-                        , 0 AS Amount_Send_pl 
-                        
+
+                        , 0 AS Amount_Send_pl
+
                         , MILinkObject_Asset.ObjectId     AS AssetId
                         , MILinkObject_Asset_two.ObjectId AS AssetId_two
- 
+
                    FROM MovementItemContainer AS MIContainer
                         INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
                                            AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
@@ -249,7 +251,7 @@ BEGIN
                           , MIContainer.MovementId
                           , MILinkObject_Asset.ObjectId
                           , MILinkObject_Asset_two.ObjectId
-                  UNION ALL 
+                  UNION ALL
                    SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                         , MIContainer.MovementId
                         , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId
@@ -288,12 +290,12 @@ BEGIN
                           , tmpSend_ProfitLoss_mi.AssetId
                           , tmpSend_ProfitLoss_mi.AssetId_two
                    )
-                   
+
      , tmpMovementString AS (SELECT MovementString.*
                              FROM MovementString
                              WHERE MovementString.DescId = zc_MovementString_Comment()
                                AND MovementString.MovementId IN (SELECT DISTINCT tmpCont.MovementId FROM tmpCont)
-                               AND inisComment = TRUE
+                               AND inIsComment = TRUE
                              )
 
      , tmpSubjectDoc AS (SELECT MovementLinkObject_SubjectDoc.MovementId
@@ -315,13 +317,14 @@ BEGIN
                       , tmpCont.AccountId
                       , tmpCont.ArticleLossId
                       , tmpCont.ContainerId_Analyzer
-                      
-                      , CASE WHEN inisDateDoc = TRUE THEN Movement.OperDate ELSE NULL END   ::TDateTime AS OperDate
-                      , CASE WHEN inisInvnumber = TRUE THEN Movement.Invnumber ELSE '' END  ::TVarChar  AS Invnumber
+
+                      , CASE WHEN inIsDateDoc   = TRUE OR inIsInvNumber = TRUE THEN Movement.OperDate  ELSE NULL END ::TDateTime AS OperDate
+                      , CASE WHEN inIsInvNumber = TRUE THEN Movement.InvNumber ELSE ''   END ::TVarChar  AS InvNumber
+                      , CASE WHEN inIsInvNumber = TRUE THEN Movement.Id        ELSE 0    END ::Integer   AS MovementId
 
                       , tmpCont.AssetId
                       , tmpCont.AssetId_two
-                      
+
                       , SUM (tmpCont.AmountOut) AS AmountOut
                       , SUM (tmpCont.SummOut) AS SummOut
 
@@ -333,12 +336,14 @@ BEGIN
                       , SUM (tmpCont.Summ_ProfitLoss_send) AS Summ_ProfitLoss_send
 
                       , SUM (tmpCont.Amount_Send_pl) AS Amount_Send_pl
+
                  FROM tmpCont
                       LEFT JOIN Movement ON Movement.Id = tmpCont.MovementId
 
                       LEFT JOIN tmpMovementString AS MovementString_Comment
                                                   ON MovementString_Comment.MovementId = tmpCont.MovementId
                       LEFT JOIN tmpSubjectDoc ON tmpSubjectDoc.MovementId = tmpCont.MovementId
+
                  GROUP BY tmpCont.ContainerId
                         , COALESCE (MovementString_Comment.ValueData, '')
                         , tmpCont.UnitId
@@ -349,16 +354,111 @@ BEGIN
                         , tmpCont.ArticleLossId
                         , tmpCont.ContainerId_Analyzer
                         , tmpSubjectDoc.SubjectDocName
-                        , CASE WHEN inisDateDoc = TRUE THEN Movement.OperDate ELSE NULL END
-                        , CASE WHEN inisInvnumber = TRUE THEN Movement.Invnumber ELSE '' END
+                        , CASE WHEN inIsDateDoc   = TRUE OR inIsInvNumber = TRUE THEN Movement.OperDate  ELSE NULL END ::TDateTime
+                        , CASE WHEN inIsInvNumber = TRUE THEN Movement.InvNumber ELSE ''   END ::TVarChar
+                        , CASE WHEN inIsInvNumber = TRUE THEN Movement.Id        ELSE 0    END ::Integer
                         , tmpCont.AssetId
                         , tmpCont.AssetId_two
-                 )
+                )
+
+ , tmpOperationGroup AS (SELECT tmpContainer.MovementId
+                              , tmpContainer.ArticleLossId
+                              , tmpContainer.ContainerId_Analyzer
+                              , tmpContainer.UnitId
+                              , tmpContainer.UnitId_by
+                              , tmpContainer.GoodsId
+                              , tmpContainer.GoodsKindId
+                              , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                              , tmpContainer.OperDate
+                              , tmpContainer.InvNumber
+                              , tmpContainer.Comment
+              
+                              , tmpContainer.AssetId
+                              , tmpContainer.AssetId_two
+              
+                              , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
+                              --, tmpContainer.SubjectDocName          AS SubjectDocName
+              
+                              , SUM (tmpContainer.AmountOut)         AS AmountOut
+                              , SUM (tmpContainer.AmountOut_Weight)  AS AmountOut_Weight
+                              , SUM (tmpContainer.AmountOut_sh)      AS AmountOut_sh
+                              , SUM (tmpContainer.SummOut)           AS SummOut_zavod
+                              , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_branch
+                              , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END)                AS SummOut_60000
+              
+                              , SUM (tmpContainer.AmountIn)          AS AmountIn
+                              , SUM (tmpContainer.AmountIn_Weight)   AS AmountIn_Weight
+                              , SUM (tmpContainer.AmountIn_sh)       AS AmountIn_sh
+                              , SUM (tmpContainer.SummIn)            AS SummIn_zavod
+                              , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END) AS SummIn_branch
+                              , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END)                AS SummIn_60000
+              
+                              , SUM (tmpContainer.Summ_ProfitLoss)      AS Summ_ProfitLoss
+                              , SUM (tmpContainer.Summ_ProfitLoss_loss) AS Summ_ProfitLoss_loss
+                              , SUM (tmpContainer.Summ_ProfitLoss_send) AS Summ_ProfitLoss_send
+              
+                              , SUM (tmpContainer.Amount_Send_pl)       AS Amount_Send_pl
+              
+                         FROM (SELECT tmpMI.MovementId
+                                    , tmpMI.ContainerId
+                                    , tmpMI.UnitId
+                                    , tmpMI.UnitId_by
+                                    , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpMI.GoodsId END AS GoodsId
+                                    , tmpMI.GoodsKindId
+                                    , tmpMI.AccountId
+                                    , tmpMI.ArticleLossId
+                                    , tmpMI.ContainerId_Analyzer
+                                    , tmpMI.Comment
+                                    , tmpMI.SubjectDocName
+                                    , tmpMI.AmountOut
+                                    , tmpMI.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountOut_Weight
+                                    , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountOut ELSE 0 END AS AmountOut_sh
+                                    , tmpMI.SummOut
+              
+                                    , tmpMI.AmountIn
+                                    , tmpMI.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountIn_Weight
+                                    , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountIn ELSE 0 END AS AmountIn_sh
+                                    , tmpMI.SummIn
+              
+                                    , tmpMI.Summ_ProfitLoss
+                                    , tmpMI.Summ_ProfitLoss_loss
+                                    , tmpMI.Summ_ProfitLoss_send
+                                    , tmpMI.Amount_Send_pl
+              
+                                    , tmpMI.OperDate
+                                    , tmpMI.InvNumber
+              
+                                    , tmpMI.AssetId
+                                    , tmpMI.AssetId_two
+              
+                               FROM tmpMI
+                                    INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI.GoodsId
+                               ) AS tmpContainer
+                               LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpContainer.AccountId
+                               LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                             ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
+                                                            AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+              
+                         GROUP BY tmpContainer.MovementId
+                                , tmpContainer.ArticleLossId
+                                , tmpContainer.ContainerId_Analyzer
+                                , tmpContainer.UnitId
+                                , tmpContainer.UnitId_by
+                                , tmpContainer.GoodsId
+                                , tmpContainer.GoodsKindId
+                                , CLO_PartionGoods.ObjectId
+                                , tmpContainer.Comment
+                                , tmpContainer.OperDate
+                                , tmpContainer.InvNumber
+                                , CASE WHEN inIsSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE '' END
+                                , tmpContainer.AssetId
+                                , tmpContainer.AssetId_two
+                        )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
     -- ANALYZE _tmpGoods;
     -- ANALYZE _tmpUnit;
-    
+
     -- Результат
     SELECT Object_GoodsGroup.Id                       AS GoodsGroupId
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
@@ -429,7 +529,7 @@ BEGIN
 
          , tmpOperationGroup.OperDate    ::TDateTime
          , tmpWeekDay.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName
-         , tmpOperationGroup.Invnumber   ::TVarChar
+         , tmpOperationGroup.InvNumber   ::TVarChar
 
          , Object_Asset.Id                       AS AssetId
          , Object_Asset.ObjectCode               AS AssetCode
@@ -438,96 +538,19 @@ BEGIN
          , Object_Asset_two.Id                   AS AssetId_two
          , Object_Asset_two.ObjectCode           AS AssetCode_two
          , Object_Asset_two.ValueData            AS AssetName_two
-     FROM (SELECT tmpContainer.ArticleLossId
-                , tmpContainer.ContainerId_Analyzer
-                , tmpContainer.UnitId
-                , tmpContainer.UnitId_by
-                , tmpContainer.GoodsId
-                , tmpContainer.GoodsKindId
-                , CLO_PartionGoods.ObjectId AS PartionGoodsId
-                , tmpContainer.OperDate
-                , tmpContainer.Invnumber
-                , tmpContainer.Comment
-                
-                , tmpContainer.AssetId
-                , tmpContainer.AssetId_two
 
-                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
-                --, tmpContainer.SubjectDocName          AS SubjectDocName
+         , CASE WHEN vbIsGroup = TRUE
+                THEN 0
+                ELSE (SELECT COUNT(*)
+                      FROM tmpOperationGroup AS find
+                      WHERE find.GoodsId     = tmpOperationGroup.GoodsId
+                        AND find.GoodsKindId = tmpOperationGroup.GoodsKindId
+                        AND find.OperDate    = tmpOperationGroup.OperDate
+                     )
+           END :: Integer AS myCount
+         , MovementDate_Insert.ValueData AS Date_Insert
 
-                , SUM (tmpContainer.AmountOut)         AS AmountOut
-                , SUM (tmpContainer.AmountOut_Weight)  AS AmountOut_Weight
-                , SUM (tmpContainer.AmountOut_sh)      AS AmountOut_sh
-                , SUM (tmpContainer.SummOut)           AS SummOut_zavod
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_branch
-                , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END)                AS SummOut_60000
-
-                , SUM (tmpContainer.AmountIn)          AS AmountIn
-                , SUM (tmpContainer.AmountIn_Weight)   AS AmountIn_Weight
-                , SUM (tmpContainer.AmountIn_sh)       AS AmountIn_sh
-                , SUM (tmpContainer.SummIn)            AS SummIn_zavod
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END) AS SummIn_branch
-                , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END)                AS SummIn_60000
-
-                , SUM (tmpContainer.Summ_ProfitLoss)      AS Summ_ProfitLoss
-                , SUM (tmpContainer.Summ_ProfitLoss_loss) AS Summ_ProfitLoss_loss
-                , SUM (tmpContainer.Summ_ProfitLoss_send) AS Summ_ProfitLoss_send
-
-                , SUM (tmpContainer.Amount_Send_pl)       AS Amount_Send_pl
-
-           FROM (SELECT tmpMI.ContainerId
-                      , tmpMI.UnitId
-                      , tmpMI.UnitId_by
-                      , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpMI.GoodsId END AS GoodsId
-                      , tmpMI.GoodsKindId
-                      , tmpMI.AccountId
-                      , tmpMI.ArticleLossId
-                      , tmpMI.ContainerId_Analyzer
-                      , tmpMI.Comment
-                      , tmpMI.SubjectDocName
-                      , tmpMI.AmountOut
-                      , tmpMI.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountOut_Weight
-                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountOut ELSE 0 END AS AmountOut_sh
-                      , tmpMI.SummOut
-
-                      , tmpMI.AmountIn
-                      , tmpMI.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountIn_Weight
-                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountIn ELSE 0 END AS AmountIn_sh
-                      , tmpMI.SummIn
-
-                      , tmpMI.Summ_ProfitLoss
-                      , tmpMI.Summ_ProfitLoss_loss
-                      , tmpMI.Summ_ProfitLoss_send
-                      , tmpMI.Amount_Send_pl
-
-                      , tmpMI.OperDate
-                      , tmpMI.Invnumber
-                      
-                      , tmpMI.AssetId
-                      , tmpMI.AssetId_two
-
-                 FROM tmpMI
-                      INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI.GoodsId
-                 ) AS tmpContainer
-                 LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpContainer.AccountId
-                 LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                               ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
-                                              AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-
-           GROUP BY tmpContainer.ArticleLossId
-                  , tmpContainer.ContainerId_Analyzer
-                  , tmpContainer.UnitId
-                  , tmpContainer.UnitId_by
-                  , tmpContainer.GoodsId
-                  , tmpContainer.GoodsKindId
-                  , CLO_PartionGoods.ObjectId
-                  , tmpContainer.Comment
-                  , tmpContainer.OperDate
-                  , tmpContainer.Invnumber
-                  , CASE WHEN inisSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE '' END 
-                  , tmpContainer.AssetId
-                  , tmpContainer.AssetId_two
-          ) AS tmpOperationGroup
+     FROM tmpOperationGroup
 
           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpOperationGroup.GoodsId
                                 AND tmpPriceList.GoodsKindId Is NULL
@@ -591,12 +614,15 @@ BEGIN
                               AND ObjectLink_Unit_Branch_to.DescId   = zc_ObjectLink_Unit_Branch()
           LEFT JOIN Object AS Object_Branch_to ON Object_Branch_to.Id = ObjectLink_Unit_Branch_to.ChildObjectId
 
-          LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON tmpOperationGroup.OperDate IS NOT NULL --1=1 
-          
+          LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON tmpOperationGroup.OperDate IS NOT NULL --1=1
+
           LEFT JOIN Object AS Object_Asset     ON Object_Asset.Id     = tmpOperationGroup.AssetId
           LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = tmpOperationGroup.AssetId_two
 
-  ;
+          LEFT JOIN MovementDate AS MovementDate_Insert ON MovementDate_Insert.MovementId = tmpOperationGroup.MovementId
+                                                       AND MovementDate_Insert.DescId     = zc_MovementDate_Insert()
+         ;
+
 
 END;
 $BODY$
@@ -606,7 +632,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  25.10.22         * AssetId, AssetId_two
- 17.12.21         * 
+ 17.12.21         *
  29.04.20         * zc_Movement_SendAsset()
  13.02.20         *
  18.12.19         * add цена по виду
@@ -626,10 +652,10 @@ $BODY$
 , inGoodsGroupId:= 0
 , inPriceListId:= 0
 , inIsMO_all:= FALSE
-, inisComment:= true
-, inisSubjectDoc:= FALSE
-, inisDateDoc:= true
-, inisInvnumber:= true 
+, inIsComment:= true
+, inIsSubjectDoc:= FALSE
+, inIsDateDoc:= true
+, inIsInvNumber:= true
 , inSession := zfCalc_UserAdmin()); -- Склад Реализации
 
 */

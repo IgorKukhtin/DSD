@@ -40,6 +40,7 @@ RETURNS TABLE (Id              Integer
              , DescName        TVarChar
              , TaxKindName     TVarChar
              , TaxKindName_info TVarChar
+             , TaxKindName_Comment TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -361,6 +362,7 @@ BEGIN
       , tmpData.DescName
       , Object_TaxKind.ValueData            AS TaxKindName
       , ObjectString_TaxKind_Info.ValueData AS TaxKindName_info
+      , ObjectString_TaxKind_Comment.ValueData AS TaxKindName_Comment
 
       , tmpData.InfoMoneyId
       , tmpData.InfoMoneyCode
@@ -414,6 +416,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
                                ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
                               AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
+
+        LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
+                               ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                              AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()   
 
 ;
 

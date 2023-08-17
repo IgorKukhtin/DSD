@@ -39,7 +39,7 @@
     Width = 100
   end
   object ceAmountIn: TcxCurrencyEdit [5]
-    Left = 15
+    Left = 17
     Top = 128
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -219,7 +219,7 @@
     Caption = '% '#1053#1044#1057
   end
   object edVATPercent: TcxCurrencyEdit [29]
-    Left = 234
+    Left = 235
     Top = 175
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -342,8 +342,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 71
-    Top = 300
+    Left = 47
+    Top = 340
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Invoice'
@@ -924,8 +924,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 147
-    Top = 319
+    Left = 115
+    Top = 359
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1012,9 +1012,91 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm_debet'
+        Value = Null
+        Component = ceAmountIn
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm_credit'
+        Value = Null
+        Component = ceAmountOut
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectId'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 203
-    Top = 375
+    Left = 155
+    Top = 303
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
