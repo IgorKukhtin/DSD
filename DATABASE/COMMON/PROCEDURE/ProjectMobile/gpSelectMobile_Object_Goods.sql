@@ -46,16 +46,24 @@ BEGIN
                 , tmpPartner AS (SELECT OP.Id AS PartnerId FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP)
                 , tmpGoods AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
                                FROM Object AS Object_GoodsByGoodsKind
-                                    JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
-                                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
-                                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
-                                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE
                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                     ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
                                                    AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                                    AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
+                                    -- Вид товара
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                         ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
+                                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                    JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                                      AND (ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE
+                                                        OR (ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     = 9505524 -- 457 - Сосиски ФІЛЕЙКИ вар 1 ґ ТМ Наші Ковбаси
+                                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = 8344    -- Б/В 0,5кг
+                                                          ))
                                WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
-                               UNION
+
+                              UNION
                                SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
                                FROM Object AS Object_GoodsListSale
                                     JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 

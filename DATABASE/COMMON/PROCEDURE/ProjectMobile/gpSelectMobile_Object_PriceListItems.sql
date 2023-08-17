@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_PriceListItems (
 )
 RETURNS TABLE (Id              Integer
              , GoodsId         Integer   -- Товар
+             , GoodsId_key     Integer   -- Товар
+             , GoodsKindId     Integer   -- Товар
              , PriceListId     Integer   -- Прайс-лист
              , OrderStartDate  TDateTime -- Дата с которой действует цена заявки
              , OrderEndDate    TDateTime -- Дата до которой действует цена заявки
@@ -20,9 +22,10 @@ RETURNS TABLE (Id              Integer
              , ReturnPrice     TFloat    -- Цена возврата
              , isSync          Boolean   -- Синхронизируется (да/нет)
               )
-AS 
+AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUserId_save Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbReturnDayCount Integer;
    DECLARE vbReturnDate TDateTime;
@@ -36,7 +39,9 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      if vbUserId = 5 then vbUserId:= 1000137; end if;
+      vbUserId_save:= vbUserId;
+
+      -- if vbUserId = 5 then vbUserId:= 1045496; inSession:= '1045496'; end if; -- Стрижко Д.О.
 
       -- if inSession = '1000137' then return; end if;
 
@@ -46,21 +51,21 @@ BEGIN
 
       -- определяем идентификатор торгового агента
       SELECT PersonalId, ReturnDayCount INTO vbPersonalId, vbReturnDayCount FROM gpGetMobile_Object_Const (inSession);
-      
+
       vbReturnDate:= CURRENT_DATE - COALESCE (vbReturnDayCount, 14)::Integer;
 
       -- если торговый агент не определен, то возвращать нечего
-      IF vbPersonalId IS NOT NULL 
+      IF vbPersonalId IS NOT NULL
       THEN
            -- Результат
            RETURN QUERY
-             WITH 
+             WITH
                   -- определяем список контрагентов+юр.лиц, что доступны торговому агенту
                   tmpPartner AS (SELECT OP.Id AS PartnerId
                                       , OP.JuridicalId
                                  FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP
                                 )
-                  -- создаем список идентификаторов прайс-листов, что доступны торговому агенту 
+                  -- создаем список идентификаторов прайс-листов, что доступны торговому агенту
                 , tmpPriceList AS (SELECT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
                                                --, ObjectLink_Contract_PriceList.ChildObjectId
                                                  , ObjectLink_Juridical_PriceList.ChildObjectId
@@ -72,7 +77,7 @@ BEGIN
                                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                                              ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
                                                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                                  UNION                                    
+                                  UNION
                                    SELECT COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
                                                  , ObjectLink_Juridical_PriceListPrior.ChildObjectId
                                                  , zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListId
@@ -83,7 +88,7 @@ BEGIN
                                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
                                                              ON ObjectLink_Juridical_PriceListPrior.ObjectId = tmpPartner.JuridicalId
                                                             AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
-                                  UNION                                    
+                                  UNION
                                    SELECT OL_ContractPriceList_PriceList.ChildObjectId AS PriceListId
                                    FROM tmpPartner
                                         JOIN ObjectLink AS ObjectLink_Contract_Juridical
@@ -126,7 +131,7 @@ BEGIN
                                   , MAX (ObjectHistoryFloat_PriceListItem_Value_Return.ValueData) :: TFloat    AS ReturnPrice
                                   , TRUE                                                          :: Boolean   AS isSync
                              FROM Object AS Object_PriceListItem
-                                  JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
+                                  JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                   ON ObjectLink_PriceListItem_Goods.ObjectId = Object_PriceListItem.Id
                                                  AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                                   JOIN tmpGoods ON tmpGoods.GoodsId = ObjectLink_PriceListItem_Goods.ChildObjectId
@@ -134,15 +139,15 @@ BEGIN
                                                   ON ObjectLink_PriceListItem_PriceList.ObjectId = Object_PriceListItem.Id
                                                  AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                                   JOIN tmpPriceList ON tmpPriceList.PriceListId = ObjectLink_PriceListItem_PriceList.ChildObjectId
-                
+
                                   LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
                                                        ON ObjectLink_PriceListItem_GoodsKind.ObjectId = Object_PriceListItem.Id
                                                       AND ObjectLink_PriceListItem_GoodsKind.DescId = zc_ObjectLink_PriceListItem_GoodsKind()
-                
+
                                   -- Цены заявки
                                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Order
                                                           ON ObjectHistory_PriceListItem_Order.ObjectId = Object_PriceListItem.Id
-                                                         AND ObjectHistory_PriceListItem_Order.DescId = zc_ObjectHistory_PriceListItem() 
+                                                         AND ObjectHistory_PriceListItem_Order.DescId = zc_ObjectHistory_PriceListItem()
                                                          AND CURRENT_DATE >= ObjectHistory_PriceListItem_Order.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem_Order.EndDate
                                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Order
                                                                ON ObjectHistoryFloat_PriceListItem_Value_Order.ObjectHistoryId = ObjectHistory_PriceListItem_Order.Id
@@ -150,7 +155,7 @@ BEGIN
                                   -- Цены отгрузки
                                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Sale
                                                           ON ObjectHistory_PriceListItem_Sale.ObjectId = Object_PriceListItem.Id
-                                                         AND ObjectHistory_PriceListItem_Sale.DescId = zc_ObjectHistory_PriceListItem() 
+                                                         AND ObjectHistory_PriceListItem_Sale.DescId = zc_ObjectHistory_PriceListItem()
                                                          AND (CURRENT_DATE + INTERVAL '1 DAY') >= ObjectHistory_PriceListItem_Sale.StartDate AND (CURRENT_DATE + INTERVAL '1 DAY') < ObjectHistory_PriceListItem_Sale.EndDate
                                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Sale
                                                                ON ObjectHistoryFloat_PriceListItem_Value_Sale.ObjectHistoryId = ObjectHistory_PriceListItem_Sale.Id
@@ -158,17 +163,17 @@ BEGIN
                                   -- Цены возврата
                                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return
                                                           ON ObjectHistory_PriceListItem_Return.ObjectId = Object_PriceListItem.Id
-                                                         AND ObjectHistory_PriceListItem_Return.DescId = zc_ObjectHistory_PriceListItem() 
+                                                         AND ObjectHistory_PriceListItem_Return.DescId = zc_ObjectHistory_PriceListItem()
                                                          AND vbReturnDate >= ObjectHistory_PriceListItem_Return.StartDate AND vbReturnDate < ObjectHistory_PriceListItem_Return.EndDate
                                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return
                                                                ON ObjectHistoryFloat_PriceListItem_Value_Return.ObjectHistoryId = ObjectHistory_PriceListItem_Return.Id
                                                               AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-                
+
                              WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
-                               AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
+                               AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0))
                                    + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0)
                              --AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
-                
+
                              GROUP BY Object_PriceListItem.Id
                                     , ObjectLink_PriceListItem_Goods.ChildObjectId
                                     , ObjectLink_PriceListItem_PriceList.ChildObjectId
@@ -192,10 +197,11 @@ BEGIN
                                   , ROW_NUMBER() OVER (PARTITION BY tmpRes_all.GoodsId, tmpRes_all.PriceListId ORDER BY tmpRes_all.OrderPrice DESC) AS Ord_price
                              FROM tmpRes_all
                             )
-
-
+             -- Результат
              SELECT tmpRes.Id
-                  , CASE WHEN tmpRes.Ord = 1 THEN tmpRes.GoodsId     ELSE 0  END :: Integer AS GoodsId 
+                  , CASE WHEN tmpRes.Ord = 1 THEN tmpRes.GoodsId     ELSE 0  END :: Integer AS GoodsId
+                  , CASE WHEN tmpRes.Ord = 1 THEN tmpRes.GoodsId     ELSE 0  END :: Integer AS GoodsId_key
+                  , 0 :: Integer AS GoodsKindId
                   , CASE WHEN tmpRes.Ord = 1 THEN tmpRes.PriceListId ELSE -1 END :: Integer AS PriceListId
                   , COALESCE (tmpRes_ch.OrderStartDate, tmpRes.OrderStartDate)   :: TDateTime AS OrderStartDate
                   , COALESCE (tmpRes_ch.OrderEndDate, tmpRes.OrderEndDate)       :: TDateTime AS OrderEndDate
@@ -204,7 +210,7 @@ BEGIN
                   , COALESCE (tmpRes_ch.SaleEndDate, tmpRes.SaleEndDate)         :: TDateTime AS SaleEndDate
                   , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes_ch.SalePrice,   tmpRes.SalePrice)   ELSE 0 END :: TFloat AS SalePrice
                   , COALESCE (tmpRes_ch.ReturnStartDate, tmpRes.ReturnStartDate) :: TDateTime AS ReturnStartDate
-                  , COALESCE (tmpRes_ch.ReturnEndDate, tmpRes.ReturnEndDate)     :: TDateTime AS ReturnEndDate 
+                  , COALESCE (tmpRes_ch.ReturnEndDate, tmpRes.ReturnEndDate)     :: TDateTime AS ReturnEndDate
                   , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes_ch.ReturnPrice, tmpRes.ReturnPrice) ELSE 0 END :: TFloat AS ReturnPrice
                   , tmpRes.isSync
              FROM tmpRes
@@ -216,10 +222,10 @@ BEGIN
                   --, ObjectHistory_PriceListItem_Return.StartDate DESC
              LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;
-                   
+
       END IF;
 
-END; 
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -233,3 +239,6 @@ $BODY$
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '1059546') WHERE GoodsId = 1045379 and PriceListId = zc_PriceList_Basis()
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '1000137')
+SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '5')
+  where                              GoodsId_key = 2755
+ and PriceListId = 18840
