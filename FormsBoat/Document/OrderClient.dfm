@@ -119,8 +119,8 @@ object OrderClientForm: TOrderClientForm
       Width = 81
     end
     object edDiscountTax: TcxCurrencyEdit
-      Left = 287
-      Top = 95
+      Left = 289
+      Top = 94
       Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
       ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
@@ -435,7 +435,7 @@ object OrderClientForm: TOrderClientForm
     end
     object edBasis_summ1_orig: TcxCurrencyEdit
       Left = 121
-      Top = 95
+      Top = 94
       Hint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
@@ -447,8 +447,8 @@ object OrderClientForm: TOrderClientForm
       Width = 70
     end
     object edBasis_summ2_orig: TcxCurrencyEdit
-      Left = 121
-      Top = 120
+      Left = 123
+      Top = 121
       Hint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
@@ -488,7 +488,7 @@ object OrderClientForm: TOrderClientForm
     end
     object edSummDiscount2: TcxCurrencyEdit
       Left = 431
-      Top = 120
+      Top = 119
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1084#1091' % '#1089#1082#1080#1076#1082#1080
       ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
@@ -500,8 +500,8 @@ object OrderClientForm: TOrderClientForm
       Width = 70
     end
     object edSummDiscount3: TcxCurrencyEdit
-      Left = 431
-      Top = 144
+      Left = 435
+      Top = 145
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1086#1087#1094#1080#1081' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
       ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
@@ -594,7 +594,7 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object edBasis_summ_orig: TcxCurrencyEdit
-      Left = 121
+      Left = 123
       Top = 144
       Hint = 
         #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
@@ -1064,6 +1064,7 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
+            ExplicitLeft = 2
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -3421,7 +3422,7 @@ object OrderClientForm: TOrderClientForm
   end
   object edDiscountNextTax: TcxCurrencyEdit
     Left = 289
-    Top = 120
+    Top = 121
     Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -3448,8 +3449,8 @@ object OrderClientForm: TOrderClientForm
     Width = 70
   end
   object edSummReal: TcxCurrencyEdit
-    Left = 784
-    Top = 120
+    Left = 783
+    Top = 121
     Hint = 
       #1048#1058#1054#1043#1054' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087 +
       #1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
@@ -3478,8 +3479,8 @@ object OrderClientForm: TOrderClientForm
     Width = 70
   end
   object edBasisWVAT_summ_transport: TcxCurrencyEdit
-    Left = 1083
-    Top = 120
+    Left = 1088
+    Top = 121
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -3502,7 +3503,7 @@ object OrderClientForm: TOrderClientForm
   end
   object edTaxKind_Value: TcxCurrencyEdit
     Left = 879
-    Top = 156
+    Top = 155
     Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify

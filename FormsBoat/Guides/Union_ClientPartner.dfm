@@ -3,7 +3,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Lieferanten / Kunden>'
   ClientHeight = 397
-  ClientWidth = 715
+  ClientWidth = 796
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,12 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 715
+    Width = 796
     Height = 371
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = -192
-    ExplicitTop = 186
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,7 +40,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -53,7 +50,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 42
       end
       object Name: TcxGridDBColumn
         Caption = 'Lieferanten / Kunden'
@@ -61,14 +58,14 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 214
+        Width = 178
       end
       object DescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 137
+        Width = 127
       end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -76,7 +73,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 53
+        Width = 50
       end
       object DayCalendar: TcxGridDBColumn
         Caption = #1054#1090#1089#1088'. '#1074' '#1082#1072#1083#1077#1085#1076'. '#1076#1085#1103#1093
@@ -88,7 +85,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1082#1072#1083#1077#1085#1076#1072#1088#1085#1099#1093' '#1076#1085#1103#1093
         Options.Editing = False
-        Width = 70
+        Width = 65
       end
       object InfoMoneyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103' '#1059#1055
@@ -96,7 +93,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 46
+        Width = 42
       end
       object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -104,7 +101,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 69
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -112,17 +109,31 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 57
       end
       object TaxKind_Value: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'TaxKind_Value'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 46
+        Width = 61
+      end
+      object TaxKindName_Info: TcxGridDBColumn
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName_Info'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
+      end
+      object TaxKindName_Comment: TcxGridDBColumn
+        Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName_Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -219,6 +230,34 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSubItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -274,11 +313,66 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Action = ShowErased
       Category = 0
     end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'Lieferanten '
+      Category = 0
+      Visible = ivAlways
+      Detachable = True
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbtInsert_client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_client'
+        end>
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = 'Kunden'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert_Partner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_partner'
+        end>
+    end
+    object bbtInsert_client: TdxBarButton
+      Action = actInsert_client
+      Category = 0
+    end
+    object bbUpdate_client: TdxBarButton
+      Action = actUpdate_client
+      Category = 0
+    end
+    object bbInsert_Partner: TdxBarButton
+      Action = actInsert_Partner
+      Category = 0
+      ShortCut = 8237
+    end
+    object bbUpdate_partner: TdxBarButton
+      Action = actUpdate_partner
+      Category = 0
+      ShortCut = 8307
+    end
+    object bbSetErased: TdxBarButton
+      Action = actSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = actSetUnErased
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 264
-    Top = 136
+    Left = 256
+    Top = 160
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -466,6 +560,133 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actInsert_client: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TClientEditForm'
+      FormNameParam.Value = 'TClientEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate_client: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TClientEditForm'
+      FormNameParam.Value = 'TClientEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsert_Partner: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate_partner: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErased
+      StoredProcList = <
+        item
+          StoredProc = spErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object actSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ClientPartner'
@@ -525,5 +746,53 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     PropertiesCellList = <>
     Left = 48
     Top = 216
+  end
+  object spUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Partner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 128
+  end
+  object spErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Partner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 80
   end
 end

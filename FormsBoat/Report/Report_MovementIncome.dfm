@@ -6,7 +6,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -237
+  ExplicitLeft = -273
   ExplicitWidth = 1147
   ExplicitHeight = 602
   PixelsPerInch = 96
@@ -561,8 +561,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           object VATPercent_in: TcxGridDBColumn
             Caption = #1053#1044#1057' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'VATPercent_in'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

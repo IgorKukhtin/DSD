@@ -65,6 +65,9 @@ type
     GuidesObject: TdsdGuides;
     cxLabel6: TcxLabel;
     edObject: TcxButtonEdit;
+    edSearchInvNumber: TcxTextEdit;
+    lbSearchCode: TcxLabel;
+    FieldFilter_Article: TdsdFieldFilter;
   private
     { Private declarations }
   public
