@@ -151,7 +151,6 @@
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = True
         TabOrder = 15
         Width = 130
       end
@@ -516,6 +515,30 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPLZ'
+        Value = Null
+        Component = edPLZ
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCityName'
+        Value = Null
+        Component = edCity
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountryName'
+        Value = Null
+        Component = edCountry
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDiscountTax'
         Value = Null
         Component = ceDiscountTax
@@ -544,30 +567,6 @@
         Value = Null
         Component = GuidesBank
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPLZId'
-        Value = Null
-        Component = GuidesPLZ
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCityName'
-        Value = Null
-        Component = edCity
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountryName'
-        Value = Null
-        Component = edCountry
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -879,6 +878,22 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryName'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityName'
+        Value = Null
+        Component = GuidesCity
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 48

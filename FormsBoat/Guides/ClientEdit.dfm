@@ -91,8 +91,8 @@ object ClientEditForm: TClientEditForm
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object edComment: TcxTextEdit
-        Left = 3
-        Top = 295
+        Left = 10
+        Top = 292
         TabOrder = 5
         Width = 558
       end
@@ -215,8 +215,8 @@ object ClientEditForm: TClientEditForm
         Caption = #1043#1086#1088#1086#1076' ('#1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089')'
       end
       object edCity: TcxButtonEdit
-        Left = 303
-        Top = 308
+        Left = 295
+        Top = 116
         Properties.Buttons = <
           item
             Default = True
@@ -242,8 +242,8 @@ object ClientEditForm: TClientEditForm
         Width = 130
       end
       object edPLZ: TcxButtonEdit
-        Left = 10
-        Top = 116
+        Left = 14
+        Top = 113
         Properties.Buttons = <
           item
             Default = True

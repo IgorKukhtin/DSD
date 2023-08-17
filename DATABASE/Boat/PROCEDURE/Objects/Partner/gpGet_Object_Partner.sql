@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxNumber TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
-             , PLZId Integer, PLZName TVarChar
+             , PLZId Integer, PLZName TVarChar  
+             , CityName TVarChar, CountryId Integer, CountryName TVarChar   --город страна
              , TaxKindId Integer, TaxKindName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -50,7 +51,9 @@ BEGIN
            , '' :: TVarChar           AS BankName
            , 0                        AS PLZId
            , '' :: TVarChar           AS PLZName
-
+           , '' :: TVarChar           AS CityName
+           , 0                        AS CountryId
+           , '' :: TVarChar           AS CountryName
            , 0                        AS TaxKindId
            , '' :: TVarChar           AS TaxKindName
            , 0                        AS PaidKindId
@@ -82,9 +85,11 @@ BEGIN
            , Object_Bank.Id                  AS BankId
            , Object_Bank.ValueData           AS BankName
            , Object_PLZ.Id                   AS PLZId
-           --, Object_PLZ.ValueData            AS PLZName
-           , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName
-
+           , Object_PLZ.ValueData            AS PLZName
+           --, TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName
+           , ObjectString_City.ValueData     AS CityName
+           , Object_Country.Id               AS CountryId
+           , Object_Country.ValueData        AS CountryName
            , Object_TaxKind.Id               AS TaxKindId
            , Object_TaxKind.ValueData        AS TaxKindName
            , Object_PaidKind.Id              AS PaidKindId
