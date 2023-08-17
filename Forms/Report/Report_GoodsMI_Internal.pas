@@ -116,6 +116,8 @@ type
     cbDateDoc: TcxCheckBox;
     cbInvnumber: TcxCheckBox;
     DayOfWeekName: TcxGridDBColumn;
+    myCount: TcxGridDBColumn;
+    Date_Insert: TcxGridDBColumn;
   private
     { Private declarations }
   public

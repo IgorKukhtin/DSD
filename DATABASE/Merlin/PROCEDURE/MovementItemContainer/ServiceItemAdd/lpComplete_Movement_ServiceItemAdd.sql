@@ -60,7 +60,7 @@ BEGIN
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.DescId     = zc_MI_Master()
                                                             AND MovementItem.isErased   = FALSE
-                                                            AND MovementItem.Amount     > 0
+                                                            AND MovementItem.Amount     >= 0
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                       ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
