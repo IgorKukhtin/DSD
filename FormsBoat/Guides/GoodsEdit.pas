@@ -27,7 +27,7 @@ uses
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter, cxPCdxBarPopupMenu,
-  cxPC;
+  cxPC, cxSSheet;
 
 type
   TGoodsEditForm = class(TParentForm)
@@ -200,6 +200,7 @@ type
     apSelectChild: TdsdStoredProc;
     Colors_ch1: TcxGridDBColumn;
     Color_Value_ch1: TcxGridDBColumn;
+    cxSpreadSheetBook1: TcxSpreadSheetBook;
   private
     { Private declarations }
   public

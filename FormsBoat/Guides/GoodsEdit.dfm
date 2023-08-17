@@ -266,7 +266,7 @@
     Width = 337
     Height = 655
     TabOrder = 0
-    Properties.ActivePage = Main
+    Properties.ActivePage = Child
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 655
     ClientRectRight = 337
@@ -787,6 +787,18 @@
         end
       end
     end
+  end
+  object cxSpreadSheetBook1: TcxSpreadSheetBook
+    Left = 18
+    Top = 24
+    Width = 9
+    Height = 33
+    DefaultStyle.Font.Name = 'Tahoma'
+    HeaderFont.Charset = DEFAULT_CHARSET
+    HeaderFont.Color = clWindowText
+    HeaderFont.Height = -11
+    HeaderFont.Name = 'Tahoma'
+    HeaderFont.Style = []
   end
   object ActionList: TActionList
     Left = 248
