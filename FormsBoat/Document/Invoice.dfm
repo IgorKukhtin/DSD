@@ -219,7 +219,7 @@
     Caption = '% '#1053#1044#1057
   end
   object edVATPercent: TcxCurrencyEdit [29]
-    Left = 234
+    Left = 235
     Top = 175
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'

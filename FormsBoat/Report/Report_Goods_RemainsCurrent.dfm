@@ -6,7 +6,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -237
+  ExplicitLeft = -220
   ExplicitWidth = 1147
   ExplicitHeight = 563
   PixelsPerInch = 96
@@ -646,8 +646,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           object VATPercent_in: TcxGridDBColumn
             Caption = '% '#1053#1044#1057' ('#1087#1072#1088#1090#1080#1103')'
             DataBinding.FieldName = 'VATPercent_in'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

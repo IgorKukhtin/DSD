@@ -80,9 +80,6 @@ object ClientForm: TClientForm
       object TaxKind_Value: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'TaxKind_Value'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

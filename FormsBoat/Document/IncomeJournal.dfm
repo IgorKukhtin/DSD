@@ -343,9 +343,6 @@ object IncomeJournalForm: TIncomeJournalForm
       object VATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 42
@@ -1687,8 +1684,8 @@ object IncomeJournalForm: TIncomeJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 328
-    Top = 64
+    Left = 336
+    Top = 160
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

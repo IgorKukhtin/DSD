@@ -26,9 +26,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 24
-    ExplicitTop = -118
-    ExplicitWidth = 715
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -117,8 +114,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       object TaxKind_Value: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'TaxKind_Value'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

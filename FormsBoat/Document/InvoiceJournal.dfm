@@ -370,8 +370,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             Options.Editing = False
             Width = 60
