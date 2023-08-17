@@ -174,7 +174,7 @@ type
     actPrint_PP: TdsdPrintAction;
     bbPrint2: TdxBarButton;
     actPrint_Remains: TdsdPrintAction;
-    bbPrint3: TdxBarButton;
+    bbPrint_PP_3: TdxBarButton;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
     edUnitGroup_by: TcxButtonEdit;
@@ -215,6 +215,8 @@ type
     PartnerName: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    actPrint_PP_3: TdsdPrintAction;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
   public
   end;

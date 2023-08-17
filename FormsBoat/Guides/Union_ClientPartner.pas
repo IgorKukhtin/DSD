@@ -54,6 +54,24 @@ type
     dxBarButton1: TdxBarButton;
     ShowErased: TBooleanStoredProcAction;
     TaxKind_Value: TcxGridDBColumn;
+    TaxKindName_Info: TcxGridDBColumn;
+    TaxKindName_Comment: TcxGridDBColumn;
+    actInsert_client: TdsdInsertUpdateAction;
+    actUpdate_client: TdsdInsertUpdateAction;
+    actInsert_Partner: TdsdInsertUpdateAction;
+    actUpdate_partner: TdsdInsertUpdateAction;
+    spUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSubItem2: TdxBarSubItem;
+    bbtInsert_client: TdxBarButton;
+    bbUpdate_client: TdxBarButton;
+    bbInsert_Partner: TdxBarButton;
+    bbUpdate_partner: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public

@@ -9923,9 +9923,6 @@ inherited MainForm: TMainForm
       object N46: TMenuItem
         Caption = '-'
       end
-      object N39: TMenuItem
-        Action = actQuality
-      end
       object miGoodsQuality: TMenuItem
         Action = actGoodsQuality
       end
@@ -9937,6 +9934,9 @@ inherited MainForm: TMainForm
       end
       object miQualityParams: TMenuItem
         Action = actQualityParams
+      end
+      object N39: TMenuItem
+        Action = actQuality
       end
       object miQualityDoc: TMenuItem
         Action = actQualityDoc

@@ -113,7 +113,6 @@ BEGIN
     END IF;
 
 
-
     IF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY') AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594', '140094')
          AND ((1+7)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
            OR (10+8) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
@@ -440,8 +439,8 @@ BEGIN
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
             , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-            , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE gpReport.GoodsKindId END AS GoodsKindId
-            , STRING_AGG (DISTINCT gpReport.GoodsKindName, ' ;' ) ::TVarChar AS GoodsKindName
+            , CASE WHEN COALESCE (inIsGoodsKind, FALSE) = FALSE THEN 0 ELSE gpReport.GoodsKindId END AS GoodsKindId
+            , STRING_AGG (COALESCE (gpReport.GoodsKindName,'') , '; ') ::TVarChar AS GoodsKindName
             , gpReport.MeasureName
             , gpReport.TradeMarkId, gpReport.TradeMarkName
             , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
@@ -462,11 +461,22 @@ BEGIN
             , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
             , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
 
-            , SUM (gpReport.Promo_Summ) :: TFloat AS Promo_Summ, SUM (gpReport.Sale_Summ) :: TFloat AS Sale_Summ, SUM (gpReport.Sale_SummReal) :: TFloat AS Sale_SummReal, SUM (gpReport.Sale_Summ_10200) :: TFloat AS Sale_Summ_10200, SUM (gpReport.Sale_Summ_10250) :: TFloat AS Sale_Summ_10250, SUM (gpReport.Sale_Summ_10300) :: TFloat AS Sale_Summ_10300
-            , SUM (gpReport.Promo_SummCost) :: TFloat AS Promo_SummCost, SUM (gpReport.Sale_SummCost) :: TFloat AS Sale_SummCost, SUM (gpReport.Sale_SummCost_10500) :: TFloat AS Sale_SummCost_10500, SUM (gpReport.Sale_SummCost_40200) :: TFloat AS Sale_SummCost_40200
+            , SUM (gpReport.Promo_Summ) :: TFloat AS Promo_Summ
+            , SUM (gpReport.Sale_Summ) :: TFloat AS Sale_Summ
+            , SUM (gpReport.Sale_SummReal) :: TFloat AS Sale_SummReal
+            , SUM (gpReport.Sale_Summ_10200) :: TFloat AS Sale_Summ_10200
+            , SUM (gpReport.Sale_Summ_10250) :: TFloat AS Sale_Summ_10250
+            , SUM (gpReport.Sale_Summ_10300) :: TFloat AS Sale_Summ_10300
+            , SUM (gpReport.Promo_SummCost) :: TFloat AS Promo_SummCost
+            , SUM (gpReport.Sale_SummCost) :: TFloat AS Sale_SummCost
+            , SUM (gpReport.Sale_SummCost_10500) :: TFloat AS Sale_SummCost_10500
+            , SUM (gpReport.Sale_SummCost_40200) :: TFloat AS Sale_SummCost_40200
             , SUM (gpReport.Sale_Amount_Weight) :: TFloat AS Sale_Amount_Weight, SUM (gpReport.Sale_Amount_Sh) :: TFloat AS Sale_Amount_Sh
-            , SUM (gpReport.Promo_AmountPartner_Weight) :: TFloat AS Promo_AmountPartner_Weight, SUM (gpReport.Promo_AmountPartner_Sh) :: TFloat AS Promo_AmountPartner_Sh, SUM (gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_AmountPartner_Weight, SUM (gpReport.Sale_AmountPartner_Sh) :: TFloat AS Sale_AmountPartner_Sh, SUM (gpReport.Sale_AmountPartnerR_Weight) :: TFloat AS Sale_AmountPartnerR_Weight, SUM (gpReport.Sale_AmountPartnerR_Sh) :: TFloat AS Sale_AmountPartnerR_Sh
-            , SUM (gpReport.Return_Summ) :: TFloat AS Return_Summ, SUM (gpReport.Return_Summ_10300) :: TFloat AS Return_Summ_10300, SUM (gpReport.Return_Summ_10700) :: TFloat AS Return_Summ_10700, SUM (gpReport.Return_SummCost) :: TFloat AS Return_SummCost, SUM (gpReport.Return_SummCost_40200) :: TFloat AS Return_SummCost_40200
+            , SUM (gpReport.Promo_AmountPartner_Weight) :: TFloat AS Promo_AmountPartner_Weight, SUM (gpReport.Promo_AmountPartner_Sh) :: TFloat AS Promo_AmountPartner_Sh
+            , SUM (gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_AmountPartner_Weight, SUM (gpReport.Sale_AmountPartner_Sh) :: TFloat AS Sale_AmountPartner_Sh
+            , SUM (gpReport.Sale_AmountPartnerR_Weight) :: TFloat AS Sale_AmountPartnerR_Weight, SUM (gpReport.Sale_AmountPartnerR_Sh) :: TFloat AS Sale_AmountPartnerR_Sh
+            , SUM (gpReport.Return_Summ) :: TFloat AS Return_Summ, SUM (gpReport.Return_Summ_10300) :: TFloat AS Return_Summ_10300
+            , SUM (gpReport.Return_Summ_10700) :: TFloat AS Return_Summ_10700, SUM (gpReport.Return_SummCost) :: TFloat AS Return_SummCost, SUM (gpReport.Return_SummCost_40200) :: TFloat AS Return_SummCost_40200
             , SUM (gpReport.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight, SUM (gpReport.Return_Amount_Sh) :: TFloat AS Return_Amount_Sh, SUM (gpReport.Return_AmountPartner_Weight) :: TFloat AS Return_AmountPartner_Weight, SUM (gpReport.Return_AmountPartner_Sh) :: TFloat AS Return_AmountPartner_Sh
             , SUM (gpReport.Sale_Amount_10500_Weight) :: TFloat AS Sale_Amount_10500_Weight
             , SUM (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
@@ -478,8 +488,8 @@ BEGIN
             , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
             , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
             
-            , CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END ::TFloat AS Count_TT 
-            , gpReport.isTop
+            , sum(CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END) ::TFloat AS Count_TT 
+            , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.isTop ELSE FALSE END ::Boolean AS isTop
             
             , gpReport.PaidKindId
             , gpReport.PaidKindName
@@ -506,7 +516,7 @@ BEGIN
 
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-              , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE gpReport.GoodsKindId END
+              , CASE WHEN COALESCE (inIsGoodsKind, FALSE) = FALSE THEN 0 ELSE gpReport.GoodsKindId END
               --, gpReport.GoodsKindName
               , gpReport.MeasureName
               , gpReport.TradeMarkId, gpReport.TradeMarkName
@@ -525,14 +535,14 @@ BEGIN
               , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
               , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
               , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
-              , gpReport.isTop
+              , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.isTop ELSE FALSE END
               , gpReport.PaidKindId
               , gpReport.PaidKindName
               , gpReport.OperDate
               , gpReport.DayOfWeekName_Full
               , Object_Section.Id
               , Object_Section.ValueData
-              , CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END
+              --, CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END
                ;
        --
        RETURN;
@@ -769,7 +779,7 @@ BEGIN
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
                               
                               , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
-                              , STRING_AGG (DISTINCT Object_GoodsKind.ValueData, ' ;') ::TVarChar AS GoodsKindName
+                              , STRING_AGG (DISTINCT COALESCE (Object_GoodsKind.ValueData,''), '; ') ::TVarChar AS GoodsKindName
  
                               , ContainerLO_PaidKind.ObjectId AS PaidKindId
                               , tmpOperationGroup2.OperDate
@@ -808,7 +818,7 @@ BEGIN
                               , SUM (tmpOperationGroup2.Return_SummCost) AS Return_SummCost
                               , SUM (tmpOperationGroup2.Return_SummCost_40200) AS Return_SummCost_40200
 
-                              , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END AS Count_TT
+                              , SUM (CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END) AS Count_TT
                          FROM tmpOperationGroup2
                               LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
                                                             ON ContainerLinkObject_Contract.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
@@ -845,7 +855,7 @@ BEGIN
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                                 , ContainerLO_PaidKind.ObjectId
                                 , tmpOperationGroup2.OperDate
-                                , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
+                               -- , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
                         )
 
            -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
