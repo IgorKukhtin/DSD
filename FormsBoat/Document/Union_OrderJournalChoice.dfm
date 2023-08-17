@@ -6,25 +6,27 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1044
-  ExplicitHeight = 391
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 87
     Width = 1028
-    Height = 299
+    Height = 269
     TabOrder = 3
+    ExplicitTop = 87
     ExplicitWidth = 1028
-    ExplicitHeight = 299
-    ClientRectBottom = 299
+    ExplicitHeight = 269
+    ClientRectBottom = 269
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 299
+      ExplicitHeight = 269
       inherited cxGrid: TcxGrid
         Width = 1028
-        Height = 299
+        Height = 269
         ExplicitWidth = 1028
-        ExplicitHeight = 299
+        ExplicitHeight = 269
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -140,6 +142,30 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 52
+          end
+          object TaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object TaxKindName_info: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKindName_info'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object TaxKindName_Comment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKindName_Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -332,7 +358,9 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   end
   inherited Panel: TPanel
     Width = 1028
+    Height = 61
     ExplicitWidth = 1028
+    ExplicitHeight = 61
     inherited deStart: TcxDateEdit
       EditValue = 44197d
     end
@@ -354,6 +382,27 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
         end>
       TabOrder = 5
       Width = 230
+    end
+    object edSearchInvNumber: TcxTextEdit
+      Left = 95
+      Top = 33
+      TabOrder = 6
+      DesignSize = (
+        115
+        21)
+      Width = 115
+    end
+    object lbSearchCode: TcxLabel
+      Left = 10
+      Top = 32
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -957,6 +1006,113 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           ComponentItem = 'Comment'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName_info'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName_info'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName_comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName_comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSumm_debet'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TotalSumm_debet'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSumm_credit'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TotalSumm_credit'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProductId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProductName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1082,9 +1238,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
-    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -1107,6 +1260,10 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     OnDblClickActionList = <
       item
       end>
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 192
+    Top = 160
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1273,5 +1430,18 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       end>
     Left = 624
     Top = 3
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchInvNumber
+    DataSet = MasterCDS
+    Column = colInvNumber
+    ColumnList = <
+      item
+        Column = colInvNumber
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 496
+    Top = 216
   end
 end
