@@ -17,6 +17,8 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ReportExternal());
 
+      RETURN;
+
       RETURN QUERY
         SELECT 0
              , 0 AS Code
@@ -37,5 +39,4 @@ $BODY$
 */
 
 -- тест
--- update Object set ValueData = '' where Id = 1208446
 -- SELECT * FROM gpSelect_Object_ReportLocalService (inSession:= zfCalc_UserAdmin())
