@@ -19,7 +19,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dsdGuides, cxMaskEdit, cxButtonEdit, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
+  cxPC;
 
 type
   TClientEditForm = class(TParentForm)
@@ -46,7 +47,6 @@ type
     ceDayCalendar: TcxCurrencyEdit;
     ceDayBank: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
-    cxLabel4: TcxLabel;
     edFax: TcxTextEdit;
     cxLabel5: TcxLabel;
     edPhone: TcxTextEdit;
@@ -93,6 +93,10 @@ type
     cxLabel14: TcxLabel;
     GuidesPLZ: TdsdGuides;
     cxLabel24: TcxLabel;
+    cxPageControl1: TcxPageControl;
+    Main: TcxTabSheet;
+    Detail: TcxTabSheet;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

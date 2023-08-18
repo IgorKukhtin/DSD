@@ -19,7 +19,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dsdGuides, cxMaskEdit, cxButtonEdit, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
+  cxPC;
 
 type
   TPartnerEditForm = class(TParentForm)
@@ -50,11 +51,9 @@ type
     edIBAN: TcxTextEdit;
     cxLabel8: TcxLabel;
     edStreet: TcxTextEdit;
-    cxLabel9: TcxLabel;
     edMember: TcxTextEdit;
     cxLabel10: TcxLabel;
     edWWW: TcxTextEdit;
-    cxLabel11: TcxLabel;
     edEmail: TcxTextEdit;
     cxLabel12: TcxLabel;
     edCodeDB: TcxTextEdit;
@@ -81,6 +80,17 @@ type
     cxLabel19: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxLabel11: TcxLabel;
+    cxLabel9: TcxLabel;
+    cxLabel22: TcxLabel;
+    cxLabel23: TcxLabel;
+    edCountry: TcxButtonEdit;
+    edCity: TcxButtonEdit;
+    GuidesCity: TdsdGuides;
+    GuidesCountry: TdsdGuides;
   private
     { Private declarations }
   public
