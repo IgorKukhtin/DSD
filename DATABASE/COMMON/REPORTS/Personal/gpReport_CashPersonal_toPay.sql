@@ -83,6 +83,7 @@ BEGIN
                            -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
                       WHERE CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
                      )
+
  , tmpMovement AS (SELECT MIContainer.MovementId
                         , MIContainer.MovementDescId
                         , CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN NULL ELSE MIContainer.MovementId END AS MovementId_begin
@@ -114,6 +115,14 @@ BEGIN
                           , tmpContainer.PersonalServiceListId
                           , tmpContainer.BranchId
                   )
+   
+ , tmpMI_begin AS (SELECT MI_Master.*
+                   FROM MovementItem  AS MI_Master
+                   WHERE MI_Master.MovementId IN (SELECT DISTINCT tmpMovement.MovementId_begin FROM tmpMovement)
+                     AND MI_Master.DescId     = zc_MI_Master()
+                     AND MI_Master.isErased   = FALSE                
+                   )  
+
     --
     SELECT tmpMovement.MovementId
          , Movement.ParentId
@@ -190,9 +199,8 @@ BEGIN
                                  ON ObjectBoolean_Official.ObjectId = vbMemberId
                                 AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
 
-         LEFT JOIN MovementItem AS MI_Master
-                                ON MI_Master.MovementId = tmpMovement.MovementId_begin
-                               AND MI_Master.DescId     = zc_MI_Master()
+         LEFT JOIN tmpMI_begin AS MI_Master ON MI_Master.MovementId = tmpMovement.MovementId_begin
+
          LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                           ON MILinkObject_MoneyPlace.MovementItemId = MI_Master.Id
                                          AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()

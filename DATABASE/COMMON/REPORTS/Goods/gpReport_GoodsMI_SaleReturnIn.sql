@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_SaleReturnIn() - Рабочая версия
+ -- Function: gpReport_GoodsMI_SaleReturnIn() - Рабочая версия
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
@@ -302,7 +302,10 @@ BEGIN
        WITH -- данные только из олап
             tmpReport_olap AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
                                     , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-                                    , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+                                    , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindId   ELSE 0 END AS GoodsKindId
+                                    , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE '' END AS GoodsKindName
+                                    , gpReport.GoodsKindName AS GoodsKindName_str_agg
+                                    , gpReport.MeasureName
                                     , gpReport.TradeMarkId, gpReport.TradeMarkName
                                     , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
                                     , gpReport.GoodsPlatformName
@@ -368,7 +371,10 @@ BEGIN
            -- данные из проводок - открываются долго, по идее здесь будет 1 день
          , tmpReport_after AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
                                     , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-                                    , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
+                                    , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindId   ELSE 0 END AS GoodsKindId
+                                    , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE '' END AS GoodsKindName
+                                    , gpReport.GoodsKindName AS GoodsKindName_str_agg
+                                    , gpReport.MeasureName
                                     , gpReport.TradeMarkId, gpReport.TradeMarkName
                                     , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
                                     , gpReport.GoodsPlatformName
@@ -439,8 +445,8 @@ BEGIN
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
             , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-            , CASE WHEN COALESCE (inIsGoodsKind, FALSE) = FALSE THEN 0 ELSE gpReport.GoodsKindId END AS GoodsKindId
-            , STRING_AGG (COALESCE (gpReport.GoodsKindName,'') , '; ') ::TVarChar AS GoodsKindName
+            , gpReport.GoodsKindId :: Integer AS GoodsKindId
+            , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE STRING_AGG (COALESCE (gpReport.GoodsKindName_str_agg,'') , '; ') END ::TVarChar AS GoodsKindName
             , gpReport.MeasureName
             , gpReport.TradeMarkId, gpReport.TradeMarkName
             , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
@@ -516,8 +522,8 @@ BEGIN
 
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
-              , CASE WHEN COALESCE (inIsGoodsKind, FALSE) = FALSE THEN 0 ELSE gpReport.GoodsKindId END
-              --, gpReport.GoodsKindName
+              , gpReport.GoodsKindId
+              , gpReport.GoodsKindName
               , gpReport.MeasureName
               , gpReport.TradeMarkId, gpReport.TradeMarkName
               , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
@@ -778,8 +784,9 @@ BEGIN
                               , _tmpGoods.TradeMarkId
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
                               
-                              , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
-                              , STRING_AGG (DISTINCT COALESCE (Object_GoodsKind.ValueData,''), '; ') ::TVarChar AS GoodsKindName
+                              , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId   ELSE 0  END AS GoodsKindId
+                              , CASE WHEN inIsGoodsKind = TRUE THEN Object_GoodsKind.ValueData       ELSE '' END AS GoodsKindName
+                              , STRING_AGG (DISTINCT COALESCE (Object_GoodsKind.ValueData,''), '; ')             AS GoodsKindName_str_agg
  
                               , ContainerLO_PaidKind.ObjectId AS PaidKindId
                               , tmpOperationGroup2.OperDate
@@ -852,7 +859,8 @@ BEGIN
                                 , tmpOperationGroup2.BusinessId
                                 , _tmpGoods.TradeMarkId
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
-                                , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
+                                , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId   ELSE 0  END
+                                , CASE WHEN inIsGoodsKind = TRUE THEN Object_GoodsKind.ValueData       ELSE '' END
                                 , ContainerLO_PaidKind.ObjectId
                                 , tmpOperationGroup2.OperDate
                                -- , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
@@ -875,8 +883,8 @@ BEGIN
           , Object_Goods.ValueData             AS GoodsName
           --, Object_GoodsKind.Id                AS GoodsKindId
           --, Object_GoodsKind.ValueData         AS GoodsKindName
-          , tmpOperationGroup.GoodsKindId    ::Integer
-          , tmpOperationGroup.GoodsKindName  ::TVarChar
+          , tmpOperationGroup.GoodsKindId    ::Integer AS GoodsKindId
+          , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup.GoodsKindName ELSE tmpOperationGroup.GoodsKindName_str_agg END :: TVarChar AS GoodsKindName
           , Object_Measure.ValueData           AS MeasureName
           , Object_TradeMark.Id                AS TradeMarkId
           , Object_TradeMark.ValueData         AS TradeMarkName

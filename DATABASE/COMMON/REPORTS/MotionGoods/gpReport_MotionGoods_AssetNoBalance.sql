@@ -395,7 +395,7 @@ BEGIN
         , ObjectFloat_Weight.ValueData   AS Weight
 
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)              AS PartionGoodsId
-        , COALESCE (ObjectString_Asset_InvNumber.ValueData, '') :: TVarChar AS PartionGoodsName
+        , COALESCE ( ObjectString_Asset_InvNumber.ValueData, Object_PartionGoods.ValueData,'') :: TVarChar AS PartionGoodsName
         , COALESCE(ObjectDate_PartionGoods_Value.ValueData,Null) ::TDateTime AS PartionGoodsDate   --дата ввода в эксплуатацию
         , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
 
