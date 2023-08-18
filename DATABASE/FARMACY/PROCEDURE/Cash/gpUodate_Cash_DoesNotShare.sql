@@ -30,7 +30,7 @@ BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
 
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_DoesNotShare(), inGoodsID, inDoesNotShare);
+   /*PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_DoesNotShare(), inGoodsID, inDoesNotShare);
 
     -- Сохранили в плоскую таблицй
    BEGIN
@@ -43,7 +43,7 @@ BEGIN
    END;
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inGoodsID, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inGoodsID, vbUserId);*/
    
    PERFORM gpInsertUpdate_Object_GoodsDivisionLock(ioId       := 0
                                                  , inGoodsId  := inGoodsID

@@ -123,6 +123,7 @@ begin
   // !!! Real
   ConnectionPath := '..\INIT\farmacy_init.php';
   gc_ProgramName := 'Farmacy.exe';
+  isRunReport524 := True;
   dsdProject := prFarmacy;
   // !!! DEMO
   // ConnectionPath := 'Demo.php';
@@ -149,8 +150,7 @@ begin
         if isUserRole('Инвентаризация', True) then
           TUpdater.AutomaticDownloadFarmacyInventory(ExtractFilePath(ParamStr(0)), False);
         TUpdater.AutomaticUpdateProgram;
-        if not FindCmdLineSwitch('skipcheckconnect') and
-          (Pos(AnsiUpperCase('https://f.neboley.dp.ua'), AnsiUpperCase(TStorageFactory.GetStorage.Connection)) = 0) then
+        if not FindCmdLineSwitch('skipcheckconnect') then
            TUpdater.AutomaticCheckConnect;
         //
         Application.CreateForm(TdmMain, dmMain);

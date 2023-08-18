@@ -98,7 +98,7 @@ BEGIN
                                                   , inChangePercent       := COALESCE(MovementItem_Check_View.ChangePercent, 0)      -- % Скидки
                                                   , inSummChangePercent   := COALESCE(MovementItem_Check_View.SummChangePercent, 0)  -- Сумма Скидки
                                                   , inPartionDateKindID   := MILO_PartionDateKind.ObjectId         -- Тип срок/не срок
-                                                  , inPricePartionDate    := MIFloat_PricePartionDate.ValueData    -- Цена отпускная согласно срока
+                                                  , inPricePartionDate    := COALESCE(MIFloat_PricePartionDate.ValueData, 0)    -- Цена отпускная согласно срока
                                                   , inNDSKindId           := MovementItem_Check_View.NDSKindId     -- Ставка НДС
                                                   , inDiscountExternalId  := MILO_DiscountExternal.ObjectId        -- Проект дисконтных карт
                                                   , inDivisionPartiesID   := MILO_DivisionParties.ObjectId         -- Разделение партий в кассе для продажи
@@ -175,5 +175,4 @@ $BODY$
  16.08.21                                                       *    
 */
 -- тест
--- 
-select * from gpSelect_Movement_Check_Recreating(inMovementId := 31580628  ,  inSession := '3');
+-- select * from gpSelect_Movement_Check_Recreating(inMovementId := 31580628  ,  inSession := '3');

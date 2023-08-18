@@ -709,6 +709,19 @@ BEGIN
                                                                    AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
                                        WHERE COALESCE(tmpGoodsDiscount.DiscountProcent, 0) > 0                                        
                                        )
+           , tmpGoodsDivisionLock AS (SELECT ObjectLink_GoodsDivisionLock_Goods.ChildObjectId  AS GoodsId
+                                           , ObjectBoolean_GoodsDivisionLock_Lock.ValueData    AS isLock
+                                      FROM ObjectLink AS ObjectLink_GoodsDivisionLock_Unit
+                                           INNER JOIN ObjectLink AS ObjectLink_GoodsDivisionLock_Goods
+                                                                 ON ObjectLink_GoodsDivisionLock_Goods.ObjectId = ObjectLink_GoodsDivisionLock_Unit.ObjectId
+                                                                AND ObjectLink_GoodsDivisionLock_Goods.DescId = zc_ObjectLink_GoodsDivisionLock_Goods()
+                                           INNER JOIN ObjectBoolean AS ObjectBoolean_GoodsDivisionLock_Lock
+                                                                    ON ObjectBoolean_GoodsDivisionLock_Lock.ObjectId  = ObjectLink_GoodsDivisionLock_Unit.ObjectId
+                                                                   AND ObjectBoolean_GoodsDivisionLock_Lock.DescId    = zc_ObjectBoolean_GoodsDivisionLock_Lock()
+                                                                   AND ObjectBoolean_GoodsDivisionLock_Lock.ValueData = True
+                                      WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
+                                        AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
+                                      )
 
        -- Результат
        SELECT
@@ -741,7 +754,7 @@ BEGIN
              END  AS Color_CalcError
            , Object_Accommodation.ValueData                                      AS AccommodationName
            , Null::TFloat                                                        AS Multiplicity
-           , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)                  AS DoesNotShare
+           , COALESCE (tmpGoodsDivisionLock.isLock, FALSE)                       AS DoesNotShare
            , Null::TVArChar                                                      AS IdSP
            , Null::TVArChar                                                      AS ProgramIdSP
            , Null::TFloat                                                        AS CountSP
@@ -864,6 +877,8 @@ BEGIN
           LEFT JOIN Object AS Object_CommentCheck ON Object_CommentCheck.Id = MILinkObject_CommentCheck.ObjectId
 
           LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = MovementItem.ObjectId 
+
+          LEFT JOIN tmpGoodsDivisionLock ON tmpGoodsDivisionLock.GoodsId =  MovementItem.ObjectId
 
        WHERE Movement.isDeferred = True
          AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType = 3 AND Movement.isShowLiki24 = TRUE)

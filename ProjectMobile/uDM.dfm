@@ -531,6 +531,9 @@ object DM: TDM
     object tblObject_PriceListItemsGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
+    object tblObject_PriceListItemsGoodsKindId: TIntegerField
+      FieldName = 'GoodsKindId'
+    end
     object tblObject_PriceListItemsPriceListId: TIntegerField
       FieldName = 'PriceListId'
     end

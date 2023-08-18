@@ -14,6 +14,7 @@ var
   ConnectionPath: string = '..\init\init.php';
   SQLiteFile: string = '';
   LocalFCSStart: string = '';
+  isRunReport524: boolean = False;
 
 //  EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
 //  ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';

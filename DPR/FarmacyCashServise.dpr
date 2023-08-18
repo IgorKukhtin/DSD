@@ -91,6 +91,7 @@ begin
   ConnectionPath := '..\INIT\farmacy_init.php';
   SQLiteFile := iniLocalDataBaseSQLite;
   dsdProject := prFarmacy;
+  isRunReport524 := True;
   gc_ProgramName := 'FarmacyCashServise.exe';
 
   TdsdApplication.Create;
