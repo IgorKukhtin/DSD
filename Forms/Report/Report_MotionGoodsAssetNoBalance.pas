@@ -215,8 +215,10 @@ type
     PartnerName: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
-    actPrint_PP_3: TdsdPrintAction;
+    actPrint_PP_3_2: TdsdPrintAction;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    actPrint_PP_3_3: TdsdPrintAction;
+    bbPrint_PP_3_3: TdxBarButton;
   private
   public
   end;

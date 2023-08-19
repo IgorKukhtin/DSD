@@ -58,7 +58,9 @@ BEGIN
    -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),       inDescId:= zc_Object_GlobalConst(), inCode:= 1001,  inName:= '', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
    -- CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectReportParam()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectReportParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
    -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectReportParam(), inDescId:= zc_Object_GlobalConst(), inCode:= 1002, inName:= '', inEnumName:= 'zc_Enum_GlobalConst_ConnectReportParam');
-
+-- CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectStoredProcParam()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectStoredProcParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+   -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectStoredProcParam(), inDescId:= zc_Object_GlobalConst(), inCode:= 1003, inName:= '', inEnumName:= 'zc_Enum_GlobalConst_ConnectStoredProcParam');
+   
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_BankAccountDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'Банковская выписка актуальна на: ', inEnumName:= 'zc_Enum_GlobalConst_BankAccountDate');
 
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_IntegerDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'актуальность данных Integer', inEnumName:= 'zc_Enum_GlobalConst_IntegerDate');

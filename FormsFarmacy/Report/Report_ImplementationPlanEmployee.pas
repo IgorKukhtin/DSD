@@ -31,7 +31,7 @@ uses
   cxButtonEdit, cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
-  TReport_ImplementationPlanEmployeeForm = class(TForm)
+  TReport_ImplementationPlanEmployeeForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -126,7 +126,6 @@ type
     cdsResultTotalExecutionAllLine: TCurrencyField;
     cdsResultAwarding: TStringField;
     cdsResultTotal: TCurrencyField;
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
     procedure FormCreate(Sender: TObject);
@@ -154,6 +153,8 @@ type
     procedure cbHighlightStringsClick(Sender: TObject);
     procedure cbFilter1Click(Sender: TObject);
     procedure ClientDataSetFilterRecord(DataSet: TDataSet; var Accept: Boolean);
+  protected
+    procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
     FUnit : TStrings;
     FUnitCategory : TStrings;
@@ -361,6 +362,12 @@ begin
       Name := 'col' + DataBinding.FieldName;
       Tag := nIndexUnit;
 
+      if I in [2, 3, 5] then
+      begin
+        Summary.FooterFormat := ',0.####';
+        Summary.FooterKind := skSum;
+      end;
+
       if I in [7, 8, 13, 14] then
       begin
         Summary.FooterFormat := ',0.00';
@@ -368,9 +375,10 @@ begin
       end;
 
       case I of
-         2 : begin
+         2, 3, 5 : begin
                PropertiesClass := TcxCurrencyEditProperties;
-               TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.000';
+               TcxCurrencyEditProperties(Properties).DecimalPlaces := 4;
+               TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.####';
              end;
         else
         begin
@@ -957,9 +965,12 @@ begin
   AText := IntToStr(ClientDataSet.RecordCount - FCountO);
 end;
 
-procedure TReport_ImplementationPlanEmployeeForm.FormClose(Sender: TObject;
-  var Action: TCloseAction);
+
+procedure TReport_ImplementationPlanEmployeeForm.FormClose(Sender: TObject; var Action: TCloseAction);
+var i: integer;
+    DataSetList: TList;
 begin
+  inherited;
   UserSettingsStorageAddOn.SaveUserSettings;
   Action:=caFree;
 end;

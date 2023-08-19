@@ -355,6 +355,12 @@ begin
       Name := 'col' + DataBinding.FieldName;
       Tag := nIndexUnit;
 
+      if I in [2, 3, 5] then
+      begin
+        Summary.FooterFormat := ',0.####';
+        Summary.FooterKind := skSum;
+      end;
+
       if I in [7, 8, 13, 14] then
       begin
         Summary.FooterFormat := ',0.00';
@@ -362,9 +368,10 @@ begin
       end;
 
       case I of
-         2 : begin
+         2, 3, 5 : begin
                PropertiesClass := TcxCurrencyEditProperties;
-               TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.000';
+               TcxCurrencyEditProperties(Properties).DecimalPlaces := 4;
+               TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.####';
              end;
         else
         begin

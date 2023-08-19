@@ -503,7 +503,7 @@ BEGIN
 
 -- КОНСТАНТА НИЖЕ НЕ СТАВИТСЯ АВТОМАТОМ!!! 
 --     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://farmacy.neboley.dp.ua/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
---     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectReportParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://farmacy.neboley.dp.ua/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectReportParam');
+--     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectReportParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://slave.neboley.dp.ua/index.php'\\CNR(10)\\CNR(13)\\'http://farmacy.neboley.dp.ua/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectReportParam');
 
 
 -- Константы на какую разрядность обновлять версию программы

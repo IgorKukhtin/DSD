@@ -178,7 +178,9 @@ procedure TPayPosTermProcessForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   if Assigned(FPosTermThread) and not FPosTermThread.Finished and
-    (FPosTermThread.FPosTerm.ProcessState <> ppsError) then
+    (FPosTermThread.FPosTerm.ProcessState <> ppsError) and
+    (FPosTermThread.FPosTerm.ProcessState <> ppsOkPayment) and
+    (FPosTermThread.FPosTerm.ProcessState <> ppsOkRefund) then
   begin
     if MessageDlg('Прервать оплату документа?',mtConfirmation,mbYesNo,0) <> mrYes then
     begin
@@ -192,6 +194,12 @@ begin
       ModalResult := 0;
       Exit;
     end;
+  end;
+
+  if Assigned(FPosTermThread) and (ModalResult <> mrOk) and
+    ((FPosTermThread.FPosTerm.ProcessState = ppsOkPayment) or (FPosTermThread.FPosTerm.ProcessState = ppsOkRefund)) then
+  begin
+    ModalResult := mrOk;
   end;
 
   if Assigned(FPosTermThread) then
@@ -259,6 +267,7 @@ Begin
     end;
   finally
     PosTerm.OnMsgDescriptionProc := Nil;
+    FreeAndNil(PayPosTermProcessForm);
   end;
 End;
 

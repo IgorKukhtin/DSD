@@ -14,7 +14,8 @@ uses
   FireDAC.Phys.SQLiteWrapper.Stat
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
-  Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App
+  Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App,
+  Androidapi.JNI.Support
   {$ENDIF};
 
 CONST
@@ -808,6 +809,7 @@ type
     tblObject_ConstAPIKey: TStringField;
     tblObject_ConstCriticalWeight: TFloatField;
     tblObject_PartnerisOrderMin: TBooleanField;
+    tblObject_PriceListItemsGoodsKindId: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -2250,6 +2252,8 @@ var
   {$IFDEF ANDROID}
   intent: JIntent;
   uri: Jnet_Uri;
+  LAuthority: JString;
+  lfile: JFile;
   {$ENDIF}
 begin
   Result := '';
@@ -2297,9 +2301,16 @@ begin
     Intent := TJIntent.Create;
     Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
 
-    uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName))));
+    lfile := TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName)));
+    LAuthority := TAndroidHelper.Context.getApplicationContext.getPackageName.concat(StringToJString('.fileprovider'));
+    uri := TJContent_FileProvider.JavaClass.getUriForFile(TAndroidHelper.Context, LAuthority, lfile);
+
     Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
-    Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
+    Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK
+                 or TJIntent.JavaClass.FLAG_ACTIVITY_CLEAR_TOP
+                 or TJIntent.JavaClass.FLAG_GRANT_WRITE_URI_PERMISSION
+                 or TJIntent.JavaClass.FLAG_GRANT_READ_URI_PERMISSION);
+
     TAndroidHelper.Activity.startActivity(Intent);
   except
     on E : Exception do
@@ -3917,7 +3928,7 @@ begin
        + '       , ''-''                            AS PromoPrice '
        + '       , Object_TradeMark.ValueData       AS TradeMarkName '
        + '       , Object_GoodsByGoodsKind.Remains '
-       + '       , Object_PriceListItems.OrderPrice AS Price '
+       + '       , COALESCE(Object_PriceListItems.OrderPrice, Object_PriceListItems_two.OrderPrice, 0.0) AS Price '
        + '       , Object_Measure.ValueData         AS Measure '
        + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' ||  '
        + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
@@ -3930,7 +3941,14 @@ begin
        + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
        + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
        + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID  '
+       + '                                        AND Object_PriceListItems.GoodsKindId = Object_GoodsByGoodsKind.GoodsKindId '
+       + '                                        AND COALESCE(Object_GoodsByGoodsKind.GoodsKindId, 0) <> 0 '
        + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
+       + '       LEFT JOIN Object_PriceListItems   AS Object_PriceListItems_two '
+       + '                                         ON Object_PriceListItems_two.GoodsId     = Object_Goods.ID  '
+       + '                                        AND Object_PriceListItems.GoodsId IS NULL '
+       + '                                        AND COALESCE(Object_PriceListItems_two.GoodsKindId, 0) = 0 '
+       + '                                        AND Object_PriceListItems_two.PriceListId = :PRICELISTID '
        + ' WHERE Object_GoodsByGoodsKind.isErased = 0  '
        + ' ORDER BY GoodsName ';
 
@@ -4497,7 +4515,7 @@ begin
      + '       ''-1;'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' ||  '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' ||  '
      + '       IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || Object_GoodsListSale.AmountCalc || '';'' || IFNULL(MovementItem_StoreReal.Amount, 0) || '';'' ||  '
-     + '       IFNULL(Object_PriceListItems.' + PriceField + ', 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' ||  '
+     + '       IFNULL(COALESCE(Object_PriceListItems.' + PriceField + ', Object_PriceListItems_two.' + PriceField + '), 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' ||  '
      + '       IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' ||  '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0'' '
      + ' FROM  Object_GoodsListSale  '
@@ -4511,8 +4529,15 @@ begin
      + '                                          AND MovementItem_StoreReal.MovementId      = Movement_StoreReal.Id '
      + '       LEFT JOIN Object_Measure            ON Object_Measure.Id                      = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark          ON Object_TradeMark.Id                    = Object_Goods.TradeMarkId '
-     + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.Id  '
-     + '                                          AND Object_PriceListItems.PriceListId      = :PRICELISTID '
+     + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
+     + '                                          AND Object_PriceListItems.GoodsKindId      = Object_GoodsListSale.GoodsKindId '
+     + '                                          AND COALESCE(Object_GoodsListSale.GoodsKindId, 0) <> 0 '
+     + '                                          AND Object_PriceListItems.PriceListId = :PRICELISTID '
+     + '       LEFT JOIN Object_PriceListItems     AS Object_PriceListItems_two '
+     + '                                           ON Object_PriceListItems_two.GoodsId      = Object_Goods.ID  '
+     + '                                          AND Object_PriceListItems.GoodsId IS NULL '
+     + '                                          AND COALESCE(Object_PriceListItems_two.GoodsKindId, 0) = 0 '
+     + '                                          AND Object_PriceListItems_two.PriceListId  = :PRICELISTID '
      + '       LEFT JOIN (SELECT MovementItem_PromoPartner.MovementId, MovementItem_PromoGoods.PriceWithVAT, MovementItem_PromoGoods.PriceWithOutVAT '
      + '                       , MovementItem_PromoGoods.GoodsId, MovementItem_PromoGoods.GoodsKindId '
      + '                  FROM MovementItem_PromoPartner  '
@@ -4598,7 +4623,7 @@ begin
      + '       MovementItem_OrderExternal.ID || '';'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || '
      + '       IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || 0 || '';'' || IFNULL(MovementItem_StoreReal.Amount, 0) || '';'' || '
-     + '       IFNULL(Object_PriceListItems.' + PriceField + ', 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+     + '       IFNULL(COALESCE(Object_PriceListItems.' + PriceField + ', Object_PriceListItems_two.' + PriceField + '), 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
      + '       IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' || '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_OrderExternal.Amount '
      + ' FROM  MovementItem_OrderExternal  '
@@ -4613,7 +4638,14 @@ begin
      + '       LEFT JOIN Object_Measure            ON Object_Measure.ID                      = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark          ON Object_TradeMark.ID                    = Object_Goods.TradeMarkId '
      + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
-     + '                                          AND Object_PriceListItems.PriceListId      = :PRICELISTID '
+     + '                                          AND Object_PriceListItems.GoodsKindId      = MovementItem_OrderExternal.GoodsKindId '
+     + '                                          AND COALESCE(MovementItem_OrderExternal.GoodsKindId, 0) <> 0 '
+     + '                                          AND Object_PriceListItems.PriceListId = :PRICELISTID '
+     + '       LEFT JOIN Object_PriceListItems     AS Object_PriceListItems_two '
+     + '                                           ON Object_PriceListItems_two.GoodsId      = Object_Goods.ID  '
+     + '                                          AND Object_PriceListItems.GoodsId IS NULL '
+     + '                                          AND COALESCE(Object_PriceListItems_two.GoodsKindId, 0) = 0 '
+     + '                                          AND Object_PriceListItems_two.PriceListId  = :PRICELISTID '
      + '       LEFT JOIN (SELECT MovementItem_PromoPartner.MovementId, MovementItem_PromoGoods.PriceWithVAT, MovementItem_PromoGoods.PriceWithOutVAT '
      + '                       , MovementItem_PromoGoods.GoodsId, MovementItem_PromoGoods.GoodsKindId '
      + '                  FROM MovementItem_PromoPartner  '
@@ -4686,11 +4718,11 @@ begin
        + '       , IFNULL(' + PromoPriceField + ' || '''', ''-'')      AS PromoPrice '
        + '       , Object_TradeMark.ValueData                          AS TradeMarkName '
        + '       , Object_GoodsByGoodsKind.Remains '
-       + '       , Object_PriceListItems.' + PriceField + '            AS Price '
+       + '       , COALESCE(Object_PriceListItems.' + PriceField + ', Object_PriceListItems_two.' + PriceField + ', 0.0) AS Price '
        + '       , Object_Measure.ValueData                            AS Measure '
        + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
        + '         CAST(Object_Goods.ObjectCode as VarChar) || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || 0 || '';'' || 0 || '';'' || '
-       + '         IFNULL(Object_PriceListItems.' + PriceField + ', ''0'') || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+       + '         IFNULL(COALESCE(Object_PriceListItems.' + PriceField + ', Object_PriceListItems_two.' + PriceField + '), ''0'') || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
        + '         IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' || '
        + '         IFNULL(Object_TradeMark.ValueData, '''') || '';0''  AS FullInfo '
        + '       , CAST(Object_Goods.ObjectCode as VarChar) || '' '' || Object_Goods.ValueData || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END  AS SearchName '
@@ -4700,8 +4732,15 @@ begin
        + '       LEFT JOIN Object_GoodsKind           ON Object_GoodsKind.ID                    = Object_GoodsByGoodsKind.GoodsKindId '
        + '       LEFT JOIN Object_Measure             ON Object_Measure.ID                      = Object_Goods.MeasureId '
        + '       LEFT JOIN Object_TradeMark           ON Object_TradeMark.ID                    = Object_Goods.TradeMarkId '
-       + '       LEFT JOIN Object_PriceListItems      ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
-       + '                                           AND Object_PriceListItems.PriceListId      = :PRICELISTID '
+       + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId             = Object_Goods.ID  '
+       + '                                        AND Object_PriceListItems.GoodsKindId         = Object_GoodsByGoodsKind.GoodsKindId '
+       + '                                        AND COALESCE(Object_GoodsByGoodsKind.GoodsKindId, 0) <> 0 '
+       + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
+       + '       LEFT JOIN Object_PriceListItems   AS Object_PriceListItems_two '
+       + '                                         ON Object_PriceListItems_two.GoodsId         = Object_Goods.ID  '
+       + '                                        AND Object_PriceListItems.GoodsId IS NULL '
+       + '                                        AND COALESCE(Object_PriceListItems_two.GoodsKindId, 0) = 0 '
+       + '                                        AND Object_PriceListItems_two.PriceListId =   :PRICELISTID '
        + '       LEFT JOIN (SELECT MovementItem_PromoPartner.MovementId, MovementItem_PromoGoods.PriceWithVAT, MovementItem_PromoGoods.PriceWithOutVAT '
        + '                       , MovementItem_PromoGoods.GoodsId, MovementItem_PromoGoods.GoodsKindId '
        + '                  FROM MovementItem_PromoPartner  '
@@ -5294,15 +5333,22 @@ begin
        ' SELECT '
      + '       ''-1;'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
-     + '       IFNULL(Object_PriceListItems.ReturnPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+     + '       IFNULL(COALESCE(Object_PriceListItems.ReturnPrice, Object_PriceListItems_two.ReturnPrice), 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0;-'' '
      + ' FROM  Object_GoodsListSale  '
      + '       JOIN Object_Goods               ON Object_GoodsListSale.GoodsId      = Object_Goods.Id '
      + '       LEFT JOIN Object_GoodsKind      ON Object_GoodsKind.Id               = Object_GoodsListSale.GoodsKindId '
      + '       LEFT JOIN Object_Measure        ON Object_Measure.Id                 = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark      ON Object_TradeMark.Id               = Object_Goods.TradeMarkId '
-     + '       LEFT JOIN Object_PriceListItems ON Object_PriceListItems.GoodsId     = Object_Goods.Id '
-     + '                                      AND Object_PriceListItems.PriceListId = :PRICELISTID '
+     + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
+     + '                                          AND Object_PriceListItems.GoodsKindId      = Object_GoodsListSale.GoodsKindId '
+     + '                                          AND COALESCE(Object_GoodsListSale.GoodsKindId, 0) <> 0 '
+     + '                                          AND Object_PriceListItems.PriceListId = :PRICELISTID '
+     + '       LEFT JOIN Object_PriceListItems     AS Object_PriceListItems_two '
+     + '                                           ON Object_PriceListItems_two.GoodsId      = Object_Goods.ID  '
+     + '                                          AND Object_PriceListItems.GoodsId IS NULL '
+     + '                                          AND COALESCE(Object_PriceListItems_two.GoodsKindId, 0) = 0 '
+     + '                                          AND Object_PriceListItems_two.PriceListId  = :PRICELISTID '
      + ' WHERE Object_GoodsListSale.PartnerId = :PARTNERID '
      + '   AND Object_GoodsListSale.isErased  = 0 '
      + ' ORDER BY Object_Goods.ValueData ';
@@ -5357,7 +5403,7 @@ begin
        ' SELECT '
      + '       MovementItem_ReturnIn.Id || '';'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
-     + '       IFNULL(MovementItem_ReturnIn.Price, IFNULL(Object_PriceListItems.ReturnPrice, 0)) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+     + '       IFNULL(MovementItem_ReturnIn.Price, IFNULL(COALESCE(Object_PriceListItems.ReturnPrice, Object_PriceListItems_two.ReturnPrice), 0)) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_ReturnIn.Amount || '';'' || '
      + '       CASE WHEN MovementItem_ReturnIn.isRecalcPrice THEN ''Пересчитано'' ELSE ''-'' END '
      + ' FROM  MovementItem_ReturnIn  '
@@ -5365,8 +5411,15 @@ begin
      + '       LEFT JOIN Object_GoodsKind      ON Object_GoodsKind.Id               = MovementItem_ReturnIn.GoodsKindId '
      + '       LEFT JOIN Object_Measure        ON Object_Measure.Id                 = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark      ON Object_TradeMark.Id               = Object_Goods.TradeMarkId '
-     + '       LEFT JOIN Object_PriceListItems ON Object_PriceListItems.GoodsId     = Object_Goods.Id  '
-     + '                                      AND Object_PriceListItems.PriceListId = :PRICELISTID '
+     + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
+     + '                                          AND Object_PriceListItems.GoodsKindId      = MovementItem_ReturnIn.GoodsKindId '
+     + '                                          AND COALESCE(MovementItem_ReturnIn.GoodsKindId, 0) <> 0 '
+     + '                                          AND Object_PriceListItems.PriceListId = :PRICELISTID '
+     + '       LEFT JOIN Object_PriceListItems     AS Object_PriceListItems_two '
+     + '                                           ON Object_PriceListItems_two.GoodsId      = Object_Goods.ID  '
+     + '                                          AND Object_PriceListItems.GoodsId IS NULL '
+     + '                                          AND COALESCE(Object_PriceListItems_two.GoodsKindId, 0) = 0 '
+     + '                                          AND Object_PriceListItems_two.PriceListId  = :PRICELISTID '
      + ' WHERE MovementItem_ReturnIn.MovementId = ' + IntToStr(AId)
      + ' ORDER BY Object_Goods.ValueData ';
 
@@ -5409,11 +5462,11 @@ begin
        + '       , ''-''                             AS PromoPrice '
        + '       , Object_TradeMark.ValueData        AS TradeMarkName '
        + '       , Object_GoodsByGoodsKind.Remains '
-       + '       , Object_PriceListItems.ReturnPrice  AS PRICE '
+       + '       , COALESCE(Object_PriceListItems.ReturnPrice, Object_PriceListItems_two.ReturnPrice, 0.0) AS PRICE '
        + '       , Object_Measure.ValueData          AS MEASURE '
        + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
        + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
-       + '         IFNULL(Object_PriceListItems.OrderPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || '
+       + '         IFNULL(COALESCE(Object_PriceListItems.OrderPrice, Object_PriceListItems_two.OrderPrice), 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || '
        + '         Object_Goods.Weight || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0'' AS FullInfo '
        + '       , Object_Goods.ValueData || '';0''  AS SearchName '
        + '       , Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData AS FullGoodsName '
@@ -5422,8 +5475,15 @@ begin
        + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
        + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
        + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
-       + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID '
-       + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
+       + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
+       + '                                          AND Object_PriceListItems.GoodsKindId      = Object_GoodsByGoodsKind.GoodsKindId '
+       + '                                          AND COALESCE(Object_GoodsByGoodsKind.GoodsKindId, 0) <> 0 '
+       + '                                          AND Object_PriceListItems.PriceListId = :PRICELISTID '
+       + '       LEFT JOIN Object_PriceListItems     AS Object_PriceListItems_two '
+       + '                                           ON Object_PriceListItems_two.GoodsId      = Object_Goods.ID  '
+       + '                                          AND Object_PriceListItems.GoodsId IS NULL '
+       + '                                          AND COALESCE(Object_PriceListItems_two.GoodsKindId, 0) = 0 '
+       + '                                          AND Object_PriceListItems_two.PriceListId  = :PRICELISTID '
        + ' WHERE Object_GoodsByGoodsKind.isErased = 0 '
        + ' ORDER BY GoodsName ';
 

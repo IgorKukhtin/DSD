@@ -165,6 +165,7 @@ begin
   SQLiteFile := iniLocalDataBaseSQLite;
   gc_ProgramName := 'FarmacyCash.exe';
   dsdProject := prFarmacy;
+  isRunReport524 := True;
   StartSplash('Старт');
   TdsdApplication.Create;
 

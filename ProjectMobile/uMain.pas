@@ -5964,7 +5964,7 @@ begin
       + '                                        AND Object_Goods.isErased            = 0 '
       + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId  = Object_Goods.ID '
       + '                                        AND Object_GoodsByGoodsKind.isErased = 0 '
-      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID              = Object_GoodsByGoodsKind.GoodsKindId '
+      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID              = COALESCE(NULLIF(Object_PriceListItems.GoodsKindId, 0), Object_GoodsByGoodsKind.GoodsKindId) '
       + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                = Object_Goods.MeasureId '
       + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID              = Object_Goods.TradeMarkId '
       + ' WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
@@ -5993,7 +5993,7 @@ begin
       + '                                        AND Object_Goods.isErased            = 0 '
       + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId  = Object_Goods.ID '
       + '                                        AND Object_GoodsByGoodsKind.isErased = 0 '
-      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID              = Object_GoodsByGoodsKind.GoodsKindId '
+      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID              = COALESCE(NULLIF(Object_PriceListItems.GoodsKindId, 0), Object_GoodsByGoodsKind.GoodsKindId) '
       + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                = Object_Goods.MeasureId '
       + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID              = Object_Goods.TradeMarkId '
       + ' WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
