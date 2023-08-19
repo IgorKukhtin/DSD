@@ -138,7 +138,13 @@ where T.table_name ILIKE 'movementitemcontainer'
    and T.table_name NOT ILIKE 'historycost'
    and T.table_name NOT ILIKE 'loginprotocol'
 */
-
+/*
+    where T.table_name  ILIKE 'objecthistorylink'
+      or T.table_name  ILIKE 'objecthistorystring'
+      or T.table_name  ILIKE 'objecthistorydate'
+      or T.table_name  ILIKE 'objecthistoryFloat'
+      or T.table_name  ILIKE 'objecthistory'
+*/
     group by T.table_name, B.table_name
   order by case when T.table_name ilike 'resourseitemprotocol' then 102 
                 when T.table_name ilike 'soldtable' then 101
