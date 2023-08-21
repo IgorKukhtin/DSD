@@ -108,7 +108,12 @@ begin
 //          SaveLocalConnect(edUserName.Text, edPassword.Text, gc_User.Session);
         TStorageFactory.GetStorage.LoadReportList(gc_User.Session);
         if dsdProject = prProject then
+        begin
           TStorageFactory.GetStorage.LoadReportPriorityList(gc_User.Session);
+          TStorageFactory.GetStorage.LoadStoredProcList(gc_User.Session);
+        end;
+        if dsdProject = prFarmacy then
+          TStorageFactory.GetStorage.LoadReportLocalList(gc_User.Session);
         ModalResult := mrOk;
       End
       else

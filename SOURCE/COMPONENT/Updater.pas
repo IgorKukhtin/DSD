@@ -8,6 +8,7 @@ type
   private
      class procedure UpdateConnect (Connection: string);
      class procedure UpdateConnectReport (Connection: string; Restart : boolean = True);
+     class procedure UpdateConnectStoredProc (Connection: string; Restart : boolean = True);
      class procedure UpdateConnectReportLocal (Connection: string; Restart : boolean = True);
      class procedure UpdateProgram;
      class function UpdateProgramTest : boolean;
@@ -87,7 +88,7 @@ end;
 
 class procedure TUpdater.AutomaticCheckConnect;
 var StoredProc: TdsdStoredProc;
-    Connection, ReportConnection, ReportConnectionLocal: String;
+    Connection, ReportConnection, ReportConnectionLocal, StoredProcConnection: String;
     StringList: TStringList;
     StringListConnection: TStringList;
     i:Integer;
@@ -271,6 +272,60 @@ begin
            // 2.3. надо как раньше на integer-srv + integer-srv2
            UpdateConnectReport(ReportConnection);
     end;
+
+    //
+    //
+    // теперь тоже самое для запука внешних процедур - !!! Если АЛАН
+    //
+    if fAlan_conn = TRUE then
+    begin
+        StoredProc.Params.Clear;
+        //основное подключение из базы
+        StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectStoredProcParam');
+        StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
+        StoredProc.OutputType := otResult;
+        StoredProc.StoredProcName := 'gpGetConstName';
+        try
+          StoredProc.Execute;
+        except
+          // Если это наша ошибка, то тихонько обходим
+          on E: EStorageException do begin
+             exit;
+          end;
+          // Если не наша, то возмущаемся
+          on E: Exception do
+              raise;
+        end;
+        //основное подключение из базы
+        StoredProcConnection := StoredProc.ParamByName('gpGetConstName').AsString;
+        //
+        StringList := TStringList.Create;
+        StringListConnection := TStringList.Create;
+        StringListConnection.Text := StoredProcConnection;
+        with StringList do begin
+           if FileExists(ReplaceStr(ConnectionPath,'\init.php','\initStoredProc.php')) = TRUE
+           then LoadFromFile(ReplaceStr(ConnectionPath,'\init.php','\initStoredProc.php'));
+           fFind:=Count <> 0;
+           if fFind then
+           begin
+             if Count = StringListConnection.Count then
+               for i:=0 to Count-1 do
+               begin
+                 fFind:= Strings[i] = StringListConnection.Strings[i];
+                 if fFind = FALSE then Break;
+               end
+             else fFind:=False;
+           end;
+           StringList.Free;
+           StringListConnection.Free;
+        end;
+        if (fFind = FALSE) and (StoredProcConnection<>'') or
+           FileExists(ReplaceStr(ConnectionPath,'\init.php','\initStoredProc.php')) = FALSE
+        then
+           UpdateConnectStoredProc(StoredProcConnection, False);
+
+    end;
+
     //
     //
     // теперь тоже самое для отчетов фармаси
@@ -546,6 +601,53 @@ begin
     ShellExecute(Application.Handle, 'open', PWideChar(Application.ExeName), nil, nil, SW_SHOWNORMAl);
   end;
 end;
+
+class procedure TUpdater.UpdateConnectStoredProc (Connection: string; Restart : boolean = True);
+var StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+
+  // 1.1. надо переключиться с alan на colocall
+  if (fAlan_colocall = TRUE) and (AnsiUpperCase(Connection) = AnsiUpperCase('alan')) then
+  begin
+    StringList.Add('http://integer-srv-a.alan.dp.ua/index.php');
+    StringList.Add('http://integer-srv-a-r.alan.dp.ua/index.php');
+    //сохранили
+    StringList.SaveToFile(ConnectionPath);
+  end
+  else
+  // 1.2. надо переключиться с colocall на integer-srv
+  if (fAlan_colocall = FALSE) and (AnsiUpperCase(Connection) = AnsiUpperCase('colocall')) then
+  begin
+    StringList.Add('http://integer-srv-a.alan.dp.ua/index.php');
+    StringList.Add('http://integer-srv-a-r.alan.dp.ua/index.php');
+    //сохранили
+    StringList.SaveToFile(ConnectionPath);
+  end
+  else
+  // 1.3. надо как раньше на integer-srv + integer-srv2
+  begin
+    //делаем его первым
+    if Connection <> '' then StringList.Add(Connection);
+    StringList.Add('http://integer-srv-a.alan.dp.ua/index.php');
+    StringList.Add('http://integer-srv-a-r.alan.dp.ua/index.php');
+    //сохранили
+    StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initStoredProc.php'));
+  end
+  finally
+    StringList.Free;
+  end;
+  //
+  //
+  if Restart then
+  begin
+    ShowMessage('Путь к серверу ВІПОЛНЕНИЯ ПРОЦЕДУР изменен на <'+Connection+'>. Нажмите кнопку для перезапуска');
+    Application.Terminate;
+    ShellExecute(Application.Handle, 'open', PWideChar(Application.ExeName), nil, nil, SW_SHOWNORMAl);
+  end;
+end;
+
 
 class procedure TUpdater.UpdateConnectReportLocal (Connection: string; Restart : boolean = True);
 var StringList: TStringList;
