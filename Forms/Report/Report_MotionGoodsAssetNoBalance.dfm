@@ -2681,6 +2681,10 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         end
         item
           Visible = True
+          ItemName = 'bbPrint_PP_3_1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2766,6 +2770,11 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
     object bbPrint_PP_3_3: TdxBarButton
       Action = actPrint_PP_3_3
       Category = 0
+    end
+    object bbPrint_PP_3_1: TdxBarButton
+      Action = actPrint_PP_3_1
+      Category = 0
+      ImageIndex = 15
     end
   end
   object ActionList: TActionList
@@ -2952,6 +2961,122 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrint_PP_3_1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1040#1082#1090' '#1087#1088#1080#1077#1084#1086'-'#1087#1077#1088#1077#1076#1072#1095#1080' ('#1054#1057') '#1072#1074#1090#1086
+      Hint = #1040#1082#1090' '#1087#1088#1080#1077#1084#1086'-'#1087#1077#1088#1077#1076#1072#1095#1080' ('#1054#1057') '#1072#1074#1090#1086
+      ImageIndex = 21
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NumGroup_print;LocationName;CarName;AssetToName;GoodsName;'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44075d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44075d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = False
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = False
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAmount'
+          Value = False
+          Component = cbAmount
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = False
+          Component = cbInfoMoney
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName_by'
+          Value = ''
+          Component = GuidesUnitGroup_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName_by'
+          Value = ''
+          Component = GuidesLocation_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PrintPage'
+          Value = '1'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1087#1088#1080#1077#1084#1086'-'#1087#1077#1088#1077#1076#1072#1095#1080' ('#1054#1057' '#1058#1057' '#1079#1072#1073#1072#1083#1072#1085#1089')'
+      ReportNameParam.Value = #1040#1082#1090' '#1087#1088#1080#1077#1084#1086'-'#1087#1077#1088#1077#1076#1072#1095#1080' ('#1054#1057' '#1058#1057' '#1079#1072#1073#1072#1083#1072#1085#1089')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_PP_3_3: TdsdPrintAction
       Category = 'DSDLib'

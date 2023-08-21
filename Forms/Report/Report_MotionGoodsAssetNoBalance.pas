@@ -219,6 +219,8 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     actPrint_PP_3_3: TdsdPrintAction;
     bbPrint_PP_3_3: TdxBarButton;
+    actPrint_PP_3_1: TdsdPrintAction;
+    bbPrint_PP_3_1: TdxBarButton;
   private
   public
   end;

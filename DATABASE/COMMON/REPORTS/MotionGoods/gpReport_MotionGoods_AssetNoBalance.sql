@@ -625,7 +625,7 @@ BEGIN
         , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
-        , CASE WHEN Object_Goods.DescId = zc_Object_Car() THEN 1
+        , CASE WHEN COALESCE (Object_Car.Id,0) <> 0 THEN 1
                WHEN Object_Goods.DescId = zc_Object_Asset() THEN 2
                ELSE 3
           END                                 ::Integer AS NumGroup_print
@@ -971,3 +971,7 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_MotionGoods_AssetNoBalance (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * from gpReport_MotionGoods_AssetNoBalance (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 1, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());
+
+/*
+, когда место учета - авто и когда zc_ObjectLink_Asset_Car
+*/
