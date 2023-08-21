@@ -653,16 +653,25 @@ BEGIN
            , COALESCE (CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END, 0)
              + COALESCE (CAST (MovementFloat_TotalSummTare.ValueData - MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0) AS TotalSummMVAT 
            
-           , COALESCE (CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END, 0)
-              + COALESCE (MovementFloat_TotalSummTare.ValueData,0) AS TotalSummPVAT
+           , (COALESCE (CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END, 0)
+            + COALESCE (MovementFloat_TotalSummTare.ValueData,0)
+            - CASE WHEN inMovementId = 25962251 THEN 0.01 ELSE 0 END -- № 1871895 от 16.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
+             ) :: TFloat AS TotalSummPVAT
 
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT
-                 ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData 
-                  + COALESCE (CAST ( MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0) END AS SummVAT
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
+                  THEN vbOperSumm_PVAT - vbOperSumm_MVAT
+                  ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData 
+                     + COALESCE (CAST ( MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0)
+                     - CASE WHEN inMovementId = 25962251 THEN 0.01 ELSE 0 END -- № 1871895 от 16.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
+             END :: TFloat AS SummVAT
            
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
+                  THEN vbOperSumm_PVAT
+                  ELSE MovementFloat_TotalSumm.ValueData
+                     - CASE WHEN inMovementId = 25962251 THEN 0.01 ELSE 0 END -- № 1871895 от 16.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
+             END :: TFloat AS TotalSumm
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData *(1 - (vbVATPercent / (vbVATPercent + 100))) END TotalSummMVAT_Info                                                                                                                            
-           --Сумма оборотной тары
+             -- Сумма оборотной тары
            , MovementFloat_TotalSummTare.ValueData AS TotalSummPVAT_Tare -- c НДС
            
            , CAST (MovementFloat_TotalSummTare.ValueData - MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)) AS TotalSummMVAT_Tare --  без НДС

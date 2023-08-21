@@ -359,22 +359,27 @@ order by 4*/
 
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN MovementFloat_TotalSummMVAT.ValueData ELSE 0 END AS TotalSummMVAT
           --, CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() OR COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
-           , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
-            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False 
-                        THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)
-                        ELSE 0
-             END  :: TFloat AS SummVAT
+           , (MovementFloat_TotalSummPVAT.ValueData
+            - CASE WHEN inMovementId = 25962252 THEN 0.01 ELSE 0 END -- № 5647 от 17.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
+             ) ::TFloat AS TotalSummPVAT
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False 
+                       THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)
+                          - CASE WHEN inMovementId = 25962252 THEN 0.01 ELSE 0 END -- № 5647 от 17.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
+                       ELSE 0
+            END :: TFloat AS SummVAT
              
-           , MovementFloat_TotalSumm.ValueData AS TotalSumm
+           , (MovementFloat_TotalSumm.ValueData
+            - CASE WHEN inMovementId = 25962252 THEN 0.01 ELSE 0 END -- № 5647 от 17.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
+             ) :: TFloat AS TotalSumm
 
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN 0 ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT_11
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN 0 ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT_11
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN 0 ELSE COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) END AS SummVAT_11
 
-           , Object_From.ValueData             		    AS FromName
-           , Object_To.ValueData               		    AS ToName
+           , Object_From.ValueData             		AS FromName
+           , Object_To.ValueData               		AS ToName
 
-           , View_Contract.InvNumber         		    AS ContractName
+           , View_Contract.InvNumber         		AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
