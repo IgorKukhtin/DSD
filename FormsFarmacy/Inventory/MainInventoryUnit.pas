@@ -163,6 +163,7 @@ type
     InfoisCheck: TcxGridDBColumn;
     actSetFocusedInfoAmount: TdsdSetFocusedAction;
     spUnitComplInventFull: TdsdStoredProc;
+    InfoRemainsCurr: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);

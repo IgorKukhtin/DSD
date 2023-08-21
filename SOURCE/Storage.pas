@@ -33,6 +33,7 @@ type
 
     procedure LoadReportList(ASession: string);
     procedure LoadReportLocalList(ASession: string);
+    procedure LoadStoredProcList(ASession: string);
     procedure LoadReportPriorityList(ASession: string);
     procedure LoadReportPriorityState(AProcName: string; var ASecond_pause :Integer;
                                       var AMessage_pause: String; ASession: string);
@@ -75,7 +76,7 @@ const
    XMLStructureLenghtLenght = 10;
 
 type
-  TConnectionType = (ctMain, ctReport, ctReportLocal);
+  TConnectionType = (ctMain, ctReport, ctReportLocal, ctStoredProc);
 
   // Поток для обрыва соеденений При не ответе сервера
   TCheckConnectThread = class(TThread)
@@ -129,6 +130,7 @@ type
     FCriticalSection: TCriticalSection;
     FReportList: TStringList;
     FReportLocalList: TStringList;
+    FStoredProcList: TStringList;
     FReportPriorityList: TStringList;
     FConnectionList: TConnectionList;
     function PrepareStr: String;
@@ -140,12 +142,14 @@ type
     function GetConnection: string;
     procedure LoadReportList(ASession: string);
     procedure LoadReportLocalList(ASession: string);
+    procedure LoadStoredProcList(ASession: string);
     procedure LoadReportPriorityList(ASession: string);
     procedure LoadReportPriorityState(AProcName: string; var ASecond_pause :Integer;
                                       var AMessage_pause: String; ASession: string);
     function ReportPriorityPause(AProcName, ASession: string) : Boolean;
     function CheckConnectionType(pData: string): TConnectionType;
     procedure InsertReportProtocol(pData: string);
+    function StoredProcCheck(pStoredProc, pData: string) : Boolean;
     function GetIdHTTP : TIdHTTP;
   public
     property Connection: String read GetConnection;
@@ -229,7 +233,7 @@ const
   {создаем XML вызова процедуры на сервере}
   pXML =
     '<xml Session = "%s" AutoWidth = "0">' +
-      '<gpInsert_ReportProtocol OutputType = "otResult" DataSetType = "">' +
+      '<gpInsert_ReportProtocol OutputType="otResult">' +
       '<inProtocolData DataType="ftBlob" Value="%s" />' +
       '</gpInsert_ReportProtocol>' +
     '</xml>';
@@ -238,6 +242,8 @@ var
   Data, NodeFun, NodeParam: IXMLNode;
   I, J: Integer;
   S, T, Q: string;
+  pSendList: TStringList;
+  pReceiveStream: TStringStream;
 begin
   TXMLDocument.Create(nil).GetInterface(IXMLDocument, XML);
 
@@ -264,17 +270,107 @@ begin
     end;
   end;
 
-  FSendList.Clear;
-  FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' +
-    Format(pXML, [gc_User.Session, S {pData}]));
-  FReceiveStream.Clear;
-  IdHTTPWork.FExecOnServer := False;
-
+  pSendList := TStringList.Create;
+  pReceiveStream := TStringStream.Create('');
   try
-    IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, FSendList, FReceiveStream,
-      {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
-  except
-    IdHTTP.Disconnect;
+
+    if dsdProject = prBoat then
+      pSendList.Add('XML=' + '<?xml version="1.0" encoding="utf-8"?>' +
+        Format(pXML, [gc_User.Session, gfStrToXmlStr(S) {pData}]))
+    else
+      pSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' +
+        Format(pXML, [gc_User.Session, gfStrToXmlStr(S) {pData}]));
+    if dsdProject = prBoat then
+      pSendList.Add('ENC=UTF8');
+
+    FReceiveStream.Clear;
+    IdHTTPWork.FExecOnServer := False;
+
+    try
+      IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, pSendList, pReceiveStream,
+        {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+    except
+      IdHTTP.Disconnect;
+    end;
+  finally
+    pReceiveStream.Free;
+    pSendList.Free;
+  end;
+end;
+
+function TStorage.StoredProcCheck(pStoredProc, pData: string) : Boolean;
+var
+  XML: IXMLDocument;
+  Data, NodeFun, NodeParam: IXMLNode;
+  pXML: String;
+  I, J, L: Integer;
+  pSendList: TStringList;
+  pReceiveStream: TStringStream;
+begin
+  Result := False;
+  TXMLDocument.Create(nil).GetInterface(IXMLDocument, XML);
+
+  XML.LoadFromXML(pData);
+  Data := XML.DocumentElement;
+
+  {создаем XML вызова процедуры на сервере}
+  pXML := pXML + '<xml Session = "' + gc_User.Session + '" AutoWidth = "0">' +
+      '<gpGet_StoredProcCheck OutputType="otResult">' +
+      '<inStoredProc DataType="ftString" Value="' + pStoredProc + '" />';
+
+  L := 1;
+  if Data <> nil then
+  begin
+    for I := 0 to Pred(Data.ChildNodes.Count) do
+    begin
+      NodeFun := Data.ChildNodes.Get(I);
+      for J := 0 to Pred(NodeFun.ChildNodes.Count) do
+      begin
+        NodeParam := NodeFun.ChildNodes.Get(J);
+        pXML := pXML +
+          '<inParam' + IntToStr(L) + ' DataType="ftString" Value="' + NodeParam.NodeName + '" />' +
+      //    '<inDataType' + IntToStr(L) + ' DataType="ftString" Value="' + NodeParam.Attributes['DataType'] + '" />' +
+          '<inValue' + IntToStr(L) + ' DataType="ftString" Value="' + gfStrToXmlStr(NodeParam.Attributes['Value']) + '" />';
+        Inc(L);
+        if L >= 10 then Break;
+      end;
+      if L >= 10 then Break;
+    end;
+  end;
+
+  for I := L to 10 do
+    pXML := pXML +
+      '<inParam' + IntToStr(I) + ' DataType="ftString" Value="" />' +
+      '<inValue' + IntToStr(I) + ' DataType="ftString" Value="" />';
+
+  pXML := pXML +
+      '</gpGet_StoredProcCheck>' +
+    '</xml>';
+
+  pSendList := TStringList.Create;
+  pReceiveStream := TStringStream.Create('');
+  try
+
+    if dsdProject = prBoat then
+      pSendList.Add('XML=' + '<?xml version="1.0" encoding="utf-8"?>' + pXML)
+    else
+      pSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pXML);
+    if dsdProject = prBoat then
+      pSendList.Add('ENC=UTF8');
+
+    FReceiveStream.Clear;
+    IdHTTPWork.FExecOnServer := False;
+
+    try
+      IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, pSendList, pReceiveStream,
+        {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+      Result := (Pos('Result', pReceiveStream.DataString) = 1) and (Pos('"t"', pReceiveStream.DataString) > 1);
+    except
+      IdHTTP.Disconnect;
+    end;
+  finally
+    pReceiveStream.Free;
+    pSendList.Free;
   end;
 end;
 
@@ -337,6 +433,41 @@ begin
         begin
           if not DataSet.FieldByName('isErased').AsBoolean then
             FReportLocalList.Add(DataSet.FieldByName('Name').AsString);
+          DataSet.Next;
+        end;
+    finally
+      if Assigned(Stream) then
+        Stream.Free;
+      DataSet.Free;
+    end;
+  except
+  end;
+end;
+
+procedure TStorage.LoadStoredProcList(ASession: string);
+const
+  {создаем XML вызова процедуры на сервере}
+  pXML =
+    '<xml Session = "%s" AutoWidth = "0">' +
+      '<gpSelect_Object_StoredProcExternal OutputType = "otDataSet" DataSetType = "TClientDataSet">' +
+      '</gpSelect_Object_StoredProcExternal>' +
+    '</xml>';
+var
+  DataSet: TClientDataSet;
+  Stream: TStringStream;
+begin
+  FStoredProcList.Clear;
+  try
+    DataSet := TClientDataSet.Create(nil);
+    Stream := nil;
+    try
+      Stream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
+      DataSet.LoadFromStream(Stream);
+      if not DataSet.IsEmpty then
+        while not DataSet.Eof do
+        begin
+          if not DataSet.FieldByName('isErased').AsBoolean then
+            FStoredProcList.Add(DataSet.FieldByName('Name').AsString);
           DataSet.Next;
         end;
     finally
@@ -439,12 +570,13 @@ end;
 
 class function TStorage.NewInstance: TObject;
 var
-  lConnectionPathRep, lConnectionPathRepLocal : String;
+  lConnectionPathRep, lConnectionPathStoredProc, lConnectionPathRepLocal : String;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
     Instance.FReportList := TStringList.Create;
     Instance.FReportLocalList := TStringList.Create;
+    Instance.FStoredProcList := TStringList.Create;
     Instance.FReportPriorityList := TStringList.Create;
     Instance.FConnectionList := TConnectionList.Create;
 
@@ -467,6 +599,8 @@ begin
         lConnectionPathRep := ReplaceStr(ConnectionPath, '\farmacy_init.php', '\farmacy_initRep.php')
       else lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
 
+      lConnectionPathStoredProc := ReplaceStr(ConnectionPath, '\init.php', '\initStoredProc.php');
+
       if Pos('\farmacy_init.php', ConnectionPath) > 0 then
         lConnectionPathRepLocal := ReplaceStr(ConnectionPath, '\farmacy_init.php', '\farmacy_initRepLocal.php')
       else lConnectionPathRepLocal := ReplaceStr(ConnectionPath, '\init.php', '\initRepLocal.php');
@@ -474,6 +608,8 @@ begin
       Instance.FConnectionList.AddFromFile(ConnectionPath, ctMain);
       if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
         Instance.FConnectionList.AddFromFile(lConnectionPathRep, ctReport);
+      if (lConnectionPathStoredProc <> ConnectionPath) and FileExists(lConnectionPathStoredProc) then
+        Instance.FConnectionList.AddFromFile(lConnectionPathStoredProc, ctStoredProc);
       if (lConnectionPathRepLocal <> ConnectionPath) and FileExists(lConnectionPathRepLocal) then
         Instance.FConnectionList.AddFromFile(lConnectionPathRepLocal, ctReportLocal);
     end;
@@ -676,6 +812,17 @@ var
   S: string;
 begin
   Result := ctMain;
+  if FStoredProcList.Count > 0 then
+    for S in FStoredProcList do
+      if (Pos(S + ' ', pData) > 0) then
+      begin
+        if StoredProcCheck(S, pData) then
+        begin
+          Result := ctStoredProc;
+          Exit;
+        end;
+        Break;
+      end;
   if FReportLocalList.Count > 0 then
     for S in FReportLocalList do
       if Pos(S + ' ', pData) > 0 then
@@ -734,12 +881,13 @@ function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
        result := '';
   end;
 var
-iii : Integer;
+  iii : Integer;
   ResultType: string;
   AttemptCount: Integer;
   ok, isBinary: Boolean;
   CType: TConnectionType;
   CString, DString: string;
+  isError524: boolean;
   function LastAttempt: Boolean;
   Begin
     Result := (AttemptCount >= AMaxAtempt) AND (FConnectionList.CurrentConnection[CType] = nil);
@@ -751,6 +899,7 @@ iii : Integer;
 begin
   //!!!Переопределили как то криво
   if gc_User.LocalMaxAtempt > 0 then AMaxAtempt:= gc_User.LocalMaxAtempt;
+  isError524 := False;
   //
 
   FCriticalSection.Enter;
@@ -762,7 +911,7 @@ begin
 
     CType := CheckConnectionType(pData);
 
-    if CType = ctReport then
+    if (CType = ctReport) and (dsdProject <> prFarmacy) then
       InsertReportProtocol(pData);
 
     if CType = ctReportLocal then
@@ -805,6 +954,16 @@ begin
         for AttemptCount := 1 to AMaxAtempt do
         Begin
           try
+
+   if isError524 and isRunReport524 and (CType <> ctReport) then
+   begin
+     if FConnectionList.FirstConnection(ctReport) <> nil then
+     begin
+       InsertReportProtocol(pData);
+       CType := ctReport;
+       CString := FConnectionList.FirstConnection(CType).CString;
+     end;
+   end;
 
    if ((Pos('TSale_OrderJournalForm', pData) > 0) or (Pos('TReturnInJournalForm', pData) > 0))
     and (Pos('gpGet_Object_Form', pData) > 0)
@@ -884,6 +1043,7 @@ begin
           except
             on E: EIdSocketError do
             Begin
+              if idHTTP.ResponseCode = 524 then isError524 := True;
               if gc_BreakingConnection then
               begin
                 if gc_allowLocalConnection then gc_User.Local := True;
@@ -963,6 +1123,7 @@ begin
             End;
             on E: Exception do
             Begin
+              if idHTTP.ResponseCode = 524 then isError524 := True;
               if gc_BreakingConnection then
               begin
                 if gc_allowLocalConnection then gc_User.Local := True;

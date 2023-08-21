@@ -565,6 +565,11 @@ inherited MainInventoryForm: TMainInventoryForm
                 Format = '+ ,0.####;- ,0.####; ;'
                 Kind = skSum
                 Column = InfoDiff
+              end
+              item
+                Format = ',0.####;-,0.####; ;'
+                Kind = skSum
+                Column = InfoRemainsCurr
               end>
             DataController.Summary.SummaryGroups = <>
             OptionsBehavior.GoToNextCellOnEnter = True
@@ -616,6 +621,16 @@ inherited MainInventoryForm: TMainInventoryForm
               Options.Editing = False
               Width = 67
             end
+            object InfoRemainsCurr: TcxGridDBColumn
+              Caption = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
+              DataBinding.FieldName = 'RemainsCurr'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1091#1095#1080#1090#1099#1074#1072#1077#1090' '#1074#1089#1077' '#1087#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1076#1085#1080' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080')'
+              Options.Editing = False
+              Width = 68
+            end
             object InfoRemains: TcxGridDBColumn
               Caption = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'Remains'
@@ -623,6 +638,7 @@ inherited MainInventoryForm: TMainInventoryForm
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
+              HeaderHint = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082' ('#1085#1072' '#1076#1077#1085#1100' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1074#1094#1080#1080')'
               Options.Editing = False
               Width = 67
             end
@@ -1233,6 +1249,7 @@ inherited MainInventoryForm: TMainInventoryForm
           '     , COALESCE (ID.GoodsId, IC.GoodsId) AS GoodsId'
           '     , G.Code   AS GoodsCode'
           '     , G.Name  AS GoodsName'
+          '     , ID.RemainsCurr'
           '     , ID.Remains '
           '     , ID.ExpirationDate'
           '     , CAST(COALESCE(ID.Price, R.Price, 0) AS Float)    AS Price'
