@@ -232,7 +232,7 @@
   end
   object cbIsDate: TcxCheckBox
     Left = 133
-    Top = 26
+    Top = 19
     Caption = #1055#1086' '#1076#1072#1090#1072#1084
     TabOrder = 26
     Width = 74
@@ -244,6 +244,13 @@
     Properties.ReadOnly = False
     TabOrder = 27
     Width = 96
+  end
+  object sbisMonth: TcxCheckBox
+    Left = 133
+    Top = 41
+    Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+    TabOrder = 28
+    Width = 74
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -466,6 +473,14 @@
         Name = 'isContract'
         Value = Null
         Component = cbContract
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMonth'
+        Value = Null
+        Component = sbisMonth
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
