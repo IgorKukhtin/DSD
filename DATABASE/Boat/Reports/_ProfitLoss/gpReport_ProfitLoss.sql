@@ -1,10 +1,12 @@
 -- Function: gpReport_ProfitLoss()
 
 DROP FUNCTION IF EXISTS gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ProfitLoss (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
     IN inStartDate   TDateTime , -- 
     IN inEndDate     TDateTime , --
+    IN inisMonth     Boolean   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName  TVarChar
@@ -14,7 +16,8 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
              , DirectionObjectCode Integer, DirectionObjectName TVarChar
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
              , MovementDescName TVarChar
-             , Amount TFloat
+             , Amount TFloat 
+             , OperDate TDateTime
               )
 AS
 $BODY$
@@ -33,6 +36,7 @@ BEGIN
                                   , MIContainer.ObjectExtId_Analyzer   AS UnitId_ProfitLoss
                                   , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                   , MIContainer.MovementDescId
+                                  , CASE WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE NULL END ::TDateTime AS OperDate
                              FROM MovementItemContainer AS MIContainer 
                              WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                --AND MIContainer.AccountId = zc_Enum_Account_100301()
@@ -41,11 +45,13 @@ BEGIN
                                     , MIContainer.ObjectExtId_Analyzer
                                     , MIContainer.WhereObjectId_Analyzer
                                     , MIContainer.MovementDescId
+                                    , CASE WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE NULL END
                             )
         , tmpProfitLoss AS (SELECT CLO_ProfitLoss.ObjectId                AS ProfitLossId
                                  , tmpMIContainer.MovementDescId
                                  , tmpMIContainer.DirectionId
                                  , tmpMIContainer.UnitId_ProfitLoss
+                                 , tmpMIContainer.OperDate
                                  , SUM (tmpMIContainer.Amount) AS Amount
                             FROM tmpMIContainer
                                  LEFT JOIN ContainerLinkObject AS CLO_ProfitLoss
@@ -55,18 +61,21 @@ BEGIN
                                    , tmpMIContainer.MovementDescId
                                    , tmpMIContainer.DirectionId
                                    , tmpMIContainer.UnitId_ProfitLoss
+                                   , tmpMIContainer.OperDate
                            )
 
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
                            , tmpProfitLoss.UnitId_ProfitLoss
                            , tmpProfitLoss.DirectionId
                            , tmpProfitLoss.MovementDescId
+                           , tmpProfitLoss.OperDate
                            , SUM (tmpProfitLoss.Amount) AS Amount
                       FROM tmpProfitLoss
                       GROUP BY tmpProfitLoss.ProfitLossId
                              , tmpProfitLoss.UnitId_ProfitLoss
                              , tmpProfitLoss.DirectionId
                              , tmpProfitLoss.MovementDescId
+                             , tmpProfitLoss.OperDate
                      )
       SELECT
              View_ProfitLoss.ProfitLossGroupName
@@ -95,6 +104,7 @@ BEGIN
 
            , tmpReport.Amount :: TFloat AS Amount
 
+           , tmpReport.OperDate ::TDateTime
       FROM Object_ProfitLoss_View AS View_ProfitLoss
 
            LEFT JOIN tmpReport ON tmpReport.ProfitLossId = View_ProfitLoss.ProfitLossId
@@ -112,13 +122,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.08.23         *
  11.06.17                                        *
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '31.07.2016', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '31.07.2016', inisMonth := FALSE, inSession:= '2') WHERE Amount <> 0 ORDER BY 5

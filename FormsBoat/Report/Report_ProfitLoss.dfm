@@ -166,6 +166,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     TabOrder = 6
     Width = 101
   end
+  object cbMonth: TcxCheckBox
+    Left = 254
+    Top = 163
+    Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Width = 101
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -268,7 +276,11 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMonth'
         end
         item
           Visible = True
@@ -311,12 +323,19 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Action = actPrint
       Category = 0
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
+    object ddTotal: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = cbTotal
+    end
+    object bbMonth: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbMonth
     end
   end
   object ActionList: TActionList
@@ -553,6 +572,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMonth'
+          Value = Null
+          Component = cbMonth
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

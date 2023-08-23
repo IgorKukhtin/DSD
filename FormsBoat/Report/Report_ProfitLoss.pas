@@ -67,9 +67,11 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     cbTotal: TcxCheckBox;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    ddTotal: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     DirectionObjectName: TcxDBPivotGridField;
+    cbMonth: TcxCheckBox;
+    bbMonth: TdxBarControlContainerItem;
   private
   public
   end;

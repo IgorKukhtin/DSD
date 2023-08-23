@@ -250,7 +250,7 @@
     Top = 41
     Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
     TabOrder = 28
-    Width = 74
+    Width = 82
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
