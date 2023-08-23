@@ -418,6 +418,8 @@ const
   gcLogFileName: string = '';
   {в данном листе хранятся те праметры, которые определяют пользовательские настройки}
 
+  isRunReport524: boolean = False;
+
 implementation
 uses Windows;
 
