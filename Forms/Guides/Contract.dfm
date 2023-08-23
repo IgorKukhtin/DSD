@@ -15,6 +15,7 @@
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -827,6 +828,8 @@
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
+      ExplicitLeft = 41
+      ExplicitTop = -4
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -1666,8 +1669,8 @@
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 72
-    Top = 88
+    Left = 136
+    Top = 136
     DockControlHeights = (
       0
       0
@@ -2050,6 +2053,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateStateKind_Closed'
         end>
     end
@@ -2194,6 +2205,10 @@
     end
     object bbGridToExcelCCP: TdxBarButton
       Action = actGridToExcelCCP
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -3945,6 +3960,45 @@
       Hint = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 76
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1086#1075#1086#1074#1086#1088#1086#1074' ('#1092#1080#1079#1086#1073#1084#1077#1085') '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#1044#1086#1075#1086#1074#1086#1088#1072' ('#1092#1080#1079#1086#1073#1084#1077#1085')'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#1044#1086#1075#1086#1074#1086#1088#1072' ('#1092#1080#1079#1086#1073#1084#1077#1085')'
+      ImageIndex = 41
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -4647,8 +4701,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 184
+    Left = 648
+    Top = 200
   end
   object spUpdateStateKind_Closed: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Contract_StateKind_Closed'
@@ -5069,5 +5123,47 @@
     PackSize = 1
     Left = 576
     Top = 448
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TContractForm;zc_Object_ImportSetting_Contract'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 736
+    Top = 144
   end
 end

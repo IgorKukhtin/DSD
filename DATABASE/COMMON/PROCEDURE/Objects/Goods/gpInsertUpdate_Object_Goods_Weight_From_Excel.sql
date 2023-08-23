@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Goods_Weight_From_Excel()
+ -- Function: gpInsertUpdate_Object_Goods_Weight_From_Excel()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_Weight_From_Excel (Integer, TFloat, TFloat, TFloat, TVarChar);
 
