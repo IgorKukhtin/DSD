@@ -71,6 +71,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , isTop Boolean
              , PaidKindId Integer, PaidKindName TVarChar
              , OperDate TDateTime
+             , OperDate_month TDateTime
              , DayOfWeekName_Full TVarChar
              , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
              , isRealEx Boolean -- Физ обмен договор
@@ -502,11 +503,16 @@ BEGIN
             , gpReport.PaidKindId
             , gpReport.PaidKindName
 
-            , CASE WHEN inIsDate = TRUE THEN gpReport.OperDate
-                   WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
-                   
+            , CASE WHEN inIsDate = TRUE
+                   THEN gpReport.OperDate
                    ELSE NULL
               END ::TDateTime AS OperDate 
+
+            , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+                   THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
+                   ELSE NULL
+              END ::TDateTime AS OperDate_month
+
             , CASE WHEN inisMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END ::TVarChar  AS DayOfWeekName_Full
 
             , SUM (gpReport.Sale_SummIn_pav)     ::TFloat AS Sale_SummIn_pav
@@ -550,12 +556,17 @@ BEGIN
               , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.isTop ELSE FALSE END
               , gpReport.PaidKindId
               , gpReport.PaidKindName
-              --, gpReport.OperDate
-              , CASE WHEN inIsDate = TRUE THEN gpReport.OperDate
-                     WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
-                     
-                      ELSE NULL END
-              --, gpReport.DayOfWeekName_Full
+
+              , CASE WHEN inIsDate = TRUE
+                     THEN gpReport.OperDate
+                     ELSE NULL
+                END ::TDateTime
+  
+              , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+                     THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
+                     ELSE NULL
+                END ::TDateTime
+
               , CASE WHEN inisMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END
               , Object_Section.Id
               , Object_Section.ValueData
@@ -725,11 +736,15 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
-                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate
-                                     WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
-                                     
+                              , CASE WHEN inIsDate = TRUE
+                                     THEN MIContainer.OperDate
                                      ELSE NULL
                                 END ::TDateTime AS OperDate 
+                  
+                              , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+                                     THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
+                                     ELSE NULL
+                                END ::TDateTime AS OperDate_month
                               
                               , ROW_NUMBER() OVER (PARTITION BY COALESCE (ContainerLO_Juridical.ObjectId, 0)
                                                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_ChangePercent() THEN ContainerLO_Juridical.ObjectId WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
@@ -785,9 +800,15 @@ BEGIN
                                 , MILinkObject_Business.ObjectId
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_InfoMoney.ObjectId
-                                , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate
-                                       WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
-                                  ELSE NULL END
+                                , CASE WHEN inIsDate = TRUE
+                                       THEN MIContainer.OperDate
+                                       ELSE NULL
+                                  END ::TDateTime
+                    
+                                , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+                                       THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
+                                       ELSE NULL
+                                  END ::TDateTime
                         )
 
  , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner  = TRUE  THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
@@ -807,6 +828,7 @@ BEGIN
  
                               , ContainerLO_PaidKind.ObjectId AS PaidKindId
                               , tmpOperationGroup2.OperDate
+                              , tmpOperationGroup2.OperDate_month
 
                               , SUM (tmpOperationGroup2.Promo_Summ)  AS Promo_Summ
                               , SUM (tmpOperationGroup2.Sale_Summ)   AS Sale_Summ
@@ -880,6 +902,7 @@ BEGIN
                                 , CASE WHEN inIsGoodsKind = TRUE THEN Object_GoodsKind.ValueData       ELSE '' END
                                 , ContainerLO_PaidKind.ObjectId
                                 , tmpOperationGroup2.OperDate
+                                , tmpOperationGroup2.OperDate_month
                                -- , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
                         )
 
@@ -1018,8 +1041,9 @@ BEGIN
          , Object_PaidKind.Id        AS PaidKindId
          , Object_PaidKind.ValueData AS PaidKindName
 
-         , tmpOperationGroup.OperDate    ::TDateTime
-         , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_Full         
+         , tmpOperationGroup.OperDate       ::TDateTime
+         , tmpOperationGroup.OperDate_month ::TDateTime
+         , tmpWeekDay.DayOfWeekName_Full    ::TVarChar AS DayOfWeekName_Full         
 
          , 0 ::TFloat AS Sale_SummIn_pav
          , 0 ::TFloat AS ReturnIn_SummIn_pav

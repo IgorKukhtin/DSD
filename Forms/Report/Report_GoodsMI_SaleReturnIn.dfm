@@ -385,7 +385,7 @@
           end
           object OperDate_month: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094
-            DataBinding.FieldName = 'OperDate'
+            DataBinding.FieldName = 'OperDate_month'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'MMMM YYYY'
             HeaderAlignmentHorz = taCenter
