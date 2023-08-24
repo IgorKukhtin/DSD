@@ -95,7 +95,7 @@ $BODY$
 BEGIN
 
     -- Ограничения по товарам
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+  /*CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -103,7 +103,7 @@ BEGIN
     ELSE
         INSERT INTO _tmpGoods (GoodsId)
            SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods();
-    END IF;
+    END IF;*/
 
 
     vbDiffTax := (WITH tmpBranch AS (SELECT COALESCE (OL_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
@@ -127,8 +127,12 @@ BEGIN
                   );
 
      RETURN QUERY
-     WITH
-      tmpPartnerLinkGoodsProperty AS (SELECT ObjectLink_Partner_Juridical.ObjectId AS  PartnerId
+     WITH _tmpGoods AS (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect WHERE inGoodsGroupId <> 0
+                       UNION ALL
+                        SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND COALESCE (inGoodsGroupId, 0) = 0
+                       )
+
+    , tmpPartnerLinkGoodsProperty AS (SELECT ObjectLink_Partner_Juridical.ObjectId AS  PartnerId
                                            , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
                                       FROM ObjectLink AS ObjectLink_Partner_Juridical
                                          INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
@@ -1204,4 +1208,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '06.08.2022', inEndDate:= '06.08.2022', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
+-- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '06.08.2023', inEndDate:= '06.08.2023', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
