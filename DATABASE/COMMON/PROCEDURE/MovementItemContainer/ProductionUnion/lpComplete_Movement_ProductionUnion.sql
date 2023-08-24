@@ -655,9 +655,9 @@ BEGIN
                                   , tmpContainer.AmountSUM
                                   , tmpContainer.Ord
                                     -- с минимального
-                                  , COALESCE (tmpContainer_old.Amount, 0) AS Amount_min
+                                  , COALESCE (tmpContainer_old.AmountSUM, 0) AS Amount_min
                                     -- увеличим последнее кол-во, если партий не хватит, что б все упало на этот ContainerId (хотя оно и так упалов запросе tmpContainer_partion)
-                                  , CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.AmountSUM * 1000 ELSE tmpContainer.Amount END AS Amount_max
+                                  , CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.AmountSUM * 1000 ELSE tmpContainer.AmountSUM END AS Amount_max
                               FROM tmpContainer_NUMBER AS tmpContainer
                                    LEFT JOIN tmpContainer_NUMBER AS tmpContainer_old
                                                                  ON tmpContainer_old.GoodsId = tmpContainer.GoodsId
@@ -741,11 +741,13 @@ BEGIN
              LEFT JOIN tmpContainer_res AS tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
        ;
 
-/*IF inMovementId = 25761587
+/*IF inMovementId = 26004071
 THEN
-    RAISE EXCEPTION 'Ошибка.<%>  %', (select _tmpItemChild.PartionGoodsId_container from _tmpItemChild)
-                                , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild)
-     ;
+    RAISE EXCEPTION 'Ошибка.<%>  %   %'
+                                   , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild where _tmpItemChild.MovementItemId = 266516348)
+                                   , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild where _tmpItemChild.MovementItemId = 266516351)
+                                   , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild where _tmpItemChild.MovementItemId = 266516354)
+                                    ;
 end if;*/
 
 
