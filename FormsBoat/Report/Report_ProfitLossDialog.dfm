@@ -3,8 +3,8 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093'>'
-  ClientHeight = 154
-  ClientWidth = 301
+  ClientHeight = 151
+  ClientWidth = 372
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 26
-    Top = 119
+    Left = 66
+    Top = 111
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 200
-    Top = 119
+    Left = 240
+    Top = 111
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -62,11 +62,19 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
     Top = 71
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
   end
+  object cbMonth: TcxCheckBox
+    Left = 256
+    Top = 30
+    Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 101
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 152
-    Top = 104
+    Left = 184
+    Top = 112
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 215
@@ -82,8 +90,8 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 248
-    Top = 12
+    Left = 336
+    Top = 108
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -93,6 +101,7 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -100,6 +109,15 @@ object Report_ProfitLossDialogForm: TReport_ProfitLossDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMonth'
+        Value = Null
+        Component = cbMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 23
     Top = 102

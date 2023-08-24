@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer
              , Amount TFloat
              , Price TFloat
-             , Remains TFloat, ExpirationDate TDateTime
+             , RemainsCurr TFloat, Remains TFloat, ExpirationDate TDateTime
              , AmountUser TFloat, CountUser Integer
              , MIComment TVarChar, isAuto Boolean
              )
@@ -85,6 +85,7 @@ BEGIN
                                              Container.Id AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
+                                           , Container.Amount                                                      AS Remains
                                         FROM Container
                                             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                                  -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
@@ -103,6 +104,7 @@ BEGIN
                                              Container.Id  AS ContainerId
                                            , Container.ObjectId  -- Товар
                                            , -1 * SUM (MovementItemContainer.Amount) AS Amount
+                                           , 0::TFloat                               AS Remains  
                                         FROM MovementItemContainer
                                             INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                         WHERE MovementItemContainer.DescID = zc_MIContainer_Count()
@@ -120,6 +122,7 @@ BEGIN
                                 SELECT
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
+                                   ,SUM (T0.Remains) :: TFloat AS Remains
                                    ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
                                 FROM tmpContainer AS T0
 
@@ -236,6 +239,8 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , CASE WHEN MovementItem.ObjectId > 0 THEN MovementItem.Price ELSE tmpPrice.Price END :: TFloat AS Price
+              
+              , REMAINS.Remains  :: TFloat                                          AS RemainsCurr
               , REMAINS.Amount  :: TFloat                                           AS Remains
               , REMAINS.minExpirationDate ::TDateTime
               , tmpMI_Child.AmountUser                                              AS AmountUser
@@ -268,4 +273,4 @@ ALTER FUNCTION gpSelect_Inventory_MI_Full (Integer, TDateTime, TVarChar) OWNER T
 -- тест
 
 -- 
-select * from gpSelect_Inventory_MI_Full(inUnitId := 377610 , inOperDate := ('05.07.2023')::TDateTime ,  inSession := '3');
+select * from gpSelect_Inventory_MI_Full(inUnitId := 377610 , inOperDate := ('21.08.2023')::TDateTime ,  inSession := '3');

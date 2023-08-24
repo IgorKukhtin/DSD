@@ -15,17 +15,17 @@
     TabOrder = 3
     ExplicitTop = 107
     ExplicitWidth = 1362
-    ExplicitHeight = 280
+    ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 280
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 313
         ExplicitWidth = 1362
-        ExplicitHeight = 280
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -377,6 +377,17 @@
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object OperDate_month: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094
+            DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MMMM YYYY'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -1427,7 +1438,7 @@
       Width = 120
     end
     object cxLabel10: TcxLabel
-      Left = 136
+      Left = 178
       Top = 58
       Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080#1089#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090
       Caption = '!'#1074#1072#1078#1085#1086'! '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1072#1082#1090#1091#1072#1083#1100#1085#1086#1089#1090#1080' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' :'
@@ -1435,7 +1446,7 @@
       ShowHint = True
     end
     object edProtocolDateOlapSR: TcxDateEdit
-      Left = 429
+      Left = 471
       Top = 57
       EditValue = 42370d
       Enabled = False
@@ -1444,10 +1455,10 @@
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 21
-      Width = 107
+      Width = 102
     end
     object cxLabel11: TcxLabel
-      Left = 542
+      Left = 576
       Top = 58
       Hint = 
         #1055#1086' '#1082#1072#1082#1091#1102' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088 +
@@ -1457,17 +1468,17 @@
       ShowHint = True
     end
     object edEndDateOlapSR: TcxDateEdit
-      Left = 751
+      Left = 785
       Top = 57
       EditValue = 42370d
       Enabled = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 23
-      Width = 85
+      Width = 80
     end
     object cxLabel12: TcxLabel
-      Left = 838
+      Left = 869
       Top = 58
       Hint = 
         #1040#1082#1090#1091#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1080#1089#1093#1086#1076#1080#1090' 1 '#1088#1072#1079' '#1074' '#1089#1091#1090#1082#1080', '#1087#1086#1089#1083#1077' '#1095#1077#1075#1086' '#1073#1099#1089#1090#1088#1077#1077 +
@@ -1479,11 +1490,18 @@
       ShowHint = True
     end
     object cbIsDate: TcxCheckBox
-      Left = 39
+      Left = 8
       Top = 54
       Caption = #1055#1086' '#1076#1072#1090#1072#1084
       TabOrder = 25
       Width = 74
+    end
+    object sbisMonth: TcxCheckBox
+      Left = 89
+      Top = 54
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+      TabOrder = 26
+      Width = 83
     end
   end
   object cbPartner: TcxCheckBox [2]
@@ -1999,6 +2017,14 @@
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMonth'
+          Value = Null
+          Component = sbisMonth
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2182,6 +2208,14 @@
         Name = 'inIsDate'
         Value = Null
         Component = cbIsDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMonth'
+        Value = Null
+        Component = sbisMonth
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

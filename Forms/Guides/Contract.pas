@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, ExternalLoad;
 
 type
   TContractForm = class(TParentForm)
@@ -335,6 +335,12 @@ type
     actRefreshCCPartner: TdsdDataSetRefresh;
     actGridToExcelCCP: TdsdGridToExcel;
     bbGridToExcelCCP: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
 
   private
     { Private declarations }

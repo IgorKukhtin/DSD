@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inIsContract   Boolean   , --
     IN inIsOLAP       Boolean   , --
     IN inIsDate       Boolean   , --
+    IN inisMonth      Boolean   , --
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -364,7 +366,7 @@ BEGIN
                                                                       , vbIsGoods_where
                                                                       , EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
                                                                         OR vbUserId = 1058530 -- Няйко В.И.
-                                                                      , inIsDate
+                                                                      , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE THEN TRUE ELSE FALSE END ::Boolean
                                                                       , inSession
                                                                        ) AS gpReport
                               )
@@ -427,7 +429,7 @@ BEGIN
                                                                  , CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
                                                                  , inIsContract
                                                                  , FALSE -- inIsOLAP
-                                                                 , inIsDate
+                                                                 , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE THEN TRUE ELSE FALSE END ::Boolean
                                                                  , inSession
                                                                   ) AS gpReport
                                WHERE vbEndDate_olap < inEndDate
@@ -500,8 +502,12 @@ BEGIN
             , gpReport.PaidKindId
             , gpReport.PaidKindName
 
-            , gpReport.OperDate           ::TDateTime AS OperDate 
-            , gpReport.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName_Full
+            , CASE WHEN inIsDate = TRUE THEN gpReport.OperDate
+                   WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
+                   
+                   ELSE NULL
+              END ::TDateTime AS OperDate 
+            , CASE WHEN inisMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END ::TVarChar  AS DayOfWeekName_Full
 
             , SUM (gpReport.Sale_SummIn_pav)     ::TFloat AS Sale_SummIn_pav
             , SUM (gpReport.ReturnIn_SummIn_pav) ::TFloat AS ReturnIn_SummIn_pav
@@ -544,8 +550,13 @@ BEGIN
               , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.isTop ELSE FALSE END
               , gpReport.PaidKindId
               , gpReport.PaidKindName
-              , gpReport.OperDate
-              , gpReport.DayOfWeekName_Full
+              --, gpReport.OperDate
+              , CASE WHEN inIsDate = TRUE THEN gpReport.OperDate
+                     WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
+                     
+                      ELSE NULL END
+              --, gpReport.DayOfWeekName_Full
+              , CASE WHEN inisMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END
               , Object_Section.Id
               , Object_Section.ValueData
               --, CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END
@@ -714,7 +725,11 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
-                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END ::TDateTime AS OperDate 
+                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate
+                                     WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
+                                     
+                                     ELSE NULL
+                                END ::TDateTime AS OperDate 
                               
                               , ROW_NUMBER() OVER (PARTITION BY COALESCE (ContainerLO_Juridical.ObjectId, 0)
                                                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_ChangePercent() THEN ContainerLO_Juridical.ObjectId WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
@@ -770,7 +785,9 @@ BEGIN
                                 , MILinkObject_Business.ObjectId
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_InfoMoney.ObjectId
-                                , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
+                                , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate
+                                       WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
+                                  ELSE NULL END
                         )
 
  , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner  = TRUE  THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
@@ -1168,4 +1185,9 @@ $BODY$
 Склад Приход / Расход по дате склад
 */
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.08.2023', inEndDate:= '01.08.2023', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inIsDate:= false, inSession:= zfCalc_UserAdmin());
+-- 
+SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.08.2023', inEndDate:= '01.08.2023'
+, inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm()
+, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE
+, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE
+, inIsDate:= TRUE, inisMonth:= TRUE, inSession:= zfCalc_UserAdmin());

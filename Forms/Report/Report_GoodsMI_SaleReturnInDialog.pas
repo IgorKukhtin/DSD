@@ -63,6 +63,7 @@ type
     GuidesInfoMoney: TdsdGuides;
     cbIsDate: TcxCheckBox;
     cbContract: TcxCheckBox;
+    sbisMonth: TcxCheckBox;
   private
     { Private declarations }
   public

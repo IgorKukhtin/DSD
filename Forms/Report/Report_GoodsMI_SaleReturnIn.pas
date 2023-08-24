@@ -141,6 +141,7 @@ type
     OperDate: TcxGridDBColumn;
     DayOfWeekName_full: TcxGridDBColumn;
     Count_TT: TcxGridDBColumn;
+    sbisMonth: TcxCheckBox;
   private
     { Private declarations }
   public
