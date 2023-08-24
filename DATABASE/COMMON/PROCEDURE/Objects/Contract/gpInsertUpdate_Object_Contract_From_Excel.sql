@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract_From_Excel(
 RETURNS VOID AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbContractId_find Integer;
     DECLARE vbContractTagId Integer;
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
@@ -70,21 +71,24 @@ BEGIN
          END IF;
     END IF;
 
-    --с проверкой, если по юр л. есть такой дог (номер + ФО + УП + юр-л), тогда сообщение с ошибкой  
-    IF EXISTS (SELECT 1
-               FROM Object_Contract_View AS tmp_View
-               WHERE tmp_View.JuridicalId = vbJuridicalId
-                 AND tmp_View.PaidKindId  = vbPaidKindId
-                 AND tmp_View.InfoMoneyId = vbInfoMoneyId
-                 AND tmp_View.InvNumber   = TRIM(inContractName)
-               )
+    vbContractId_find:= (SELECT tmp_View.ContractId
+                         FROM Object_Contract_View AS tmp_View
+                         WHERE tmp_View.JuridicalId = vbJuridicalId
+                           AND tmp_View.PaidKindId  = vbPaidKindId
+                           AND tmp_View.InfoMoneyId = vbInfoMoneyId
+                           AND tmp_View.InvNumber   = TRIM(inContractName)
+                        );
+    -- с проверкой, если по юр л. есть такой дог (номер + ФО + УП + юр-л), тогда сообщение с ошибкой  
+    IF vbContractId_find > 0 AND 1=1
     THEN
         RAISE EXCEPTION 'Ошибка.Договор <%> для <%> ФО <%> УП статья <%> уже существует.', inContractName, inJuridicalName, inPaidKindName, inInfoMoneyName;
     END IF;
 
     -- сохранили новый договор
-    PERFORM gpInsertUpdate_Object_Contract (ioId                 := 0              ::Integer       -- Ключ объекта <Договор>
-                                          , inCode               := lfGet_ObjectCode(0, zc_Object_Contract()) ::Integer       -- Код
+    PERFORM gpInsertUpdate_Object_Contract (ioId                 := vbContractId_find             -- Ключ объекта <Договор>
+                                          , inCode               := COALESCE ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbContractId_find)
+                                                                            , lfGet_ObjectCode (0, zc_Object_Contract())
+                                                                             ) ::Integer
                                           , inInvNumber          := TRIM (inContractName)::TVarChar      -- Номер договора
                                           , inInvNumberArchive   := NULL           ::TVarChar      -- Номер архивирования
                                           , inComment            := NULL           ::TVarChar      -- Примечание
@@ -117,13 +121,13 @@ BEGIN
                                           , inCurrencyId         := zc_Enum_Currency_Basis()   ::Integer      -- Валюта
                                           , inBankId             := NULL           ::Integer      -- Банк (исх.платеж)
                                           , inBranchId           := NULL           ::Integer      -- Филиал (расчеты нал)
-                                          , inisDefault          := FALSE          ::Boolean      -- По умолчанию (для вх. платежей)
-                                          , inisDefaultOut       := FALSE          ::Boolean      -- По умолчанию (для исх. платежей)
-                                          , inisStandart         := FALSE          ::Boolean      -- Типовой
-                                          , inisPersonal         := FALSE          ::Boolean      -- Служебная записка
-                                          , inisUnique           := FALSE          ::Boolean      -- Без группировки3
-                                          , inisRealEx           := TRUE           ::Boolean      -- Физ обмен
-                                          , inisNotVat           := FALSE          ::Boolean      -- без НДС 
+                                          , inIsDefault          := FALSE          ::Boolean      -- По умолчанию (для вх. платежей)
+                                          , inIsDefaultOut       := FALSE          ::Boolean      -- По умолчанию (для исх. платежей)
+                                          , inIsStandart         := FALSE          ::Boolean      -- Типовой
+                                          , inIsPersonal         := FALSE          ::Boolean      -- Служебная записка
+                                          , inIsUnique           := TRUE           ::Boolean      -- !!!Без объединения!!!
+                                          , inIsRealEx           := TRUE           ::Boolean      -- Физ обмен
+                                          , inIsNotVat           := FALSE          ::Boolean      -- без НДС 
                                           , inPriceListPromoId   := NULL           ::Integer      -- Прайс-лист(Акционный)
                                           , inStartPromo         := NULL           ::TDateTime    -- Дата начала акции
                                           , inEndPromo           := NULL           ::TDateTime    -- Дата окончания акции

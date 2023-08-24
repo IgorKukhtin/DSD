@@ -670,7 +670,9 @@ BEGIN
      AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.ContractId IS NULL
           OR vbIsIrna = TRUE
          )
-     AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+     AND ((Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                          , zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
+                                                           )
            AND vbBranchId_Constraint > 0)
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
@@ -680,6 +682,8 @@ BEGIN
            AND vbIsUserOrder = FALSE)
        OR (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                           , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                          , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                                                          , zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
                                                            )
            AND vbIsUserOrder = TRUE)
        OR (Object_InfoMoney_View.InfoMoneyId = 8942 AND vbIsUserOrder = FALSE) -- Кротон

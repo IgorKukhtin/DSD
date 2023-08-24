@@ -94,6 +94,33 @@ BEGIN
                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                        ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_PriceListItem_Goods.ChildObjectId
                                       AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_0
+                                       ON ObjectLink_GoodsGroup_parent_0.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_0.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_1
+                                       ON ObjectLink_GoodsGroup_parent_1.ObjectId = ObjectLink_GoodsGroup_parent_0.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_1.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_2
+                                       ON ObjectLink_GoodsGroup_parent_2.ObjectId = ObjectLink_GoodsGroup_parent_1.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_2.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_3
+                                       ON ObjectLink_GoodsGroup_parent_3.ObjectId = ObjectLink_GoodsGroup_parent_2.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_3.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_4
+                                       ON ObjectLink_GoodsGroup_parent_4.ObjectId = ObjectLink_GoodsGroup_parent_3.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_4.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_5
+                                       ON ObjectLink_GoodsGroup_parent_5.ObjectId = ObjectLink_GoodsGroup_parent_4.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_5.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_6
+                                       ON ObjectLink_GoodsGroup_parent_6.ObjectId = ObjectLink_GoodsGroup_parent_5.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_6.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_7
+                                       ON ObjectLink_GoodsGroup_parent_7.ObjectId = ObjectLink_GoodsGroup_parent_6.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_7.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent_8
+                                       ON ObjectLink_GoodsGroup_parent_8.ObjectId = ObjectLink_GoodsGroup_parent_7.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_parent_8.DescId   = zc_ObjectLink_GoodsGroup_Parent()
     
                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                        ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_PriceListItem_Goods.ChildObjectId
@@ -105,7 +132,17 @@ BEGIN
                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListFromId
                 AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
                 -- если заполнены  переносить данные только по этим товарам
-                AND (ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId OR inGoodsGroupId = 0)
+                AND (ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId OR inGoodsGroupId = 0
+                  OR ObjectLink_GoodsGroup_parent_0.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_1.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_2.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_3.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_4.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_5.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_6.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_7.ChildObjectId = inGoodsGroupId 
+                  OR ObjectLink_GoodsGroup_parent_8.ChildObjectId = inGoodsGroupId 
+                    )
                 AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
                 --
                 AND Object_Goods.isErased = FALSE
