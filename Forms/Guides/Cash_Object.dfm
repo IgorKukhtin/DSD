@@ -4,7 +4,7 @@ inherited Cash_ObjectForm: TCash_ObjectForm
   ClientWidth = 773
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 789
-  ExplicitHeight = 412
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -88,17 +88,22 @@ inherited Cash_ObjectForm: TCash_ObjectForm
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
       Enabled = False
-      FormName = 'TCashEditForm'
+      FormName = 'Error'
+      FormNameParam.Value = 'Error'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
-      FormName = 'TCashEditForm'
+      ShortCut = 0
+      FormName = 'Error'
+      FormNameParam.Value = 'Error'
     end
     inherited dsdSetUnErased: TdsdUpdateErased
       Enabled = False
+      ShortCut = 0
     end
     inherited dsdSetErased: TdsdUpdateErased
       Enabled = False
+      ShortCut = 0
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -225,5 +230,8 @@ inherited Cash_ObjectForm: TCash_ObjectForm
       item
         Action = dsdChoiceGuides
       end>
+  end
+  inherited spErasedUnErased: TdsdStoredProc
+    StoredProcName = ''
   end
 end
