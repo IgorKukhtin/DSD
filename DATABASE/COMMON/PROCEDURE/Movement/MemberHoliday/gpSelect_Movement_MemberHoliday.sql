@@ -26,25 +26,33 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , DateIn TDateTime
              , DateOut TDateTime
              , Day_work    TFloat
-             , Day_holiday TFloat  
-             
-             , PersonalServiceListId Integer, PersonalServiceListName TVarChar   
+             , Day_holiday TFloat
+
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , InvNumber_Full1 TVarChar, InvNumber_Full2 TVarChar
              , SummHoliday1 TFloat, SummHoliday2 TFloat, TotalSummHoliday TFloat, SummHoliday_calc TFloat
-             , Amount TFloat 
-             , isLoad Boolean 
+             , Amount TFloat
+             , isLoad Boolean
              , Color_SummHoliday Integer
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsAccessKey_MemberHoliday Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_MemberHoliday());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- проверка прав
+     vbIsAccessKey_MemberHoliday:= EXISTS (SELECT *        FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_MemberHoliday() AND UserId = vbUserId)
+                                OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+                                  ;
+
+
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                        UNION
                         SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -69,7 +77,7 @@ BEGIN
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                         WHERE lfSelect.Ord = 1
                         )
-        
+
         , tmpMovement AS (SELECT Movement.*
                                , MovementFloat_MovementId.ValueData    ::Integer  AS MovementId_1
                                , MovementFloat_MovementItemId.ValueData::Integer  AS MovementId_2
@@ -77,19 +85,19 @@ BEGIN
                                JOIN Movement ON Movement.DescId = zc_Movement_MemberHoliday()
                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                             AND Movement.StatusId = tmpStatus.StatusId
-                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId 
-                               
+                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+
                                LEFT JOIN MovementFloat AS MovementFloat_MovementId
-                                                       ON MovementFloat_MovementId.MovementId = Movement.Id 
+                                                       ON MovementFloat_MovementId.MovementId = Movement.Id
                                                       AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
-                         
+
                                LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                                       ON MovementFloat_MovementItemId.MovementId = Movement.Id 
+                                                       ON MovementFloat_MovementItemId.MovementId = Movement.Id
                                                       AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                           )
 
-        , tmpSummHoliday AS (SELECT MovementItem.MovementId AS MovementId 
-                                  , MovementItem.ObjectId   AS PersonalId
+        , tmpSummHoliday AS (SELECT MovementItem.MovementId                           AS MovementId
+                                  , ObjectLink_Personal_Member.ChildObjectId          AS MemberId
                                   , SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
                              FROM (SELECT DISTINCT tmpMovement.MovementId_1 AS MovementId FROM tmpMovement
                                 UNION
@@ -101,11 +109,14 @@ BEGIN
                                    INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                                 ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                                AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                        ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                                       AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                              GROUP BY MovementItem.MovementId
-                                    , MovementItem.ObjectId
+                                    , ObjectLink_Personal_Member.ChildObjectId
                       )
-        
-        
+
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -122,7 +133,7 @@ BEGIN
            , Object_Member.ValueData               AS MemberName
            , Object_MemberMain.Id                  AS MemberMainId
            , Object_MemberMain.ValueData           AS MemberMainName
-           
+
            , Object_Position.Id                    AS PositionId
            , Object_Position.ValueData             AS PositionName
            , Object_Unit.Id                        AS UnitId
@@ -138,26 +149,49 @@ BEGIN
 
            , ObjectDate_DateIn.ValueData           AS DateIn
            , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut
-           
+
            , (DATE_PART ('DAY', MovementDate_OperDateEnd.ValueData  :: TIMESTAMP - MovementDate_OperDateStart.ValueData  :: TIMESTAMP) + 1) :: TFloat AS Day_work
            , (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1) :: TFloat AS Day_holiday
 
 
            , Object_PersonalServiceList.Id            AS PersonalServiceListId
-           , Object_PersonalServiceList.ValueData     AS PersonalServiceListName 
-           , zfCalc_PartionMovementName (Movement_PersonalService1.DescId, MovementDesc1.ItemName, Movement_PersonalService1.InvNumber, Movement_PersonalService1.OperDate) ::TVarChar AS InvNumber_Full1
-           , zfCalc_PartionMovementName (Movement_PersonalService2.DescId, MovementDesc2.ItemName, Movement_PersonalService2.InvNumber, Movement_PersonalService2.OperDate) ::TVarChar AS InvNumber_Full2
-           , tmpSummHoliday1.SummHoliday ::TFloat AS SummHoliday1
-           , tmpSummHoliday2.SummHoliday ::TFloat AS SummHoliday2
-           , (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0)) ::TFloat AS TotalSummHoliday  
-           , (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)) ::TFloat AS SummHoliday_calc
-           , MovementFloat_Amount.ValueData  ::TFloat AS Amount                  --Ср.ЗП за день    
-           , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad  
-           
-           , CASE WHEN (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)) <> (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0))
-                  THEN  zc_Color_Pink() --фон 
+           , Object_PersonalServiceList.ValueData     AS PersonalServiceListName
+           , zfCalc_InvNumber_isErased (MovementDesc1.ItemName, Movement_PersonalService1.InvNumber, Movement_PersonalService1.OperDate, Movement_PersonalService1.StatusId) ::TVarChar AS InvNumber_Full1
+           , zfCalc_InvNumber_isErased (MovementDesc2.ItemName, Movement_PersonalService2.InvNumber, Movement_PersonalService2.OperDate, Movement_PersonalService2.StatusId) ::TVarChar AS InvNumber_Full2
+
+             -- Отпускные (первый период)
+           , CASE WHEN vbUserId = 5 AND 1=0
+                       THEN (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1))
+                          - (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0))
+                  WHEN vbIsAccessKey_MemberHoliday = TRUE THEN tmpSummHoliday1.SummHoliday
+                  ELSE 0
+             END ::TFloat AS SummHoliday1
+             -- Отпускные (второй период)
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN tmpSummHoliday2.SummHoliday ELSE 0 END ::TFloat AS SummHoliday2
+             -- Отпускные Итого
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN COALESCE (tmpSummHoliday1.SummHoliday, 0) + COALESCE (tmpSummHoliday2.SummHoliday, 0) ELSE 0 END ::TFloat AS TotalSummHoliday
+             -- Отпускные (расчет)
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+                  THEN MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData   :: TIMESTAMP
+                                                                         - MovementDate_BeginDateStart.ValueData :: TIMESTAMP)
+                                                       + 1)
+                  ELSE 0
+             END ::TFloat AS SummHoliday_calc
+             -- Ср.ЗП за день
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN MovementFloat_Amount.ValueData  ELSE 0 END ::TFloat AS Amount
+             --
+           , CASE WHEN Movement_PersonalService1.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                    OR Movement_PersonalService2.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                       THEN COALESCE (MovementBoolean_isLoad.ValueData, FALSE) 
+                  ELSE FALSE
+             END :: Boolean AS isLoad
+
+           , CASE WHEN (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)) :: TFloat
+                    <> (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0))
+                  THEN  zc_Color_Pink() --фон
                   ELSE zc_Color_White()
              END ::Integer AS Color_SummHoliday
+
        FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -191,23 +225,22 @@ BEGIN
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
             /*LEFT JOIN MovementFloat AS MovementFloat_MovementId
-                                    ON MovementFloat_MovementId.MovementId = Movement.Id 
+                                    ON MovementFloat_MovementId.MovementId = Movement.Id
                                    AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
             */
-            LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = Movement.MovementId_1  --MovementFloat_MovementId.ValueData::Integer 
+            LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = Movement.MovementId_1  --MovementFloat_MovementId.ValueData::Integer
             LEFT JOIN MovementDesc AS MovementDesc1 ON MovementDesc1.Id = Movement_PersonalService1.DescId
 
             /*LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id 
+                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id
                                    AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
             */
             LEFT JOIN Movement AS Movement_PersonalService2 ON Movement_PersonalService2.Id = Movement.MovementId_2  --MovementFloat_MovementItemId.ValueData::Integer
             LEFT JOIN MovementDesc AS MovementDesc2 ON MovementDesc2.Id = Movement_PersonalService2.DescId
- 
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                       ON MovementBoolean_isLoad.MovementId = Movement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
-
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                          ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -233,7 +266,7 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
-            
+
             --
             LEFT JOIN tmpMember ON tmpMember.MemberId = MovementLinkObject_Member.ObjectId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpMember.PositionId
@@ -250,18 +283,18 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                  ON ObjectLink_Personal_PersonalServiceList.ObjectId = tmpMember.PersonalId
                                 AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId 
-            
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
             --
             LEFt JOIN tmpSummHoliday AS tmpSummHoliday1
-                                     ON tmpSummHoliday1.MovementId = Movement_PersonalService1.Id 
-                                    AND tmpSummHoliday1.PersonalId = tmpMember.PersonalId
+                                     ON tmpSummHoliday1.MovementId = Movement_PersonalService1.Id
+                                    AND tmpSummHoliday1.MemberId   = MovementLinkObject_Member.ObjectId
             LEFt JOIN tmpSummHoliday AS tmpSummHoliday2
-                                     ON tmpSummHoliday2.MovementId = Movement_PersonalService2.Id 
-                                    AND tmpSummHoliday2.PersonalId = tmpMember.PersonalId                      
+                                     ON tmpSummHoliday2.MovementId = Movement_PersonalService2.Id
+                                    AND tmpSummHoliday2.MemberId   = MovementLinkObject_Member.ObjectId
 
       ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -60,6 +60,7 @@ BEGIN
                    -- !!!захардкодил временно для БН с НДС!!!
                    WHEN MB_PriceWithVAT.ValueData = TRUE
                     AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                    AND OH_JuridicalDetails.OKPO NOT IN ('26632252') 
                         THEN 'PrintMovement_Sale2PriceWithVAT'
 
                    ELSE COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
@@ -89,6 +90,8 @@ BEGIN
             LEFT JOIN MovementBoolean AS MB_PriceWithVAT
                                       ON MB_PriceWithVAT.MovementId = Movement.Id
                                      AND MB_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
 
             LEFT JOIN PrintForms_View
                    ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate

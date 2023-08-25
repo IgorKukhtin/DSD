@@ -55,9 +55,11 @@ $BODY$
 
     DECLARE vbIsLongUKTZED Boolean;
 
+    DECLARE vbOKPO TVarChar;
+
     DECLARE vbOperDate_Begin1 TDateTime;
 
-    DECLARE vbMovementId_tax Integer;   
+    DECLARE vbMovementId_tax Integer;
     DECLARE vbCountMI Integer;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
@@ -128,7 +130,9 @@ BEGIN
                       ELSE FALSE
             END AS isOKPO_04544524
 
-            INTO vbIsGoodsCode, vbIsPrice_Pledge_25, vbIsOKPO_04544524
+          , OH_JuridicalDetails_To.OKPO
+
+            INTO vbIsGoodsCode, vbIsPrice_Pledge_25, vbIsOKPO_04544524, vbOKPO
 
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -402,7 +406,10 @@ BEGIN
                                THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           WHEN vbExtraChargesPercent <> 0
                                THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))*/
-                          ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
+                          ELSE CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent > 0 AND vbOKPO = '26632252'
+                                         THEN CAST (MIFloat_Price.ValueData / (1 + vbVATPercent / 100) AS NUMERIC (16, 3))
+                                    ELSE  COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
+                               END
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
                    -- , SUM (MovementItem.Amount) AS Amount
@@ -424,7 +431,7 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                               -- AND MIFloat_Price.ValueData <> 0 
+                                               -- AND MIFloat_Price.ValueData <> 0
                    --если MIFloat_Price.ValueData = 0, тогда берем zc_MIFloat_PriceTare
                    LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
                                                ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
@@ -493,9 +500,6 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                      ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                         LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                     ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -532,7 +536,7 @@ BEGIN
 
     --если мало строк, на печати выводим на 1 странице 2 копии
     vbCountMI := (SELECT Count (*)
-                  FROM MovementItem 
+                  FROM MovementItem
                   WHERE MovementItem.MovementId = inMovementId
                     AND MovementItem.DescId = zc_MI_Master()
                     AND MovementItem.isErased = FALSE
@@ -599,8 +603,8 @@ BEGIN
                                                                 , zc_MovementFloat_TotalCountSh()
                                                                 , zc_MovementFloat_TotalSummMVAT()
                                                                 , zc_MovementFloat_TotalSummPVAT()
-                                                                , zc_MovementFloat_TotalSumm()  
-                                                                , zc_MovementFloat_TotalSummTare() 
+                                                                , zc_MovementFloat_TotalSumm()
+                                                                , zc_MovementFloat_TotalSummTare()
                                                                 , zc_MovementFloat_TotalCountTare()
                                                                  )
                                   )
@@ -651,8 +655,8 @@ BEGIN
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData - COALESCE (vbTotalCountSh_Kg,0) END AS TotalCountSh
 
            , COALESCE (CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END, 0)
-             + COALESCE (CAST (MovementFloat_TotalSummTare.ValueData - MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0) AS TotalSummMVAT 
-           
+             + COALESCE (CAST (MovementFloat_TotalSummTare.ValueData - MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0) AS TotalSummMVAT
+
            , (COALESCE (CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END, 0)
             + COALESCE (MovementFloat_TotalSummTare.ValueData,0)
             - CASE WHEN inMovementId = 25962251 THEN 0.01 ELSE 0 END -- № 1871895 от 16.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
@@ -660,20 +664,20 @@ BEGIN
 
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
                   THEN vbOperSumm_PVAT - vbOperSumm_MVAT
-                  ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData 
+                  ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData
                      + COALESCE (CAST ( MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0)
                      - CASE WHEN inMovementId = 25962251 THEN 0.01 ELSE 0 END -- № 1871895 от 16.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
              END :: TFloat AS SummVAT
-           
+
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
                   THEN vbOperSumm_PVAT
                   ELSE MovementFloat_TotalSumm.ValueData
                      - CASE WHEN inMovementId = 25962251 THEN 0.01 ELSE 0 END -- № 1871895 от 16.08.2023 - Військова частина Т0920 м. Дніпро вул. Стартова буд.15
              END :: TFloat AS TotalSumm
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData *(1 - (vbVATPercent / (vbVATPercent + 100))) END TotalSummMVAT_Info                                                                                                                            
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData *(1 - (vbVATPercent / (vbVATPercent + 100))) END TotalSummMVAT_Info
              -- Сумма оборотной тары
            , MovementFloat_TotalSummTare.ValueData AS TotalSummPVAT_Tare -- c НДС
-           
+
            , CAST (MovementFloat_TotalSummTare.ValueData - MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)) AS TotalSummMVAT_Tare --  без НДС
 
 
@@ -681,7 +685,7 @@ BEGIN
            , CASE WHEN vbIsKiev = TRUE OR OH_JuridicalDetails_To.OKPO IN ('43536406') THEN TRUE ELSE FALSE END AS isPrintPageBarCode
 
           -- , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , CASE WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> '' THEN (OH_JuridicalDetails_To.Name ||' '|| ObjectString_ToAddress.ValueData) 
+           , CASE WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> '' THEN (OH_JuridicalDetails_To.Name ||' '|| ObjectString_ToAddress.ValueData)
                   ELSE COALESCE (Object_Partner.ValueData, Object_To.ValueData)
              END ::TVarChar AS ToName
 
@@ -884,9 +888,10 @@ BEGIN
 
              -- этому Юр Лицу печатается "За довіренністю ...."
            , vbIsOKPO_04544524 :: Boolean AS isOKPO_04544524
-           
+
            --если мало строк печатается 2 копии
-           , CASE WHEN COALESCE (vbCountMI,0) > 3 THEN FALSE ELSE TRUE END AS isTwoCopies
+           --, CASE WHEN COALESCE (vbCountMI,0) > 3 THEN FALSE ELSE TRUE END :: Boolean AS isTwoCopies
+           , TRUE :: Boolean isTwoCopies
 
        FROM tmpMovement AS Movement
             LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Sale
@@ -945,9 +950,9 @@ BEGIN
                                       AND MovementFloat_TotalSummTare.DescId = zc_MovementFloat_TotalSummTare()
  /*           LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountTare
                                        ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
-                                      AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()     
+                                      AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
 */
-                                      
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
@@ -1340,7 +1345,9 @@ BEGIN
                                                        , inIsWithVAT    := vbPriceWithVAT
                                                         )
                          ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
+
                     END AS Price
+
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
                   , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
@@ -1356,12 +1363,12 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              --AND MIFloat_Price.ValueData <> 0  
+                                              --AND MIFloat_Price.ValueData <> 0
                   --если MIFloat_Price.ValueData = 0, тогда берем zc_MIFloat_PriceTare
                   LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
                                               ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
                                              AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
-                                             AND COALESCE (MIFloat_Price.ValueData,0) = 0 
+                                             AND COALESCE (MIFloat_Price.ValueData,0) = 0
 
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -1407,7 +1414,10 @@ BEGIN
                                                          , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                          , inIsWithVAT    := vbPriceWithVAT
                                                           )
-                           ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
+                           ELSE CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent > 0 AND vbOKPO = '26632252'
+                                     THEN CAST (MIFloat_Price.ValueData / (1 + vbVATPercent / 100) AS NUMERIC (16, 3))
+                                     ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
+                                END
                       END
                     , MIFloat_CountForPrice.ValueData
                     , MIFloat_ChangePercent.ValueData
@@ -1504,8 +1514,12 @@ BEGIN
              END                             AS AmountPartner
 
            , tmpMI_Order.Amount              AS AmountOrder
-           , CASE WHEN tmpMI.CountForPrice > 1 THEN tmpMI.Price / tmpMI.CountForPrice ELSE tmpMI.Price END AS Price
-           , tmpMI.CountForPrice             AS CountForPrice
+
+           , (CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent > 0 AND vbOKPO = '26632252'
+                        THEN CAST (tmpMI.Price / (1 + vbVATPercent / 100) AS NUMERIC (16, 3))
+                        ELSE tmpMI.Price
+              END / CASE WHEN tmpMI.CountForPrice > 1 THEN tmpMI.CountForPrice ELSE 1 END
+             ) :: TFLoat AS Price
 
            , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0)) > 0
                        THEN CAST (tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0)) AS NUMERIC (16, 4))
@@ -1669,7 +1683,7 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                    ON ObjectString_Goods_BUH.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()  
+                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
             LEFT JOIN ObjectDate AS ObjectDate_BUH
                                  ON ObjectDate_BUH.ObjectId = tmpMI.GoodsId
                                 AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
@@ -1749,7 +1763,7 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                          --если MIFloat_Price.ValueData = 0, тогда берем zc_MIFloat_PriceTare 
+                          --если MIFloat_Price.ValueData = 0, тогда берем zc_MIFloat_PriceTare
                           LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
                                                       ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
                                                      AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
@@ -1768,7 +1782,7 @@ BEGIN
 
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
-                       ---- AND COALESCE (MIFloat_Price.ValueData, 0) = 0   
+                       ---- AND COALESCE (MIFloat_Price.ValueData, 0) = 0
                        --AND COALESCE (MIFloat_PriceTare.ValueData,0) <> 0
                        AND 1 = 0 -- !!!временно отключил!!!
                      GROUP BY MovementItem.ObjectId

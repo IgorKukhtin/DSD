@@ -25,23 +25,73 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalServiceByHoliday(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMovementId1 Integer;
-   DECLARE vbMovementId2 Integer;
-   DECLARE vbMI_Id1  Integer;
-   DECLARE vbMI_Id2  Integer;
    DECLARE vbSummHoliday1 TFloat;
    DECLARE vbSummHoliday2 TFloat;
-   DECLARE vbInvNumber1 TVarChar;
-   DECLARE vbInvNumber2 TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
 
-     --проверка біли ли ручные правки, если да то ничего не делаем
-     IF COALESCE (inMovementId_1,0) <> 0 OR COALESCE (inMovementId_1,0) <> 0
+
+     -- Проверка - 1
+     /*IF COALESCE (inMovementId_1, 0) = 0 AND 1=1
      THEN
-    -- RAISE EXCEPTION 'Ошибка. COALESCE (inMovementId_1,0) <> 0 OR COALESCE (inMovementId_1,0) <> 0';
-      
+         RAISE EXCEPTION 'Ошибка.Не найден документ начисления для%<%> %за <%>.'
+                       , CHR (13)
+                       , lfGet_Object_ValueData (inPersonalServiceListId)
+                       , CHR (13)
+                       , zfCalc_MonthName (inServiceDate1) || ' - ' || EXTRACT (YEAR FROM inServiceDate1)
+                        ;
+     END IF;*/
+
+     -- Проверка - 1
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_1 AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         -- Распроводим Документ
+         IF vbUserId = 5
+         THEN PERFORM lpUnComplete_Movement (inMovementId := inMovementId_1
+                                           , inUserId     := vbUserId
+                                             );
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Документ начисления для <%> %№ <%> от <%> %в статусе <%>.'
+                           , lfGet_Object_ValueData (inPersonalServiceListId)
+                           , CHR (13)
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_1)
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_1)
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData_sh (Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId_1)
+                            ;
+         END IF;
+     END IF;
+
+
+     -- Проверка - 2
+     /*IF COALESCE (inMovementId_2, 0) = 0 AND inSummHoliday2 > 0 AND 1=1
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найден документ начисления для%<%> %за <%>.'
+                       , CHR (13)
+                       , lfGet_Object_ValueData (inPersonalServiceListId)
+                       , CHR (13)
+                       , zfCalc_MonthName (inServiceDate2) || ' - ' || EXTRACT (YEAR FROM inServiceDate2)
+                        ;
+     END IF;*/
+
+     -- Проверка - 2
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_2 AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ начисления для <%> %№ <%> от <%> %в статусе <%>.'
+                       , lfGet_Object_ValueData (inPersonalServiceListId)
+                       , CHR (13)
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_2)
+                       , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_2)
+                       , CHR (13)
+                       , (SELECT lfGet_Object_ValueData_sh (Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId_2)
+                        ;
+     END IF;
+
+
+     -- проверка были ли ручные правки, если да то ничего не делаем
+     IF COALESCE (inMovementId_1, 0) <> 0 OR COALESCE (inMovementId_2, 0) <> 0
+     THEN
          vbSummHoliday1 := (SELECT SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
                             FROM MovementItem 
                                  INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
@@ -62,203 +112,252 @@ BEGIN
                               AND MovementItem.isErased = FALSE
                               AND MovementItem.ObjectId = inPersonalId
                             );
-         IF COALESCE (vbSummHoliday1,0) <> inSummHoliday1 
-           OR (COALESCE( inSummHoliday2,0) <> 0 AND COALESCE (vbSummHoliday2,0) <> inSummHoliday2)
-         THEN 
-         -- RAISE EXCEPTION 'Ошибка.COALESCE (vbSummHoliday1,0) <> inSummHoliday1 ';
-             RETURN;
-         END IF; 
      END IF;
      
-     IF COALESCE (vbSummHoliday1,0) = 0
+
+     -- если нулевая сумма - 1
+     IF COALESCE (vbSummHoliday1, 0) = 0 OR vbSummHoliday1 <> inSummHoliday1
      THEN 
-     --RAISE EXCEPTION 'Ошибка.COALESCE (vbSummHoliday1,0) = 0';
-     
-     --пробуем найти уже созданній док по inPersonalServiceListId
-      SELECT MovementDate_ServiceDate.MovementId
-           , Movement.InvNumber
-   INTO vbMovementId1, vbInvNumber1
-      FROM MovementDate AS MovementDate_ServiceDate
-           INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                              AND Movement.DescId = zc_Movement_PersonalService()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete()   --<> zc_Enum_Status_Erased()
-           INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
-      WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inServiceDate1) AND (DATE_TRUNC ('MONTH', inServiceDate1) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-        AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-        AND MovementLinkObject_PersonalServiceList.ObjectId = inPersonalServiceListId
-        ;
+         -- Выбираем сохраненные данные из документа
+         CREATE TEMP TABLE tmpMI_1 ON COMMIT DROP AS
+                SELECT tmp.*
+                FROM gpSelect_MovementItem_PersonalService (inMovementId_1, FALSE, FALSE, inSession) AS tmp
+               ;
 
-         -- сохранили <Документ>
-     vbMovementId1 := lpInsertUpdate_Movement_PersonalService (ioId                      := COALESCE (vbMovementId1,0)
-                                                             , inInvNumber               := COALESCE (vbInvNumber1, CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) )
-                                                             , inOperDate                := (inServiceDate1+ INTERVAL '1 Month') ::TDateTime
-                                                             , inServiceDate             := inServiceDate1
-                                                             , inComment                 := '' ::TVarChar
-                                                             , inPersonalServiceListId   := inPersonalServiceListId 
-                                                             , inJuridicalId             := 0
-                                                             , inUserId                  := vbUserId
-                                                              );
-     -- Выбираем сохраненные данные из документа
-     CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
-            SELECT tmp.*
-            FROM gpSelect_MovementItem_PersonalService(vbMovementId1, FALSE, FALSE, inSession) AS tmp
-            ;
-     PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                    := COALESCE (tmpMI.Id,0)                                  ::Integer
-                                                        , inMovementId            := vbMovementId1                                          ::Integer
-                                                        , inPersonalId            := tmp.PersonalId                              ::Integer
-                                                        , inIsMain                := COALESCE (tmpMI.isMain, inisMain)         ::Boolean
-                                                        , inSummService           := COALESCE (tmpMI.SummService,0)                         ::TFloat
-                                                        , inSummCardRecalc        := COALESCE (tmpMI.SummCardRecalc,0)                      ::TFloat
-                                                        , inSummCardSecondRecalc  := COALESCE (tmpMI.SummCardSecondRecalc,0)                ::TFloat
-                                                        , inSummCardSecondCash    := COALESCE (tmpMI.SummCardSecondCash,0)                  ::TFloat
-                                                        , inSummNalogRecalc       := COALESCE (tmpMI.SummNalogRecalc,0)                     ::TFloat
-                                                        , inSummNalogRetRecalc    := COALESCE (tmpMI.SummNalogRetRecalc,0)                ::TFloat
-                                                        , inSummMinus             := COALESCE (tmpMI.SummMinus,0)                           ::TFloat
-                                                        , inSummAdd               := COALESCE (tmpMI.SummAdd,0)                             ::TFloat
-                                                        , inSummAddOthRecalc      := COALESCE (tmpMI.SummAddOthRecalc,0)                    ::TFloat
-                                                        , inSummHoliday           := tmp.SummHoliday                         ::TFloat
-                                                        , inSummSocialIn          := COALESCE (tmpMI.SummSocialIn,0)                        ::TFloat
-                                                        , inSummSocialAdd         := COALESCE (tmpMI.SummSocialAdd,0)                       ::TFloat
-                                                        , inSummChildRecalc       := COALESCE (tmpMI.SummChildRecalc,0)            ::TFloat
-                                                        , inSummMinusExtRecalc    := COALESCE (tmpMI.SummMinusExtRecalc,0)         ::TFloat
-                                                        , inSummFine              := COALESCE (tmpMI.SummFine,0)                            ::TFloat
-                                                        , inSummFineOthRecalc     := COALESCE (tmpMI.SummFineOthRecalc,0)                   ::TFloat
-                                                        , inSummHosp              := COALESCE (tmpMI.SummHosp,0)                            ::TFloat
-                                                        , inSummHospOthRecalc     := COALESCE (tmpMI.SummHospOthRecalc,0)                   ::TFloat
-                                                        , inSummCompensationRecalc:= COALESCE (tmpMI.SummCompensationRecalc,0)              ::TFloat
-                                                        , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
-                                                        , inSummHouseAdd          := COALESCE (tmpMI.SummHouseAdd,0)                        ::TFloat
-                                                        , inNumber                := COALESCE (tmpMI.Number, '')     ::TVarChar
-                                                        , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
-                                                        , inInfoMoneyId           := COALESCE (tmpMI.InfoMoneyId, zc_Enum_InfoMoney_60101()) ::Integer
-                                                        , inUnitId                := COALESCE (tmp.UnitId, tmpMI.UnitId)                    ::Integer
-                                                        , inPositionId            := tmp.PositionId                                         ::Integer
-                                                        , inMemberId              := 0                                                      ::Integer 
-                                                        , inPersonalServiceListId := COALESCE (tmp.PersonalServiceListId, tmpMI.PersonalServiceListId) :: Integer
-                                                        , inFineSubjectId         := COALESCE (tmpMI.FineSubjectId,0)                       ::Integer
-                                                        , inUnitFineSubjectId     := COALESCE (tmpMI.UnitFineSubjectId,0)                   ::Integer
-                                                        , inUserId                := vbUserId
-                                                      ) 
-     FROM (SELECT inMemberId   AS MemberId
-                , inPersonalId AS PersonalId
-                , inPositionId AS PositionId
-                , inUnitId     AS UnitId       
-                , inPersonalServiceListId AS PersonalServiceListId
-                , inSummHoliday1 AS SummHoliday
-          ) AS tmp         
-          LEFT JOIN tmpMI ON tmpMI.PersonalId = tmp.PersonalId
-                         AND tmpMI.MemberId = tmp.MemberId
-                         AND tmpMI.PositionId = tmp.PositionId
-     ;
+         IF COALESCE (inMovementId_1, 0) = 0
+         THEN
+             -- сохранили <Документ>
+             inMovementId_1 := lpInsertUpdate_Movement_PersonalService (ioId                     := inMovementId_1
+                                                                     , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar)
+                                                                     , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate1)
+                                                                     , inServiceDate             := inServiceDate1
+                                                                     , inComment                 := '' ::TVarChar
+                                                                     , inPersonalServiceListId   := inPersonalServiceListId 
+                                                                     , inJuridicalId             := 0
+                                                                     , inUserId                  := vbUserId
+                                                                      );
+         END IF;
+
+         --
+         PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                    := COALESCE (tmpMI.Id,0)                                  ::Integer
+                                                            , inMovementId            := inMovementId_1                                         ::Integer
+                                                            , inPersonalId            := tmpMI.PersonalId                                       ::Integer
+                                                            , inIsMain                := COALESCE (tmpMI.isMain, inisMain)                      ::Boolean
+                                                            , inSummService           := COALESCE (tmpMI.SummService,0)                         ::TFloat
+                                                            , inSummCardRecalc        := COALESCE (tmpMI.SummCardRecalc,0)                      ::TFloat
+                                                            , inSummCardSecondRecalc  := COALESCE (tmpMI.SummCardSecondRecalc,0)                ::TFloat
+                                                            , inSummCardSecondCash    := COALESCE (tmpMI.SummCardSecondCash,0)                  ::TFloat
+                                                            , inSummNalogRecalc       := COALESCE (tmpMI.SummNalogRecalc,0)                     ::TFloat
+                                                            , inSummNalogRetRecalc    := COALESCE (tmpMI.SummNalogRetRecalc,0)                  ::TFloat
+                                                            , inSummMinus             := COALESCE (tmpMI.SummMinus,0)                           ::TFloat
+                                                            , inSummAdd               := COALESCE (tmpMI.SummAdd,0)                             ::TFloat
+                                                            , inSummAddOthRecalc      := COALESCE (tmpMI.SummAddOthRecalc,0)                    ::TFloat
+                                                            , inSummHoliday           := inSummHoliday1                                         ::TFloat
+                                                            , inSummSocialIn          := COALESCE (tmpMI.SummSocialIn,0)                        ::TFloat
+                                                            , inSummSocialAdd         := COALESCE (tmpMI.SummSocialAdd,0)                       ::TFloat
+                                                            , inSummChildRecalc       := COALESCE (tmpMI.SummChildRecalc,0)                     ::TFloat
+                                                            , inSummMinusExtRecalc    := COALESCE (tmpMI.SummMinusExtRecalc,0)                  ::TFloat
+                                                            , inSummFine              := COALESCE (tmpMI.SummFine,0)                            ::TFloat
+                                                            , inSummFineOthRecalc     := COALESCE (tmpMI.SummFineOthRecalc,0)                   ::TFloat
+                                                            , inSummHosp              := COALESCE (tmpMI.SummHosp,0)                            ::TFloat
+                                                            , inSummHospOthRecalc     := COALESCE (tmpMI.SummHospOthRecalc,0)                   ::TFloat
+                                                            , inSummCompensationRecalc:= COALESCE (tmpMI.SummCompensationRecalc,0)              ::TFloat
+                                                            , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
+                                                            , inSummHouseAdd          := COALESCE (tmpMI.SummHouseAdd,0)                        ::TFloat
+                                                            , inNumber                := COALESCE (tmpMI.Number, '')                            ::TVarChar
+                                                            , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
+                                                            , inInfoMoneyId           := tmpMI.InfoMoneyId
+                                                            , inUnitId                := tmpMI.UnitId
+                                                            , inPositionId            := tmpMI.PositionId                                       ::Integer
+                                                            , inMemberId              := 0                                                      ::Integer 
+                                                            , inPersonalServiceListId := tmpMI.PersonalServiceListId
+                                                            , inFineSubjectId         := COALESCE (tmpMI.FineSubjectId,0)                       ::Integer
+                                                            , inUnitFineSubjectId     := COALESCE (tmpMI.UnitFineSubjectId,0)                   ::Integer
+                                                            , inUserId                := vbUserId
+                                                             )
+         FROM (SELECT tmp.MemberId
+                    , COALESCE (tmpMI.PersonalId, tmp.PersonalId) AS PersonalId
+                    , COALESCE (tmpMI.PositionId, tmp.PositionId) AS PositionId
+                    , COALESCE (tmpMI.UnitId,     tmp.UnitId)     AS UnitId
+                    , COALESCE (tmpMI.PersonalServiceListId, inPersonalServiceListId) AS PersonalServiceListId
+
+                    , tmpMI.Id
+                    , tmpMI.FineSubjectId
+                    , tmpMI.UnitFineSubjectId
+                    , COALESCE (tmpMI.InfoMoneyId, zc_Enum_InfoMoney_60101()) AS InfoMoneyId
+                    , tmpMI.Number
+                    , tmpMI.Comment
+                    , COALESCE (tmpMI.isMain, inisMain) AS isMain
+                    , tmpMI.SummService
+                    , tmpMI.SummCardRecalc
+                    , tmpMI.SummCardSecondRecalc
+                    , tmpMI.SummCardSecondCash
+                    , tmpMI.SummNalogRecalc
+                    , tmpMI.SummNalogRetRecalc
+                    , tmpMI.SummMinus
+                    , tmpMI.SummAdd
+                    , tmpMI.SummAddOthRecalc
+                    , tmpMI.SummSocialIn
+                    , tmpMI.SummSocialAdd
+                    , tmpMI.SummChildRecalc
+                    , tmpMI.SummMinusExtRecalc
+                    , tmpMI.SummFine
+                    , tmpMI.SummFineOthRecalc
+                    , tmpMI.SummHosp
+                    , tmpMI.SummHospOthRecalc
+                    , tmpMI.SummCompensationRecalc
+                    , tmpMI.SummAuditAdd
+                    , tmpMI.SummHouseAdd
+
+               FROM (SELECT inMemberId              AS MemberId
+                          , inPersonalId            AS PersonalId
+                          , inPositionId            AS PositionId
+                          , inUnitId                AS UnitId       
+                    ) AS tmp
+                    LEFT JOIN tmpMI_1 AS tmpMI ON tmpMI.MemberId_Personal = tmp.MemberId
+               ORDER BY tmpMI.SummHoliday DESC, tmpMI.SummService DESC
+               LIMIT 1
+              ) AS tmpMI
+         ;
+
      END IF;
      
-     --если переходящий отпуск то сохраняем 2 документ
-     IF COALESCE (vbSummHoliday2,0) = 0  AND COALESCE (inSummHoliday2,0) <> 0 AND inServiceDate1 <> inServiceDate2 
-     THEN   
-     --RAISE EXCEPTION 'Ошибка.COALESCE (vbSummHoliday2,0) = 0';
-     
-     --пробуем найти уже созданній док по inPersonalServiceListId
-     SELECT MovementDate_ServiceDate.MovementId
-           , Movement.InvNumber
-   INTO vbMovementId2, vbInvNumber2
-      FROM MovementDate AS MovementDate_ServiceDate
-           INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                              AND Movement.DescId = zc_Movement_PersonalService()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete() ---<> zc_Enum_Status_Erased()
-           INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
-      WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inServiceDate2) AND (DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-        AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-        AND MovementLinkObject_PersonalServiceList.ObjectId = inPersonalServiceListId
-        ;
 
+     -- если нулевая сумма - 2
+     IF (COALESCE (vbSummHoliday2, 0) = 0 OR vbSummHoliday2 <> inSummHoliday2) AND inSummHoliday2 > 0
+     THEN 
+         IF COALESCE (inMovementId_2, 0) = 0
+         THEN
+             -- сохранили <Документ>
+             inMovementId_2 := lpInsertUpdate_Movement_PersonalService (ioId                     := inMovementId_2
+                                                                     , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar)
+                                                                     , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate2)
+                                                                     , inServiceDate             := inServiceDate2
+                                                                     , inComment                 := '' ::TVarChar
+                                                                     , inPersonalServiceListId   := inPersonalServiceListId 
+                                                                     , inJuridicalId             := 0
+                                                                     , inUserId                  := vbUserId
+                                                                      );
+         END IF;
 
-         -- сохранили <Документ>
-     vbMovementId2 := lpInsertUpdate_Movement_PersonalService (ioId                      := COALESCE (vbMovementId2,0)
-                                                             , inInvNumber               := COALESCE (vbInvNumber2, CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar))
-                                                             , inOperDate                := (inServiceDate1 + INERVAL '1 Month') ::TDateTime
-                                                             , inServiceDate             := inServiceDate2
-                                                             , inComment                 := '' ::TVarChar
-                                                             , inPersonalServiceListId   := inPersonalServiceListId 
-                                                             , inJuridicalId             := 0
-                                                             , inUserId                  := vbUserId
-                                                              );
-         
-     -- Выбираем сохраненные данные из документа
-     CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
-            SELECT tmp.*
-            FROM gpSelect_MovementItem_PersonalService(vbMovementId2, FALSE, FALSE, inSession) AS tmp
-            ;
-     PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                    := COALESCE (tmpMI.Id,0)                                  ::Integer
-                                                        , inMovementId            := vbMovementId2                                          ::Integer
-                                                        , inPersonalId            := tmp.PersonalId                              ::Integer
-                                                        , inIsMain                := COALESCE (tmpMI.isMain, inisMain)         ::Boolean
-                                                        , inSummService           := COALESCE (tmpMI.SummService,0)                         ::TFloat
-                                                        , inSummCardRecalc        := COALESCE (tmpMI.SummCardRecalc,0)                      ::TFloat
-                                                        , inSummCardSecondRecalc  := COALESCE (tmpMI.SummCardSecondRecalc,0)                ::TFloat
-                                                        , inSummCardSecondCash    := COALESCE (tmpMI.SummCardSecondCash,0)                  ::TFloat
-                                                        , inSummNalogRecalc       := COALESCE (tmpMI.SummNalogRecalc,0)                     ::TFloat
-                                                        , inSummNalogRetRecalc    := COALESCE (tmpMI.SummNalogRetRecalc,0)                ::TFloat
-                                                        , inSummMinus             := COALESCE (tmpMI.SummMinus,0)                           ::TFloat
-                                                        , inSummAdd               := COALESCE (tmpMI.SummAdd,0)                             ::TFloat
-                                                        , inSummAddOthRecalc      := COALESCE (tmpMI.SummAddOthRecalc,0)                    ::TFloat
-                                                        , inSummHoliday           := tmp.SummHoliday                         ::TFloat
-                                                        , inSummSocialIn          := COALESCE (tmpMI.SummSocialIn,0)                        ::TFloat
-                                                        , inSummSocialAdd         := COALESCE (tmpMI.SummSocialAdd,0)                       ::TFloat
-                                                        , inSummChildRecalc       := COALESCE (tmpMI.SummChildRecalc,0)            ::TFloat
-                                                        , inSummMinusExtRecalc    := COALESCE (tmpMI.SummMinusExtRecalc,0)         ::TFloat
-                                                        , inSummFine              := COALESCE (tmpMI.SummFine,0)                            ::TFloat
-                                                        , inSummFineOthRecalc     := COALESCE (tmpMI.SummFineOthRecalc,0)                   ::TFloat
-                                                        , inSummHosp              := COALESCE (tmpMI.SummHosp,0)                            ::TFloat
-                                                        , inSummHospOthRecalc     := COALESCE (tmpMI.SummHospOthRecalc,0)                   ::TFloat
-                                                        , inSummCompensationRecalc:= COALESCE (tmpMI.SummCompensationRecalc,0)              ::TFloat
-                                                        , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
-                                                        , inSummHouseAdd          := COALESCE (tmpMI.SummHouseAdd,0)                        ::TFloat
-                                                        , inNumber                := COALESCE (tmpMI.Number, '')                            ::TVarChar
-                                                        , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
-                                                        , inInfoMoneyId           := COALESCE (tmpMI.InfoMoneyId, zc_Enum_InfoMoney_60101()) ::Integer
-                                                        , inUnitId                := COALESCE (tmp.UnitId, tmpMI.UnitId)                    ::Integer
-                                                        , inPositionId            := tmp.PositionId                                         ::Integer
-                                                        , inMemberId              := 0                                                      ::Integer 
-                                                        , inPersonalServiceListId := COALESCE (tmp.PersonalServiceListId, tmpMI.PersonalServiceListId) :: Integer
-                                                        , inFineSubjectId         := COALESCE (tmpMI.FineSubjectId,0)                       ::Integer
-                                                        , inUnitFineSubjectId     := COALESCE (tmpMI.UnitFineSubjectId,0)                   ::Integer
-                                                        , inUserId                := vbUserId
-                                                      ) 
-     FROM (SELECT inMemberId   AS MemberId
-                , inPersonalId AS PersonalId
-                , inPositionId AS PositionId
-                , inUnitId     AS UnitId       
-                , inPersonalServiceListId AS PersonalServiceListId
-                , inSummHoliday2 AS SummHoliday
-          ) AS tmp         
-          LEFT JOIN tmpMI ON tmpMI.PersonalId = tmp.PersonalId
-                         AND tmpMI.MemberId = tmp.MemberId
-                         AND tmpMI.PositionId = tmp.PositionId
-     ;
+         -- Выбираем сохраненные данные из документа
+         CREATE TEMP TABLE tmpMI_2 ON COMMIT DROP AS
+                SELECT tmp.*
+                FROM gpSelect_MovementItem_PersonalService (inMovementId_2, FALSE, FALSE, inSession) AS tmp
+               ;
+
+         --
+         PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                    := COALESCE (tmpMI.Id,0)                                  ::Integer
+                                                            , inMovementId            := inMovementId_2                                         ::Integer
+                                                            , inPersonalId            := tmpMI.PersonalId                                       ::Integer
+                                                            , inIsMain                := COALESCE (tmpMI.isMain, inisMain)                      ::Boolean
+                                                            , inSummService           := COALESCE (tmpMI.SummService,0)                         ::TFloat
+                                                            , inSummCardRecalc        := COALESCE (tmpMI.SummCardRecalc,0)                      ::TFloat
+                                                            , inSummCardSecondRecalc  := COALESCE (tmpMI.SummCardSecondRecalc,0)                ::TFloat
+                                                            , inSummCardSecondCash    := COALESCE (tmpMI.SummCardSecondCash,0)                  ::TFloat
+                                                            , inSummNalogRecalc       := COALESCE (tmpMI.SummNalogRecalc,0)                     ::TFloat
+                                                            , inSummNalogRetRecalc    := COALESCE (tmpMI.SummNalogRetRecalc,0)                  ::TFloat
+                                                            , inSummMinus             := COALESCE (tmpMI.SummMinus,0)                           ::TFloat
+                                                            , inSummAdd               := COALESCE (tmpMI.SummAdd,0)                             ::TFloat
+                                                            , inSummAddOthRecalc      := COALESCE (tmpMI.SummAddOthRecalc,0)                    ::TFloat
+                                                            , inSummHoliday           := inSummHoliday2                                         ::TFloat
+                                                            , inSummSocialIn          := COALESCE (tmpMI.SummSocialIn,0)                        ::TFloat
+                                                            , inSummSocialAdd         := COALESCE (tmpMI.SummSocialAdd,0)                       ::TFloat
+                                                            , inSummChildRecalc       := COALESCE (tmpMI.SummChildRecalc,0)                     ::TFloat
+                                                            , inSummMinusExtRecalc    := COALESCE (tmpMI.SummMinusExtRecalc,0)                  ::TFloat
+                                                            , inSummFine              := COALESCE (tmpMI.SummFine,0)                            ::TFloat
+                                                            , inSummFineOthRecalc     := COALESCE (tmpMI.SummFineOthRecalc,0)                   ::TFloat
+                                                            , inSummHosp              := COALESCE (tmpMI.SummHosp,0)                            ::TFloat
+                                                            , inSummHospOthRecalc     := COALESCE (tmpMI.SummHospOthRecalc,0)                   ::TFloat
+                                                            , inSummCompensationRecalc:= COALESCE (tmpMI.SummCompensationRecalc,0)              ::TFloat
+                                                            , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
+                                                            , inSummHouseAdd          := COALESCE (tmpMI.SummHouseAdd,0)                        ::TFloat
+                                                            , inNumber                := COALESCE (tmpMI.Number, '')                            ::TVarChar
+                                                            , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
+                                                            , inInfoMoneyId           := tmpMI.InfoMoneyId
+                                                            , inUnitId                := tmpMI.UnitId
+                                                            , inPositionId            := tmpMI.PositionId                                       ::Integer
+                                                            , inMemberId              := 0                                                      ::Integer 
+                                                            , inPersonalServiceListId := tmpMI.PersonalServiceListId
+                                                            , inFineSubjectId         := COALESCE (tmpMI.FineSubjectId,0)                       ::Integer
+                                                            , inUnitFineSubjectId     := COALESCE (tmpMI.UnitFineSubjectId,0)                   ::Integer
+                                                            , inUserId                := vbUserId
+                                                             )
+         FROM (SELECT tmp.MemberId
+                    , COALESCE (tmpMI.PersonalId, tmp.PersonalId) AS PersonalId
+                    , COALESCE (tmpMI.PositionId, tmp.PositionId) AS PositionId
+                    , COALESCE (tmpMI.UnitId,     tmp.UnitId)     AS UnitId
+                    , COALESCE (tmpMI.PersonalServiceListId, inPersonalServiceListId) AS PersonalServiceListId
+
+                    , tmpMI.Id
+                    , tmpMI.FineSubjectId
+                    , tmpMI.UnitFineSubjectId
+                    , COALESCE (tmpMI.InfoMoneyId, zc_Enum_InfoMoney_60101()) AS InfoMoneyId
+                    , tmpMI.Number
+                    , tmpMI.Comment
+                    , COALESCE (tmpMI.isMain, inisMain) AS isMain
+                    , tmpMI.SummService
+                    , tmpMI.SummCardRecalc
+                    , tmpMI.SummCardSecondRecalc
+                    , tmpMI.SummCardSecondCash
+                    , tmpMI.SummNalogRecalc
+                    , tmpMI.SummNalogRetRecalc
+                    , tmpMI.SummMinus
+                    , tmpMI.SummAdd
+                    , tmpMI.SummAddOthRecalc
+                    , tmpMI.SummSocialIn
+                    , tmpMI.SummSocialAdd
+                    , tmpMI.SummChildRecalc
+                    , tmpMI.SummMinusExtRecalc
+                    , tmpMI.SummFine
+                    , tmpMI.SummFineOthRecalc
+                    , tmpMI.SummHosp
+                    , tmpMI.SummHospOthRecalc
+                    , tmpMI.SummCompensationRecalc
+                    , tmpMI.SummAuditAdd
+                    , tmpMI.SummHouseAdd
+
+               FROM (SELECT inMemberId              AS MemberId
+                          , inPersonalId            AS PersonalId
+                          , inPositionId            AS PositionId
+                          , inUnitId                AS UnitId       
+                    ) AS tmp
+                    LEFT JOIN tmpMI_2 AS tmpMI ON tmpMI.MemberId_Personal = tmp.MemberId
+               ORDER BY tmpMI.SummHoliday DESC, tmpMI.SummService DESC
+               LIMIT 1
+              ) AS tmpMI
+         ;
+
      END IF;
 
 
      -- сохранили свойство <Ср.ЗП за день >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), inMovementId, inAmountCompensation);
      -- сохранили свойство <№ док Начисление зарплаты(первый период) 	>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), inMovementId, vbMovementId1); 
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), inMovementId, inMovementId_1); 
+
+     -- сохранили свойство <№ док Начисление зарплаты(первый период) 	>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), inMovementId, CASE WHEN inSummHoliday1 > 0 OR inSummHoliday2 > 0 THEN TRUE ELSE FALSE END); 
      
-     IF COALESCE (vbMovementId2,0) <> 0
-     THEN
-         -- сохранили свойство <№ док Начисление зарплаты(второй период)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), inMovementId, vbMovementId2);
-     END IF;
+     -- сохранили свойство <№ док Начисление зарплаты(второй период)>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), inMovementId, CASE WHEN inSummHoliday2 > 0 THEN COALESCE (inMovementId_2, 0) ELSE 0 END);
    
    
-     IF vbUserId = '9457' 
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), inMovementId, CURRENT_TIMESTAMP);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), inMovementId, vbUserId);
+
+
+     IF vbUserId IN (5, 9457)
      THEN
          --
-         RAISE EXCEPTION 'Ошибка.Документ создан <%>', (SELECT Movement.InvNumber||' от' || Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId1);
+         RAISE EXCEPTION 'Ошибка.Документ найден <%>  <%>'
+                       , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_1)
+                       , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_2)
+                        ;
      END IF; 
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
