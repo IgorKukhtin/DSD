@@ -4,6 +4,8 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
   ClientWidth = 975
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -98
+  ExplicitTop = -49
   ExplicitWidth = 991
   ExplicitHeight = 576
   PixelsPerInch = 96
@@ -274,10 +276,13 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             Width = 80
           end
           object isLoad: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1095#1077#1085
+            Caption = #1054#1090#1087#1091#1089#1082' '#1079#1072#1087#1086#1083#1085#1077#1085
             DataBinding.FieldName = 'isLoad'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1047#1072#1087#1086#1083#1085#1077#1085#1072' '#1082#1086#1083#1086#1085#1082#1072' <'#1054#1090#1087#1091#1089#1082#1085#1099#1077'> '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077'  <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103 +
+              ' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
             Options.Editing = False
             Width = 80
           end
