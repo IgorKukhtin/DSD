@@ -1414,10 +1414,7 @@ BEGIN
                                                          , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                          , inIsWithVAT    := vbPriceWithVAT
                                                           )
-                           ELSE CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent > 0 AND vbOKPO = '26632252'
-                                     THEN CAST (MIFloat_Price.ValueData / (1 + vbVATPercent / 100) AS NUMERIC (16, 3))
-                                     ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
-                                END
+                           ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                       END
                     , MIFloat_CountForPrice.ValueData
                     , MIFloat_ChangePercent.ValueData
