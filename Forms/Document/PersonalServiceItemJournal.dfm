@@ -1623,7 +1623,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
             Options.Editing = False
-            Width = 57
+            Width = 66
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
