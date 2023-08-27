@@ -406,10 +406,8 @@ BEGIN
                                THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           WHEN vbExtraChargesPercent <> 0
                                THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))*/
-                          ELSE CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent > 0 AND vbOKPO = '26632252'
-                                         THEN CAST (MIFloat_Price.ValueData / (1 + vbVATPercent / 100) AS NUMERIC (16, 3))
-                                    ELSE  COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
-                               END
+                          ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
+
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
                    -- , SUM (MovementItem.Amount) AS Amount
