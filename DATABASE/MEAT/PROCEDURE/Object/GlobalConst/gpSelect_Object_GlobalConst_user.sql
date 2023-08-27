@@ -23,7 +23,7 @@ BEGIN
             , CASE WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost())
                         THEN (zfConvert_DateToString (CURRENT_DATE)  || ' ' ||  SUBSTRING (zfConvert_DateTimeShortToString (COALESCE (ActualBankStatement.ValueData, CURRENT_DATE)), 10, 5)) :: TDateTime
 
-                   WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
+                   WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam(), zc_Enum_GlobalConst_ConnectStoredProcParam())
                         THEN NULL
 
                    ELSE COALESCE (ActualBankStatement.ValueData, CURRENT_DATE)
@@ -35,6 +35,8 @@ BEGIN
 
                    WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_ConnectReportParam()
                         THEN 'Строка подключения в initRep.php : <' || COALESCE (Object_GlobalConst.ValueData, '') || '>'
+                   WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_ConnectStoredProcParam()
+                        THEN 'Строка подключения в initStoredProc.php : <' || COALESCE (Object_GlobalConst.ValueData, '') || '>'
 
                    ELSE Object_GlobalConst.ValueData
 

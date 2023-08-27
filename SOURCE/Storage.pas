@@ -814,7 +814,7 @@ begin
   Result := ctMain;
   if FStoredProcList.Count > 0 then
     for S in FStoredProcList do
-      if (Pos(S + ' ', pData) > 0) then
+      if (Pos(S + ' ', AnsiLowerCase (pData)) > 0) then
       begin
         if StoredProcCheck(S, pData) then
         begin

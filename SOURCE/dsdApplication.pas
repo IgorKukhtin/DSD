@@ -2,7 +2,7 @@ unit dsdApplication;
 
 interface
 
-uses Forms, SysUtils, cxLocalization, Windows, Messages, dsdDB;
+uses Forms, SysUtils, cxLocalization, Windows, Messages, Classes, dsdDB;
 
 type
 
@@ -68,17 +68,27 @@ procedure TdsdApplication.OnException(Sender: TObject; E: Exception);
     end;
     Result := E.Message;
   end;
-var EMessage: String;
+var EMessage, S: String;
     isMessage: boolean;
 begin
   if E is ESortException then
      exit;
+  S := '';
   EMessage := E.Message;
+
+  if (dsdProject = prFarmacy) then
+  begin
+    if Assigned(Screen.ActiveForm) then S := S  + 'Форма: ' + Screen.ActiveForm.Name + '; ';
+    if Assigned(Screen.ActiveControl) then S := S  + 'Контрол: ' + Screen.ActiveControl.Name + '; ';
+    if Assigned(Sender) and (Sender is TComponent) then S := S  + 'Источник: ' + TComponent(Sender).Name;
+    if S <> '' then S := #13#10 + S;
+  end;
+
   TMessagesForm.Create(nil).Execute(GetTextMessage(E, isMessage), EMessage);
   if not isMessage AND not gc_User.Local then begin
     // Сохраняем протокол в базе
     try
-      spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
+      spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message + S);
       spUserProtocol.Execute;
     except
       // Обязательно так, потому как иначе он может зациклиться.

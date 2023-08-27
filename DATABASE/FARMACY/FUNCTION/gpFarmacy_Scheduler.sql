@@ -384,7 +384,7 @@ BEGIN
     END;
     
     -- Переоценка для сайта
-    BEGIN
+/*    BEGIN
       IF date_part('isodow', CURRENT_DATE)::Integer in (2, 3, 4, 5) AND date_part('HOUR',  CURRENT_TIME)::Integer = 12 AND 
          date_part('MINUTE',  CURRENT_TIME)::Integer >= 25 AND date_part('MINUTE',  CURRENT_TIME)::Integer < 35 AND
          CURRENT_DATE >= '25.08.2021' 
@@ -397,7 +397,7 @@ BEGIN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpRun_Object_RepriceSheduler_RepriceSite', True, text_var1::TVarChar, vbUserId);
     END;
-
+*/
     -- Сброс фиксированных скидок
     BEGIN
       IF date_part('HOUR',  CURRENT_TIME)::Integer = 2 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 15

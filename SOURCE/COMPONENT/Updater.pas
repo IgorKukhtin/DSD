@@ -612,7 +612,7 @@ begin
   if (fAlan_colocall = TRUE) and (AnsiUpperCase(Connection) = AnsiUpperCase('alan')) then
   begin
     StringList.Add('http://integer-srv-a.alan.dp.ua/index.php');
-    StringList.Add('http://integer-srv-a-r.alan.dp.ua/index.php');
+    StringList.Add('http://integer-srv2-a.alan.dp.ua/index.php');
     //сохранили
     StringList.SaveToFile(ConnectionPath);
   end
@@ -621,7 +621,7 @@ begin
   if (fAlan_colocall = FALSE) and (AnsiUpperCase(Connection) = AnsiUpperCase('colocall')) then
   begin
     StringList.Add('http://integer-srv-a.alan.dp.ua/index.php');
-    StringList.Add('http://integer-srv-a-r.alan.dp.ua/index.php');
+    StringList.Add('http://integer-srv2-a.alan.dp.ua/index.php');
     //сохранили
     StringList.SaveToFile(ConnectionPath);
   end
@@ -631,7 +631,7 @@ begin
     //делаем его первым
     if Connection <> '' then StringList.Add(Connection);
     StringList.Add('http://integer-srv-a.alan.dp.ua/index.php');
-    StringList.Add('http://integer-srv-a-r.alan.dp.ua/index.php');
+    StringList.Add('http://integer-srv2-a.alan.dp.ua/index.php');
     //сохранили
     StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initStoredProc.php'));
   end

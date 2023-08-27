@@ -74,7 +74,7 @@ BEGIN
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
      
-     -- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+     --raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbAntiTOPMP_CountAward;
                          
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMovAll'))
      THEN
@@ -542,17 +542,17 @@ BEGIN
            , tmpSumAwardTop.SumPlace
            , tmpDataAwardPlace.Place
            , CASE WHEN not MovPlan.isNewUser AND NOT MovPlan.isVacation AND MovPlan.isShowPlanMobileAppUser AND 
-                       (tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_CountFine) OR
+                       (tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace)::Integer FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_CountFine) OR
                        NOT EXISTS(SELECT * FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_CountFine))
                   THEN zfCalc_Color (255, 69, 0)
                   WHEN not MovPlan.isNewUser AND NOT MovPlan.isVacation AND MovPlan.isShowPlanMobileAppUser AND 
                        COALESCE(inUnitId, 0) = 0 AND COALESCE (inUserId, 0) = 0 AND           
-                       (tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count) OR
+                       (tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace)::Integer FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count) OR
                        NOT EXISTS(SELECT * FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count))
                   THEN zfCalc_Color (255, 165, 0)
-                  WHEN not MovPlan.isNewUser AND NOT MovPlan.isVacation AND MovPlan.isShowPlanMobileAppUser AND 
+                  WHEN not MovPlan.isNewUser AND MovPlan.isShowPlanMobileAppUser AND 
                        COALESCE(inUnitId, 0) = 0 AND COALESCE (inUserId, 0) = 0 AND           
-                       (tmpSumAwardTop.SumPlace <= (SELECT MIN(tmpSumAwardTop.SumPlace) FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward) OR
+                       (tmpSumAwardTop.SumPlace <= (SELECT MIN(tmpSumAwardTop.SumPlace)::Integer FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward) OR
                        NOT EXISTS(SELECT * FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward))
                   THEN zfCalc_Color (173, 255, 47)
                   ELSE zc_Color_White()

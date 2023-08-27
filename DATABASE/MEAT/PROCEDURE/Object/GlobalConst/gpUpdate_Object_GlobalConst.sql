@@ -24,7 +24,7 @@ BEGIN
          AND vbUserId <> zfCalc_UserAdmin() :: Integer
          AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
         )
-      OR ioId IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam(), zc_Enum_GlobalConst_MedocTaxDate(), zc_Enum_GlobalConst_EndDateOlapSR(), zc_Enum_GlobalConst_ProtocolDateOlapSR())
+      OR ioId IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam(), zc_Enum_GlobalConst_ConnectStoredProcParam(), zc_Enum_GlobalConst_MedocTaxDate(), zc_Enum_GlobalConst_EndDateOlapSR(), zc_Enum_GlobalConst_ProtocolDateOlapSR())
      THEN
           RAISE EXCEPTION 'Ошибка.Нет прав изменять параметр <%>.', lfGet_Object_ValueData (ioId);
      END IF;
