@@ -49,6 +49,13 @@ BEGIN
                          WHEN inParam8  ILIKE '%StartDate%' THEN zfConvert_StringToDate (inValue8)
                          WHEN inParam9  ILIKE '%StartDate%' THEN zfConvert_StringToDate (inValue9)
                          WHEN inParam10 ILIKE '%StartDate%' THEN zfConvert_StringToDate (inValue10)
+                         -- эти всегда
+                         WHEN -- это JuridicalDeferment...
+                              (inParam1 ILIKE '%inOperDate%' AND inParam2 ILIKE '%inEmptyParam%')
+                              -- остальные
+                           OR TRIM (inStoredProc) ILIKE 'gpReport_ProductionOrder'
+                           OR TRIM (inStoredProc) ILIKE 'Report_OrderExternal_MIChild_Detail'
+                              THEN zc_DateStart()
                     END;
       vbEndDate  := CASE WHEN inParam1  ILIKE '%EndDate%' THEN zfConvert_StringToDate (inValue1)
                          WHEN inParam2  ILIKE '%EndDate%' THEN zfConvert_StringToDate (inValue2)
@@ -60,6 +67,13 @@ BEGIN
                          WHEN inParam8  ILIKE '%EndDate%' THEN zfConvert_StringToDate (inValue8)
                          WHEN inParam9  ILIKE '%EndDate%' THEN zfConvert_StringToDate (inValue9)
                          WHEN inParam10 ILIKE '%EndDate%' THEN zfConvert_StringToDate (inValue10)
+                         -- эти всегда
+                         WHEN -- это JuridicalDeferment...
+                              (inParam1 ILIKE '%inOperDate%' AND inParam2 ILIKE '%inEmptyParam%')
+                              -- остальные
+                           OR TRIM (inStoredProc) ILIKE 'gpReport_ProductionOrder'
+                           OR TRIM (inStoredProc) ILIKE 'Report_OrderExternal_MIChild_Detail'
+                              THEN zc_DateStart()
                     END;
 
       IF vbEndDate < CURRENT_DATE
