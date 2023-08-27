@@ -145,7 +145,7 @@ BEGIN
                                                     )
                                  SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday2,0)) AS SummHoliday_calc 
                                  FROM MovementFloat AS MovementFloat_MovementItemId
-                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id = MovementFloat_MovementId.MovementId
+                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id = MovementFloat_MovementItemId.MovementId
                                  WHERE MovementFloat_MovementItemId.ValueData ::Integer = inMovementId_2
                                    AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                                  );         
@@ -392,8 +392,8 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ найден <%>  <%> , сумма 1 период <%>, сумма 2 период <%>'
                        , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_1)
                        , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_2)
-                       , vbSummHoliday1_calc
-                       , vbSummHoliday2_calc
+                       , (COALESCE (inSummHoliday1,0) + COALESCE (vbSummHoliday1_calc,0))
+                       , (COALESCE (inSummHoliday2,0) + COALESCE (vbSummHoliday2_calc,0))
                         ;
      END IF; 
 
