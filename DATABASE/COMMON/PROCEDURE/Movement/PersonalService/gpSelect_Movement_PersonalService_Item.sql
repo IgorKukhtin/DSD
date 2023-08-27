@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Item(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
+             /*
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat
              , TotalSummCard TFloat, TotalSummCardSecond TFloat, TotalSummAvCardSecond TFloat, TotalSummCardSecondCash TFloat
              , TotalSummNalog TFloat, TotalSummMinus TFloat
@@ -29,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummCompensation TFloat, TotalSummCompensationRecalc TFloat
              , TotalSummHouseAdd TFloat 
              , TotalSummAvance TFloat, TotalSummAvanceRecalc TFloat
+             */
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -69,7 +71,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummSkip TFloat, DaySkip TFloat
              --, Amount_avance TFloat
              --, TotalSummChild TFloat, SummDiff TFloat
-             --, DayCount_child TFloat
+             , DayCount_child TFloat
              --, WorkTimeHoursOne_child TFloat
              --, Price_child TFloat
             
@@ -359,6 +361,22 @@ BEGIN
                                                                               , zc_MILinkObject_UnitFineSubject())
                                        )
    
+      , tmpMIChild_all AS (SELECT MovementItem.ParentId                    AS ParentId
+                                , COALESCE (MIFloat_DayCount.ValueData, 0) AS DayCount
+                           FROM MovementItem
+                              INNER JOIN MovementItemFloat AS MIFloat_DayCount
+                                                           ON MIFloat_DayCount.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
+                           WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                              AND MovementItem.DescId = zc_MI_Child()
+                              AND MovementItem.isErased = FALSE
+                          )
+      , tmpMIChild AS (SELECT tmpMIChild_all.ParentId
+                            , MAX (tmpMIChild_all.DayCount) AS DayCount
+                       FROM tmpMIChild_all
+                       GROUP BY tmpMIChild_all.ParentId
+                      )
+
 
        -- –ÂÁÛÎ¸Ú‡Ú
        SELECT
@@ -368,6 +386,7 @@ BEGIN
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementDate_ServiceDate.ValueData         AS ServiceDate 
+           /*
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementFloat_TotalSummToPay.ValueData     AS TotalSummToPay
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
@@ -426,7 +445,7 @@ BEGIN
 
            , MovementFloat_TotalAvance.ValueData        :: TFloat AS TotalSummAvance
            , MovementFloat_TotalAvanceRecalc.ValueData  :: TFloat AS TotalAvanceRecalc
-
+           */
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -548,7 +567,7 @@ BEGIN
 
             --, COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             --, (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
-            --, COALESCE (tmpMIChild.DayCount, 0)         ::TFloat AS DayCount_child
+            , COALESCE (tmpMIChild.DayCount, 0)         ::TFloat AS DayCount_child
             --, COALESCE (tmpMIChild.WorkTimeHoursOne, 0) ::TFloat AS WorkTimeHoursOne_child
             --, COALESCE (tmpMIChild.Price, 0)            ::TFloat AS Price_child
 
@@ -587,7 +606,7 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-
+            /*
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -731,7 +750,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalAvanceRecalc
                                     ON MovementFloat_TotalAvanceRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalAvanceRecalc.DescId = zc_MovementFloat_TotalAvanceRecalc()
-
+            */
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -1017,6 +1036,8 @@ BEGIN
             LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
             
             LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
+
+            LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
             ;
 
 END;
@@ -1026,6 +1047,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.06.23         *
  03.04.23         * 
  18.11.21         * TotalSummHouseAdd
  16.11.21         * isMail

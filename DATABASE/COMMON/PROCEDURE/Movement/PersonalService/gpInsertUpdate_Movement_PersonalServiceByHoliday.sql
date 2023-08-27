@@ -27,6 +27,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbSummHoliday1 TFloat;
    DECLARE vbSummHoliday2 TFloat;
+   DECLARE vbSummHoliday1_calc TFloat;
+   DECLARE vbSummHoliday2_calc TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
@@ -112,6 +114,41 @@ BEGIN
                               AND MovementItem.isErased = FALSE
                               AND MovementItem.ObjectId = inPersonalId
                             );
+         --расчет по предыдущим отпускам для периода 1 и 2                  
+         vbSummHoliday1_calc := (WITH
+                                 --все отпуска
+                                 tmpMovementAll AS (SELECT *
+                                                    FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
+                                                                                        , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                                                        , inIsErased  := FALSE
+                                                                                        , inJuridicalBasisId:= 0
+                                                                                        , inSession:= inSession) AS tmp
+                                                    WHERE tmp.MemberId = inMemberId
+                                                      AND tmp.Id <> inMovementId
+                                                    )
+                                 SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday1,0)) AS SummHoliday_calc 
+                                 FROM MovementFloat AS MovementFloat_MovementId
+                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id = MovementFloat_MovementId.MovementId
+                                 WHERE MovementFloat_MovementId.ValueData ::Integer = inMovementId_1
+                                   AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+                                 );
+         vbSummHoliday2_calc := (WITH
+                                 --все отпуска
+                                 tmpMovementAll AS (SELECT *
+                                                    FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
+                                                                                        , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                                                        , inIsErased  := FALSE
+                                                                                        , inJuridicalBasisId:= 0
+                                                                                        , inSession:= inSession) AS tmp
+                                                    WHERE tmp.MemberId = inMemberId
+                                                      AND tmp.Id <> inMovementId
+                                                    )
+                                 SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday2,0)) AS SummHoliday_calc 
+                                 FROM MovementFloat AS MovementFloat_MovementItemId
+                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id = MovementFloat_MovementId.MovementId
+                                 WHERE MovementFloat_MovementItemId.ValueData ::Integer = inMovementId_2
+                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                 );         
      END IF;
      
 
@@ -152,7 +189,7 @@ BEGIN
                                                             , inSummMinus             := COALESCE (tmpMI.SummMinus,0)                           ::TFloat
                                                             , inSummAdd               := COALESCE (tmpMI.SummAdd,0)                             ::TFloat
                                                             , inSummAddOthRecalc      := COALESCE (tmpMI.SummAddOthRecalc,0)                    ::TFloat
-                                                            , inSummHoliday           := inSummHoliday1                                         ::TFloat
+                                                            , inSummHoliday           := (COALESCE (inSummHoliday1,0) + COALESCE (vbSummHoliday1_calc,0)) ::TFloat
                                                             , inSummSocialIn          := COALESCE (tmpMI.SummSocialIn,0)                        ::TFloat
                                                             , inSummSocialAdd         := COALESCE (tmpMI.SummSocialAdd,0)                       ::TFloat
                                                             , inSummChildRecalc       := COALESCE (tmpMI.SummChildRecalc,0)                     ::TFloat
@@ -260,7 +297,7 @@ BEGIN
                                                             , inSummMinus             := COALESCE (tmpMI.SummMinus,0)                           ::TFloat
                                                             , inSummAdd               := COALESCE (tmpMI.SummAdd,0)                             ::TFloat
                                                             , inSummAddOthRecalc      := COALESCE (tmpMI.SummAddOthRecalc,0)                    ::TFloat
-                                                            , inSummHoliday           := inSummHoliday2                                         ::TFloat
+                                                            , inSummHoliday           := (COALESCE (inSummHoliday2,0) + COALESCE (vbSummHoliday2_calc,0)) ::TFloat
                                                             , inSummSocialIn          := COALESCE (tmpMI.SummSocialIn,0)                        ::TFloat
                                                             , inSummSocialAdd         := COALESCE (tmpMI.SummSocialAdd,0)                       ::TFloat
                                                             , inSummChildRecalc       := COALESCE (tmpMI.SummChildRecalc,0)                     ::TFloat
@@ -352,9 +389,11 @@ BEGIN
      IF vbUserId IN (5, 9457)
      THEN
          --
-         RAISE EXCEPTION 'Ошибка.Документ найден <%>  <%>'
+         RAISE EXCEPTION 'Ошибка.Документ найден <%>  <%> , сумма 1 период <%>, сумма 2 период <%>'
                        , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_1)
                        , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_2)
+                       , vbSummHoliday1_calc
+                       , vbSummHoliday2_calc
                         ;
      END IF; 
 
