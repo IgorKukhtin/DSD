@@ -830,7 +830,9 @@ BEGIN
              , tmpData.AmbulantClinicSP
              , tmpData.MemberSP
              , Object_GroupMemberSP.Id             AS GroupMemberSPId
-             , COALESCE (Object_GroupMemberSP.ValueData, Object_Category1303.ValueData)  :: TVarChar  AS GroupMemberSPName
+             , CASE WHEN POSITION('чорнобильці' in COALESCE (Object_GroupMemberSP.ValueData, Object_Category1303.ValueData)) > 0
+               THEN 'чорнобильці'
+               ELSE COALESCE (Object_GroupMemberSP.ValueData, Object_Category1303.ValueData) END :: TVarChar  AS GroupMemberSPName
              , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS AddressSP
              , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INNSP
              , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS PassportSP
@@ -1126,5 +1128,5 @@ $BODY$
 -- select * from gpReport_Sale_SP(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('12.08.2022')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');
 
 
-select * from gpReport_Sale_SP(inStartDate := ('01.07.2023')::TDateTime , inEndDate := ('15.07.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 13937605 ,  inSession := '3');
 
+select * from gpReport_Sale_SP(inStartDate := ('01.08.2023')::TDateTime , inEndDate := ('15.08.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');

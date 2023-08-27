@@ -3,25 +3,26 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
   ClientHeight = 554
   ClientWidth = 1043
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
-  ExplicitWidth = 1059
-  ExplicitHeight = 593
+  ExplicitWidth = 1061
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1043
-    Height = 468
+    Height = 467
+    ExplicitTop = 87
     ExplicitWidth = 1043
-    ExplicitHeight = 468
-    ClientRectBottom = 468
+    ExplicitHeight = 467
+    ClientRectBottom = 467
     ClientRectRight = 1043
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1043
-      ExplicitHeight = 444
+      ExplicitHeight = 443
       inherited cxGrid: TcxGrid
         Width = 1043
-        Height = 444
+        Height = 443
         ExplicitWidth = 1043
-        ExplicitHeight = 444
+        ExplicitHeight = 443
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -809,6 +810,22 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
         end>
       isShowModal = True
     end
+    object actFillingGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spFillingGoods
+      StoredProcList = <
+        item
+          StoredProc = spFillingGoods
+        end>
+      Caption = #1057#1074#1103#1079#1072#1090#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1088#1077#1077#1089#1090#1088#1072
+      Hint = #1057#1074#1103#1079#1072#1090#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1088#1077#1077#1089#1090#1088#1072
+      ImageIndex = 80
+      QuestionBeforeExecute = #1057#1074#1103#1079#1072#1090#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1088#1077#1077#1089#1090#1088#1072'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 192
@@ -854,7 +871,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -902,6 +919,14 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
         item
           Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFillingGoods'
         end
         item
           Visible = True
@@ -1001,6 +1026,10 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
     end
     object bbStartLoadDel: TdxBarButton
       Action = macStartLoadDel
+      Category = 0
+    end
+    object bbFillingGoods: TdxBarButton
+      Action = actFillingGoods
       Category = 0
     end
   end
@@ -1877,7 +1906,7 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 912
+    Left = 936
     Top = 352
   end
   object spUpdate_Goods: TdsdStoredProc
@@ -1956,5 +1985,24 @@ inherited GoodsSPSearch_1303Form: TGoodsSPSearch_1303Form
     PackSize = 1
     Left = 984
     Top = 224
+  end
+  object spFillingGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_GoodsSPSearch_1303_FillingGoods'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 408
   end
 end

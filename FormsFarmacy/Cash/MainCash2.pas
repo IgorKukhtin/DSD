@@ -9625,8 +9625,8 @@ begin
         end
         else if Assigned(SourceClientDataSet.FindField('PromoBonusPrice')) and
           (SourceClientDataSet.FieldByName('PromoBonusPrice').asCurrency > 0) and
-          (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) and
-          (FormParams.ParamByName('InvNumberOrder').Value = '') then
+          (not Assigned(SourceClientDataSet.FindField('PriceLoad')) or
+          (SourceClientDataSet.FieldByName('PriceLoad').asCurrency = 0)) then
         begin
           // цена БЕЗ скидки
           lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
@@ -11995,8 +11995,7 @@ begin
             CheckCDS.FieldByName('Price').asCurrency,
             FormParams.ParamByName('RoundingDown').Value);
         end else if (RemainsCDS.FieldByName('PromoBonusPrice').asCurrency > 0) and
-                    (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) and
-                    (FormParams.ParamByName('InvNumberOrder').Value = '') then
+                    (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
         begin
           CheckCDS.FieldByName('Price').asCurrency :=
             GetPrice(RemainsCDS.FieldByName('PromoBonusPrice').asCurrency, 0);

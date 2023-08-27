@@ -163,7 +163,7 @@ BEGIN
          Return;
      end if;
 
---raise notice 'Value 01: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 01: %', CLOCK_TIMESTAMP();
 
      -- получаем значение константы
      vbCostCredit := COALESCE ((SELECT COALESCE (ObjectFloat_SiteDiscount.ValueData, 0)          :: TFloat    AS SiteDiscount
@@ -266,7 +266,7 @@ BEGIN
     IF vbisDocument = False OR COALESCE(vbStatusId, 0) <> zc_Enum_Status_Complete() OR inShowAll = True
     THEN
 
---raise notice 'Value 02: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 02: %', CLOCK_TIMESTAMP();
 
       -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
       IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('PriceSettings'))
@@ -347,14 +347,33 @@ BEGIN
       END IF;
 
       CREATE TEMP TABLE tmpSupplierFailuresAll ON COMMIT DROP AS
-                                 (SELECT DISTINCT
-                                         SupplierFailures.OperDate
-                                       , SupplierFailures.DateFinal
-                                       , SupplierFailures.GoodsId
-                                       , SupplierFailures.JuridicalId
-                                       , SupplierFailures.ContractId
-                                  FROM lpSelect_PriceList_SupplierFailuresAll(vbUnitId, vbUserId) AS SupplierFailures
-                                  );
+      (WITH tmpOrderExternal AS (
+                             SELECT min(Movement_OrderExternal.OperDate) AS DateStart
+                                  , max(Movement_OrderExternal.OperDate) AS DateEnd
+                             FROM Movement AS Movement_OrderExternal
+                                  INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                             ON MovementBoolean_Deferred.MovementId = Movement_OrderExternal.Id
+                                                            AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                            AND MovementBoolean_Deferred.ValueData = TRUE
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
+                                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                               AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                                  
+                             WHERE Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
+                               AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete())
+                               
+      SELECT DISTINCT
+             SupplierFailures.OperDate
+           , SupplierFailures.DateFinal
+           , SupplierFailures.GoodsId
+           , SupplierFailures.JuridicalId
+           , SupplierFailures.ContractId
+      FROM lpSelect_PriceList_SupplierFailuresAll_Date(vbUnitId
+                                                     , COALESCE((SELECT tmpOrderExternal.DateStart FROM tmpOrderExternal), CURRENT_DATE)
+                                                     , COALESCE((SELECT tmpOrderExternal.DateEnd FROM tmpOrderExternal), CURRENT_DATE)
+                                                     , vbUserId) AS SupplierFailures
+      );
 
       ANALYSE tmpSupplierFailuresAll;
       
@@ -684,7 +703,7 @@ BEGIN
   ANALYSE tmpLayoutAll;
     
 
---raise notice 'Value 09: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 09: %', CLOCK_TIMESTAMP();
 
 
 
@@ -695,7 +714,7 @@ BEGIN
       AND inShowAll = FALSE 
     THEN
 
-     raise notice 'Value: %', 1;
+     -- raise notice 'Value: %', 1;
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -1559,11 +1578,11 @@ BEGIN
     THEN
 
 
-      raise notice 'Value: %', 2;
+      -- raise notice 'Value: %', 2;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
---raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      -- ДАННЫЕ
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
@@ -1571,7 +1590,7 @@ BEGIN
        DROP TABLE IF EXISTS _tmpMI;
      END IF;
 
---raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 
      CREATE TEMP TABLE _tmpMI (Id integer
                              , MovementItemId Integer
@@ -1913,10 +1932,10 @@ BEGIN
 
      ANALYSE _tmpMI;
 
---raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
-----      raise notice 'Value: %', 21;
+----      -- raise notice 'Value: %', 21;
 
    --RAISE EXCEPTION 'Ошибка.';
      RETURN QUERY
@@ -3115,7 +3134,7 @@ BEGIN
                                                AND tmpGoodsDiscountJuridical.JuridicalId = tmpMI.JuridicalId
            ;
 
---raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
 
     -- !!!Только для ДРУГИХ документов + inShowAll = TRUE - 3-ья ВЕТКА (ВСЕГО = 3)!!!
@@ -3123,9 +3142,9 @@ BEGIN
     THEN
 
 
-     raise notice 'Value: %', 3;
+     -- raise notice 'Value: %', 3;
 
---raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -3476,7 +3495,7 @@ BEGIN
 
 	 ANALYSE _tmpMI;
 
---raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
@@ -4547,7 +4566,7 @@ BEGIN
                                                AND tmpGoodsDiscountJuridical.JuridicalId = tmpMI.JuridicalId
         ;
            
---raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+---- raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
   END IF;
 
@@ -4605,4 +4624,4 @@ $BODY$
 --select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
 
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 30645729 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 33140874 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

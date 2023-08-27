@@ -63,6 +63,7 @@ BEGIN
                           AND MovementItemContainer.OperDate < vbOperDate + INTERVAL '2 DAY'
                           AND MovementItemContainer.WhereObjectId_Analyzer = vbUnitId 
                           AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                          AND MovementItemContainer.DescId = zc_MIContainer_Count()
                         GROUP BY MovementItemContainer.MovementId
                                , MovementItemContainer.OperDate
                                , MovementItemContainer.ObjectId_Analyzer 
@@ -126,5 +127,5 @@ $BODY$
 
 --
 
-select * from gpSelect_Movement_InventoryCheck(inMovementId := 32406899  , inSession := '3') left join Object ON Object.Id = GoodsId;
+select * from gpSelect_Movement_InventoryCheck(inMovementId := 33155033   , inSession := '3') left join Object ON Object.Id = GoodsId;
     

@@ -91,6 +91,9 @@ type
     macStartLoadDel: TMultiAction;
     bbStartLoadDel: TdxBarButton;
     actDoLoadDel: TExecuteImportSettingsAction;
+    spFillingGoods: TdsdStoredProc;
+    actFillingGoods: TdsdExecStoredProc;
+    bbFillingGoods: TdxBarButton;
   private
     { Private declarations }
   public

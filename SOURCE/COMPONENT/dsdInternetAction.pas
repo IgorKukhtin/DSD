@@ -183,10 +183,13 @@ var EMsg: TIdMessage;
       end;
     EMsg.AfterConstruction;
 
-    FIdSMTP.Connect;
-    if FIdSMTP.Connected then begin
-       FIdSMTP.Send(EMsg);
-       result := true;
+    try
+      FIdSMTP.Connect;
+      if FIdSMTP.Connected then begin
+         FIdSMTP.Send(EMsg);
+         result := true;
+      end;
+    except on E:Exception do raise Exception.Create('Ошибка отправки письма: ' + E.Message);
     end;
   finally
     FIdSMTP.Disconnect;
