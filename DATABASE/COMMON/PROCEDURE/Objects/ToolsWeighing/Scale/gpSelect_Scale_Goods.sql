@@ -366,23 +366,30 @@ BEGIN
                                                 INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
                                                                      AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                                                INNER JOIN Object_InfoMoney_View AS View_InfoMoney
-                                                                                 ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                                AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
-                                                                                                                             , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
-                                                                                                                             , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                                                                             , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                                                                             , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                                                                             , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
-                                                                                                                              )
-                                                                                  OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
-                                                                                                                  , zc_Enum_InfoMoney_10106() -- Сыр
-                                                                                                                   )
-                                                                                    )
+                                                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                                                        ON ObjectBoolean_Goods_Asset.ObjectId = Object.Id
+                                                                       AND ObjectBoolean_Goods_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
+
                                            WHERE inBranchCode BETWEEN 301 AND 310
                                              AND TRIM (inGoodsName)  <> ''
                                              AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
                                              AND Object.ValueData ILIKE ('%' || TRIM (inGoodsName) || '%')
+                                             --
+                                             AND ((View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                           , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
+                                                                                           , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                                           , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                                                           , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                           , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
+                                                                                            )
+                                                OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
+                                                                                , zc_Enum_InfoMoney_10106() -- Сыр
+                                                                                 )
+                                                  )
+                                               OR ObjectBoolean_Goods_Asset.ValueData = TRUE
+                                                 )
                                           )
                      , tmpMI AS (SELECT tmpMI.GoodsId
                                       , tmpMI.GoodsKindId
@@ -620,7 +627,7 @@ BEGIN
                                             WHERE Movement.DescId    = zc_Movement_ContractGoods()
                                               AND Movement.StatusId  = zc_Enum_Status_Complete()
                                            )
-   THEN 
+   THEN
 
         -- Результат - товары zc_Movement_ContractGoods
         RETURN QUERY
@@ -629,7 +636,7 @@ BEGIN
                          FROM lpGet_MovementItem_ContractGoods (inOperDate:= inOperDate, inJuridicalId:=0, inPartnerId:= 0, inContractId:= -1 * inOrderExternalId, inGoodsId:= 0, inUserId:= vbUserId) AS tmp
                         )
 
-              , tmpGoods 
+              , tmpGoods
                      AS (SELECT Object_Goods.Id                                  AS GoodsId
                               , Object_Goods.ObjectCode                          AS GoodsCode
                               , Object_Goods.ValueData                           AS GoodsName
@@ -685,7 +692,7 @@ BEGIN
                 , Object_GoodsKind.ValueData          AS GoodsKindName_max
                 , Object_Measure.Id           AS MeasureId
                 , Object_Measure.ValueData    AS MeasureName
-  
+
                 , 0 :: TFloat AS ChangePercentAmount
 
                  , tmpRemains.Amount :: TFloat AS Amount_Remains
@@ -776,24 +783,29 @@ BEGIN
                                      INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                            ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
                                                           AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                                     INNER JOIN Object_InfoMoney_View AS View_InfoMoney
-                                                                      ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                     AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
-                                                                                                                  , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
-                                                                                                                  , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                                                                  , zc_Enum_InfoMoneyDestination_20300() -- МНМА
-                                                                                                                  , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                                                                  , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                                                                  , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
-                                                                                                                   )
-                                                                       OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
-                                                                                                       , zc_Enum_InfoMoney_10106() -- Сыр
-                                                                                                        )
-                                                                         )
+                                     LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                                             ON ObjectBoolean_Goods_Asset.ObjectId = Object.Id
+                                                            AND ObjectBoolean_Goods_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
                                 WHERE inBranchCode BETWEEN 301 AND 310
                                   AND TRIM (inGoodsName)  <> ''
                                   AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
                                   AND Object.ValueData ILIKE ('%' || TRIM (inGoodsName) || '%')
+                                  --
+                                  AND ((View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
+                                                                                , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                                , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                                                , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
+                                                                                 )
+                                     OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
+                                                                     , zc_Enum_InfoMoney_10106() -- Сыр
+                                                                      )
+                                       )
+                                    OR ObjectBoolean_Goods_Asset.ValueData = TRUE
+                                      )
                                )
             -- Результат
             SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
@@ -865,25 +877,32 @@ BEGIN
                  INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                 INNER JOIN Object_InfoMoney_View AS View_InfoMoney
-                                                  ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                 AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
-                                                                                              , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
-                                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                                              , zc_Enum_InfoMoneyDestination_20300() -- МНМА
-                                                                                              , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                                              , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                                              , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
-                                                                                               )
-                                                   OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
-                                                                                   , zc_Enum_InfoMoney_10106() -- Сыр
-                                                                                    )
-                                                     )
+                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                         ON ObjectBoolean_Goods_Asset.ObjectId = MovementItem.ObjectId
+                                        AND ObjectBoolean_Goods_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
+
             WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '3 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
               AND Movement.DescId = zc_Movement_OrderInternal()
               AND Movement.StatusId = zc_Enum_Status_Complete()
               AND inBranchCode                  BETWEEN 301 AND 310
               AND inMovementId                  = 0
+              --
+              AND ((View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                            , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
+                                                            , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                            , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                            , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                            , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                            , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
+                                                             )
+                 OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
+                                                 , zc_Enum_InfoMoney_10106() -- Сыр
+                                                  )
+                   )
+                OR ObjectBoolean_Goods_Asset.ValueData = TRUE
+                  )
+
            UNION ALL
             -- Цех Упаковки + ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ копчения - втулки
             SELECT DISTINCT Object_Goods.Id AS GoodsId
@@ -1164,23 +1183,31 @@ BEGIN
                               , tmpInfoMoney.InfoMoneyGroupName
                               , tmpInfoMoney.InfoMoneyDestinationName
                               , tmpInfoMoney.InfoMoneyName
-                         FROM tmpInfoMoney
-                              JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
-                                             AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                         FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                              LEFT JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                               JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_Goods_InfoMoney.ObjectId
                                                          AND Object_Goods.isErased = FALSE
                                                          AND (Object_Goods.ObjectCode <> 0 OR inBranchCode BETWEEN 301 AND 310)
                               LEFT JOIN tmpGoods_ScaleCeh ON tmpGoods_ScaleCeh.GoodsId = Object_Goods.Id
                               LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                               LEFT JOIN Object AS Object_GoodsKind_Main ON Object_GoodsKind_Main.Id = zc_Enum_GoodsKind_Main()
-                         WHERE (tmpGoods_Return.GoodsId > 0
+
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                                      ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id
+                                                     AND ObjectBoolean_Goods_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
+
+                         WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                           AND (tmpGoods_Return.GoodsId > 0
                              OR inBranchCode BETWEEN 302 AND 310
                            --OR inBranchCode BETWEEN 301 AND 310
                              OR (inBranchCode = 301 AND inMovementId >= 0)
                              OR (inMovementId >= 0 AND inBranchCode NOT BETWEEN 301 AND 310)
                              OR tmpInfoMoney.isTare = TRUE
                              OR inBranchCode IN (103)
+                               )
+                           --
+                           AND (tmpInfoMoney.InfoMoneyId > 0 
+                             OR (ObjectBoolean_Goods_Asset.ValueData = TRUE AND inBranchCode BETWEEN 301 AND 310)
                                )
                         )
           , tmpPrice1 AS (SELECT tmpGoods.GoodsId
