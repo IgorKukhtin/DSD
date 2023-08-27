@@ -1,10 +1,10 @@
-﻿inherited MemberHolidayForm: TMemberHolidayForm
+inherited MemberHolidayForm: TMemberHolidayForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1082#1072#1079' '#1087#1086' '#1086#1090#1087#1091#1089#1082#1072#1084'>'
   ClientHeight = 449
   ClientWidth = 366
   AddOnFormData.isSingle = False
   ExplicitWidth = 372
-  ExplicitHeight = 477
+  ExplicitHeight = 478
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -28,7 +28,7 @@
     Top = 7
     Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
-  object Код: TcxLabel [3]
+  object lbInvNumber: TcxLabel [3]
     Left = 8
     Top = 7
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
