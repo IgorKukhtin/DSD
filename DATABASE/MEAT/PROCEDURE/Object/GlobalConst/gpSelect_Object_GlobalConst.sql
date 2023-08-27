@@ -32,15 +32,16 @@ BEGIN
           PERFORM pg_cancel_backend (tmp.pId)
           FROM (SELECT pg_PROC.pId
                 FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin()) AS gpSelect
-                     JOIN pg_stat_activity AS pg_PROC ON pg_PROC.state = 'active' AND pg_PROC.query_start < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+                     JOIN pg_stat_activity AS pg_PROC ON pg_PROC.state = 'active' AND pg_PROC.query_start < CURRENT_TIMESTAMP - INTERVAL '1 SEC'
                                                      AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'(%')
+                WHERE gpSelect.Name ILIKE '%Mobile%'
                ) AS tmp;
      END IF;
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!
      PERFORM  pg_terminate_backend(a.pid)
             , pg_cancel_backend(a.pId)
-     FROM pg_stat_activity AS a WHERE a.state = 'active' AND ((a.query ILIKE '%gpGet_Movement_Sale%'     AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '3 MIN')
+     FROM pg_stat_activity AS a WHERE a.state = 'active' AND ((a.query ILIKE '%gpGet_Movement_Sale%'     AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '5 MIN')
                                                            OR (a.query ILIKE 'select * from gpExecSql(%' AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '5 MIN'))
      ;
 
@@ -195,7 +196,7 @@ BEGIN
                                   AND ObjectString.DescId = zc_ObjectString_Enum()
        WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
          AND Object_GlobalConst.ObjectCode < 100
-         AND Object_GlobalConst.Id NOT IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
+         AND Object_GlobalConst.Id NOT IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam(), zc_Enum_GlobalConst_ConnectStoredProcParam())
        ORDER BY 1
       ;
 
@@ -213,11 +214,15 @@ ALTER FUNCTION gpSelect_Object_GlobalConst (TVarChar, TVarChar) OWNER TO postgre
 */
 
 -- тест
--- update Object set valuedata = 'http://integer-srv.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam()
+-- update Object set valuedata = 'http://integer-srv.alan.dp.ua'  where Id = zc_Enum_GlobalConst_ConnectParam()
 -- update Object set valuedata = 'http://integer-srv2.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam()
 --
--- update Object set valuedata = 'http://integer-srv-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam()
+-- update Object set valuedata = 'http://integer-srv-r.alan.dp.ua'  where Id = zc_Enum_GlobalConst_ConnectReportParam()
 -- update Object set valuedata = 'http://integer-srv2-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam()
+--
+-- update Object set valuedata = 'http://integer-srv-a.alan.dp.ua'  where Id = zc_Enum_GlobalConst_ConnectStoredProcParam()
+-- update Object set valuedata = 'http://integer-srv2-a.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectStoredProcParam()
+
 --
 -- SELECT * FROM Object where Id IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
 -- SELECT * FROM gpSelect_Object_GlobalConst ('', zfCalc_UserAdmin())

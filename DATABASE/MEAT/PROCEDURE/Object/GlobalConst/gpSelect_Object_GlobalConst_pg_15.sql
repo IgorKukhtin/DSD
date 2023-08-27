@@ -196,7 +196,7 @@ BEGIN
                                   AND ObjectString.DescId = zc_ObjectString_Enum()
        WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
          AND Object_GlobalConst.ObjectCode < 100
-         AND Object_GlobalConst.Id NOT IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
+         AND Object_GlobalConst.Id NOT IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam(), zc_Enum_GlobalConst_ConnectStoredProcParam())
        ORDER BY 1
       ;
 
