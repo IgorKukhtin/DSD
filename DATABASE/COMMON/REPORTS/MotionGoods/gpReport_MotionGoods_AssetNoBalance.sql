@@ -285,7 +285,13 @@ BEGIN
                                                                  , inAccountGroupId:= zc_Enum_AccountGroup_20000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
                                                                  , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 9354099 ELSE inGoodsGroupId END
-                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp
+                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp   
+                         UNION ALL
+                           SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate
+                                                                 , inAccountGroupId:= zc_Enum_AccountGroup_20000()
+                                                                 , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
+                                                                 , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 7597944 ELSE inGoodsGroupId END
+                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp   
                           )
         
         
