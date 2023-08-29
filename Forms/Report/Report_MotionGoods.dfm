@@ -2516,7 +2516,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 54
     Align = alTop
     TabOrder = 1
-    ExplicitTop = -22
     object edGoodsGroup: TcxButtonEdit
       Left = 858
       Top = 5
@@ -2812,16 +2811,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Component = cbAllAuto
-        Properties.Strings = (
-          'Checked')
-      end
-      item
-        Component = cbAllMO
-        Properties.Strings = (
-          'Checked')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream

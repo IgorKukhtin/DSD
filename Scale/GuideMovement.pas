@@ -144,6 +144,9 @@ type
     OperDatePartner_parent: TcxGridDBColumn;
     bbChangeTransport: TSpeedButton;
     actChangeTransport: TAction;
+    TotalCountPartner: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
+    TotalCountSh: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

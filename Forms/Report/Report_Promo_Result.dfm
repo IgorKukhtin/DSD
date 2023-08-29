@@ -4,9 +4,8 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   ClientWidth = 1081
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -308
   ExplicitWidth = 1097
-  ExplicitHeight = 469
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -125,8 +124,10 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
               Kind = skCount
               Column = GoodsName
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -174,6 +175,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'JuridicalName_str'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 154
           end
           object InvNumber: TcxGridDBColumn

@@ -4,7 +4,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
   ClientWidth = 925
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 941
-  ExplicitHeight = 469
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,6 +98,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
               Kind = skSum
               Column = CostPromo
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False

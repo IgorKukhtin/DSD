@@ -4,8 +4,9 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
   ClientWidth = 1075
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -181
   ExplicitWidth = 1091
-  ExplicitHeight = 472
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -118,8 +119,10 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
               Kind = skCount
               Column = GoodsName
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil

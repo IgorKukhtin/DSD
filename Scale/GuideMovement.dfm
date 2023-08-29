@@ -545,8 +545,68 @@ object GuideMovementForm: TGuideMovementForm
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountTare
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountPartner
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountKg
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountSh
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalSumm
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountTare
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountPartner
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountKg
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountSh
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalSumm
+          end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
         OptionsCustomize.ColumnMoving = False
@@ -555,6 +615,7 @@ object GuideMovementForm: TGuideMovementForm
         OptionsData.DeletingConfirmation = False
         OptionsData.Editing = False
         OptionsData.Inserting = False
+        OptionsView.Footer = True
         OptionsView.GroupByBox = False
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
@@ -815,7 +876,7 @@ object GuideMovementForm: TGuideMovementForm
           GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 60
+          Width = 75
         end
         object TotalCountTare: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
@@ -825,6 +886,38 @@ object GuideMovementForm: TGuideMovementForm
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 75
+        end
+        object TotalCountPartner: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          DataBinding.FieldName = 'TotalCountPartner'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 75
+        end
+        object TotalCountKg: TcxGridDBColumn
+          Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086' '#1074#1077#1089
+          DataBinding.FieldName = 'TotalCountKg'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 75
+        end
+        object TotalCountSh: TcxGridDBColumn
+          Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086' '#1096#1090'.'
+          DataBinding.FieldName = 'TotalCountSh'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 60
@@ -838,7 +931,7 @@ object GuideMovementForm: TGuideMovementForm
           GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 80
+          Width = 75
         end
         object ChangePercent: TcxGridDBColumn
           Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094

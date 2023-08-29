@@ -3,6 +3,7 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientHeight = 434
   ClientWidth = 1098
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
+  ExplicitLeft = -204
   ExplicitWidth = 1114
   ExplicitHeight = 473
   PixelsPerInch = 96
@@ -118,6 +119,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Kind = skSum
               Column = SummaProfit_plan
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
