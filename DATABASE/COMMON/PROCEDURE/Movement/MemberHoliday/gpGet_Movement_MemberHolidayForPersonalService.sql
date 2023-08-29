@@ -240,30 +240,31 @@ BEGIN
                                         WHERE MovementDate.ValueData BETWEEN (SELECT MIN (tmpData.ServiceDateStart) FROM tmpData) AND (SELECT MAX (tmpData.ServiceDateEnd) FROM tmpData)
                                           AND MovementDate.DescId = zc_MIDate_ServiceDate()
                                        )
-       , tmpPersonalService AS (SELECT MAX (Movement.Id)     AS MovementId
+       , tmpPersonalService AS (SELECT MIN (Movement.Id) AS MovementId
                                      , Movement.ServiceDate
-                                     , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0)) AS Amount
+                                     , SUM (CASE WHEN MILinkObject_Unit.ObjectId               = tmpData.UnitId
+                                                  AND ObjectLink_Personal_Member.ChildObjectId = tmpData.MemberId
+                                                 THEN COALESCE (MIFloat_SummHoliday.ValueData, 0)
+                                                 ELSE 0
+                                            END) AS Amount
                                 FROM tmpData
                                      LEFT JOIN tmpMovementPersonalService AS Movement ON 1 = 1
 
-                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                            AND MovementItem.DescId = zc_MI_Master()
-                                                            AND MovementItem.isErased = FALSE
-                                                            AND MovementItem.ObjectId = tmpData.PersonalId
+                                     LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.isErased = FALSE
+                                                           AND MovementItem.ObjectId = tmpData.PersonalId
 
                                      LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
-                                                                  ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
-                                                                 -- AND COALESCE (MIFloat_SummHoliday.ValueData, 0) > 0
+                                                                 ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
 
-                                     INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                        ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                                                      AND MILinkObject_Unit.ObjectId = tmpData.UnitId
-                                     INNER JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                           ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
-                                                          AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                                                          AND ObjectLink_Personal_Member.ChildObjectId = tmpData.MemberId
+                                     LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                                 GROUP BY Movement.ServiceDate
                                )
 
@@ -306,10 +307,10 @@ BEGIN
 
        FROM tmpData
             LEFT JOIN tmpPersonalService AS tmpPersonalService1
-                                         ON tmpPersonalService1.ServiceDate = tmpData.ServiceDateStart
+                                         ON DATE_TRUNC ('MONTH', tmpPersonalService1.ServiceDate) = DATE_TRUNC ('MONTH', tmpData.ServiceDateStart)
             LEFT JOIN tmpPersonalService AS tmpPersonalService2
-                                         ON DATE_TRUNC ('Month', tmpPersonalService2.ServiceDate) = DATE_TRUNC ('Month', tmpData.ServiceDateEnd)
-                                        AND DATE_TRUNC ('Month', tmpData.ServiceDateEnd) <> DATE_TRUNC ('Month', tmpData.ServiceDateStart)
+                                         ON DATE_TRUNC ('MONTH', tmpPersonalService2.ServiceDate) = DATE_TRUNC ('MONTH', tmpData.ServiceDateEnd)
+                                        AND DATE_TRUNC ('MONTH', tmpData.ServiceDateEnd)         <> DATE_TRUNC ('MONTH', tmpData.ServiceDateStart)
 
             LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = tmpPersonalService1.MovementId  --MovementFloat_MovementId.ValueData::Integer
             LEFT JOIN MovementDesc AS MovementDesc1 ON MovementDesc1.Id = Movement_PersonalService1.DescId
