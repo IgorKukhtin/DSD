@@ -21,7 +21,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Left = 0
     Top = 0
     Width = 1329
-    Height = 31
+    Height = 33
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
@@ -42,6 +42,23 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       TabOrder = 1
       Width = 85
     end
+    object cbTotal: TcxCheckBox
+      Left = 510
+      Top = 6
+      Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
+      Properties.ReadOnly = False
+      TabOrder = 5
+      Width = 101
+    end
+    object cbMonth: TcxCheckBox
+      Left = 414
+      Top = 6
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Properties.ReadOnly = False
+      State = cbsChecked
+      TabOrder = 2
+      Width = 85
+    end
     object cxLabel1: TcxLabel
       Left = 10
       Top = 6
@@ -55,13 +72,15 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
-    Top = 57
+    Top = 59
     Width = 1329
-    Height = 338
+    Height = 336
     Align = alClient
     DataSource = DataSource
     Groups = <>
     TabOrder = 1
+    ExplicitTop = 57
+    ExplicitHeight = 338
     object clProfitLossGroupName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -92,7 +111,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object clUnitName_ProfitLoss: TcxDBPivotGridField
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1052#1072#1075#1072#1079#1080#1085
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       DataBinding.FieldName = 'UnitName_ProfitLoss'
       Visible = True
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -152,27 +171,11 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object DirectionObjectName: TcxDBPivotGridField
       AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      Caption = #1050#1083#1080#1077#1085#1090
       DataBinding.FieldName = 'DirectionObjectName'
       Visible = True
       UniqueName = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
-  end
-  object cbTotal: TcxCheckBox
-    Left = 134
-    Top = 163
-    Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
-    Properties.ReadOnly = False
-    TabOrder = 5
-    Width = 101
-  end
-  object cbMonth: TcxCheckBox
-    Left = 254
-    Top = 163
-    Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
-    Properties.ReadOnly = False
-    TabOrder = 7
-    Width = 101
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -268,19 +271,15 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMonth'
         end
         item
           Visible = True
@@ -335,7 +334,6 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = cbMonth
     end
   end
   object ActionList: TActionList
