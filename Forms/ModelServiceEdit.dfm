@@ -13,7 +13,7 @@
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -154,9 +154,17 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -208,7 +216,7 @@
     Left = 224
     Top = 64
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
@@ -225,10 +233,18 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MaskId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -337,8 +353,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 104
+    Left = 304
+    Top = 56
   end
   object ModelServiceKindGuides: TdsdGuides
     KeyField = 'Id'

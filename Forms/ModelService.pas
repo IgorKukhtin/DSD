@@ -146,6 +146,8 @@ type
     DescName_to: TcxGridDBColumn;
     dsdGridToExcelChild: TdsdGridToExcel;
     bbGridToExcelChild: TdxBarButton;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public
