@@ -163,7 +163,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Top = 163
     Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 101
   end
   object cbMonth: TcxCheckBox
@@ -691,6 +691,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMonth'
+        Value = Null
+        Component = cbMonth
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
