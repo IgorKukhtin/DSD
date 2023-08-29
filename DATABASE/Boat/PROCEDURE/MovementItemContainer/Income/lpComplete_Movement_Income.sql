@@ -110,8 +110,8 @@ BEGIN
                   -- Аналитики счетов - направления - !!!ВРЕМЕННО - zc_Enum_AccountDirection_10100!!! Запасы + Склады
                 , COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, zc_Enum_AccountDirection_10100()) AS AccountDirectionId_To
 
-                , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
-                , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
+                , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
+                , COALESCE (MovementFloat_VATPercent.ValueData, 0)         AS VATPercent
                 , COALESCE (ObjectLink_Partner_TaxKind.ChildObjectId, zc_Enum_TaxKind_Basis()) AS TaxKindId
 
                   -- Сумма скидки без НДС
@@ -317,7 +317,10 @@ BEGIN
      -- 4.1. опять нашли - Сумма вх. без НДС, с учетом скидки ...
      vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
      -- 4.2. распределяем Сумма НДС .....
-     UPDATE _tmpItem SET OperSumm_VAT = CASE WHEN vbSummMVAT > 0 THEN zfCalc_SummVATDiscountTax ((SELECT SUM (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) FROM _tmpItem), 0, vbVATPercent) * _tmpItem.OperSumm / vbSummMVAT ELSE 0 END;
+     UPDATE _tmpItem SET OperSumm_VAT = CASE WHEN vbSummMVAT > 0
+                                             THEN zfCalc_SummVATDiscountTax ((SELECT SUM (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) FROM _tmpItem), 0, vbVATPercent) * _tmpItem.OperSumm / vbSummMVAT
+                                             ELSE 0
+                                        END;
      -- 4.3. корректируем на "погрешность округления"
      UPDATE _tmpItem SET OperSumm_VAT = _tmpItem.OperSumm_VAT                                                                              -- корректируем эту сумму на...
                                       - (SELECT SUM (_tmpItem.OperSumm_VAT) FROM _tmpItem)                                                 -- итоговая новая сумма

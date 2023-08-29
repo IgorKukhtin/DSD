@@ -139,7 +139,7 @@ BEGIN
                                                 );
 
      -- дописали партию
-     UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId;
+     UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId AND PartionId IS NULL;
 
   
      -- по ВСЕМ товарам исправили OperPriceList

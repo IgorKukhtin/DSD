@@ -582,6 +582,14 @@ BEGIN
                                                 )
      FROM _tmpItem_pr
     ;
+    
+     -- дописали партию
+     UPDATE MovementItem SET PartionId = _tmpItem_pr.PartionId
+     FROM _tmpItem_pr
+     WHERE MovementItem.Id = _tmpItem_pr.MovementItemId
+       AND MovementItem.PartionId IS NULL
+    ;
+
 
 /*
     RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>   <%>', (select count(*) from _tmpItem_Child where _tmpItem_Child.PartionId = 17959)
