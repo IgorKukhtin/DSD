@@ -31,7 +31,7 @@ type
     cxButton2: TcxButton;
     ActionList: TActionList;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;

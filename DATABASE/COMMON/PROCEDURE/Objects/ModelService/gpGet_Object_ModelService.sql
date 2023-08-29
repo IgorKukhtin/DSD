@@ -1,9 +1,11 @@
 ﻿-- Function: gpGet_Object_ModelService()
 
-DROP FUNCTION IF EXISTS gpGet_Object_ModelService();
+--DROP FUNCTION IF EXISTS gpGet_Object_ModelService (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ModelService (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ModelService(
     IN inId          Integer,       -- Единица измерения 
+    IN inMaskId      Integer   ,    -- id для копирования
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
@@ -18,12 +20,12 @@ $BODY$BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ModelService());
 
-  IF COALESCE (inId, 0) = 0
+   IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) = 0))
    THEN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_ReceiptGoods())   AS Code
+           , lfGet_ObjectCode(0, zc_Object_ModelService())   AS Code
            , CAST ('' as TVarChar)  AS NAME
            
            , CAST ('' as TVarChar)     AS Comment
@@ -35,15 +37,14 @@ $BODY$BEGIN
            , CAST ('' as TVarChar) AS ModelServiceKindName
 
            , CAST (FALSE AS Boolean) AS isTrainee
-           , CAST (NULL AS Boolean) AS isErased
+           , CAST (FALSE AS Boolean) AS isErased
            
-       FROM Object 
-       WHERE Object.DescId = zc_Object_ModelService();
+       ;
    ELSE
        RETURN QUERY 
-       SELECT 
-             Object_ModelService.Id          AS Id
-           , Object_ModelService.ObjectCode  AS Code
+       SELECT     
+             CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_ModelService.Id END ::Integer AS Id
+           , CASE WHEN inMaskId <> 0 THEN lfGet_ObjectCode (0, zc_Object_ModelService()) ELSE Object_ModelService.ObjectCode END ::Integer AS Code
            , Object_ModelService.ValueData   AS Name
            
            , ObjectString_Comment.ValueData  AS Comment
@@ -77,7 +78,7 @@ $BODY$BEGIN
                                     ON ObjectBoolean_Trainee.ObjectId = Object_ModelService.Id
                                    AND ObjectBoolean_Trainee.DescId = zc_ObjectBoolean_ModelService_Trainee()
 
-       WHERE Object_ModelService.Id = inId;
+       WHERE Object_ModelService.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
    END IF;
    
 END;$BODY$
@@ -91,6 +92,7 @@ ALTER FUNCTION gpGet_Object_ModelService(integer, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+  28.08.23        * add inMaskId
   09.12.19        * Trainee
   22.10.13        *
    

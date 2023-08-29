@@ -716,6 +716,14 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -919,6 +927,10 @@ object ModelServiceForm: TModelServiceForm
       Action = dsdGridToExcelChild
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1074,6 +1086,7 @@ object ModelServiceForm: TModelServiceForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1090#1086#1074#1072#1088#1099' '#1055#1088#1080#1093#1086#1076'/ '#1056#1072#1089#1093#1086#1076
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1090#1086#1074#1072#1088#1099' '#1055#1088#1080#1093#1086#1076'/ '#1056#1072#1089#1093#1086#1076
       ImageIndex = 6
+      ShortCut = 16472
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1125,6 +1138,12 @@ object ModelServiceForm: TModelServiceForm
           Value = '0'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = ModelServiceItemMasterDS
@@ -1148,6 +1167,12 @@ object ModelServiceForm: TModelServiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1755,6 +1780,36 @@ object ModelServiceForm: TModelServiceForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
+      FormName = 'TModelServiceEditForm'
+      FormNameParam.Value = 'TModelServiceEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object spSelectMaster: TdsdStoredProc
