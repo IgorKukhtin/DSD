@@ -94,13 +94,26 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
                -- load Сумма транспорт с сайта
              , TransportSumm_load TFloat
 
+               -- ИТОГО Сумма Скидка № 1 (Basis) - без НДС
              , SummDiscount1      TFloat
+               -- -- ИТОГО Сумма Скидка № 2 (Basis) - без НДС
              , SummDiscount2      TFloat
-             , SummDiscount3      TFloat
+
+               -- ИТОГО Сумма Скидка № 1 (options) - без НДС
+             , SummDiscount1_opt  TFloat
+               -- ИТОГО Сумма Скидка № 2 (options) - без НДС
+             , SummDiscount2_opt  TFloat
+               -- ИТОГО Сумма Скидка № 1 + 2 (options) - без НДС
+             , SummDiscount3_opt  TFloat
+
+               -- ИТОГО Сумма Скидка (Basis) + (options) - без НДС
              , SummDiscount_total TFloat
 
+               -- Cумма откорректированной скидки, без НДС (доп.скидка)
              , SummTax TFloat
+               -- ИТОГО с учетом всех скидок, без Транспорта, Сумма продажи без НДС
              , SummReal TFloat
+               -- ИТОГО расчетная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
              , Basis_summ_calc TFloat
 
              , isBasicConf Boolean
@@ -574,7 +587,7 @@ BEGIN
                                   , tmpCalc_all.BasisPriceWVAT_summ
                                     -- с учетом % скидки №1 - без НДС
                                   , tmpCalc_all.BasisPrice_summ_disc_1
-                                    -- с учетом % скидки №2+3 - без НДС
+                                    -- с учетом % скидки №1+2 - без НДС
                                   , tmpCalc_all.BasisPrice_summ_disc_2
                                     -- Сумма продажи с НДС - с учетом ВСЕХ скидок
                                   , tmpCalc_all.BasisPriceWVAT_summ_disc
@@ -897,26 +910,38 @@ BEGIN
            -- Сумма транспорт с сайта
          , tmpResAll.TransportSumm_load :: TFloat AS TransportSumm_load
 
-           -- ИТОГО Сумма Скидки - без НДС
+           -- ИТОГО Сумма Скидка № 1 (Basis) - без НДС
          , (COALESCE (tmpCalc_1.BasisPrice_summ, 0) - COALESCE (tmpCalc_1.BasisPrice_summ_disc_1, 0)) :: TFloat AS SummDiscount1
 
-         , (-- итоговая скидка
+           -- ИТОГО Сумма Скидка № 2 (Basis) - без НДС
+         , (-- скидка № 1 + 2
             (COALESCE (tmpCalc_1.BasisPrice_summ, 0) - COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0))
-            -- минус Скидка № 1
+            -- минус скидка № 1
           - (COALESCE (tmpCalc_1.BasisPrice_summ, 0) - COALESCE (tmpCalc_1.BasisPrice_summ_disc_1, 0))
            ) :: TFloat AS SummDiscount2
 
-         , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)) :: TFloat AS SummDiscount3
+           -- ИТОГО Сумма Скидка № 1 (options) - без НДС
+         , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_1, 0)) :: TFloat AS SummDiscount1_opt
+           -- ИТОГО Сумма Скидка № 2 (options) - без НДС
+         , (-- скидка № 1 + 2
+            COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)
+            -- минус скидка № 1
+          - (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_1, 0))
+           ) :: TFloat AS SummDiscount2_opt
 
+           -- ИТОГО Сумма Скидка № 1+2 (options) - без НДС
+         , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)) :: TFloat AS SummDiscount3_opt
+
+           -- ИТОГО Сумма Скидка (Basis) + (options) - без НДС
          , (-- итоговая скидка (Basis)
             (COALESCE (tmpCalc_1.BasisPrice_summ, 0) - COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0))
             -- плюс итоговая скидка (options)
           + (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0))
            ) :: TFloat AS SummDiscount_total
 
-           -- Cумма откорректированной скидки, без НДС
+           -- Cумма откорректированной скидки, без НДС (доп.скидка)
          , tmpResAll.SummTax
-           -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
+           -- ИТОГО с учетом откорректированной суммы, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
          , tmpResAll.SummReal
            -- ИТОГО расчетная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
          , CASE WHEN tmpResAll.SummReal > 0
