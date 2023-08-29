@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , ChangePercent TFloat
              , TotalCount TFloat, TotalCountTare TFloat
+             , TotalCountPartner TFloat, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSumm TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
@@ -133,6 +134,11 @@ BEGIN
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
              , MovementFloat_TotalCount.ValueData             AS TotalCount
              , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
+
+             , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
+             , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+             , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
+
              , MovementFloat_TotalSumm.ValueData              AS TotalSumm
 
              , Object_From.ValueData              AS FromName
@@ -242,6 +248,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
                                     ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
+                                    ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
@@ -467,6 +482,11 @@ BEGIN
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
              , MovementFloat_TotalCount.ValueData             AS TotalCount
              , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
+
+             , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
+             , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+             , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
+
              , MovementFloat_TotalSumm.ValueData              AS TotalSumm
 
              , Object_From.ValueData              AS FromName
@@ -576,6 +596,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
                                     ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
+                                    ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id

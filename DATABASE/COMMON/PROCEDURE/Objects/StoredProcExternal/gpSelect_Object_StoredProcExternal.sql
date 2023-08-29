@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer
              , Code Integer
              , Name     TVarChar
              , isErased Boolean
-              ) 
+              )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -52,7 +52,18 @@ BEGIN
              , FALSE                    :: Boolean  AS isErased
         FROM spList
              LEFT JOIN spExternal ON spExternal.Name ILIKE spList.ProName
-        WHERE spExternal.Name IS NULL
+        WHERE (spExternal.Name IS NULL
+            OR spList.ProName ILIKE 'gpReport_Goods'
+            OR spList.ProName ILIKE 'gpReport_GoodsBalance'
+            --
+            OR spList.ProName ILIKE 'gpSelect_Scale_Goods'
+            OR spList.ProName ILIKE 'gpSelect_Scale_Partner'
+              )
+
+        --AND spList.ProName ILIKE 'gpSelect_Movement_Income'
+          /*AND (spList.ProName ILIKE 'gpReport_Goods'
+            OR spList.ProName ILIKE 'gpReport_GoodsBalance'
+              )*/
         ORDER BY 3
        ;
 
@@ -68,5 +79,4 @@ $BODY$
 */
 
 -- тест
--- update Object set ValueData = '' where Id = 0
--- SELECT * FROM gpSelect_Object_StoredProcExternal (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_StoredProcExternal (inSession:= zfCalc_UserAdmin()) WWHERE Name ILIKE 'gpSelect_Scale_Partner'
