@@ -1,4 +1,4 @@
--- Function: gpReport_ProfitLoss()
+-- Function: gpReport_ProfitLoss()       Монітор 30" Xiaomi Curved Gaming Monitor 30RMMNT30HFCW
 
 DROP FUNCTION IF EXISTS gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_ProfitLoss (TDateTime, TDateTime, Boolean, TVarChar);
