@@ -46,7 +46,7 @@ BEGIN
                           FROM Movement
                           WHERE Movement.ParentId = inMovementId
                             AND Movement.DescId = zc_Movement_WeighingPartner()
-                            -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                             AND (Movement.Id = inMovementId_by OR COALESCE (inMovementId_by, 0) = 0)
                          )
        -- список Артикулы покупателя для товаров + GoodsKindId

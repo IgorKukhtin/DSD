@@ -1445,6 +1445,7 @@ BEGIN
                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                  WHERE Movement.ParentId = inMovementId
                                    AND Movement.DescId   = zc_Movement_WeighingPartner()
+                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  GROUP BY MovementItem.ObjectId
                                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                 )
