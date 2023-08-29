@@ -51,7 +51,7 @@ type
     clMovementDescName: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    clUnitName_ProfitLoss: TcxDBPivotGridField;
+    PartnerName_ProfitLoss: TcxDBPivotGridField;
     clInfoMoneyCode: TcxDBPivotGridField;
     clInfoMoneyGroupName: TcxDBPivotGridField;
     clInfoMoneyDestinationName: TcxDBPivotGridField;
