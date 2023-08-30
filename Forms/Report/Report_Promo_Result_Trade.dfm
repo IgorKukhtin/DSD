@@ -933,10 +933,8 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_MainDiscount
       StoredProcList = <
         item
-          StoredProc = spUpdate_MainDiscount
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
@@ -1309,49 +1307,6 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
     PackSize = 1
     Left = 832
     Top = 248
-  end
-  object spUpdate_MainDiscount: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_PromoGoods_MainDiscount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMainDiscount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MainDiscount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceSale'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceSale'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 648
-    Top = 320
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
