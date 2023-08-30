@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
 )
 RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName  TVarChar
              , PL_GroupName_original TVarChar, PL_DirectionName_original TVarChar, PL_Name_original  TVarChar
-             , UnitName_ProfitLoss TVarChar
+             , PartnerName_ProfitLoss TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , DirectionObjectCode Integer, DirectionObjectName TVarChar
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
@@ -33,7 +33,7 @@ BEGIN
                             -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
      WITH tmpMIContainer AS (SELECT MIContainer.ContainerId
                                   , -1 * SUM (MIContainer.Amount)      AS Amount
-                                  , MIContainer.ObjectExtId_Analyzer   AS UnitId_ProfitLoss
+                                  , MIContainer.ObjectExtId_Analyzer   AS PartnerId
                                   , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                   , MIContainer.MovementDescId
                                   , CASE WHEN inisMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE NULL END ::TDateTime AS OperDate
@@ -50,7 +50,7 @@ BEGIN
         , tmpProfitLoss AS (SELECT CLO_ProfitLoss.ObjectId                AS ProfitLossId
                                  , tmpMIContainer.MovementDescId
                                  , tmpMIContainer.DirectionId
-                                 , tmpMIContainer.UnitId_ProfitLoss
+                                 , tmpMIContainer.PartnerId
                                  , tmpMIContainer.OperDate
                                  , SUM (tmpMIContainer.Amount) AS Amount
                             FROM tmpMIContainer
@@ -60,23 +60,24 @@ BEGIN
                             GROUP BY CLO_ProfitLoss.ObjectId
                                    , tmpMIContainer.MovementDescId
                                    , tmpMIContainer.DirectionId
-                                   , tmpMIContainer.UnitId_ProfitLoss
+                                   , tmpMIContainer.PartnerId
                                    , tmpMIContainer.OperDate
                            )
 
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
-                           , tmpProfitLoss.UnitId_ProfitLoss
+                           , tmpProfitLoss.PartnerId
                            , tmpProfitLoss.DirectionId
                            , tmpProfitLoss.MovementDescId
                            , tmpProfitLoss.OperDate
                            , SUM (tmpProfitLoss.Amount) AS Amount
                       FROM tmpProfitLoss
                       GROUP BY tmpProfitLoss.ProfitLossId
-                             , tmpProfitLoss.UnitId_ProfitLoss
+                             , tmpProfitLoss.PartnerId
                              , tmpProfitLoss.DirectionId
                              , tmpProfitLoss.MovementDescId
                              , tmpProfitLoss.OperDate
                      )
+
       SELECT
              View_ProfitLoss.ProfitLossGroupName
            , View_ProfitLoss.ProfitLossDirectionName
@@ -86,7 +87,7 @@ BEGIN
            , View_ProfitLoss.ProfitLossDirectionName_original
            , View_ProfitLoss.ProfitLossName_original
 
-           , Object_Unit_ProfitLoss.ValueData   AS UnitName_ProfitLoss
+           , Object_Partner_ProfitLoss.ValueData   AS PartnerName_ProfitLoss
 
            , View_InfoMoney.InfoMoneyGroupCode
            , View_InfoMoney.InfoMoneyDestinationCode
@@ -108,7 +109,7 @@ BEGIN
       FROM Object_ProfitLoss_View AS View_ProfitLoss
 
            LEFT JOIN tmpReport ON tmpReport.ProfitLossId = View_ProfitLoss.ProfitLossId
-           LEFT JOIN Object AS Object_Unit_ProfitLoss   ON Object_Unit_ProfitLoss.Id = tmpReport.UnitId_ProfitLoss
+           LEFT JOIN Object AS Object_Partner_ProfitLoss ON Object_Partner_ProfitLoss.Id = tmpReport.PartnerId
            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = NULL
 
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id   = tmpReport.DirectionId
