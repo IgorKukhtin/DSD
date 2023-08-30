@@ -87,7 +87,7 @@ BEGIN
            , View_ProfitLoss.ProfitLossDirectionName_original
            , View_ProfitLoss.ProfitLossName_original
 
-           , Object_Unit_ProfitLoss.ValueData   AS PartnerName_ProfitLoss
+           , Object_Partner_ProfitLoss.ValueData   AS PartnerName_ProfitLoss
 
            , View_InfoMoney.InfoMoneyGroupCode
            , View_InfoMoney.InfoMoneyDestinationCode
