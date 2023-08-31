@@ -290,7 +290,7 @@ BEGIN
                            SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate
                                                                  , inAccountGroupId:= zc_Enum_AccountGroup_20000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
-                                                                 , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 7597944 ELSE inGoodsGroupId END
+                                                                 , inGoodsGroupId:= CASE WHEN (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0 THEN 7597944 ELSE inGoodsGroupId END
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp   
                           )
         
@@ -378,6 +378,21 @@ BEGIN
                        FROM tmpReport_summ
                             FULL JOIN tmpReport_count ON tmpReport_count.ContainerId_count = tmpReport_summ.ContainerId_count
                      )
+       , tmpCarDriver AS (SELECT tmp.*
+                          FROM (SELECT ObjectLink_Car_PersonalDriver.ChildObjectId AS PersonalDriverId
+                                     , View_PersonalDriver.MemberId                AS MemberId
+                                     , Object_Car.Id                               AS CarId
+                                     , ROW_NUMBER () OVER (PARTITION BY View_PersonalDriver.MemberId) AS Ord
+                                FROM Object AS Object_Car
+                                    INNER JOIN ObjectLink AS ObjectLink_Car_PersonalDriver 
+                                                          ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Car.Id
+                                                         AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                                    LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = ObjectLink_Car_PersonalDriver.ChildObjectId
+                                WHERE Object_Car.isErased = FALSE
+                                  AND Object_Car.DescId = zc_Object_Car()
+                                ) AS tmp
+                          WHERE tmp.Ord = 1
+                          )
 
    -- Результат
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
@@ -817,7 +832,9 @@ BEGIN
         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
 
         LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpMIContainer_group.LocationId
-       
+        --если место учета водитель то по нему получаем авто
+        LEFT JOIN tmpCarDriver ON tmpCarDriver.MemberId = tmpMIContainer_group.LocationId 
+
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_GoodsGroup.DescId in (zc_ObjectLink_Goods_GoodsGroup(), zc_ObjectLink_Asset_AssetGroup())
@@ -839,7 +856,7 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
                              ON ObjectLink_Asset_Car.ObjectId = Object_Goods.Id
                             AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
-        LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Asset_Car.ChildObjectId
+        LEFT JOIN Object AS Object_Car ON Object_Car.Id = COALESCE (ObjectLink_Asset_Car.ChildObjectId, tmpCarDriver.CarId)
 
         LEFT JOIN ObjectLink AS Car_CarModel
                              ON Car_CarModel.ObjectId = Object_Car.Id
