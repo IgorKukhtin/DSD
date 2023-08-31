@@ -4,6 +4,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   ClientWidth = 1081
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -187
   ExplicitWidth = 1097
   ExplicitHeight = 473
   PixelsPerInch = 96
@@ -127,7 +128,6 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -331,6 +331,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'AdvertisingName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object AmountPlanMin: TcxGridDBColumn

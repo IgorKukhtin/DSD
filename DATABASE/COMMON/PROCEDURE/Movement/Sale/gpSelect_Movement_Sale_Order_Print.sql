@@ -19,14 +19,27 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 
-    DECLARE vbMovementId   Integer;
-    DECLARE vbFromId_group Integer;
-    DECLARE vbToId         Integer;
-    DECLARE vbDiffTax      TFloat;
+    DECLARE vbMovementId        Integer;
+    DECLARE vbMovementId_order  Integer;
+    DECLARE vbFromId_group      Integer;
+    DECLARE vbToId              Integer;
+    DECLARE vbDiffTax           TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_OrderExternal())
+     THEN
+         vbMovementId_order:= inMovementId;
+     ELSE
+         vbMovementId_order:= (SELECT MovementLinkMovement.MovementChildId
+                               FROM MovementLinkMovement
+                               WHERE MovementLinkMovement.MovementId = inMovementId
+                                 AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
+                              );
+     END IF;
 
 
      -- таблица
@@ -48,14 +61,14 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-        WHERE MovementLinkMovement.MovementChildId = inMovementId
+        WHERE MovementLinkMovement.MovementChildId = vbMovementId_order -- inMovementId
           AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Order()
        ;
      -- 
      ANALYZE _tmpListMovement;
 
      -- параметры из документа - inMovementId_Weighing
-     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_OrderInternal())
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_order AND Movement.DescId = zc_Movement_OrderInternal())
      THEN
          --
          vbFromId_group:= COALESCE ((SELECT CASE WHEN ObjectLink_Unit_Parent_0.ChildObjectId = 8439
@@ -153,7 +166,7 @@ BEGIN
     --- кому из шапки заявки
     vbToId := (SELECT MovementLinkObject_From.ObjectId  
                FROM MovementLinkObject AS MovementLinkObject_From
-               WHERE MovementLinkObject_From.MovementId = inMovementId
+               WHERE MovementLinkObject_From.MovementId = vbMovementId_order -- inMovementId
                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From());
 
 
@@ -179,7 +192,7 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_To.ObjectId -- !!!наоборот т.к. это заявка!!!
 
-       WHERE Movement.Id = inMovementId
+       WHERE Movement.Id = vbMovementId_order -- inMovementId
          AND Movement.StatusId <> zc_Enum_Status_Erased()
       ;
 
@@ -213,7 +226,7 @@ BEGIN
                                                        AND Movement.DescId = zc_Movement_WeighingProduction()
                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                                        AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
-                                WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
+                                WHERE MLM_Order.MovementChildId = vbMovementId_order -- inMovementId -- id заявки
                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
                                 ) AS tmp
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -324,7 +337,7 @@ BEGIN
                                                    AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-                          WHERE MovementItem.MovementId = inMovementId
+                          WHERE MovementItem.MovementId = vbMovementId_order -- inMovementId
                             AND MovementItem.isErased   = FALSE
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
