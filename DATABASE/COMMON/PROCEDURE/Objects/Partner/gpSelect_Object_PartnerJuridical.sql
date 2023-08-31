@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Partner()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_PartnerJuridical (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_PartnerJuridical (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PartnerJuridical (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartnerJuridical(
-    IN inJuridicalId       Integer,            --
+    IN inJuridicalId       Integer,
+    IN inisErased          Boolean,            --
     IN inSession           TVarChar            -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar, isErased Boolean
@@ -32,21 +34,23 @@ BEGIN
                                  ON ObjectString_Address.ObjectId = Object_Partner.Id
                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
                                 AND ObjectString_Address.ValueData <> ''
-    WHERE Object_Partner.DescId = zc_Object_Partner();
+    WHERE Object_Partner.DescId = zc_Object_Partner()
+      AND (Object_Partner.isErased = FALSE OR inisErased = TRUE);
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_PartnerJuridical (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_PartnerJuridical (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.08.23         * inisErased
  05.04.14                                        * add COALESCE (ObjectString_Address.ValueData, Object_Partner.ValueData)
  06.01.14                                        * add zc_ObjectString_Partner_Address
  27.11.13                          *  
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartnerJuridical (1, '2')
+-- SELECT * FROM gpSelect_Object_PartnerJuridical (1, false, '2')

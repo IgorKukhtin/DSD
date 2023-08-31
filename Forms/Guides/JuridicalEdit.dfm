@@ -756,14 +756,14 @@
     Left = 8
     Top = 140
     Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1094#1077#1085#1091' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 33
+    TabOrder = 32
     Width = 241
   end
   object cbisNotRealGoods: TcxCheckBox [33]
     Left = 8
     Top = 161
     Caption = #1053#1077#1090' c'#1093#1077#1084#1099' '#1089' '#1079#1072#1084#1077#1085#1086#1081' '#1092#1072#1082#1090'/'#1073#1091#1093#1075' '#1086#1090#1075#1088'.) ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 36
+    TabOrder = 35
     Width = 272
   end
   object cxLabel25: TcxLabel [34]
@@ -978,6 +978,44 @@
       DataSetRefresh = actPartnerRefresh
       IdFieldName = 'Id'
     end
+    object actShowErasedPartner: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPartner
+      StoredProcList = <
+        item
+          StoredProc = spPartner
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actShowErasedContract: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spContract
+      StoredProcList = <
+        item
+          StoredProc = spContract
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
     object actPartnerRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = PartnerTS
@@ -1096,6 +1134,120 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
       ShortCut = 45
+    end
+    object dsdSetUnErasedContract: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedContract
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedContract
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+    end
+    object dsdSetErasedContract: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedContract
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedContract
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+    end
+    object dsdSetErasedPartner: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+    end
+    object dsdSetUnErasedPartner: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedPartner
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedPartner
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+    end
+    object ProtocolOpenFormContract: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ContractCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ContractCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenFormPartner: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1645,11 +1797,43 @@
         end
         item
           Visible = True
+          ItemName = 'bbSetUnErasedPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPartnerRefresh'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErasedPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormPartner'
         end>
       OneOnRow = True
       Row = 0
@@ -1683,11 +1867,43 @@
         end
         item
           Visible = True
+          ItemName = 'bbSetErasedContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbContractRefresh'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErasedContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormContract'
         end>
       OneOnRow = True
       Row = 0
@@ -1723,6 +1939,38 @@
     end
     object bbContractUpdate: TdxBarButton
       Action = actContractUpdate
+      Category = 0
+    end
+    object bbShowErasedContract: TdxBarButton
+      Action = actShowErasedContract
+      Category = 0
+    end
+    object bbShowErasedPartner: TdxBarButton
+      Action = actShowErasedPartner
+      Category = 0
+    end
+    object bbSetErasedContract: TdxBarButton
+      Action = dsdSetErasedContract
+      Category = 0
+    end
+    object bbSetErasedPartner: TdxBarButton
+      Action = dsdSetErasedPartner
+      Category = 0
+    end
+    object bbSetUnErasedContract: TdxBarButton
+      Action = dsdSetUnErasedContract
+      Category = 0
+    end
+    object bbSetUnErasedPartner: TdxBarButton
+      Action = dsdSetUnErasedPartner
+      Category = 0
+    end
+    object bbProtocolOpenFormContract: TdxBarButton
+      Action = ProtocolOpenFormContract
+      Category = 0
+    end
+    object bbProtocolOpenFormPartner: TdxBarButton
+      Action = ProtocolOpenFormPartner
       Category = 0
     end
   end
@@ -1812,6 +2060,14 @@
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErasedPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -1830,6 +2086,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErasedContract
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2228,5 +2492,39 @@
       end>
     Left = 104
     Top = 527
+  end
+  object spErasedUnErasedContract: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Contract'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ContractCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 128
+  end
+  object spErasedUnErasedPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = PartnerCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 176
   end
 end
