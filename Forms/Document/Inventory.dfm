@@ -550,7 +550,26 @@ inherited InventoryForm: TInventoryForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
-    object actSaleOpenForm: TOpenChoiceForm [0]
+    object actSendOnPriceOpenForm: TOpenChoiceForm [0]
+      Category = 'Send'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actSendOnPriceJournal'
+      FormName = 'TSendOnPriceJournalForm'
+      FormNameParam.Value = 'TSendOnPriceJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_Send'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actSaleOpenForm: TOpenChoiceForm [1]
       Category = 'Sale'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -568,7 +587,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actRefreshGet: TdsdDataSetRefresh [1]
+    object actRefreshGet: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spInsertUpdateMovement
@@ -582,7 +601,7 @@ inherited InventoryForm: TInventoryForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macDelete_bySale: TMultiAction [2]
+    object macDelete_bySale: TMultiAction [3]
       Category = 'Sale'
       MoveParams = <>
       ActionList = <
@@ -603,7 +622,41 @@ inherited InventoryForm: TInventoryForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actDelete_bySale: TdsdExecStoredProc [4]
+    object macInsert_bySendOnPrice: TMultiAction [5]
+      Category = 'Send'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendOnPriceOpenForm
+        end
+        item
+          Action = actInsert_bySendOnPrice
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1086#1073#1072#1074#1083#1077#1085#1099
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1094#1077#1085#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1094#1077#1085#1077
+      ImageIndex = 27
+    end
+    object actInsert_bySendOnPrice: TdsdExecStoredProc [6]
+      Category = 'Send'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Inventory_bySend
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Inventory_bySend
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      ImageIndex = 27
+    end
+    object actDelete_bySale: TdsdExecStoredProc [7]
       Category = 'Sale'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -616,7 +669,7 @@ inherited InventoryForm: TInventoryForm
       Hint = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
       ImageIndex = 39
     end
-    object macDelete_bySeparate: TMultiAction [5]
+    object macDelete_bySeparate: TMultiAction [8]
       Category = 'Separate'
       MoveParams = <>
       ActionList = <
@@ -634,7 +687,7 @@ inherited InventoryForm: TInventoryForm
       Hint = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       ImageIndex = 39
     end
-    object macInsert_bySale: TMultiAction [6]
+    object macInsert_bySale: TMultiAction [9]
       Category = 'Sale'
       MoveParams = <>
       ActionList = <
@@ -652,7 +705,7 @@ inherited InventoryForm: TInventoryForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1055#1088#1086#1076#1072#1078#1080
       ImageIndex = 27
     end
-    object actDelete_bySeparate: TdsdExecStoredProc [7]
+    object actDelete_bySeparate: TdsdExecStoredProc [10]
       Category = 'Separate'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -665,7 +718,7 @@ inherited InventoryForm: TInventoryForm
       Hint = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       ImageIndex = 39
     end
-    object actInsert_bySale: TdsdExecStoredProc [8]
+    object actInsert_bySale: TdsdExecStoredProc [11]
       Category = 'Sale'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -681,7 +734,7 @@ inherited InventoryForm: TInventoryForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
       ImageIndex = 27
     end
-    object actPrint1: TdsdPrintAction [15]
+    object actPrint1: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -763,7 +816,7 @@ inherited InventoryForm: TInventoryForm
         item
         end>
     end
-    object actStorageChoice: TOpenChoiceForm [22]
+    object actStorageChoice: TOpenChoiceForm [25]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -790,7 +843,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actAssetChoice: TOpenChoiceForm [23]
+    object actAssetChoice: TOpenChoiceForm [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -817,7 +870,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc [24]
+    object actInsertUpdateMIAmount: TdsdExecStoredProc [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -837,7 +890,7 @@ inherited InventoryForm: TInventoryForm
         #1085#1072' '#1076#1072#1090#1091'?'
       InfoAfterExecute = '<'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
-    object actUnitChoice: TOpenChoiceForm [25]
+    object actUnitChoice: TOpenChoiceForm [28]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -864,7 +917,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [26]
+    object actGoodsKindChoice: TOpenChoiceForm [29]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1638,6 +1691,14 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_bySendOnPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_PartionGoods'
         end
         item
@@ -1756,6 +1817,10 @@ inherited InventoryForm: TInventoryForm
     end
     object bbPartionGoodsAssetChoiceForm: TdxBarButton
       Action = actPartionGoodsAssetChoiceForm
+      Category = 0
+    end
+    object bbInsert_bySendOnPrice: TdxBarButton
+      Action = macInsert_bySendOnPrice
       Category = 0
     end
   end

@@ -3,27 +3,28 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   ClientHeight = 429
   ClientWidth = 980
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 996
-  ExplicitHeight = 467
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 980
     Height = 372
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 980
     ExplicitHeight = 372
     ClientRectBottom = 372
     ClientRectRight = 980
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 980
       ExplicitHeight = 372
       inherited cxGrid: TcxGrid
         Width = 980
         Height = 372
-        ExplicitWidth = 1020
+        ExplicitWidth = 980
         ExplicitHeight = 372
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -592,7 +593,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   end
   inherited Panel: TPanel
     Width = 980
-    ExplicitWidth = 1020
+    ExplicitWidth = 980
     inherited deStart: TcxDateEdit
       Left = 95
       EditValue = 42370d
@@ -1692,6 +1693,67 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end>
       Caption = 'actSPPrintTTNProcName'
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToName'
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1793,6 +1855,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -1961,6 +2031,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
     object bbChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbChoiceGuides: TdxBarButton
+      Action = actChoiceGuides
       Category = 0
     end
   end

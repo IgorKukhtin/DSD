@@ -1798,6 +1798,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerFile() RETURNS Integer A
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Sticker_StickerFile', 'ÿ¿¡ÀŒÕ', zc_Object_Sticker(), zc_Object_StickerFile() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerFile');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerFile_70_70() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerFile_70_70'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_StickerFile_70_70', 'ÿ¿¡ÀŒÕ 70_70', zc_Object_Sticker(), zc_Object_StickerFile() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerFile_70_70');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerFile_Language() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_Language'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_StickerFile_Language', 'ﬂÁ˚Í', zc_Object_StickerFile(), zc_Object_Language() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_Language');

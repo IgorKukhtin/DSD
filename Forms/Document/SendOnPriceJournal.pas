@@ -127,6 +127,8 @@ type
     isHistoryCost: TcxGridDBColumn;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    actChoiceGuides: TdsdChoiceGuides;
+    bbChoiceGuides: TdxBarButton;
   private
     { Private declarations }
   public
