@@ -433,6 +433,7 @@ AS
                                       , '44608319' -- ОЛІВІЯ ТРЕНД
                                       , '42465240' -- новый "Сафлора"
                                       , '43233918' -- на нового клиента Хотей 43233918
+                                      , '45041508' --  новий ОКПО 45041508
                                        )  -- добвавили из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
@@ -960,7 +961,7 @@ AS
            , CAST ('PrintMovement_TTN_071021' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493'
+       AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493', '45041508'
                                           , '44588869' -- Бунар
                                           , '44608319' -- ОЛІВІЯ ТРЕНД
                                            )
@@ -981,6 +982,7 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493'
                                       , '44588869' -- Бунар
                                       , '44608319' -- ОЛІВІЯ ТРЕНД
+                                      , '45041508'
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
