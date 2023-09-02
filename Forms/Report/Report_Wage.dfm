@@ -57,6 +57,11 @@ inherited Report_WageForm: TReport_WageForm
               Format = ',0.####'
               Kind = skSum
               Column = SheetWorkTime_Amount
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = MemberName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
