@@ -3897,13 +3897,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerNormEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerSortNormForm');
   //
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileEditForm');
   exit;
-
+   {
   //StickerPack
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPackForm');

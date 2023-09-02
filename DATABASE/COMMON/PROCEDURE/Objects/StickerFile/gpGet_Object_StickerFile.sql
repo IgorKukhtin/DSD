@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Level1_70_70 TFloat, Level2_70_70 TFloat
              , Left1_70_70 TFloat, Left2_70_70 TFloat
              , isDefault Boolean
+             , isSize70 Boolean
              ) AS
 $BODY$
 BEGIN
@@ -79,6 +80,7 @@ BEGIN
            , CAST (0 as TFloat)        AS Left2_70_70
 
            , CAST (False AS Boolean)   AS isDefault
+           , FALSE       :: Boolean    AS isSize70
            ;
    ELSE
        RETURN QUERY
@@ -131,6 +133,7 @@ BEGIN
            , ObjectFloat_Left2_70_70.ValueData       AS Left2_70_70
 
            , ObjectBoolean_Default.ValueData AS isDefault
+           , COALESCE (ObjectBoolean_70.ValueData, FALSE) ::Boolean AS isSize70
            
        FROM Object AS Object_StickerFile
             LEFT JOIN ObjectString AS ObjectString_Comment
@@ -140,6 +143,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                     ON ObjectBoolean_Default.ObjectId = Object_StickerFile.Id
                                    AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_StickerFile_Default()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_70
+                                    ON ObjectBoolean_70.ObjectId = Object_StickerFile.Id
+                                   AND ObjectBoolean_70.DescId = zc_ObjectBoolean_StickerFile_70()
                                                               
             LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Language
                                  ON ObjectLink_StickerFile_Language.ObjectId = Object_StickerFile.Id

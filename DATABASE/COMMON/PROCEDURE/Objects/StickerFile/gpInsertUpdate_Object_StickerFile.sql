@@ -8,12 +8,20 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, In
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);*/
 
+/*DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat
+                                                          , Boolean, TVarChar);*/
+
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TFloat, TFloat, TFloat, TFloat
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TFloat, TFloat, TFloat, TFloat
-                                                          , Boolean, TVarChar);
+                                                          , Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
    INOUT ioId                       Integer,     -- ид
@@ -51,7 +59,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
       IN inLeft1_70_70              TFloat, 
       IN inLeft2_70_70              TFloat,
 
-      IN inisDefault                Boolean ,    --
+      IN inisDefault                Boolean ,    -- 
+      IN inisSize70                 Boolean ,    --
       IN inSession                  TVarChar     -- Пользователь
       )
   RETURNS Integer AS
@@ -89,6 +98,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_StickerFile_Comment(), ioId, inComment);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_StickerFile_Default(), ioId, inisDefault);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_StickerFile_70(), ioId, inisSize70);
 
     -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerFile_Juridical(), ioId, inJuridicalId);
@@ -186,6 +197,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.09.23         *
  11.04.23         *
  08.05.18         *
  19.12.17         *

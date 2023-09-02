@@ -67,6 +67,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Width1: TcxGridDBColumn;
+    isSize70: TcxGridDBColumn;
   private
     { Private declarations }
   public

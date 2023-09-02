@@ -55,12 +55,12 @@
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
+    Left = 42
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 137
+    Width = 78
   end
   object cxLabel2: TcxLabel
     Left = 354
@@ -124,7 +124,7 @@
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100': '#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' / '#1070#1088'. '#1083#1080#1094#1086' / '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object cbisDefault: TcxCheckBox
-    Left = 239
+    Left = 130
     Top = 26
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
     TabOrder = 14
@@ -595,9 +595,15 @@
     Top = 290
     Caption = #1074#1086' 2-'#1086#1081
   end
+  object cbisSize70: TcxCheckBox
+    Left = 239
+    Top = 26
+    Caption = #1056#1072#1079#1084#1077#1088' 70*70'
+    TabOrder = 80
+    Width = 97
+  end
   object ActionList: TActionList
-    Left = 216
-    Top = 20
+    Top = 100
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -911,6 +917,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSize70'
+        Value = Null
+        Component = cbisSize70
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 384
@@ -1207,6 +1221,13 @@
         Component = ceLeft2_70_70
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSize70'
+        Value = Null
+        Component = cbisSize70
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 488
@@ -1228,8 +1249,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 8
+    Left = 8
+    Top = 40
   end
   object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'
