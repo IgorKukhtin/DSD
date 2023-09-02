@@ -1259,6 +1259,9 @@ begin
 end;
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalChoiceForm');
+   exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_ReestrJournalForm');

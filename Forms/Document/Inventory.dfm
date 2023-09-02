@@ -555,8 +555,8 @@ inherited InventoryForm: TInventoryForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actSendOnPriceJournal'
-      FormName = 'TSendOnPriceJournalForm'
-      FormNameParam.Value = 'TSendOnPriceJournalForm'
+      FormName = 'TSendOnPriceJournalChoiceForm'
+      FormNameParam.Value = 'TSendOnPriceJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
