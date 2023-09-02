@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
-  ClientHeight = 523
+  ClientHeight = 559
   ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,12 +18,12 @@
   TextHeight = 13
   object cxLabel1: TcxLabel
     Left = 19
-    Top = 178
+    Top = 215
     Caption = #1042#1086#1083#1086#1075#1110#1089#1090#1100' '#1084#1110#1085
   end
   object cxButton1: TcxButton
     Left = 67
-    Top = 485
+    Top = 522
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -33,7 +33,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 485
+    Top = 522
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -77,13 +77,13 @@
     Width = 153
   end
   object cxLabel7: TcxLabel
-    Left = 178
-    Top = 134
+    Left = 19
+    Top = 174
     Caption = #1064#1040#1041#1051#1054#1053
   end
   object edStickerFile: TcxButtonEdit
-    Left = 178
-    Top = 151
+    Left = 19
+    Top = 188
     Properties.Buttons = <
       item
         Default = True
@@ -95,18 +95,18 @@
   end
   object edComment: TcxTextEdit
     Left = 19
-    Top = 450
+    Top = 487
     TabOrder = 9
     Width = 312
   end
   object cxLabel8: TcxLabel
     Left = 19
-    Top = 434
+    Top = 471
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceValue1: TcxCurrencyEdit
     Left = 19
-    Top = 193
+    Top = 230
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -129,12 +129,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 178
-    Top = 178
+    Top = 215
     Caption = #1042#1086#1083#1086#1075#1110#1089#1090#1100' '#1084#1072#1082#1089
   end
   object ceValue2: TcxCurrencyEdit
     Left = 178
-    Top = 193
+    Top = 230
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -144,12 +144,12 @@
   end
   object cxLabel9: TcxLabel
     Left = 19
-    Top = 217
+    Top = 254
     Caption = #1058' '#1084#1110#1085
   end
   object ceValue3: TcxCurrencyEdit
     Left = 19
-    Top = 232
+    Top = 269
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -159,12 +159,12 @@
   end
   object cxLabel10: TcxLabel
     Left = 178
-    Top = 218
+    Top = 255
     Caption = #1058' '#1084#1072#1082#1089
   end
   object ceValue4: TcxCurrencyEdit
     Left = 178
-    Top = 234
+    Top = 271
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -174,12 +174,12 @@
   end
   object cxLabel11: TcxLabel
     Left = 19
-    Top = 261
+    Top = 298
     Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
   end
   object ceValue5: TcxCurrencyEdit
     Left = 19
-    Top = 277
+    Top = 314
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -194,14 +194,14 @@
   end
   object edStickerSkin: TcxButtonEdit
     Left = 19
-    Top = 151
+    Top = 150
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 23
-    Width = 153
+    Width = 312
   end
   object cxLabel3: TcxLabel
     Left = 178
@@ -221,19 +221,19 @@
   end
   object cbisFix: TcxCheckBox
     Left = 212
-    Top = 320
+    Top = 357
     Caption = #1060#1080#1082#1089'. '#1074#1077#1089
     TabOrder = 26
     Width = 74
   end
   object cxLabel12: TcxLabel
     Left = 178
-    Top = 262
+    Top = 299
     Caption = #1042#1077#1089
   end
   object ceValue6: TcxCurrencyEdit
     Left = 178
-    Top = 277
+    Top = 314
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -243,12 +243,12 @@
   end
   object cxLabel13: TcxLabel
     Left = 19
-    Top = 304
+    Top = 341
     Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
   end
   object ceValue7: TcxCurrencyEdit
     Left = 19
-    Top = 320
+    Top = 357
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -269,12 +269,12 @@
   end
   object cxLabel15: TcxLabel
     Left = 19
-    Top = 345
+    Top = 382
     Caption = #1058' '#1084#1110#1085' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
   end
   object ceValue8: TcxCurrencyEdit
     Left = 19
-    Top = 360
+    Top = 397
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -284,12 +284,12 @@
   end
   object cxLabel16: TcxLabel
     Left = 178
-    Top = 345
+    Top = 382
     Caption = #1058' '#1084#1072#1082#1089' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
   end
   object ceValue9: TcxCurrencyEdit
     Left = 178
-    Top = 360
+    Top = 397
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -299,12 +299,12 @@
   end
   object cxLabel17: TcxLabel
     Left = 19
-    Top = 389
+    Top = 426
     Caption = #1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
   end
   object ceValue10: TcxCurrencyEdit
     Left = 19
-    Top = 405
+    Top = 442
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -314,17 +314,34 @@
   end
   object cxLabel18: TcxLabel
     Left = 178
-    Top = 389
+    Top = 426
     Caption = #1074#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
   end
   object ceValue11: TcxCurrencyEdit
     Left = 178
-    Top = 405
+    Top = 442
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 40
+    Width = 153
+  end
+  object cxLabel19: TcxLabel
+    Left = 178
+    Top = 174
+    Caption = #1064#1040#1041#1051#1054#1053' 70_70'
+  end
+  object edStickerFile70_70: TcxButtonEdit
+    Left = 178
+    Top = 188
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 42
     Width = 153
   end
   object ActionList: TActionList
@@ -407,6 +424,14 @@
         Name = 'inStickerFileId'
         Value = ''
         Component = GuidesStickerFile
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStickerFileId_70_70'
+        Value = Null
+        Component = GuidesStickerFile70_70
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -533,7 +558,7 @@
       end>
     PackSize = 1
     Left = 160
-    Top = 280
+    Top = 317
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -566,8 +591,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 286
-    Top = 480
+    Left = 278
+    Top = 509
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_StickerProperty'
@@ -768,10 +793,25 @@
         Component = edBarCode
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StickerFileId_70_70'
+        Value = Null
+        Component = GuidesStickerFile70_70
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StickerFileName_70_70'
+        Value = Null
+        Component = GuidesStickerFile70_70
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 305
-    Top = 304
+    Top = 341
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -879,8 +919,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 271
-    Top = 143
+    Left = 103
+    Top = 167
   end
   object GuidesStickerSkin: TdsdGuides
     KeyField = 'Id'
@@ -910,7 +950,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 64
-    Top = 164
+    Top = 201
   end
   object GuidesStickerPack: TdsdGuides
     KeyField = 'Id'
@@ -941,5 +981,35 @@
       end>
     Left = 264
     Top = 91
+  end
+  object GuidesStickerFile70_70: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStickerFile70_70
+    FormNameParam.Value = 'TStickerFileForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TStickerFileForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesStickerFile70_70
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStickerFile70_70
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 242
+    Top = 185
   end
 end

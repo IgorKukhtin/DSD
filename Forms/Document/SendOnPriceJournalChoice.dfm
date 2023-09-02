@@ -1,4 +1,4 @@
-inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
+inherited SendOnPriceJournalChoiceForm: TSendOnPriceJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 429
   ClientWidth = 980
@@ -1820,32 +1820,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1959,30 +1933,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOrdSpr'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbtDesadv'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrint: TdxBarButton
@@ -2039,6 +1989,15 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = actChoiceGuides
+        ShortCut = 13
+      end>
     Left = 320
     Top = 224
   end
@@ -2642,8 +2601,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 535
-    Top = 184
+    Left = 551
+    Top = 160
   end
   object spChecked: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_CheckedProtocol'

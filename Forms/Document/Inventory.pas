@@ -130,6 +130,13 @@ type
     bbInsertRecordAsset: TdxBarButton;
     bbPartionGoodsAssetChoiceForm: TdxBarButton;
     actPartionModelForm: TOpenChoiceForm;
+    actSendOnPriceOpenForm: TOpenChoiceForm;
+    actInsert_bySendOnPrice: TdsdExecStoredProc;
+    macInsert_bySendOnPrice: TMultiAction;
+    bbInsert_bySendOnPrice: TdxBarButton;
+    actDelete_bySendOnPrice: TdsdExecStoredProc;
+    macDelete_bySendOnPrice: TMultiAction;
+    bbDelete_bySendOnPrice: TdxBarButton;
   private
     { Private declarations }
   public

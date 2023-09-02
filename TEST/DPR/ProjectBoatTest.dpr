@@ -368,7 +368,9 @@ uses
   Report_CollationByPartner in '..\..\FormsBoat\Report\Report_CollationByPartner.pas' {Report_CollationByPartnerForm: TParentForm},
   Report_CollationByPartnerDialog in '..\..\FormsBoat\Report\Report_CollationByPartnerDialog.pas' {Report_CollationByPartnerDialogForm: TParentForm},
   GoodsGroup in '..\..\FormsBoat\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
-  GoodsGroup_List in '..\..\FormsBoat\Guides\GoodsGroup_List.pas' {GoodsGroup_ListForm: TParentForm};
+  GoodsGroup_List in '..\..\FormsBoat\Guides\GoodsGroup_List.pas' {GoodsGroup_ListForm: TParentForm},
+  Report_Client in '..\..\FormsBoat\Report\Report_Client.pas' {Report_ClientForm: TParentForm},
+  Report_ClientDialog in '..\..\FormsBoat\Report\Report_ClientDialog.pas' {Report_ClientDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

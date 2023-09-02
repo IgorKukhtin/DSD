@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Level1_70_70 TFloat, Level2_70_70 TFloat
              , Left1_70_70 TFloat, Left2_70_70 TFloat
              , isDefault Boolean
+             , isSize70 Boolean
              , isErased Boolean
              ) AS
 $BODY$
@@ -86,6 +87,7 @@ BEGIN
            , ObjectFloat_Left2_70_70.ValueData       AS Left2_70_70
 
            , ObjectBoolean_Default.ValueData AS isDefault
+           , COALESCE (ObjectBoolean_70.ValueData, FALSE) ::Boolean AS isSize70
            , Object_StickerFile.isErased     AS isErased
 
        FROM tmpIsErased
@@ -100,6 +102,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                     ON ObjectBoolean_Default.ObjectId = Object_StickerFile.Id
                                    AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_StickerFile_Default()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_70
+                                    ON ObjectBoolean_70.ObjectId = Object_StickerFile.Id
+                                   AND ObjectBoolean_70.DescId = zc_ObjectBoolean_StickerFile_70()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Width1
                                   ON ObjectFloat_Width1.ObjectId = Object_StickerFile.Id
@@ -280,6 +286,7 @@ BEGIN
            , CAST (0 as TFloat)  AS Left2_70_70
 
            , TRUE  :: Boolean AS isDefault
+           , FALSE :: Boolean AS isSize70
            , FALSE :: Boolean AS isErased
     ;
 
@@ -290,6 +297,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.09.23         *
  19.12.17         *
  23.10.17         *
 */

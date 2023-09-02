@@ -154,6 +154,24 @@ type
     GuidesSection: TdsdGuides;
     cxLabel25: TcxLabel;
     edSection: TcxButtonEdit;
+    actShowErasedContract: TBooleanStoredProcAction;
+    actShowErasedPartner: TBooleanStoredProcAction;
+    bbShowErasedContract: TdxBarButton;
+    bbShowErasedPartner: TdxBarButton;
+    spErasedUnErasedContract: TdsdStoredProc;
+    spErasedUnErasedPartner: TdsdStoredProc;
+    dsdSetUnErasedContract: TdsdUpdateErased;
+    dsdSetErasedContract: TdsdUpdateErased;
+    dsdSetErasedPartner: TdsdUpdateErased;
+    dsdSetUnErasedPartner: TdsdUpdateErased;
+    ProtocolOpenFormContract: TdsdOpenForm;
+    ProtocolOpenFormPartner: TdsdOpenForm;
+    bbSetErasedContract: TdxBarButton;
+    bbSetErasedPartner: TdxBarButton;
+    bbSetUnErasedContract: TdxBarButton;
+    bbSetUnErasedPartner: TdxBarButton;
+    bbProtocolOpenFormContract: TdxBarButton;
+    bbProtocolOpenFormPartner: TdxBarButton;
   private
     { Private declarations }
   public

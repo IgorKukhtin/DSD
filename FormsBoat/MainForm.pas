@@ -273,6 +273,8 @@ type
     miReport_Partner: TMenuItem;
     actGoodsGroup_List: TdsdOpenForm;
     miGoodsGroupList: TMenuItem;
+    actReport_Client: TdsdOpenForm;
+    miReport_Client: TMenuItem;
   private
     { Private declarations }
   public

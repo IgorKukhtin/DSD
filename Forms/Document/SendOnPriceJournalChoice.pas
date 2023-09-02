@@ -1,4 +1,4 @@
-unit SendOnPriceJournal;
+unit SendOnPriceJournalChoice;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TSendOnPriceJournalForm = class(TAncestorJournalForm)
+  TSendOnPriceJournalChoiceForm = class(TAncestorJournalForm)
     OperDatePartner: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
@@ -139,5 +139,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TSendOnPriceJournalForm);
+  RegisterClass(TSendOnPriceJournalChoiceForm);
 end.

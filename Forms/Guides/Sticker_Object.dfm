@@ -60,6 +60,13 @@ object Sticker_ObjectForm: TSticker_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object StickerFileName_70_70: TcxGridDBColumn
+        Caption = #1064#1040#1041#1051#1054#1053' 70_70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
+        DataBinding.FieldName = 'StickerFileName_70_70'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1101#1090#1080#1082#1077#1090#1082#1080
         DataBinding.FieldName = 'Code'
@@ -115,6 +122,15 @@ object Sticker_ObjectForm: TSticker_ObjectForm
       object TradeMarkName_StickerFile: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'.)'
         DataBinding.FieldName = 'TradeMarkName_StickerFile'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 82
+      end
+      object TradeMarkName_StickerFile_70_70: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' 70_70 '#1080#1085#1076#1080#1074#1080#1076'.)'
+        DataBinding.FieldName = 'TradeMarkName_StickerFile_70_70'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -659,7 +675,7 @@ object Sticker_ObjectForm: TSticker_ObjectForm
     Params = <
       item
         Name = 'inShowErased'
-        Value = 'False'
+        Value = False
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -667,7 +683,7 @@ object Sticker_ObjectForm: TSticker_ObjectForm
       end
       item
         Name = 'inShowAll'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -716,10 +732,13 @@ object Sticker_ObjectForm: TSticker_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 800
     Top = 224
   end
@@ -774,6 +793,14 @@ object Sticker_ObjectForm: TSticker_ObjectForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'StickerFileId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStickerFileId_70_70'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StickerFileId_70_70'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

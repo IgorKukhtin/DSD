@@ -89,6 +89,7 @@ type
     cxLabel27: TcxLabel;
     cxLabel28: TcxLabel;
     cxLabel29: TcxLabel;
+    cbisSize70: TcxCheckBox;
   private
     { Private declarations }
   public

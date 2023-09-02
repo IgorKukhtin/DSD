@@ -1,9 +1,9 @@
-object Report_PartnerDialogForm: TReport_PartnerDialogForm
+object Report_ClientDialogForm: TReport_ClientDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'>'
-  ClientHeight = 186
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
+  ClientHeight = 177
   ClientWidth = 491
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -82,9 +82,9 @@ object Report_PartnerDialogForm: TReport_PartnerDialogForm
   object cxLabel2: TcxLabel
     Left = 250
     Top = 8
-    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+    Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100':'
   end
-  object cePartner: TcxButtonEdit
+  object ceClient: TcxButtonEdit
     Left = 250
     Top = 27
     Properties.Buttons = <
@@ -189,17 +189,17 @@ object Report_PartnerDialogForm: TReport_PartnerDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerId'
+        Name = 'ClientId'
         Value = Null
-        Component = GuidesPartner
+        Component = GuidesClient
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerName'
+        Name = 'ClientName'
         Value = Null
-        Component = GuidesPartner
+        Component = GuidesClient
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -241,19 +241,19 @@ object Report_PartnerDialogForm: TReport_PartnerDialogForm
     Left = 144
     Top = 53
   end
-  object GuidesPartner: TdsdGuides
+  object GuidesClient: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePartner
-    FormNameParam.Value = 'TPartnerForm'
+    LookupControl = ceClient
+    FormNameParam.Value = 'TClientForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerForm'
+    FormName = 'TClientForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPartner
+        Component = GuidesClient
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -262,7 +262,7 @@ object Report_PartnerDialogForm: TReport_PartnerDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPartner
+        Component = GuidesClient
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

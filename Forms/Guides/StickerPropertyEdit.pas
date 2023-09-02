@@ -77,6 +77,9 @@ type
     ceValue10: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
     ceValue11: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edStickerFile70_70: TcxButtonEdit;
+    GuidesStickerFile70_70: TdsdGuides;
 
   private
     { Private declarations }

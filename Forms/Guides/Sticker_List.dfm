@@ -73,6 +73,21 @@ object Sticker_ListForm: TSticker_ListForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object StickerFileName_70_70: TcxGridDBColumn
+        Caption = #1064#1040#1041#1051#1054#1053' 70_70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
+        DataBinding.FieldName = 'StickerFileName_70_70'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = StickerFile_70_70ChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1101#1090#1080#1082#1077#1090#1082#1080
         DataBinding.FieldName = 'Code'
@@ -128,6 +143,15 @@ object Sticker_ListForm: TSticker_ListForm
       object TradeMarkName_StickerFile: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'.)'
         DataBinding.FieldName = 'TradeMarkName_StickerFile'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
+      end
+      object TradeMarkName_StickerFile_70_70: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' 70_70 '#1080#1085#1076#1080#1074#1080#1076'.)'
+        DataBinding.FieldName = 'TradeMarkName_StickerFile_70_70'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -378,6 +402,32 @@ object Sticker_ListForm: TSticker_ListForm
       object prTradeMarkName_StickerFile_SP: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076'. '#1089#1074'.)'
         DataBinding.FieldName = 'TradeMarkName_StickerFile_SP'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'. '#1089#1074'-'#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080')'
+        Options.Editing = False
+        Width = 150
+      end
+      object prStickerFileName_70_70_SP: TcxGridDBColumn
+        Caption = #1064#1040#1041#1051#1054#1053' 70_70 ('#1080#1085#1076'. '#1089#1074'.)'
+        DataBinding.FieldName = 'StickerFileName_70_70_SP'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = StickerFile_70_70ChoiceForm1
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1040#1041#1051#1054#1053' ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081' '#1089#1074'-'#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080')'
+        Width = 120
+      end
+      object prTradeMarkName_StickerFile_70_70_SP: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' 70_70 '#1080#1085#1076'. '#1089#1074'.)'
+        DataBinding.FieldName = 'TradeMarkName_StickerFile_70_70_SP'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1606,6 +1656,33 @@ object Sticker_ListForm: TSticker_ListForm
         end>
       isShowModal = False
     end
+    object StickerFile_70_70ChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StickerFileChoiceForm'
+      FormName = 'TStickerFileForm'
+      FormNameParam.Value = 'TStickerFileForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerFileId_70_70'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerFileName_70_70'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1741,6 +1818,29 @@ object Sticker_ListForm: TSticker_ListForm
       isShowModal = False
     end
     object StickerFileChoiceForm1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TContractChoiceForm'
+      FormName = 'TStickerFileForm'
+      FormNameParam.Value = 'TStickerFileForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object StickerFile_70_70ChoiceForm1: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2267,6 +2367,14 @@ object Sticker_ListForm: TSticker_ListForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStickerFileId_70_70'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StickerFileId_70_70'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStickerGroupName'
         Value = Null
         Component = ClientDataSet
@@ -2466,6 +2574,14 @@ object Sticker_ListForm: TSticker_ListForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStickerFileId_70_70'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StickerFileId_70_70_SP'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStickerSkinName'
         Value = Null
         Component = ClientDataSet
@@ -2560,6 +2676,42 @@ object Sticker_ListForm: TSticker_ListForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Value7_SP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue8'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value8_SP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue9'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value9_SP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue10'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value10_SP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue11'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value11_SP'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

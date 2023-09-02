@@ -71,7 +71,14 @@ object StickerFileForm: TStickerFileForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 52
+        Width = 46
+      end
+      object isSize70: TcxGridDBColumn
+        Caption = #1056#1072#1079#1084#1077#1088' 70*70'
+        DataBinding.FieldName = 'isSize70'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object LanguageName: TcxGridDBColumn
         Caption = #1071#1079#1099#1082

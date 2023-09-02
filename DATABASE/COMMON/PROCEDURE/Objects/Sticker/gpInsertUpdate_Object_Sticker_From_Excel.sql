@@ -116,6 +116,7 @@ BEGIN
                                                    , inJuridicalId         := 0                   ::Integer
                                                    , inGoodsId             := vbGoodsId           ::Integer
                                                    , inStickerFileId       := 0                   ::Integer
+                                                   , inStickerFileId_70_70 := 0                   ::Integer
                                                    , inStickerGroupName    := inStickerGroupName  ::TVarChar
                                                    , inStickerTypeName     := inStickerTypeName   ::TVarChar
                                                    , inStickerTagName      := inStickerTagName    ::TVarChar
@@ -198,6 +199,7 @@ BEGIN
                                                            , inStickerId         := vbStickerId       ::Integer
                                                            , inGoodsKindId       := 0                 ::Integer
                                                            , inStickerFileId     := 0                 ::Integer
+                                                           , inStickerFileId_70_70 := 0                 ::Integer
                                                            , inStickerSkinName   := inStickerSkinName ::TVarChar
                                                            , inStickerPackName   := inStickerPackName ::TVarChar
                                                            , inBarCode           := inBarCode         ::TVarChar
