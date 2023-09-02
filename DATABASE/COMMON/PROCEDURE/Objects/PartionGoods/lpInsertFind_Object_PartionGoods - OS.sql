@@ -45,7 +45,7 @@ BEGIN
      -- проверка
      IF COALESCE (inStorageId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.В партии Не определено <Место учета>.';
+         RAISE EXCEPTION 'Ошибка.В партии Не определено <Место хранения>.';
      END IF;
 
      -- проверка - пока нет
