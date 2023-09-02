@@ -77,13 +77,13 @@
     Width = 312
   end
   object cxLabel7: TcxLabel
-    Left = 178
-    Top = 218
+    Left = 346
+    Top = 261
     Caption = #1064#1040#1041#1051#1054#1053' ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
   end
   object edStickerFile: TcxButtonEdit
-    Left = 178
-    Top = 235
+    Left = 346
+    Top = 276
     Properties.Buttons = <
       item
         Default = True
@@ -91,7 +91,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 153
+    Width = 148
   end
   object edComment: TcxTextEdit
     Left = 346
@@ -259,20 +259,20 @@
   end
   object edStickerNorm: TcxButtonEdit
     Left = 19
-    Top = 235
+    Top = 233
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 31
-    Width = 153
+    Width = 312
   end
   object ceInfo: TcxMemo
-    Left = 346
-    Top = 20
+    Left = 352
+    Top = 17
     TabOrder = 32
-    Height = 277
+    Height = 239
     Width = 327
   end
   object cxLabel15: TcxLabel
@@ -327,6 +327,23 @@
     Properties.DisplayFormat = ',0'
     TabOrder = 39
     Width = 87
+  end
+  object cxLabel19: TcxLabel
+    Left = 502
+    Top = 261
+    Caption = #1064#1040#1041#1051#1054#1053' 70_70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
+  end
+  object edStickerFile_70_70: TcxButtonEdit
+    Left = 502
+    Top = 276
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 41
+    Width = 171
   end
   object ActionList: TActionList
     Left = 305
@@ -408,6 +425,14 @@
         Name = 'inStickerFileId'
         Value = ''
         Component = GuidesStickerFile
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStickerFileId_70_70'
+        Value = Null
+        Component = GuidesStickerFile_70_70
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -761,6 +786,21 @@
         Component = ceInfo
         DataType = ftWideString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StickerFileId_70_70'
+        Value = Null
+        Component = GuidesStickerFile_70_70
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StickerFileName_70_70'
+        Value = Null
+        Component = GuidesStickerFile_70_70
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 281
@@ -872,8 +912,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 271
-    Top = 227
+    Left = 407
+    Top = 267
   end
   object GuidesStickerGroup: TdsdGuides
     KeyField = 'Id'
@@ -962,8 +1002,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 186
+    Left = 56
+    Top = 170
   end
   object GuidesStickerType: TdsdGuides
     KeyField = 'Id'
@@ -1024,5 +1064,35 @@
       end>
     Left = 104
     Top = 229
+  end
+  object GuidesStickerFile_70_70: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStickerFile_70_70
+    FormNameParam.Value = 'TStickerFileForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TStickerFileForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesStickerFile_70_70
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStickerFile_70_70
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 579
+    Top = 259
   end
 end

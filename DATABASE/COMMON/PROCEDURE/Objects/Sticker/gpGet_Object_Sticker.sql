@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerSortId Integer, StickerSortName TVarChar
              , StickerNormId Integer, StickerNormName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar
+             , StickerFileId_70_70 Integer, StickerFileName_70_70 TVarChar
              , isInfo TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , Value6 TFloat, Value7 TFloat, Value8 TFloat
@@ -61,7 +62,9 @@ BEGIN
             
             , CAST (0 as Integer)     AS StickerFileId
             , CAST ('' as TVarChar)   AS StickerFileName
-                  
+            , CAST (0 as Integer)     AS StickerFileId_70_70
+            , CAST ('' as TVarChar)   AS StickerFileName_70_70
+                              
             , CAST ('' as TBlob)      AS isInfo
                                     
             , CAST (0 as TFloat)      AS Value1
@@ -103,7 +106,8 @@ BEGIN
             
             , Object_StickerFile.Id             AS StickerFileId
             , Object_StickerFile.ValueData      AS StickerFileName
-                  
+            , Object_StickerFile_70_70.Id        AS StickerFileId_70_70
+            , Object_StickerFile_70_70.ValueData AS StickerFileName_70_70                  
             , ObjectBlob_Info.ValueData         AS isInfo
                                     
             , ObjectFloat_Value1.ValueData      AS Value1
@@ -158,6 +162,11 @@ BEGIN
                                  AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile()
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = ObjectLink_Sticker_StickerFile.ChildObjectId 
 
+             LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile_70_70
+                                  ON ObjectLink_Sticker_StickerFile_70_70.ObjectId = Object_Sticker.Id 
+                                 AND ObjectLink_Sticker_StickerFile_70_70.DescId = zc_ObjectLink_Sticker_StickerFile_70_70()
+             LEFT JOIN Object AS Object_StickerFile_70_70 ON Object_StickerFile_70_70.Id = ObjectLink_Sticker_StickerFile_70_70.ChildObjectId 
+
              LEFT JOIN ObjectFloat AS ObjectFloat_Value1
                                    ON ObjectFloat_Value1.ObjectId = Object_Sticker.Id 
                                   AND ObjectFloat_Value1.DescId = zc_ObjectFloat_Sticker_Value1()
@@ -204,9 +213,10 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.09.23         *
  14.02.20         *
  23.10.17         *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_Sticker (100, '2')
+-- SELECT * FROM gpGet_Object_Sticker (100, 0, '2')

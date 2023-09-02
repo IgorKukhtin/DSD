@@ -3848,28 +3848,28 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerHeaderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerHeaderEditForm');
    exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
-  exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ObjectForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerProperty_ValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerProperty_ValueForm');
-
+   }
   //Property
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPropertyEditForm');
-
+  {
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerGroupForm');
@@ -3897,13 +3897,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerNormEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerSortNormForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileEditForm');
   exit;
-  {
+
   //StickerPack
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPackForm');
@@ -3914,13 +3914,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStickerSkinForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerSkinEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerSkinEditForm');
-  }
+
   //Language
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLanguageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLanguageEditForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadStoreRealFormTest;

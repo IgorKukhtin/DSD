@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_Sticker()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
     IN inJuridicalId         Integer   , -- ссылка юр.лицо, ТОрг.сеть, Контрагент
     IN inGoodsId             Integer   , -- Товар
     IN inStickerFileId       Integer   , --
+    IN inStickerFileId_70_70 Integer   , --
     IN inStickerGroupName    TVarChar  , --
     IN inStickerTypeName     TVarChar  , --
     IN inStickerTagName      TVarChar  , --
@@ -61,7 +63,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Sticker_Goods(), ioId, inGoodsId);
    -- сохранили вязь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Sticker_StickerFile(), ioId, inStickerFileId);
-
+   -- сохранили вязь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Sticker_StickerFile_70_70(), ioId, inStickerFileId_70_70);
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_Sticker_Info(), ioId, inInfo);
 
@@ -193,6 +197,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.23         *
  14.02.20         *
  23.10.17         *
 */

@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , StickerPackId Integer, StickerPackName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar
+             , StickerFileId_70_70 Integer, StickerFileName_70_70 TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , BarCode TVarChar
              , isFix Boolean
@@ -47,6 +48,9 @@ BEGIN
             , CAST (0 as Integer)     AS StickerFileId
             , CAST ('' as TVarChar)   AS StickerFileName
 
+            , CAST (0 as Integer)     AS StickerFileId_70_70
+            , CAST ('' as TVarChar)   AS StickerFileName_70_70
+            
             , CAST (0 as Integer)     AS StickerSkinId
             , CAST ('' as TVarChar)   AS StickerSkinName
             
@@ -83,7 +87,10 @@ BEGIN
                                                  
             , Object_StickerFile.Id              AS StickerFileId
             , Object_StickerFile.ValueData       AS StickerFileName
-                                                 
+
+            , Object_StickerFile_70_70.Id        AS StickerFileId_70_70
+            , Object_StickerFile_70_70.ValueData AS StickerFileName_70_70
+                            
             , Object_StickerSkin.Id              AS StickerSkinId
             , Object_StickerSkin.ValueData       AS StickerSkinName
 
@@ -123,6 +130,11 @@ BEGIN
                                   ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id 
                                  AND ObjectLink_StickerProperty_StickerFile.DescId = zc_ObjectLink_StickerProperty_StickerFile()
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = ObjectLink_StickerProperty_StickerFile.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile_70_70
+                                  ON ObjectLink_StickerProperty_StickerFile_70_70.ObjectId = Object_StickerProperty.Id
+                                 AND ObjectLink_StickerProperty_StickerFile_70_70.DescId = zc_ObjectLink_StickerProperty_StickerFile_70_70()
+             LEFT JOIN Object AS Object_StickerFile_70_70 ON Object_StickerFile_70_70.Id = ObjectLink_StickerProperty_StickerFile_70_70.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerSkin
                                   ON ObjectLink_StickerProperty_StickerSkin.ObjectId = Object_StickerProperty.Id
@@ -203,6 +215,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.09.23         *
  24.10.17         *
 */
 

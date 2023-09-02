@@ -1835,6 +1835,10 @@ SELECT 'zc_ObjectLink_StickerProperty_StickerPack', '‚Ë‰ Ô‡ÍÛ‚‡ÌÌˇ', zc_Object_S
 CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerProperty_StickerFile() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerFile'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_StickerProperty_StickerFile', 'ÿ¿¡ÀŒÕ', zc_Object_StickerProperty(), zc_Object_StickerFile() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerFile');
+          
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerProperty_StickerFile_70_70() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerFile_70_70'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerProperty_StickerFile_70_70', 'ÿ¿¡ÀŒÕ 70_70', zc_Object_StickerProperty(), zc_Object_StickerFile() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerFile_70_70');
 
 
 --- 
