@@ -166,13 +166,13 @@ BEGIN
            -- замена, делаем задержку на 120 SEC
            vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
                                  WHERE Id BETWEEN inId_start AND vbId_End
-                                   AND last_modified < timezone('utc'::text, vb_Query_start - INTERVAL '120 SEC')
+                                   AND last_modified < timezone('utc'::text, vb_Query_start - INTERVAL '55 SEC')
                                 ), inId_start - 1);
        ELSE
            -- замена, делаем задержку на 240 SEC
            vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
                                  WHERE Id BETWEEN inId_start AND vbId_End
-                                   AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP - INTERVAL '240 SEC')
+                                   AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP - INTERVAL '30 SEC')
                                 ), inId_start - 1);
 
        END IF;
