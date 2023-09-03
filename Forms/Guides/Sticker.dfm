@@ -1381,7 +1381,7 @@ object StickerForm: TStickerForm
           Name = 'TextValue'
           Value = Null
           Component = CDSProperty
-          ComponentItem = 'Comment_SP'
+          ComponentItem = 'StickerPackName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1411,7 +1411,7 @@ object StickerForm: TStickerForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Comment'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
