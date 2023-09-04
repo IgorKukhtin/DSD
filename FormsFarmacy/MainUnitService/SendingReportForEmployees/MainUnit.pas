@@ -231,6 +231,8 @@ begin
     if not qrySendList.Active then Exit;
     if qrySendList.IsEmpty then Exit;
 
+    Add_Log('**** Start');
+
     qrySendList.First;
     while not qrySendList.Eof do
     begin
@@ -238,7 +240,11 @@ begin
       if (qrySendList.FieldByName('DateSend').AsDateTime < StartDate) and
          (qrySendList.FieldByName('DateSend').AsDateTime > FDate) then
       begin
+        Add_Log('Run ' + qrySendList.FieldByName('SQL').AsString + ' ' + DateTimeToStr(FDate));
         btnExecuteClick(Nil);
+        if qryReport.Active then Add_Log('RecordCount ' + IntToStr(qryReport.RecordCount));
+        if qryReport_Upload.Active then Add_Log('RecordCount ' + IntToStr(qryReport_Upload.RecordCount));
+
         btnExportClick(Nil);
         btnSendTelegramClick(Nil);
       end;
@@ -262,6 +268,8 @@ begin
     on E: Exception do
       Add_Log(E.Message);
   end;
+
+  Add_Log('**** Finish');
 end;
 
 procedure TMainForm.btnAllLineClick(Sender: TObject);
@@ -274,6 +282,7 @@ procedure TMainForm.btnExecuteClick(Sender: TObject);
 begin
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
+  if qryReport.Active then qryReport.Close;
   if qryReport_Upload.Active then qryReport_Upload.Close;
 
 

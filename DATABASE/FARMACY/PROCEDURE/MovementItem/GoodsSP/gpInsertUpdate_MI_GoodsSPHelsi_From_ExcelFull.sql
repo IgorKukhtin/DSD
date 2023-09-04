@@ -13,36 +13,36 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(
     IN inCountSPMin          TVarChar  ,    -- Мінімальна кількість форм випуску до продажу (AW)
     IN inCountSP             TVarChar  ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) (AX)
 
-    IN inPriceSP             TVarChar  ,    -- Референтна ціна за уп, грн (Соц. проект) (BJ)
-    IN inPriceOptSP          TVarChar  ,    -- Оптово-відпускна ціна за упаковку. грн (BG)
-    IN inPriceRetSP          TVarChar  ,    -- Роздрібна ціна за упаковку. грн (BH)
-    IN inDailyCompensationSP TVarChar  ,    -- Розмір відшкодування добової дози лікарського засобу. грн (BI)
-    IN inPaymentSP           TVarChar  ,    -- Сума доплати за упаковку. грн (BK)
+    IN inPriceSP             TVarChar  ,    -- Референтна ціна за уп, грн (Соц. проект) (BJ) (BM)
+    IN inPriceOptSP          TVarChar  ,    -- Оптово-відпускна ціна за упаковку. грн (BG)  (BJ)
+    IN inPriceRetSP          TVarChar  ,    -- Роздрібна ціна за упаковку. грн (BH)  (BK)
+    IN inDailyCompensationSP TVarChar  ,    -- Розмір відшкодування добової дози лікарського засобу. грн (BI) (BL)
+    IN inPaymentSP           TVarChar  ,    -- Сума доплати за упаковку. грн (BK)  (BN)
 
 
-    IN inDenumeratorValue    TVarChar  ,    -- Кількість сутності (AI)
+    IN inDenumeratorValue    TVarChar  ,    -- Кількість сутності (AT)
 
-    IN inReestrDateSP        TVarChar  ,    -- Дата закінчення строку дії реєстраційного посвідчення на лікарський засіб (BB)
+    IN inReestrDateSP        TVarChar  ,    -- Дата закінчення строку дії реєстраційного посвідчення на лікарський засіб (BB)  (BE)
     IN inPack                TVarChar  ,    -- дозування (F)
     IN inIntenalSPName       TVarChar  ,    -- Міжнародна непатентована назва (Соц. проект) (D)
     IN inIntenalSPName_Lat   TVarChar  ,    -- Міжнародна непатентована назва (Соц. проект) (E)
     IN inBrandSPName         TVarChar  ,    -- Торговельна назва лікарського засобу (Соц. проект) (AV)
-    IN inKindOutSPName       TVarChar  ,    -- Форма випуску (Соц. проект) (I)
+    IN inKindOutSPName       TVarChar  ,    -- Форма випуску (Соц. проект) (I)  (AK)
 
-    IN inMakerSP             TVarChar  ,    -- Найменування виробника, країна (AY)
-    IN inCountry             TVarChar  ,    -- Найменування виробника, країна (AZ)
-    IN inReestrSP            TVarChar  ,    -- Номер реєстраційного посвідчення на лікарський засіб (BA) 
+    IN inMakerSP             TVarChar  ,    -- Найменування виробника, країна (AY)  (BA)
+    IN inCountry             TVarChar  ,    -- Найменування виробника, країна (AZ)  (BB)
+    IN inReestrSP            TVarChar  ,    -- Номер реєстраційного посвідчення на лікарський засіб (BA) (BD)
 
 
     IN inIdSP                TVarChar  ,    -- ID лікар. засобу (AQ)
     
-    IN inProgramId           TVarChar  ,    -- ID учасника програми (BF)
+    IN inProgramId           TVarChar  ,    -- ID учасника програми (BF)  (BI)
     IN inNumeratorUnit       TVarChar  ,    -- Одиниця виміру сили дії (AH)
     IN inDenumeratorUnit     TVarChar  ,    -- Одиниця виміру сутності (AU)
     
-    IN inName                TVarChar  ,    -- Название (AF)
+    IN inName                TVarChar  ,    -- Название (AF) 
     
-    IN inEndDate             TVarChar  ,    -- Дата окончания (BM)
+    IN inEndDate             TVarChar  ,    -- Дата окончания (BM) (BP)
 
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -65,7 +65,21 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
      
-     IF TRIM(inMedicalProgramSPId) = '' THEN RETURN; END IF;     
+     IF TRIM(inMedicalProgramSPId) = '' THEN RETURN; END IF;    
+     
+     IF NOT EXISTS(SELECT * 
+                   FROM Object AS MedicalProgramSP
+
+                        INNER JOIN ObjectString AS ObjectString_ProgramId 	
+                                                ON ObjectString_ProgramId.ObjectId = MedicalProgramSP.Id
+                                               AND ObjectString_ProgramId.DescId = zc_ObjectString_MedicalProgramSP_ProgramId()
+                                               AND ObjectString_ProgramId.ValueData ILIKE TRIM(inMedicalProgramSPId)
+                                                                 
+                   WHERE MedicalProgramSP.DescId = zc_Object_MedicalProgramSP() 
+                     AND MedicalProgramSP.isErased = False)
+     THEN 
+       RETURN; 
+     END IF;    
      
      IF inEndDate <> ''
      THEN
@@ -227,7 +241,7 @@ BEGIN
      SELECT Object_Goods_Main.Id
      INTO vbGoodsId
      FROM Object_Goods_Main
-     WHERE Object_Goods_Main.IdSP = inIdSP
+     WHERE Object_Goods_Main.IdSP ILIKE '%'||inIdSP||'%'
      Limit 1; -- на всякий случай
      
     -- определяется признак Создание/Корректировка
@@ -351,7 +365,7 @@ BEGIN
     PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, vbIsInsert);    
    
     -- !!!ВРЕМЕННО для ТЕСТА!!!
-/*    IF inSession = zfCalc_UserAdmin()
+    /*IF inSession = zfCalc_UserAdmin()
     THEN
         RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%>', vbMovementId, vbIsInsert, vbId, vbGoodsId, inSession;
     END IF;*/
@@ -375,35 +389,37 @@ $BODY$
      inCountSPMin          := '1',    -- Мінімальна кількість форм випуску до продажу (AW)
      inCountSP             := '5',    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) (AX)
 
-     inPriceSP             := '1740.2',    -- Референтна ціна за уп, грн (Соц. проект) (BJ)
-     inPriceOptSP          := '1581.3',    -- Оптово-відпускна ціна за упаковку. грн (BG)
-     inPriceRetSP          := '2047.3',    -- Роздрібна ціна за упаковку. грн (BH)
-     inDailyCompensationSP := '69.608',    -- Розмір відшкодування добової дози лікарського засобу. грн (BI)
-     inPaymentSP           := '307.1',    -- Сума доплати за упаковку. грн (BK)
+     inPriceSP             := '1740.2',    -- Референтна ціна за уп, грн (Соц. проект) (BJ) (BM)
+     inPriceOptSP          := '1581.3',    -- Оптово-відпускна ціна за упаковку. грн (BG) (BJ)
+     inPriceRetSP          := '2047.3',    -- Роздрібна ціна за упаковку. грн (BH) (BK)
+     inDailyCompensationSP := '69.608',    -- Розмір відшкодування добової дози лікарського засобу. грн (BI) (BL)
+     inPaymentSP           := '307.1',    -- Сума доплати за упаковку. грн (BK) (BN)
      inDenumeratorValue    := '1',    -- Кількість сутності (AT)
 
-     inReestrDateSP        := '2100-01-01'  ,    -- Дата закінчення строку дії реєстраційного посвідчення на лікарський засіб (BB)
+     inReestrDateSP        := '2100-01-01'  ,    -- Дата закінчення строку дії реєстраційного посвідчення на лікарський засіб (BB) (BE)
      inPack                := '300'  ,    -- дозування (F)
      inIntenalSPName       := 'Інсулін Детемір'  ,    -- Міжнародна непатентована назва (Соц. проект) (D)
      inIntenalSPName_Lat   := 'Insulin detemir'  ,    -- Міжнародна непатентована назва (Соц. проект) (E)
      inBrandSPName         := 'ЛЕВЕМІР® ФЛЕКСПЕН®'  ,    -- Торговельна назва лікарського засобу (Соц. проект) (AV)
-     inKindOutSPName       := 'SYRINGE_PEN'  ,    -- Форма випуску (Соц. проект) (I)
+     inKindOutSPName       := 'SYRINGE_PEN'  ,    -- Форма випуску (Соц. проект) (AK)
 
-     inMakerSP             := 'А/Т Ново Нордіск'  ,    -- Найменування виробника, країна (AY)
-     inCountry             := 'Данія'  ,    -- Найменування виробника, країна (AZ)
-     inReestrSP            := 'UA/4858/01/01'  ,    -- Номер реєстраційного посвідчення на лікарський засіб (BA) 
+     inMakerSP             := 'А/Т Ново Нордіск'  ,    -- Найменування виробника, країна (AY) (BA)
+     inCountry             := 'Данія'  ,    -- Найменування виробника, країна (AZ) (BB)
+     inReestrSP            := 'UA/4858/01/01'  ,    -- Номер реєстраційного посвідчення на лікарський засіб (BA) (BD)
      inIdSP                := 'dd2681b8-4476-4c14-886a-14fe0aecd736'  ,    -- ID лікар. засобу (AQ)
     
-     inProgramId           := 'f4528123-ce19-4a6a-abbe-7ccc13914136'  ,    -- ID учасника програми (BF)
+     inProgramId           := 'f4528123-ce19-4a6a-abbe-7ccc13914136'  ,    -- ID учасника програми (BF) (BI)
      inNumeratorUnit       := 'IU'  ,    -- Одиниця виміру сили дії (AH)
      inDenumeratorUnit     := 'SYRINGE_PEN'  ,    -- Одиниця виміру сутності (AU)
     
      inName                := 'ЛЕВЕМІР® ФЛЕКСПЕН® картридж вмонтований в одноразову шприц-ручку 3 мл, 100 МО/мл, тривалої дії'  ,    -- Название (AF)
      
-     inEndDate             := '' , -- Дата окончания
+     inEndDate             := '' , -- Дата окончания (BM)  (BP)
 
 
      inSession := '3');*/
      
      
-select * from gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(inOperDate := ('01.08.2023')::TDateTime , inColSP := 7500 , inMedicalProgramSPId := '1318eabc-1a1a-42f6-8450-61e11c19eede' , inCountSPMin := '100' , inCountSP := '100' , inPriceSP := '0.0' , inPriceOptSP := '0' , inPriceRetSP := '' , inDailyCompensationSP := '' , inPaymentSP := '' , inDenumeratorValue := '1.0' , inReestrDateSP := '2024-02-05' , inPack := '70.0' , inIntenalSPName := 'етанол' , inIntenalSPName_Lat := 'Ethanol' , inBrandSPName := 'СПИРТ ЕТИЛОВИЙ 70 %' , inKindOutSPName := 'SOLUTION' , inMakerSP := '"АТ \"Лубнифарм\""' , inCountry := 'UA' , inReestrSP := 'UA/17228/01/01' , inIdSP := 'df125d7e-35e5-4c6a-9c99-45fe1efc1163' , inProgramId := '525df984-65be-4ae7-a18d-d662642a8acb' , inNumeratorUnit := 'PERCENT' , inDenumeratorUnit := 'FLACON' , inName := 'етанол 70 відсоток/мл, розчин' , inEndDate := '' ,  inSession := '3');
+--select * from gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(inOperDate := ('01.10.2023')::TDateTime , inColSP := 7500 ,inMedicalProgramSPId := '1318eabc-1a1a-42f6-8450-61e11c19eede' , inCountSPMin := '100' , inCountSP := '100' , inPriceSP := '0.0' ,     inPriceOptSP := '0' ,   inPriceRetSP := '' ,       inDailyCompensationSP := ''      , inPaymentSP := '' ,  inDenumeratorValue := '1.0' , inReestrDateSP := '2024-02-05' , inPack := '70.0' , inIntenalSPName := 'етанол' ,           inIntenalSPName_Lat := 'Ethanol' ,       inBrandSPName := 'СПИРТ ЕТИЛОВИЙ 70 %' , inKindOutSPName := 'SOLUTION' ,                  inMakerSP := '"АТ \"Лубнифарм\""' ,                             inCountry := 'UA' , inReestrSP := 'UA/17228/01/01' ,inIdSP := 'df125d7e-35e5-4c6a-9c99-45fe1efc1163' , inProgramId := '525df984-65be-4ae7-a18d-d662642a8acb' , inNumeratorUnit := 'PERCENT' , inDenumeratorUnit := 'FLACON' , inName := 'етанол 70 відсоток/мл, розчин' , inEndDate := '' ,  inSession := '3');
+
+--select * from gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(  inOperDate := ('18.09.2023')::TDateTime , inColSP := 100 , inMedicalProgramSPId := '8efe29df-18bd-4d49-8995-c3f7e44d9e12' , inCountSPMin := '3' ,   inCountSP := '30' ,  inPriceSP := '1631.3' , inPriceOptSP := '1260' , inPriceRetSP := '1631.3' , inDailyCompensationSP := '17.82' , inPaymentSP := '0' , inDenumeratorValue := '1' ,   inReestrDateSP := '2100-01-11' , inPack := '25.0' , inIntenalSPName := 'Інсулін людський' , inIntenalSPName_Lat := 'Insulin human' , inBrandSPName := 'ІНСУМАН КОМБ 25®' ,    inKindOutSPName := 'SUSPENSION_FOR_INJECTIONS' , inMakerSP := 'Санофі-Авентіс Дойчланд ГмбХ /ТОВ "Фарма Лайф"' , inCountry := 'DE' , inReestrSP := 'UA/9530/01/01' , inIdSP := '5f1e497f-0b54-4528-9092-263d773314d5' , inProgramId := '817f9401-e6e3-42ed-850a-b8f765c1f2e6' , inNumeratorUnit := 'IU' ,      inDenumeratorUnit := 'PENFILL' , inName := 'ІНСУМАН КОМБ 25® 100 МО/мл, розчин для ін`єкцій, короткої тривалості дії у комбінації з інсулінами середньої тривалості дії' , inEndDate := '' ,  inSession := '3');

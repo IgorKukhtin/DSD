@@ -52,7 +52,7 @@ BEGIN
     WHERE Movement.DescId = zc_Movement_GoodsSP()
       AND Movement.Id = inMovementId;
 
-    PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := MovementItem.ObjectId , inIdSP := '',  inSession := inSession)
+    PERFORM gpUpdate_Goods_IdSP_Del(inGoodsMainId := MovementItem.ObjectId , inIdSP := inIdSP,  inSession := inSession)
     FROM MovementItem 
     WHERE MovementItem.ID = inId
       AND COALESCE(MovementItem.ObjectId, 0) <> 0; 

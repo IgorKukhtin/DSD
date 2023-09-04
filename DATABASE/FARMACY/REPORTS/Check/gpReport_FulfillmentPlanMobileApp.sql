@@ -223,7 +223,8 @@ BEGIN
                                                   ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
                                                  AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
 
-                       WHERE Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '2 MONTH'
+                       WHERE (Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '2 MONTH'
+                          OR Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH')
                          AND Movement.DescId = zc_Movement_EmployeeSchedule()
                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                          AND ObjectLink_Member_Position.ChildObjectId = 1672498
@@ -279,8 +280,7 @@ BEGIN
      FROM MovementProtocol 
      WHERE MovementProtocol.OperDate >= date_trunc('MONTH', inOperDate)
        AND MovementProtocol.OperDate <  date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH' + INTERVAL '3 DAY'
-       AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%'
-       AND (MovementProtocol.UserId  = inUserId OR COALESCE (inUserId, 0) = 0);
+       AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%';
           
      ANALYSE tmpMovementProtocol;
      
@@ -603,4 +603,4 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 -- 
 
 
-select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('22.08.2023')::TDateTime , inUnitId := 0 , inUserId := 0 ,  inSession := '3')
+select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('22.08.2023')::TDateTime , inUnitId := 0 , inUserId := 16411862 ,  inSession := '3')

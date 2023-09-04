@@ -85,6 +85,7 @@ type
     btnCancelledOrders: TButton;
     spSetErased: TZStoredProc;
     spSetErasetBooking: TZStoredProc;
+    TimerTerminate: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
@@ -95,6 +96,7 @@ type
     procedure btnOpenBookingClick(Sender: TObject);
     procedure btnCancelledOrdersClick(Sender: TObject);
     procedure SetDataСancelled;
+    procedure TimerTerminateTimer(Sender: TObject);
   private
     { Private declarations }
 
@@ -561,6 +563,8 @@ begin
       btnSaveBookings.Enabled := false;
       btnOpenBooking.Enabled := false;
       btnUpdateStaus.Enabled := false;
+      TimerTerminate.Interval := 7 * 60 * 1000;
+      TimerTerminate.Enabled := true;
       Timer1.Enabled := true;
     end;
   end else
@@ -599,6 +603,12 @@ begin
   finally
     Close;
   end;
+end;
+
+procedure TMainForm.TimerTerminateTimer(Sender: TObject);
+begin
+  Add_Log('Прерывание по таймеру.');
+  Application.Terminate;
 end;
 
 end.

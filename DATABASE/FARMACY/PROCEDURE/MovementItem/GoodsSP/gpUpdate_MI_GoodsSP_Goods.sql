@@ -53,7 +53,7 @@ BEGIN
     WHERE Movement.DescId = zc_Movement_GoodsSP()
       AND Movement.Id = inMovementId;
 
-    PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := inGoodsId , inIdSP := inIdSP,  inSession := inSession); 
+    PERFORM gpUpdate_Goods_IdSP_Add(inGoodsMainId := inGoodsId , inIdSP := inIdSP,  inSession := inSession); 
         
     UPDATE MovementItem SET ObjectId = inGoodsId
     WHERE MovementItem.ID IN
