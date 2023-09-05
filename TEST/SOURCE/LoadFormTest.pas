@@ -2405,6 +2405,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PersonalGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PersonalGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PersonalGroupDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PersonalGroupDialogForm');
+  exit;
+
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentMovementForm');
