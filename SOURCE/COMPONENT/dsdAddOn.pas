@@ -3049,7 +3049,7 @@ var
 begin
   if gc_isSetDefault then
      exit;
-  if Owner is TParentForm then
+  if (Owner is TParentForm) and (TParentForm(Owner).FormClassName <> '') then
      FormName := TParentForm(Owner).FormClassName
   else
      FormName := Owner.ClassName;
@@ -3064,7 +3064,7 @@ var
 begin
   if gc_isSetDefault then
      exit;
-  if Owner is TParentForm then
+  if (Owner is TParentForm) and (TParentForm(Owner).FormClassName <> '') then
      FormName := TParentForm(Owner).FormClassName + '_Back'
   else
      FormName := Owner.ClassName + '_Back';
@@ -3081,7 +3081,7 @@ var
 begin
   if gc_isSetDefault then
      exit;
-  if Owner is TParentForm then
+  if (Owner is TParentForm) and (TParentForm(Owner).FormClassName <> '') then
      FormName := TParentForm(Owner).FormClassName
   else
      FormName := Owner.ClassName;
@@ -3144,7 +3144,7 @@ var
 begin
   if gc_isSetDefault then
      exit;
-  if Owner is TParentForm then
+  if (Owner is TParentForm) and (TParentForm(Owner).FormClassName <> '') then
      FormName := TParentForm(Owner).FormClassName + '_Back'
   else
      FormName := Owner.ClassName + '_Back';

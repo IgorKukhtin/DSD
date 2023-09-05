@@ -44,6 +44,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbGoodsId Integer;
    DECLARE vbOperDateStart TDateTime;
    DECLARE vbOperDateEnd TDateTime;
 BEGIN
@@ -65,7 +66,9 @@ BEGIN
       RAISE EXCEPTION 'Изменение <ID лікар. засобу> запрещено.';
     END IF;
     
-    IF COALESCE (inGoodsId, 0) <> COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = ioId), 0)
+    vbGoodsId := COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = ioId), 0);
+    
+    IF COALESCE (inGoodsId, 0) <> COALESCE (vbGoodsId, 0)
     THEN
 
        SELECT MovementDate_OperDateStart.ValueData
@@ -83,12 +86,9 @@ BEGIN
        WHERE Movement.DescId = zc_Movement_GoodsSP()
          AND Movement.Id = inMovementId;
     
-      IF COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = ioId), 0) <> 0
+      IF COALESCE ((vbGoodsId), 0) <> 0
       THEN
-        PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := MovementItem.ObjectId , inIdSP := '',  inSession := inSession)
-        FROM MovementItem 
-        WHERE MovementItem.ID = ioId
-          AND COALESCE(MovementItem.ObjectId, 0) <> 0; 
+        PERFORM gpUpdate_Goods_IdSP_Del(inGoodsMainId := vbGoodsId, inIdSP := inIdSP, inSession := inSession); 
 
         UPDATE MovementItem SET ObjectId = 0
         WHERE MovementItem.ID IN
@@ -122,7 +122,7 @@ BEGIN
       END IF;
       
       IF COALESCE (inGoodsId, 0) <> 0 THEN 
-        PERFORM gpUpdate_Goods_IdSP(inGoodsMainId := inGoodsId , inIdSP := inIdSP,  inSession := inSession); 
+        PERFORM gpUpdate_Goods_IdSP_Add(inGoodsMainId := inGoodsId , inIdSP := inIdSP,  inSession := inSession); 
         
         UPDATE MovementItem SET ObjectId = inGoodsId
         WHERE MovementItem.ID IN
@@ -197,5 +197,3 @@ $BODY$
  14.08.18         *
 */
 --
-
-select * from gpInsertUpdate_MovementItem_GoodsSP(ioId := 553447891 , inMovementId := 29941641 , inGoodsId := 11672288 , inIntenalSPId := 19718200 , inBrandSPId := 19718204 , inKindOutSPId := 18086954 , inColSP := 364 , inCountSPMin := 25 , inCountSP := 25 , inPriceOptSP := 136.5 , inPriceRetSP := 184.76 , inDailyNormSP := 0 , inDailyCompensationSP := 8.8685 , inPriceSP := 184.76 , inPaymentSP := 0 , inGroupSP := 0 , inDenumeratorValueSP := 1 , inPack := '250' , inCodeATX := '' , inMakerSP := 'АТ "ФАРМАК", Україна' , inReestrSP := 'UA/17450/01/01' , inReestrDateSP := '2024-05-29' , inIdSP := 'edf1bd27-ecd4-4b4a-bae3-e9c3afdcabc8' , inDosageIdSP := '' , inProgramIdSP := '52b2cb1c-8066-441c-a118-1d37af625d58' , inNumeratorUnitSP := 'MKG' , inDenumeratorUnitSP := 'FLACON' ,  inSession := '3');

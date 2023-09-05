@@ -111,7 +111,6 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 5
       object cxGridDBTableView2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = BookingsHeadDS
@@ -1152,5 +1151,11 @@ object MainForm: TMainForm
         Name = 'inSession'
         ParamType = ptInput
       end>
+  end
+  object TimerTerminate: TTimer
+    Enabled = False
+    OnTimer = TimerTerminateTimer
+    Left = 392
+    Top = 89
   end
 end

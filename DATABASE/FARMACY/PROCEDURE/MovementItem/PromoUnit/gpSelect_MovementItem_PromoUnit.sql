@@ -82,10 +82,8 @@ BEGIN
                                                      AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                            AND (ObjectLink_Price_Unit.ChildObjectId = vbUnitId     
-                            OR ObjectLink_Price_Unit.ChildObjectId in (SELECT ObjectLink.ObjectId 
-                                                                       FROM ObjectLink 
-                                                                       WHERE ObjectLink.DescId = zc_ObjectLink_Unit_Category() 
-                                                                         AND ObjectLink.ChildObjectId = vbUnitCategoryId))
+                            OR ObjectLink_Price_Unit.ChildObjectId in (SELECT tmpUnit.Id 
+                                                                       FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS tmpUnit))
                          GROUP BY Price_Goods.ChildObjectId
                          )
 
