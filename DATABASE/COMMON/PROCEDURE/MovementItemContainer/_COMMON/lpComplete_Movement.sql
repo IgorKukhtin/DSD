@@ -71,7 +71,14 @@ BEGIN
   -- 1.1. Проверка
   IF COALESCE (vbDescId, -1) <> COALESCE (inDescId, -2)
   THEN
-      RAISE EXCEPTION 'Ошибка.Вид документа не определен.<%><%>', vbDescId, inDescId;
+      RAISE EXCEPTION 'Ошибка.Вид документа не определен.<%><%>.% Документ № <%> от <%> в статусе <%>.'
+                         , vbDescId
+                         , inDescId
+                         , CHR (13)
+                         , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                         , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
+                         , (SELECT lfGet_Object_ValueData_sh (Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId)
+                          ;
   END IF;
   -- 1.2. Проверка
   /*IF COALESCE (vbStatusId, 0) NOT IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
