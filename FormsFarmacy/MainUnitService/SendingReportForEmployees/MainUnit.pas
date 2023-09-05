@@ -237,7 +237,7 @@ begin
     while not qrySendList.Eof do
     begin
 
-      if (qrySendList.FieldByName('DateSend').AsDateTime < StartDate) and
+      if (qrySendList.FieldByName('DateSend').AsDateTime < IncSecond(StartDate, 20)) and
          (qrySendList.FieldByName('DateSend').AsDateTime > FDate) then
       begin
         Add_Log('Run ' + qrySendList.FieldByName('SQL').AsString + ' ' + DateTimeToStr(FDate));
