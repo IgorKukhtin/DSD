@@ -25,6 +25,8 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 319
+        ExplicitLeft = 40
+        ExplicitTop = 16
         ExplicitWidth = 1028
         ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView

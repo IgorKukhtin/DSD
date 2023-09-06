@@ -105,7 +105,7 @@ BEGIN
                                 -- Кол-во итого
                               , SUM (MIContainer.Amount) AS Amount
                                 --  Кол-во приход
-                              , SUM (CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.Amount ELSE 0 END) AS AmountOut
+                              , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
                                 -- Кол-во расход
                               , SUM (CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS AmountIn
                               
@@ -201,7 +201,7 @@ BEGIN
                     FROM tmpContainer
                         FULL JOIN tmpSheetWorkTime ON tmpSheetWorkTime.OperDate = tmpContainer.OperDate
                                                   AND tmpSheetWorkTime.UnitId = tmpContainer.FromId
-                                                  AND tmpSheetWorkTime.PersonalGroupId = tmpContainer.PersonalGroupId
+                                                  AND COALESCE (tmpSheetWorkTime.PersonalGroupId,0) = COALESCE (tmpContainer.PersonalGroupId,0)
                     GROUP BY CASE WHEN inIsDays = TRUE THEN COALESCE (tmpContainer.OperDate, tmpSheetWorkTime.OperDate) ELSE NULL END ::TDateTime
                          , COALESCE (tmpContainer.PersonalGroupId, tmpSheetWorkTime.PersonalGroupId)
                          , COALESCE (tmpContainer.FromId, tmpSheetWorkTime.UnitId)
