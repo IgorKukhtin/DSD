@@ -573,7 +573,7 @@ BEGIN
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
-                            , CASE WHEN vbUserId = 5 THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
+                            , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
                          FROM tmpMovement_all
                               LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
                                                           AND tmpMovement_all.IsActive      = TRUE
@@ -595,7 +595,7 @@ BEGIN
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
-                            , CASE WHEN vbUserId = 5 THEN tmpMovement_all.MovementId ELSE 0 END
+                            , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMovement_all.MovementId ELSE 0 END
                         )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
@@ -710,8 +710,9 @@ BEGIN
              -- Общая база, кол-во
            , CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                   THEN
-                      CAST (SUM (CASE WHEN vbUserId = 5 AND 1=0 AND ObjectFloat_WeightTotal.ValueData <> 0
-                                           THEN tmpMovement.Amount
+                      CAST (SUM (CASE WHEN vbUserId = 5 and 1=0 and ObjectFloat_WeightTotal.ValueData <> 0
+                                            THEN tmpMovement.Amount
+                                           --THEN tmpMovement.MovementId -- tmpMovement.Amount
 
                                       WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                            THEN (tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
@@ -768,7 +769,7 @@ BEGIN
              END :: TFloat
            , 2) :: TFloat AS Amount
 
-           , CASE WHEN vbUserId = 5 THEN tmpMovement.MovementId ELSE 0 END AS MovementId
+           , tmpMovement.MovementId
 
         FROM Setting_Wage_1 AS Setting
              LEFT JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
@@ -794,6 +795,11 @@ BEGIN
                                            -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
                                          , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                           )
+-- and tmpMovement.GoodsKind_FromId        <> 8346  
+-- and tmpMovement.GoodsKind_ToId          <> 8346  
+ -- AND tmpMovement.MovementId not IN (26004344 , 26000823  , 26006075   )
+ --AND tmpMovement.MovementId IN (26005954)
+-- SELECT * FROM Movement where Id = 26005954
           AND (Setting.FromId IS NULL OR COALESCE (tmpMovement_HeadCount.FromId, tmpMovement.FromId) IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.FromId) AS UnitTree))
           AND (Setting.ToId   IS NULL OR COALESCE (tmpMovement_HeadCount.ToId,   tmpMovement.ToId)   IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.ToId)   AS UnitTree))
           AND (Setting.ModelServiceItemChild_FromId IS NULL OR (Setting.ModelServiceItemChild_FromDescId = zc_Object_Goods()
@@ -820,7 +826,7 @@ BEGIN
 
         GROUP BY
              Setting.StaffListId
-           , CASE WHEN vbUserId = 5 THEN tmpMovement.MovementId ELSE 0 END
+           , tmpMovement.MovementId
            , Setting.UnitId
            , Setting.PositionId
            , Setting.PositionLevelId
@@ -911,6 +917,8 @@ BEGIN
           AND Movement.StatusId <> zc_Enum_Status_Erased()
 -- and (ObjectFloat_WorkTimeKind_Tax.ValueData = 50 or vbUserId <> 5)
 -- and (MI_SheetWorkTime.ObjectId = 7867165 or vbUserId <> 5)
+-- and MI_SheetWorkTime.ObjectId = 7699258 
+-- LIMIT 1
        )
          -- табель - кто в какие дни работал
        , MI_SheetWorkTime AS
