@@ -16,21 +16,14 @@ BEGIN
     -- vbUserId:= lpGetUserBySession (inSession);
     vbUserId:= inSession :: Integer;
 
-raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+-- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
     CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS
                        (SELECT DISTINCT Container.ObjectId
-                        FROM
-                            Container
-                            INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                  ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
-                                                 AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
-                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                 ON ObjectLink_Juridical_Retail.ObjectId      = ObjectLink_Unit_Juridical.ChildObjectId
-                                                AND ObjectLink_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
-                                                AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+                        FROM Container
                         WHERE Container.DescId        = zc_Container_Count()
                           AND (Container.WhereObjectId = inUnitId OR COALESCE(inUnitId, 0) = 0)
+                          AND Container.WhereObjectId IN (SELECT tmp.Id FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS tmp)
                           AND Container.Amount        <> 0
                        );
                        
@@ -59,7 +52,7 @@ raise notice 'Value 1: %', CLOCK_TIMESTAMP();
     ANALYSE tmpObjectHistory;
     
 
-raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+-- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
     RETURN QUERY
     WITH
@@ -144,7 +137,7 @@ raise notice 'Value 1: %', CLOCK_TIMESTAMP();
                                                                   WHEN '21947206' THEN 9
                                                                   WHEN '13808034' THEN 10
                                                                   WHEN '35431349' THEN 11 END AS JuridicalCode
-                                  , ROW_NUMBER()OVER(PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.JuridicalID) as ORD
+                                  , ROW_NUMBER()OVER(PARTITION BY Object_Goods_Juridical.GoodsMainId, Object_Goods_Juridical.JuridicalID ORDER BY Object_Goods_Juridical.ID DESC) as ORD
                              FROM
                                  Object_Goods_Juridical
                                  INNER JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalID = Object_Goods_Juridical.JuridicalID

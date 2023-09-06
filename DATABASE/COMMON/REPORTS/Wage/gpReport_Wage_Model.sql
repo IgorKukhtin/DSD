@@ -573,7 +573,7 @@ AS  (SELECT
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
-                            , CASE WHEN vbUserId = 5 THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
+                            , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
                          FROM tmpMovement_all
                               LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
                                                           AND tmpMovement_all.IsActive      = TRUE
@@ -595,7 +595,7 @@ AS  (SELECT
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
-                            , CASE WHEN vbUserId = 5 THEN tmpMovement_all.MovementId ELSE 0 END
+                            , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMovement_all.MovementId ELSE 0 END
                         )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
@@ -708,41 +708,64 @@ AS  (SELECT
            , tmpMovement.PersonalGroupId
 
              -- Общая база, кол-во
-           , SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
-                        AND tmpMovement.OperDate_num <> 6 -- суббота
-                            THEN 0
-
-                       WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
-                            THEN tmpMovement_HeadCount.Amount
-
-                       WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
-                            THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                           THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
-                                                    / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+           , CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                  THEN
+                      CAST (SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                           THEN (tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                              / ObjectFloat_WeightTotal.ValueData
                                       ELSE 0
                                  END
-                       ELSE tmpMovement.Amount
-
-                  END) :: TFloat AS Gross
+                                ) AS  NUMERIC (16, 4))
+                  ELSE
+                      SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
+                                AND tmpMovement.OperDate_num <> 6 -- суббота
+                                    THEN 0
+        
+                               WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+                                    THEN tmpMovement_HeadCount.Amount
+        
+                               WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                                    THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                                   THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                            / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                                              ELSE 0
+                                         END
+                               ELSE tmpMovement.Amount
+        
+                          END)
+             END :: TFloat AS Gross
 
              -- Общая сумма, грн
            , ROUND (Setting.Price * Setting.Ratio
-           * SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
-                        AND tmpMovement.OperDate_num <> 6 -- суббота
-                            THEN 0
-                       WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
-                            THEN tmpMovement_HeadCount.Amount
-                       WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
-                            THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                           THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
-                                                    / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+           * CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                  THEN
+                      CAST (SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                           THEN (tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                              / ObjectFloat_WeightTotal.ValueData
                                       ELSE 0
                                  END
-                       ELSE tmpMovement.Amount
-                  END)
+                                ) AS  NUMERIC (16, 4))
+                  ELSE
+                      SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
+                                AND tmpMovement.OperDate_num <> 6 -- суббота
+                                    THEN 0
+        
+                               WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+                                    THEN tmpMovement_HeadCount.Amount
+        
+                               WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                                    THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                                   THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                            / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                                              ELSE 0
+                                         END
+                               ELSE tmpMovement.Amount
+        
+                          END)
+             END :: TFloat
            , 2) :: TFloat AS Amount
 
-           , CASE WHEN vbUserId = 5 THEN tmpMovement.MovementId ELSE 0 END AS MovementId
+           , tmpMovement.MovementId
 
         FROM Setting_Wage_1 AS Setting
              LEFT JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
@@ -794,7 +817,7 @@ AS  (SELECT
 
         GROUP BY
              Setting.StaffListId
-           , CASE WHEN vbUserId = 5 THEN tmpMovement.MovementId ELSE 0 END
+           , tmpMovement.MovementId
            , Setting.UnitId
            , Setting.PositionId
            , Setting.PositionLevelId
@@ -1966,4 +1989,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '02.11.2019', inEndDate:= '02.11.2019', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '02.11.2023', inEndDate:= '02.11.2023', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

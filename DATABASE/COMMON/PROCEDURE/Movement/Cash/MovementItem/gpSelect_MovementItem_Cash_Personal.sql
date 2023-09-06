@@ -270,7 +270,7 @@ BEGIN
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.DescId = zc_MI_Master()
-                                                          AND MovementItem.isErased = FALSE
+                                                          AND (MovementItem.isErased = FALSE OR inShowAll = TRUE)
                                                           -- AND MovementItem.Amount <> 0
                                    LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
                                                                 ON MLO_PersonalServiceList.MovementId = Movement.Id
@@ -428,6 +428,7 @@ BEGIN
                                   OR MIFloat_SummTransportTaxi.ValueData <> 0
                                   OR MIFloat_SummPhone.ValueData <> 0
                                   OR MIFloat_SummCompensation.ValueData <> 0
+                                  OR inShowAll = TRUE
                                     )
 
                               GROUP BY MovementItem.ObjectId

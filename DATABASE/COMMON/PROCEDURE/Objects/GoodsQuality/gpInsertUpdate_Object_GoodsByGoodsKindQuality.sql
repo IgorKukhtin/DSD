@@ -26,17 +26,24 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKindQuality(
     IN inisKlipsa         Boolean   ,    -- клипсованный товар
     IN inSession          TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsId Integer;
    DECLARE vbGoodsByGoodsKindId Integer;
  BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_GoodsQuality());
-   vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_GoodsQuality());
+     vbUserId:= lpGetUserBySession (inSession);
 
-    -- проверка уникальности товара
+     -- проверка
+     IF COALESCE (inQualityId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Качественное удостоверение>.';
+     END IF;
+
+     -- проверка уникальности товара
      IF COALESCE (inGoodsId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено значение <Товар>.';
@@ -47,7 +54,7 @@ $BODY$
          END IF;
      END IF;
 
-    -- проверка
+     -- проверка
      IF COALESCE (inGoodsKindId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено значение <Вид Товара>.';

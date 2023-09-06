@@ -1,8 +1,5 @@
 -- Function: gpSelect_GoodsSearch()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSearch(
@@ -172,12 +169,13 @@ BEGIN
        FROM LoadPriceListItem
 
             INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-            LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceCloseOrder
+            LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId --, isPriceCloseOrder
                          FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS JuridicalSettings
                               INNER JOIN Object AS Object_Juridical
                                                 ON Object_Juridical.Id = JuridicalSettings.MainJuridicalId
                                                AND Object_Juridical.isErased = False 
-                       WHERE JuridicalSettings.MainJuridicalId = vbJuridicalId OR COALESCE(vbJuridicalId, 0) = 0) AS JuridicalSettings
+                       WHERE (JuridicalSettings.MainJuridicalId = vbJuridicalId OR COALESCE(vbJuridicalId, 0) = 0)
+                         AND JuridicalSettings.isPriceCloseOrder = FALSE) AS JuridicalSettings
                     ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId
                    AND JuridicalSettings.ContractId = LoadPriceList.ContractId
 
@@ -237,7 +235,7 @@ BEGIN
             or
             inCodeSearch <> ''
         )
-        AND (COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE or EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = 12084491))
+       -- AND (COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE or EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = 12084491))
         AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = inAreaId OR COALESCE(inAreaId, 0) = 0 OR COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() );
 
 END;
@@ -266,4 +264,4 @@ $BODY$
 
 --select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '5544' ,  inSession := '3');
 
-select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'сондокс' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детрал%30' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
