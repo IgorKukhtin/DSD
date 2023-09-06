@@ -454,7 +454,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     end
     object cbIsDays: TcxCheckBox
       Left = 211
-      Top = 5
+      Top = 6
       Caption = #1087#1086' '#1044#1085#1103#1084
       Properties.ReadOnly = False
       TabOrder = 10

@@ -116,33 +116,14 @@ BEGIN
                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                               AND MIContainer.DescId = zc_MIContainer_Count()
                                                               AND MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
-                                                              AND MIContainer.ObjectExtId_Analyzer   = _tmpUnit.UnitId_by
-                                                              AND (MIContainer.isActive = FALSE
-                                                                OR (MIContainer.isActive = TRUE AND MIContainer.AccountId IN (zc_Enum_Account_110101(), zc_Enum_Account_110102()
-                                                                                                                            , zc_Enum_Account_110111(), zc_Enum_Account_110112()
-                                                                                                                            , zc_Enum_Account_110121(), zc_Enum_Account_110122()
-                                                                                                                            , zc_Enum_Account_110131(), zc_Enum_Account_110132()
-        
-                                                                                                                            , zc_Enum_Account_110151(), zc_Enum_Account_110152(), zc_Enum_Account_110153()
-                                                                                                                            , zc_Enum_Account_110161(), zc_Enum_Account_110162()
-                                                                                                                            , zc_Enum_Account_110171(), zc_Enum_Account_110172(), zc_Enum_Account_110173()
-                                                                                                                            , zc_Enum_Account_110181(), zc_Enum_Account_110182()
-                                                                                                                             ))
-                                                                OR MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummOut_80401(), zc_Enum_AnalyzerId_SummOut_110101())
-                                                                  )
+                                                              AND (MIContainer.ObjectExtId_Analyzer   = _tmpUnit.UnitId_by OR COALESCE (inToId,0) = 0)
                               LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                           ON MIFloat_CountPack.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
-                                                         --AND MIContainer.IsActive = FALSE
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
                                                            ON MovementLinkObject_PersonalGroup.MovementId = MIContainer.MovementId
                                                           AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
-                               -- LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
-
-                                                         
-                         GROUP BY 
-                               -- , CASE WHEN inIsDays = TRUE THEN MIContainer.OperDate ELSE NULL END ::TDateTime
-                                  MIContainer.OperDate
+                         GROUP BY MIContainer.OperDate
                                 , MovementLinkObject_PersonalGroup.ObjectId
                                 , MIContainer.WhereObjectId_analyzer    
                                 , MIContainer.ObjectExtId_Analyzer      
