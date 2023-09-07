@@ -43,6 +43,10 @@ type
     edUnitFrom: TcxButtonEdit;
     GuidesUnitFrom: TdsdGuides;
     cbIsDays: TcxCheckBox;
+    cxLabel2: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cbisGoods: TcxCheckBox;
   private
     { Private declarations }
   public

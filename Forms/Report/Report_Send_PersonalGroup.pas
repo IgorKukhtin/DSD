@@ -65,6 +65,10 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     cbIsDays: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cbisGoods: TcxCheckBox;
   private
     { Private declarations }
   public
