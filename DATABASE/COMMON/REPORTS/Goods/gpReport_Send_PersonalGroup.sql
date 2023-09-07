@@ -195,7 +195,7 @@ BEGIN
                          , SUM (COALESCE (tmp.AmountHour,0)) AS AmountHour
                     FROM (
                           SELECT CASE WHEN inIsDays = TRUE THEN COALESCE (tmpContainer.OperDate, tmpSheetWorkTime.OperDate) ELSE NULL END ::TDateTime AS OperDate
-                               , tmpContainer.MovementId
+                               , COALESCE (tmpContainer.MovementId, -1) AS MovementId
                                , COALESCE (tmpContainer.PersonalGroupId, tmpSheetWorkTime.PersonalGroupId) AS PersonalGroupId
                                , COALESCE (tmpContainer.FromId)  AS FromId
                                , tmpContainer.ToId
@@ -205,7 +205,7 @@ BEGIN
                                , (COALESCE (tmpContainer.AmountIn,0))   AS AmountIn
                                , (COALESCE (tmpContainer.AmountOut,0))  AS AmountOut
                                , (COALESCE (tmpContainer.CountPack,0))  AS CountPack
-                               , (CASE WHEN tmpContainer.Ord = 1 OR tmpContainer.MovementId IS NULL THEN COALESCE (tmpSheetWorkTime.Amount,0) ELSE 0 END) AS AmountHour
+                               , (CASE WHEN tmpContainer.Ord = 1 OR tmpContainer.MovementId = -1 THEN COALESCE (tmpSheetWorkTime.Amount,0) ELSE 0 END) AS AmountHour
                                , tmpContainer.Ord 
                                , CASE WHEN ((COALESCE (tmpContainer.Amount,0) <> 0 AND COALESCE (tmpSheetWorkTime.Amount,0) = 0) 
                                          OR (COALESCE (tmpContainer.Amount,0) = 0  AND COALESCE (tmpSheetWorkTime.Amount,0) <> 0) ) 
@@ -275,7 +275,7 @@ BEGIN
                 THEN TRUE
                 ELSE FALSE
            END :: Boolean AS isError*/
-         , Movement.Id      AS MovementId
+         , tmpOperationGroup.MovementId      AS MovementId
          , Movement.InvNumber
           
      FROM (SELECT tmpData.OperDate
