@@ -33,7 +33,7 @@ type
     CountPack: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
-    GoodsGroupGuides: TdsdGuides;
+    GuidesGoodsGroup: TdsdGuides;
     FormParams: TdsdFormParams;
     AmountOut: TcxGridDBColumn;
     CountPack_out: TcxGridDBColumn;
@@ -71,6 +71,14 @@ type
     cbisGoods: TcxCheckBox;
     InvNumber: TcxGridDBColumn;
     cbisMovement: TcxCheckBox;
+    actOpenForm: TdsdOpenForm;
+    actMovementForm: TdsdExecStoredProc;
+    macOpenDocument: TMultiAction;
+    getMovementForm: TdsdStoredProc;
+    bbOpenDocument: TdxBarButton;
+    actRefreshMovement: TdsdDataSetRefresh;
+    actRefreshGoods: TdsdDataSetRefresh;
+    actRefreshDay: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

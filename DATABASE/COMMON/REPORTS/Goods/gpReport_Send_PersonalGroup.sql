@@ -46,7 +46,7 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF inisMovement = TRUE THEN inisDay := True; END IF;
+     IF inisMovement = TRUE THEN inIsDays := True; END IF;
 
     -- Результат
     RETURN QUERY
@@ -102,14 +102,16 @@ BEGIN
                     )
      */           
       , tmpContainer AS (SELECT MIContainer.OperDate ::TDateTime AS OperDate
-                              , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE NULL END AS MovementId
-                              , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END AS FromId
-                              , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END AS ToId
+                              , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE -1 END AS MovementId
+                              , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE NULL END AS FromId
+                              , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.ObjectExtId_Analyzer ELSE NULL END AS ToId
                               , MovementLinkObject_PersonalGroup.ObjectId                                      AS PersonalGroupId
-                              , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectId_analyzer ELSE NULL END    AS GoodsId
-                              , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE NULL END AS GoodsKindId
+                              --, CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectId_analyzer ELSE NULL END    AS GoodsId
+                              --, CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE NULL END AS GoodsKindId 
+                              , MIContainer.ObjectId_analyzer     AS GoodsId
+                              , MIContainer.ObjectIntId_analyzer  AS GoodsKindId
                                 -- Кол-во итого
-                              , SUM (MIContainer.Amount) AS Amount
+                              , SUM (-1 * MIContainer.Amount ) AS Amount
                                 --  Кол-во расход
                               , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
                                 -- Кол-во приход
@@ -124,21 +126,25 @@ BEGIN
                                                          AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
                                                            ON MovementLinkObject_PersonalGroup.MovementId = MIContainer.MovementId
-                                                          AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+                                                          AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()  
+                         
+                              
                          WHERE MIContainer.MovementDescId = zc_Movement_Send()
                            AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                            AND MIContainer.DescId = zc_MIContainer_Count()
                            AND MIContainer.WhereObjectId_analyzer = inUnitId
-                           AND ( ( (MIContainer.isActive = FALSE AND MIContainer.ObjectExtId_Analyzer = inToId) OR COALESCE (inToId,0) = 0 )
-                               OR ((MIContainer.isActive = TRUE  AND  MIContainer.ObjectExtId_Analyzer = inFromId) OR COALESCE (inFromId,0) = 0)
+                           AND ( ( (MIContainer.isActive = FALSE AND MIContainer.ObjectExtId_Analyzer = inToId) OR (MIContainer.isActive = FALSE AND COALESCE (inToId,0) = 0) )
+                               OR ((MIContainer.isActive = TRUE  AND  MIContainer.ObjectExtId_Analyzer = inFromId) OR (MIContainer.isActive = TRUE AND COALESCE (inFromId,0) = 0) )
                                )
                          GROUP BY MIContainer.OperDate
                                 , MovementLinkObject_PersonalGroup.ObjectId
-                                , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END
-                                , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END     
-                                , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectId_analyzer ELSE NULL END
-                                , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE NULL END
-                                , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE NULL END     
+                                , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE NULL END
+                                , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.ObjectExtId_Analyzer ELSE NULL END     
+                                --, CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectId_analyzer ELSE NULL END
+                                --, CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE NULL END  
+                                , MIContainer.ObjectId_analyzer
+                                , MIContainer.ObjectIntId_analyzer
+                                , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE -1 END 
                   )         
         --данные из табеля Бригада кол-во часов 
       , tmpOperDate AS (SELECT generate_series(inStartDate, inEndDate, '1 DAY'::interval) OperDate) --все дни выбранного периода
@@ -191,7 +197,7 @@ BEGIN
                           SELECT CASE WHEN inIsDays = TRUE THEN COALESCE (tmpContainer.OperDate, tmpSheetWorkTime.OperDate) ELSE NULL END ::TDateTime AS OperDate
                                , tmpContainer.MovementId
                                , COALESCE (tmpContainer.PersonalGroupId, tmpSheetWorkTime.PersonalGroupId) AS PersonalGroupId
-                               , COALESCE (tmpContainer.FromId, tmpSheetWorkTime.UnitId)  AS FromId
+                               , COALESCE (tmpContainer.FromId)  AS FromId
                                , tmpContainer.ToId
                                , tmpContainer.GoodsId
                                , tmpContainer.GoodsKindId
@@ -199,7 +205,7 @@ BEGIN
                                , (COALESCE (tmpContainer.AmountIn,0))   AS AmountIn
                                , (COALESCE (tmpContainer.AmountOut,0))  AS AmountOut
                                , (COALESCE (tmpContainer.CountPack,0))  AS CountPack
-                               , (CASE WHEN tmpContainer.Ord = 1 THEN  COALESCE (tmpSheetWorkTime.Amount,0) ELSE 0 END) AS AmountHour
+                               , (CASE WHEN tmpContainer.Ord = 1 OR tmpContainer.MovementId IS NULL THEN COALESCE (tmpSheetWorkTime.Amount,0) ELSE 0 END) AS AmountHour
                                , tmpContainer.Ord 
                                , CASE WHEN ((COALESCE (tmpContainer.Amount,0) <> 0 AND COALESCE (tmpSheetWorkTime.Amount,0) = 0) 
                                          OR (COALESCE (tmpContainer.Amount,0) = 0  AND COALESCE (tmpSheetWorkTime.Amount,0) <> 0) ) 
@@ -237,7 +243,7 @@ BEGIN
          , Object_Measure.ValueData                   AS MeasureName
          , tmpOperationGroup.Weight      ::TFloat
           -- Вес в упаковке - GoodsByGoodsKind
-         , ObjectFloat_WeightTotal.ValueData   :: TFloat  AS WeightTotal
+         , tmpOperationGroup.WeightTotal   :: TFloat  AS WeightTotal
          
          --, Object_From.ObjectCode          AS FromCode
          , tmpOperationGroup.FromName      AS FromName
@@ -247,9 +253,12 @@ BEGIN
          , Object_PersonalGroup.ValueData  AS PersonalGroupName
          
          , tmpOperationGroup.AmountHour :: TFloat
-         , tmpOperationGroup.CountPack  :: TFloat 
-         , CASE WHEN COALESCE(ObjectFloat_WeightTotal.ValueData,0) <> 0 THEN tmpOperationGroup.AmountIn_kg / ObjectFloat_WeightTotal.ValueData ELSE 0 END  ::TFloat AS CountPack_in
-         , CASE WHEN COALESCE(ObjectFloat_WeightTotal.ValueData,0) <> 0 THEN tmpOperationGroup.AmountOut_kg / ObjectFloat_WeightTotal.ValueData ELSE 0 END ::TFloat AS CountPack_out
+         --, tmpOperationGroup.CountPack  :: TFloat 
+         --, CASE WHEN COALESCE(ObjectFloat_WeightTotal.ValueData,0) <> 0 THEN tmpOperationGroup.AmountIn_kg / ObjectFloat_WeightTotal.ValueData ELSE 0 END  ::TFloat AS CountPack_in
+         --, CASE WHEN COALESCE(ObjectFloat_WeightTotal.ValueData,0) <> 0 THEN tmpOperationGroup.AmountOut_kg / ObjectFloat_WeightTotal.ValueData ELSE 0 END ::TFloat AS CountPack_out
+         , (COALESCE (tmpOperationGroup.CountPack_out,0) - COALESCE (tmpOperationGroup.CountPack_in,0)) ::TFloat AS CountPack
+         , tmpOperationGroup.CountPack_in
+         , tmpOperationGroup.CountPack_out
          
          , tmpOperationGroup.Amount        :: TFloat
          , tmpOperationGroup.AmountIn      :: TFloat
@@ -271,26 +280,50 @@ BEGIN
           
      FROM (SELECT tmpData.OperDate
                 , tmpData.MovementId
-                , tmpData.FromId
+                , tmpData.FromName
                 , tmpData.ToName
-                , tmpData.GoodsId
-                , tmpData.GoodsKindId
-                , _tmpGoods.MeasureId
-                , _tmpGoods.Weight
+                , CASE WHEN inisGoods = TRUE THEN tmpData.GoodsId ELSE NULL END AS GoodsId
+                , CASE WHEN inisGoods = TRUE THEN tmpData.GoodsKindId ELSE NULL END AS GoodsKindId
+                , CASE WHEN inisGoods = TRUE THEN _tmpGoods.MeasureId ELSE NULL END AS MeasureId
+                , CASE WHEN inisGoods = TRUE THEN _tmpGoods.Weight ELSE NULL END AS Weight
+                 -- Вес в упаковке - GoodsByGoodsKind
+                , CASE WHEN inisGoods = TRUE THEN ObjectFloat_WeightTotal.ValueData  ELSE NULL END :: TFloat  AS WeightTotal
                 , tmpData.PersonalGroupId
                 , tmpData.isError    
-                , tmpData.AmountHour  AS AmountHour
-                , tmpData.CountPack   AS CountPack
+                , SUM (tmpData.AmountHour)  AS AmountHour
+                , SUM (tmpData.CountPack)   AS CountPack
                 
-                , tmpData.Amount      AS Amount
-                , tmpData.AmountIn    AS AmountIn
-                , tmpData.AmountOut   AS AmountOut
-                , (tmpData.Amount * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)     AS Amount_kg
-                , (tmpData.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)   AS AmountIn_kg
-                , (tmpData.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS AmountOut_kg
+                , SUM (tmpData.Amount)      AS Amount
+                , SUM (tmpData.AmountIn)    AS AmountIn
+                , SUM (tmpData.AmountOut)   AS AmountOut
+                , SUM (tmpData.Amount * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)     AS Amount_kg
+                , SUM (tmpData.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)   AS AmountIn_kg
+                , SUM (tmpData.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS AmountOut_kg
+
+                , SUM (CASE WHEN COALESCE(ObjectFloat_WeightTotal.ValueData,0) <> 0 THEN (tmpData.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) / ObjectFloat_WeightTotal.ValueData ELSE 0 END)  ::TFloat AS CountPack_in
+                , SUM (CASE WHEN COALESCE(ObjectFloat_WeightTotal.ValueData,0) <> 0 THEN (tmpData.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) / ObjectFloat_WeightTotal.ValueData ELSE 0 END) ::TFloat AS CountPack_out
 
            FROM tmpData
-                LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpData.GoodsId
+                LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpData.GoodsId  
+
+                 -- Товар и Вид товара
+                LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpData.GoodsId
+                                                      AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpData.GoodsKindId
+                -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+                LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                      ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                     AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()  
+           GROUP BY tmpData.OperDate
+                , tmpData.MovementId
+                , tmpData.FromName
+                , tmpData.ToName
+                , CASE WHEN inisGoods = TRUE THEN tmpData.GoodsId ELSE NULL END 
+                , CASE WHEN inisGoods = TRUE THEN tmpData.GoodsKindId ELSE NULL END 
+                , CASE WHEN inisGoods = TRUE THEN _tmpGoods.MeasureId ELSE NULL END
+                , CASE WHEN inisGoods = TRUE THEN _tmpGoods.Weight ELSE NULL END
+                , CASE WHEN inisGoods = TRUE THEN ObjectFloat_WeightTotal.ValueData  ELSE NULL END
+                , tmpData.PersonalGroupId
+                , tmpData.isError 
            ) AS tmpOperationGroup
 
          -- LEFT JOIN Object AS Object_From ON Object_From.Id = tmpOperationGroup.FromId
@@ -309,14 +342,6 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          -- Товар и Вид товара
-          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
-                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId
-          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
-          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
-                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal() 
-
           LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
   ;
 
@@ -331,5 +356,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 0, inGoodsGroupId:= 0, inisMovement:= true, inIsDays:= true, inIsGoods:= false, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 8459, inGoodsGroupId:= 0, inisMovement:= false, inIsDays:= false, inIsGoods:= false, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
 
