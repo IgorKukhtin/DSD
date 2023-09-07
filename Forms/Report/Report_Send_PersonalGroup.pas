@@ -69,6 +69,8 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     cbisGoods: TcxCheckBox;
+    InvNumber: TcxGridDBColumn;
+    cbisMovement: TcxCheckBox;
   private
     { Private declarations }
   public

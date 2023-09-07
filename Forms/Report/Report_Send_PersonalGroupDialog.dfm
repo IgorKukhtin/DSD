@@ -139,12 +139,20 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
     Width = 327
   end
   object cbisGoods: TcxCheckBox
-    Left = 147
+    Left = 133
     Top = 64
     Caption = #1087#1086' '#1058#1086#1074#1072#1088#1091
     Properties.ReadOnly = False
     TabOrder = 15
     Width = 74
+  end
+  object cbisMovement: TcxCheckBox
+    Left = 244
+    Top = 64
+    Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 16
+    Width = 102
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -263,9 +271,17 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisGoods'
+        Name = 'isGoods'
         Value = Null
         Component = cbisGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMovement'
+        Value = Null
+        Component = cbisMovement
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

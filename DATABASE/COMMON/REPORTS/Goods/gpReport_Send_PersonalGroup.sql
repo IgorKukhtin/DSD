@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Send_PersonalGroup (
     IN inStartDate         TDateTime ,
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_Send_PersonalGroup (
     IN inFromId            Integer   ,
     IN inToId              Integer   ,
     IN inGoodsGroupId      Integer   ,
+    IN inisMovement        Boolean   ,
     IN inIsDays            Boolean   , --
     IN inisGoods           Boolean   , --
     IN inSession           TVarChar    -- сессия пользователя
@@ -19,7 +21,8 @@ RETURNS TABLE (OperDate TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , Weight         TFloat
              , WeightTotal    TFloat
-             , FromCode Integer, FromName TVarChar
+             --, FromCode Integer
+             , FromName TVarChar
              --, ToCode Integer
              , ToName TVarChar
              , PersonalGroupCode Integer, PersonalGroupName TVarChar
@@ -33,13 +36,17 @@ RETURNS TABLE (OperDate TDateTime
              , Amount_kg      TFloat
              , AmountIn_kg    TFloat
              , AmountOut_kg   TFloat
-             , isError        Boolean
+             , isError        Boolean 
+             , MovementId     Integer
+             , InvNumber      TVarChar
              )  
 AS
 $BODY$
  DECLARE vbUserId Integer;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
+
+     IF inisMovement = TRUE THEN inisDay := True; END IF;
 
     -- Результат
     RETURN QUERY
@@ -95,8 +102,9 @@ BEGIN
                     )
      */           
       , tmpContainer AS (SELECT MIContainer.OperDate ::TDateTime AS OperDate
-                              , MIContainer.WhereObjectId_analyzer  AS FromId
-                              , MIContainer.ObjectExtId_Analyzer    AS ToId
+                              , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE NULL END AS MovementId
+                              , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END AS FromId
+                              , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END AS ToId
                               , MovementLinkObject_PersonalGroup.ObjectId                                      AS PersonalGroupId
                               , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectId_analyzer ELSE NULL END    AS GoodsId
                               , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE NULL END AS GoodsKindId
@@ -126,10 +134,11 @@ BEGIN
                                )
                          GROUP BY MIContainer.OperDate
                                 , MovementLinkObject_PersonalGroup.ObjectId
-                                , MIContainer.WhereObjectId_analyzer    
-                                , MIContainer.ObjectExtId_Analyzer      
+                                , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END
+                                , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE NULL END     
                                 , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectId_analyzer ELSE NULL END
-                                , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE NULL END     
+                                , CASE WHEN inisGoods = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE NULL END
+                                , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE NULL END     
                   )         
         --данные из табеля Бригада кол-во часов 
       , tmpOperDate AS (SELECT generate_series(inStartDate, inEndDate, '1 DAY'::interval) OperDate) --все дни выбранного периода
@@ -166,8 +175,9 @@ BEGIN
                              )          
        --связываем перемещения с табелем по дате бригаде подразделению
       , tmpData AS (SELECT tmp.OperDate
+                         , tmp.MovementId
                          , tmp.PersonalGroupId
-                         , tmp.FromId
+                         , STRING_AGG (DISTINCT Object_From.ValueData, ', ') ::TVarChar AS FromName
                          , STRING_AGG (DISTINCT Object_To.ValueData, ', ') ::TVarChar AS ToName
                          , tmp.GoodsId
                          , tmp.GoodsKindId
@@ -179,6 +189,7 @@ BEGIN
                          , SUM (COALESCE (tmp.AmountHour,0)) AS AmountHour
                     FROM (
                           SELECT CASE WHEN inIsDays = TRUE THEN COALESCE (tmpContainer.OperDate, tmpSheetWorkTime.OperDate) ELSE NULL END ::TDateTime AS OperDate
+                               , tmpContainer.MovementId
                                , COALESCE (tmpContainer.PersonalGroupId, tmpSheetWorkTime.PersonalGroupId) AS PersonalGroupId
                                , COALESCE (tmpContainer.FromId, tmpSheetWorkTime.UnitId)  AS FromId
                                , tmpContainer.ToId
@@ -201,9 +212,11 @@ BEGIN
                                                         AND tmpSheetWorkTime.PersonalGroupId = tmpContainer.PersonalGroupId
                           ) AS tmp
                           LEFT JOIN Object AS Object_To ON Object_To.Id = tmp.ToId
+                          LEFT JOIN Object AS Object_From ON Object_From.Id = tmp.FromId
                     GROUP BY tmp.OperDate
+                           , tmp.MovementId
                            , tmp.PersonalGroupId
-                           , tmp.FromId
+                           --, tmp.FromId
                            --, tmp.ToId
                            , tmp.GoodsId
                            , tmp.GoodsKindId
@@ -226,8 +239,8 @@ BEGIN
           -- Вес в упаковке - GoodsByGoodsKind
          , ObjectFloat_WeightTotal.ValueData   :: TFloat  AS WeightTotal
          
-         , Object_From.ObjectCode          AS FromCode
-         , Object_From.ValueData           AS FromName
+         --, Object_From.ObjectCode          AS FromCode
+         , tmpOperationGroup.FromName      AS FromName
          --, Object_To.ObjectCode            AS ToCode
          , tmpOperationGroup.ToName        AS ToName
          , Object_PersonalGroup.ObjectCode AS PersonalGroupCode 
@@ -253,8 +266,11 @@ BEGIN
                 THEN TRUE
                 ELSE FALSE
            END :: Boolean AS isError*/
+         , Movement.Id      AS MovementId
+         , Movement.InvNumber
           
      FROM (SELECT tmpData.OperDate
+                , tmpData.MovementId
                 , tmpData.FromId
                 , tmpData.ToName
                 , tmpData.GoodsId
@@ -277,7 +293,7 @@ BEGIN
                 LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpData.GoodsId
            ) AS tmpOperationGroup
 
-          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpOperationGroup.FromId
+         -- LEFT JOIN Object AS Object_From ON Object_From.Id = tmpOperationGroup.FromId
           --LEFT JOIN Object AS Object_To ON Object_To.Id = tmpOperationGroup.ToId
           LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = tmpOperationGroup.PersonalGroupId
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -299,7 +315,9 @@ BEGIN
           -- вес в упаковке: "чистый" вес + вес 1-ого пакета
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal() 
+
+          LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
   ;
 
 END;
@@ -313,5 +331,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 0, inGoodsGroupId:= 0, inIsDays:= true, inIsGoods:= false, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+--SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 0, inGoodsGroupId:= 0, inisMovement:= true, inIsDays:= true, inIsGoods:= false, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
 

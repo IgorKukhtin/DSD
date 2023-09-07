@@ -14,19 +14,19 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     Width = 1028
     Height = 316
     TabOrder = 3
-    ExplicitTop = 80
+    ExplicitTop = 83
     ExplicitWidth = 1028
-    ExplicitHeight = 319
+    ExplicitHeight = 316
     ClientRectBottom = 316
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 319
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 316
         ExplicitWidth = 1028
-        ExplicitHeight = 319
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -142,35 +142,21 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object FromCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1086#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromCode'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.;-,0.; ;'
-            Visible = False
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Options.Editing = False
+            Width = 104
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 150
-          end
-          object ToCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1082#1086#1084#1091
-            DataBinding.FieldName = 'ToCode'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.;-,0.; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
+            Width = 150
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
@@ -375,6 +361,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
   inherited Panel: TPanel
     Width = 1028
     Height = 57
+    ExplicitLeft = -40
     ExplicitWidth = 1028
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
@@ -400,13 +387,13 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 289
+      Left = 384
       Top = 31
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 378
-      Top = 30
+      Left = 474
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
@@ -417,12 +404,12 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Width = 199
     end
     object cxLabel3: TcxLabel
-      Left = 600
+      Left = 695
       Top = 31
       Caption = #1050#1086#1084#1091':'
     end
     object edUnitTo: TcxButtonEdit
-      Left = 634
+      Left = 730
       Top = 30
       Properties.Buttons = <
         item
@@ -434,12 +421,12 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Width = 261
     end
     object cxLabel8: TcxLabel
-      Left = 585
-      Top = 6
+      Left = 680
+      Top = 7
       Caption = #1054#1090' '#1082#1086#1075#1086':'
     end
     object edUnitFrom: TcxButtonEdit
-      Left = 634
+      Left = 730
       Top = 5
       Properties.Buttons = <
         item
@@ -452,19 +439,19 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     end
     object cbIsDays: TcxCheckBox
       Left = 209
-      Top = 6
+      Top = 5
       Caption = #1087#1086' '#1044#1085#1103#1084
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 76
+      Width = 65
     end
     object cxLabel5: TcxLabel
-      Left = 290
-      Top = 6
+      Left = 385
+      Top = 7
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 378
+      Left = 474
       Top = 5
       Properties.Buttons = <
         item
@@ -482,6 +469,14 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Properties.ReadOnly = False
       TabOrder = 13
       Width = 74
+    end
+    object cbisMovement: TcxCheckBox
+      Left = 277
+      Top = 4
+      Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Properties.ReadOnly = False
+      TabOrder = 14
+      Width = 102
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -897,9 +892,17 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inisGoods'
+          Name = 'isGoods'
           Value = Null
           Component = cbisGoods
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement'
+          Value = Null
+          Component = cbisMovement
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1069,6 +1072,14 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisMovement'
+        Value = Null
+        Component = cbisMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsDays'
         Value = Null
         Component = cbIsDays
@@ -1194,8 +1205,8 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 112
-    Top = 128
+    Left = 256
+    Top = 304
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ShowDialogAction = ExecuteDialog
@@ -1218,8 +1229,8 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       end
       item
       end>
-    Left = 208
-    Top = 168
+    Left = 216
+    Top = 224
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1283,7 +1294,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 664
+    Left = 760
   end
   object GuidesUnitFrom: TdsdGuides
     KeyField = 'Id'

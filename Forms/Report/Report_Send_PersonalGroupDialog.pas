@@ -47,6 +47,7 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     cbisGoods: TcxCheckBox;
+    cbisMovement: TcxCheckBox;
   private
     { Private declarations }
   public
