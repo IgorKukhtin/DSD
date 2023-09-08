@@ -76,7 +76,7 @@ BEGIN
     WHERE MovementString.MovementId = inMovementId
    UNION
     SELECT '<Field FieldName = "' || zfStrToXmlStr (CASE WHEN vbMovementDescId = zc_Movement_MemberHoliday() AND MovementBoolean.DescId = zc_MovementBoolean_isLoad()
-                                                         THEN 'Оплачен'
+                                                         THEN 'Отпуск заполнен'
                                                          ELSE MovementBooleanDesc.ItemName
                                                     END)
         || '" FieldValue = "' || COALESCE (MovementBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 

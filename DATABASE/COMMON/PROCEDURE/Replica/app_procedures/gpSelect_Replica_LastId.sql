@@ -33,16 +33,83 @@ BEGIN
     vbId_start_save:= inId_start;
 
 
+    -- CREATE EXTENSION dblink;
+    --
+    -- Активные процессы
+    SELECT gpSelect.pId
+         , gpSelect.Waiting
+         , gpSelect.UseName
+         , gpSelect.Query
+         , gpSelect.State
+         , gpSelect.Query_start
+         , gpSelect.vb_Count
+           -- нашли время начала этой транзакции - здесь значение с timezone
+           INTO vb_pId
+              , vb_Waiting
+              , vb_UseName
+              , vb_Query
+              , vb_State
+              , vb_Query_start
+              , vb_Count
+    FROM (WITH tmp_activity AS (SELECT gpSelect.pId
+                                     , gpSelect.Waiting
+                                     , gpSelect.UseName
+                                     , gpSelect.Query
+                                     , gpSelect.State
+                                     , gpSelect.Query_start
+                                FROM dblink('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok' :: Text
+                                          , (' SELECT pId, Waiting, UseName, Query, State, Query_start'
+                                          || ' FROM gpSelect_pg_stat_activity()') :: Text
+                                           ) AS gpSelect (pId         Bigint
+                                                        , Waiting     Boolean
+                                                        , UseName     TVarChar
+                                                        , Query       TVarChar
+                                                        , State       TVarChar
+                                                        , Query_start TDateTime
+                                                         )
+                               )
+          SELECT tmp_activity.pId
+               , tmp_activity.Waiting
+               , tmp_activity.UseName
+               , tmp_activity.Query
+               , tmp_activity.State
+               , tmp_activity.Query_start
+               , (SELECT COUNT(*) FROM tmp_activity) AS vb_Count
+          FROM tmp_activity
+          WHERE Query NOT ILIKE 'VACUUM%'
+          ORDER BY tmp_activity.Query_start
+          LIMIT 1
+         ) AS gpSelect
+   ;
+
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".
     -- Для этого нужно определить правую границу, которая будет удовлетворять такому условию.
-    vbId_End := (SELECT MAX (Id)
-                 FROM _replica.table_update_data
-                 WHERE transaction_id IN (SELECT DISTINCT transaction_id
-                                          FROM _replica.table_update_data
-                                          WHERE Id BETWEEN inId_start AND inId_start + inRec_count
-                                         )
-                );
+       -- если найдена активная транзакция - для значения без timezone
+    IF vb_Count > 0
+    THEN
+        -- замена, делаем задержку на 55 SEC
+        vbId_End := (WITH tmp_tran AS (SELECT transaction_id, MAX (last_modified) AS last_m
+                                       FROM _replica.table_update_data
+                                       WHERE Id BETWEEN inId_start AND inId_start + inRec_count
+                                       GROUP by transaction_id
+                                      )
+                     SELECT MAX (Id)
+                     FROM _replica.table_update_data
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '55 SEC'))
+                    );
+    ELSE
+        -- замена, делаем задержку на 30 SEC
+        vbId_End := (WITH tmp_tran AS (SELECT transaction_id, MAX (last_modified) AS last_m
+                                       FROM _replica.table_update_data
+                                       WHERE Id BETWEEN inId_start AND inId_start + inRec_count
+                                       GROUP by transaction_id
+                                      )
+                     SELECT MAX (Id)
+                     FROM _replica.table_update_data
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '30 SEC'))
+                    );
+    END IF;
 
 
     -- могли не найти, т.к. следующий Id за границей диапазона
@@ -51,12 +118,14 @@ BEGIN
         -- находим первого
         inId_start:= (SELECT MIN (Id) FROM _replica.table_update_data WHERE Id >= inId_start);
         -- вторая попытка
-        vbId_End := (SELECT MAX (Id)
+        vbId_End := (WITH tmp_tran AS (SELECT transaction_id, MAX (last_modified) AS last_m
+                                       FROM _replica.table_update_data
+                                       WHERE Id BETWEEN inId_start AND inId_start + inRec_count
+                                       GROUP by transaction_id
+                                      )
+                     SELECT MAX (Id)
                      FROM _replica.table_update_data
-                     WHERE transaction_id IN (SELECT DISTINCT transaction_id
-                                              FROM _replica.table_update_data
-                                              WHERE Id BETWEEN inId_start AND inId_start + inRec_count
-                                             )
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '55 SEC'))
                     );
 
     END IF;
@@ -101,81 +170,17 @@ BEGIN
                           WHERE table_update_data.Id BETWEEN inId_start AND vbId_End + inRec_count
                             AND (soldtable.Id > 0 OR table_update_data.table_name NOT ILIKE 'soldtable' OR table_update_data.operation ILIKE 'DELETE')
                           ORDER BY table_update_data.Id
+                          --LIMIT ((vbId_End - inId_start) / 4) :: Integer + 1
                           LIMIT (inRec_count / 4) :: Integer + 1
+                          
                          ) AS tmp
                    );
     END IF;
 
 
-    IF 1=1
-    THEN
-          -- CREATE EXTENSION dblink;
-          --
-          -- Активные процессы
-          SELECT gpSelect.pId
-               , gpSelect.Waiting
-               , gpSelect.UseName
-               , gpSelect.Query
-               , gpSelect.State
-               , gpSelect.Query_start
-               , gpSelect.vb_Count
-                 -- нашли время начала этой транзакции - здесь значение с timezone
-                 INTO vb_pId
-                    , vb_Waiting
-                    , vb_UseName
-                    , vb_Query
-                    , vb_State
-                    , vb_Query_start
-                    , vb_Count
-          FROM (WITH tmp_activity AS (SELECT gpSelect.pId
-                                           , gpSelect.Waiting
-                                           , gpSelect.UseName
-                                           , gpSelect.Query
-                                           , gpSelect.State
-                                           , gpSelect.Query_start
-                                      FROM dblink('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok' :: Text
-                                                , (' SELECT pId, Waiting, UseName, Query, State, Query_start'
-                                                || ' FROM gpSelect_pg_stat_activity()') :: Text
-                                                 ) AS gpSelect (pId         Bigint
-                                                              , Waiting     Boolean
-                                                              , UseName     TVarChar
-                                                              , Query       TVarChar
-                                                              , State       TVarChar
-                                                              , Query_start TDateTime
-                                                               )
-                                     )
-                SELECT tmp_activity.pId
-                     , tmp_activity.Waiting
-                     , tmp_activity.UseName
-                     , tmp_activity.Query
-                     , tmp_activity.State
-                     , tmp_activity.Query_start
-                     , (SELECT COUNT(*) FROM tmp_activity) AS vb_Count
-                FROM tmp_activity
-                ORDER BY tmp_activity.Query_start
-                LIMIT 1
-               ) AS gpSelect
-         ;
-
        -- тест
        --RAISE EXCEPTION 'Ошибка.<%>', vb_Count;
 
-       -- если найдена активная транзакция - для значения без timezone
-       IF vb_Count > 0
-       THEN
-           -- замена, делаем задержку на 120 SEC
-           vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
-                                 WHERE Id BETWEEN inId_start AND vbId_End
-                                   AND last_modified < timezone('utc'::text, vb_Query_start - INTERVAL '55 SEC')
-                                ), inId_start - 1);
-       ELSE
-           -- замена, делаем задержку на 240 SEC
-           vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
-                                 WHERE Id BETWEEN inId_start AND vbId_End
-                                   AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP - INTERVAL '30 SEC')
-                                ), inId_start - 1);
-
-       END IF;
 
        -- Item
        /*INSERT INTO ResourseItemProtocol (pid
@@ -213,7 +218,6 @@ BEGIN
                , vb_Query_start
           ;*/
 
-    END IF;
 
     -- Результат
     /*IF vbId_End > 5602489721
@@ -221,7 +225,7 @@ BEGIN
          vbId_End:=5602489721;
     END IF;*/
     --
-    vbId_End:= COALESCE ((SELECT max(id) FROM _replica.table_update_data WHERE Id between vbId_start_save and vbId_End
+    vbId_End:= COALESCE ((SELECT max (Id) FROM _replica.table_update_data WHERE Id between vbId_start_save and vbId_End
                                  /*AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 16
                                                                                                      THEN INTERVAL '135 MINUTES'
                                                                                                      ELSE INTERVAL '155 MINUTES'

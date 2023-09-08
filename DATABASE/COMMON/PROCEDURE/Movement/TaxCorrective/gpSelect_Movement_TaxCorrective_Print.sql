@@ -889,7 +889,7 @@ BEGIN
 
            , tmpMovement_Data.Code_DocumentTaxKind          AS KindCode     -- заполняется в справочнике
 
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change(), zc_Enum_DocumentTaxKind_ChangeErr())
                        THEN Object_DocumentTaxKind.ValueData
 
                   WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
@@ -1234,7 +1234,7 @@ BEGIN
            --, COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNum
            , CASE WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE tmpMI.NPP END :: Integer AS LineNum
            , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin < '01.12.2018' THEN 'X'
-                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
+                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay(), zc_Enum_DocumentTaxKind_ChangeErr()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
                   ELSE ''
              END    AS TaxKind --признак  сводной корректировки
 
@@ -1365,7 +1365,7 @@ BEGIN
 
                               WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change(), zc_Enum_DocumentTaxKind_ChangeErr()
                                                                      , zc_Enum_DocumentTaxKind_ChangePercent()
                                                                       )
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
@@ -1391,7 +1391,7 @@ BEGIN
                          END AS KindCode
 
                        , CASE WHEN (tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                      , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                                      , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change(), zc_Enum_DocumentTaxKind_ChangeErr()
                                                                       , zc_Enum_DocumentTaxKind_ChangePercent())
                                  OR vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                               , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
@@ -1892,7 +1892,7 @@ BEGIN
                        OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                         , zc_Enum_DocumentTaxKind_ChangePercent()
-                                                        , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                        , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change(), zc_Enum_DocumentTaxKind_ChangeErr()
                                                          ))
 
 

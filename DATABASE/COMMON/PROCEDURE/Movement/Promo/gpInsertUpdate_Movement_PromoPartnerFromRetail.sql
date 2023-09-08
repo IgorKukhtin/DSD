@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartnerFromRetail(
     IN inRetailId               Integer    , -- Ключ объекта <Торговая Сеть>
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS VOID
+RETURNS
+VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -56,12 +57,13 @@ BEGIN
     THEN
         PERFORM
             gpInsertUpdate_Movement_PromoPartner(
-                ioId         := 0, -- Ключ объекта <партнер для документа акции>
-                inParentId   := inParentId , -- Ключ родительского объекта <Документ акции>
-                inPartnerId  := ObjectLink_Partner_Juridical.ObjectId, -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
-                inContractId := 0, -- Ключ объекта <Контракт>
-                inComment    := '', -- Примечание
-                inSession    := inSession)  -- сессия пользователя
+                ioId              := 0, -- Ключ объекта <партнер для документа акции>
+                inParentId        := inParentId , -- Ключ родительского объекта <Документ акции>
+                inPartnerId       := ObjectLink_Partner_Juridical.ObjectId, -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
+                inContractId      := 0, -- Ключ объекта <Контракт>
+                inComment         := '', -- Примечание
+                inRetailName_inf  := '', -- торг.сеть доп.
+                inSession         := inSession)  -- сессия пользователя
         FROM
             ObjectLink AS ObjectLink_Juridical_Retail
             INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -131,7 +133,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_PromoPartnerFromRetail (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

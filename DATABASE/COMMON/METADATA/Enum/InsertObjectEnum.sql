@@ -337,6 +337,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Goods(),                           inDescId:= zc_Object_DocumentTaxKind(), inCode:= 15, inName:= 'Зміна номенклатури',        inEnumName:= 'zc_Enum_DocumentTaxKind_Goods');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Change(),                          inDescId:= zc_Object_DocumentTaxKind(), inCode:= 16, inName:= 'Усунення неоднозначностей', inEnumName:= 'zc_Enum_DocumentTaxKind_Change');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_ChangePercent(),                   inDescId:= zc_Object_DocumentTaxKind(), inCode:= 17, inName:= 'предоставлению скидки',     inEnumName:= 'zc_Enum_DocumentTaxKind_ChangePercent');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_ChangeErr(),                       inDescId:= zc_Object_DocumentTaxKind(), inCode:= 18, inName:= 'Виправлення помилки',       inEnumName:= 'zc_Enum_DocumentTaxKind_ChangeErr');
 
      -- !!! Типы моделей начисления
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_DaySheetWorkTime(),        inDescId:= zc_Object_ModelServiceKind(), inCode:= 1, inName:= 'По дням табель'               , inEnumName:= 'zc_Enum_ModelServiceKind_DaySheetWorkTime');

@@ -43,6 +43,9 @@ $BODY$
    DECLARE vbLen10 Integer;
    DECLARE vbLen11 Integer;
    DECLARE vbLen12 Integer;
+   DECLARE vbLen13 Integer;
+   DECLARE vbLen14 Integer;
+   DECLARE vbLen15 Integer;
    DECLARE vbTmp   Integer;
    
 BEGIN
@@ -75,17 +78,32 @@ BEGIN
             + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
               AS Width9
 
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer ELSE 1000 END
+              -- 10
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 30 END
             + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
               AS Width10
               -- 11
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer + 0 ELSE 1000 END
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
             + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
               AS Width11
               -- 12
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer + 0 ELSE 1000 END
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
             + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
               AS Width12
+
+              -- 13
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width13
+              -- 14
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width14
+              -- 15
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width15
+
 
               INTO vbLen1
                  , vbLen2
@@ -100,6 +118,10 @@ BEGIN
 
                  , vbLen11
                  , vbLen12
+
+                 , vbLen13
+                 , vbLen14
+                 , vbLen15
 
        FROM Object AS Object_StickerFile
             LEFT JOIN ObjectFloat AS ObjectFloat_Width1
@@ -271,7 +293,16 @@ BEGIN
                     WHEN 10 THEN vbLen10
                     WHEN 11 THEN vbLen11
                     WHEN 12 THEN vbLen12
-                            ELSE 10000
+                    WHEN 13 THEN vbLen13
+                    WHEN 14 THEN vbLen14
+                    WHEN 15 THEN vbLen15
+                    --
+                    WHEN 16 THEN vbLen15
+                    WHEN 17 THEN vbLen15
+                    WHEN 18 THEN vbLen15
+                    WHEN 19 THEN vbLen15
+                    WHEN 20 THEN vbLen15
+                            ELSE 45
                END;
                
        vbTmp:= vbLen;

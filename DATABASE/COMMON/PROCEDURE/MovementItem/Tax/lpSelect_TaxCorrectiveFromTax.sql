@@ -104,7 +104,7 @@ BEGIN
                           , CASE WHEN tmpMICorrective.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                           , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                           , zc_Enum_DocumentTaxKind_Goods()
-                                                                          , zc_Enum_DocumentTaxKind_Change()
+                                                                          , zc_Enum_DocumentTaxKind_Change(), zc_Enum_DocumentTaxKind_ChangeErr()
                                                                           , zc_Enum_DocumentTaxKind_ChangePercent()
                                                                            )
                                   AND tmpMICorrective.LineNumTax <> 0 

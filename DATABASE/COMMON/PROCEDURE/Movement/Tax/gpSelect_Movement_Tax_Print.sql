@@ -533,7 +533,7 @@ order by 4*/
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
 
            , CASE WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin < '01.12.2018' THEN 'X' 
-                  WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
+                  WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay(), zc_Enum_DocumentTaxKind_ChangeErr()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
                   ELSE '' 
              END AS TaxKind -- для сводной НН
 
