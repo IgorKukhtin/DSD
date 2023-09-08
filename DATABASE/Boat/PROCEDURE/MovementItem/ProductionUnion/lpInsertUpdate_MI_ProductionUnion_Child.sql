@@ -25,7 +25,7 @@ BEGIN
 
 
      -- сохранили <Ёлемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, Null, inMovementId, inAmount, inParentId, inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, NULL, inMovementId, inAmount, inParentId, inUserId);
 
      
      -- сохранили св€зь с <Ётап сборки>
