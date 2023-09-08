@@ -29,8 +29,17 @@ BEGIN
                                   JOIN pg_namespace AS n
                                                     ON n.oid     = p.pronamespace
                                                    AND n.nspname ILIKE 'public'
-                              WHERE p.ProName ilike '%gpReport%'
-                                 OR p.ProName ilike '%gpSelect%'
+                              WHERE p.ProName ILIKE '%gpReport%'
+                              -- OR p.ProName ILIKE '%gpSelect%'
+                                 --
+                                 OR p.ProName ILIKE 'gpSelect_Report_Wage%'
+                                 --
+                                 OR p.ProName ILIKE 'gpSelect_Object_ContractChoice'
+                                 OR p.ProName ILIKE 'gpSelect_Object_ContractChoice_byPromo'
+                                 OR p.ProName ILIKE 'gpSelect_Object_ContractPartnerChoice'
+                                 OR p.ProName ILIKE 'gpSelect_Object_ContractPartnerOrderChoice'
+                                 OR p.ProName ILIKE 'gpSelect_Scale_Goods'
+                                 OR p.ProName ILIKE 'gpSelect_Scale_Partner'
                              ) AS tmp
                        )
            , spExternal AS (SELECT LOWER (gpSelect.Name) AS Name FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin()) AS gpSelect)
@@ -55,10 +64,15 @@ BEGIN
         WHERE (spExternal.Name IS NULL
             OR spList.ProName ILIKE 'gpReport_Goods'
             OR spList.ProName ILIKE 'gpReport_GoodsBalance'
+            OR spList.ProName ILIKE 'gpSelect_Report_Wage'
+            OR spList.ProName ILIKE 'gpReport_GoodsMI_SaleReturnIn%'
             --
             OR spList.ProName ILIKE 'gpSelect_Scale_Goods'
             OR spList.ProName ILIKE 'gpSelect_Scale_Partner'
               )
+          AND spList.ProName NOT ILIKE 'gpSelect_Object_Contract'
+
+          --AND spList.ProName ILIKE 'gpSelect_Report_Wage%'
 
         --AND spList.ProName ILIKE 'gpSelect_Movement_Income'
           /*AND (spList.ProName ILIKE 'gpReport_Goods'
@@ -79,4 +93,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StoredProcExternal (inSession:= zfCalc_UserAdmin()) WWHERE Name ILIKE 'gpSelect_Scale_Partner'
+-- SELECT * FROM gpSelect_Object_StoredProcExternal (inSession:= zfCalc_UserAdmin()) -- WHERE Name ILIKE 'gpSelect_Scale_Partner'
