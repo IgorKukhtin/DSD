@@ -1006,7 +1006,7 @@ BEGIN
      END IF; -- !!!Курсовая разница!!!
 
      -- Проверка
-     IF inUserId = 5 AND 1=0
+     IF inUserId = 5 AND 1=1
      THEN
          RAISE EXCEPTION 'Ошибка.Admin vbSumm_diff = <%> '
                         , vbSumm_diff

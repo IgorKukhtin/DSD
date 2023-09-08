@@ -808,7 +808,34 @@ end if;
 
                                                     ELSE lpInsertFind_Object_PartionGoods ('')
                                                END
-                         , PartionGoodsId_To = CASE WHEN _tmpItem.PartionGoodsId_To > 0
+                         , PartionGoodsId_To = CASE -- ОС - найдем партию, т.к. могло измениться StorageId
+                                                    WHEN _tmpItem.PartionGoodsId_From > 0 AND vbMovementDescId = zc_Movement_SendAsset()
+                                                         THEN lpInsertFind_Object_PartionGoods
+                                                                                        (inMovementId     := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_From)
+                                                                                       , inGoodsId        := _tmpItem.GoodsId
+                                                                                       , inUnitId         := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_From AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
+                                                                                       , inStorageId      := _tmpItem.StorageId_mi
+                                                                                       , inInvNumber      := (SELECT Object.ValueData FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_From)
+                                                                                        )
+
+                                                    -- Товары - ОС
+                                                    WHEN _tmpItem.isAsset = TRUE
+                                                         AND (_tmpItem.MemberId_To > 0
+                                                          AND _tmpItem.StorageId_mi <> 0
+                                                          AND (SELECT Object.ValueData FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_mi AND Object.ValueData <> '' AND Object.ValueData <> '0') <> ''
+                                                          AND (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.ObjectId = _tmpItem.PartionGoodsId_mi AND OS.DescId = zc_ObjectString_PartionGoods_PartNumber() AND OS.ValueData <> '') <> ''
+                                                             )
+                                                         THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion := COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_mi AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit()), -1 * 0) -- _tmpItem.PartionGoodsId_mi
+                                                                                              , inGoodsId        := _tmpItem.GoodsId
+                                                                                              , inStorageId      := CASE WHEN COALESCE (_tmpItem.StorageId_mi, 0) = 0 AND inUserId = zc_Enum_Process_Auto_PrimeCost() THEN 9569212 ELSE _tmpItem.StorageId_mi END
+                                                                                              , inPartionModelId := _tmpItem.PartionModelId
+                                                                                              , inInvNumber      := COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_mi AND Object.ValueData <> '' AND Object.ValueData <> '0'), _tmpItem.PartionGoods)
+                                                                                              , inPartNumber     := COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.ObjectId = _tmpItem.PartionGoodsId_mi AND OS.DescId = zc_ObjectString_PartionGoods_PartNumber() AND OS.ValueData <> ''), _tmpItem.PartNumber)
+                                                                                              , inOperDate       := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_mi AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
+                                                                                              , inPrice          := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_mi AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
+                                                                                               )
+                                                    -- здесь только ОС - уже не ищем
+                                                    WHEN _tmpItem.PartionGoodsId_To > 0
                                                          THEN _tmpItem.PartionGoodsId_To
 
                                                     -- Спецодежда
@@ -1921,9 +1948,5 @@ SELECT tmpProtocol.MovementId
 FROM tmpProtocol
 WHERE tmpProtocol.Ord = 1
 ) AS tmp
-
-
-
-
 
 */
