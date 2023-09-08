@@ -48,6 +48,9 @@ type
     GuidesUnit: TdsdGuides;
     cbisGoods: TcxCheckBox;
     cbisMovement: TcxCheckBox;
+    cxLabel3: TcxLabel;
+    GuidesModelService: TdsdGuides;
+    edModelService: TcxButtonEdit;
   private
     { Private declarations }
   public

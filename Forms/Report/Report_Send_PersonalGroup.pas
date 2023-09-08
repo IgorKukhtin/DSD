@@ -79,6 +79,9 @@ type
     actRefreshMovement: TdsdDataSetRefresh;
     actRefreshGoods: TdsdDataSetRefresh;
     actRefreshDay: TdsdDataSetRefresh;
+    GuidesModelService: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edModelService: TcxButtonEdit;
   private
     { Private declarations }
   public

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, inModelServiceIdBoolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Send_PersonalGroup (
     IN inStartDate         TDateTime ,
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_Send_PersonalGroup (
     IN inFromId            Integer   ,
     IN inToId              Integer   ,
     IN inGoodsGroupId      Integer   ,
+    IN inModelServiceId    Integer   ,
     IN inisMovement        Boolean   ,
     IN inIsDays            Boolean   , --
     IN inisGoods           Boolean   , --
@@ -52,55 +54,96 @@ BEGIN
     RETURN QUERY
 
      WITH -- Ограничения по товару
-          _tmpGoods AS -- (GoodsId, InfoMoneyId, TradeMarkId, MeasureId, Weight)
-          (SELECT lfSelect.GoodsId, COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId, COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) AS TradeMarkId
-                , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
-                , ObjectFloat_Weight.ValueData           AS Weight
-           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = lfSelect.GoodsId
-                                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfSelect.GoodsId
-                                    AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = lfSelect.GoodsId
-                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                      ON ObjectFloat_Weight.ObjectId = lfSelect.GoodsId
-                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-           WHERE inGoodsGroupId <> 0
-        UNION ALL
-           SELECT Object.Id, COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId, COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) AS TradeMarkId
-                , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
-                , ObjectFloat_Weight.ValueData           AS Weight
-           FROM Object
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
-                                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                     ON ObjectLink_Goods_TradeMark.ObjectId = Object.Id
-                                    AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
-                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                      ON ObjectFloat_Weight.ObjectId = Object.Id
-                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-           WHERE Object.DescId = zc_Object_Goods()
-             AND COALESCE (inGoodsGroupId, 0) = 0
-          )
-
-    /*    -- группа подразделений или подразделение
-      , tmpFrom AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect WHERE inUnitId > 0
+        tmpGoods_Group AS (SELECT lfSelect.GoodsId, COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId, COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) AS TradeMarkId
+                                , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
+                                , ObjectFloat_Weight.ValueData           AS Weight
+                           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = lfSelect.GoodsId
+                                                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfSelect.GoodsId
+                                                    AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = lfSelect.GoodsId
+                                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                      ON ObjectFloat_Weight.ObjectId = lfSelect.GoodsId
+                                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                           WHERE inGoodsGroupId <> 0
+                        UNION ALL
+                           SELECT Object.Id, COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId, COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) AS TradeMarkId
+                                , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
+                                , ObjectFloat_Weight.ValueData           AS Weight
+                           FROM Object
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
+                                                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                     ON ObjectLink_Goods_TradeMark.ObjectId = Object.Id
+                                                    AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
+                                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                      ON ObjectFloat_Weight.ObjectId = Object.Id
+                                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                           WHERE Object.DescId = zc_Object_Goods()
+                             AND COALESCE (inGoodsGroupId, 0) = 0
+                          )
+        --товары из модели начисления  
+      , tmpGoods_ModelService AS (WITH
+                                  tmpMaster AS (SELECT ObjectLink_ModelServiceItemMaster_ModelService.ObjectId AS Id_Master
+                                                FROM ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
+                                                WHERE ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId = inModelServiceId  -- 5678129   -- -12378   --
+                                                  AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+                                               )
+                                 , tmpChild AS (SELECT ObjectLink_ModelServiceItemChild_From.ChildObjectId AS GoodsId
+                                                     , ObjectLink_ModelServiceItemChild_FromGoodsKind.ChildObjectId  AS GoodsKindId
+                                                FROM ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
+                                                       LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
+                                                                            ON ObjectLink_ModelServiceItemChild_From.ObjectId = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
+                                                                           AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
+   
+                                                       LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_FromGoodsKind
+                                                                            ON ObjectLink_ModelServiceItemChild_FromGoodsKind.ObjectId = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
+                                                                           AND ObjectLink_ModelServiceItemChild_FromGoodsKind.DescId = zc_ObjectLink_ModelServiceItemChild_FromGoodsKind()
+                                        
+                                                WHERE ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId IN (SELECT DISTINCT tmpMaster.Id_Master FROM tmpMaster) 
+                                                  AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
+                                             UNION
+                                                SELECT ObjectLink_ModelServiceItemChild_To.ChildObjectId             AS GoodsId
+                                                    ,  ObjectLink_ModelServiceItemChild_ToGoodsKind.ChildObjectId    AS GoodsKindId
+                                                FROM ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
+                                                     LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
+                                                                          ON ObjectLink_ModelServiceItemChild_To.ObjectId = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
+                                                                         AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()   
+   
+                                                     LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ToGoodsKind
+                                                                          ON ObjectLink_ModelServiceItemChild_ToGoodsKind.ObjectId = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
+                                                                         AND ObjectLink_ModelServiceItemChild_ToGoodsKind.DescId = zc_ObjectLink_ModelServiceItemChild_ToGoodsKind()
+                                                                    
+                                                WHERE ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId IN (SELECT DISTINCT tmpMaster.Id_Master FROM tmpMaster) 
+                                                  AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()  
+                                                )  
+                                  SELECT COALESCE (tmp.GoodsId,tmpChild.GoodsId) AS GoodsId
+                                       , tmpChild.GoodsKindId
+                                  FROM tmpChild
+                                       LEFT JOIN lfSelect_Object_Goods_byGoodsGroup (tmpChild.GoodsId) AS tmp ON 1 = 1
+                                  WHERE COALESCE (tmpChild.GoodsId,0) <> 0
+                                  )
+      , _tmpGoods AS (SELECT tmpGoods_ModelService.GoodsId
+                           , tmpGoods_ModelService.GoodsKindId
+                           , tmpGoods_Group.MeasureId
+                           , tmpGoods_Group.Weight
+                      FROM tmpGoods_ModelService
+                           INNER JOIN tmpGoods_Group ON tmpGoods_Group.GoodsId = tmpGoods_ModelService.GoodsId 
+                      WHERE COALESCE (inModelServiceId,0) <> 0
                     UNION
-                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inUnitId = 0
-                    )
-      , tmpTo AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect WHERE inToId > 0
-                 UNION
-                  SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inToId = 0
-                 )
-    ,  _tmpUnit AS (SELECT tmpFrom.UnitId, COALESCE (tmpTo.UnitId, 0) AS UnitId_by
-                    FROM tmpFrom 
-                         LEFT JOIN tmpTo ON tmpTo.UnitId > 0
-                    )
-     */           
+                      SELECT tmpGoods_Group.GoodsId
+                           , NULL AS GoodsKindId
+                           , tmpGoods_Group.MeasureId
+                           , tmpGoods_Group.Weight
+                      FROM tmpGoods_Group
+                      WHERE COALESCE (inModelServiceId,0) = 0
+                      )
+
       , tmpContainer AS (SELECT MIContainer.OperDate ::TDateTime AS OperDate
                               , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE -1 END AS MovementId
                               , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE NULL END AS FromId
@@ -121,6 +164,9 @@ BEGIN
                               --бригада день
                               , ROW_NUMBER() OVER (PARTITION BY MIContainer.OperDate, MovementLinkObject_PersonalGroup.ObjectId) AS Ord
                          FROM MovementItemContainer AS MIContainer
+                              --ограничиваем товары
+                              INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+
                               LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                           ON MIFloat_CountPack.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
@@ -128,7 +174,6 @@ BEGIN
                                                            ON MovementLinkObject_PersonalGroup.MovementId = MIContainer.MovementId
                                                           AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()  
                          
-                              
                          WHERE MIContainer.MovementDescId = zc_Movement_Send()
                            AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                            AND MIContainer.DescId = zc_MIContainer_Count()
@@ -136,6 +181,7 @@ BEGIN
                            AND ( ( (MIContainer.isActive = FALSE AND MIContainer.ObjectExtId_Analyzer = inToId) OR (MIContainer.isActive = FALSE AND COALESCE (inToId,0) = 0) )
                                OR ((MIContainer.isActive = TRUE  AND  MIContainer.ObjectExtId_Analyzer = inFromId) OR (MIContainer.isActive = TRUE AND COALESCE (inFromId,0) = 0) )
                                )
+                           AND (COALESCE (MIContainer.ObjectIntId_analyzer,0) = COALESCE (_tmpGoods.GoodsKindId,0) OR COALESCE (_tmpGoods.GoodsKindId,0) = 0)     
                          GROUP BY MIContainer.OperDate
                                 , MovementLinkObject_PersonalGroup.ObjectId
                                 , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE NULL END
@@ -356,5 +402,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 8459, inGoodsGroupId:= 0, inisMovement:= false, inIsDays:= false, inIsGoods:= false, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+--  SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 8459, inGoodsGroupId:= 0, inModelServiceId:=5678129  , inisMovement:= false, inIsDays:= false, inIsGoods:= true, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
 

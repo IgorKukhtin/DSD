@@ -1,31 +1,31 @@
 inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1041#1088#1080#1075#1072#1076#1099')>'
   ClientHeight = 399
-  ClientWidth = 1028
+  ClientWidth = 1181
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1044
+  ExplicitWidth = 1197
   ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1028
+    Width = 1181
     Height = 316
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1028
+    ExplicitWidth = 1181
     ExplicitHeight = 316
     ClientRectBottom = 316
-    ClientRectRight = 1028
+    ClientRectRight = 1181
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1028
+      ExplicitWidth = 1181
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
-        Width = 1028
+        Width = 1181
         Height = 316
-        ExplicitWidth = 1028
+        ExplicitWidth = 1181
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -358,10 +358,9 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     end
   end
   inherited Panel: TPanel
-    Width = 1028
+    Width = 1181
     Height = 57
-    ExplicitLeft = -40
-    ExplicitWidth = 1028
+    ExplicitWidth = 1181
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -386,13 +385,13 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 384
-      Top = 31
+      Left = 208
+      Top = 32
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 474
-      Top = 31
+      Left = 298
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -403,13 +402,13 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Width = 199
     end
     object cxLabel3: TcxLabel
-      Left = 695
-      Top = 31
+      Left = 519
+      Top = 32
       Caption = #1050#1086#1084#1091':'
     end
     object edUnitTo: TcxButtonEdit
-      Left = 730
-      Top = 30
+      Left = 554
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
@@ -417,15 +416,15 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 261
+      Width = 199
     end
     object cxLabel8: TcxLabel
-      Left = 680
-      Top = 7
+      Left = 504
+      Top = 8
       Caption = #1054#1090' '#1082#1086#1075#1086':'
     end
     object edUnitFrom: TcxButtonEdit
-      Left = 730
+      Left = 554
       Top = 5
       Properties.Buttons = <
         item
@@ -434,23 +433,23 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 261
+      Width = 199
     end
     object cbIsDays: TcxCheckBox
-      Left = 209
-      Top = 5
+      Left = 759
+      Top = 31
       Action = actRefreshDay
       Properties.ReadOnly = False
       TabOrder = 10
       Width = 65
     end
     object cxLabel5: TcxLabel
-      Left = 385
-      Top = 7
+      Left = 209
+      Top = 8
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 474
+      Left = 298
       Top = 5
       Properties.Buttons = <
         item
@@ -462,20 +461,37 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Width = 199
     end
     object cbisGoods: TcxCheckBox
-      Left = 209
-      Top = 31
+      Left = 830
+      Top = 32
       Action = actRefreshGoods
       Properties.ReadOnly = False
       TabOrder = 13
       Width = 74
     end
     object cbisMovement: TcxCheckBox
-      Left = 276
-      Top = 5
+      Left = 918
+      Top = 32
       Action = actRefreshMovement
       Properties.ReadOnly = False
       TabOrder = 14
       Width = 102
+    end
+    object cxLabel6: TcxLabel
+      Left = 761
+      Top = 8
+      Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+    end
+    object edModelService: TcxButtonEdit
+      Left = 873
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 149
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -513,6 +529,12 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesModelService
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -527,6 +549,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshGoods: TdsdDataSetRefresh [1]
@@ -540,6 +563,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Caption = #1087#1086' '#1058#1086#1074#1072#1088#1091
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshDay: TdsdDataSetRefresh [2]
@@ -553,6 +577,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Caption = #1087#1086' '#1044#1085#1103#1084
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
@@ -950,6 +975,23 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelServiceId'
+          Value = Null
+          Component = GuidesModelService
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelServiceName'
+          Value = Null
+          Component = GuidesModelService
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1168,6 +1210,14 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inModelServiceId'
+        Value = Null
+        Component = GuidesModelService
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisMovement'
         Value = Null
         Component = cbisMovement
@@ -1335,6 +1385,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         Component = GuidesUnit
       end
       item
+        Component = GuidesModelService
       end
       item
       end>
@@ -1368,8 +1419,8 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 32
+    Left = 448
+    Top = 8
   end
   object FormParams: TdsdFormParams
     Params = <>
@@ -1403,7 +1454,8 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 760
+    Left = 640
+    Top = 16
   end
   object GuidesUnitFrom: TdsdGuides
     KeyField = 'Id'
@@ -1432,7 +1484,8 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 840
+    Left = 336
+    Top = 8
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1488,5 +1541,35 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     PackSize = 1
     Left = 720
     Top = 248
+  end
+  object GuidesModelService: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edModelService
+    FormNameParam.Value = 'TModelServiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TModelServiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesModelService
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesModelService
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1040
+    Top = 65533
   end
 end
