@@ -94,6 +94,7 @@ BEGIN
      -- проверка были ли ручные правки, если да то ничего не делаем
      IF COALESCE (inMovementId_1, 0) <> 0 OR COALESCE (inMovementId_2, 0) <> 0
      THEN
+         -- сумма из док начисления - 1
          vbSummHoliday1 := (SELECT SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
                             FROM MovementItem 
                                  INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
@@ -104,6 +105,7 @@ BEGIN
                               AND MovementItem.isErased = FALSE
                               AND MovementItem.ObjectId = inPersonalId
                             );
+         -- сумма из док начисления - 2
          vbSummHoliday2 := (SELECT SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
                             FROM MovementItem 
                                  INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
@@ -114,9 +116,9 @@ BEGIN
                               AND MovementItem.isErased = FALSE
                               AND MovementItem.ObjectId = inPersonalId
                             );
-         --расчет по предыдущим отпускам для периода 1 и 2                  
+         -- расчет по "другим" отпускам для периода 1 и 2                  
          vbSummHoliday1_calc := (WITH
-                                 --все отпуска
+                                 -- все отпуска
                                  tmpMovementAll AS (SELECT *
                                                     FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
                                                                                         , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
@@ -124,14 +126,16 @@ BEGIN
                                                                                         , inJuridicalBasisId:= 0
                                                                                         , inSession:= inSession) AS tmp
                                                     WHERE tmp.MemberId = inMemberId
+                                                      -- !!!без текущего документа!!!
                                                       AND tmp.Id <> inMovementId
                                                     )
                                  SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday1,0)) AS SummHoliday_calc 
                                  FROM MovementFloat AS MovementFloat_MovementId
-                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id = MovementFloat_MovementId.MovementId
+                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id     = MovementFloat_MovementId.MovementId
+                                                               AND tmpMovementAll.isLoad = TRUE
                                  WHERE MovementFloat_MovementId.ValueData ::Integer = inMovementId_1
                                    AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
-                                 );
+                                );
          vbSummHoliday2_calc := (WITH
                                  --все отпуска
                                  tmpMovementAll AS (SELECT *
@@ -141,6 +145,7 @@ BEGIN
                                                                                         , inJuridicalBasisId:= 0
                                                                                         , inSession:= inSession) AS tmp
                                                     WHERE tmp.MemberId = inMemberId
+                                                      -- !!!без текущего документа!!!
                                                       AND tmp.Id <> inMovementId
                                                     )
                                  SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday2,0)) AS SummHoliday_calc 
@@ -151,6 +156,12 @@ BEGIN
                                  );         
      END IF;
      
+
+     IF vbUserId IN (5, 9457) AND 1=1
+     THEN
+         --
+         RAISE EXCEPTION 'Test.сумма 1 период <%> + <%> , сумма 2 период <%> + <%>', inSummHoliday1, vbSummHoliday1, inSummHoliday2, vbSummHoliday2;
+     END IF; 
 
      -- если нулевая сумма - 1
      IF COALESCE (vbSummHoliday1, 0) = 0 OR vbSummHoliday1 <> inSummHoliday1
@@ -384,6 +395,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), inMovementId, CURRENT_TIMESTAMP);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), inMovementId, vbUserId);
+
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
 
      IF vbUserId IN (5, 9457)

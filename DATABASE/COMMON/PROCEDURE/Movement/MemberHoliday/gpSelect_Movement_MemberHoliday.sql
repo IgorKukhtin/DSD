@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_MemberHoliday(
     IN inJuridicalBasisId  Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDateStart TDateTime, OperDateEnd TDateTime
              , BeginDateStart TDateTime, BeginDateEnd TDateTime
@@ -27,10 +27,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , DateOut TDateTime
              , Day_work    TFloat
              , Day_holiday TFloat, Day_holiday1 TFloat, Day_holiday2 TFloat
+             , Day_holiday1_calc TFloat, Day_holiday2_calc TFloat
 
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , InvNumber_Full1 TVarChar, InvNumber_Full2 TVarChar
-             , SummHoliday1 TFloat, SummHoliday2 TFloat, TotalSummHoliday TFloat, SummHoliday_calc TFloat
+             , SummHoliday1 TFloat, SummHoliday2 TFloat, TotalSummHoliday TFloat
+             , SummHoliday1_calc TFloat, SummHoliday2_calc TFloat, TotalSummHoliday_calc TFloat
+             , Summ_diff TFloat
              , Amount TFloat
              , isLoad Boolean
              , Color_SummHoliday Integer
@@ -76,35 +79,51 @@ BEGIN
                         WHERE lfSelect.Ord = 1
                         )
 
-        , tmpMovement_1 AS (SELECT Movement.*
-                               , MovementFloat_MovementId.ValueData    ::Integer  AS MovementId_1
-                               , MovementFloat_MovementItemId.ValueData::Integer  AS MovementId_2
-                               , MovementLinkObject_Member.ObjectId               AS MemberId
-                               , MovementLinkObject_WorkTimeKind.ObjectId         AS WorkTimeKindId
-                               , MovementDate_BeginDateStart.ValueData            AS BeginDateStart
-                               , MovementDate_BeginDateEnd.ValueData              AS BeginDateEnd
-                               , (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1) :: TFloat AS Day_holiday
-                               -- дни отпуска по периодам оплачиваемые <> "zc_Enum_WorkTimeKind_HolidayNoZp"
-                               , CASE WHEN MovementLinkObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_HolidayNoZp() 
-                                      THEN CASE WHEN DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData) = DATE_TRUNC ('Month', MovementDate_BeginDateStart.ValueData) 
-                                                    THEN (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)
-                                                ELSE (DATE_PART ('DAY', (DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData)-Interval '1 day') :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)
-                                           END
-                                      ELSE 0
-                                 END :: TFloat AS Day_holiday1
-                               , CASE WHEN MovementLinkObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_HolidayNoZp() 
-                                      THEN CASE WHEN DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData) = DATE_TRUNC ('Month', MovementDate_BeginDateStart.ValueData) 
-                                                    THEN 0
-                                                ELSE (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData) :: TIMESTAMP) + 1)       
-                                           END
-                                      ELSE 0
-                                 END :: TFloat AS Day_holiday2
-             
+        , tmpMovement_1 AS (SELECT Movement.Id
+                                 , Movement.StatusId
+                                 , Movement.InvNumber
+                                 , Movement.OperDate
+                                   --
+                                 , MovementFloat_MovementId.ValueData    ::Integer  AS MovementId_1
+                                 , MovementFloat_MovementItemId.ValueData::Integer  AS MovementId_2
+                                   --
+                                 , MovementLinkObject_Member.ObjectId               AS MemberId
+                                 , MovementLinkObject_WorkTimeKind.ObjectId         AS WorkTimeKindId
+                                 , MovementDate_BeginDateStart.ValueData            AS BeginDateStart
+                                 , MovementDate_BeginDateEnd.ValueData              AS BeginDateEnd
+
+                                   -- расчет - Отпуск, дней
+                                 , (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1) :: TFloat AS Day_holiday
+
+                                   -- расчет - оплачиваемые дни отпуска для периода-1 AND <> "zc_Enum_WorkTimeKind_HolidayNoZp"
+                                 , CASE WHEN MovementLinkObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_HolidayNoZp()
+                                        THEN CASE WHEN DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData) = DATE_TRUNC ('Month', MovementDate_BeginDateStart.ValueData)
+                                                      THEN (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)
+                                                  ELSE (DATE_PART ('DAY', (DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData)-Interval '1 day') :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)
+                                             END
+                                        ELSE 0
+                                   END :: TFloat AS Day_holiday1_calc
+
+                                   -- расчет - оплачиваемые дни отпуска для периода-2 AND <> "zc_Enum_WorkTimeKind_HolidayNoZp"
+                                 , CASE WHEN MovementLinkObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_HolidayNoZp()
+                                        THEN CASE WHEN DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData) = DATE_TRUNC ('Month', MovementDate_BeginDateStart.ValueData)
+                                                      THEN 0
+                                                  ELSE (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - DATE_TRUNC ('Month', MovementDate_BeginDateEnd.ValueData) :: TIMESTAMP) + 1)
+                                             END
+                                        ELSE 0
+                                   END :: TFloat AS Day_holiday2_calc
+
+                                 , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
+
                           FROM tmpStatus
                                JOIN Movement ON Movement.DescId = zc_Movement_MemberHoliday()
                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                             AND Movement.StatusId = tmpStatus.StatusId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+
+                               LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
+                                                         ON MovementBoolean_isLoad.MovementId = Movement.Id
+                                                        AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
                                LEFT JOIN MovementFloat AS MovementFloat_MovementId
                                                        ON MovementFloat_MovementId.MovementId = Movement.Id
@@ -117,11 +136,11 @@ BEGIN
                                LEFT JOIN MovementDate AS MovementDate_BeginDateStart
                                                       ON MovementDate_BeginDateStart.MovementId = Movement.Id
                                                      AND MovementDate_BeginDateStart.DescId = zc_MovementDate_BeginDateStart()
-                   
+
                                LEFT JOIN MovementDate AS MovementDate_BeginDateEnd
                                                       ON MovementDate_BeginDateEnd.MovementId = Movement.Id
                                                      AND MovementDate_BeginDateEnd.DescId = zc_MovementDate_BeginDateEnd()
- 
+
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
                                                             ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
                                                            AND MovementLinkObject_WorkTimeKind.DescId = zc_MovementLinkObject_WorkTimeKind()
@@ -132,13 +151,41 @@ BEGIN
                                LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
                           )
 
-        --расчет дней отпуска в первом и втором периодах
-        , tmpMovement AS (SELECT tmpMovement.*
-                               , SUM (tmpMovement.Day_holiday1) OVER (PARTITION BY tmpMovement.MovementId_1, tmpMovement.MemberId) AS TotalDay_holiday1 
-                               , SUM (tmpMovement.Day_holiday2) OVER (PARTITION BY tmpMovement.MovementId_2, tmpMovement.MemberId) AS TotalDay_holiday2
+          -- расчет дней отпуска в первом и втором периодах
+        , tmpMovement AS (SELECT tmpMovement.Id
+                               , tmpMovement.StatusId
+                               , tmpMovement.InvNumber
+                               , tmpMovement.OperDate
+                                 --
+                               , tmpMovement.MovementId_1
+                               , tmpMovement.MovementId_2
+                                 --
+                               , tmpMovement.MemberId
+                               , tmpMovement.WorkTimeKindId
+
+                                 -- Нач. дата отпуска
+                               , tmpMovement.BeginDateStart
+                                 -- Конечн. дата отпуска
+                               , tmpMovement.BeginDateEnd
+
+                               , tmpMovement.isLoad
+
+                                 -- расчет - Отпуск, дней
+                               , tmpMovement.Day_holiday
+
+                               , tmpMovement.Day_holiday1_calc
+                               , tmpMovement.Day_holiday2_calc
+
+                               , CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday1_calc ELSE 0 END AS Day_holiday1
+                               , CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday2_calc ELSE 0 END AS Day_holiday2
+
+                               , SUM (CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday1_calc ELSE 0 END) OVER (PARTITION BY tmpMovement.MovementId_1, tmpMovement.MemberId) AS TotalDay_holiday1
+                               , SUM (CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday2_calc ELSE 0 END) OVER (PARTITION BY tmpMovement.MovementId_2, tmpMovement.MemberId) AS TotalDay_holiday2
+
                           FROM tmpMovement_1 AS tmpMovement
-                          )     
-        
+                         )
+
+          -- сумма из док начисления - факт
         , tmpSummHoliday AS (SELECT MovementItem.MovementId                           AS MovementId
                                   , ObjectLink_Personal_Member.ChildObjectId          AS MemberId
                                   , SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
@@ -157,19 +204,22 @@ BEGIN
                                                        AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                              GROUP BY MovementItem.MovementId
                                     , ObjectLink_Personal_Member.ChildObjectId
-                      )
-
-
+                            )
+       -- Результат
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode              AS StatusCode
            , Object_Status.ValueData               AS StatusName
 
+             -- Нач. дата рабочего периода
            , MovementDate_OperDateStart.ValueData  AS OperDateStart
+             -- Конечн. дата рабочего периода
            , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
+             -- Нач. дата отпуска
            , Movement.BeginDateStart AS BeginDateStart
+             -- Конечн. дата отпуска
            , Movement.BeginDateEnd   AS BeginDateEnd
 
            , Object_Member.Id                      AS MemberId
@@ -193,69 +243,94 @@ BEGIN
            , ObjectDate_DateIn.ValueData           AS DateIn
            , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut
 
+             -- Кол-во дней (Рабочий период)
            , (DATE_PART ('DAY', MovementDate_OperDateEnd.ValueData  :: TIMESTAMP - MovementDate_OperDateStart.ValueData  :: TIMESTAMP) + 1) :: TFloat AS Day_work
-           --, (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1) :: TFloat AS Day_holiday
+
+             -- Отпуск, дней
            , Movement.Day_holiday ::TFloat
-           -- дни отпуска по периодам оплачиваемые <> "zc_Enum_WorkTimeKind_HolidayNoZp"
+
+             -- расчет - факт оплаченные дни отпуска для периода - 1 и 2 AND <> "zc_Enum_WorkTimeKind_HolidayNoZp" AND isLoad = TRUE
            , Movement.Day_holiday1 :: TFloat AS Day_holiday1
            , Movement.Day_holiday2 :: TFloat AS Day_holiday2
 
+             -- расчет - оплачиваемые дни отпуска для периода - 1 и 2 AND <> "zc_Enum_WorkTimeKind_HolidayNoZp"
+           , Movement.Day_holiday1_calc :: TFloat AS Day_holiday1_calc
+           , Movement.Day_holiday2_calc :: TFloat AS Day_holiday2_calc
+
            , Object_PersonalServiceList.Id            AS PersonalServiceListId
-           , Object_PersonalServiceList.ValueData     AS PersonalServiceListName 
+           , Object_PersonalServiceList.ValueData     AS PersonalServiceListName
+
+             -- № док Начисление зарплаты (первый период)
            , zfCalc_InvNumber_isErased (MovementDesc1.ItemName, Movement_PersonalService1.InvNumber, Movement_PersonalService1.OperDate, Movement_PersonalService1.StatusId) ::TVarChar AS InvNumber_Full1
+             -- № док Начисление зарплаты (второй период)
            , zfCalc_InvNumber_isErased (MovementDesc2.ItemName, Movement_PersonalService2.InvNumber, Movement_PersonalService2.OperDate, Movement_PersonalService2.StatusId) ::TVarChar AS InvNumber_Full2
 
-             -- Отпускные (первый период)
-           /*, CASE WHEN vbUserId = 5 AND 1=0
-                       THEN (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1))
-                          - (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0))
-                  WHEN vbIsAccessKey_MemberHoliday = TRUE THEN tmpSummHoliday1.SummHoliday
+             -- Отпускные (первый период) - пропорционально сумме в начислениях
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+                  THEN
+                      CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END
                   ELSE 0
              END ::TFloat AS SummHoliday1
-             -- Отпускные (второй период)
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN tmpSummHoliday2.SummHoliday ELSE 0 END ::TFloat AS SummHoliday2
-           */
-            -- Отпускные (первый период)
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE 
-                  THEN 
-                      CASE WHEN COALESCE (Movement.TotalDay_holiday1,0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1/ Movement.TotalDay_holiday1 ELSE 0 END 
-                  ELSE 0
-             END ::TFloat AS SummHoliday1
-           -- Отпускные (второй период)
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE 
+             -- Отпускные (второй период)- пропорционально сумме в начислениях
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
                   THEN --tmpSummHoliday2.SummHoliday
-                      CASE WHEN COALESCE (Movement.TotalDay_holiday2,0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2/ Movement.TotalDay_holiday2 ELSE 0 END
-                  ELSE 0 
+                      CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END
+                  ELSE 0
              END ::TFloat AS SummHoliday2
-           
-             -- Отпускные Итого
-           --, CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN COALESCE (tmpSummHoliday1.SummHoliday, 0) + COALESCE (tmpSummHoliday2.SummHoliday, 0) ELSE 0 END ::TFloat AS TotalSummHoliday
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE 
-                  THEN 
-                      (CASE WHEN COALESCE (Movement.TotalDay_holiday1,0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1/ Movement.TotalDay_holiday1 ELSE 0 END)
-                    + (CASE WHEN COALESCE (Movement.TotalDay_holiday2,0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2/ Movement.TotalDay_holiday2 ELSE 0 END) 
+
+             -- Отпускные Итого - пропорционально сумме в начислениях
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+                  THEN
+                      (CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END)
+                    + (CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END)
                   ELSE 0
              END ::TFloat AS TotalSummHoliday
-             
-             -- Отпускные (расчет)
+
+             -- Отпускные (первый период) - расчет
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+                  THEN MovementFloat_Amount.ValueData * Movement.Day_holiday1
+                  ELSE 0
+             END ::TFloat AS SummHoliday1_calc
+             -- Отпускные (второй период)- расчет
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+                  THEN MovementFloat_Amount.ValueData * Movement.Day_holiday2
+                  ELSE 0
+             END ::TFloat AS SummHoliday2_calc
+             -- Отпускные Итого - расчет
            , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE AND Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
                   THEN MovementFloat_Amount.ValueData * (DATE_PART ('DAY', Movement.BeginDateEnd   :: TIMESTAMP
                                                                          - Movement.BeginDateStart :: TIMESTAMP)
                                                        + 1)
                   ELSE 0
              END ::TFloat AS SummHoliday_calc
+
+             -- разница
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE AND Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
+                  THEN (CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END)
+                     + (CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END)
+                     - (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', Movement.BeginDateEnd :: TIMESTAMP
+                                                                          - Movement.BeginDateStart :: TIMESTAMP)
+                                                        + 1)) :: TFloat
+                  ELSE 0
+             END :: TFloat AS Summ_diff
+ 
              -- Ср.ЗП за день
            , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN MovementFloat_Amount.ValueData  ELSE 0 END ::TFloat AS Amount
              --
-           , CASE WHEN Movement_PersonalService1.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                    OR Movement_PersonalService2.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                       THEN COALESCE (MovementBoolean_isLoad.ValueData, FALSE) 
+           , CASE WHEN (Movement_PersonalService1.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                     OR Movement_PersonalService2.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                       )
+                   AND Movement.isLoad = TRUE
+                       THEN Movement.isLoad
                   ELSE FALSE
              END :: Boolean AS isLoad
 
-           , CASE WHEN (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', Movement.BeginDateEnd :: TIMESTAMP - Movement.BeginDateStart :: TIMESTAMP) + 1)) :: TFloat
-                    <>  (CASE WHEN COALESCE (Movement.TotalDay_holiday1,0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1/ Movement.TotalDay_holiday1 ELSE 0 END)
-                      + (CASE WHEN COALESCE (Movement.TotalDay_holiday2,0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2/ Movement.TotalDay_holiday2 ELSE 0 END) 
+           , CASE WHEN Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
+                   AND (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', Movement.BeginDateEnd :: TIMESTAMP
+                                                                          - Movement.BeginDateStart :: TIMESTAMP)
+                                                        + 1)) :: TFloat
+                    <>  (CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END)
+                      + (CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END)
                   THEN  zc_Color_Pink() --фон
                   ELSE zc_Color_White()
              END ::Integer AS Color_SummHoliday
@@ -292,38 +367,21 @@ BEGIN
                                     ON MovementFloat_Amount.MovementId = Movement.Id
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
-            /*LEFT JOIN MovementFloat AS MovementFloat_MovementId
-                                    ON MovementFloat_MovementId.MovementId = Movement.Id
-                                   AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
-            */
             LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = Movement.MovementId_1  --MovementFloat_MovementId.ValueData::Integer
             LEFT JOIN MovementDesc AS MovementDesc1 ON MovementDesc1.Id = Movement_PersonalService1.DescId
 
-            /*LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id
-                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-            */
             LEFT JOIN Movement AS Movement_PersonalService2 ON Movement_PersonalService2.Id = Movement.MovementId_2  --MovementFloat_MovementItemId.ValueData::Integer
             LEFT JOIN MovementDesc AS MovementDesc2 ON MovementDesc2.Id = Movement_PersonalService2.DescId
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
-                                      ON MovementBoolean_isLoad.MovementId = Movement.Id
-                                     AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
-            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
-                                         ON MovementLinkObject_Member.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-            */LEFT JOIN Object AS Object_Member ON Object_Member.Id = Movement.MemberId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = Movement.MemberId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberMain
                                          ON MovementLinkObject_MemberMain.MovementId = Movement.Id
                                         AND MovementLinkObject_MemberMain.DescId = zc_MovementLinkObject_MemberMain()
             LEFT JOIN Object AS Object_MemberMain ON Object_MemberMain.Id = MovementLinkObject_MemberMain.ObjectId
 
-           /* LEFT JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
-                                         ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_WorkTimeKind.DescId = zc_MovementLinkObject_WorkTimeKind()
-           */ LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = Movement.WorkTimeKindId
+            LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = Movement.WorkTimeKindId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -376,4 +434,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_MemberHoliday (inStartDate:= '01.08.2023', inEndDate:= '01.12.2023', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_MemberHoliday (inStartDate:= '01.08.2023', inEndDate:= '01.08.2023', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
