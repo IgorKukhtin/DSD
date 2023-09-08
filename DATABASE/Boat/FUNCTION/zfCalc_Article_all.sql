@@ -8,9 +8,10 @@ AS
 $BODY$
   DECLARE vbRetV TVarChar;
 BEGIN
-      vbRetV:= REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (inValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '');
+      vbRetV:= REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (inValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', ''), '/', ''), '\', '');
 
       RETURN (CASE WHEN vbRetV <> inValueData THEN  vbRetV || '___' || inValueData ELSE inValueData END);
+      --RETURN (vbRetV);
 
 END;
 $BODY$
