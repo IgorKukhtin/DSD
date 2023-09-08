@@ -57,6 +57,11 @@ type
     Color_SummHoliday: TcxGridDBColumn;
     actOpenFormMemberHolidayEdit: TdsdOpenForm;
     bbOpenFormMemberHolidayEdit: TdxBarButton;
+    SummHoliday1_calc: TcxGridDBColumn;
+    SummHoliday2_calc: TcxGridDBColumn;
+    Day_holiday1_calc: TcxGridDBColumn;
+    Day_holiday2_calc: TcxGridDBColumn;
+    Summ_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

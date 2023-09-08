@@ -85,7 +85,7 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummHoliday_calc
+              Column = TotalSummHoliday_calc
             end
             item
               Format = ',0.####'
@@ -96,6 +96,31 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Day_holiday1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Day_holiday1_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Day_holiday2_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHoliday1_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHoliday2_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -126,7 +151,7 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummHoliday_calc
+              Column = TotalSummHoliday_calc
             end
             item
               Format = ',0.####'
@@ -137,6 +162,31 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Day_holiday1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Day_holiday1_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Day_holiday2_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHoliday1_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHoliday2_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -181,6 +231,18 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             HeaderHint = #1050#1086#1085#1077#1095#1085'. '#1076#1072#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
             Width = 90
           end
+          object Day_work: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1088'.'
+            DataBinding.FieldName = 'Day_work'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' ('#1056#1072#1073#1086#1095#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+            Options.Editing = False
+            Width = 80
+          end
           object BeginDateStart: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'BeginDateStart'
@@ -203,31 +265,7 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1087#1091#1089#1082', '#1076#1085#1077#1081
-            Options.Editing = False
-            Width = 80
-          end
-          object Day_holiday1: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1095'. '#1076#1085#1077#1081' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
-            DataBinding.FieldName = 'Day_holiday1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1087#1083#1072#1095'. '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
-            Options.Editing = False
-            Width = 80
-          end
-          object Day_holiday2: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1095'. '#1076#1085#1077#1081' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
-            DataBinding.FieldName = 'Day_holiday2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1087#1083#1072#1095'. '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' ('#1054#1090#1087#1091#1089#1082')'
             Options.Editing = False
             Width = 80
           end
@@ -239,94 +277,169 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             Options.Editing = False
             Width = 80
           end
-          object Day_work: TcxGridDBColumn
-            Caption = #1056#1072#1073#1086#1095#1080#1081' '#1087#1077#1088#1080#1086#1076', '#1076#1085'.'
-            DataBinding.FieldName = 'Day_work'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1073#1086#1095#1080#1081' '#1087#1077#1088#1080#1086#1076', '#1076#1085#1077#1081
-            Options.Editing = False
-            Width = 80
-          end
-          object SummHoliday1: TcxGridDBColumn
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
-            DataBinding.FieldName = 'SummHoliday1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 77
-          end
-          object SummHoliday2: TcxGridDBColumn
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
-            DataBinding.FieldName = 'SummHoliday2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 74
-          end
-          object TotalSummHoliday: TcxGridDBColumn
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' '#1048#1090#1086#1075#1086
-            DataBinding.FieldName = 'TotalSummHoliday'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-          end
-          object SummHoliday_calc: TcxGridDBColumn
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'SummHoliday_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 74
-          end
-          object PersonalServiceListName: TcxGridDBColumn
-            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
-            DataBinding.FieldName = 'PersonalServiceListName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 104
-          end
-          object InvNumber_Full1: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082' '#1053#1072#1095'. '#1079#1087' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
-            DataBinding.FieldName = 'InvNumber_Full1'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
-            Options.Editing = False
-            Width = 80
-          end
-          object InvNumber_Full2: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082' '#1053#1072#1095'. '#1079#1087' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
-            DataBinding.FieldName = 'InvNumber_Full2'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
-            Options.Editing = False
-            Width = 80
-          end
           object isLoad: TcxGridDBColumn
             Caption = #1054#1090#1087#1091#1089#1082' '#1079#1072#1087#1086#1083#1085#1077#1085
             DataBinding.FieldName = 'isLoad'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 
-              #1047#1072#1087#1086#1083#1085#1077#1085#1072' '#1082#1086#1083#1086#1085#1082#1072' <'#1054#1090#1087#1091#1089#1082#1085#1099#1077'> '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077'  <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103 +
-              ' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+              #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1072' '#1082#1086#1083#1086#1085#1082#1072' <'#1054#1090#1087#1091#1089#1082#1085#1099#1077'> '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077'  <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077 +
+              #1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
             Options.Editing = False
-            Width = 80
+            Width = 70
+          end
+          object Day_holiday1: TcxGridDBColumn
+            Caption = #1054#1087#1083'. '#1076#1085'. (1-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'Day_holiday1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1083#1072#1095#1077#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
+            Options.Editing = False
+            Width = 75
+          end
+          object Day_holiday2: TcxGridDBColumn
+            Caption = #1054#1087#1083'. '#1076#1085#1077#1081' (2-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'Day_holiday2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1083#1072#1095#1077#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
+            Options.Editing = False
+            Width = 75
+          end
+          object Day_holiday1_calc: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1076#1085'. (1-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'Day_holiday1_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
+            Width = 70
+          end
+          object Day_holiday2_calc: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1076#1085'. (2-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'Day_holiday2_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
+            Width = 70
+          end
+          object SummHoliday1: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' (1-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'SummHoliday1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1083#1072#1095#1077#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1086#1090#1087#1091#1089#1082#1085#1099#1093' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
+            Width = 77
+          end
+          object SummHoliday2: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' (2-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'SummHoliday2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1083#1072#1095#1077#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1086#1090#1087#1091#1089#1082#1085#1099#1093' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
+            Width = 74
+          end
+          object TotalSummHoliday: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' '#1048#1090#1086#1075#1086
+            DataBinding.FieldName = 'TotalSummHoliday'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1083#1072#1095#1077#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1086#1090#1087#1091#1089#1082#1085#1099#1093' '#1048#1090#1086#1075#1086
+            Width = 84
+          end
+          object SummHoliday1_calc: TcxGridDBColumn
+            Caption = '***'#1054#1090#1087#1091#1089#1082#1085#1099#1077' (1-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'SummHoliday1_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1086#1090#1087#1091#1089#1082#1085#1099#1093' ('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
+            Width = 70
+          end
+          object SummHoliday2_calc: TcxGridDBColumn
+            Caption = '***'#1054#1090#1087#1091#1089#1082#1085#1099#1077' (2-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'SummHoliday2_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1086#1090#1087#1091#1089#1082#1085#1099#1093' ('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
+            Width = 70
+          end
+          object TotalSummHoliday_calc: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'TotalSummHoliday_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1086#1090#1087#1091#1089#1082#1085#1099#1093' ('#1048#1090#1086#1075#1086')'
+            Width = 74
+          end
+          object Summ_diff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'Summ_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090' "'#1084#1080#1085#1091#1089'" '#1056#1074#1089#1095#1077#1090
+            Width = 74
+          end
+          object PersonalServiceListName: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085'.)'
+            DataBinding.FieldName = 'PersonalServiceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
+            Options.Editing = False
+            Width = 130
+          end
+          object InvNumber_Full1: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' '#1053#1072#1095'. '#1079#1087' (1-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'InvNumber_Full1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'('#1087#1077#1088#1074#1099#1081' '#1087#1077#1088#1080#1086#1076')'
+            Options.Editing = False
+            Width = 100
+          end
+          object InvNumber_Full2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' '#1053#1072#1095'. '#1079#1087' (2-'#1087#1077#1088#1080#1086#1076')'
+            DataBinding.FieldName = 'InvNumber_Full2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'('#1074#1090#1086#1088#1086#1081' '#1087#1077#1088#1080#1086#1076')'
+            Options.Editing = False
+            Width = 100
           end
           object Amount: TcxGridDBColumn
             Caption = #1057#1088'.'#1047#1055' '#1079#1072' '#1076#1077#1085#1100
@@ -421,6 +534,8 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
           object Color_SummHoliday: TcxGridDBColumn
             DataBinding.FieldName = 'Color_SummHoliday'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 70
           end
@@ -432,10 +547,10 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
     Width = 975
     ExplicitWidth = 975
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 44927d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 44927d
     end
   end
   object cxLabel27: TcxLabel [2]
