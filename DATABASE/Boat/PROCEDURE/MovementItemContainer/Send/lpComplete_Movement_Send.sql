@@ -537,10 +537,10 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_From                           AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - ПРИХОД
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер корреспондент - ОПиУ
             , _tmpItem_Child.ContainerId_GoodsTo      AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - ПРИХОД
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Кому - ПРИХОД
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Подразделение Кому - ПРИХОД
             , -1 * _tmpItem_Child.Amount              AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
@@ -557,10 +557,10 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - РАСХОД
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер корреспондент - ОПиУ
             , _tmpItem_Child.ContainerId_GoodsFrom    AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение От Кого - РАСХОД
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Подразделение От Кого - РАСХОД
             , 1 * _tmpItem_Child.Amount               AS Amount
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
@@ -587,10 +587,10 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_From                           AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - ПРИХОД
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер корреспондент - ОПиУ
             , _tmpItem_Child.ContainerId_SummTo       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - ПРИХОД
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Кому - ПРИХОД
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Подразделение Кому - ПРИХОД
             , -1 * CASE WHEN _tmpItem_Child.Amount = Container_Count.Amount
                              THEN Container_Summ.Amount
                         ELSE _tmpItem_Child.Amount * Object_PartionGoods.EKPrice
@@ -614,10 +614,10 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - РАСХОД
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер корреспондент - ОПиУ
             , _tmpItem_Child.ContainerId_SummFrom     AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение От Кого - РАСХОД
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Подразделение От Кого - РАСХОД
             , 1 * CASE WHEN _tmpItem_Child.Amount = Container_Count.Amount
                             THEN Container_Summ.Amount
                        ELSE _tmpItem_Child.Amount * Object_PartionGoods.EKPrice

@@ -11,15 +11,16 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
  
-    -- собственно проводки
-    PERFORM lpComplete_Movement_Sale(inMovementId, -- ключ Документа
-                                            vbUserId);    -- Пользователь  
+     -- создаются временные таблицы - для формирование данных по проводкам
+     PERFORM lpComplete_Movement_Sale_CreateTemp();
 
-    UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-    WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     -- собственно проводки
+     PERFORM lpComplete_Movement_Sale (inMovementId, -- ключ Документа
+                                       vbUserId      -- Пользователь  
+                                      );
 
 END;
 $BODY$

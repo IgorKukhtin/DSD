@@ -642,10 +642,10 @@ BEGIN
             , _tmpItem.PartionId                      AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_SummPartner.AccountId          AS AccountId_Analyzer     -- Счет - корреспондент - по долгам поставщика
-            , _tmpItem_SummPartner.ContainerId_VAT    AS ContainerId_Analyzer   -- Контейнер - Корреспондент - по долгам НДС
+            , _tmpItem_SummPartner.ContainerId_VAT    AS ContainerId_Analyzer   -- Контейнер корреспондент - ОПиУ или по долгам НДС
             , _tmpItem_SummPartner.ContainerId        AS ContainerExtId_analyzer-- Контейнер - Корреспондент - по долгам поставщика
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Контрагент
             , _tmpItem.OperCount                      AS Amount
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
@@ -673,10 +673,10 @@ BEGIN
             , _tmpItem.PartionId                      AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_SummPartner.AccountId          AS AccountId_Analyzer     -- Счет - корреспондент - по долгам поставщика
-            , _tmpItem_SummPartner.ContainerId_VAT    AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem_SummPartner.ContainerId_VAT    AS ContainerId_Analyzer   -- Контейнер корреспондент - ОПиУ или по долгам НДС
             , _tmpItem_SummPartner.ContainerId        AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по долгам поставщика
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент - Контрагент
             , _tmpItem.OperSumm                       AS Amount
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
@@ -694,7 +694,7 @@ BEGIN
             , _tmpItem.PartionId                      AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_SummPartner.AccountId          AS AccountId_Analyzer     -- Счет - корреспондент - по долгам поставщика
-            , _tmpItem_SummPartner.ContainerId_VAT    AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem_SummPartner.ContainerId_VAT    AS ContainerId_Analyzer   -- Контейнер корреспондент - ОПиУ или по долгам НДС
             , _tmpItem_SummPartner.ContainerId        AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по долгам поставщика
             , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
@@ -727,10 +727,10 @@ BEGIN
             , 0                               AS PartionId               -- Партия
             , 0                               AS WhereObjectId_Analyzer  -- Место учета
             , 0                               AS AccountId_Analyzer      -- Счет - корреспондент
-            , 0                               AS ContainerId_Analyzer    -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , 0                               AS ContainerId_Analyzer    -- Контейнер корреспондент - ОПиУ или по долгам НДС
             , 0                               AS ContainerExtId_Analyzer -- Контейнер - Корреспондент
-            , 0                               AS ObjectIntId_Analyzer    -- Аналитический справочник
-            , 0                               AS ObjectExtId_Analyzer    -- Аналитический справочник
+            , 0                               AS ObjectIntId_Analyzer    -- Аналитический справочник - статья ОПиУ или ...
+            , 0                               AS ObjectExtId_Analyzer    -- Аналитический справочник - Корреспондент
             , -1 * _tmpItem_group.OperSumm    AS Amount
             , vbOperDate                      AS OperDate
             , FALSE                           AS isActive

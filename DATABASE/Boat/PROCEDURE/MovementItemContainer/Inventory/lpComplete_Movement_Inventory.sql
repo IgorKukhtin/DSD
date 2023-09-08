@@ -528,7 +528,7 @@ BEGIN
                                                                             , inJuridicalId_basis := vbJuridicalId_Basis      -- Главное юридическое лицо
                                                                             , inBusinessId        := vbBusinessId             -- Бизнесы
                                                                             , inDescId_1          := zc_ContainerLinkObject_ProfitLoss() -- DescId для 1-ой Аналитики
-                                                                            , inObjectId_1        := zc_Enum_Account_90301()  -- временно, надо будет потом использовать lpInsertFind_Object_ProfitLoss
+                                                                            , inObjectId_1        := zc_Enum_ProfitLoss_20501()  -- временно, Прочие потери (Списание+инвентаризация) + Комплектующие, надо будет потом использовать lpInsertFind_Object_ProfitLoss
                                                                              )
 
                              , OperSumm = CASE WHEN -- если списали остаток
@@ -569,10 +569,10 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , zc_Enum_Account_90301()                 AS AccountId_Analyzer     -- Счет - корреспондент - ПРИБЫЛЬ
-            , _tmpItem_Child.ContainerId_ProfitLoss   AS ContainerId_Analyzer   -- Контейнер - корреспондент - ПРИБЫЛЬ
+            , _tmpItem_Child.ContainerId_ProfitLoss   AS ContainerId_Analyzer   -- Контейнер корреспондент - ОПиУ
             , 0                                       AS ContainerExtId_Analyzer-- нет - Контейнер - Корреспондент
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник
+            , zc_Enum_ProfitLoss_20501()              AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент
             , 1 * _tmpItem_Child.OperCount            AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
@@ -600,10 +600,10 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , zc_Enum_Account_90301()                 AS AccountId_Analyzer     -- Счет - корреспондент - ПРИБЫЛЬ
-            , _tmpItem_Child.ContainerId_ProfitLoss   AS ContainerId_Analyzer   -- Контейнер - корреспондент - ПРИБЫЛЬ
+            , _tmpItem_Child.ContainerId_ProfitLoss   AS ContainerId_Analyzer   -- Контейнер корреспондент - ОПиУ
             , 0                                       AS ContainerExtId_Analyzer-- нет - Контейнер - Корреспондент
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник
+            , zc_Enum_ProfitLoss_20501()              AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент
             , _tmpItem_Child.OperSumm                 AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
@@ -621,10 +621,10 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , 0                                       AS AccountId_Analyzer     -- в ОПиУ не нужен
-            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен - Контейнер корреспондент - ОПиУ
             , 0                                       AS ContainerExtId_Analyzer-- нет - Контейнер - Корреспондент
-            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник
+            , zc_Enum_ProfitLoss_20501()              AS ObjectIntId_Analyzer   -- Аналитический справочник - статья ОПиУ или ...
+            , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник - Корреспондент
             , -1 * _tmpItem_Child.OperSumm            AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
