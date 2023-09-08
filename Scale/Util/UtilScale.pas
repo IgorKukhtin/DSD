@@ -29,10 +29,12 @@ type
   end;
 
   TStickerFileItem = record
-    Report:   TStream;
-    Id:       Integer;
-    Code:     Integer;
-    FileName: String;
+    Report:       TStream;
+    Report_70_70: TStream;
+    Id:           Integer;
+    Code:         Integer;
+    FileName:     String;
+    FileName_70_70:     String;
   end;
 
   TScaleType = (stBI, stDB, stZeus, stAP);

@@ -840,6 +840,7 @@ end;
 function TDMMainScaleForm.gpSelect_Scale_StickerFile (inBranchCode : Integer): TArrayStickerFileList;
 var i: integer;
     tmpStringStream : TStringStream;
+    tmpStringStream_70_70 : TStringStream;
 begin
     with spSelect do
     begin
@@ -855,8 +856,9 @@ begin
          begin
           Result[i].Id       := DataSet.FieldByName('Id').asInteger;
           Result[i].Code     := DataSet.FieldByName('Code').asInteger;
+          //
           Result[i].FileName := DataSet.FieldByName('FileName').asString;
-
+          //
           tmpStringStream:= TStringStream.Create;
           tmpStringStream.WriteString (ReConvertConvert(DataSet.FieldByName('FileValue').asString));
           if tmpStringStream.Size = 0 then
@@ -864,6 +866,20 @@ begin
 
           tmpStringStream.Position := 0;
           Result[i].Report:= tmpStringStream;
+
+          // для 70x70
+          Result[i].FileName_70_70 := DataSet.FieldByName('FileName_70_70').asString;
+          //
+          if DataSet.FieldByName('FileName_70_70').asString <> '' then
+          begin
+              tmpStringStream_70_70:= TStringStream.Create;
+              tmpStringStream_70_70.WriteString (ReConvertConvert(DataSet.FieldByName('FileValue_70_70').asString));
+              if tmpStringStream_70_70.Size = 0 then
+                 raise Exception.Create('Форма "' + DataSet.FieldByName('FileName').asString + '" не загружена из базы данных для 70x70');
+
+              tmpStringStream_70_70.Position := 0;
+              Result[i].Report_70_70:= tmpStringStream_70_70;
+          end;
 
 
           DataSet.Next;
