@@ -391,6 +391,16 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 46
       end
+      object OperDate_Month: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094
+        DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'MMMM YYYY'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
       object InvNumberTransport: TcxGridDBColumn
         Caption = #8470
         DataBinding.FieldName = 'InvNumberTransport'
@@ -899,12 +909,12 @@ object Report_TransportForm: TReport_TransportForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel5: TcxLabel
-      Left = 424
+      Left = 507
       Top = 7
       Caption = #1060#1080#1083#1080#1072#1083':'
     end
     object edBranch: TcxButtonEdit
-      Left = 473
+      Left = 557
       Top = 5
       Properties.Buttons = <
         item
@@ -913,7 +923,15 @@ object Report_TransportForm: TReport_TransportForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 138
+      Width = 174
+    end
+    object cbIsMonth: TcxCheckBox
+      Left = 408
+      Top = 4
+      Action = actRefreshMonth
+      Properties.ReadOnly = False
+      TabOrder = 6
+      Width = 81
     end
   end
   object DataSource: TDataSource
@@ -1050,6 +1068,19 @@ object Report_TransportForm: TReport_TransportForm
     Images = dmMain.ImageList
     Left = 256
     Top = 232
+    object actRefreshMonth: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1087#1086' Me'#1089#1103#1094#1072#1084
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1116,6 +1147,14 @@ object Report_TransportForm: TReport_TransportForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsMonth'
+          Value = Null
+          Component = cbIsMonth
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1157,6 +1196,14 @@ object Report_TransportForm: TReport_TransportForm
         Value = ''
         Component = BranchGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMonth'
+        Value = Null
+        Component = cbIsMonth
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1232,7 +1279,7 @@ object Report_TransportForm: TReport_TransportForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
+    Left = 664
     Top = 27
   end
 end

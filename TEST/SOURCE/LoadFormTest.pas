@@ -3141,11 +3141,11 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListDialogForm'));

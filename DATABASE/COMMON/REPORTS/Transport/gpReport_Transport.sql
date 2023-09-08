@@ -1,13 +1,15 @@
 -- Function: gpReport_Transport ()
 
 DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Transport(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inCarId         Integer   , --
-    IN inBranchId      Integer   , -- филиал
+    IN inBranchId      Integer   , -- филиал  
+    IN inisMonth       Boolean   , --
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
@@ -800,8 +802,8 @@ BEGIN
                                 )
 
         -- результат
-        SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
-             , tmpFuel.OperDate
+        SELECT CASE WHEN inisMonth = FALSE THEN zfConvert_StringToNumber (tmpFuel.InvNumber) ELSE NULL END       ::Integer  AS InvNumberTransport
+             , CASE WHEN inisMonth = FALSE THEN tmpFuel.OperDate ELSE DATE_TRUNC ('Month', tmpFuel.OperDate) END ::TDateTime AS OperDate
              , ViewObject_Unit.BranchName
              , ViewObject_Unit.Name             AS UnitName_car
              , STRING_AGG (Object_Unit_route.ValueData, ';') :: TVarChar AS UnitName_route
@@ -939,9 +941,9 @@ BEGIN
            OR inBranchId = 0
            OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)
 
-        GROUP BY tmpFuel.MovementId
-               , tmpFuel.InvNumber
-               , tmpFuel.OperDate
+        GROUP BY CASE WHEN inisMonth = FALSE THEN tmpFuel.MovementId ELSE 0 END 
+               , CASE WHEN inisMonth = FALSE THEN zfConvert_StringToNumber (tmpFuel.InvNumber) ELSE NULL END
+               , CASE WHEN inisMonth = FALSE THEN tmpFuel.OperDate ELSE DATE_TRUNC ('Month', tmpFuel.OperDate) END
                , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') )
                , Object_Car.ValueData
                , View_PersonalDriver.PersonalName 
@@ -972,11 +974,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.09.23         *
  27.04.21         *
  31.01.19         *
  21.06.18         * add tmpDataReestr
@@ -989,4 +992,4 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 
 -- тест
 -- SELECT * FROM gpReport_Transport (inStartDate:= '06.03.2021', inEndDate:= '10.03.2021', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_Transport(inStartDate := ('04.03.2020')::TDateTime , inEndDate := ('05.03.2020')::TDateTime , inCarId := 0 , inBranchId := 8380 ,  inSession := '5');
+-- select * from gpReport_Transport(inStartDate := ('04.08.2023')::TDateTime , inEndDate := ('10.08.2023')::TDateTime , inCarId := 0 , inBranchId := 8380 ,  inisMonth:= false, inSession := '5');

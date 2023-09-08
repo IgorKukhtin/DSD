@@ -3,7 +3,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1041#1088#1080#1075#1072#1076#1099')>'
-  ClientHeight = 284
+  ClientHeight = 383
   ClientWidth = 354
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 73
-    Top = 223
+    Top = 345
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   end
   object cxButton2: TcxButton
     Left = 194
-    Top = 223
+    Top = 345
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 8
-    Top = 178
+    Top = 259
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 8
-    Top = 157
+    Top = 238
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel6: TcxLabel
@@ -81,12 +81,12 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   end
   object cxLabel4: TcxLabel
     Left = 8
-    Top = 107
+    Top = 188
     Caption = #1050#1086#1084#1091':'
   end
   object edUnitTo: TcxButtonEdit
     Left = 8
-    Top = 128
+    Top = 209
     Properties.Buttons = <
       item
         Default = True
@@ -98,12 +98,12 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   end
   object cxLabel8: TcxLabel
     Left = 8
-    Top = 61
+    Top = 142
     Caption = #1054#1090' '#1082#1086#1075#1086':'
   end
   object edUnitFrom: TcxButtonEdit
     Left = 8
-    Top = 80
+    Top = 161
     Properties.Buttons = <
       item
         Default = True
@@ -114,12 +114,62 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
     Width = 327
   end
   object cbIsDays: TcxCheckBox
-    Left = 256
-    Top = 27
+    Left = 20
+    Top = 64
     Caption = #1087#1086' '#1044#1072#1090#1072#1084
     Properties.ReadOnly = False
     TabOrder = 12
     Width = 79
+  end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 92
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+  end
+  object edUnit: TcxButtonEdit
+    Left = 8
+    Top = 115
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 327
+  end
+  object cbisGoods: TcxCheckBox
+    Left = 133
+    Top = 64
+    Caption = #1087#1086' '#1058#1086#1074#1072#1088#1091
+    Properties.ReadOnly = False
+    TabOrder = 15
+    Width = 74
+  end
+  object cbisMovement: TcxCheckBox
+    Left = 244
+    Top = 64
+    Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 16
+    Width = 102
+  end
+  object cxLabel3: TcxLabel
+    Left = 8
+    Top = 287
+    Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+  end
+  object edModelService: TcxButtonEdit
+    Left = 8
+    Top = 305
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 327
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -127,8 +177,8 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
     Left = 80
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 48
-    Top = 222
+    Left = 32
+    Top = 320
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -140,8 +190,8 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 112
-    Top = 27
+    Left = 104
+    Top = 19
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -219,9 +269,59 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoods'
+        Value = Null
+        Component = cbisGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMovement'
+        Value = Null
+        Component = cbisMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelServiceId'
+        Value = Null
+        Component = GuidesModelService
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelServiceName'
+        Value = Null
+        Component = GuidesModelService
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
-    Top = 191
+    Top = 313
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -251,7 +351,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 136
-    Top = 166
+    Top = 247
   end
   object GuidesUnitTo: TdsdGuides
     KeyField = 'Id'
@@ -281,7 +381,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 184
-    Top = 111
+    Top = 192
   end
   object GuidesUnitFrom: TdsdGuides
     KeyField = 'Id'
@@ -311,6 +411,67 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 92
-    Top = 86
+    Top = 167
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 140
+    Top = 102
+  end
+  object GuidesModelService: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edModelService
+    isShowModal = True
+    FormNameParam.Value = 'TModelServiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TModelServiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesModelService
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesModelService
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 285
   end
 end

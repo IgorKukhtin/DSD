@@ -3,7 +3,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1087#1091#1090#1077#1074#1099#1084' '#1083#1080#1089#1090#1072#1084'>'
-  ClientHeight = 169
+  ClientHeight = 199
   ClientWidth = 270
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 15
-    Top = 124
+    Top = 158
     Width = 75
     Height = 23
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
   end
   object cxButton2: TcxButton
     Left = 149
-    Top = 124
+    Top = 158
     Width = 75
     Height = 23
     Caption = #1054#1090#1084#1077#1085#1072
@@ -64,12 +64,12 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
   end
   object cxLabel8: TcxLabel
     Left = 8
-    Top = 56
+    Top = 90
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit
     Left = 8
-    Top = 77
+    Top = 111
     Properties.Buttons = <
       item
         Default = True
@@ -79,6 +79,14 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
     TabOrder = 7
     Width = 232
   end
+  object cbIsMonth: TcxCheckBox
+    Left = 140
+    Top = 70
+    Caption = #1087#1086' Me'#1089#1103#1094#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 8
+    Width = 93
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -86,7 +94,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 120
-    Top = 112
+    Top = 146
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -109,6 +117,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -116,6 +125,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
@@ -123,6 +133,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -131,26 +142,38 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverId'
         Value = ''
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverName'
         Value = ''
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsMonth'
+        Value = Null
+        Component = cbIsMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
-    Top = 56
+    Top = 90
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -161,6 +184,7 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -169,8 +193,9 @@ object Report_TransportDialogForm: TReport_TransportDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
-    Top = 55
+    Top = 89
   end
 end
