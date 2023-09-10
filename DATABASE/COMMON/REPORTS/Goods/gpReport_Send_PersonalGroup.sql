@@ -74,6 +74,26 @@ BEGIN
                              WHERE Object.DescId = zc_Object_Goods()
                                AND COALESCE (inGoodsGroupId, 0) = 0
                             )
+        -- должности из штатного расписания
+      , tmpPosition_ModelService AS (SELECT DISTINCT ObjectLink_StaffList_Position.ChildObjectId AS PositionId
+                                     FROM ObjectLink AS ObjectLink_ModelService
+                                          JOIN Object ON Object.Id       = ObjectLink_ModelService.ObjectId
+                                                     -- не удален
+                                                     AND Object.isErased = FALSE
+                                          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+                                                               ON ObjectLink_StaffListCost_StaffList.ObjectId = ObjectLink_ModelService.ObjectId
+                                                              AND ObjectLink_StaffListCost_StaffList.DescId   = zc_ObjectLink_StaffListCost_StaffList()
+                                          JOIN Object AS Object_StaffList ON Object_StaffList.Id       = ObjectLink_StaffListCost_StaffList.ChildObjectId
+                                                                         -- не удален
+                                                                         AND Object_StaffList.isErased = FALSE
+                                          INNER JOIN ObjectLink AS ObjectLink_StaffList_Position
+                                                                ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                                                               AND ObjectLink_StaffList_Position.DescId   = zc_ObjectLink_StaffList_Position()
+   
+                                     WHERE ObjectLink_ModelService.ChildObjectId = inModelServiceId
+                                       AND ObjectLink_ModelService.DescId        = zc_ObjectLink_StaffListCost_ModelService()
+                                    )
+
         -- товары из модели начисления
       , tmpGoods_ModelService AS (WITH
                                   -- Главные элементы Модели начисления

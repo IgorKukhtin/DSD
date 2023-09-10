@@ -446,7 +446,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
       Width = 199
     end
     object cbIsDays: TcxCheckBox
-      Left = 759
+      Left = 761
       Top = 31
       Action = actRefreshDay
       Properties.ReadOnly = False
@@ -472,7 +472,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     end
     object cbisGoods: TcxCheckBox
       Left = 830
-      Top = 32
+      Top = 31
       Action = actRefreshGoods
       Properties.ReadOnly = False
       TabOrder = 13
@@ -480,7 +480,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
     end
     object cbisMovement: TcxCheckBox
       Left = 918
-      Top = 32
+      Top = 31
       Action = actRefreshMovement
       Properties.ReadOnly = False
       TabOrder = 14
