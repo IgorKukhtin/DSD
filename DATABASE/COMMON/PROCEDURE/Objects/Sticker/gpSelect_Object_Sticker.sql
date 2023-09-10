@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Sticker(
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar -- , StickerName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, TradeMarkName_Goods TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar, TradeMarkName_Goods TVarChar
              , StickerGroupId Integer, StickerGroupName TVarChar
              , StickerTypeId Integer, StickerTypeName TVarChar
              , StickerTagId Integer, StickerTagName TVarChar
@@ -314,6 +314,7 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
+            , Object_Measure.ValueData          AS MeasureName
             , Object_TradeMark_Goods.ValueData  AS TradeMarkName_Goods
             
             , Object_StickerGroup.Id            AS StickerGroupId
@@ -370,6 +371,11 @@ BEGIN
                                   ON ObjectLink_Sticker_Goods.ObjectId = Object_Sticker.Id
                                  AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Sticker_Goods.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerGroup
                                   ON ObjectLink_Sticker_StickerGroup.ObjectId = Object_Sticker.Id
