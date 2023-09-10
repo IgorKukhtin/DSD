@@ -350,6 +350,7 @@ END IF;
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_To.UnitId > 0)
        AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       -- AND 1=0
        -- AND Object_To.Id not in (8459, 846, 8461, 256716, 1387416) -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
        -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
        AND vbIsReturnIn = TRUE
