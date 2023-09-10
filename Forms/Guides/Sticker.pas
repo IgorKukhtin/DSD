@@ -184,6 +184,7 @@ type
     cb70_70: TcxCheckBox;
     ceRetail: TcxButtonEdit;
     RetailGuides: TdsdGuides;
+    MeasureName: TcxGridDBColumn;
 
   private
     { Private declarations }
