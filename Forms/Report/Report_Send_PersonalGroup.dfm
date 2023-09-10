@@ -5,6 +5,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -287
   ExplicitWidth = 1197
   ExplicitHeight = 438
   PixelsPerInch = 96
@@ -68,6 +69,11 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountOut_kg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountHour
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -148,15 +154,14 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 70
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 120
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
@@ -164,7 +169,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 120
           end
           object PersonalGroupName: TcxGridDBColumn
             Caption = #1041#1088#1080#1075#1072#1076#1072
@@ -190,16 +195,6 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object AmountHour: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1088#1072#1073'. '#1095#1072#1089#1086#1074
-            DataBinding.FieldName = 'AmountHour'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -208,7 +203,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 35
+            Width = 55
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -218,7 +213,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Width = 151
           end
           object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -253,18 +248,30 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Options.Editing = False
             Width = 70
           end
+          object AmountHour: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
+            DataBinding.FieldName = 'AmountHour'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+            Width = 70
+          end
           object CountPack: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1087#1072#1082#1077#1090#1086#1074', '#1080#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076
+            Caption = #1055#1072#1082#1077#1090#1099' '#1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'CountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088#1072#1089#1093#1086#1076' "'#1084#1080#1085#1091#1089'" '#1087#1088#1080#1093#1086#1076
             Width = 70
           end
           object CountPack_in: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1087#1072#1082#1077#1090#1086#1074' '#1087#1088#1080#1093#1086#1076
+            Caption = #1055#1072#1082#1077#1090#1099' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'CountPack_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -274,7 +281,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Width = 70
           end
           object CountPack_out: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1087#1072#1082#1077#1090#1086#1074' '#1088#1072#1089#1093#1086#1076
+            Caption = #1055#1072#1082#1077#1090#1099' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'CountPack_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -284,7 +291,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Width = 70
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1080#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076
+            Caption = #1050#1086#1083'-'#1074#1086' '#1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -292,10 +299,11 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088#1072#1089#1093#1086#1076' "'#1084#1080#1085#1091#1089'" '#1087#1088#1080#1093#1086#1076
             Width = 70
           end
           object AmountIn: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1087#1088#1080#1093#1086#1076
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -306,7 +314,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Width = 70
           end
           object AmountOut: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1088#1072#1089#1093#1086#1076
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -317,17 +325,18 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Width = 70
           end
           object Amount_kg: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1080#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076', '#1074#1077#1089
+            Caption = #1042#1077#1089' '#1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'Amount_kg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088#1072#1089#1093#1086#1076' "'#1084#1080#1085#1091#1089'" '#1087#1088#1080#1093#1086#1076
             Width = 70
           end
           object AmountIn_kg: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
+            Caption = #1042#1077#1089' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn_kg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -337,7 +346,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
             Width = 70
           end
           object AmountOut_kg: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1088#1072#1089#1093#1086#1076', '#1074#1077#1089
+            Caption = #1042#1077#1089' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut_kg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -349,6 +358,7 @@ inherited Report_Send_PersonalGroupForm: TReport_Send_PersonalGroupForm
           object isError: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'isError'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70

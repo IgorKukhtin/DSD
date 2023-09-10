@@ -161,7 +161,7 @@ BEGIN
 
                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile_70_70
                                                       ON ObjectLink_Sticker_StickerFile_70_70.ObjectId = Object_Sticker.Id 
-                                                     AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile_70_70()
+                                                     AND ObjectLink_Sticker_StickerFile_70_70.DescId = zc_ObjectLink_Sticker_StickerFile_70_70()
                                  LEFT JOIN Object AS Object_StickerFile_70_70 ON Object_StickerFile_70_70.Id = ObjectLink_Sticker_StickerFile_70_70.ChildObjectId
                
                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value1
@@ -336,9 +336,9 @@ BEGIN
             , tmpStickerFile.Name               AS StickerFileName_inf
             , Object_TradeMark_StickerFile.ValueData  AS TradeMarkName_StickerFile
 
-            , Object_StickerFile_70_70.Id        AS StickerFileId_70_70
-            , Object_StickerFile_70_70.ValueData AS StickerFileName_70_70 
-            , Object_TradeMark_StickerFile_70_70.ValueData  AS TradeMarkName_StickerFile_70_70
+            , Object_StickerFile_70_70.Id                                   AS StickerFileId_70_70
+            , (Object_StickerFile_70_70.ValueData  || '_70_70') :: TVarChar AS StickerFileName_70_70 
+            , Object_TradeMark_StickerFile_70_70.ValueData                  AS TradeMarkName_StickerFile_70_70
 
             , ObjectBlob_Info.ValueData         AS Info
                                     
@@ -403,7 +403,7 @@ BEGIN
 
              LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile_70_70
                                   ON ObjectLink_Sticker_StickerFile_70_70.ObjectId = Object_Sticker.Id 
-                                 AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile_70_70()
+                                 AND ObjectLink_Sticker_StickerFile_70_70.DescId = zc_ObjectLink_Sticker_StickerFile_70_70()
              LEFT JOIN Object AS Object_StickerFile_70_70 ON Object_StickerFile_70_70.Id = ObjectLink_Sticker_StickerFile_70_70.ChildObjectId
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Value1
@@ -452,7 +452,7 @@ BEGIN
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark_70_70
                                   ON ObjectLink_StickerFile_TradeMark_70_70.ObjectId = Object_StickerFile_70_70.Id
-                                 AND ObjectLink_StickerFile_TradeMark_70_70.DescId = zc_ObjectLink_StickerFile_TradeMark()
+                                 AND ObjectLink_StickerFile_TradeMark_70_70.DescId   = zc_ObjectLink_StickerFile_TradeMark()
              LEFT JOIN Object AS Object_TradeMark_StickerFile_70_70 ON Object_TradeMark_StickerFile_70_70.Id = ObjectLink_StickerFile_TradeMark_70_70.ChildObjectId
             
              LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
@@ -473,4 +473,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Sticker (inShowErased:=FALSE, inShowAll:=TRUE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Sticker (inShowErased:=FALSE, inShowAll:=FALSE, inSession := zfCalc_UserAdmin())

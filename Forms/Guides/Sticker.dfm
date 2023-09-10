@@ -68,7 +68,7 @@ object StickerForm: TStickerForm
         Width = 120
       end
       object StickerFileName_70_70: TcxGridDBColumn
-        Caption = #1064#1040#1041#1051#1054#1053' 70_70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
+        Caption = #1064#1040#1041#1051#1054#1053' 70x70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
         DataBinding.FieldName = 'StickerFileName_70_70'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -144,7 +144,7 @@ object StickerForm: TStickerForm
         Width = 150
       end
       object TradeMarkName_StickerFile_70_70: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' 70_70 '#1080#1085#1076#1080#1074#1080#1076'.)'
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' 70x70 '#1080#1085#1076#1080#1074#1080#1076'.)'
         DataBinding.FieldName = 'TradeMarkName_StickerFile_70_70'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -441,7 +441,7 @@ object StickerForm: TStickerForm
           Width = 120
         end
         object colStickerFileName_70_70: TcxGridDBColumn
-          Caption = #1064#1040#1041#1051#1054#1053' 70_70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
+          Caption = #1064#1040#1041#1051#1054#1053' 70x70 ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
           DataBinding.FieldName = 'StickerFileName_70_70'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -466,7 +466,7 @@ object StickerForm: TStickerForm
           Width = 150
         end
         object colTradeMarkName_StickerFile_70_70: TcxGridDBColumn
-          Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' 70_70 '#1080#1085#1076#1080#1074#1080#1076'.)'
+          Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' 70x70 '#1080#1085#1076#1080#1074#1080#1076'.)'
           DataBinding.FieldName = 'TradeMarkName_StickerFile_70_70'
           Visible = False
           HeaderAlignmentHorz = taCenter

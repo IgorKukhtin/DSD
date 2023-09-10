@@ -64,17 +64,26 @@ object StickerFileForm: TStickerFileForm
         HeaderAlignmentVert = vaCenter
         Width = 123
       end
+      object Name_70_70: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' 70x70'
+        DataBinding.FieldName = 'Name_70_70'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object isDefault: TcxGridDBColumn
-        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        Caption = #1043#1083#1072#1074#1085'.'
         DataBinding.FieldName = 'isDefault'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 46
+        HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        Width = 50
       end
       object isSize70: TcxGridDBColumn
-        Caption = #1056#1072#1079#1084#1077#1088' 70*70'
+        Caption = '70x70 ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'isSize70'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

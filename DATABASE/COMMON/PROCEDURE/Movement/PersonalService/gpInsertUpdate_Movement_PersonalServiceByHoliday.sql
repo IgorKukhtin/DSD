@@ -9,17 +9,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalServiceByHoliday(
     IN inMovementId             Integer   , -- док. отпуска
     IN inMemberId               Integer   ,
     IN inPersonalId             Integer   ,
-    IN inPersonalServiceListId  Integer   , -- 
-    IN inMovementId_1           Integer   , -- 
+    IN inPersonalServiceListId  Integer   , --
+    IN inMovementId_1           Integer   , --
     IN inMovementId_2           Integer   ,
     IN inSummHoliday1           TFloat    , --
     IN inSummHoliday2           TFloat    , --
     IN inAmountCompensation     TFloat    ,
     IN inServiceDate1           TDateTime , -- Месяц начислений
     IN inServiceDate2           TDateTime , -- Месяц начислений
-    IN inUnitId                 Integer   , -- 
-    IN inPositionId             Integer   , 
-    IN inisMain                 Boolean   , 
+    IN inUnitId                 Integer   , --
+    IN inPositionId             Integer   ,
+    IN inisMain                 Boolean   ,
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -96,7 +96,7 @@ BEGIN
      THEN
          -- сумма из док начисления - 1
          vbSummHoliday1 := (SELECT SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
-                            FROM MovementItem 
+                            FROM MovementItem
                                  INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                               ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                              AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
@@ -107,7 +107,7 @@ BEGIN
                             );
          -- сумма из док начисления - 2
          vbSummHoliday2 := (SELECT SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
-                            FROM MovementItem 
+                            FROM MovementItem
                                  INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                               ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                              AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
@@ -116,56 +116,57 @@ BEGIN
                               AND MovementItem.isErased = FALSE
                               AND MovementItem.ObjectId = inPersonalId
                             );
-         -- расчет по "другим" отпускам для периода 1 и 2                  
-         vbSummHoliday1_calc := (WITH
-                                 -- все отпуска
-                                 tmpMovementAll AS (SELECT *
-                                                    FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
-                                                                                        , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-                                                                                        , inIsErased  := FALSE
-                                                                                        , inJuridicalBasisId:= 0
-                                                                                        , inSession:= inSession) AS tmp
-                                                    WHERE tmp.MemberId = inMemberId
-                                                      -- !!!без текущего документа!!!
-                                                      AND tmp.Id <> inMovementId
-                                                    )
-                                 SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday1,0)) AS SummHoliday_calc 
+         -- расчет по "другим" отпускам для периода 1 и 2
+         vbSummHoliday1_calc := (WITH -- все отпуска
+                                      tmpMovementAll AS (SELECT *
+                                                         FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
+                                                                                             , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                                                             , inIsErased  := FALSE
+                                                                                             , inJuridicalBasisId:= 0
+                                                                                             , inSession:= inSession) AS tmp
+                                                         WHERE tmp.MemberId = inMemberId
+                                                           -- !!!без текущего документа!!!
+                                                           AND tmp.Id <> inMovementId
+                                                         )
+                                 -- получили все, где док начисления ЗП - inMovementId_1
+                                 SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday1,0)) AS SummHoliday_calc
                                  FROM MovementFloat AS MovementFloat_MovementId
                                       INNER JOIN tmpMovementAll ON tmpMovementAll.Id     = MovementFloat_MovementId.MovementId
                                                                AND tmpMovementAll.isLoad = TRUE
                                  WHERE MovementFloat_MovementId.ValueData ::Integer = inMovementId_1
                                    AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
                                 );
-         vbSummHoliday2_calc := (WITH
-                                 --все отпуска
-                                 tmpMovementAll AS (SELECT *
-                                                    FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
-                                                                                        , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-                                                                                        , inIsErased  := FALSE
-                                                                                        , inJuridicalBasisId:= 0
-                                                                                        , inSession:= inSession) AS tmp
-                                                    WHERE tmp.MemberId = inMemberId
-                                                      -- !!!без текущего документа!!!
-                                                      AND tmp.Id <> inMovementId
-                                                    )
-                                 SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday2,0)) AS SummHoliday_calc 
+
+         vbSummHoliday2_calc := (WITH -- все отпуска
+                                      tmpMovementAll AS (SELECT *
+                                                         FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
+                                                                                             , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                                                             , inIsErased  := FALSE
+                                                                                             , inJuridicalBasisId:= 0
+                                                                                             , inSession:= inSession) AS tmp
+                                                         WHERE tmp.MemberId = inMemberId
+                                                           -- !!!без текущего документа!!!
+                                                           AND tmp.Id <> inMovementId
+                                                         )
+                                 -- получили все, где док начисления ЗП - inMovementId_2
+                                 SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday2,0)) AS SummHoliday_calc
                                  FROM MovementFloat AS MovementFloat_MovementItemId
                                       INNER JOIN tmpMovementAll ON tmpMovementAll.Id = MovementFloat_MovementItemId.MovementId
                                  WHERE MovementFloat_MovementItemId.ValueData ::Integer = inMovementId_2
                                    AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                                 );         
+                                );
      END IF;
-     
 
-     IF vbUserId IN (5, 9457) AND 1=1
+
+     IF vbUserId IN (5, 9457) AND 1=0
      THEN
          --
          RAISE EXCEPTION 'Test.сумма 1 период <%> + <%> , сумма 2 период <%> + <%>', inSummHoliday1, vbSummHoliday1, inSummHoliday2, vbSummHoliday2;
-     END IF; 
+     END IF;
 
      -- если нулевая сумма - 1
      IF COALESCE (vbSummHoliday1, 0) = 0 OR vbSummHoliday1 <> inSummHoliday1
-     THEN 
+     THEN
          -- Выбираем сохраненные данные из документа
          CREATE TEMP TABLE tmpMI_1 ON COMMIT DROP AS
                 SELECT tmp.*
@@ -180,7 +181,7 @@ BEGIN
                                                                      , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate1)
                                                                      , inServiceDate             := inServiceDate1
                                                                      , inComment                 := '' ::TVarChar
-                                                                     , inPersonalServiceListId   := inPersonalServiceListId 
+                                                                     , inPersonalServiceListId   := inPersonalServiceListId
                                                                      , inJuridicalId             := 0
                                                                      , inUserId                  := vbUserId
                                                                       );
@@ -217,7 +218,7 @@ BEGIN
                                                             , inInfoMoneyId           := tmpMI.InfoMoneyId
                                                             , inUnitId                := tmpMI.UnitId
                                                             , inPositionId            := tmpMI.PositionId                                       ::Integer
-                                                            , inMemberId              := 0                                                      ::Integer 
+                                                            , inMemberId              := 0                                                      ::Integer
                                                             , inPersonalServiceListId := tmpMI.PersonalServiceListId
                                                             , inFineSubjectId         := COALESCE (tmpMI.FineSubjectId,0)                       ::Integer
                                                             , inUnitFineSubjectId     := COALESCE (tmpMI.UnitFineSubjectId,0)                   ::Integer
@@ -260,7 +261,7 @@ BEGIN
                FROM (SELECT inMemberId              AS MemberId
                           , inPersonalId            AS PersonalId
                           , inPositionId            AS PositionId
-                          , inUnitId                AS UnitId       
+                          , inUnitId                AS UnitId
                     ) AS tmp
                     LEFT JOIN tmpMI_1 AS tmpMI ON tmpMI.MemberId_Personal = tmp.MemberId
                ORDER BY tmpMI.SummHoliday DESC, tmpMI.SummService DESC
@@ -269,11 +270,11 @@ BEGIN
          ;
 
      END IF;
-     
+
 
      -- если нулевая сумма - 2
      IF (COALESCE (vbSummHoliday2, 0) = 0 OR vbSummHoliday2 <> inSummHoliday2) AND inSummHoliday2 > 0
-     THEN 
+     THEN
          IF COALESCE (inMovementId_2, 0) = 0
          THEN
              -- сохранили <Документ>
@@ -282,7 +283,7 @@ BEGIN
                                                                      , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate2)
                                                                      , inServiceDate             := inServiceDate2
                                                                      , inComment                 := '' ::TVarChar
-                                                                     , inPersonalServiceListId   := inPersonalServiceListId 
+                                                                     , inPersonalServiceListId   := inPersonalServiceListId
                                                                      , inJuridicalId             := 0
                                                                      , inUserId                  := vbUserId
                                                                       );
@@ -325,7 +326,7 @@ BEGIN
                                                             , inInfoMoneyId           := tmpMI.InfoMoneyId
                                                             , inUnitId                := tmpMI.UnitId
                                                             , inPositionId            := tmpMI.PositionId                                       ::Integer
-                                                            , inMemberId              := 0                                                      ::Integer 
+                                                            , inMemberId              := 0                                                      ::Integer
                                                             , inPersonalServiceListId := tmpMI.PersonalServiceListId
                                                             , inFineSubjectId         := COALESCE (tmpMI.FineSubjectId,0)                       ::Integer
                                                             , inUnitFineSubjectId     := COALESCE (tmpMI.UnitFineSubjectId,0)                   ::Integer
@@ -368,7 +369,7 @@ BEGIN
                FROM (SELECT inMemberId              AS MemberId
                           , inPersonalId            AS PersonalId
                           , inPositionId            AS PositionId
-                          , inUnitId                AS UnitId       
+                          , inUnitId                AS UnitId
                     ) AS tmp
                     LEFT JOIN tmpMI_2 AS tmpMI ON tmpMI.MemberId_Personal = tmp.MemberId
                ORDER BY tmpMI.SummHoliday DESC, tmpMI.SummService DESC
@@ -382,15 +383,15 @@ BEGIN
      -- сохранили свойство <Ср.ЗП за день >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), inMovementId, inAmountCompensation);
      -- сохранили свойство <№ док Начисление зарплаты(первый период) 	>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), inMovementId, inMovementId_1); 
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), inMovementId, inMovementId_1);
 
      -- сохранили свойство <№ док Начисление зарплаты(первый период) 	>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), inMovementId, CASE WHEN inSummHoliday1 > 0 OR inSummHoliday2 > 0 THEN TRUE ELSE FALSE END); 
-     
-     -- сохранили свойство <№ док Начисление зарплаты(второй период)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), inMovementId, CASE WHEN inSummHoliday1 > 0 OR inSummHoliday2 > 0 THEN TRUE ELSE FALSE END);
+
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), inMovementId, CASE WHEN inSummHoliday2 > 0 THEN COALESCE (inMovementId_2, 0) ELSE 0 END);
-   
-   
+
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), inMovementId, CURRENT_TIMESTAMP);
      -- сохранили свойство <>
@@ -410,7 +411,7 @@ BEGIN
                        , (COALESCE (inSummHoliday1,0) + COALESCE (vbSummHoliday1_calc,0))
                        , (COALESCE (inSummHoliday2,0) + COALESCE (vbSummHoliday2_calc,0))
                         ;
-     END IF; 
+     END IF;
 
 END;
 $BODY$

@@ -97,6 +97,9 @@ type
     PanelIsPreview: TPanel;
     cbPreviewPrint: TcxCheckBox;
     Comment: TcxGridDBColumn;
+    PanelIs_70_70: TPanel;
+    cb_70_70: TcxCheckBox;
+    StickerFileName_70_70: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -138,6 +141,7 @@ type
     procedure cbStartEndClick(Sender: TObject);
     procedure btnDialogStickerTareClick(Sender: TObject);
     procedure cbStartEndEnter(Sender: TObject);
+    procedure cb_70_70Click(Sender: TObject);
   private
     //FReport : TfrxReport;
     fCloseOK : Boolean;
@@ -184,9 +188,14 @@ begin
      fStartShowReport:= TRUE;
      //
      if (fStickerPropertyId = CDS.FieldByName('Id').asInteger) and (CDS.RecordCount = 1)
+    and (((CDS.FieldByName('StickerFileName').asString       = fStickerFileName)and(cb_70_70.Checked = FALSE))
+      or ((CDS.FieldByName('StickerFileName_70_70').asString = fStickerFileName)and(cb_70_70.Checked = TRUE))
+        )
      then exit;
      //
-     if (CDS.FieldByName('StickerFileName').asString = '')or (CDS.RecordCount <> 1)
+     if  ((CDS.FieldByName('StickerFileName').asString       = '')and(cb_70_70.Checked = FALSE))
+      or ((CDS.FieldByName('StickerFileName_70_70').asString = '')and(cb_70_70.Checked = TRUE))
+      or (CDS.RecordCount <> 1)
      then begin
               if fStickerPropertyId = -1 then exit;
               fStickerPropertyId:= -1;
@@ -210,13 +219,25 @@ begin
               //Sleep(10);
               //Application.ProcessMessages;
               //
-              if fStickerFileName <> CDS.FieldByName('StickerFileName').asString then
+              if ((fStickerFileName <> CDS.FieldByName('StickerFileName').asString)      and(cb_70_70.Checked = FALSE))
+              or ((fStickerFileName <> CDS.FieldByName('StickerFileName_70_70').asString)and(cb_70_70.Checked = TRUE))
+              then
               begin
                     FReport.Clear;
-                    StickerFile_Array[GetArrayStickerFileList_Index_byName(StickerFile_Array,CDS.FieldByName('StickerFileName').asString)].Report.Position := 0;
-                    FReport.LoadFromStream(StickerFile_Array[GetArrayStickerFileList_Index_byName(StickerFile_Array,CDS.FieldByName('StickerFileName').asString)].Report);
-                    //
-                    fStickerFileName:= CDS.FieldByName('StickerFileName').asString;
+                    if cb_70_70.Checked = TRUE then
+                    begin
+                        StickerFile_Array[GetArrayStickerFileList_Index_byName_70_70(StickerFile_Array,CDS.FieldByName('StickerFileName_70_70').asString)].Report_70_70.Position := 0;
+                        FReport.LoadFromStream(StickerFile_Array[GetArrayStickerFileList_Index_byName_70_70(StickerFile_Array,CDS.FieldByName('StickerFileName_70_70').asString)].Report_70_70);
+                        //
+                        fStickerFileName:= CDS.FieldByName('StickerFileName_70_70').asString;
+                    end
+                    else
+                    begin
+                        StickerFile_Array[GetArrayStickerFileList_Index_byName(StickerFile_Array,CDS.FieldByName('StickerFileName').asString)].Report.Position := 0;
+                        FReport.LoadFromStream(StickerFile_Array[GetArrayStickerFileList_Index_byName(StickerFile_Array,CDS.FieldByName('StickerFileName').asString)].Report);
+                        //
+                        fStickerFileName:= CDS.FieldByName('StickerFileName').asString;
+                    end;
               end;
 
               //
@@ -251,10 +272,12 @@ begin
     with spSelectPrintForm do
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
+       ParamByName('inRetailId').Value:=0;
 
        //ParamByName('inIsJPG').Value   := FALSE;
        ParamByName('inIsJPG').Value   := TRUE;
        ParamByName('inIsLength').Value:= FALSE;
+       ParamByName('inIs70_70').Value:= cb_70_70.Checked;
 
        //1 - печатать дату нач/конечн произв-ва на этикетке
        ParamByName('inIsStartEnd').Value     := ParamsMI.ParamByName('isStartEnd_Sticker').AsBoolean;
@@ -432,6 +455,11 @@ begin
      else if (Length(trim(EditGoodsCode.Text))>0)
           then ActiveControl:= EditGoodsKindCode
           else ActiveControl:= EditGoodsCode;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.cb_70_70Click(Sender: TObject);
+begin
+    pShowReport;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.CancelCxFilter;
@@ -627,7 +655,7 @@ procedure TGuideGoodsStickerForm.CDSFilterRecord(DataSet: TDataSet;var Accept: B
 var
    GoodsKindCode:Integer;
 begin
-     if rgGoodsKind.Items.Count=1
+     if (rgGoodsKind.Items.Count=1)or(EditGoodsKindCode.Text='')
      then GoodsKindCode:=0
      else try GoodsKindCode:=StrToInt(EditGoodsKindCode.Text) except GoodsKindCode:=0;end;
      //

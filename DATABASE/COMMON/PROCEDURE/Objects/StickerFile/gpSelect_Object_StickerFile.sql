@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StickerFile(
     IN inShowAll     Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_70_70 TVarChar
              , LanguageId Integer, LanguageName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar, ItemName TVarChar
@@ -40,7 +40,8 @@ BEGIN
        SELECT
              Object_StickerFile.Id           AS Id
            , Object_StickerFile.ObjectCode   AS Code
-           , Object_StickerFile.ValueData    AS Name
+           , CASE WHEN ObjectForm.ValueData       <> '' THEN Object_StickerFile.ValueData              ELSE '' END :: TVarChar AS Name
+           , CASE WHEN ObjectForm_70_70.ValueData <> '' THEN Object_StickerFile.ValueData || '_70_70'  ELSE '' END :: TVarChar AS Name_70_70
 
            , Object_Language.Id              AS LanguageId
            , Object_Language.ValueData       AS LanguageName
@@ -235,11 +236,21 @@ BEGIN
                                 AND ObjectLink_StickerFile_Juridical.DescId = zc_ObjectLink_StickerFile_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_StickerFile_Juridical.ChildObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
+
+            LEFT JOIN Object AS ObjectForm
+                             ON ObjectForm.ValueData = (Object_StickerFile.ValueData || '.Sticker') :: TVarChar
+                            AND ObjectForm.DescId    = zc_Object_Form()
+            --
+            LEFT JOIN Object AS ObjectForm_70_70
+                             ON ObjectForm_70_70.ValueData = (Object_StickerFile.ValueData || '_70_70.Sticker') :: TVarChar
+                            AND ObjectForm_70_70.DescId    = zc_Object_Form()
+
       UNION ALL
        SELECT
              0    :: Integer  AS Id
            , 0    :: Integer  AS Code
            , 'УДАЛИТЬ Значение' :: TVarChar AS Name
+           , ''                 :: TVarChar AS Name_70_70
 
            , 0    :: Integer  AS LanguageId
            , ''   :: TVarChar AS LanguageName

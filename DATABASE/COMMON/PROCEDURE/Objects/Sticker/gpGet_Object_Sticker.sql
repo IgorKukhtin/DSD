@@ -107,7 +107,9 @@ BEGIN
             , Object_StickerFile.Id             AS StickerFileId
             , Object_StickerFile.ValueData      AS StickerFileName
             , Object_StickerFile_70_70.Id        AS StickerFileId_70_70
-            , Object_StickerFile_70_70.ValueData AS StickerFileName_70_70                  
+            , (Object_StickerFile_70_70.ValueData  || '_70_70') :: TVarChar AS StickerFileName_70_70 
+
+              --
             , ObjectBlob_Info.ValueData         AS isInfo
                                     
             , ObjectFloat_Value1.ValueData      AS Value1
@@ -219,4 +221,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Sticker (100, 0, '2')
+-- SELECT * FROM gpGet_Object_Sticker (3781246, 0, '2')

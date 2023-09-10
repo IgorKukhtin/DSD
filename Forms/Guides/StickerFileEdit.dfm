@@ -598,7 +598,7 @@
   object cbisSize70: TcxCheckBox
     Left = 239
     Top = 26
-    Caption = #1056#1072#1079#1084#1077#1088' 70*70'
+    Caption = #1056#1072#1079#1084#1077#1088' 70x70'
     TabOrder = 80
     Width = 97
   end

@@ -68,6 +68,7 @@ type
     bbShowAll: TdxBarButton;
     Width1: TcxGridDBColumn;
     isSize70: TcxGridDBColumn;
+    Name_70_70: TcxGridDBColumn;
   private
     { Private declarations }
   public

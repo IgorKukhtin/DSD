@@ -240,6 +240,14 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           HeaderAlignmentVert = vaCenter
           Width = 200
         end
+        object StickerFileName_70_70: TcxGridDBColumn
+          Caption = #1064#1040#1041#1051#1054#1053' 70x70'
+          DataBinding.FieldName = 'StickerFileName_70_70'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
       end
       object cxDBGridLevel: TcxGridLevel
         GridView = cxDBGridDBTableView
@@ -394,6 +402,8 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 4
+          ExplicitLeft = -1
+          ExplicitTop = 333
           object cbPreviewPrint: TcxCheckBox
             Left = 20
             Top = 0
@@ -411,6 +421,8 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitLeft = -1
+        ExplicitTop = -1
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
@@ -463,8 +475,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
           TabOrder = 2
-          ExplicitLeft = 5
-          ExplicitTop = 86
           object PanelGoodsWieghtValue: TPanel
             Left = 2
             Top = 16
@@ -480,6 +490,25 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
+          end
+        end
+        object PanelIs_70_70: TPanel
+          Left = 0
+          Top = 327
+          Width = 95
+          Height = 21
+          Align = alBottom
+          BevelOuter = bvNone
+          TabOrder = 3
+          ExplicitLeft = 5
+          ExplicitTop = 326
+          object cb_70_70: TcxCheckBox
+            Left = 15
+            Top = -1
+            Caption = '70 x 70'
+            TabOrder = 0
+            OnClick = cb_70_70Click
+            Width = 71
           end
         end
       end
@@ -731,6 +760,12 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRetailId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsJPG'
         Value = True
         DataType = ftBoolean
@@ -740,6 +775,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       item
         Name = 'inIsLength'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIs70_70'
+        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

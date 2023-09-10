@@ -47,9 +47,9 @@ BEGIN
             , Object_StickerFile.ValueData       AS StickerFileName
             , Object_TradeMark_StickerFile.ValueData  AS TradeMarkName_StickerFile
 
-            , Object_StickerFile_70_70.Id        AS StickerFileId_70_70
-            , Object_StickerFile_70_70.ValueData AS StickerFileName_70_70 
-            , Object_TradeMark_StickerFile_70_70.ValueData  AS TradeMarkName_StickerFile_70_70
+            , Object_StickerFile_70_70.Id                                   AS StickerFileId_70_70
+            , (Object_StickerFile_70_70.ValueData  || '_70_70') :: TVarChar AS StickerFileName_70_70 
+            , Object_TradeMark_StickerFile_70_70.ValueData                  AS TradeMarkName_StickerFile_70_70
 
             , Object_StickerSkin.Id              AS StickerSkinId
             , Object_StickerSkin.ValueData       AS StickerSkinName
@@ -99,7 +99,7 @@ BEGIN
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile_70_70
                                   ON ObjectLink_StickerProperty_StickerFile_70_70.ObjectId = Object_StickerProperty.Id
-                                 AND ObjectLink_StickerProperty_StickerFile_70_70.DescId = zc_ObjectLink_StickerProperty_StickerFile_70_70()
+                                 AND ObjectLink_StickerProperty_StickerFile_70_70.DescId   = zc_ObjectLink_StickerProperty_StickerFile_70_70()
              LEFT JOIN Object AS Object_StickerFile_70_70 ON Object_StickerFile_70_70.Id = ObjectLink_StickerProperty_StickerFile_70_70.ChildObjectId
 
 
