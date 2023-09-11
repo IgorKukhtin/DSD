@@ -54,7 +54,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 8
-    Top = 259
+    Top = 208
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 8
-    Top = 238
+    Top = 187
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel6: TcxLabel
@@ -80,13 +80,13 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel4: TcxLabel
-    Left = 8
-    Top = 188
+    Left = 176
+    Top = 142
     Caption = #1050#1086#1084#1091':'
   end
   object edUnitTo: TcxButtonEdit
-    Left = 8
-    Top = 209
+    Left = 176
+    Top = 161
     Properties.Buttons = <
       item
         Default = True
@@ -94,7 +94,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 327
+    Width = 159
   end
   object cxLabel8: TcxLabel
     Left = 8
@@ -111,7 +111,7 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 327
+    Width = 159
   end
   object cbIsDays: TcxCheckBox
     Left = 20
@@ -169,6 +169,23 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 18
+    Width = 327
+  end
+  object cxLabel5: TcxLabel
+    Left = 8
+    Top = 235
+    Caption = #1058#1086#1074#1072#1088':'
+  end
+  object edGoods: TcxButtonEdit
+    Left = 8
+    Top = 258
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
     Width = 327
   end
   object PeriodChoice: TPeriodChoice
@@ -319,6 +336,23 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 313
@@ -350,8 +384,8 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 247
+    Left = 176
+    Top = 191
   end
   object GuidesUnitTo: TdsdGuides
     KeyField = 'Id'
@@ -380,8 +414,8 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 184
-    Top = 192
+    Left = 240
+    Top = 160
   end
   object GuidesUnitFrom: TdsdGuides
     KeyField = 'Id'
@@ -473,5 +507,35 @@ object Report_Send_PersonalGroupDialogForm: TReport_Send_PersonalGroupDialogForm
       end>
     Left = 128
     Top = 285
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 230
   end
 end
