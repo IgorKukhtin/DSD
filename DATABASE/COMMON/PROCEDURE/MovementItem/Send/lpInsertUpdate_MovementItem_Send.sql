@@ -317,6 +317,7 @@ BEGIN
                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From())
         -- Ўины + —пецодежда
         AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_InfoMoney() AND OL.ChildObjectId IN (zc_Enum_InfoMoney_20103(), zc_Enum_InfoMoney_20202()))
+        AND inPartionGoodsId > 0
          THEN
              ioPartionGoods:= (SELECT ValueData FROM Object WHERE Id = inPartionGoodsId);
          END IF;

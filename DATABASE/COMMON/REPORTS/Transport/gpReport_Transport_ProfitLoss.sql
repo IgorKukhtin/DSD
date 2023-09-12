@@ -77,7 +77,13 @@ BEGIN
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_ServiceAdd
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_PersonalSendCash()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_PersonalSendCash
                                        , MIContainer.WhereObjectId_Analyzer          AS CarId
-                                       , MIContainer.ObjectIntId_Analyzer            AS UnitId
+                                         -- Подраделение (ОПиУ)
+                                       , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                                   THEN MILinkObject_Unit.ObjectId
+                                              ELSE MIContainer.ObjectIntId_Analyzer
+                                         END AS UnitId
+--                                     , MIContainer.ObjectIntId_Analyzer            AS UnitId
+
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
                                        , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
@@ -100,6 +106,10 @@ BEGIN
                                                                     ON MovementLinkObject_PersonalDriver.MovementId = MIContainer.MovementId
                                                                    AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
          
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                        ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId
+                                                                       AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                         ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
                                                                        AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
@@ -117,11 +127,17 @@ BEGIN
                                     AND (MIContainer.WhereObjectId_Analyzer = inCarId      OR inCarId      = 0) -- Автомобиль
                                     AND (CLO_Business.ObjectId              = inBusinessId OR inBusinessId = 0) -- Бизнес  
                                  -- AND (CLO_ProfitLoss.ContainerId > 0 OR tmpAccount_50000.AccountId > 0)
+
+                              -- AND (MIContainer.MovementDescId = zc_Movement_Transport() OR vbUserId <> 5)
+                              -- AND (MILinkObject_Unit.ObjectId = 8429 or vbUserId <> 5)
+                              -- AND (MIContainer.MovementId in (25881365, 25834263)  or vbUserId <> 5)
+
                                   GROUP BY  MIContainer.MovementId, MIContainer.MovementDescId
                                           , MIContainer.ObjectId_Analyzer
                                           , MIContainer.WhereObjectId_Analyzer 
                                           , MIContainer.ObjectIntId_Analyzer 
                                           , MIContainer.ObjectExtId_Analyzer
+                                          , MILinkObject_Unit.ObjectId
                                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END
                                           , MILinkObject_Route.ObjectId
                                           , CLO_ProfitLoss.ObjectId
@@ -143,7 +159,13 @@ BEGIN
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_ServiceAdd
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_PersonalSendCash()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_PersonalSendCash
                                        , MIContainer.WhereObjectId_Analyzer          AS CarId
-                                       , MIContainer.ObjectIntId_Analyzer            AS UnitId
+                                         -- Подраделение (ОПиУ)
+                                       , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                                   THEN MILinkObject_Unit.ObjectId
+                                              ELSE MIContainer.ObjectIntId_Analyzer
+                                         END AS UnitId
+                                     --, MIContainer.ObjectIntId_Analyzer            AS UnitId
+
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
                                        , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
@@ -160,6 +182,10 @@ BEGIN
                                                                     ON MovementLinkObject_PersonalDriver.MovementId = MIContainer.MovementId
                                                                    AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
          
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                        ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId
+                                                                       AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                         ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
                                                                        AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
@@ -174,11 +200,14 @@ BEGIN
                                     AND (MIContainer.ObjectIntId_Analyzer   = inUnitId     OR inUnitId     = 0) -- подразделение
                                     AND (MIContainer.WhereObjectId_Analyzer = inCarId      OR inCarId      = 0) -- Автомобиль
                                     AND (                                                     inBusinessId = 0) -- Бизнес  
+                                    --AND vbUserId <> 5
+
                                   GROUP BY  MIContainer.MovementId, MIContainer.MovementDescId
                                           , MIContainer.ObjectId_Analyzer
                                           , MIContainer.WhereObjectId_Analyzer 
                                           , MIContainer.ObjectIntId_Analyzer 
                                           , MIContainer.ObjectExtId_Analyzer
+                                          , MILinkObject_Unit.ObjectId
                                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END
                                           , MILinkObject_Route.ObjectId
                                           , MIContainer.AccountId_Analyzer
