@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integ
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Send_PersonalGroup (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Send_PersonalGroup (
     IN inStartDate         TDateTime ,
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_Send_PersonalGroup (
     IN inFromId            Integer   ,
     IN inToId              Integer   ,
     IN inGoodsGroupId      Integer   ,
+    IN inGoodsId           Integer   ,
     IN inModelServiceId    Integer   ,
     IN inIsMovement        Boolean   ,
     IN inIsDays            Boolean   , --
@@ -62,7 +64,7 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                         ON ObjectFloat_Weight.ObjectId = lfSelect.GoodsId
                                                        AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
-                             WHERE inGoodsGroupId <> 0
+                             WHERE inGoodsGroupId <> 0 AND COALESCE (inGoodsId,0) = 0
                             UNION ALL
                              SELECT Object.Id, ObjectLink_Goods_Measure.ObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
                              FROM Object
@@ -72,7 +74,16 @@ BEGIN
                                                         ON ObjectFloat_Weight.ObjectId = Object.Id
                                                        AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
                              WHERE Object.DescId = zc_Object_Goods()
-                               AND COALESCE (inGoodsGroupId, 0) = 0
+                               AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId,0) = 0
+                            UNION ALL
+                             SELECT inGoodsId AS GoodsId, ObjectLink_Goods_Measure.ObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+                             FROM ObjectLink AS ObjectLink_Goods_Measure 
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                        ON ObjectFloat_Weight.ObjectId = inGoodsId
+                                                       AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                             WHERE ObjectLink_Goods_Measure.ObjectId = inGoodsId
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                               AND COALESCE (inGoodsId,0) <> 0
                             )
         -- должности из штатного расписания
       , tmpPosition_ModelService AS (SELECT DISTINCT ObjectLink_StaffList_Position.ChildObjectId AS PositionId
@@ -505,4 +516,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 8459, inGoodsGroupId:= 0, inModelServiceId:=5678129  , inIsMovement:= false, inIsDays:= false, inIsGoods:= true, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 8459, inGoodsGroupId:= 0, inGoodsId:= 0, inModelServiceId:=5678129  , inIsMovement:= false, inIsDays:= false, inIsGoods:= true, inSession:= zfCalc_UserAdmin()); -- Склад Реализации

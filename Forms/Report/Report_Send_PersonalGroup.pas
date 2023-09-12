@@ -82,6 +82,9 @@ type
     GuidesModelService: TdsdGuides;
     cxLabel6: TcxLabel;
     edModelService: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public
