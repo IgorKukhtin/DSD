@@ -28,6 +28,8 @@ RETURNS TABLE (Id Integer, Comment TVarChar
              , StickerSkinName TVarChar
                -- название файла fr3 в БАЗЕ
              , StickerFileName TVarChar
+               -- название файла fr3 в БАЗЕ
+             , StickerFileName_70_70 TVarChar
                -- сколько уже прошло в печати
              , Count_begin TFloat
               )
@@ -125,7 +127,8 @@ BEGIN
                                     -- Оболочка
                                   , Object_StickerSkin.ValueData  AS StickerSkinName
                                     -- название файла fr3 в БАЗЕ
-                                  , Object_StickerFile.ValueData  AS StickerFileName
+                                  , Object_StickerFile.ValueData                    AS StickerFileName
+                                  , Object_StickerFile_70_70.ValueData || '_70_70'  AS StickerFileName_70_70
 
                              FROM Object AS Object_StickerProperty
                                   -- Свойства этикетки
@@ -184,19 +187,34 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile
                                                        ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id
                                                       AND ObjectLink_StickerProperty_StickerFile.DescId   = zc_ObjectLink_StickerProperty_StickerFile()
-
                                   -- Печать - индивидуальный - Этикетка
                                   LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile
                                                        ON ObjectLink_Sticker_StickerFile.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
                                                       AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile()
 
+                                  -- Печать 70x70 - индивидуальный - Свойства этикетки
+                                  LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile_70_70
+                                                       ON ObjectLink_StickerProperty_StickerFile_70_70.ObjectId = Object_StickerProperty.Id
+                                                      AND ObjectLink_StickerProperty_StickerFile_70_70.DescId   = zc_ObjectLink_StickerProperty_StickerFile_70_70()
+                                  -- Печать 70x70 - индивидуальный - Этикетка
+                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile_70_70
+                                                       ON ObjectLink_Sticker_StickerFile_70_70.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                      AND ObjectLink_Sticker_StickerFile_70_70.DescId = zc_ObjectLink_Sticker_StickerFile_70_70()
+
+                                  -- ТМ у Товара
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                                        ON ObjectLink_Goods_TradeMark.ObjectId = ObjectLink_Sticker_Goods.ChildObjectId
                                                       AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+
                                   -- Печать - "по умолчанию" - для конкретной ТМ
                                   LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
 
-                                  LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, COALESCE (ObjectLink_Sticker_StickerFile.ChildObjectId, tmpStickerFile.StickerFileId))
+                                  LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId
+                                                                                                  , COALESCE (ObjectLink_Sticker_StickerFile.ChildObjectId
+                                                                                                            , tmpStickerFile.StickerFileId))
+                                  LEFT JOIN Object AS Object_StickerFile_70_70 ON Object_StickerFile_70_70.Id = COALESCE (ObjectLink_StickerProperty_StickerFile_70_70.ChildObjectId
+                                                                                                              , COALESCE (ObjectLink_Sticker_StickerFile_70_70.ChildObjectId
+                                                                                                                        , tmpStickerFile.StickerFileId))
                                   LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Language
                                                        ON ObjectLink_StickerFile_Language.ObjectId = Object_StickerFile.Id
                                                       AND ObjectLink_StickerFile_Language.DescId   = zc_ObjectLink_StickerFile_Language()
@@ -231,7 +249,8 @@ BEGIN
             , tmpSticker.StickerSkinName
 
               -- название файла fr3 в БАЗЕ
-            , (tmpSticker.StickerFileName || '.Sticker') :: TVarChar AS StickerFileName
+            , (tmpSticker.StickerFileName       || '.Sticker') :: TVarChar AS StickerFileName
+            , CASE WHEN ObjectForm_70_70.ValueData <> '' THEN ObjectForm_70_70.ValueData ELSE '' END :: TVarChar AS StickerFileName_70_70
 
             , tmpMI_Weighing.Count_begin :: TFloat AS Count_begin
 
@@ -240,6 +259,10 @@ BEGIN
             LEFT JOIN tmpMI_Weighing ON tmpMI_Weighing.GoodsId     = tmpSticker.GoodsId
                                     AND tmpMI_Weighing.GoodsKindId = tmpSticker.GoodsKindId
 
+
+            LEFT JOIN Object AS ObjectForm_70_70
+                             ON ObjectForm_70_70.ValueData = (tmpSticker.StickerFileName_70_70 || '.Sticker') :: TVarChar
+                            AND ObjectForm_70_70.DescId    = zc_Object_Form()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId

@@ -223,6 +223,10 @@ BEGIN
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
                               AND MIContainer.isActive = FALSE
                             --AND (MIContainer.MovementId = 20615866 OR vbUserId <> 5)
+                            --AND (MIContainer.MovementDescId = zc_Movement_Transport() OR vbUserId <> 5)
+                            --AND (MIContainer.ObjectIntId_Analyzer = 8429 or vbUserId <> 5)
+                            --AND (MIContainer.MovementId in (25881365, 25834263)  or vbUserId <> 5)
+
                             GROUP BY MIContainer.ContainerId
                                      -- Подраделение (ОПиУ)
                                    , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
