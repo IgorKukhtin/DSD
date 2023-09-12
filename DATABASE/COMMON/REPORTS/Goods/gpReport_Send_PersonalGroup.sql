@@ -305,11 +305,9 @@ BEGIN
                                   JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
                                                                        AND MI_SheetWorkTime.isErased   = FALSE
                                                                        AND MI_SheetWorkTime.Amount     > 0
-                                  INNER JOIN MovementItemLinkObject AS MIObject_Position
-                                                                    ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
-                                                                   AND MIObject_Position.DescId         = zc_MILinkObject_Position()
-                                                                   -- Ограничение по должности
-                                                                   AND MIObject_Position.ObjectId       IN (SELECT tmpPosition_ModelService.PositionId FROM tmpPosition_ModelService)
+                                  LEFT JOIN MovementItemLinkObject AS MIObject_Position
+                                                                   ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
+                                                                  AND MIObject_Position.DescId         = zc_MILinkObject_Position()
                                   LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
                                                                    ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
                                                                   AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
@@ -327,6 +325,11 @@ BEGIN
                                   LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                    ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
                                                                   AND MIObject_PersonalGroup.DescId         = zc_MILinkObject_PersonalGroup()
+                             WHERE -- Ограничение по должности
+                                   MIObject_Position.ObjectId       IN (SELECT tmpPosition_ModelService.PositionId FROM tmpPosition_ModelService)
+                                   -- иди нет Модели
+                                OR COALESCE (inModelServiceId, 0) = 0
+
                              GROUP BY tmpOperDate.OperDate
                                     , COALESCE(MIObject_PersonalGroup.ObjectId, 0)
                                     , MovementLinkObject_Unit.ObjectId
