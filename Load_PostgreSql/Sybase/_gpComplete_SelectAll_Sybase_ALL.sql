@@ -172,11 +172,28 @@ END IF;
 --                             SELECT 8296254   AS GoodsId -- 94183
 --                             SELECT 2365   AS GoodsId -- 135
                             )
+            /*, tmp_new as  (SELECT DISTINCT HistoryCost.ContainerId
+                             FROM Container AS Container_Summ
+                                  INNER JOIN Container ON Container.Id = Container_Summ.ParentId
+                                                      AND Container.ObjectId = 6883420 
+                                  INNER JOIN HistoryCost ON HistoryCost.ContainerId  = Container_Summ.Id
+                                                        AND HistoryCost.StartDate = '01.08.2023'
+                             WHERE Container_Summ.DescId = zc_Container_Summ()
+                            )                                      
+     , tmpMovContainer AS (SELECT DISTINCT Movement.Id AS MovementId
+                           FROM Movement
+                                --INNER JOIN MovementItem  ON MovementItem.MovementId = Movement.Id
+                                --                        AND MovementItem.isErased   = FALSE
+                                -- INNER JOIN tmpGoodsContainer  ON tmpGoodsContainer.GoodsId = MovementItem.ObjectId
+                                INNER JOIN MovementItemContainer  ON MovementItemContainer.MovementId = Movement.Id
+                                                                 AND MovementItemContainer.ContainerId IN (SELECT DISTINCT tmp_new.ContainerId FROM tmp_new)
+                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                          )*/
      /*, tmpMovContainer AS (SELECT DISTINCT Movement.Id AS MovementId
                            FROM Movement
                                 INNER JOIN MovementItem  ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.isErased   = FALSE
-                                INNER JOIN tmpGoodsContainer  ON tmpGoodsContainer.GoodsId = MovementItem.ObjectId
                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                           )*/
