@@ -2405,13 +2405,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PersonalGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PersonalGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PersonalGroupDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PersonalGroupDialogForm');
   exit;
 
-{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementDialogForm'));
@@ -2690,7 +2690,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
   //
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCost_DifferenceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCost_DifferenceDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCost_DifferenceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCost_DifferenceForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementSaleReturnForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementSaleReturnForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementSaleReturnDialogForm'));

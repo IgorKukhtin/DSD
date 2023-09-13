@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_BUH (
     IN inIsPartner    Boolean   , --
     IN inIsTradeMark  Boolean   , --
     IN inIsGoods      Boolean   , --
-    IN inIsGoodsKind  Boolean   , --                               
+    IN inIsGoodsKind  Boolean   , --
     IN inIsContract   Boolean   , --
     IN inIsOLAP       Boolean   , --
     IN inSession      TVarChar    -- сессия пользователя
@@ -519,7 +519,7 @@ BEGIN
                                , tmpOperationGroup2.BranchId
                                , _tmpGoods.TradeMarkId
                                , CASE WHEN inIsGoods = TRUE     THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
-                               , CASE WHEN inIsGoodsKind = TRUE OR inIsGoods = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId        -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
+                               , CASE WHEN inIsGoodsKind = TRUE OR inIsGoods = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId            -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
 
 --                             , SUM (tmpOperationGroup2.Sale_Summ - tmpOperationGroup2.Sale_SummVAT)     AS Sale_SummMVAT
 
@@ -551,12 +551,11 @@ BEGIN
                                  , tmpOperationGroup2.BranchId
                                  , _tmpGoods.TradeMarkId
                                  , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
-                                 ,  CASE WHEN inIsGoodsKind = TRUE OR inIsGoods = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
+                                 , CASE WHEN inIsGoodsKind = TRUE OR inIsGoods = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                                  , tmpOperationGroup2.MovementDescId
                           HAVING SUM (tmpOperationGroup2.Sale_SummVAT)   <> 0
                               OR SUM (tmpOperationGroup2.Return_SummVAT) <> 0
                           )
- 
   ,_tmpMI AS (SELECT tmpOperationGroup.JuridicalId
                    , Object_Juridical.ObjectCode        AS JuridicalCode
                    , Object_Juridical.ValueData         AS JuridicalName
@@ -575,14 +574,14 @@ BEGIN
                    , tmpOperationGroup.GoodsId
                    , Object_Goods.ObjectCode            AS GoodsCode
                    , Object_Goods.ValueData             AS GoodsName
-                   , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE tmpOperationGroup.GoodsKindId END AS GoodsKindId
-                   , STRING_AGG (DISTINCT COALESCE (Object_GoodsKind.ValueData,''), '; ') ::TVarChar AS GoodsKindName
+                   , tmpOperationGroup.GoodsKindId
+                   , Object_GoodsKind.ValueData         AS GoodsKindName
                      -- сумма без НДС для скидки - !!!ТОЛЬКО!!!
-                   , SUM (tmpOperationGroup.Sale_SummMVAT)      :: TFloat AS Sale_SummMVAT
+                   , tmpOperationGroup.Sale_SummMVAT
                      -- сумма НДС
-                   , SUM (tmpOperationGroup.Sale_SummVAT)       :: TFloat AS Sale_SummVAT
+                   , tmpOperationGroup.Sale_SummVAT       :: TFloat
                      -- сумма НДС
-                   , SUM (tmpOperationGroup.Return_SummVAT)     :: TFloat AS Return_SummVAT
+                   , tmpOperationGroup.Return_SummVAT     :: TFloat
                      -- 
                    , tmpOperationGroup.MovementId_test
                      -- 
@@ -600,37 +599,14 @@ BEGIN
                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
 
                    LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpOperationGroup.ContractId
-                   LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpOperationGroup.InfoMoneyId 
-              GROUP BY tmpOperationGroup.JuridicalId
-                   , Object_Juridical.ObjectCode       
-                   , Object_Juridical.ValueData        
-                   , tmpOperationGroup.ContractId
-                   , Object_Contract.ObjectCode        
-                   , Object_Contract.ValueData         
-                   , tmpOperationGroup.PartnerId
-                   , tmpOperationGroup.InfoMoneyId
-                   , Object_InfoMoney.ObjectCode       
-                   , Object_InfoMoney.ValueData        
-                   , tmpOperationGroup.BranchId
-                   , Object_Branch.ObjectCode          
-                   , Object_Branch.ValueData           
-                   , Object_TradeMark.Id               
-                   , Object_TradeMark.ValueData        
-                   , tmpOperationGroup.GoodsId
-                   , Object_Goods.ObjectCode           
-                   , Object_Goods.ValueData            
-                   , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE tmpOperationGroup.GoodsKindId END                   
-                     -- 
-                   , tmpOperationGroup.MovementId_test
-                     -- 
-                   , tmpOperationGroup.MovementDescId   
+                   LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpOperationGroup.InfoMoneyId
               )
-
        -- результат
        SELECT tmp.GoodsGroupName, tmp.GoodsGroupNameFull
             , tmp.GoodsCode
             , tmp.GoodsName
-            , tmp.GoodsKindName
+            --, tmp.GoodsKindName  
+            , STRING_AGG (DISTINCT COALESCE (tmp.GoodsKindName,''), '; ') ::TVarChar AS GoodsKindName
             , tmp.MeasureName
             , tmp.TradeMarkName
             , tmp.GoodsGroupAnalystName, tmp.GoodsTagName
@@ -695,7 +671,8 @@ BEGIN
                    THEN _tmpMI.MovementId_test
                    ELSE COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode)
               END:: Integer AS GoodsCode
-            , COALESCE (_tmpMI.GoodsName, tmp.GoodsName) :: TVarChar AS GoodsName
+            , COALESCE (_tmpMI.GoodsName, tmp.GoodsName)         :: TVarChar AS GoodsName
+            , COALESCE (_tmpMI.GoodsKindId, tmp.GoodsKindId)                 AS GoodsKindId
             , COALESCE (_tmpMI.GoodsKindName, tmp.GoodsKindName) :: TVarChar AS GoodsKindName
             , Object_Measure.ValueData            AS MeasureName
             , COALESCE (_tmpMI.TradeMarkName, tmp.TradeMarkName) :: TVarChar AS TradeMarkName
@@ -788,7 +765,7 @@ BEGIN
                                          , inIsPartner
                                          , inIsTradeMark
                                          , inIsGoods
-                                         , inIsGoodsKind
+                                         , TRUE --inIsGoodsKind                 --   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG  -- всегда по видам товара, а потом свернуть.
                                          , inIsContract
                                          , inIsOLAP
                                          , FALSE
@@ -858,7 +835,8 @@ BEGIN
        GROUP BY tmp.GoodsGroupName, tmp.GoodsGroupNameFull
             , tmp.GoodsCode
             , tmp.GoodsName
-            , tmp.GoodsKindName
+            , CASE WHEN inIsGoodsKind = FALSE THEN 0 ELSE tmp.GoodsKindId END
+            --, tmp.GoodsKindName
             , tmp.MeasureName
             , tmp.TradeMarkName
             , tmp.GoodsGroupAnalystName, tmp.GoodsTagName
@@ -890,6 +868,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.09.23         *
  15.02.19         *
 */
 -- тест
