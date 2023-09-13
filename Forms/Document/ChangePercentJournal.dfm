@@ -4,6 +4,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
   ClientWidth = 1062
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -168
   ExplicitWidth = 1078
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -59,6 +60,11 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -90,6 +96,11 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -276,6 +287,9 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
           object ChangePercent: TcxGridDBColumn
             Caption = '% '#1089#1082'.'
             DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1089#1082#1080#1076#1082#1080
@@ -284,6 +298,9 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
