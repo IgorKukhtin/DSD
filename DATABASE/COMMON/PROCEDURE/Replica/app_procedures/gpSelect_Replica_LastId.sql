@@ -76,7 +76,7 @@ BEGIN
                , tmp_activity.Query_start
                , (SELECT COUNT(*) FROM tmp_activity) AS vb_Count
           FROM tmp_activity
-          WHERE Query NOT ILIKE 'VACUUM%'
+          -- WHERE Query NOT ILIKE 'VACUUM%'
           ORDER BY tmp_activity.Query_start
           LIMIT 1
          ) AS gpSelect
@@ -96,7 +96,7 @@ BEGIN
                                       )
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
-                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '55 SEC'))
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '120 SEC'))
                     );
     ELSE
         -- замена, делаем задержку на 30 SEC
@@ -107,7 +107,7 @@ BEGIN
                                       )
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
-                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '30 SEC'))
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '100 SEC'))
                     );
     END IF;
 
@@ -125,7 +125,7 @@ BEGIN
                                       )
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
-                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '55 SEC'))
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '120 SEC'))
                     );
 
     END IF;
