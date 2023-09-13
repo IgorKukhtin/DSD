@@ -1445,6 +1445,8 @@ type
     miBodyType: TMenuItem;
     actReport_Send_PersonalGroup: TdsdOpenForm;
     miReport_Send_PersonalGroup: TMenuItem;
+    actReport_HistoryCost_Difference: TdsdOpenForm;
+    miReport_HistoryCost_Difference: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
