@@ -154,6 +154,7 @@ type
     macUpdate_Group_list: TMultiAction;
     macUpdate_Group: TMultiAction;
     bbcUpdate_Group: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

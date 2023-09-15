@@ -20,7 +20,12 @@ BEGIN
      --vbUserId:= lpGetUserBySession (inSession); 
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Goods_GoodsGroup());
 
-
+     --проверка
+     IF COALESCE (inGoodsGroupId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Новая группа не выбрана.'; 
+     END IF;
+     
      -- !!!Пустой код - Пропустили!!!
      IF COALESCE (inGoodsCode, 0) = 0 THEN
         RETURN; -- !!!ВЫХОД!!!
@@ -55,7 +60,7 @@ BEGIN
    
    IF vbUserId = 9457 OR vbUserId = 5
    THEN
-         RAISE EXCEPTION 'Тест. Ок.'; 
+         RAISE EXCEPTION 'Тест. Ок. <%>', vbGoodsId; 
    END IF;   
    
 
@@ -69,4 +74,4 @@ $BODY$
 */
 
 -- тест
---
+--select * from gpInsertUpdate_Object_Goods_Group_From_Excel(inGoodsGroupId := 1858 , inGoodsCode:=38 , inSession := '9457');

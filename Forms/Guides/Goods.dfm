@@ -435,7 +435,7 @@ object GoodsForm: TGoodsForm
   object cxLabel5: TcxLabel
     Left = 386
     Top = 107
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    Caption = #1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072':'
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 386
@@ -607,6 +607,10 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -734,7 +738,15 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateGoods_In'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
         end
         item
           Visible = True
@@ -746,7 +758,15 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdate_BasisCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
         end
         item
           Visible = True
@@ -774,6 +794,11 @@ object GoodsForm: TGoodsForm
     object bbcUpdate_Group: TdxBarButton
       Action = macUpdate_Group
       Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
@@ -1338,7 +1363,7 @@ object GoodsForm: TGoodsForm
         #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078 +
         #1085#1086#1077'?'
       InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1086
-      Caption = 'macUpdate_isIrna'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
       ImageIndex = 66
     end
@@ -1472,10 +1497,10 @@ object GoodsForm: TGoodsForm
       ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
-          Name = 'inDate_BUH'
+          Name = 'inGoodsGroupId'
           Value = 45047d
-          Component = edDate_BUH
-          DataType = ftDateTime
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
     end

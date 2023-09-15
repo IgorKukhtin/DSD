@@ -19,6 +19,11 @@ BEGIN
      --vbUserId:= lpGetUserBySession (inSession); 
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Goods_GoodsGroup());
 
+   IF COALESCE (inGoodsGroupId,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Новая группа не выбрана.'; 
+   END IF;
+   
    
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
