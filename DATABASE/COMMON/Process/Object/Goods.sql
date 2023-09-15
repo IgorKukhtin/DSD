@@ -2,6 +2,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_Goods() RETURNS I
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_isErased_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_isErased_Goods' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Goods_UKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Goods_UKTZED' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Goods_Name_BUH() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Goods_Name_BUH' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Goods_GoodsGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Goods_GoodsGroup' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
+
 
 
 -- CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Object_Goods' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
@@ -34,7 +37,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Goods_N
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Goods())||'> - изменение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Goods_Name_BUH');
 
-
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Goods_GoodsGroup()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 5
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Goods())||'> - изменение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Goods_GoodsGroup');
+                                  
 
 /*             
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Object_Goods()

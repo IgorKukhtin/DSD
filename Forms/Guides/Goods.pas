@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
   cxCurrencyEdit, ExternalLoad, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar;
+  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, dsdGuides;
 
 type
   TGoodsForm = class(TParentForm)
@@ -138,6 +138,22 @@ type
     macStartLoad_BUH: TMultiAction;
     bbcStartLoad_BUH: TdxBarButton;
     isAsset: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    GoodsGroupGuides: TdsdGuides;
+    spGetImportSettingId_UpdGroup: TdsdStoredProc;
+    actDoLoad_Group: TExecuteImportSettingsAction;
+    actGetImportSetting_Goods_Group: TdsdExecStoredProc;
+    macStartLoad_Group: TMultiAction;
+    dxBarSubItem1: TdxBarSubItem;
+    bbStartLoad_Group: TdxBarButton;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    spUpdateGoodsGroup: TdsdStoredProc;
+    actUpdate_Group: TdsdExecStoredProc;
+    macUpdate_Group_list: TMultiAction;
+    macUpdate_Group: TMultiAction;
+    bbcUpdate_Group: TdxBarButton;
   private
     { Private declarations }
   public

@@ -112,6 +112,9 @@ type
     PersonalServiceListName: TcxGridDBColumn;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    actInsertMask: TdsdInsertUpdateAction;
+    macInsertMask: TMultiAction;
+    bbInsertMask: TdxBarButton;
   private
   public
   end;
