@@ -42,8 +42,13 @@ BEGIN
                               JOIN Container AS —ontainer_count ON —ontainer_count.Id = Container_sum.ParentId 
                                                                AND —ontainer_count.DescId = zc_Container_Count()
                                                                AND —ontainer_count.WhereObjectId =  inUnitId   --8455 -- =
+                              LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                            ON CLO_Account.ContainerId = —ontainer_count.Id
+                                                           AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                           WHERE HistoryCost.StartDate <= inEndDate 
                             AND HistoryCost.EndDate >= inStartDate
+                            -- ·ÂÁ “Ó‚‡ ‚ ÔÛÚË
+                            AND CLO_Account.ObjectId IS NULL
                           GROUP BY —ontainer_count.Id
                                  , —ontainer_count.ObjectId
                                  , —ontainer_count.Amount 
