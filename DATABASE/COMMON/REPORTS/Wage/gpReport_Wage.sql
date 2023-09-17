@@ -196,7 +196,7 @@ BEGIN
          , Report_1.ServiceModelCode, Report_1.ServiceModelName, Report_1.Price
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
          , Report_1.ModelServiceItemChild_FromId, Report_1.ModelServiceItemChild_FromCode,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName
-         ,Report_1.ModelServiceItemChild_ToId,Report_1.ModelServiceItemChild_ToCode, Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
+         , Report_1.ModelServiceItemChild_ToId,Report_1.ModelServiceItemChild_ToCode, Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
          , Report_1.StorageLineId_From, Report_1.StorageLineName_From, Report_1.StorageLineId_To, Report_1.StorageLineName_To
          , Report_1.GoodsKind_FromId, Report_1.GoodsKind_FromName, Report_1.GoodsKindComplete_FromId, Report_1.GoodsKindComplete_FromName
          , Report_1.GoodsKind_ToId, Report_1.GoodsKind_ToName, Report_1.GoodsKindComplete_ToId, Report_1.GoodsKindComplete_ToName
@@ -800,7 +800,9 @@ BEGIN
            ,tmpRes.GoodsKindComplete_ToName
 
            ,tmpRes.OperDate
-           ,tmpRes.Count_Day                             -- Отраб. дн. 1 чел (инф.)
+            -- Отраб. дн. 1 чел (инф.)
+           ,tmpRes.Count_Day
+            --
            ,tmpRes.Count_MemberInDay
            ,tmpRes.Gross
            ,tmpRes.GrossOnOneMember
@@ -914,7 +916,7 @@ BEGIN
             -- итого часов всех сотрудников (с этой должностью+...)
            ,0 :: TFloat    AS SUM_MemberHours
             -- итого часов сотрудника
-           ,Movement_SheetWorkTime.SheetWorkTime_Amount
+           ,Movement_SheetWorkTime.SheetWorkTime_Amount :: TFloat AS SheetWorkTime_Amount
             --
            ,0  :: Integer  AS ServiceModelCode
            ,'' :: TVarChar AS ServiceModelName

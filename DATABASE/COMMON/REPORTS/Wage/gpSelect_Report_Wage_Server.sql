@@ -189,27 +189,24 @@ BEGIN
     SELECT Report_1.StaffListId, Report_1.DocumentKindId, Report_1.UnitId, Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.Count_Member,Report_1.HoursPlan,Report_1.HoursDay
          , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date
            -- итого часов всех сотрудников (с этой должностью+...)
-         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.SUM_MemberHours      ELSE 0 END AS SUM_MemberHours
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.SUM_MemberHours      ELSE 0 END :: TFloat AS SUM_MemberHours
            -- итого часов сотрудника
-         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.SheetWorkTime_Amount ELSE 0 END AS SheetWorkTime_Amount
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.SheetWorkTime_Amount ELSE 0 END :: TFloat AS SheetWorkTime_Amount
            --
          , Report_1.ServiceModelCode, Report_1.ServiceModelName, Report_1.Price
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
-         , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromCode,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName
-         , Report_1.ModelServiceItemChild_ToId, Report_1.ModelServiceItemChild_ToCode,Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
+         , Report_1.ModelServiceItemChild_FromId, Report_1.ModelServiceItemChild_FromCode,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName
+         , Report_1.ModelServiceItemChild_ToId,Report_1.ModelServiceItemChild_ToCode, Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
          , Report_1.StorageLineId_From, Report_1.StorageLineName_From, Report_1.StorageLineId_To, Report_1.StorageLineName_To
          , Report_1.GoodsKind_FromId, Report_1.GoodsKind_FromName, Report_1.GoodsKindComplete_FromId, Report_1.GoodsKindComplete_FromName
          , Report_1.GoodsKind_ToId, Report_1.GoodsKind_ToName, Report_1.GoodsKindComplete_ToId, Report_1.GoodsKindComplete_ToName
-         , CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Report_1.OperDate)
-                ELSE Report_1.OperDate
-           END ::TDateTime AS OperDate
+         , Report_1.OperDate
            -- Отраб. дн. 1 чел (инф.)
-         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.Count_Day         ELSE 0 END AS Count_Day
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.Count_Day         ELSE 0 END :: Integer AS Count_Day
            -- Кол-во человек (за 1 д.)
-         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.Count_MemberInDay ELSE 0 END AS Count_MemberInDay
+         , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.Count_MemberInDay ELSE 0 END :: Integer AS Count_MemberInDay
            --
-         , Report_1.Gross
-         , Report_1.GrossOnOneMember
+         , Report_1.Gross,Report_1.GrossOnOneMember
          , Report_1.Amount,Report_1.AmountOnOneMember
          , Report_1.ServiceModelId AS ModelServiceId
          , 0 AS StaffListSummKindId
@@ -241,20 +238,21 @@ BEGIN
                         )
     -- Результат
     SELECT
-        Report_2.StaffListId
-       ,Report_2.UnitId
-       ,Report_2.UnitName
-       ,Report_2.PositionId
-       ,Report_2.PositionName
-       ,Report_2.PositionLevelId
-       ,Report_2.PositionLevelName
-       ,Report_2.Count_Member
-       ,Report_2.HoursPlan
-       ,Report_2.HoursDay
-       ,Report_2.PersonalGroupId
-       ,Report_2.PersonalGroupName
-       ,Report_2.MemberId
-       ,Report_2.MemberName
+         Report_2.StaffListId
+       , Report_2.UnitId
+       , Report_2.UnitName
+       , Report_2.PositionId
+       , Report_2.PositionName
+       , Report_2.PositionLevelId
+       , Report_2.PositionLevelName
+       , Report_2.Count_Member
+       , Report_2.HoursPlan
+       , Report_2.HoursDay
+       , Report_2.PersonalGroupId
+       , Report_2.PersonalGroupName
+       , Report_2.MemberId
+       , Report_2.MemberName
+
         -- итого часов всех сотрудников (с этой должностью+...)
      --,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SUM_MemberHours ELSE 0 END SUM_MemberHours
        ,Report_2.SUM_MemberHours
@@ -262,36 +260,37 @@ BEGIN
         --,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SheetWorkTime_Amount ELSE 0 END AS SheetWorkTime_Amount
         --,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
        ,Report_2.SheetWorkTime_Amount
-        --
-       ,Report_2.StaffListSummKindId   AS ServiceModelCode
-       ,Report_2.StaffListSummKindName AS ServiceModelName
-       ,Report_2.StaffListSumm_Value   AS Price
-       ,Report_2.Summ
+         --
+       , Report_2.StaffListSummKindId   AS ServiceModelCode
+       , Report_2.StaffListSummKindName AS ServiceModelName
+       , Report_2.StaffListSumm_Value   AS Price
+
+       , Report_2.Summ AS AmountOnOneMember
         -- Отраб. дн. 1 чел (инф.)
         --,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.Count_Day ELSE 0 END AS Count_Day
        ,Report_2.Count_Day
-        --
-       ,0              AS ModelServiceId
-       ,Report_2.StaffListSummKindId
-       ,Report_2.Tax_Trainee :: TFloat   AS KoeffHoursWork_car 
-       ,Report_2.OperDate :: TDateTime AS OperDate
+
+       , 0            AS ModelServiceId
+       , Report_2.StaffListSummKindId
+       , Report_2.Tax_Trainee :: TFloat   AS KoeffHoursWork_car
+
+       , Report_2.OperDate :: TDateTime AS OperDate
+
     FROM gpSelect_Report_Wage_Sum_Server (inStartDate      := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inStartDate END
-                                        , inEndDate        := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inEndDate   END
-                                        , inUnitId         := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inUnitId    END
-                                        , inMemberId       := inMemberId
-                                        , inPositionId     := inPositionId
-                                        , inSession        := inSession
-                                         ) AS Report_2
-       --LEFT JOIN tmpReport_1 ON tmpReport_1.MemberId = Report_2.MemberId
-
-
+                                 , inEndDate        := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inEndDate   END
+                                 , inUnitId         := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inUnitId    END
+                                 , inMemberId       := inMemberId
+                                 , inPositionId     := inPositionId
+                                 , inSession        := inSession
+                                  ) AS Report_2
+         --LEFT JOIN tmpReport_1 ON tmpReport_1.MemberId = Report_2.MemberId
     WHERE COALESCE (inModelServiceId, 0) = 0
     --AND vbUserId <> 5
     ;
 
     --
     INSERT INTO tmpListServiceModel (ServiceModelCode, ServiceModelName, Ord)
-    SELECT tmp.ServiceModelCode
+   (SELECT tmp.ServiceModelCode
          , tmp.ServiceModelName
          , (ROW_NUMBER() OVER (ORDER BY tmp.ServiceModelCode)) :: Integer AS Ord
     FROM (SELECT DISTINCT
@@ -299,18 +298,19 @@ BEGIN
                , Res.ServiceModelName
           FROM Res
           WHERE Res.ServiceModelCode IS NOT NULL
-         ) AS tmp;
+         ) AS tmp
+   );
 
     -- Результат
     RETURN QUERY
         WITH tmpPersonal AS (SELECT *
-                                  , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal.MemberId
-                                                                   , COALESCE (Object_Personal.PositionId, 0)
-                                                                   , COALESCE (Object_Personal.PositionLevelId, 0)
-                                                                   , COALESCE (Object_Personal.UnitId, 0)
-                                                        ) AS Ord
-                             FROM Object_Personal_View AS Object_Personal
-                            )
+                               , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal.MemberId
+                                                                , COALESCE (Object_Personal.PositionId, 0)
+                                                                , COALESCE (Object_Personal.PositionLevelId, 0)
+                                                                , COALESCE (Object_Personal.UnitId, 0)
+                                                    ) AS Ord
+                          FROM Object_Personal_View AS Object_Personal
+                         )
           -- доступ филиалов только к этим ведомостям
         , tmpMemberPersonalServiceList
                      AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
@@ -356,8 +356,9 @@ BEGIN
              , Movement_SheetWorkTime AS
                 (SELECT
                        CASE WHEN inDetailDay = TRUE THEN Movement.OperDate
-                            WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
-                            ELSE NULL
+                            ELSE CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
+                                      ELSE NULL
+                                 END
                        END :: TDateTime AS OperDate
                      , MI_SheetWorkTime.ObjectId                      AS MemberId
                      , MIObject_Position.ObjectId                     AS PositionId
@@ -398,13 +399,14 @@ BEGIN
                    AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                    AND Movement.StatusId <> zc_Enum_Status_Erased()
                  GROUP BY CASE WHEN inDetailDay = TRUE THEN Movement.OperDate
-                               WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
-                               ELSE NULL
+                               ELSE CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
+                                         ELSE NULL
+                                    END
                           END
-                        , MI_SheetWorkTime.ObjectId                      
-                        , MIObject_Position.ObjectId                     
-                        , MIObject_PersonalGroup.ObjectId                
-                      --, COALESCE (MIObject_PositionLevel.ObjectId, 0)  
+                        , MI_SheetWorkTime.ObjectId
+                        , MIObject_Position.ObjectId
+                        , MIObject_PersonalGroup.ObjectId
+                      --, COALESCE (MIObject_PositionLevel.ObjectId, 0)
                 )
 
         -- Результат
@@ -451,14 +453,12 @@ BEGIN
                      THEN Res.MovementDescName
                 ELSE NULL::TVarChar END                         AS MovementDescName
 
-                -- вот товар 
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_from.ObjectCode, Res.ModelServiceItemChild_FromCode)
-                ELSE NULL ::Integer END                         AS ModelServiceItemChild_FromCode
+                ELSE NULL::Integer END                         AS ModelServiceItemChild_FromCode
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_from.ValueData, Res.ModelServiceItemChild_FromName)
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_FromName
-                -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_to.ObjectCode, Res.ModelServiceItemChild_ToCode)
                 ELSE NULL::Integer END                         AS ModelServiceItemChild_ToCode
@@ -486,9 +486,9 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END                         AS GoodsKindComplete_ToName
 
-               ,CASE WHEN inDetailDay = TRUE OR inDetailMonth = TRUE
-                     THEN Res.OperDate
-                ELSE NULL::TDateTime END                  AS OperDate
+              , CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
+                     ELSE Res.OperDate
+                END  ::TDateTime AS OperDate
 
                , MAX (Res.Count_Day) :: Integer           AS Count_Day         -- Отраб. дн. 1 чел (инф.)
 
@@ -563,19 +563,19 @@ BEGIN
 
                 -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
-                     THEN COALESCE (Object_Goods_from.ObjectCode, Res.ModelServiceItemChild_FromCode)
-                ELSE NULL::Integer END
-               ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_from.ValueData, Res.ModelServiceItemChild_FromName)
                 ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN COALESCE (Object_Goods_from.ObjectCode, Res.ModelServiceItemChild_FromCode)
+                ELSE NULL::Integer END
                 -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_to.ValueData, Res.ModelServiceItemChild_ToName)
                 ELSE NULL::TVarChar END
-               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_to.ObjectCode, Res.ModelServiceItemChild_ToCode)
                 ELSE NULL::Integer END
-                
+
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.StorageLineName_From
                 ELSE NULL::TVarChar END
@@ -596,9 +596,10 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END
 
-               ,CASE WHEN inDetailDay = TRUE OR inDetailMonth = TRUE
-                     THEN Res.OperDate
-                ELSE NULL::TDateTime END
+              , CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
+                     ELSE Res.OperDate
+                END  ::TDateTime
+
                ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Count_MemberInDay
                 ELSE NULL::Integer END
@@ -679,7 +680,7 @@ BEGIN
             -- итого часов всех сотрудников (с этой должностью...)
            ,tmpRes.SUM_MemberHours
             -- итого часов сотрудника
-           --,tmpRes.SheetWorkTime_Amount
+            --,tmpRes.SheetWorkTime_Amount
            ,Movement_SheetWorkTime.SheetWorkTime_Amount :: TFloat AS SheetWorkTime_Amount
             --
            ,tmpRes.ServiceModelCode
@@ -704,46 +705,42 @@ BEGIN
            ,tmpRes.OperDate
             -- Отраб. дн. 1 чел (инф.)
            ,tmpRes.Count_Day
-            -- 
+            --
            ,tmpRes.Count_MemberInDay
            ,tmpRes.Gross
            ,tmpRes.GrossOnOneMember
            ,ROUND (tmpRes.Amount, 2) :: TFloat            AS Amount
            ,ROUND (tmpRes.AmountOnOneMember, 2) :: TFloat AS AmountOnOneMember
            ,Object_PersonalServiceList.Id                 AS PersonalServiceListId
-           ,(Object_PersonalServiceList.ValueData/* || ' ' || COALESCE (tmpRes.MemberId, 0) :: TVarChar*/) :: TVarChar AS PersonalServiceListName
+           ,Object_PersonalServiceList.ValueData          AS PersonalServiceListName
            ,tmpListServiceModel.Ord
            ,tmpListServiceModel_1.ServiceModelName as ServiceModelName_1
            ,tmpListServiceModel_2.ServiceModelName as ServiceModelName_2
            ,tmpListServiceModel_3.ServiceModelName as ServiceModelName_3
            ,tmpListServiceModel_4.ServiceModelName as ServiceModelName_4
 
-           ,tmpRes.ModelServiceId        :: Integer AS ModelServiceId
-           ,tmpRes.StaffListSummKindId   :: Integer AS StaffListSummKindId
+           ,tmpRes.ModelServiceId      :: Integer AS ModelServiceId
+           ,tmpRes.StaffListSummKindId :: Integer AS StaffListSummKindId
 
-           ,tmpRes.KoeffHoursWork_car    :: TFloat  AS KoeffHoursWork_car
-           ,tmpRes.Ord_SheetWorkTime     :: Integer AS Ord_SheetWorkTime
+           ,tmpRes.KoeffHoursWork_car  :: TFloat  AS KoeffHoursWork_car
+           ,tmpRes.Ord_SheetWorkTime   :: Integer AS Ord_SheetWorkTime
 
         FROM
             tmpRes
-
             LEFT JOIN Movement_SheetWorkTime ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId_find
                                             AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
                                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
---                                            AND (COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
-                                            --OR COALESCE (tmpRes.PositionLevelId, 0) = 0
---                                                )
+                                          --AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
-                                              OR inDetailDay = FALSE
+                                              OR (inDetailDay = FALSE AND inDetailMonth = FALSE)
                                                 )
                                             AND tmpRes.Ord_SheetWorkTime                             = 1
-
             LEFT JOIN tmpPersonal AS Object_Personal
-                                                 ON Object_Personal.MemberId                      = tmpRes.MemberId
-                                                AND COALESCE (Object_Personal.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
-                                                AND COALESCE (Object_Personal.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
-                                                AND COALESCE (Object_Personal.UnitId, 0)          = COALESCE (tmpRes.UnitId, 0)
-                                                AND Object_Personal.ORD                           = 1
+                                  ON Object_Personal.MemberId                      = tmpRes.MemberId
+                                 AND COALESCE (Object_Personal.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
+                                 AND COALESCE (Object_Personal.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                                 AND COALESCE (Object_Personal.UnitId, 0)          = COALESCE (tmpRes.UnitId, 0)
+                                 AND Object_Personal.ORD                           = 1
             /*LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_two
                                  ON ObjectLink_Personal_PersonalServiceList_two.ObjectId = tmpRes.MemberId
                                 AND ObjectLink_Personal_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
@@ -762,7 +759,6 @@ BEGIN
 
             -- доступ филиалов только к этим ведомостям
             LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = Object_PersonalServiceList.Id
-
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpRes.DocumentKindId
 
             LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = tmpRes.StaffListId
@@ -789,10 +785,10 @@ BEGIN
             LEFT JOIN tmpListServiceModel AS tmpListServiceModel_4 ON tmpListServiceModel_4.Ord = 4
 
         -- доступ филиалов только к этим ведомостям
-        WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0 OR vbObjectId_Constraint_Branch = 0
+        WHERE (tmpMemberPersonalServiceList.PersonalServiceListId > 0 OR vbObjectId_Constraint_Branch = 0)
           AND (ObjectLink_Personal_Member_find.ChildObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
 
-        UNION ALL
+       UNION ALL
         SELECT
             0  :: Integer  AS StaffListId
           , 0  :: Integer  AS StaffListCode
@@ -831,9 +827,9 @@ BEGIN
            ,'' :: TVarChar AS FromName
            ,'' :: TVarChar AS ToName
            ,'' :: TVarChar AS MovementDescName
-           , 0 :: Integer  AS ModelServiceItemChild_FromCode
+           , 0 :: Integer AS ModelServiceItemChild_FromCode
            ,'' :: TVarChar AS ModelServiceItemChild_FromName
-           , 0 :: Integer  AS ModelServiceItemChild_ToCode
+           , 0 :: Integer AS ModelServiceItemChild_ToCode
            ,'' :: TVarChar AS ModelServiceItemChild_ToName
 
            ,'' :: TVarChar AS StorageLineName_From
@@ -848,7 +844,7 @@ BEGIN
 
             -- Отраб. дн. 1 чел (инф.)
            ,0  :: Integer  AS Count_Day
-            -- 
+            --
            ,0  :: Integer  AS Count_MemberInDay
            ,0  :: TFloat   AS Gross
            ,0  :: TFloat   AS GrossOnOneMember
@@ -883,20 +879,17 @@ BEGIN
             LEFT JOIN tmpRes ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId_find
                             AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
-                          --AND (COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0))
-                            --OR COALESCE (tmpRes.PositionLevelId, 0) = 0)
+                          --AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
-                              OR inDetailDay = FALSE
+                              OR (inDetailDay = FALSE AND inDetailMonth = FALSE)
                                 )
-
             LEFT JOIN Object AS Object_Member        ON Object_Member.Id        = Movement_SheetWorkTime.MemberId
             LEFT JOIN Object AS Object_Position      ON Object_Position.Id      = Movement_SheetWorkTime.PositionId
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = Movement_SheetWorkTime.PersonalGroupId
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = NULL -- Movement_SheetWorkTime.PositionLevelId
             LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id          = inUnitId
 
-        WHERE tmpRes.MemberId_find IS NULL
-         AND 1=0
+        WHERE tmpRes.MemberId_find IS NULL AND 1=0
        ;
 
 END;
