@@ -64,7 +64,7 @@ BEGIN
         WHERE (spExternal.Name IS NULL
             OR spList.ProName ILIKE 'gpReport_Goods'
             OR spList.ProName ILIKE 'gpReport_GoodsBalance'
-            OR spList.ProName ILIKE 'gpSelect_Report_Wage'
+            OR spList.ProName ILIKE 'gpSelect_Report_Wage%'
             OR spList.ProName ILIKE 'gpReport_GoodsMI_SaleReturnIn%'
             --
             OR spList.ProName ILIKE 'gpSelect_Scale_Goods'
