@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, SerialNumber TVarChar, PassportNumber TVarChar
-             , PeriodUse TFloat
+             , PeriodUse TFloat, Production TFloat, KW TFloat
+             , PartionModelId Integer, PartionModelCode Integer, PartionModelName TVarChar
              , StorageId Integer, StorageName TVarChar
              , UnitName_Storage     TVarChar
              , BranchName_Storage   TVarChar
@@ -104,8 +105,13 @@ BEGIN
            , ObjectString_InvNumber.ValueData      AS InvNumber
            , ObjectString_SerialNumber.ValueData   AS SerialNumber
            , ObjectString_PassportNumber.ValueData AS PassportNumber
-           , ObjectFloat_PeriodUse.ValueData  AS PeriodUse  
-           
+           , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
+           , COALESCE (ObjectFloat_Production.ValueData,0) :: TFloat AS Production
+           , COALESCE (ObjectFloat_KW.ValueData,0)         :: TFloat AS KW  
+           , Object_PartionModel.Id               AS PartionModelId
+           , Object_PartionModel.ObjectCode       AS PartionModelCode
+           , Object_PartionModel.ValueData        AS PartionModelName
+
            , Object_Storage.Id                    AS StorageId
            , Object_Storage.ValueData  ::TVarChar AS StorageName 
            , Object_Unit_Storage.ValueData            AS UnitName_Storage
@@ -193,6 +199,18 @@ BEGIN
                                   ON ObjectFloat_PeriodUse.ObjectId = tmpMI_Goods.GoodsId
                                  AND ObjectFloat_PeriodUse.DescId = zc_ObjectFloat_Asset_PeriodUse()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Production
+                                  ON ObjectFloat_Production.ObjectId = tmpMI_Goods.GoodsId
+                                 AND ObjectFloat_Production.DescId = zc_ObjectFloat_Asset_Production()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_KW
+                                  ON ObjectFloat_KW.ObjectId = tmpMI_Goods.GoodsId
+                                 AND ObjectFloat_KW.DescId = zc_ObjectFloat_Asset_KW()  
+
+            LEFT JOIN ObjectLink AS ObjectLink_Asset_PartionModel
+                                 ON ObjectLink_Asset_PartionModel.ObjectId = tmpMI_Goods.GoodsId
+                                AND ObjectLink_Asset_PartionModel.DescId = zc_ObjectLink_Asset_PartionModel()
+            LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_Asset_PartionModel.ChildObjectId                               
             ;
 
 END;
@@ -203,6 +221,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.09.23         *
  27.06.23         *
  16.03.20         *
 */

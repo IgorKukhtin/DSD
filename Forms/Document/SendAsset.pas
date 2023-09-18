@@ -69,6 +69,7 @@ type
     macInsertRecordAsset: TMultiAction;
     bbPartionGoodsAssetChoiceForm: TdxBarButton;
     bbInsertRecordAsset: TdxBarButton;
+    actPartionModelForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -173,7 +173,6 @@ inherited SendAssetForm: TSendAssetForm
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 142
           end
           object SerialNumber: TcxGridDBColumn
@@ -181,7 +180,6 @@ inherited SendAssetForm: TSendAssetForm
             DataBinding.FieldName = 'SerialNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 68
           end
           object PassportNumber: TcxGridDBColumn
@@ -189,7 +187,6 @@ inherited SendAssetForm: TSendAssetForm
             DataBinding.FieldName = 'PassportNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 66
           end
           object Release: TcxGridDBColumn
@@ -232,6 +229,41 @@ inherited SendAssetForm: TSendAssetForm
             HeaderHint = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
             Options.Editing = False
             Width = 100
+          end
+          object Production: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076'-'#1090#1100', '#1082#1075
+            DataBinding.FieldName = 'Production'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+            Width = 86
+          end
+          object KW: TcxGridDBColumn
+            Caption = #1052#1086#1097#1085#1086#1089#1090#1100', '#1082#1042#1090
+            DataBinding.FieldName = 'KW'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+            Width = 86
+          end
+          object PartionModelName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'PartionModelName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionModelForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object ContainerId: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1054#1057
@@ -522,6 +554,33 @@ inherited SendAssetForm: TSendAssetForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPartionModelForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionModel'
+      FormName = 'TPartionModelForm'
+      FormNameParam.Value = 'TPartionModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actStorageChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -873,6 +932,37 @@ inherited SendAssetForm: TSendAssetForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PeriodUse'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Production'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Production'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KW'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'KW'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1668,6 +1758,58 @@ inherited SendAssetForm: TSendAssetForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'StorageId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionModelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSerialNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SerialNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPassportNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PassportNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProduction'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Production'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKW'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KW'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
