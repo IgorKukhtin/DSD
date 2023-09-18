@@ -38,7 +38,7 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       vbUserId:= lpGetUserBySession (inSession);
 
-      -- RAISE EXCEPTION 'Ошибка.<%> %', inParam1, inParam2;
+      -- RAISE EXCEPTION 'Ошибка. <%> <%>  %  %', vbStartDate, vbEndDate, inValue1, inValue2;
       -- RETURN FALSE;
       
       -- включено - некеоторые проц будут на SRV-A
@@ -74,13 +74,14 @@ BEGIN
               -- 1.0.
               RETURN FALSE;
 
-          -- 1.1. "Персонал - руководитель" - за большой период - только gpSelect_Report_Wage
-          ELSEIF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 3745487)
-             AND (zfConvert_StringToDate (inValue1) < zfConvert_StringToDate (inValue2) - INTERVAL '3 MONTH'
+          -- 1.1. за большой период - только gpSelect_Report_Wage
+          ELSEIF (zfConvert_StringToDate (inValue1) < zfConvert_StringToDate (inValue2) - INTERVAL '3 MONTH'
                    -- Брикова В.В.
              --OR (vbUserId = 6561986 AND zfConvert_StringToDate (inValue2) < DATE_TRUNC ('MONTH', CURRENT_DATE))
                  )
              AND TRIM (inStoredProc) ILIKE 'gpSelect_Report_Wage%'
+             -- "Персонал - руководитель"
+             --AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 3745487)
           THEN
               -- 1.1.
               RETURN TRUE;
@@ -172,14 +173,14 @@ BEGIN
         
 
               -- 2. временно пока выяснили как часто нужна он-лайн инфа, только для этих проц
-              IF vbStartDate <= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 10
+              IF vbStartDate <= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 15
                                       -- последний день предыдущего месяца
                                       THEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
          
                                       -- последний день ДВА месяца назад
                                       ELSE DATE_TRUNC ('MONTH', DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY') -INTERVAL '1 DAY'
                                  END)
-               AND vbEndDate <= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 10
+               AND vbEndDate <= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 15
                                       -- последний день предыдущего месяца
                                       THEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
          
@@ -193,6 +194,7 @@ BEGIN
               -- эти проц на общих основаниях
               AND TRIM (inStoredProc) NOT ILIKE 'gpReport_MotionGoods_Asset%'
               THEN
+-- RAISE EXCEPTION 'Ошибка. <%> <%>  %  %', vbStartDate, vbEndDate, inValue1, inValue2;
                    -- 2.
                    RETURN TRUE;
                 -- RETURN FALSE;
@@ -234,6 +236,10 @@ BEGIN
                  AND TRIM (inStoredProc) NOT ILIKE 'gpSelect_ObjectProtocol'
                  AND TRIM (inStoredProc) NOT ILIKE 'gpSelect_Movement_SheetWorkTimeClose'
                  --
+                 AND TRIM (inStoredProc) NOT ILIKE 'gpSelect_Report_Wage%'
+                 AND TRIM (inStoredProc) NOT ILIKE 'gpReport_GoodsBalance'
+                 AND TRIM (inStoredProc) NOT ILIKE 'gpReport_MotionGoods%'
+             
                  -- AND vbUserId <> 440561 -- Гончарова И.А.
                  -- AND vbUserId NOT IN (5)
               THEN
