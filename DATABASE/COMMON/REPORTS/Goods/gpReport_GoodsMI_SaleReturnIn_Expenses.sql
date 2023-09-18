@@ -351,6 +351,7 @@ BEGIN
                                                                  , inIsGoodsKind
                                                                  , inIsContract
                                                                  , FALSE -- inIsOLAP
+                                                                 , FALSE -- inisMonth
                                                                  , inSession
                                                                   ) AS gpReport
                                WHERE vbEndDate_olap < inEndDate

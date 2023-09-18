@@ -217,6 +217,7 @@ BEGIN
                                                       , inIsContract   := FALSE
                                                       , inIsOLAP       := TRUE
                                                       , inIsDate       := TRUE
+                                                      , inisMonth      := FALSE
                                                       , inSession      := inSession
                                                        ) AS tmpReport
                          INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpReport.GoodsId

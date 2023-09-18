@@ -157,6 +157,7 @@ BEGIN
                                                        , inIsContract
                                                        , inIsOLAP
                                                        , FALSE
+                                                       , FALSE
                                                        , inSession
                                                         ) AS gpReport
                     )
