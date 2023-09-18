@@ -95,6 +95,11 @@ BEGIN
                                                                      , inCarModelId  := 0 
                                                                      , inCarTypeId   := 0
                                                                      , inJuridicalId := 0
+                                                    , inLength                  := 0
+                                                    , inWidth                   := 0
+                                                    , inHeight                  := 0
+                                                    , inWeight                  := 0
+                                                    , inYear                    := 0
                                                                      , inUserId      := vbUserId
                                                                        );
                         -- сохранили протокол

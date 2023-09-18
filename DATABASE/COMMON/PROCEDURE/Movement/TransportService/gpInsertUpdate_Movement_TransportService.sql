@@ -352,7 +352,7 @@ BEGIN
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
-IF vbUserId = 5
+IF vbUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'OK';
     -- 'ѕовторите действие через 3 мин.'

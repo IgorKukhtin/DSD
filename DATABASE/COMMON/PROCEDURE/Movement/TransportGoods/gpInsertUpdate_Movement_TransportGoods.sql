@@ -136,6 +136,11 @@ BEGIN
                                                     , inCarModelId              := inCarModelId
                                                     , inCarTypeId               := ObjectLink_CarType.ChildObjectId ::Integer
                                                     , inJuridicalId             := inCarJuridicalId
+                                                    , inLength                  := 0
+                                                    , inWidth                   := 0
+                                                    , inHeight                  := 0
+                                                    , inWeight                  := 0
+                                                    , inYear                    := 0
                                                     , inUserId                  := vbUserId
                                                      )
                     FROM (SELECT  0 AS CarId) as tmpCarNew
