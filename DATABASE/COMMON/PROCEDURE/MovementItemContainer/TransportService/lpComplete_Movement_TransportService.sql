@@ -118,6 +118,7 @@ BEGIN
                          , AnalyzerId, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                          , IsActive, IsMaster
                           )
+        -- 1.1.
         SELECT Movement.DescId
              , Movement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
@@ -188,7 +189,7 @@ BEGIN
 
                     ELSE 0 -- иначе затраты без принадлежности к филиалу
 
-               END AS ObjectExtId_Analyzer   
+               END AS ObjectExtId_Analyzer
 
              , FALSE AS IsActive
              , TRUE AS IsMaster
@@ -347,6 +348,7 @@ BEGIN
                                   GROUP BY tmpItem_goods.MovementItemId
                                        , tmpItem_goods.AnalyzerId
                                  )
+        -- 2.1.
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
                -- !!!Расходы будущих периодов или будет ОПиУ!!!
@@ -412,12 +414,28 @@ BEGIN
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
                     ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
                    AND vbIsAccount_50000 = FALSE
-            -- Покупатель + Товар
-            LEFT JOIN tmpItem_goods ON tmpItem_goods.MovementItemId = _tmpItem.MovementItemId
-                                   AND tmpItem_goods.AnalyzerId     = _tmpItem.AnalyzerId
-            -- итого распределили
-            LEFT JOIN tmpItem_goods_sum ON tmpItem_goods_sum.MovementItemId = _tmpItem.MovementItemId
-                                       AND tmpItem_goods_sum.AnalyzerId     = _tmpItem.AnalyzerId
+             -- Покупатель + Товар
+             LEFT JOIN tmpItem_goods ON tmpItem_goods.MovementItemId = _tmpItem.MovementItemId
+                                    AND tmpItem_goods.AnalyzerId     = _tmpItem.AnalyzerId
+             -- итого распределили
+             LEFT JOIN tmpItem_goods_sum ON tmpItem_goods_sum.MovementItemId = _tmpItem.MovementItemId
+                                        AND tmpItem_goods_sum.AnalyzerId     = _tmpItem.AnalyzerId
+
+             -- есть ли перевыставление
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                              ON MILinkObject_Route.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Route.DescId         = zc_MILinkObject_Route()
+             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
+                                  ON ObjectLink_Route_Unit.ObjectId = MILinkObject_Route.ObjectId
+                                 AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
+             -- перевыставление
+             LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Contract
+                                  ON ObjectLink_UnitRoute_Contract.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                 AND ObjectLink_UnitRoute_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+
+        -- !!!если НЕ перевыставление!!!
+        WHERE ObjectLink_UnitRoute_Contract.ChildObjectId IS NULL
+
         GROUP BY _tmpItem.MovementDescId
                , _tmpItem.OperDate
                , _tmpItem.MovementItemId
@@ -451,6 +469,83 @@ BEGIN
 
                , _tmpItem.IsActive
                , _tmpItem.IsMaster
+
+       UNION ALL
+        -- 2.2. Перевыставление затрат на Юр Лицо
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, 0) AS ObjectId
+             , COALESCE (Object.DescId, 0) AS ObjectDescId
+
+             , -1 * _tmpItem.OperSumm AS OperSumm
+
+             , _tmpItem.MovementItemId
+               -- сформируем позже
+             , 0 AS ContainerId
+
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId             -- не используется
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора
+             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: всегда "Главный филиал" (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал ОПиУ: здесь не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , 0 AS AnalyzerId -- не используется
+             , _tmpItem.ObjectIntId_Analyzer          AS ObjectIntId_Analyzer     -- Автомобиль !!!при формировании проводок замена с UnitId!!!
+             , 0 AS ObjectExtId_Analyzer    -- не используется
+             , 0 AS ContainerIntId_Analyzer -- не используется
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             -- есть ли перевыставление
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                              ON MILinkObject_Route.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Route.DescId         = zc_MILinkObject_Route()
+             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
+                                  ON ObjectLink_Route_Unit.ObjectId = MILinkObject_Route.ObjectId
+                                 AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
+             -- перевыставление
+             LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Contract
+                                  ON ObjectLink_UnitRoute_Contract.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                 AND ObjectLink_UnitRoute_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_UnitRoute_Contract.ChildObjectId
+                                                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_UnitRoute_Contract.ChildObjectId
+                                                                 AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = ObjectLink_UnitRoute_Contract.ChildObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+             LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
+
+        -- !!!если перевыставление!!!
+        WHERE ObjectLink_UnitRoute_Contract.ChildObjectId > 0
        ;
 
 
