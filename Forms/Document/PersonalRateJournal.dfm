@@ -316,6 +316,14 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
           ItemName = 'bbEdit'
         end
         item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -434,6 +442,10 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
       Action = MovementProtocolOpenForm
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = macInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -474,6 +486,12 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -503,6 +521,12 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
           Value = 41639d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -846,6 +870,61 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
         end>
       isShowModal = False
     end
+    object macInsertMask: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
+      FormName = 'TPersonalRateForm'
+      FormNameParam.Value = 'TPersonalRateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43830d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalRate'
@@ -999,10 +1078,13 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

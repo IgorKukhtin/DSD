@@ -1,16 +1,19 @@
 -- Function: gpGet_Movement_PersonalRate (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_PersonalRate (Integer, TDateTime ,TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_PersonalRate (Integer, TDateTime ,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalRate (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalRate(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime , -- 
+    IN inOperDate          TDateTime , --  
+    IN inMask              Boolean  , -- добавить по маске
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , isMask Boolean --вернуть false
               )
 AS
 $BODY$
@@ -19,6 +22,15 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalRate());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- создаем док по маске
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_PersonalRate_Mask (ioId        := inMovementId
+                                                        , inOperDate  := inOperDate
+                                                        , inSession   := inSession); 
+     END IF;
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -33,6 +45,7 @@ BEGIN
 
             , 0                     AS PersonalServiceListId
             , ''       :: TVarChar  AS PersonalServiceListName
+            , CAST (FALSE AS Boolean) AS isMask
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
        ;
@@ -48,6 +61,7 @@ BEGIN
 
             , Object_PersonalServiceList.Id        AS PersonalServiceListId
             , Object_PersonalServiceList.ValueData AS PersonalServiceListName
+            , CAST (FALSE AS Boolean)            AS isMask
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -68,13 +82,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalRate (Integer, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_PersonalRate (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.23         *
  20.09.19         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalRate (inMovementId:= 0, inOperDate := CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_PersonalRate (inMovementId:= 0, inOperDate := CURRENT_DATE, inMask := false, inSession:= zfCalc_UserAdmin())

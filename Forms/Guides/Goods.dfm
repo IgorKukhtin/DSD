@@ -26,6 +26,8 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -24
+    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -430,6 +432,23 @@ object GoodsForm: TGoodsForm
     Top = 107
     Caption = #1044#1072#1090#1072' '#1076#1086' ('#1053#1072#1079#1074'. '#1090#1086#1074'. '#1041#1091#1093#1075'.):'
   end
+  object cxLabel5: TcxLabel
+    Left = 386
+    Top = 107
+    Caption = #1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072':'
+  end
+  object edGoodsGroup: TcxButtonEdit
+    Left = 386
+    Top = 122
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 135
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -515,65 +534,10 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbisPartionCount'
+          ItemName = 'dxBarSubItem1'
         end
         item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbisPartionSumm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateGoods_In'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_WeightTareList'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Name_BUH'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdate_BasisCode'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isIrna'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbShowAll'
         end
@@ -607,10 +571,6 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
           ItemName = 'bbDateBuh_text'
         end
         item
@@ -620,6 +580,30 @@ object GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbcStartLoad_BUH'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Group'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbcUpdate_Group'
         end
         item
           Visible = True
@@ -738,6 +722,83 @@ object GoodsForm: TGoodsForm
     object bbcStartLoad_BUH: TdxBarButton
       Action = macStartLoad_BUH
       Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbisPartionCount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbisPartionSumm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateGoods_In'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_WeightTareList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Name_BUH'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_BasisCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isIrna'
+        end>
+    end
+    object bbStartLoad_Group: TdxBarButton
+      Action = macStartLoad_Group
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel5
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edGoodsGroup
+    end
+    object bbcUpdate_Group: TdxBarButton
+      Action = macUpdate_Group
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
@@ -1113,6 +1174,7 @@ object GoodsForm: TGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       StoredProc = spUpdate_Name_BUH
       StoredProcList = <
         item
@@ -1301,7 +1363,7 @@ object GoodsForm: TGoodsForm
         #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078 +
         #1085#1086#1077'?'
       InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1086
-      Caption = 'macUpdate_isIrna'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
       ImageIndex = 66
     end
@@ -1395,6 +1457,93 @@ object GoodsForm: TGoodsForm
         #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103', '#1092#1086#1088#1084#1072#1090' : '#1082#1086#1076' '#1090#1086#1074' + '#1074#1077#1089' + '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080' + '#1082#1086#1083'-'#1074 +
         #1086' '#1085#1072' 1-'#1086#1081' '#1074#1090#1091#1083#1082#1077
       ImageIndex = 41
+    end
+    object macStartLoad_Group: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_Group
+        end
+        item
+          Action = actDoLoad_Group
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1087#1077#1088#1077#1085#1086#1089' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1087#1086' '#1089#1087#1080#1089#1082#1091' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1080#1079' '#1089#1087#1080#1089#1082#1072' - '#1101#1082#1089#1077#1083#1100
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1080#1079' '#1089#1087#1080#1089#1082#1072' - '#1101#1082#1089#1077#1083#1100
+      ImageIndex = 47
+    end
+    object actGetImportSetting_Goods_Group: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_UpdGroup
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_UpdGroup
+        end>
+      Caption = 'actGetImportSetting_Goods_Price'
+    end
+    object actDoLoad_Group: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inGoodsGroupId'
+          Value = 45047d
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macUpdate_Group: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_Group_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1087#1077#1088#1077#1085#1086#1089' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1084#1091' '#1089#1087#1080#1089#1082#1091'?'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1089#1087#1080#1089#1082#1072
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1089#1087#1080#1089#1082#1072
+      ImageIndex = 48
+    end
+    object macUpdate_Group_list: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Group
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1089#1087#1080#1089#1082#1072
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1089#1087#1080#1089#1082#1072
+      ImageIndex = 48
+    end
+    object actUpdate_Group: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdateGoodsGroup
+      StoredProcList = <
+        item
+          StoredProc = spUpdateGoodsGroup
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1089#1087#1080#1089#1082#1072
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1089#1087#1080#1089#1082#1072
+      ImageIndex = 48
     end
     object actUpdate_isIrna: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1780,8 +1929,8 @@ object GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 416
-    Top = 152
+    Left = 384
+    Top = 216
   end
   object spGetImportSettingId_buh: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -1814,5 +1963,92 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 600
     Top = 184
+  end
+  object GoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 480
+    Top = 104
+  end
+  object spGetImportSettingId_UpdGroup: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_Group'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 120
+  end
+  object spUpdateGoodsGroup: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_GoodsGroup'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 152
   end
 end

@@ -348,6 +348,12 @@ object PersonalRateForm: TPersonalRateForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 304
@@ -1096,10 +1102,13 @@ object PersonalRateForm: TPersonalRateForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 360
     Top = 304
   end
@@ -1194,10 +1203,19 @@ object PersonalRateForm: TPersonalRateForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1256,6 +1274,21 @@ object PersonalRateForm: TPersonalRateForm
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     PackSize = 1

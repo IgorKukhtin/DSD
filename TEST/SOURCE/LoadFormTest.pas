@@ -603,8 +603,8 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-   {exit;
-
+   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
@@ -2202,11 +2202,14 @@ end;
 
 procedure TLoadFormTest.LoadEDIForm;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDI_SendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDI_SendJournalForm');
 //  exit;
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalLoadForm');
 end;

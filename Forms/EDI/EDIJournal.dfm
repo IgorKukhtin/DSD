@@ -5,7 +5,7 @@ inherited EDIJournalForm: TEDIJournalForm
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1378
-  ExplicitHeight = 488
+  ExplicitHeight = 492
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1289,14 +1289,14 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
-          Value = '1'
+          Value = 1.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1335,6 +1335,31 @@ inherited EDIJournalForm: TEDIJournalForm
       ImageIndex = 42
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+    end
+    object macUpdateMI_EDIComdoc: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMI_EDIComdoc_list
+        end>
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 5
+    end
+    object macUpdateMI_EDIComdoc_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMI_EDIComdoc
+        end>
+      View = cxGridDBTableView
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 5
     end
     object mactCOMDOC: TMultiAction
       Category = 'EDI COMDOC'
@@ -1685,7 +1710,7 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -1879,6 +1904,14 @@ inherited EDIJournalForm: TEDIJournalForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbmacUpdateMI_EDIComdoc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bb_mactComDoc'
@@ -2037,6 +2070,10 @@ inherited EDIJournalForm: TEDIJournalForm
       Action = actGridProtocolToExcel
       Category = 0
     end
+    object bbmacUpdateMI_EDIComdoc: TdxBarButton
+      Action = macUpdateMI_EDIComdoc
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 448
@@ -2092,7 +2129,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2269,7 +2306,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2283,7 +2320,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inPartnerOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2297,7 +2334,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2311,7 +2348,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperDateSaleLink'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2346,7 +2383,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inComDocDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2428,10 +2465,13 @@ inherited EDIJournalForm: TEDIJournalForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 344
   end
@@ -2478,10 +2518,13 @@ inherited EDIJournalForm: TEDIJournalForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 808
     Top = 328
   end
@@ -2585,7 +2628,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDatePartner_Sale'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
@@ -2593,7 +2636,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDate_Tax'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_Tax'
         DataType = ftDateTime
@@ -2601,7 +2644,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDate_TaxCorrective'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TaxCorrective'
         DataType = ftDateTime
@@ -2654,7 +2697,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDate_Order'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
@@ -2795,7 +2838,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDatePartner_Sale'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
@@ -2818,7 +2861,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'OperDate_Order'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
@@ -3008,7 +3051,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperMonth'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3029,7 +3072,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inDateRegistered'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3224,7 +3267,7 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
