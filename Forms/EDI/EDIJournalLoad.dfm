@@ -4,22 +4,23 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1380
-  ExplicitHeight = 500
+  ExplicitLeft = -468
+  ExplicitWidth = 1378
+  ExplicitHeight = 492
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 61
+    Top = 57
     Width = 1362
-    Height = 392
-    ExplicitTop = 61
+    Height = 396
+    ExplicitTop = 57
     ExplicitWidth = 1362
-    ExplicitHeight = 392
-    ClientRectBottom = 392
+    ExplicitHeight = 396
+    ClientRectBottom = 396
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 392
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 209
@@ -68,6 +69,11 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
               Format = ',0.####'
               Kind = skSum
               Column = clTotalSumm_Sale
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = clUnitName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -474,7 +480,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Left = 0
         Top = 214
         Width = 1362
-        Height = 178
+        Height = 182
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
@@ -482,7 +488,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 0
           Top = 0
           Width = 953
-          Height = 178
+          Height = 182
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
@@ -762,7 +768,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 957
           Top = 0
           Width = 405
-          Height = 178
+          Height = 182
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
@@ -824,7 +830,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 953
           Top = 0
           Width = 4
-          Height = 178
+          Height = 182
           Control = cxChildGrid
         end
       end
@@ -1963,7 +1969,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     DockControlHeights = (
       0
       0
-      30
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

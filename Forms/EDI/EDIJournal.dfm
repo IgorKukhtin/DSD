@@ -4,6 +4,7 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -468
   ExplicitWidth = 1378
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -68,6 +69,11 @@ inherited EDIJournalForm: TEDIJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTotalSumm_Sale
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = clUnitName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
