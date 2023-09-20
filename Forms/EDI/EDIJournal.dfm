@@ -4,7 +4,6 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -468
   ExplicitWidth = 1378
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -1042,7 +1041,24 @@ inherited EDIJournalForm: TEDIJournalForm
       EDIDocType = ediError
       Directory = '/error'
     end
-    object mactDeclarSilent: TMultiAction [9]
+    object actUpdateMI_EDIComdoc_list: TdsdExecStoredProc [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spInsertUpdate_SaleLinkEDI
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 42
+    end
+    object mactDeclarSilent: TMultiAction [10]
       Category = 'EDI COMDOC DataSet'
       MoveParams = <>
       ActionList = <
@@ -1053,7 +1069,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = EDIDeclar
         end>
     end
-    object mactOrdSpr: TMultiAction [10]
+    object mactOrdSpr: TMultiAction [11]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -1070,7 +1086,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076'.'
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1074' EXITE'
     end
-    object actDesadv: TEDIAction [11]
+    object actDesadv: TEDIAction [12]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -1082,7 +1098,7 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactDesadv: TMultiAction [12]
+    object mactDesadv: TMultiAction [13]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -1359,7 +1375,7 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateMI_EDIComdoc
+          Action = actUpdateMI_EDIComdoc_list
         end>
       View = cxGridDBTableView
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
