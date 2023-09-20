@@ -1,28 +1,28 @@
 inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
-  ClientHeight = 364
-  ClientWidth = 1009
+  ClientHeight = 338
+  ClientWidth = 1010
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1025
-  ExplicitHeight = 403
+  ExplicitWidth = 1028
+  ExplicitHeight = 385
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 64
-    Width = 1009
-    Height = 300
+    Width = 1010
+    Height = 274
     TabOrder = 3
     ExplicitTop = 64
     ExplicitWidth = 1009
     ExplicitHeight = 300
-    ClientRectBottom = 300
-    ClientRectRight = 1009
+    ClientRectBottom = 274
+    ClientRectRight = 1010
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1009
       ExplicitHeight = 300
       inherited cxGrid: TcxGrid
-        Width = 1009
-        Height = 300
+        Width = 1010
+        Height = 274
         ExplicitWidth = 1009
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -437,12 +437,60 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 100
           end
+          object MakerName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
+          object BarCode: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+            DataBinding.FieldName = 'BarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object MorionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object BadmCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1041#1072#1076#1084
+            DataBinding.FieldName = 'BadmCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object OptimaCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1054#1087#1090#1080#1084#1072
+            DataBinding.FieldName = 'OptimaCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object AccommodationName: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
+            DataBinding.FieldName = 'AccommodationName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1009
+    Width = 1010
     Height = 38
     ExplicitWidth = 1009
     ExplicitHeight = 38
@@ -679,7 +727,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Name = 'inIsPartion'
-          Value = 'False'
+          Value = False
           Component = cbPartion
           DataType = ftBoolean
           ParamType = ptInput
@@ -687,7 +735,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Name = 'inisPartionPrice'
-          Value = 'False'
+          Value = False
           Component = cbPartionPrice
           DataType = ftBoolean
           ParamType = ptInput
@@ -703,7 +751,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Name = 'inisVendorminPrices'
-          Value = 'False'
+          Value = False
           Component = cbVendorminPrices
           DataType = ftBoolean
           ParamType = ptInput
@@ -817,7 +865,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       end
       item
         Name = 'inisVendorminPrices'
-        Value = 'False'
+        Value = False
         Component = cbVendorminPrices
         DataType = ftBoolean
         ParamType = ptInput

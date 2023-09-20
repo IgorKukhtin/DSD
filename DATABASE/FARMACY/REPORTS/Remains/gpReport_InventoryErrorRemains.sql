@@ -25,10 +25,14 @@ BEGIN
      (WITH tmpInventory AS (SELECT Movement.Id
                                  , Movement.OperDate
                                  , MovementLinkObject_Unit.ObjectId AS UnitId
+                                 , COALESCE(MovementBoolean_FullInvent.ValueData,False) AS isFullInvent
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                 LEFT OUTER JOIN MovementBoolean AS MovementBoolean_FullInvent
+                                                                 ON MovementBoolean_FullInvent.MovementId = Movement.Id
+                                                                AND MovementBoolean_FullInvent.DescId = zc_MovementBoolean_FullInvent()
                             WHERE Movement.OperDate BETWEEN inDateStart AND inDateFinal
                               AND Movement.DescId = zc_Movement_Inventory()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -42,8 +46,8 @@ BEGIN
                                      , MovementItem.Amount
                                 FROM tmpInventory AS Movement
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                WHERE MovementItem.Amount > 0
-                                  AND MovementItem.isErased = FALSE
+                                WHERE MovementItem.isErased = FALSE
+                                  AND MovementItem.DescId = zc_MI_Master()
                                 ),
            tmpRemansAll AS (SELECT tmpInventoryList.MovementItemID
                                  , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
@@ -70,7 +74,48 @@ BEGIN
            tmpRemans AS (SELECT tmpRemansAll.MovementItemID
                               , SUM (tmpRemansAll.Amount) AS Amount
                          FROM tmpRemansAll
-                         GROUP BY tmpRemansAll.MovementItemID)
+                         GROUP BY tmpRemansAll.MovementItemID
+                         HAVING SUM (tmpRemansAll.Amount) <> 0),
+           tmpRemansAllFull AS (SELECT tmpInventory.ID
+                                 , Container.ID AS ContainerID
+                                 , Container.ObjectId
+                                 , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
+                            FROM tmpInventory
+                                 INNER JOIN Container ON Container.WhereObjectId = tmpInventory.UnitID
+                                                     AND Container.DescID = zc_Container_Count()
+
+                                 LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                      AND MovementItemContainer.Operdate >= tmpInventory.OperDate + INTERVAL '1 DAY'
+                            WHERE tmpInventory.isFullInvent = True
+                            GROUP BY tmpInventory.ID
+                                 , Container.ID
+                                 , Container.ObjectId
+                                 , Container.Amount
+                            HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
+
+                            UNION ALL
+                            -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
+                            SELECT
+                                 tmpInventory.ID
+                               , Container.ID AS ContainerID
+                               , Container.ObjectId
+                               , -1 * SUM (MovementItemContainer.Amount) AS Amount
+                            FROM tmpInventory
+                                 INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmpInventory.ID
+                                                                 AND MovementItemContainer.DescID = zc_MIContainer_Count()
+                                 INNER JOIN Container ON Container.ID = MovementItemContainer.ContainerID
+                            GROUP BY tmpInventory.ID
+                                   , Container.ID
+                                   , Container.ObjectId
+                           ),
+           tmpRemansFull AS (SELECT tmpRemansAllFull.ID
+                              , tmpRemansAllFull.ObjectId
+                              , SUM (tmpRemansAllFull.Amount) AS Amount
+                         FROM tmpRemansAllFull
+                         GROUP BY tmpRemansAllFull.ID
+                                , tmpRemansAllFull.ObjectId
+                         HAVING SUM (tmpRemansAllFull.Amount) <> 0
+                         )
 
        SELECT tmpInventoryList.Id
             , tmpInventoryList.OperDate
@@ -80,13 +125,50 @@ BEGIN
             , tmpInventoryList.Amount
             , tmpRemans.Amount            AS Remains
             , MIFloat_Remains.ValueData   AS RemainsSave
+            , Null::TFloat                AS Price
        FROM tmpInventoryList
             INNER JOIN MovementItemFloat AS MIFloat_Remains
                                          ON MIFloat_Remains.MovementItemId = tmpInventoryList.MovementItemId
                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
             LEFT JOIN tmpRemans ON tmpRemans.MovementItemID = tmpInventoryList.MovementItemID
        WHERE MIFloat_Remains.ValueData <> COALESCE(tmpRemans.Amount, 0)
+         AND tmpInventoryList.Id IN (SELECT tmpInventory.Id FROM tmpInventory WHERE tmpInventory.isFullInvent = False)
+       UNION ALL 
+       SELECT tmpInventory.Id
+            , tmpInventory.OperDate
+            , tmpInventory.UnitId
+            , tmpInventoryList.MovementItemID
+            , COALESCE(tmpRemansFull.ObjectId, tmpInventoryList.GoodsId) AS GoodsId
+            , tmpInventoryList.Amount
+            , tmpRemansFull.Amount            AS Remains
+            , MIFloat_Remains.ValueData   AS RemainsSave
+            , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+       FROM tmpRemansFull 
+                   
+            FULL JOIN tmpInventoryList ON tmpInventoryList.Id = tmpRemansFull.Id
+                                      AND tmpInventoryList.GoodsId = tmpRemansFull.ObjectId
+            
+            LEFT JOIN tmpInventory ON tmpInventory.Id = COALESCE (tmpRemansFull.Id, tmpInventoryList.Id)
 
+            LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                        ON MIFloat_Remains.MovementItemId = tmpInventoryList.MovementItemId
+                                       AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+                                       
+            INNER JOIN ObjectLink AS ObjectLink_Price_Unit 
+                                  ON ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                 AND ObjectLink_Price_Unit.ChildObjectId = tmpInventory.UnitId
+            
+            INNER JOIN ObjectLink AS Price_Goods
+                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 AND Price_Goods.ChildObjectId = COALESCE(tmpRemansFull.ObjectId, tmpInventoryList.GoodsId)
+                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+            LEFT JOIN ObjectFloat AS Price_Value
+                                  ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
+                                       
+                                       
+       WHERE tmpInventory.isFullInvent = True
+         AND COALESCE(MIFloat_Remains.ValueData, 0) <> COALESCE(tmpRemansFull.Amount, 0)
             );
 
 
@@ -177,15 +259,17 @@ BEGIN
             , tmpMovementItemAll.MovementItemID    AS Id
             , tmpMovementItemAll.GoodsId
             , Object_Goods.ObjectCode              AS GoodsCode
-            , Object_Goods.ValueData               AS GoodsName
+            , (CASE WHEN tmpMovementItemAll.MovementItemID > 0 THEN '' ELSE '***' END || Object_Goods.ValueData) :: TVarChar AS GoodsName
             , tmpMovementItemAll.Amount
             , tmpMovementItemAll.Remains
             , tmpMovementItemAll.RemainsSave
             , MIFloat_Price.ValueData              AS Price
-            , (tmpMovementItemAll.Remains
-              - tmpMovementItemAll.RemainsSave)::TFloat AS RemainsDiff
-            , ((tmpMovementItemAll.Remains
-              - tmpMovementItemAll.RemainsSave) * MIFloat_Price.ValueData)::TFloat AS RemainsDiff_Summa
+            , (COALESCE(tmpMovementItemAll.Remains, 0)
+              - COALESCE(tmpMovementItemAll.RemainsSave, 0))::TFloat AS RemainsDiff
+            , ((COALESCE(tmpMovementItemAll.Remains, 0)
+              - COALESCE(tmpMovementItemAll.RemainsSave, 0)) * 
+              CASE WHEN tmpMovementItemAll.MovementItemID > 0 THEN MIFloat_Price.ValueData ELSE tmpMovementItemAll.Price END
+              )::TFloat AS RemainsDiff_Summa
        FROM tmpMovementItemAll
             INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItemAll.GoodsId
 
@@ -211,3 +295,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_InventoryErrorRemains (inDateStart:= '01.01.2020'::TDateTime, inDateFinal:= '31.01.2020'::TDateTime, inUnitID := 8393158, inSession:= zfCalc_UserAdmin())
+
+
+select * from gpReport_InventoryErrorRemains(inDateStart := ('15.09.2023')::TDateTime , inDateFinal := ('20.09.2023')::TDateTime , inUnitId := 9771036 ,  inSession := '3');

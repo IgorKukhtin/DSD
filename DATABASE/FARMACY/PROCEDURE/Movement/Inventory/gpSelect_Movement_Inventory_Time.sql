@@ -89,7 +89,9 @@ BEGIN
            , tmpInsert.OperDate                     AS InsertDate
            , Object_Complete.ValueData              AS CompleteName
            , tmpProtocol.OperDate                   AS CompleteDate
-           , SUBSTRING((tmpProtocol.OperDate - tmpInsert.OperDate)::TVarChar, 1, POSITION('.' in (tmpProtocol.OperDate - tmpInsert.OperDate)::TVarChar) - 1)::TVarChar
+           , CASE WHEN POSITION('.' in (tmpProtocol.OperDate - tmpInsert.OperDate)::TVarChar) > 8
+                  THEN SUBSTRING((tmpProtocol.OperDate - tmpInsert.OperDate)::TVarChar, 1, POSITION('.' in (tmpProtocol.OperDate - tmpInsert.OperDate)::TVarChar) - 1)::TVarChar
+                  ELSE (tmpProtocol.OperDate - tmpInsert.OperDate)::TVarChar END
 
        FROM tmpMovement
 
@@ -129,3 +131,5 @@ ALTER FUNCTION gpSelect_Movement_Inventory_Time (TDateTime, TDateTime, TVarChar)
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Inventory_Time (inStartDate:= '01.01.2020', inEndDate:= '17.01.2020', inSession:= '2')
+
+select * from gpSelect_Movement_Inventory_Time(inStartDate := ('01.08.2023')::TDateTime , inEndDate := ('16.09.2023')::TDateTime ,  inSession := '3');

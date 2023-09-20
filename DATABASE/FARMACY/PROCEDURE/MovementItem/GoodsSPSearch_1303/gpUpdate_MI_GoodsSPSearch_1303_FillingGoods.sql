@@ -42,6 +42,40 @@ BEGIN
     WHERE Movement.DescId = zc_Movement_GoodsSPSearch_1303()
       AND Movement.StatusId <> zc_Enum_Status_Erased()
       AND Movement.Id < inMovementId;
+
+
+    CREATE TEMP TABLE tmpGoodsSPSearch ON COMMIT DROP AS
+    SELECT T2.*
+         , REPLACE(T2.CodeATX, ' ', '') AS RCodeATX
+         , ROW_NUMBER() OVER (PARTITION BY REPLACE(T2.CodeATX, ' ', '')
+                                         , T2.ReestrSP
+                                         , T2.IntenalSP_1303Id
+                                         , T2.BrandSPId
+                                         , T2.KindOutSP_1303Id
+                                         , T2.Dosage_1303Id
+                                         , T2.CountSP_1303Id
+                                        ORDER BY T2.OrderDateSP DESC) AS Ord
+    FROM gpSelect_MovementItem_GoodsSPSearch_1303(inMovementId :=  inMovementId   , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T2;
+                                
+    ANALYSE tmpGoodsSPSearch;
+
+    CREATE TEMP TABLE tmpGoodsSPRegistry ON COMMIT DROP AS
+    SELECT DISTINCT
+           T1.GoodsId
+         , T1.GoodsCode
+         , REPLACE(T1.CodeATX, ' ', '') AS RCodeATX
+         , T1.ReestrSP
+         , T1.IntenalSP_1303Id
+         , T1.BrandSPId
+         , T1.KindOutSP_1303Id
+         , T1.Dosage_1303Id
+         , T1.CountSP_1303Id
+    FROM gpSelect_MovementItem_GoodsSPSearch_1303(inMovementId := vbMovementId    , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
+    WHERE COALESCE(T1.GoodsId, 0) <> 0
+      AND (COALESCE(T1.GoodsId, 0) NOT IN (SELECT tmpGoodsSPSearch.GoodsId FROM tmpGoodsSPSearch)
+           OR NOT EXISTS (SELECT tmpGoodsSPSearch.GoodsId FROM tmpGoodsSPSearch WHERE tmpGoodsSPSearch.GoodsId IS NOT NULL));
+                                         
+    ANALYSE tmpGoodsSPRegistry;
       
     PERFORM gpUpdate_MI_GoodsSPSearch_1303_Goods(inId := GoodsSPSearch.Id 
                                                , inMovementId := inMovementId
@@ -49,33 +83,6 @@ BEGIN
                                                , inCol := GoodsSPSearch.Col
                                                , inSession := inSession)
     FROM (
-      WITH tmpGoodsSPSearch AS (select T2.*
-                                     , REPLACE(T2.CodeATX, ' ', '') AS RCodeATX
-                                     , ROW_NUMBER() OVER (PARTITION BY REPLACE(T2.CodeATX, ' ', '')
-                                                                     , T2.ReestrSP
-                                                                     , T2.IntenalSP_1303Id
-                                                                     , T2.BrandSPId
-                                                                     , T2.KindOutSP_1303Id
-                                                                     , T2.Dosage_1303Id
-                                                                     , T2.CountSP_1303Id
-                                                                    ORDER BY T2.OrderDateSP DESC) AS Ord
-
-                                from gpSelect_MovementItem_GoodsSPSearch_1303(inMovementId :=  inMovementId   , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T2)
-         , tmpGoodsSPRegistry AS (select DISTINCT
-                                         T1.GoodsId
-                                       , T1.GoodsCode
-                                       , REPLACE(T1.CodeATX, ' ', '') AS RCodeATX
-                                       , T1.ReestrSP
-                                       , T1.IntenalSP_1303Id
-                                       , T1.BrandSPId
-                                       , T1.KindOutSP_1303Id
-                                       , T1.Dosage_1303Id
-                                       , T1.CountSP_1303Id
-                                  from gpSelect_MovementItem_GoodsSPSearch_1303(inMovementId := vbMovementId    , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
-                                  WHERE COALESCE(T1.GoodsId, 0) <> 0
-                                    AND (COALESCE(T1.GoodsId, 0) NOT IN (SELECT tmpGoodsSPSearch.GoodsId FROM tmpGoodsSPSearch)
-                                         OR NOT EXISTS (SELECT tmpGoodsSPSearch.GoodsId FROM tmpGoodsSPSearch WHERE tmpGoodsSPSearch.GoodsId IS NOT NULL)))
-
 
       SELECT tmpGoodsSPSearch.Id 
            , Min(tmpGoodsSPRegistry.GoodsId)::Integer AS GoodsId
@@ -114,5 +121,4 @@ $BODY$
  124.08.24                                                       *
 */
 
--- 
-select * from gpUpdate_MI_GoodsSPSearch_1303_FillingGoods(inMovementId := 33145769,  inSession := '3');
+-- select * from gpUpdate_MI_GoodsSPSearch_1303_FillingGoods(inMovementId := 33332437 ,  inSession := '3');
