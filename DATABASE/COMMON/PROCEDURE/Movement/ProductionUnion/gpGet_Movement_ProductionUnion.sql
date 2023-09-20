@@ -73,11 +73,11 @@ BEGIN
          , Object_Status.ObjectCode                 AS StatusCode
          , Object_Status.ValueData                  AS StatusName
          , Object_From.Id                           AS FromId
-         , Object_From.ValueData                    AS FromName
+         , (CASE WHEN Object_From.ValueData ILIKE Object_To.ValueData THEN '(' || Object_From.ObjectCode :: TVarChar ||') ' ELSE '' END || Object_From.ValueData) :: TVarChar AS FromName
          , Object_JuridicalFrom.id                  AS JuridicalId_From
          , Object_JuridicalFrom.ValueData           AS JuridicalName_From
          , Object_To.Id                             AS ToId
-         , Object_To.ValueData                      AS ToName
+         , (CASE WHEN Object_From.ValueData ILIKE Object_To.ValueData THEN '(' || Object_To.ObjectCode :: TVarChar ||') '  ELSE '' END || Object_To.ValueData) :: TVarChar AS ToName
          , Object_DocumentKind.Id                   AS DocumentKindId
          , Object_DocumentKind.ValueData            AS DocumentKindName
          , COALESCE(MovementBoolean_isAuto.ValueData, False)          AS isAuto

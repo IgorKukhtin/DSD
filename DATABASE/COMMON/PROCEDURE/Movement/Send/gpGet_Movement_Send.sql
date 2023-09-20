@@ -89,9 +89,9 @@ BEGIN
            , Object_Status.ValueData                            AS StatusName
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , Object_From.Id                                     AS FromId
-           , Object_From.ValueData                              AS FromName
+           , (CASE WHEN Object_From.ValueData ILIKE Object_To.ValueData THEN '(' || Object_From.ObjectCode :: TVarChar ||') ' ELSE '' END || Object_From.ValueData) :: TVarChar AS FromName
            , Object_To.Id                                       AS ToId
-           , Object_To.ValueData                                AS ToName
+           , (CASE WHEN Object_From.ValueData ILIKE Object_To.ValueData THEN '(' || Object_To.ObjectCode :: TVarChar ||') '  ELSE '' END || Object_To.ValueData) :: TVarChar AS ToName
            , Object_DocumentKind.Id                             AS DocumentKindId
            , Object_DocumentKind.ValueData                      AS DocumentKindName
            , MovementString_Comment.ValueData                   AS Comment
