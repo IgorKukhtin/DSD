@@ -46,8 +46,13 @@ BEGIN
       -- всегда отключено выполнение на SRV-A
       -- vbIsReal_only:= TRUE AND vbUserId <> 5;
       
+      IF vbUserId = 5 AND 1=0
+      THEN
+           -- 0. !!!Admin!!!
+          RETURN TRUE;
+
       -- если отключен SRV-A
-      IF vbIsReal_only = TRUE OR 1=0
+      ELSEIF vbIsReal_only = TRUE OR 1=0
       THEN
            -- 0.1.
           RETURN FALSE;
@@ -227,6 +232,7 @@ BEGIN
                                           -- последний день ДВА месяца назад
                                           ELSE DATE_TRUNC ('MONTH', DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY') -INTERVAL '1 DAY'
                                      END)
+                                     --
                  -- отключили
                  AND TRIM (inStoredProc) NOT ILIKE 'gpSelect_Movement_MemberHoliday'
                  AND TRIM (inStoredProc) NOT ILIKE 'gpSelect_Movement_Promo%'
@@ -239,7 +245,10 @@ BEGIN
                  AND TRIM (inStoredProc) NOT ILIKE 'gpSelect_Report_Wage%'
                  AND TRIM (inStoredProc) NOT ILIKE 'gpReport_GoodsBalance'
                  AND TRIM (inStoredProc) NOT ILIKE 'gpReport_MotionGoods%'
-             
+                 --
+                 AND (TRIM (inStoredProc) NOT ILIKE 'gpReport_Transport%'
+                   --OR vbUserId IN (5)
+                     )
                  -- AND vbUserId <> 440561 -- Гончарова И.А.
                  -- AND vbUserId NOT IN (5)
               THEN

@@ -30,7 +30,8 @@ BEGIN
                                                     ON n.oid     = p.pronamespace
                                                    AND n.nspname ILIKE 'public'
                               WHERE p.ProName ILIKE '%gpReport%'
-                              -- OR p.ProName ILIKE '%gpSelect%'
+                                 OR (p.ProName ILIKE '%gpSelect%'          AND vbUserId = 5)
+                                 OR (p.ProName ILIKE '%gpGet_Object_Form%' AND vbUserId = 5)
                                  --
                                  OR p.ProName ILIKE 'gpSelect_Report_Wage%'
                                  --
