@@ -590,17 +590,22 @@ order by Movement.OperDate*/
            -- филиал Киев
        -- AND 8379 <> COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 LIMIT 1), 0)
      THEN
-         outMessageText:= 'Ошибка.Документ сформирован но НЕ ПРОВЕДЕН'
-            -- || CHR(13) || 'Покупатель <' || lfGet_Object_ValueData (vbPartnerId) || '>.'
-            || CHR(13) || 'Для товара <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1) || '>'
-                                 || ' <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1) || '>'
-            || CHR(13) || 'с количеством <' || zfConvert_FloatToString ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)) || '> установлена цена = 0.'
-            || CHR(13) || 'Необходимо открыть заявку № <' || COALESCE ((SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), '') || '>'
-                                               || ' от <' || COALESCE ((SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId) :: TVarChar, '') || '> и исправить цену.'
-              ;
+         IF inUserId <> 5
+         THEN outMessageText:= 'Ошибка.Документ сформирован но НЕ ПРОВЕДЕН'
+                 -- || CHR(13) || 'Покупатель <' || lfGet_Object_ValueData (vbPartnerId) || '>.'
+                 || CHR(13) || 'Для товара <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1) || '>'
+                                      || ' <' || (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1) || '>'
+                 || CHR(13) || 'с количеством <' || zfConvert_FloatToString ((SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)) || '> установлена цена = 0.'
+                 || CHR(13) || 'Необходимо открыть заявку № <' || COALESCE ((SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), '') || '>'
+                                                    || ' от <' || COALESCE ((SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId) :: TVarChar, '') || '> и исправить цену.'
+                 ;
+         END IF;
+
          -- !!! выход !!!
          RETURN;
+
      END IF;
+
      -- проверка
      IF 1=0 AND EXISTS (SELECT 1 FROM _tmpItem WHERE 1 <= CASE WHEN _tmpItem.PriceEDI > 0 THEN 100 * ABS (_tmpItem.Price - _tmpItem.PriceEDI) / _tmpItem.PriceEDI ELSE 0 END)
      THEN

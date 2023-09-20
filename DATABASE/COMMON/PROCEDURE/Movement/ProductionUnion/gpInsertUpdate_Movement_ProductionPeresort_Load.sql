@@ -45,7 +45,7 @@ BEGIN
     -- Если такого физ лица нет, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbMemberId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. <%> не найден в справочнике физ.лиц. % Загрузка не возможна', TRIM (inMemberName), chr(13);
+        RAISE EXCEPTION 'Ошибка. (%) <%> не найден в справочнике физ.лиц. % Загрузка не возможна', inMemberCode, TRIM (inMemberName), chr(13);
     END IF;
  
      -- Найти Id товара
