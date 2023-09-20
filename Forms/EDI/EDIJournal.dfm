@@ -4,7 +4,6 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -468
   ExplicitWidth = 1378
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -921,7 +920,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 184
   end
   inherited ActionList: TActionList
-    Top = 183
+    Top = 184
     object ClientRefresh: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -1348,7 +1347,11 @@ inherited EDIJournalForm: TEDIJournalForm
       ActionList = <
         item
           Action = macUpdateMI_EDIComdoc_list
+        end
+        item
+          Action = actRefresh
         end>
+      QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
@@ -1359,10 +1362,26 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateMI_EDIComdoc
+          Action = actUpdateMI_EDIComdoc_list
         end>
       View = cxGridDBTableView
-      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 5
+    end
+    object actUpdateMI_EDIComdoc_list: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spInsertUpdate_SaleLinkEDI_list
+        end>
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 5
@@ -2819,7 +2838,7 @@ inherited EDIJournalForm: TEDIJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
+    Left = 608
     Top = 144
   end
   object spUpdate_EDIComdoc_Params: TdsdStoredProc
@@ -3320,5 +3339,30 @@ inherited EDIJournalForm: TEDIJournalForm
     PackSize = 1
     Left = 856
     Top = 200
+  end
+  object spInsertUpdate_SaleLinkEDI_list: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_SaleLinkEDI'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId_EDI'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 192
   end
 end

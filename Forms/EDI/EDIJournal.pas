@@ -210,6 +210,8 @@ type
     macUpdateMI_EDIComdoc_list: TMultiAction;
     macUpdateMI_EDIComdoc: TMultiAction;
     bbmacUpdateMI_EDIComdoc: TdxBarButton;
+    actUpdateMI_EDIComdoc_list: TdsdExecStoredProc;
+    spInsertUpdate_SaleLinkEDI_list: TdsdStoredProc;
   private
     { Private declarations }
   public
