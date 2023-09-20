@@ -307,7 +307,12 @@ END IF;
          OR Movement.DescId = zc_Movement_SaleAsset()
        --OR tmpUnit_To.UnitId > 0
            )
-       AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       AND ((inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+         AND Object_From.Id <> 8459) -- Розподільчий комплекс
+         OR (inGroupId <= 0 
+         AND Object_From.Id = 8459) -- Розподільчий комплекс
+           )
+
        -- AND Object_From.Id in (8459, 846, 8461, 256716, 1387416) -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
        -- AND Object_From.Id <> 8459 -- Розподільчий комплекс
        -- !!!НУЖНЫ ли ПРОДАЖИ!!!
@@ -723,4 +728,4 @@ create table dba._pgMovementReComlete
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2023', inEndDate:= '30.06.2023', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.08.2023', inEndDate:= '31.08.2023', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= 0)
