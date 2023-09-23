@@ -4645,13 +4645,13 @@ end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelEditForm');
   exit;
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptMainGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptMainGoods_ObjectForm');
 
@@ -4661,6 +4661,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
