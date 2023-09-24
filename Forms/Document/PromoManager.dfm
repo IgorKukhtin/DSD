@@ -4969,19 +4969,35 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindId'
+        Name = 'ioGoodsKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindCompleteId'
+        Name = 'outGoodsKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioGoodsKindCompleteId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindCompleteId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindCompleteName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindCompleteName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
