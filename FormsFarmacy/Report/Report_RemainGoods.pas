@@ -54,6 +54,12 @@ type
     cbVendorminPrices: TcxCheckBox;
     actOverdueChange: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    MakerName: TcxGridDBColumn;
+    BarCode: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
+    BadmCode: TcxGridDBColumn;
+    OptimaCode: TcxGridDBColumn;
+    AccommodationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

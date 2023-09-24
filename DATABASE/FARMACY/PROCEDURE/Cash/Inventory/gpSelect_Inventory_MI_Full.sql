@@ -217,12 +217,16 @@ BEGIN
                                 , COUNT (tmp.Num)::Integer         AS CountUser
                                 , SUM (tmp.AmountUser)::TFloat     AS AmountUser
                            FROM (SELECT MovementItem.ParentId      AS ParentId
-                                      , CASE WHEN MovementItem.ObjectId = vbUserId THEN MovementItem.Amount ELSE 0 END   AS AmountUser
+                                      , CASE WHEN MovementItem.ObjectId = vbUserId AND
+                                                  COALESCE(MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END   AS AmountUser
                                       , CAST (ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId, MovementItem.ObjectId ORDER BY MovementItem.ParentId, MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS Num
                                  FROM MovementItem
                                       LEFT JOIN MovementItemDate AS MIDate_Insert
                                                                  ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                                 AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                  ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                                  WHERE MovementItem.MovementId = vbMovementId
                                    AND MovementItem.DescId     = zc_MI_Child()
                                    AND MovementItem.isErased  = FALSE

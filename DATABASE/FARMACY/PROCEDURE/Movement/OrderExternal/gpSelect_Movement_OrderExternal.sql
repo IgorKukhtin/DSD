@@ -47,7 +47,131 @@ BEGIN
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      vbCURRENT_DOW := CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN 7 ELSE EXTRACT (DOW FROM CURRENT_DATE) END ; -- день недели сегодня
+
+     -- raise notice'ObjectProtocol 1: %', CLOCK_TIMESTAMP();
      
+     CREATE TEMP TABLE tmpMovement_OrderExternal ON COMMIT DROP AS
+     WITH
+        tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                      )
+      , tmpUnit  AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                     FROM ObjectLink AS ObjectLink_Unit_Juridical
+                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                             AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbUserId = zfCalc_UserAdmin() :: Integer)
+                     WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                     )
+
+      SELECT Movement.Id                                        AS Id
+           , Movement.InvNumber                                 AS InvNumber
+           , Movement.OperDate                                  AS OperDate
+           , Movement.StatusId                                  AS StatusId
+           , Object_Status.ObjectCode                           AS StatusCode
+           , Object_Status.ValueData                            AS StatusName
+           , MovementLinkObject_From.ObjectId                   AS FromId
+           , Object_From.ObjectCode                             AS FromCode
+           , Object_From.ValueData                              AS FromName
+           , MovementLinkObject_To.ObjectId                     AS ToId
+           , Object_To.Code                                     AS ToCode
+           , Object_To.Name                                     AS ToName
+           , Object_To.JuridicalId                              AS JuridicalId
+           , Object_To.JuridicalCode                            AS JuridicalCode
+           , Object_To.JuridicalName                            AS JuridicalName
+           , MovementLinkObject_Contract.ObjectId               AS ContractId
+           , Object_Contract.ValueData                          AS ContractName
+           , MovementFloat_TotalCount.ValueData                 AS TotalCount
+           , MovementFloat_TotalSumm.ValueData                  AS TotalSum
+           , Movement_Master.Id                                 AS MasterId
+           , ('№ '||Movement_Master.InvNumber || ' от '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar   AS MasterInvNumber 
+           , COALESCE(MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred          
+
+       FROM Movement
+                                         
+            JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId 
+
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                                                          
+            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                         
+            JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                                                  
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MLM_Master
+                                           ON MLM_Master.MovementId = Movement.Id
+                                          AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MLM_Master.MovementChildId
+
+       WHERE Movement.DescId = zc_Movement_OrderExternal()
+         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+                                         
+     ANALYSE tmpMovement_OrderExternal;
+                                         
+     -- raise notice'ObjectProtocol 2: %', CLOCK_TIMESTAMP();
+     
+     
+     CREATE TEMP TABLE tmpOrderShedule ON COMMIT DROP AS
+      SELECT ObjectLink_OrderShedule_Unit.ChildObjectId              AS UnitId  --To 
+           , ObjectLink_OrderShedule_Contract.ChildObjectId          AS ContractId --
+           , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1)) ::TFloat AS Value1
+           , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2)) ::TFloat AS Value2
+           , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3)) ::TFloat AS Value3
+           , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4)) ::TFloat AS Value4
+           , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5)) ::TFloat AS Value5
+           , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6)) ::TFloat AS Value6
+           , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7)) ::TFloat AS Value7
+           , Object_OrderShedule.ValueData AS Value8
+
+      FROM Object AS Object_OrderShedule
+           LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
+                  ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
+                 AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
+           LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
+                  ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
+                 AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+      WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
+        AND Object_OrderShedule.isErased = FALSE;
+                           
+     
+     ANALYSE tmpOrderShedule;
+                                         
+     -- raise notice'ObjectProtocol 3: %', CLOCK_TIMESTAMP();
+                                         
+      
      RETURN QUERY
      WITH 
      --Данные Справочника График заказа/доставки
@@ -57,27 +181,6 @@ BEGIN
                           FROM (SELECT generate_series ( CURRENT_DATE,  CURRENT_DATE+interval '6 day', '1 day' :: INTERVAL) AS OperDate) AS tmp
                             LEFT JOIN zfCalc_DayOfWeekName(tmp.OperDate) AS tmpDayOfWeek ON 1=1
                           )
-      , tmpOrderShedule AS (SELECT ObjectLink_OrderShedule_Unit.ChildObjectId              AS UnitId  --To 
-                                 , ObjectLink_OrderShedule_Contract.ChildObjectId          AS ContractId --
-                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1)) ::TFloat AS Value1
-                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2)) ::TFloat AS Value2
-                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3)) ::TFloat AS Value3
-                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4)) ::TFloat AS Value4
-                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5)) ::TFloat AS Value5
-                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6)) ::TFloat AS Value6
-                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7)) ::TFloat AS Value7
-                                 , Object_OrderShedule.ValueData AS Value8
-
-                            FROM Object AS Object_OrderShedule
-                                 LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
-                                        ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
-                                       AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
-                                 LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
-                                        ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
-                                       AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
-                            WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
-                              AND Object_OrderShedule.isErased = FALSE
-                           )
       , tmpOrderSheduleText AS (SELECT tmpOrderShedule.UnitId
                                      , tmpOrderShedule.ContractId
                                      , (CASE WHEN tmpOrderShedule.Value1 in (1,3) THEN 'Понедельник,' ELSE '' END ||
@@ -162,23 +265,6 @@ BEGIN
                                  )
 --
 
-      , tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                      )
-      , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
---        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
-  --                       UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
---                              )
-      , tmpUnit  AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                     FROM ObjectLink AS ObjectLink_Unit_Juridical
-                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                             AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbUserId = zfCalc_UserAdmin() :: Integer)
-                     WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                     )
-
        SELECT
              Movement_OrderExternal_View.Id
            , Movement_OrderExternal_View.InvNumber
@@ -218,16 +304,12 @@ BEGIN
            , MovementString_LetterSubject.ValueData                            AS LetterSubject
            , COALESCE (MovementBoolean_UseSubject.ValueData, FALSE) :: Boolean AS isUseSubject
            , COALESCE (MovementBoolean_SupplierFailures.ValueData, FALSE) :: Boolean AS isSupplierFailures
-     FROM tmpUnit
-          LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
-                                               AND Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
+     FROM tmpMovement_OrderExternal AS Movement_OrderExternal_View 
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
                                        ON MovementLinkObject_OrderKind.MovementId = Movement_OrderExternal_View.MasterId
                                       AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
           LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
-
-          JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
 
           LEFT JOIN MovementDate AS MovementDate_Update
                                  ON MovementDate_Update.MovementId = Movement_OrderExternal_View.Id
@@ -272,6 +354,8 @@ BEGIN
                            ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
     ;
 
+     -- raise notice'ObjectProtocol 20: %', CLOCK_TIMESTAMP();
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -292,4 +376,5 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 
 --select * from gpSelect_Movement_OrderExternal(instartdate := ('27.12.2016')::TDateTime , inenddate := ('27.12.2016')::TDateTime , inIsErased := 'False' ,  inSession := '3');
 
-select * from gpSelect_Movement_OrderExternal(instartdate := ('01.03.2023')::TDateTime , inenddate := ('31.03.2023')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_Movement_OrderExternal(instartdate := ('01.08.2023')::TDateTime , inenddate := ('31.08.2023')::TDateTime , inIsErased := 'False' ,  inSession := '3');

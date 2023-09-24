@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdGuides, Vcl.ExtCtrls;
+  dxSkinXmas2008Blue, dsdGuides, Vcl.ExtCtrls, ExternalLoad;
 
 type
   TReceiptForm = class(TParentForm)
@@ -203,7 +203,13 @@ type
     bbUpdate_isIrna: TdxBarButton;
     spUpdateReal: TdsdStoredProc;
     actUpdateReal: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbUpdateReal: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actDoLoad_ReceiptCost: TExecuteImportSettingsAction;
+    actGetImportSetting_ReceiptCost: TdsdExecStoredProc;
+    macStartLoad_ReceiptCost: TMultiAction;
+    bbStartLoad_ReceiptCost: TdxBarButton;
   private
     { Private declarations }
   public

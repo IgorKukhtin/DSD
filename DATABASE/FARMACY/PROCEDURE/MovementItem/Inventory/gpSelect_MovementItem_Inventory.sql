@@ -606,4 +606,10 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, Boole
 
 --select * from gpSelect_MovementItem_Inventory_Ol(inMovementId := 30623284 , inShowAll := 'True' , inIsErased := 'False' , inShowDeviated := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_Inventory(inMovementId := 30629165 , inShowAll := 'False' , inIsErased := 'False' , inShowDeviated := 'False' ,  inSession := '3');
+/*select GoodsCode, GoodsName
+     , Amount, Price TFloat, Summ TFloat
+     , COALESCE(Remains_Save, 0)
+     , (COALESCE(Remains_Save, 0) - COALESCE(Amount, 0)) * pRICE 
+from gpSelect_MovementItem_Inventory(inMovementId := 33370112 , inShowAll := 'False' , inIsErased := 'False' , inShowDeviated := 'False' ,  inSession := '3')
+where COALESCE(Remains_Save, 0) <> COALESCE(Amount, 0);*/
+

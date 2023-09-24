@@ -961,8 +961,8 @@ object ReceiptForm: TReceiptForm
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 56
-    Top = 96
+    Left = 24
+    Top = 160
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -1003,8 +1003,8 @@ object ReceiptForm: TReceiptForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 136
+    Top = 160
     DockControlHeights = (
       0
       0
@@ -1085,7 +1085,7 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateReal'
         end
         item
           Visible = True
@@ -1114,6 +1114,14 @@ object ReceiptForm: TReceiptForm
         item
           Visible = True
           ItemName = 'bbUpdate_isIrna'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_ReceiptCost'
         end
         item
           Visible = True
@@ -1297,8 +1305,12 @@ object ReceiptForm: TReceiptForm
       Action = macUpdate_isIrna
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateReal: TdxBarButton
       Action = actUpdateReal
+      Category = 0
+    end
+    object bbStartLoad_ReceiptCost: TdxBarButton
+      Action = macStartLoad_ReceiptCost
       Category = 0
     end
   end
@@ -1927,6 +1939,46 @@ object ReceiptForm: TReceiptForm
         end>
       Caption = 'actUpdate_isIrna'
       ImageIndex = 66
+    end
+    object actDoLoad_ReceiptCost: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actGetImportSetting_ReceiptCost: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_ReceiptCost'
+    end
+    object macStartLoad_ReceiptCost: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_ReceiptCost
+        end
+        item
+          Action = actDoLoad_ReceiptCost
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1047#1072#1090#1088#1072#1090' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1090#1088#1072#1090#1099' '#1086#1073#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1079#1072#1090#1088#1072#1090#1099
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1079#1072#1090#1088#1072#1090#1099
+      ImageIndex = 41
+      ShowGauge = False
     end
   end
   object spSelect: TdsdStoredProc
@@ -2737,5 +2789,47 @@ object ReceiptForm: TReceiptForm
     PackSize = 1
     Left = 850
     Top = 453
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TReceiptForm;zc_Object_ImportSetting_Receipt_ReceiptCost'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 752
+    Top = 200
   end
 end
