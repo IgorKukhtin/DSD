@@ -185,6 +185,8 @@ type
     ceRetail: TcxButtonEdit;
     RetailGuides: TdsdGuides;
     MeasureName: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edWeight: TcxCurrencyEdit;
 
   private
     { Private declarations }

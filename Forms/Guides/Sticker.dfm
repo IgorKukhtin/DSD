@@ -711,9 +711,9 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 5
     object deDateStart: TcxDateEdit
-      Left = 70
-      Top = 28
-      EditValue = 43101d
+      Left = 68
+      Top = 30
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -722,8 +722,8 @@ object StickerForm: TStickerForm
     end
     object deDatePack: TcxDateEdit
       Left = 656
-      Top = 5
-      EditValue = 43101d
+      Top = 6
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -741,9 +741,10 @@ object StickerForm: TStickerForm
       Caption = #1059#1055#1040#1050#1054#1042#1050#1040':'
     end
     object edPartion: TcxLabel
-      Left = 743
-      Top = 8
-      Caption = #8470' '#1087#1072#1088#1090#1080#1080'  '#1091#1087#1072#1082#1086#1074#1082#1080':'
+      Left = 742
+      Top = 7
+      Hint = #8470' '#1087#1072#1088#1090#1080#1080'  '#1091#1087#1072#1082#1086#1074#1082#1080':'
+      Caption = #8470' '#1087#1072#1088#1090#1080#1080'  '#1091#1087#1072#1082'.:'
     end
     object cbStartEnd: TcxCheckBox
       Left = 5
@@ -777,8 +778,9 @@ object StickerForm: TStickerForm
       Width = 117
     end
     object ceNumPack: TcxCurrencyEdit
-      Left = 859
-      Top = 5
+      Left = 836
+      Top = 7
+      Hint = #8470' '#1087#1072#1088#1090#1080#1080'  '#1091#1087#1072#1082#1086#1074#1082#1080':'
       EditValue = 1.000000000000000000
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -796,7 +798,7 @@ object StickerForm: TStickerForm
     object deDateProduction: TcxDateEdit
       Left = 656
       Top = 28
-      EditValue = 43101d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -804,13 +806,15 @@ object StickerForm: TStickerForm
       Width = 80
     end
     object cxLabel5: TcxLabel
-      Left = 740
-      Top = 31
-      Caption = #8470' '#1089#1084#1077#1085#1099' '#1090#1077#1093#1085#1086#1083#1086#1075#1086#1074':'
+      Left = 742
+      Top = 29
+      Hint = #8470' '#1089#1084#1077#1085#1099' '#1090#1077#1093#1085#1086#1083#1086#1075#1086#1074':'
+      Caption = #8470' '#1089#1084#1077#1085#1099' '#1090#1077#1093#1085'.:'
     end
     object ceNumTech: TcxCurrencyEdit
-      Left = 859
-      Top = 28
+      Left = 836
+      Top = 30
+      Hint = #8470' '#1089#1084#1077#1085#1099' '#1090#1077#1093#1085#1086#1083#1086#1075#1086#1074':'
       EditValue = 1.000000000000000000
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -829,6 +833,7 @@ object StickerForm: TStickerForm
     object ceRetail: TcxButtonEdit
       Left = 398
       Top = 28
+      Hint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
       Properties.Buttons = <
         item
           Default = True
@@ -837,6 +842,23 @@ object StickerForm: TStickerForm
       Properties.ReadOnly = True
       TabOrder = 15
       Width = 159
+    end
+    object cxLabel6: TcxLabel
+      Left = 886
+      Top = 8
+      Caption = #1042#1077#1089':'
+    end
+    object edWeight: TcxCurrencyEdit
+      Left = 879
+      Top = 30
+      Hint = #8470' '#1089#1084#1077#1085#1099' '#1090#1077#1093#1085#1086#1083#1086#1075#1086#1074':'
+      EditValue = 0.000000000000000000
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.0###'
+      TabOrder = 17
+      Width = 49
     end
   end
   object cxLabel3: TcxLabel
@@ -847,7 +869,7 @@ object StickerForm: TStickerForm
   object deDateTare: TcxDateEdit
     Left = 302
     Top = 28
-    EditValue = 43101d
+    EditValue = 44927d
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -901,7 +923,7 @@ object StickerForm: TStickerForm
       item
         Component = deDatePack
         Properties.Strings = (
-          'Date')
+          'EditValue')
       end
       item
         Component = deDateProduction
@@ -3105,6 +3127,14 @@ object StickerForm: TStickerForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = edWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 575
@@ -3285,6 +3315,14 @@ object StickerForm: TStickerForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = edWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 623
@@ -3412,6 +3450,14 @@ object StickerForm: TStickerForm
         Name = 'inNumTech'
         Value = 1.000000000000000000
         Component = ceNumTech
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = edWeight
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
