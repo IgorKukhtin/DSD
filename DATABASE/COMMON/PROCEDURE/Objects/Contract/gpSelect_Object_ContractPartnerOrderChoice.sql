@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , Address TVarChar, GPSN TFloat, GPSE TFloat
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
-             , ContractComment TVarChar
+             , ContractComment TVarChar  
+             , isNotTareReturning Boolean
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , MemberTakeId Integer, MemberTakeName TVarChar
@@ -104,6 +105,7 @@ BEGIN
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
 
        , Object_Route.Id               AS RouteId
        , Object_Route.ValueData        AS RouteName
@@ -254,6 +256,10 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
  	/*LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
@@ -355,6 +361,7 @@ BEGIN
        , NULL :: TVarChar AS PaidKindName
        , NULL :: Integer ContractStateKindCode
        , NULL :: TVarChar AS ContractComment
+       , FALSE:: Boolean  AS isNotTareReturning
 
        , NULL :: Integer AS RouteId
        , NULL :: TVarChar AS RouteName
@@ -491,6 +498,7 @@ BEGIN
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
 
        , Object_Route.Id               AS RouteId
        , Object_Route.ValueData        AS RouteName
@@ -641,6 +649,10 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
  	LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
@@ -754,7 +766,8 @@ BEGIN
        , NULL :: Integer AS PaidKindId
        , NULL :: TVarChar AS PaidKindName
        , NULL :: Integer ContractStateKindCode
-       , NULL :: TVarChar AS ContractComment
+       , NULL :: TVarChar AS ContractComment 
+       , FALSE:: Boolean  AS isNotTareReturning
 
        , NULL :: Integer AS RouteId
        , NULL :: TVarChar AS RouteName
@@ -838,7 +851,8 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerOrderChoice (Boolean, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
- 10.05.17         *  add Address, GPSE, GPSN
+ 26.09.23         * isNotTareReturning
+ 10.05.17         * add Address, GPSE, GPSN
  18.10.14                                        *
 */
 

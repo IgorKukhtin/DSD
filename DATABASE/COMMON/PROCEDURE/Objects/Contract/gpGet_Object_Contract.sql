@@ -46,6 +46,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isUnique Boolean
              , isRealEx Boolean
              , isNotVat Boolean
+             , isNotTareReturning Boolean
              
              , PriceListId Integer, PriceListName TVarChar
              , PriceListPromoId Integer, PriceListPromoName TVarChar
@@ -145,7 +146,8 @@ BEGIN
            , CAST (false as Boolean)   AS isPersonal 
            , CAST (false as Boolean)   AS isUnique
            , CAST (false as Boolean)   AS isRealEx
-           , CAST (FALSE AS Boolean)   AS isNotVat
+           , CAST (FALSE AS Boolean)   AS isNotVat 
+           , CAST (FALSE AS Boolean)   AS isNotTareReturning
 
            , CAST (0 as Integer)       AS PriceListId 
            , CAST ('' as TVarChar)     AS PriceListName 
@@ -250,7 +252,8 @@ BEGIN
            , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
-           , COALESCE (ObjectBoolean_NotVat.ValueData, False)           :: Boolean AS isNotVat
+           , COALESCE (ObjectBoolean_NotVat.ValueData, False)             :: Boolean AS isNotVat
+           , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
@@ -336,6 +339,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NotVat
                                     ON ObjectBoolean_NotVat.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_NotVat.DescId = zc_ObjectBoolean_Contract_NotVat()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                    ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
                                
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
@@ -446,6 +453,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.09.23         * isNotTareReturning
  01.05.23         * isNotVat
  21.03.22         * isRealEx
  03.11.21         * add Branch

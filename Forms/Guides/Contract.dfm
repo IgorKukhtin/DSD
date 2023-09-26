@@ -828,8 +828,6 @@
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
-      ExplicitLeft = 41
-      ExplicitTop = -4
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -1608,6 +1606,14 @@
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 40
+        end
+        object isNotTareReturning: TcxGridDBColumn
+          Caption = #1053#1077#1090' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1090#1072#1088#1099
+          DataBinding.FieldName = 'isNotTareReturning'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
       end
       object cxGridLevel: TcxGridLevel

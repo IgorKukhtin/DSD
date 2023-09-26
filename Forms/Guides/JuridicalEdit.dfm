@@ -599,6 +599,14 @@
               HeaderAlignmentVert = vaCenter
               Width = 40
             end
+            object isNotTareReturning: TcxGridDBColumn
+              Caption = #1053#1077#1090' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1090#1072#1088#1099
+              DataBinding.FieldName = 'isNotTareReturning'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
             object Comment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
@@ -763,7 +771,7 @@
     Left = 8
     Top = 161
     Caption = #1053#1077#1090' c'#1093#1077#1084#1099' '#1089' '#1079#1072#1084#1077#1085#1086#1081' '#1092#1072#1082#1090'/'#1073#1091#1093#1075' '#1086#1090#1075#1088'.) ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 35
+    TabOrder = 34
     Width = 272
   end
   object cxLabel25: TcxLabel [34]

@@ -200,6 +200,7 @@ type
     GuidesBranch: TdsdGuides;
     cbisRealEx: TcxCheckBox;
     cbNotVat: TcxCheckBox;
+    cbisNotTareReturning: TcxCheckBox;
   private
     { Private declarations }
   public

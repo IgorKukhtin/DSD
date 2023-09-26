@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
              , isPersonal Boolean
-             , isUnique Boolean
+             , isUnique Boolean 
+             , isNotTareReturning Boolean
              , isErased Boolean 
               )
 AS
@@ -78,6 +79,7 @@ BEGIN
 
        , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
 
        , Object_Contract_View.isErased
        
@@ -103,6 +105,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
                                 ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
 
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
@@ -154,6 +159,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.09.23         * isNotTareReturning
  31.08.23         * inisErased
  18.01.19         * DefaultOut
  08.09.14                                        * add Object_RoleAccessKeyGuide_View

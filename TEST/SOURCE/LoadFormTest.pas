@@ -430,27 +430,28 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
 
-  exit;
+ // exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
-   exit;
+   //exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
    exit;
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
-  exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
   //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
+  exit;
 
-
-  // Состояние договора
+ {
+   // Состояние договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');
   // Предмет договора
