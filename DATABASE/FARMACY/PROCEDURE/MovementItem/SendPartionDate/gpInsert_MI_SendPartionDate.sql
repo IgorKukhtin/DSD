@@ -111,7 +111,11 @@ BEGIN
                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                                -- WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
+                                   LEFT OUTER JOIN Movement  AS MovementIncome
+                                                             ON MovementIncome.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                                             
+                                WHERE ((COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())::Date - MovementIncome.OperDate::Date) > 90
+                                   OR MovementIncome.OperDate < '19.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)
                                )
           -- остатки - нашли Срок c перемещений
         , tmpContainer_In AS (SELECT tmp.ContainerId
