@@ -247,8 +247,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 97
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = -1
-      ExplicitTop = 22
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
