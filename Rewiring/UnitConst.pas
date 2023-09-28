@@ -124,6 +124,10 @@ const
   cSQL_HistoryCost_Calc  =
       'SELECT RewiringUUId FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
 
+        // Перерасчета цен на слейве
+  cSQL_HistoryCost_Master  =
+      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_HistoryCost_Master (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
+
   // Получение перечня документов
   cSQL_Rewiring_Calc  =
       'SELECT Q.* FROM gpComplete_Selectall_sybase (:inStartDate, :inEndDate, :inIsSale, :inIsBefoHistoryCost, :inGroupId) AS Q ' +

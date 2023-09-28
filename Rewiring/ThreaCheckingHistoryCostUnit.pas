@@ -94,20 +94,20 @@ begin
       FZConnection.Connect;
 
       // Перерасчета цен на слейве
-//      if FisMaster then
-//        FZQueryTable.SQL.Text := cSQLpg_Slave_HistoryCost_Master
-//      else FZQueryTable.SQL.Text := cSQL_HistoryCost_Calc;
-//      FZQueryTable.ParamByName('inStartDate').Value := FStartDate;
-//      FZQueryTable.ParamByName('inEndDate').Value := FEndDate;
-//      FZQueryTable.ParamByName('inBranchId').Value := FBranchId;
-//      FZQueryTable.ParamByName('inItearationCount').Value := 50;
-//      FZQueryTable.ParamByName('inDiffSumm').Value := 1;
-//      FZQueryTable.ParamByName('inSession').Value := FSession;
-//      FZQueryTable.Open;
-//      FRewiringUUId := FZQueryTable.FieldByName('RewiringUUId').AsString;
-//      FZQueryTable.Close;
+      if FisMaster then
+        FZQueryTable.SQL.Text := cSQL_HistoryCost_Master
+      else FZQueryTable.SQL.Text := cSQL_HistoryCost_Calc;
+      FZQueryTable.ParamByName('inStartDate').Value := FStartDate;
+      FZQueryTable.ParamByName('inEndDate').Value := FEndDate;
+      FZQueryTable.ParamByName('inBranchId').Value := FBranchId;
+      FZQueryTable.ParamByName('inItearationCount').Value := 50;
+      FZQueryTable.ParamByName('inDiffSumm').Value := 1;
+      FZQueryTable.ParamByName('inSession').Value := FSession;
+      FZQueryTable.Open;
+      FRewiringUUId := FZQueryTable.FieldByName('RewiringUUId').AsString;
+      FZQueryTable.Close;
 
-      FRewiringUUId := '0807adf9-d20a-4d7a-8927-3bcb029aa1f8';
+      //FRewiringUUId := '0807adf9-d20a-4d7a-8927-3bcb029aa1f8';
 
       FZQueryTable.Close;
 

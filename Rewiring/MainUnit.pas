@@ -291,6 +291,9 @@ procedure TMainForm.sbRunCheckingHCClick(Sender: TObject);
 begin
   if MessageDlg('Запустить проверку перерасчета цен?', mtInformation, mbOKCancel, 0) <> mrOk then Exit;
 
+  FMasterUUId := '';
+  FSlaveUUId := '';
+
   FTerminated := False;
   cxPageProcessing.ActivePage := tsPageProcessingEmpty;
   cxPageControl.ActivePage := cxTabSheetProcess;
@@ -668,6 +671,8 @@ begin
   begin
     deStartDateCheckingHC.Date := deStartDate.Date;
     deEndDateCheckingHC.Date := deEndDate.Date;
+    if deEndDateCheckingHC.Date > Date then deEndDateCheckingHC.Date := IncDay(Date, - 1);
+
 
     if GetInfoMaster then
     begin
@@ -1053,53 +1058,53 @@ begin
     ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_HistoryCost_Master);
     ZQueryExecute.ExecSQL;
 
-    // Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost
-    SaveRewiringLog('Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_SendHistoryCost);
-    ZQueryExecute.ExecSQL;
-
-    // Создаем (обновляем) на слейве функцию отправки документа
-    SaveRewiringLog('Создаем (обновляем) на слейве функцию отправки документа');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_SendMovement);
-    ZQueryExecute.ExecSQL;
-
-    // Создаем (обновляем) на слейве функцию что отправить надо
-    SaveRewiringLog('Создаем (обновляем) на слейве функцию что отправить надо');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringProtocol);
-    ZQueryExecute.ExecSQL;
-
-    // Создаем (обновляем) на слейве функцию данных для перепроведения
-    SaveRewiringLog('Создаем (обновляем) на слейве функцию данных для перепроведения');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringParams);
-    ZQueryExecute.ExecSQL;
-
-    // Создаем (обновляем) на слейве функцию перепроводки документа
-    SaveRewiringLog('Создаем (обновляем) на слейве функцию перепроводки документа');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementId);
-    ZQueryExecute.ExecSQL;
-
-    // Создаем (обновляем) на слейве функцию получения изменившихся свойств
-    SaveRewiringLog('Создаем (обновляем) на слейве функцию получения изменившихся свойств');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementProperties);
-    ZQueryExecute.ExecSQL;
-
-    // Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций
-    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPCalcFunctionMaster);
-    ZQueryExecute.ExecSQL;
-
-    // Cоздаем (обновляем) на слейве функцию Копирование функций
-    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Копирование функций');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPReplication_Function);
-    ZQueryExecute.ExecSQL;
+//    // Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost
+//    SaveRewiringLog('Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_SendHistoryCost);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Создаем (обновляем) на слейве функцию отправки документа
+//    SaveRewiringLog('Создаем (обновляем) на слейве функцию отправки документа');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_SendMovement);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Создаем (обновляем) на слейве функцию что отправить надо
+//    SaveRewiringLog('Создаем (обновляем) на слейве функцию что отправить надо');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringProtocol);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Создаем (обновляем) на слейве функцию данных для перепроведения
+//    SaveRewiringLog('Создаем (обновляем) на слейве функцию данных для перепроведения');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringParams);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Создаем (обновляем) на слейве функцию перепроводки документа
+//    SaveRewiringLog('Создаем (обновляем) на слейве функцию перепроводки документа');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementId);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Создаем (обновляем) на слейве функцию получения изменившихся свойств
+//    SaveRewiringLog('Создаем (обновляем) на слейве функцию получения изменившихся свойств');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementProperties);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций
+//    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPCalcFunctionMaster);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Cоздаем (обновляем) на слейве функцию Копирование функций
+//    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Копирование функций');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPReplication_Function);
+//    ZQueryExecute.ExecSQL;
 
     // Создаем (обновляем) на слейве функцию для проверки HistoryCost
     SaveRewiringLog('Создаем (обновляем) на слейве функцию для проверки HistoryCost');
@@ -1115,118 +1120,118 @@ begin
          edtMasterPassword.Text, edtSlaveUserRC.Text, edtSlavePasswordRC.Text]);
     ZQueryExecute.ExecSQL;
 
-    if edtSlaveUserRC.Text <> '' then
-    begin
-
-      // Создаем (обновляем) на слейве функцию определения что под ролью для перепроведения
-      SaveRewiringLog('Создаем функцию определения что под ролью для перепроведения');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := Format(LiadScripts(cSQLzc_isUserRewiring), [edtSlaveUserRC.Text]);
-      ZQueryExecute.ExecSQL;
-
-      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data
-      SaveRewiringLog('Создаем тригерную функцию notice_changed_data');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data);
-      ZQueryExecute.ExecSQL;
-
-      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data_container
-      SaveRewiringLog('Создаем тригерную функцию notice_changed_data_container');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data_container);
-      ZQueryExecute.ExecSQL;
-
-      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data_movement
-      SaveRewiringLog('Создаем тригерную функцию notice_changed_data_movement');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data_movement);
-      ZQueryExecute.ExecSQL;
-
-      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data_movementitemcontainer
-      SaveRewiringLog('Создаем тригерную функцию notice_changed_data_movementitemcontainer');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data_movementitemcontainer);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Container
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Container');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Container);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - Asset
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - Asset');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_Asset);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - InvNumber
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - InvNumber');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_InvNumber);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - OS
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - OS');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_OS);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionDate);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate - NEW
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate - NEW');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionDate_NEW);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionString);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString_20202
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString_20202');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionString_20202);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertFind_Object_PartionMovement
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionMovement');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionMovement);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertUpdate_MovementItemContainer);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer_byTable
-      SaveRewiringLog('Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer_byTable');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertUpdate_MovementItemContainer_byTable);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpDelete_MovementItemContainer
-      SaveRewiringLog('Обновляем на слейве функцию lpDelete_MovementItemContainer');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpDelete_MovementItemContainer);
-      ZQueryExecute.ExecSQL;
-
-      // Обновляем на слейве функцию lpInsert_MovementProtocol
-      SaveRewiringLog('Обновляем на слейве функцию lpInsert_MovementProtocol');
-      ZQueryExecute.Close;
-      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsert_MovementProtocol);
-      ZQueryExecute.ExecSQL;
-
-    end else SaveRewiringLog('Не создана роль для проведения инвентаризации. Тригера не обновлены', True);
+//    if edtSlaveUserRC.Text <> '' then
+//    begin
+//
+//      // Создаем (обновляем) на слейве функцию определения что под ролью для перепроведения
+//      SaveRewiringLog('Создаем функцию определения что под ролью для перепроведения');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := Format(LiadScripts(cSQLzc_isUserRewiring), [edtSlaveUserRC.Text]);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data
+//      SaveRewiringLog('Создаем тригерную функцию notice_changed_data');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data_container
+//      SaveRewiringLog('Создаем тригерную функцию notice_changed_data_container');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data_container);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data_movement
+//      SaveRewiringLog('Создаем тригерную функцию notice_changed_data_movement');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data_movement);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Создаем (обновляем) на слейве тригерную функцию notice_changed_data_movementitemcontainer
+//      SaveRewiringLog('Создаем тригерную функцию notice_changed_data_movementitemcontainer');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLTR_Data_movementitemcontainer);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Container
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Container');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Container);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - Asset
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - Asset');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_Asset);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - InvNumber
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - InvNumber');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_InvNumber);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - OS
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - OS');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_OS);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionDate);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate - NEW
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionDate - NEW');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionDate_NEW);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionString);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString_20202
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionGoods - PartionString_20202');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionGoods_PartionString_20202);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertFind_Object_PartionMovement
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertFind_Object_PartionMovement');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertFind_Object_PartionMovement);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertUpdate_MovementItemContainer);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer_byTable
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsertUpdate_MovementItemContainer_byTable');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsertUpdate_MovementItemContainer_byTable);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpDelete_MovementItemContainer
+//      SaveRewiringLog('Обновляем на слейве функцию lpDelete_MovementItemContainer');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpDelete_MovementItemContainer);
+//      ZQueryExecute.ExecSQL;
+//
+//      // Обновляем на слейве функцию lpInsert_MovementProtocol
+//      SaveRewiringLog('Обновляем на слейве функцию lpInsert_MovementProtocol');
+//      ZQueryExecute.Close;
+//      ZQueryExecute.SQL.Text := LiadScripts(cSQLlpInsert_MovementProtocol);
+//      ZQueryExecute.ExecSQL;
+//
+//    end else SaveRewiringLog('Не создана роль для проведения перепроведения. Тригера не обновлены', True);
 
     SaveRewiringLog('Выполнено.');
     ZConnection.Disconnect;
