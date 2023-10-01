@@ -51,6 +51,13 @@ BEGIN
            -- 0. !!!Admin!!!
           RETURN TRUE;
 
+      ELSEIF vbUserId = 5 AND TRIM (inStoredProc) ILIKE 'gpReport_ReceiptAnalyze'
+             AND 1=0
+      THEN
+           -- 0. !!!Admin!!!
+          RETURN TRUE;
+      
+
       -- если отключен SRV-A
       ELSEIF vbIsReal_only = TRUE OR 1=0
       THEN
