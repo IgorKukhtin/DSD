@@ -128,6 +128,12 @@ type
     Comment_calc: TcxGridDBColumn;
     Amount_calc_two: TcxGridDBColumn;
     Amount_Weight_calc_two: TcxGridDBColumn;
+    Price1_bon: TcxGridDBColumn;
+    Price2_bon: TcxGridDBColumn;
+    Price3_bon: TcxGridDBColumn;
+    Price1_bon_sale: TcxGridDBColumn;
+    Price2_bon_sale: TcxGridDBColumn;
+    Price3_bon_sale: TcxGridDBColumn;
   private
     { Private declarations }
   public
