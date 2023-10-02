@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ChangePercent TFloat
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , isRealEx Boolean
+             , isNotTareReturning Boolean
              , isErased Boolean
               )
 AS
@@ -147,7 +148,8 @@ BEGIN
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
 
-       , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
+       , COALESCE (ObjectBoolean_RealEx.ValueData, False)             :: Boolean AS isRealEx
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
        , Object_Contract_View.isErased
        
    FROM 
@@ -186,7 +188,7 @@ BEGIN
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                   ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
 
- 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+ 	    LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
@@ -200,6 +202,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                 ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
@@ -300,7 +306,10 @@ BEGIN
 
 
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
-       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
+       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName  
+       
+       , COALESCE (ObjectBoolean_RealEx.ValueData, False)             :: Boolean AS isRealEx
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
 
        , Object_Contract_View.isErased
        
@@ -355,6 +364,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                 ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
@@ -433,7 +446,10 @@ BEGIN
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
-       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
+       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName   
+       
+       , COALESCE (ObjectBoolean_RealEx.ValueData, False)             :: Boolean AS isRealEx
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
 
        , Object_Contract_View.isErased
        
@@ -486,6 +502,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                 ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
@@ -566,6 +586,9 @@ BEGIN
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
 
+       , COALESCE (ObjectBoolean_RealEx.ValueData, False)             :: Boolean AS isRealEx
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
+
        , Object_Contract_View.isErased
        
    FROM _tmpPaidKind
@@ -610,6 +633,10 @@ BEGIN
                                 ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
@@ -633,6 +660,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 26.09.23         * isNotTareReturning
  21.05.17         * add Contract_Currency
  17.11.15                                                                     *
  08.09.14                                        * add Object_RoleAccessKeyGuide_View

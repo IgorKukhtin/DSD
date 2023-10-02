@@ -143,8 +143,13 @@ BEGIN
                                                                  ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerPD.PartionGoodsId
                                                                 AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
 
+                                         LEFT OUTER JOIN Movement  AS MovementIncome
+                                                                   ON MovementIncome.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+
                                      WHERE Container.DescId = zc_Container_Count()
                                        AND Container.WhereObjectId = vbUnitId
+                                       AND ((COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())::Date - MovementIncome.OperDate::Date) > 90
+                                        OR MovementIncome.OperDate < '19.09.2023')
                                        AND Container.Amount > 0)
                  , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id
                                                , Object_PartionDateKind.ValueData
@@ -257,8 +262,13 @@ BEGIN
                                                                  ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerPD.PartionGoodsId
                                                                 AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
 
+                                         LEFT OUTER JOIN Movement  AS MovementIncome
+                                                                   ON MovementIncome.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+
                                      WHERE Container.DescId = zc_Container_Count()
                                        AND Container.WhereObjectId = vbUnitId
+                                       AND ((COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())::Date - MovementIncome.OperDate::Date) > 90
+                                        OR MovementIncome.OperDate < '19.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)
                                        AND Container.ObjectId IN (SELECT DISTINCT MI_Master.GoodsId FROM MI_Master)
                                        AND Container.Amount > 0)
 

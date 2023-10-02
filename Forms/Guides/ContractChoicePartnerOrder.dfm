@@ -442,6 +442,14 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Options.Editing = False
             Width = 70
           end
+          object isNotTareReturning: TcxGridDBColumn
+            Caption = #1053#1077#1090' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1090#1072#1088#1099
+            DataBinding.FieldName = 'isNotTareReturning'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object GLNCode: TcxGridDBColumn
             Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
             DataBinding.FieldName = 'GLNCode'

@@ -341,6 +341,7 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    isNotTareReturning: TcxGridDBColumn;
 
   private
     { Private declarations }

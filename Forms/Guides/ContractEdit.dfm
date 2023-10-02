@@ -580,6 +580,15 @@
       TabOrder = 5
       Width = 218
     end
+    object cbisNotTareReturning: TcxCheckBox
+      Left = 7
+      Top = 330
+      Caption = #1053#1077#1090' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1090#1072#1088#1099
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+      Width = 122
+    end
   end
   object cxLabel15: TcxLabel [33]
     Left = 18
@@ -984,7 +993,7 @@
     Hint = 
       #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103') - '#1076#1083#1103' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1083#1072#1090#1077#1078#1072' '#1074' '#1073#1072#1085#1082'.'#1074#1099#1087#1080#1089 +
       #1082#1077
-    TabOrder = 84
+    TabOrder = 81
     Width = 161
   end
   object cbisRealEx: TcxCheckBox [82]
@@ -994,7 +1003,7 @@
     Caption = #1060#1080#1079'. '#1086#1073#1084#1077#1085
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 86
+    TabOrder = 84
     Width = 92
   end
   object cbNotVat: TcxCheckBox [83]
@@ -1750,6 +1759,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisNotTareReturning'
+        Value = Null
+        Component = cbisNotTareReturning
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceListPromoId'
         Value = Null
         Component = GuidesPriceListPromo
@@ -1771,12 +1788,6 @@
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 440
@@ -2275,6 +2286,13 @@
         Component = cbNotVat
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotTareReturning'
+        Value = Null
+        Component = cbisNotTareReturning
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 392
     Top = 315
@@ -2336,8 +2354,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 310
-    Top = 259
+    Left = 342
+    Top = 235
   end
   object GuidesContractKind: TdsdGuides
     KeyField = 'Id'

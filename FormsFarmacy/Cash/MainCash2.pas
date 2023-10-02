@@ -3041,7 +3041,8 @@ begin
         end else if NOT PUSHDS.FieldByName('isPoll').AsBoolean and
            (PUSHDS.FieldByName('FormName').AsString = '') and
            NOT PUSHDS.FieldByName('isExecStoredProc').AsBoolean and
-           NOT PUSHDS.FieldByName('isSpecialLighting').AsBoolean  then
+           NOT PUSHDS.FieldByName('isSpecialLighting').AsBoolean and
+           (Pos('полный переучет', PUSHDS.FieldByName('Text').AsString) = 0) then
         begin
           ShowTrayMessage(PUSHDS.FieldByName('Text').AsString);
           if PUSHDS.FieldByName('Id').AsInteger > 1000 then

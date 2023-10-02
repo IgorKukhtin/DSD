@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
+             , isNotTareReturning Boolean
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , MemberTakeId Integer, MemberTakeName TVarChar
@@ -110,7 +111,8 @@ BEGIN
        , Object_PaidKind.Id              AS PaidKindId
        , Object_PaidKind.ValueData       AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
-       , ObjectString_Comment.ValueData AS ContractComment 
+       , ObjectString_Comment.ValueData AS ContractComment
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning 
 
        , Object_Route.Id               AS RouteId
        , Object_Route.ValueData        AS RouteName
@@ -266,6 +268,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
  
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
@@ -445,7 +451,8 @@ BEGIN
        , Object_PaidKind.Id              AS PaidKindId
        , Object_PaidKind.ValueData       AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
-       , ObjectString_Comment.ValueData AS ContractComment 
+       , ObjectString_Comment.ValueData AS ContractComment
+       , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning 
 
        , Object_Route.Id               AS RouteId
        , Object_Route.ValueData        AS RouteName
@@ -602,6 +609,10 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
+                                ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
@@ -732,6 +743,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 26.09.23         * isNotTareReturning
  22.11.18         * add Currency
  10.05.17         *  add Address, GPSE, GPSN
  12.09.15         * add MemberTake1...7
