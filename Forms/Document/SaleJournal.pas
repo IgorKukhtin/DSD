@@ -349,6 +349,7 @@ type
     actPrint_QualityDoc_list: TdsdPrintAction;
     bb: TdxBarButton;
     macPrint_Group: TMultiAction;
+    mactPrint_Sale_list: TMultiAction;
   private
     { Private declarations }
   public

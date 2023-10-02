@@ -5,7 +5,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -231
   ExplicitWidth = 1386
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -3989,6 +3988,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      WithOutPreview = True
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -4062,6 +4062,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = 'actPrint_TTN'
       Hint = 'actPrint_TTN'
+      WithOutPreview = True
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -4165,7 +4166,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           Action = actInsertUpdate_Quality_byTransport
         end
         item
-          Action = mactPrint_Sale
+          Action = macPrintPack
         end
         item
           Action = macPrint_TTN_list
