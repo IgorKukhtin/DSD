@@ -308,6 +308,7 @@ BEGIN
                                          ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
                                         AND MovementLinkObject_CarTrailer.DescId = zc_MovementLinkObject_CarTrailer()
             LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MovementLinkObject_CarTrailer.ObjectId
+            
             LEFT JOIN ObjectLink AS ObjectLink_CarTrailer_CarModel ON ObjectLink_CarTrailer_CarModel.ObjectId = Object_CarTrailer.Id
                                                                   AND ObjectLink_CarTrailer_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarTrailerModel ON Object_CarTrailerModel.Id = ObjectLink_CarTrailer_CarModel.ChildObjectId
