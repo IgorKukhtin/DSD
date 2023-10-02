@@ -693,6 +693,7 @@ BEGIN
                   ELSE 0
              END :: TFloat AS Amount_next
            , _tmpMI_child.ContainerId
+           , (vbOperDate :: Date - tmpGoods_params.TermProduction :: Integer) :: TDateTime AS Date_TermProd
            , FALSE AS isErased
        FROM _tmpMI_child
              LEFT JOIN tmpGoods_params ON tmpGoods_params.GoodsId_basis = _tmpMI_child.GoodsId

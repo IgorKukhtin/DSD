@@ -2,6 +2,8 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
   ClientHeight = 668
   ClientWidth = 1020
+  ExplicitLeft = -143
+  ExplicitTop = -44
   ExplicitWidth = 1036
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -1891,6 +1893,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1073#1077#1079' '#1091#1095#1077#1090#1072' '#1087#1086#1090#1077#1088#1100
         Options.Editing = False
         Width = 80
       end
@@ -1913,6 +1916,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' '#1087#1086#1090#1077#1088#1100
         Options.Editing = False
       end
       object Amount_old: TcxGridDBColumn
@@ -1923,6 +1927,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' '#1087#1086#1090#1077#1088#1100
         Options.Editing = False
         Width = 70
       end
@@ -1934,6 +1939,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' '#1087#1086#1090#1077#1088#1100
         Options.Editing = False
         Width = 70
       end
@@ -1944,6 +1950,15 @@ inherited OrderInternalForm: TOrderInternalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object Date_TermProd: TcxGridDBColumn
+        Caption = '***'#1055#1072#1088#1090#1080#1080' <'#1076#1072#1083#1077#1077'>'
+        DataBinding.FieldName = 'Date_TermProd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '***'#1055#1072#1088#1090#1080#1080' '#1087#1086#1089#1083#1077' '#1101#1090#1086#1081' '#1076#1072#1090#1099' '#1074#1093#1086#1076#1103#1090' '#1074' <'#1055#1088#1086#1080#1079#1074'. '#1076#1072#1083#1077#1077'>'
+        Options.Editing = False
+        Width = 75
       end
       object ContainerId: TcxGridDBColumn
         Caption = #1087#1072#1088#1090#1080#1103

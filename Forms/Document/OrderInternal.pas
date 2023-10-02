@@ -168,6 +168,7 @@ type
     CountForecastPromo: TcxGridDBColumn;
     CountForecast_minus: TcxGridDBColumn;
     CountForecastOrder_minus: TcxGridDBColumn;
+    Date_TermProd: TcxGridDBColumn;
   private
     { Private declarations }
   public
