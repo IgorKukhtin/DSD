@@ -112,7 +112,7 @@ BEGIN
                                                        FROM tmpInventory
                                                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpInventory.MovementId
                                                                                    AND MovementItem.DescId     = zc_MI_Master()
-                                                                                   -- AND MovementItem.isErased   = FALSE
+                                                                                 --AND MovementItem.isErased   = FALSE
                                                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
                                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -521,11 +521,11 @@ end if;*/
       ;
 
 
-if vbUserId = 5 AND 1=0
+if vbUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)
-    , (select max (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)
-    , (select max (tmpAll.ContainerId) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)
+    RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 7493 AND tmpAll.MIDescId = zc_MI_Child() AND tmpAll.ContainerId > 0)
+    , (select count(*) from tmpAll where tmpAll.GoodsId = 7493 AND tmpAll.MIDescId = zc_MI_Child() AND tmpAll.ContainerId > 0 and tmpAll.Amount_start <> 0)
+    , (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 7493 AND tmpAll.MIDescId = zc_MI_Child() AND tmpAll.ContainerId > 0 and tmpAll.Amount_start < 0)
     ;
 end if;
 

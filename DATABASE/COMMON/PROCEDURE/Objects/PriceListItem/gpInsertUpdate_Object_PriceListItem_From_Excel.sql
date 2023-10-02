@@ -28,12 +28,12 @@ BEGIN
     IF COALESCE (TRIM (inGoodsKindName), '') <> ''
     THEN 
          -- Проверка
-         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND Object.ValueData ILIKE TRIM (inGoodsKindName))
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND TRIM (Object.ValueData) ILIKE TRIM (inGoodsKindName))
          THEN
              RAISE EXCEPTION 'Ошибка.Значение вид товара = <%> найден несколько раз.', inGoodsKindName;
          END IF;
          -- поиск вида товара
-         vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND Object.ValueData ILIKE TRIM (inGoodsKindName));
+         vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND TRIM (Object.ValueData) ILIKE TRIM (inGoodsKindName));
          IF COALESCE (vbGoodsKindId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение вид товара = <%> не найден.', inGoodsKindName;
