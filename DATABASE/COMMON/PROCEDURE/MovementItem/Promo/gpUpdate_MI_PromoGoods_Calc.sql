@@ -30,7 +30,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
 
-    --vbTaxPromo := (REPLACE(REPLACE (inTaxPromo, '%', ''), ',', '.')) :: TFloat;
+    -- vbTaxPromo := (REPLACE(REPLACE (inTaxPromo, '%', ''), ',', '.')) :: TFloat;
     vbGoodsId  := (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inId);
     
     -- проверка - если есть подписи, корректировать нельзя
@@ -58,7 +58,7 @@ BEGIN
               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), MovementItem.Id, inContractCondition)  -- zfConvert_StringToFloat(TRIM (REPLACE (REPLACE (inContractCondition, '%', ''), ',', '.')))
         FROM MovementItem
         WHERE MovementItem.MovementId = inMovementId
-          AND MovementItem.ObjectId = vbGoodsId;
+          AND MovementItem.ObjectId   = vbGoodsId;
           
         -- сохранили протокол
         PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)

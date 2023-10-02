@@ -30,7 +30,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
     IN inAmountPlanMax        TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг)
    OUT outAmountPlanMaxWeight TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг) Вес
  INOUT ioTaxRetIn             TFloat    , -- % возвратa
-    IN inGoodsKindId          Integer   , -- ИД обьекта <Вид товара>
+ INOUT ioGoodsKindId          Integer   , -- ИД обьекта <Вид товара>
+   OUT outGoodsKindName       TVarChar  , -- 
  INOUT ioGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
    OUT outGoodsKindCompleteName TVarChar, -- 
     IN inComment              TVarChar  , -- Комментарий
@@ -49,9 +50,17 @@ BEGIN
     vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
 
 
+    -- !!!замена!!! - новая схема
+    IF EXISTS (SELECT 1 FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_Insert() AND MovementDate.ValueData >= '25.09.2023')
+       OR vbUserId = 5
+    THEN
+        ioGoodsKindId:= ioGoodsKindCompleteId;
+    END IF;
+
+
     -- замена
     IF COALESCE (ioCountForPrice, 0) <= 0 THEN ioCountForPrice:= 1; END IF;
-
+    
 
     -- проверка - если есть подписи, корректировать нельзя
     PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inMovementId
@@ -72,13 +81,13 @@ BEGIN
                FROM MovementItem_PromoGoods_View AS MI_PromoGoods
                WHERE MI_PromoGoods.MovementId                          = inMovementId
                    AND MI_PromoGoods.GoodsId                           = inGoodsId
-                   AND COALESCE (MI_PromoGoods.GoodsKindId, 0)         = COALESCE (inGoodsKindId, 0)
+                   AND COALESCE (MI_PromoGoods.GoodsKindId, 0)         = COALESCE (ioGoodsKindId, 0)
                    AND COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) = COALESCE (ioGoodsKindCompleteId, 0)
                    AND MI_PromoGoods.Id                        <> COALESCE(ioId, 0)
                    AND MI_PromoGoods.isErased                  = FALSE
               )
     THEN
-        RAISE EXCEPTION 'Ошибка. В документе уже указана скидка для товара = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
+        RAISE EXCEPTION 'Ошибка. В документе уже указана скидка для товара = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (ioGoodsKindId);
     END IF;
 
     -- поиск прайс-лист
@@ -95,6 +104,8 @@ BEGIN
 
     -- поиск цены по базовому прайсу
     IF COALESCE (ioOperPriceList, 0) = 0 OR COALESCE (ioId, 0) = 0
+       OR COALESCE (ioGoodsKindId, 0)         <> COALESCE ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKind()), 0)
+       OR COALESCE (ioGoodsKindCompleteId, 0) <> COALESCE ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKindComplete()), 0)
     THEN
          --
          IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPriceList'))
@@ -111,17 +122,24 @@ BEGIN
                   , lfSelect.ValuePrice  AS ValuePrice
              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList, inOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId)) AS lfSelect;
 
-       ioOperPriceList := COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId = CASE WHEN inGoodsKindId > 0 THEN inGoodsKindId ELSE ioGoodsKindCompleteId END)
+       ioOperPriceList := COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId = CASE WHEN ioGoodsKindId > 0 THEN ioGoodsKindId ELSE ioGoodsKindCompleteId END)
                           , (SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId IS NULL)
                           ,0);
 
-        /*SELECT Price.ValuePrice
-               INTO ioOperPriceList
-        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList
-                                                 , inOperDate   := (SELECT OperDate FROM Movement WHERE Id = inMovementId)
-                                                  ) AS Price
-        WHERE Price.GoodsId = inGoodsId;
-        */
+    /*IF vbUserId = 5 AND 1=0
+    THEN
+        RAISE EXCEPTION 'Ошибка. %   %   %'
+        , (SELECT Price.ValuePrice
+          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList
+                                                   , inOperDate   := (SELECT OperDate FROM Movement WHERE Id = inMovementId)
+                                                    ) AS Price
+          WHERE Price.GoodsId = inGoodsId
+            AND Price.GoodsKindId = CASE WHEN ioGoodsKindId > 0 THEN ioGoodsKindId ELSE ioGoodsKindCompleteId END)
+        , lfGet_Object_ValueData_sh (vbPriceList)
+        , lfGet_Object_ValueData_sh (ioGoodsKindCompleteId)
+        ;
+        
+    END IF;*/
 
         IF ioCountForPrice > 1
         THEN
@@ -219,7 +237,7 @@ BEGIN
                                                   , inAmountPlanMin        := inAmountPlanMin
                                                   , inAmountPlanMax        := inAmountPlanMax
                                                   , inTaxRetIn             := ioTaxRetIn
-                                                  , inGoodsKindId          := inGoodsKindId
+                                                  , inGoodsKindId          := ioGoodsKindId
                                                   , inGoodsKindCompleteId  := ioGoodsKindCompleteId
                                                   , inComment              := inComment
                                                   , inUserId               := vbUserId
@@ -236,6 +254,10 @@ BEGIN
                                                          , inSession          := inSession
                                                           );
      END IF;
+     
+
+    -- вернули данные
+    outGoodsKindName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = ioGoodsKindId);
 
     -- вернули данные
     SELECT MILO_GoodsKindComplete.ObjectId    AS GoodsKindCompleteId

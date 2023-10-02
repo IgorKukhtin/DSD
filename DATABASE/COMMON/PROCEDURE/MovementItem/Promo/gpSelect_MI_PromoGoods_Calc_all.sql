@@ -113,13 +113,13 @@ BEGIN
                           
                           , (MIFloat_PriceWithVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END) :: TFloat AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
                     
-                          , SUM (MIFloat_AmountPlanMax.ValueData) OVER (PARTITION BY MovementItem.ObjectId)  AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
+                          , SUM (MIFloat_AmountPlanMax.ValueData) OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0))  AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
 
                           , SUM (CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE
                                       THEN (MIFloat_AmountPlanMax.ValueData * MIFloat_PriceWithVAT.ValueData) / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                                       ELSE MIFloat_AmountPlanMax.ValueData * ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100) / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END, 2)
                                  END)
-                                 OVER (PARTITION BY MovementItem.ObjectId)  AS SummaSale                            --сумма плана продаж
+                                 OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0))  AS SummaSale                            --сумма плана продаж
      
                           , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
                           , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
@@ -131,7 +131,7 @@ BEGIN
                           
                           , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки
                            /* выводить товар 1 раз, даже если zc_MI_Master.ObjectId несколько - из за видов упак*/
-                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id)    AS Ord_goods  -- для вывода только 1 раз товара
+                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ORDER BY MovementItem.Id)    AS Ord_goods  -- для вывода только 1 раз товара
      
                      FROM MovementItem
                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -601,7 +601,7 @@ WITH
                           
                           , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки
                            /* выводить товар 1 раз, даже если zc_MI_Master.ObjectId несколько - из за видов упак*/
-                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id)    AS Ord_goods  -- для вывода только 1 раз товара
+                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ORDER BY MovementItem.Id)    AS Ord_goods  -- для вывода только 1 раз товара
      
                      FROM MovementItem
                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId

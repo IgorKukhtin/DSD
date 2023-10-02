@@ -294,7 +294,12 @@ end if;
                                      , inUserId        := zc_Enum_Process_Auto_PartionDate()
                                       )
      FROM _tmpItem_Partion_child
+          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpItem_Partion_child.MovementItemId_parent
+                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                    AND MIB_Close.ValueData      = TRUE
      WHERE _tmpItem_Partion_child.OperCount = 0 AND _tmpItem_Partion_child.MovementItemId <> 0
+       -- Закрыт для пересчета
+       AND MIB_Close.MovementItemId IS NULL
     ;
 
      -- сохраняются элементы - расход на производство
@@ -312,7 +317,12 @@ end if;
                                                      )
      FROM _tmpItem_Partion_child
           LEFT JOIN _tmpItem_Partion ON _tmpItem_Partion.MovementItemId = _tmpItem_Partion_child.MovementItemId_parent
+          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpItem_Partion_child.MovementItemId_parent
+                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                    AND MIB_Close.ValueData      = TRUE
      WHERE _tmpItem_Partion_child.OperCount <> 0
+       -- Закрыт для пересчета
+       AND MIB_Close.MovementItemId IS NULL
     ;
 
 
