@@ -1457,7 +1457,8 @@ uses
   Report_Send_PersonalGroup in '..\..\Forms\Report\Report_Send_PersonalGroup.pas' {Report_Send_PersonalGroupForm: TParentForm},
   Report_Send_PersonalGroupDialog in '..\..\Forms\Report\Report_Send_PersonalGroupDialog.pas' {Report_Send_PersonalGroupDialogForm: TParentForm},
   Report_HistoryCost_Difference in '..\..\Forms\Report\Report_HistoryCost_Difference.pas' {Report_HistoryCost_DifferenceForm: TParentForm},
-  Report_HistoryCost_DifferenceDialog in '..\..\Forms\Report\Report_HistoryCost_DifferenceDialog.pas' {Report_HistoryCost_DifferenceDialogForm: TParentForm};
+  Report_HistoryCost_DifferenceDialog in '..\..\Forms\Report\Report_HistoryCost_DifferenceDialog.pas' {Report_HistoryCost_DifferenceDialogForm: TParentForm},
+  OrderInternalChild in '..\..\Forms\Document\OrderInternalChild.pas' {OrderInternalChildForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
