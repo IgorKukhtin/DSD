@@ -11,9 +11,10 @@ RETURNS TABLE (Second_pause   Integer
               )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
-      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ReportPriority());
+      vbUserId:= lpGetUserBySession (inSession);
 
 
       --
@@ -39,7 +40,10 @@ BEGIN
                           )
             , tmpCount AS (SELECT SUM (COALESCE (tmpCount_all.Res, 0)) :: Integer AS Res FROM tmpCount_all
                           )
-            , tmpSecond AS (SELECT CASE WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
+            , tmpSecond AS (SELECT CASE WHEN vbUserId = 5
+                                             THEN 0
+
+                                        WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
 
                                         WHEN CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) BETWEEN 1 AND 10 THEN 0 ELSE 2 END
