@@ -300,6 +300,24 @@ type
     macExportFile_fromMail: TMultiAction;
     macExportFile_fromMail_All: TMultiAction;
     bbExportFile_fromMail_All: TdxBarButton;
+    spGetReportNameQuality_list: TdsdStoredProc;
+    spInsertUpdate_TTN_byTransport: TdsdStoredProc;
+    spInsertUpdate_Quality_byTransport: TdsdStoredProc;
+    spSelectPrint_Quality_list: TdsdStoredProc;
+    actPrint_Quality_ReportName_list: TdsdExecStoredProc;
+    actPrint_QualityDoc_list: TdsdPrintAction;
+    actSPPrintTTNProcName_list: TdsdExecStoredProc;
+    actInsertUpdate_TTN_byTransport: TdsdExecStoredProc;
+    actInsertUpdate_Quality_byTransport: TdsdExecStoredProc;
+    actPrint_TTN_list: TdsdPrintAction;
+    macPrint_QualityDoc_list: TMultiAction;
+    macPrint_TTN_list: TMultiAction;
+    macPrint_Group_list: TMultiAction;
+    macPrint_Group: TMultiAction;
+    bbPrint_Group: TdxBarButton;
+    cxLabel30: TcxLabel;
+    edInvNumberTransport: TcxButtonEdit;
+    GuidesTransport: TdsdGuides;
   private
     { Private declarations }
   public
