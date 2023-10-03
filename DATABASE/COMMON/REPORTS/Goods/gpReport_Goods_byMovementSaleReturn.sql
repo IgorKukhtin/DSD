@@ -27,6 +27,9 @@ $BODY$
 
     DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
 
@@ -106,7 +109,7 @@ BEGIN
                                 )
                     SELECT tmpReport.OperDate
                          , _tmpGoods.GroupNum
-                         , _tmpGoods.GoodsPlatformId
+                         , CASE WHEN _tmpGoods.GoodsPlatformId > 0 THEN _tmpGoods.GoodsPlatformId WHEN vbUserId = 5 OR 1=1 THEN tmpReport.GoodsId ELSE _tmpGoods.GoodsPlatformId END AS GoodsPlatformId
                          , _tmpGoods.TradeMarkId
                          , _tmpGoods.GoodsTagId
                          , CASE WHEN _tmpGoods.GroupNum = 2 THEN tmpReport.GoodsId ELSE 0 END AS GoodsId
@@ -223,7 +226,7 @@ BEGIN
                          INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpReport.GoodsId
                     GROUP BY tmpReport.OperDate
                           , _tmpGoods.GroupNum
-                          , _tmpGoods.GoodsPlatformId
+                          , CASE WHEN _tmpGoods.GoodsPlatformId > 0 THEN _tmpGoods.GoodsPlatformId WHEN vbUserId = 5 OR 1=1 THEN tmpReport.GoodsId ELSE _tmpGoods.GoodsPlatformId END
                           , _tmpGoods.TradeMarkId
                           , _tmpGoods.GoodsTagId
                           , CASE WHEN _tmpGoods.GroupNum = 2 THEN tmpReport.GoodsId ELSE 0 END

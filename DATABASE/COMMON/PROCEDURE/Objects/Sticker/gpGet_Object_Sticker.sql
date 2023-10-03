@@ -24,12 +24,12 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
               )
 AS
 $BODY$
-   DECLARE vbPriceListId Integer;
+   DECLARE vbUserId        Integer;
+   DECLARE vbPriceListId   Integer;
    DECLARE vbPriceListName TVarChar;
 BEGIN
-
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Sticker());
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
     
    IF (COALESCE (inId, 0) = 0 AND COALESCE (inMaskId, 0) = 0)
    THEN

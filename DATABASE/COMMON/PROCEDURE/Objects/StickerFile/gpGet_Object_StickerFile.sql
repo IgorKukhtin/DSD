@@ -21,12 +21,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Left1_70_70 TFloat, Left2_70_70 TFloat
              , isDefault Boolean
              , isSize70 Boolean
-             ) AS
+             )
+AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
-  -- проверка прав пользователя на вызов процедуры
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_StickerFile());
 
    IF COALESCE (inId, 0) = 0
    THEN

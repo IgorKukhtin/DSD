@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inIsContract   Boolean   , --
     IN inIsOLAP       Boolean   , --
     IN inIsDate       Boolean   , --
-    IN inisMonth      Boolean   , --
+    IN inIsMonth      Boolean   , --
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -367,7 +367,7 @@ BEGIN
                                                                       , vbIsGoods_where
                                                                       , EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
                                                                         OR vbUserId = 1058530 -- Няйко В.И.
-                                                                      , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE THEN TRUE ELSE FALSE END ::Boolean
+                                                                      , CASE WHEN inIsDate = TRUE OR inIsMonth = TRUE THEN TRUE ELSE FALSE END ::Boolean
                                                                       , inSession
                                                                        ) AS gpReport
                               )
@@ -430,7 +430,8 @@ BEGIN
                                                                  , CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
                                                                  , inIsContract
                                                                  , FALSE -- inIsOLAP
-                                                                 , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE THEN TRUE ELSE FALSE END ::Boolean
+                                                                 , inIsDate
+                                                                 , inIsMonth
                                                                  , inSession
                                                                   ) AS gpReport
                                WHERE vbEndDate_olap < inEndDate
@@ -508,12 +509,12 @@ BEGIN
                    ELSE NULL
               END ::TDateTime AS OperDate 
 
-            , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+            , CASE WHEN inIsDate = TRUE OR inIsMonth = TRUE
                    THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
                    ELSE NULL
               END ::TDateTime AS OperDate_month
 
-            , CASE WHEN inisMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END ::TVarChar  AS DayOfWeekName_Full
+            , CASE WHEN inIsMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END ::TVarChar  AS DayOfWeekName_Full
 
             , SUM (gpReport.Sale_SummIn_pav)     ::TFloat AS Sale_SummIn_pav
             , SUM (gpReport.ReturnIn_SummIn_pav) ::TFloat AS ReturnIn_SummIn_pav
@@ -562,12 +563,12 @@ BEGIN
                      ELSE NULL
                 END ::TDateTime
   
-              , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+              , CASE WHEN inIsDate = TRUE OR inIsMonth = TRUE
                      THEN DATE_TRUNC ('MONTH', gpReport.OperDate)
                      ELSE NULL
                 END ::TDateTime
 
-              , CASE WHEN inisMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END
+              , CASE WHEN inIsMonth = TRUE THEN '' ELSE gpReport.DayOfWeekName_Full  END
               , Object_Section.Id
               , Object_Section.ValueData
               --, CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END
@@ -578,7 +579,9 @@ BEGIN
     END IF;
 
 
--- if vbUserId = 5 then     RETURN; end if;
+ if vbUserId = 5 then     
+     RAISE EXCEPTION 'Ошибка.<%> ', inIsDate;
+ end if;
 
     -- Результат
     RETURN QUERY
@@ -741,7 +744,7 @@ BEGIN
                                      ELSE NULL
                                 END ::TDateTime AS OperDate 
                   
-                              , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+                              , CASE WHEN inIsDate = TRUE OR inIsMonth = TRUE
                                      THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
                                      ELSE NULL
                                 END ::TDateTime AS OperDate_month
@@ -805,7 +808,7 @@ BEGIN
                                        ELSE NULL
                                   END ::TDateTime
                     
-                                , CASE WHEN inIsDate = TRUE OR inisMonth = TRUE
+                                , CASE WHEN inIsDate = TRUE OR inIsMonth = TRUE
                                        THEN DATE_TRUNC ('MONTH', MIContainer.OperDate)
                                        ELSE NULL
                                   END ::TDateTime
@@ -1210,8 +1213,3 @@ $BODY$
 */
 -- тест
 -- 
-SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.08.2023', inEndDate:= '01.08.2023'
-, inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm()
-, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE
-, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE
-, inIsDate:= TRUE, inisMonth:= TRUE, inSession:= zfCalc_UserAdmin());

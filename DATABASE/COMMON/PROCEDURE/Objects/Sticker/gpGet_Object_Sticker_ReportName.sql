@@ -45,7 +45,14 @@ BEGIN
                                 -- индивидуальный - Свойства этикетки
                                 LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile
                                                      ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id
-                                                    AND ObjectLink_StickerProperty_StickerFile.DescId   = zc_ObjectLink_StickerProperty_StickerFile()
+                                                    AND ObjectLink_StickerProperty_StickerFile.DescId   = CASE WHEN inIs70_70 = TRUE
+                                                                                                               THEN zc_ObjectLink_StickerProperty_StickerFile_70_70()
+                                                                                                               ELSE zc_ObjectLink_StickerProperty_StickerFile()
+                                                                                                          END
+                                -- без 70x70
+                                LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile_f
+                                                     ON ObjectLink_StickerProperty_StickerFile_f.ObjectId = Object_StickerProperty.Id
+                                                    AND ObjectLink_StickerProperty_StickerFile_f.DescId   = zc_ObjectLink_StickerProperty_StickerFile()
 
                                 LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
                                                      ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
@@ -53,7 +60,14 @@ BEGIN
                                 -- индивидуальный - Этикетка
                                 LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile
                                                      ON ObjectLink_Sticker_StickerFile.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
-                                                    AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile()
+                                                    AND ObjectLink_Sticker_StickerFile.DescId   = CASE WHEN inIs70_70 = TRUE
+                                                                                                       THEN zc_ObjectLink_Sticker_StickerFile_70_70()
+                                                                                                       ELSE zc_ObjectLink_Sticker_StickerFile()
+                                                                                                  END
+                                -- без 70x70
+                                LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile_f
+                                                     ON ObjectLink_Sticker_StickerFile_f.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                    AND ObjectLink_Sticker_StickerFile_f.DescId   = zc_ObjectLink_Sticker_StickerFile()
 
                                 LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
                                                      ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
@@ -64,7 +78,13 @@ BEGIN
                                 -- "по умолчанию" - для конкретной ТМ
                                 LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
 
-                                LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, COALESCE (ObjectLink_Sticker_StickerFile.ChildObjectId, tmpStickerFile.StickerFileId))
+                                LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId
+                                                                                                          , ObjectLink_Sticker_StickerFile.ChildObjectId
+                                                                                                          , tmpStickerFile.StickerFileId
+                                                                                                          , ObjectLink_StickerProperty_StickerFile_f.ChildObjectId
+                                                                                                          , ObjectLink_Sticker_StickerFile_f.ChildObjectId
+                                                                                                           )
+
                            WHERE Object_StickerProperty.Id = inObjectId
                           );
 
@@ -75,8 +95,15 @@ BEGIN
      END IF;
 
      -- Результат
-     RETURN (vbStickerFileName
-          || CASE WHEN inIs70_70 = TRUE /*AND vbUserId=5*/ THEN '_70_70' ELSE '' END
+     RETURN (CASE WHEN vbUserId = 5 AND 1=0
+                       THEN REPLACE (vbStickerFileName, 'ТМ', 'тм')
+                       --THEN REPLACE (vbStickerFileName, 'тм', 'ТМ')
+                  ELSE vbStickerFileName
+             END
+          || CASE WHEN vbStickerFileName ILIKE '%_70_70'   THEN ''
+                  WHEN inIs70_70 = TRUE /*AND vbUserId=5*/ THEN '_70_70'
+                  ELSE ''
+             END
           || '.Sticker');
 
 END;

@@ -4,14 +4,15 @@ DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, TVarChar
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print(Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inObjectId          Integer  , -- ключ Этикетки
-    IN inRetailId          Integer  , -- ключ Этикетки
+    IN inRetailId          Integer  , -- ключ
     IN inIsJPG             Boolean  , --
     IN inIsLength          Boolean  , --
-    IN inIs70_70           Boolean  , -- 
+    IN inIs70_70           Boolean  , --
 
     IN inIsStartEnd        Boolean  , -- 1 - печатать дату нач/конечн произв-ва на этикетке
     IN inIsTare            Boolean  , -- 2 - печатать для ТАРЫ
@@ -26,12 +27,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inNumPack           TFloat   , -- № партии  упаковки, по умолчанию = 1 (для режим 3)
     IN inNumTech           TFloat   , -- № смены технологов, по умолчанию = 1 (для режим 3)
 
+    IN inWeight            TFloat   , --
+
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , MeasureId Integer, MeasureName TVarChar, zc_Measure_Sh Integer
              , StickerPackId Integer, StickerPackName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
@@ -84,6 +88,8 @@ $BODY$
     DECLARE vbAddLeft1      Integer;
     DECLARE vbAddLeft2      Integer;
     DECLARE vbAddLine       Integer;
+
+    DECLARE vbGoodsPropertyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -91,7 +97,7 @@ BEGIN
      -- тест
      IF COALESCE (inRetailId, 0) = 0
      THEN
-         inRetailId:= 310855; -- Варус
+         inRetailId:= 0; -- 83955; -- Алан
      END IF;
 
      -- проверка
@@ -99,6 +105,29 @@ BEGIN
      --   THEN
      --    RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
      --END IF;
+
+     -- поиск
+     vbGoodsPropertyId:= COALESCE ((SELECT MAX (OL_Juridical_GoodsProperty.ChildObjectId)
+                                    FROM ObjectLink AS OL_Juridical_Retail
+                                         INNER JOIN ObjectLink AS OL_Juridical_GoodsProperty
+                                                               ON OL_Juridical_GoodsProperty.ObjectId      = OL_Juridical_Retail.ObjectId
+                                                              AND OL_Juridical_GoodsProperty.DescId        = zc_ObjectLink_Juridical_GoodsProperty()
+                                                              AND OL_Juridical_GoodsProperty.ChildObjectId > 0
+                                    WHERE OL_Juridical_Retail.ChildObjectId = inRetailId
+                                      AND OL_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                   )
+                                 , (SELECT OL_Retail_GoodsProperty.ChildObjectId
+                                    FROM ObjectLink AS OL_Retail_GoodsProperty
+                                    WHERE OL_Retail_GoodsProperty.ObjectId = inRetailId
+                                      AND OL_Retail_GoodsProperty.DescId   = zc_ObjectLink_Retail_GoodsProperty()
+                                   )
+                                 , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)
+                                  );
+
+      /*IF vbUserId = 5
+      THEN
+          RAISE EXCEPTION 'Ошибка.%   %.', vbGoodsPropertyId, lfGet_Object_ValueData_sh (vbGoodsPropertyId);
+      END IF;*/
 
      -- поиск
      vbBranchCode:= (WITH tmpMember AS (SELECT OL.ChildObjectId AS MemberId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId AND OL.DescId = zc_ObjectLink_User_Member())
@@ -159,8 +188,12 @@ BEGIN
                        );
 
      -- Сколько пробелов добавим слева, т.е. это когда слева - Фирменный знак
-     vbAddLeft1:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left1() AND ObF.ValueData > 0), 0);
-     vbAddLeft2:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left2() AND ObF.ValueData > 0), 0);
+     vbAddLeft1:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left1_70_70() AND ObF.ValueData > 0 AND inIs70_70 = TRUE)
+                          , (SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left1() AND ObF.ValueData > 0)
+                          , 0);
+     vbAddLeft2:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left2_70_70() AND ObF.ValueData > 0 AND inIs70_70 = TRUE)
+                          , (SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left2() AND ObF.ValueData > 0)
+                          , 0);
                  /*CASE (SELECT ObjectLink_StickerFile_TradeMark.ChildObjectId
                        FROM ObjectLink AS ObjectLink_StickerFile_TradeMark
                        WHERE ObjectLink_StickerFile_TradeMark.ObjectId = vbStickerFileId
@@ -176,7 +209,9 @@ BEGIN
                  END;*/
 
      -- При какой длине Level1 - StickerType - выводится в Level2 + при этом инфа в Level2 в 2 строки
-     vbParam1:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level1() AND ObF.ValueData > 0), 30);
+     vbParam1:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level1_70_70() AND ObF.ValueData > 0 AND inIs70_70 = TRUE)
+                        , (SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level1() AND ObF.ValueData > 0)
+                        , 30);
                 /*CASE vbAddLeft
                      WHEN 40 -- тм Повна Чаша (Фоззи)
                           THEN 25
@@ -185,7 +220,9 @@ BEGIN
                     ELSE 25 -- 30
                 END;*/
      -- При какой длине Level2 - StickerSort и StickerNorm - выводятся в 2 строки
-     vbParam2:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level2() AND ObF.ValueData > 0), 30);
+     vbParam2:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level2_70_70() AND ObF.ValueData > 0 AND inIs70_70 = TRUE)
+                        , (SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level2() AND ObF.ValueData > 0)
+                        , 30);
                 /*CASE vbAddLeft
                      WHEN 40 -- тм Повна Чаша (Фоззи)
                           THEN 20
@@ -208,7 +245,113 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH
-       tmpLanguageParam AS (SELECT ObjectString_Value1.ValueData  AS Value1   -- Склад:
+          tmpObject_GoodsPropertyValue AS
+                            (SELECT ObjectLink_GoodsPropertyValue_Goods.ObjectId      AS ObjectId
+                                  , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                                  , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                  , ObjectLink_Goods_Measure.ChildObjectId            AS MeasureId
+                                  , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                              THEN ObjectString_BarCode.ValueData
+                                              ELSE ''
+                                    END AS BarCode
+                                  , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh()
+                                              THEN -- Левая часть Ш/К
+                                                   LEFT (ObjectString_BarCode.ValueData, (ObjectFloat_StartPosInt.ValueData - 1) :: Integer)
+                                                         -- добавили нули слева
+                                                      || REPEAT ('0'
+                                                                 -- сколько надо символов
+                                                               , ((ObjectFloat_EndPosInt.ValueData - ObjectFloat_StartPosInt.ValueData + 1)
+                                                                  -- МИНУС сколько символов в целой части веса
+                                                                - LENGTH (-- первая часть
+                                                                          SPLIT_PART (inWeight :: TVarChar, '.', 1))
+                                                                 ) :: Integer
+                                                                )
+                                                         -- целая часть веса - первая часть
+                                                      || SPLIT_PART (inWeight :: TVarChar, '.', 1)
+
+                                                         -- дробная часть веса - вторая часть
+                                                      || SPLIT_PART (inWeight :: TVarChar, '.', 2)
+                                                         -- добавили нули справа
+                                                      || REPEAT ('0'
+                                                                 -- сколько надо символов
+                                                               , ((ObjectFloat_EndPosFrac.ValueData - ObjectFloat_StartPosFrac.ValueData + 1)
+                                                                  -- МИНУС сколько символов в дробной части веса
+                                                                - LENGTH (-- вторая часть
+                                                                          SPLIT_PART (inWeight :: TVarChar, '.', 2))
+                                                                 ) :: Integer
+                                                                )
+                                    END AS BarCode_calc
+                             FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId
+                                  ) AS tmpGoodsProperty
+
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt
+                                                        ON ObjectFloat_StartPosInt.ObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                       AND ObjectFloat_StartPosInt.DescId   = zc_ObjectFloat_GoodsProperty_StartPosInt()
+
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_EndPosInt
+                                                        ON ObjectFloat_EndPosInt.ObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                       AND ObjectFloat_EndPosInt.DescId   = zc_ObjectFloat_GoodsProperty_EndPosInt()
+
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_StartPosFrac
+                                                        ON ObjectFloat_StartPosFrac.ObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                       AND ObjectFloat_StartPosFrac.DescId   = zc_ObjectFloat_GoodsProperty_StartPosFrac()
+
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_EndPosFrac
+                                                        ON ObjectFloat_EndPosFrac.ObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                       AND ObjectFloat_EndPosFrac.DescId   = zc_ObjectFloat_GoodsProperty_EndPosFrac()
+
+                                  INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                        ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                       AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId        = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                  INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                                -- AND Object_GoodsPropertyValue.ValueData <> ''
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                       ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                      AND ObjectLink_GoodsPropertyValue_Goods.DescId   = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                       ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                      AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                  LEFT JOIN ObjectString AS ObjectString_BarCode
+                                                         ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                        AND ObjectString_BarCode.DescId   = zc_ObjectString_GoodsPropertyValue_BarCode()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                       ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+                                                      AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                            )
+          -- расчет контрольной суммы
+        , tmpObject_GoodsPropertyValue_calc AS
+                            (SELECT tmpObject_GoodsPropertyValue.ObjectId
+                                  , tmpObject_GoodsPropertyValue.GoodsId
+                                  , tmpObject_GoodsPropertyValue.GoodsKindId
+                                  , tmpObject_GoodsPropertyValue.MeasureId
+                                    --
+                                  , CASE WHEN tmpObject_GoodsPropertyValue.BarCode <> ''
+                                              THEN tmpObject_GoodsPropertyValue.BarCode
+                                              -- плюс контрольная
+                                              ELSE BarCode_calc || zfCalc_SummBarCode (BarCode_calc)
+                                    END AS BarCode
+                             FROM (SELECT tmpObject_GoodsPropertyValue.ObjectId
+                                        , tmpObject_GoodsPropertyValue.GoodsId
+                                        , tmpObject_GoodsPropertyValue.GoodsKindId
+                                        , tmpobject_goodspropertyvalue.MeasureId
+                                        , tmpObject_GoodsPropertyValue.BarCode
+                                          --
+                                        , LEFT (CASE WHEN tmpObject_GoodsPropertyValue.BarCode <> ''
+                                                          THEN ''
+                                                          -- дополнили НУЛИ справа
+                                                          ELSE tmpObject_GoodsPropertyValue.BarCode_calc
+                                                               -- добавили нули справа
+                                                            || REPEAT ('0'
+                                                                       -- сколько надо символов
+                                                                     , 12
+                                                                       -- МИНУС сколько символов в Ш/К
+                                                                     - LENGTH (tmpObject_GoodsPropertyValue.BarCode_calc)
+                                                                      )
+                                                END, 12) AS BarCode_calc
+                                   FROM tmpObject_GoodsPropertyValue
+                                  ) AS tmpObject_GoodsPropertyValue
+                            )
+     , tmpLanguageParam AS (SELECT ObjectString_Value1.ValueData  AS Value1   -- Склад:
                                  , ObjectString_Value2.ValueData  AS Value2   -- Умови та термін зберігання:
                                  , ObjectString_Value3.ValueData  AS Value3   -- за відносної вологості повітря від
                                  , ObjectString_Value4.ValueData  AS Value4   -- до
@@ -294,6 +437,10 @@ BEGIN
             , Object_GoodsKind.Id                AS GoodsKindId
             , Object_GoodsKind.ValueData         AS GoodsKindName
 
+            , COALESCE (Object_Measure.Id, 0) :: Integer AS MeasureId
+            , Object_Measure.ValueData         AS MeasureName
+            , zc_Measure_Sh() :: Integer       AS zc_Measure_Sh
+
             , Object_StickerPack.Id              AS StickerPackId
             , Object_StickerPack.ValueData       AS StickerPackName
 
@@ -304,20 +451,31 @@ BEGIN
             , Object_StickerSkin.Id              AS StickerSkinId
             , Object_StickerSkin.ValueData       AS StickerSkinName
 
-            , ObjectBoolean_Fix.ValueData        AS isFix
+            , CASE WHEN inIs70_70 = TRUE AND tmpObject_GoodsPropertyValue_calc.MeasureId <> zc_Measure_Sh()
+                        THEN TRUE
+                   ELSE ObjectBoolean_Fix.ValueData
+              END :: Boolean AS isFix
 
             , ObjectFloat_Value1.ValueData       AS Value1
             , ObjectFloat_Value2.ValueData       AS Value2
             , ObjectFloat_Value3.ValueData       AS Value3
             , ObjectFloat_Value4.ValueData       AS Value4
             , ObjectFloat_Value5.ValueData       AS Value5
-            , ObjectFloat_Value6.ValueData       AS Value6
+              -- вес
+            , CASE WHEN inIs70_70 = TRUE AND tmpObject_GoodsPropertyValue_calc.MeasureId <> zc_Measure_Sh()
+                        THEN inWeight
+                   ELSE ObjectFloat_Value6.ValueData
+              END :: TFloat AS Value6
+
             , ObjectFloat_Value7.ValueData       AS Value7
             , ObjectFloat_Value8.ValueData       AS Value8
             , ObjectFloat_Value9.ValueData       AS Value9
             , ObjectFloat_Value10.ValueData      AS Value10
             , ObjectFloat_Value11.ValueData      AS Value11
-            , ObjectString_BarCode.ValueData     AS BarCode
+
+            , CASE WHEN ObjectString_BarCode.ValueData <> '' THEN ObjectString_BarCode.ValueData
+                   ELSE tmpObject_GoodsPropertyValue_calc.BarCode
+              END :: TVarChar  AS BarCode
 
             , Sticker_Value1.ValueData           AS Sticker_Value1
             , Sticker_Value2.ValueData           AS Sticker_Value2
@@ -599,10 +757,23 @@ BEGIN
                                   ON ObjectBlob_StickerHeader_Info.ObjectId = ObjectLink_Retail_StickerHeader.ChildObjectId
                                  AND ObjectBlob_StickerHeader_Info.DescId   = zc_ObjectBlob_StickerHeader_Info()
 
+             LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                  ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                 AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Sticker_Goods.ChildObjectId
+
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_GoodsKind
                                   ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_StickerProperty_GoodsKind.ChildObjectId
+             
+             LEFT JOIN tmpObject_GoodsPropertyValue_calc ON tmpObject_GoodsPropertyValue_calc.GoodsId     = Object_Goods.Id
+                                                        AND tmpObject_GoodsPropertyValue_calc.GoodsKindId = Object_GoodsKind.Id
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerPack
                                   ON ObjectLink_StickerProperty_StickerPack.ObjectId = Object_StickerProperty.Id
@@ -673,11 +844,6 @@ BEGIN
                                   ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
                                  AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
              LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
-
-             LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
-                                  ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
-                                 AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Sticker_Goods.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerGroup
                                   ON ObjectLink_Sticker_StickerGroup.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
@@ -754,4 +920,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1371309, inRetailId:= 0, inIsJPG:= TRUE, inIsLength:= FALSE, inIs70_70:= TRUE, inIsStartEnd:= FALSE, inIsTare:= FALSE, inIsPartion:= FALSE, inIsGoodsName:= FALSE, inDateStart:= '01.01.2016', inDateTare:= '01.01.2016', inDatePack:= '01.01.2016', inDateProduction:= '01.01.2016', inNumPack:= 1, inNumTech:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT BarCode, * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 7559997, inRetailId:= 310828, inIsJPG:= TRUE, inIsLength:= FALSE, inIs70_70:= TRUE, inIsStartEnd:= FALSE, inIsTare:= FALSE, inIsPartion:= FALSE, inIsGoodsName:= FALSE, inDateStart:= '01.01.2016', inDateTare:= '01.01.2016', inDatePack:= '01.01.2016', inDateProduction:= '01.01.2016', inNumPack:= 1, inNumTech:= 1, inWeight:=1.123, inSession:= zfCalc_UserAdmin());

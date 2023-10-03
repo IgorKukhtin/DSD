@@ -39,7 +39,7 @@ BEGIN
 
        SELECT
              Object_StickerFile.Id           AS Id
-           , Object_StickerFile.ObjectCode   AS Code
+           , CASE WHEN vbUserId = 5 THEN Object_StickerFile.Id ELSE Object_StickerFile.ObjectCode END :: Integer AS Code
            , CASE WHEN ObjectForm.ValueData       <> '' THEN Object_StickerFile.ValueData              ELSE '' END :: TVarChar AS Name
            , CASE WHEN ObjectForm_70_70.ValueData <> '' THEN Object_StickerFile.ValueData || '_70_70'  ELSE '' END :: TVarChar AS Name_70_70
 
