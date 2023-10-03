@@ -2020,7 +2020,46 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object actPrintScan: TdsdPrintAction [8]
+    object actOpenOrderInternalChild: TdsdOpenForm [6]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1055#1072#1088#1090#1080#1081
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1055#1072#1088#1090#1080#1081
+      ImageIndex = 26
+      FormName = 'TOrderInternalChildForm'
+      FormNameParam.Name = 'TOrderInternalChildForm'
+      FormNameParam.Value = 'TOrderInternalChildForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actPrintScan: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -2102,7 +2141,7 @@ inherited OrderInternalForm: TOrderInternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2336,6 +2375,50 @@ inherited OrderInternalForm: TOrderInternalForm
         '- '#1087#1088#1086#1076#1072#1078#1072')'
       ImageIndex = 68
     end
+    object actOpenOrderInternalChild_1: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1072#1088#1090#1080#1081
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1072#1088#1090#1080#1081
+      ImageIndex = 24
+      FormName = 'TOrderInternalChildForm'
+      FormNameParam.Value = 'TOrderInternalChildForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -2421,6 +2504,18 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenOrderInternalChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2560,6 +2655,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbUpdateAmountPartner_dif: TdxBarButton
       Action = MultiUpdateAmountPartner_dif
+      Category = 0
+    end
+    object bbOpenOrderInternalChild: TdxBarButton
+      Action = actOpenOrderInternalChild_1
       Category = 0
     end
   end

@@ -1,4 +1,4 @@
-unit OrderInternal;
+unit OrderInternalChild;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TOrderInternalForm = class(TAncestorDocumentForm)
+  TOrderInternalChildForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
@@ -37,7 +37,6 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -51,7 +50,6 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    AmountSecond: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
     spUpdateAmountPartner: TdsdStoredProc;
     spUpdateAmountForecast: TdsdStoredProc;
@@ -66,10 +64,6 @@ type
     cxLabel20: TcxLabel;
     edOperDateEnd: TcxDateEdit;
     AmountRemains: TcxGridDBColumn;
-    AmountPartner: TcxGridDBColumn;
-    AmountForecast: TcxGridDBColumn;
-    AmountForecastOrder: TcxGridDBColumn;
-    CuterCount: TcxGridDBColumn;
     bbMultiAmountRemain: TdxBarButton;
     actUpdateAmountPartner: TdsdExecStoredProc;
     MultiAmountPartner: TMultiAction;
@@ -80,98 +74,29 @@ type
     bbMultiAmountForecast: TdxBarButton;
     bbUpdateAmountAll: TdxBarButton;
     MeasureName: TcxGridDBColumn;
-    ReceiptCode: TcxGridDBColumn;
-    ReceiptName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
-    Koeff: TcxGridDBColumn;
-    CountForecast: TcxGridDBColumn;
-    CountForecastOrder: TcxGridDBColumn;
-    CountForecastK: TcxGridDBColumn;
-    CountForecastOrderK: TcxGridDBColumn;
-    AmountPartnerPrior: TcxGridDBColumn;
-    TermProduction: TcxGridDBColumn;
-    NormInDays: TcxGridDBColumn;
-    StartProductionInDays: TcxGridDBColumn;
-    UnitCode: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    DayCountForecast: TcxGridDBColumn;
-    DayCountForecastOrder: TcxGridDBColumn;
-    Color_remains: TcxGridDBColumn;
-    GoodsCode_detail: TcxGridDBColumn;
-    GoodsName_detail: TcxGridDBColumn;
-    GoodsKindName_detail: TcxGridDBColumn;
-    MeasureName_detail: TcxGridDBColumn;
-    AmountRemains_calc: TcxGridDBColumn;
-    AmountPrognoz_calc: TcxGridDBColumn;
-    AmountPrognozOrder_calc: TcxGridDBColumn;
-    AmountProduction_old: TcxGridDBColumn;
-    AmountProduction_next: TcxGridDBColumn;
-    StartDate_old: TcxGridDBColumn;
-    EndDate_old: TcxGridDBColumn;
-    StartDate_next: TcxGridDBColumn;
-    EndDate_next: TcxGridDBColumn;
-    GoodsCode_basis: TcxGridDBColumn;
-    GoodsName_basis: TcxGridDBColumn;
-    MeasureName_basis: TcxGridDBColumn;
-    isCheck_basis: TcxGridDBColumn;
-    ReceiptCode_basis: TcxGridDBColumn;
-    ReceiptName_basis: TcxGridDBColumn;
-    ChildCDS: TClientDataSet;
-    ChildDS: TDataSource;
-    cxGridChild: TcxGrid;
-    cxGridDBTableViewChild: TcxGridDBTableView;
     ChGoodsCode: TcxGridDBColumn;
     ChGoodsName: TcxGridDBColumn;
     ChMeasureName: TcxGridDBColumn;
     ChAmount: TcxGridDBColumn;
     PartionGoodsDate: TcxGridDBColumn;
-    IsErased: TcxGridDBColumn;
-    cxGridLevelChild: TcxGridLevel;
-    ChildDBViewAddOn: TdsdDBViewAddOn;
     cxBottomSplitter: TcxSplitter;
     GoodsKindName_Complete: TcxGridDBColumn;
     ChGoodsKindName: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
     Amount_old: TcxGridDBColumn;
     Amount_next: TcxGridDBColumn;
-    ColorB_AmountPartner: TcxGridDBColumn;
-    ColorB_DayCountForecast: TcxGridDBColumn;
-    AmountRemainsTerm_calc: TcxGridDBColumn;
-    ColorB_AmountPrognoz: TcxGridDBColumn;
-    AmountPrognozTerm_calc: TcxGridDBColumn;
-    AmountPrognozOrderTerm_calc: TcxGridDBColumn;
-    ColorB_const: TcxGridDBColumn;
-    Color_remains_calc: TcxGridDBColumn;
-    Color_remainsTerm_calc: TcxGridDBColumn;
     Amount_calc: TcxGridDBColumn;
     TaxLoss: TcxGridDBColumn;
-    CuterCountSecond: TcxGridDBColumn;
-    AmountSend_sh: TcxGridDBColumn;
-    AmountSend_Weight: TcxGridDBColumn;
-    Color_send: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    Color_production_old: TcxGridDBColumn;
-    Color_production_next: TcxGridDBColumn;
     actPrintScan: TdsdPrintAction;
-    AmountRemains_sh: TcxGridDBColumn;
     spUpdateAmountPartner_dif: TdsdStoredProc;
     actUpdateAmountPartner_dif: TdsdExecStoredProc;
     actUpdateAmountAll_diff: TMultiAction;
     bbUpdateAmountAll_diff: TdxBarButton;
     bbUpdateAmountPartner_dif: TdxBarButton;
     MultiUpdateAmountPartner_dif: TMultiAction;
-    AmountOrderPromo: TcxGridDBColumn;
-    AmountSalePromo: TcxGridDBColumn;
-    AmountProductionOut: TcxGridDBColumn;
-    CountForecastOrderPromo: TcxGridDBColumn;
-    CountForecastPromo: TcxGridDBColumn;
-    CountForecast_minus: TcxGridDBColumn;
-    CountForecastOrder_minus: TcxGridDBColumn;
-    Date_TermProd: TcxGridDBColumn;
-    actOpenOrderInternalChild: TdsdOpenForm;
-    bbOpenOrderInternalChild: TdxBarButton;
-    actOpenOrderInternalChild_1: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public
@@ -183,6 +108,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderInternalForm);
+  RegisterClass(TOrderInternalChildForm);
 
 end.
