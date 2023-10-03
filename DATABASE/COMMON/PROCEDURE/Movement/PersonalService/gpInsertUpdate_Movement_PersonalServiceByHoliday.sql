@@ -29,6 +29,8 @@ $BODY$
    DECLARE vbSummHoliday2 TFloat;
    DECLARE vbSummHoliday1_calc TFloat;
    DECLARE vbSummHoliday2_calc TFloat;
+   DECLARE vbBeginDateStart TDateTime;
+   DECLARE vbBeginDateEnd   TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
@@ -94,6 +96,9 @@ BEGIN
      -- проверка были ли ручные правки, если да то ничего не делаем
      IF COALESCE (inMovementId_1, 0) <> 0 OR COALESCE (inMovementId_2, 0) <> 0
      THEN
+         vbBeginDateStart:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_BeginDateStart());
+         vbBeginDateEnd  := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_BeginDateEnd());
+
          -- сумма из док начисления - 1
          vbSummHoliday1 := (SELECT SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
                             FROM MovementItem
@@ -118,8 +123,29 @@ BEGIN
                             );
          -- расчет по "другим" отпускам для периода 1 и 2
          vbSummHoliday1_calc := (WITH -- все отпуска
-                                      tmpMovementAll AS (SELECT *
-                                                         FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
+                                      tmpMovementAll AS (SELECT tmp.Id, tmp.isLoad, tmp.Amount
+                                                              , CASE -- если такой же первый период
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateStart) = DATE_TRUNC ('MONTH', vbBeginDateStart)
+                                                                          THEN tmp.Day_holiday1
+
+                                                                     -- если из предыдущего периода, но он там второй
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateEnd) = DATE_TRUNC ('MONTH', vbBeginDateStart)
+                                                                          THEN tmp.Day_holiday2
+
+                                                                     ELSE 0
+                                                                END AS Day_holiday1
+
+                                                              , CASE -- если такой же первый период
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateStart) = DATE_TRUNC ('MONTH', vbBeginDateStart)
+                                                                          THEN zc_MovementFloat_MovementId()
+
+                                                                     -- если из предыдущего периода, но он там второй
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateEnd) = DATE_TRUNC ('MONTH', vbBeginDateStart)
+                                                                          THEN zc_MovementFloat_MovementItemId()
+
+                                                                END AS DescId_calc
+
+                                                         FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1) - INTERVAL '1 MONTH'
                                                                                              , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                                                                                              , inIsErased  := FALSE
                                                                                              , inJuridicalBasisId:= 0
@@ -127,18 +153,47 @@ BEGIN
                                                          WHERE tmp.MemberId = inMemberId
                                                            -- !!!без текущего документа!!!
                                                            AND tmp.Id <> inMovementId
+                                                           -- !!!
+                                                           AND tmp.isLoad = TRUE
                                                          )
                                  -- получили все, где док начисления ЗП - inMovementId_1
                                  SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday1,0)) AS SummHoliday_calc
-                                 FROM MovementFloat AS MovementFloat_MovementId
-                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id     = MovementFloat_MovementId.MovementId
-                                                               AND tmpMovementAll.isLoad = TRUE
-                                 WHERE MovementFloat_MovementId.ValueData ::Integer = inMovementId_1
-                                   AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+                                 FROM tmpMovementAll
+                                      INNER JOIN MovementFloat AS MovementFloat_MovementId
+                                                               ON MovementFloat_MovementId.MovementId          = tmpMovementAll.Id
+                                                              AND MovementFloat_MovementId.ValueData ::Integer = inMovementId_1
+                                                              AND MovementFloat_MovementId.DescId              = tmpMovementAll.DescId_calc
                                 );
 
          vbSummHoliday2_calc := (WITH -- все отпуска
-                                      tmpMovementAll AS (SELECT *
+                                      tmpMovementAll AS (SELECT tmp.Id, tmp.isLoad, tmp.Amount
+                                                              , CASE -- если такой же второй период
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateEnd) = DATE_TRUNC ('MONTH', vbBeginDateEnd)
+                                                                      AND tmp.Day_holiday2 > 0
+                                                                           THEN tmp.Day_holiday2
+
+                                                                     -- если нашли с таким началом = BeginDateEnd
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateStart) = DATE_TRUNC ('MONTH', vbBeginDateEnd)
+                                                                      -- только для переходящего
+                                                                      AND DATE_TRUNC ('MONTH', vbBeginDateStart) < DATE_TRUNC ('MONTH', vbBeginDateEnd)
+                                                                          THEN tmp.Day_holiday1
+
+                                                                     ELSE 0
+                                                                END AS Day_holiday2
+
+                                                              , CASE -- если такой же второй период
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateEnd) = DATE_TRUNC ('MONTH', vbBeginDateEnd)
+                                                                      AND tmp.Day_holiday2 > 0
+                                                                          THEN zc_MovementFloat_MovementItemId()
+
+                                                                     -- если нашли с таким началом = BeginDateEnd
+                                                                     WHEN DATE_TRUNC ('MONTH', tmp.BeginDateStart) = DATE_TRUNC ('MONTH', vbBeginDateEnd)
+                                                                      -- только для переходящего
+                                                                      AND DATE_TRUNC ('MONTH', vbBeginDateStart) < DATE_TRUNC ('MONTH', vbBeginDateEnd)
+                                                                          THEN zc_MovementFloat_MovementId()
+
+                                                                END AS DescId_calc
+
                                                          FROM gpSelect_Movement_MemberHoliday (inStartDate := DATE_TRUNC ('MONTH', inServiceDate1)
                                                                                              , inEndDate   := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                                                                                              , inIsErased  := FALSE
@@ -147,13 +202,16 @@ BEGIN
                                                          WHERE tmp.MemberId = inMemberId
                                                            -- !!!без текущего документа!!!
                                                            AND tmp.Id <> inMovementId
+                                                           -- !!!
+                                                           -- AND tmp.isLoad = TRUE
                                                          )
                                  -- получили все, где док начисления ЗП - inMovementId_2
                                  SELECT SUM (COALESCE (tmpMovementAll.Amount * tmpMovementAll.Day_holiday2,0)) AS SummHoliday_calc
-                                 FROM MovementFloat AS MovementFloat_MovementItemId
-                                      INNER JOIN tmpMovementAll ON tmpMovementAll.Id = MovementFloat_MovementItemId.MovementId
-                                 WHERE MovementFloat_MovementItemId.ValueData ::Integer = inMovementId_2
-                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                 FROM tmpMovementAll
+                                      INNER JOIN MovementFloat AS MovementFloat_MovementId
+                                                               ON MovementFloat_MovementId.MovementId          = tmpMovementAll.Id
+                                                              AND MovementFloat_MovementId.ValueData ::Integer = inMovementId_2
+                                                              AND MovementFloat_MovementId.DescId              = tmpMovementAll.DescId_calc
                                 );
      END IF;
 
@@ -165,7 +223,7 @@ BEGIN
      END IF;
 
      -- если нулевая сумма - 1
-     IF COALESCE (vbSummHoliday1, 0) = 0 OR vbSummHoliday1 <> inSummHoliday1
+     IF COALESCE (vbSummHoliday1, 0) = 0 OR vbSummHoliday1 <> inSummHoliday1 + COALESCE (vbSummHoliday1_calc,0)
      THEN
          -- Выбираем сохраненные данные из документа
          CREATE TEMP TABLE tmpMI_1 ON COMMIT DROP AS
@@ -273,7 +331,7 @@ BEGIN
 
 
      -- если нулевая сумма - 2
-     IF (COALESCE (vbSummHoliday2, 0) = 0 OR vbSummHoliday2 <> inSummHoliday2) AND inSummHoliday2 > 0
+     IF (COALESCE (vbSummHoliday2, 0) = 0 OR vbSummHoliday2 <> inSummHoliday2 + COALESCE (vbSummHoliday2_calc,0)) AND inSummHoliday2 > 0
      THEN
          IF COALESCE (inMovementId_2, 0) = 0
          THEN
@@ -405,11 +463,15 @@ BEGIN
      IF vbUserId IN (5, 9457)
      THEN
          --
-         RAISE EXCEPTION 'Ошибка.Документ найден <%>  <%> , сумма 1 период <%>, сумма 2 период <%>'
+         RAISE EXCEPTION 'Ошибка.Документ найден %<%>  %<%> %сумма 1 период <%> %сумма 2 период <%>'
+                       , CHR (13)
                        , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_1)
+                       , CHR (13)
                        , (SELECT Movement.InvNumber||' от' || zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_2)
-                       , (COALESCE (inSummHoliday1,0) + COALESCE (vbSummHoliday1_calc,0))
-                       , (COALESCE (inSummHoliday2,0) + COALESCE (vbSummHoliday2_calc,0))
+                       , CHR (13)
+                       , (zfConvert_FloatToString (COALESCE (inSummHoliday1,0) + COALESCE (vbSummHoliday1_calc,0)))
+                       , CHR (13)
+                       , (zfConvert_FloatToString (COALESCE (inSummHoliday2,0) + COALESCE (vbSummHoliday2_calc,0)))
                         ;
      END IF;
 

@@ -115,11 +115,19 @@ BEGIN
 
                                  , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
+                                   -- Ср.ЗП за день
+                                 , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN MovementFloat_Amount.ValueData  ELSE 0 END ::TFloat AS Amount_day
+
                           FROM tmpStatus
                                JOIN Movement ON Movement.DescId = zc_Movement_MemberHoliday()
-                                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', inStartDate - INTERVAL '1 MONTH') AND (DATE_TRUNC ('MONTH', inEndDate + INTERVAL '2 MONTH') - INTERVAL '1 DAY')
                                             AND Movement.StatusId = tmpStatus.StatusId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+
+                               -- Ср.ЗП за день
+                               LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                       ON MovementFloat_Amount.MovementId = Movement.Id
+                                                      AND MovementFloat_Amount.DescId     = zc_MovementFloat_Amount()
 
                                LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                                          ON MovementBoolean_isLoad.MovementId = Movement.Id
@@ -150,6 +158,38 @@ BEGIN
                                                            AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
                                LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
                           )
+      -- добавляем сумму
+    , tmpMovement_add AS (SELECT tmpMovement.Id
+                                 -- из предыдущего периода в текущий - первый
+                               , SUM (tmpMovement.Summ_holiday1_add) AS Summ_holiday1_add
+                                 -- из будущего периода в текущий - второй
+                               , SUM (tmpMovement.Summ_holiday2_add) AS Summ_holiday2_add
+
+                          FROM (-- из предыдущего периода в текущий - первый
+                                SELECT tmpMovement.Id
+                                     , SUM (COALESCE (tmpMovement_old.Amount_day * tmpMovement_old.Day_holiday2_calc, 0)) AS Summ_holiday1_add
+                                     , 0 AS Summ_holiday2_add
+                                FROM tmpMovement_1 AS tmpMovement
+                                     LEFT JOIN tmpMovement_1 AS tmpMovement_old ON tmpMovement_old.MovementId_2 = tmpMovement.MovementId_1
+                                                                               AND tmpMovement_old.MemberId     = tmpMovement.MemberId
+                                --WHERE vbUserId = 5 AND 1=1
+                                GROUP BY tmpMovement.Id
+
+                               UNION ALL
+                                -- из будущего периода в текущий - второй
+                                SELECT tmpMovement.Id
+                                     , 0  AS Summ_holiday1_add
+                                     , SUM (COALESCE (tmpMovement_next.Amount_day * tmpMovement_next.Day_holiday1_calc, 0)) AS Summ_holiday2_add
+--                                     , SUM (COALESCE (tmpMovement_next.Day_holiday1_calc, 0)) AS Summ_holiday2_add
+  --                                   -- , max (COALESCE (tmpMovement_next.Day_holiday1_calc, 0)) AS Summ_holiday2_add
+                                FROM tmpMovement_1 AS tmpMovement
+                                     LEFT JOIN tmpMovement_1 AS tmpMovement_next ON tmpMovement_next.MovementId_1 = tmpMovement.MovementId_2
+                                                                                AND tmpMovement_next.MemberId     = tmpMovement.MemberId
+                                --WHERE vbUserId = 5 AND 1=1
+                                GROUP BY tmpMovement.Id
+                               ) AS tmpMovement
+                          GROUP BY tmpMovement.Id
+                         )
 
           -- расчет дней отпуска в первом и втором периодах
         , tmpMovement AS (SELECT tmpMovement.Id
@@ -173,16 +213,26 @@ BEGIN
                                  -- расчет - Отпуск, дней
                                , tmpMovement.Day_holiday
 
+                                 -- Ср.ЗП за день
+                               , tmpMovement.Amount_day
+
                                , tmpMovement.Day_holiday1_calc
                                , tmpMovement.Day_holiday2_calc
 
                                , CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday1_calc ELSE 0 END AS Day_holiday1
                                , CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday2_calc ELSE 0 END AS Day_holiday2
 
-                               , SUM (CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday1_calc ELSE 0 END) OVER (PARTITION BY tmpMovement.MovementId_1, tmpMovement.MemberId) AS TotalDay_holiday1
-                               , SUM (CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday2_calc ELSE 0 END) OVER (PARTITION BY tmpMovement.MovementId_2, tmpMovement.MemberId) AS TotalDay_holiday2
+                               , CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday1_calc * tmpMovement.Amount_day ELSE 0 END AS Summ_holiday1
+                               , CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday2_calc * tmpMovement.Amount_day ELSE 0 END AS Summ_holiday2
+
+                                 -- итого расчет суммы 1-ого периода
+                               , SUM (CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday1_calc * tmpMovement.Amount_day + COALESCE (tmpMovement_add.Summ_holiday1_add, 0) ELSE 0 END) OVER (PARTITION BY tmpMovement.MovementId_1, tmpMovement.MemberId) AS TotalSumm_holiday1
+                                 -- итого расчет суммы 2-ого периода
+                               , SUM (CASE WHEN tmpMovement.isLoad = TRUE THEN tmpMovement.Day_holiday2_calc * tmpMovement.Amount_day + COALESCE (tmpMovement_add.Summ_holiday2_add, 0) ELSE 0 END) OVER (PARTITION BY tmpMovement.MovementId_2, tmpMovement.MemberId) AS TotalSumm_holiday2
 
                           FROM tmpMovement_1 AS tmpMovement
+                               LEFT JOIN tmpMovement_add ON tmpMovement_add.Id = tmpMovement.Id
+                          WHERE tmpMovement.OperDate BETWEEN inStartDate AND inEndDate
                          )
 
           -- сумма из док начисления - факт
@@ -190,7 +240,7 @@ BEGIN
                                   , ObjectLink_Personal_Member.ChildObjectId          AS MemberId
                                   , SUM (COALESCE (MIFloat_SummHoliday.ValueData,0) ) AS SummHoliday
                              FROM (SELECT DISTINCT tmpMovement.MovementId_1 AS MovementId FROM tmpMovement
-                                UNION
+                                  UNION
                                    SELECT DISTINCT tmpMovement.MovementId_2 AS MovementId FROM tmpMovement
                                    ) AS tmp
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
@@ -198,10 +248,10 @@ BEGIN
                                                           AND MovementItem.isErased = FALSE
                                    INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                                 ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
-                                                               AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                                                               AND MIFloat_SummHoliday.DescId         = zc_MIFloat_SummHoliday()
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                         ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
-                                                       AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                                       AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
                              GROUP BY MovementItem.MovementId
                                     , ObjectLink_Personal_Member.ChildObjectId
                             )
@@ -265,57 +315,76 @@ BEGIN
              -- № док Начисление зарплаты (второй период)
            , zfCalc_InvNumber_isErased (MovementDesc2.ItemName, Movement_PersonalService2.InvNumber, Movement_PersonalService2.OperDate, Movement_PersonalService2.StatusId) ::TVarChar AS InvNumber_Full2
 
-             -- Отпускные (первый период) - пропорционально сумме в начислениях
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+             -- Отпускные (1 - период) - НЕ пропорционально сумме в начислениях
+           , CASE /*WHEN vbIsAccessKey_MemberHoliday = TRUE AND vbUserId <> 5 AND 1=1
+                  THEN Movement.Summ_holiday1*/
+
+                  /*WHEN vbUserId = 5 
+                  THEN Movement.TotalSumm_holiday1*/
+
+                  WHEN vbIsAccessKey_MemberHoliday = TRUE
                   THEN
-                      CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END
+                      CASE WHEN Movement.TotalSumm_holiday1 <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Summ_holiday1 / Movement.TotalSumm_holiday1 ELSE 0 END
                   ELSE 0
              END ::TFloat AS SummHoliday1
-             -- Отпускные (второй период)- пропорционально сумме в начислениях
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+
+             -- Отпускные (2 - период) - НЕ пропорционально сумме в начислениях
+           , CASE /*WHEN vbIsAccessKey_MemberHoliday = TRUE AND vbUserId <> 5 AND 1=1
+                  THEN Movement.Summ_holiday2*/
+
+                  /*WHEN vbUserId = 5 
+                  THEN Movement.TotalSumm_holiday2*/
+
+                  WHEN vbIsAccessKey_MemberHoliday = TRUE
                   THEN --tmpSummHoliday2.SummHoliday
-                      CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END
+                      CASE WHEN Movement.TotalSumm_holiday2 <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Summ_holiday2 / Movement.TotalSumm_holiday2 ELSE 0 END
                   ELSE 0
              END ::TFloat AS SummHoliday2
 
-             -- Отпускные Итого - пропорционально сумме в начислениях
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
+             -- Отпускные Итого - НЕ пропорционально сумме в начислениях
+           , CASE /*WHEN vbIsAccessKey_MemberHoliday = TRUE AND vbUserId <> 5 AND 1=1
+                  THEN Movement.Summ_holiday1 + Movement.Summ_holiday2*/
+
+                  WHEN vbIsAccessKey_MemberHoliday = TRUE
                   THEN
-                      (CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END)
-                    + (CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END)
+                      (CASE WHEN Movement.TotalSumm_holiday1 <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Summ_holiday1 / Movement.TotalSumm_holiday1 ELSE 0 END)
+                    + (CASE WHEN Movement.TotalSumm_holiday2 <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Summ_holiday2 / Movement.TotalSumm_holiday2 ELSE 0 END)
                   ELSE 0
              END ::TFloat AS TotalSummHoliday
 
              -- Отпускные (первый период) - расчет
            , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
-                  THEN MovementFloat_Amount.ValueData * Movement.Day_holiday1
+                  THEN Movement.Summ_holiday1
                   ELSE 0
              END ::TFloat AS SummHoliday1_calc
              -- Отпускные (второй период)- расчет
            , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE
-                  THEN MovementFloat_Amount.ValueData * Movement.Day_holiday2
+                  THEN Movement.Summ_holiday2
                   ELSE 0
              END ::TFloat AS SummHoliday2_calc
              -- Отпускные Итого - расчет
            , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE AND Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
-                  THEN MovementFloat_Amount.ValueData * (DATE_PART ('DAY', Movement.BeginDateEnd   :: TIMESTAMP
-                                                                         - Movement.BeginDateStart :: TIMESTAMP)
-                                                       + 1)
+                  THEN Movement.Amount_day * (DATE_PART ('DAY', Movement.BeginDateEnd   :: TIMESTAMP
+                                                              - Movement.BeginDateStart :: TIMESTAMP)
+                                            + 1)
                   ELSE 0
              END ::TFloat AS SummHoliday_calc
 
              -- разница
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE AND Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
-                  THEN (CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END)
-                     + (CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END)
-                     - (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', Movement.BeginDateEnd :: TIMESTAMP
-                                                                          - Movement.BeginDateStart :: TIMESTAMP)
-                                                        + 1)) :: TFloat
+           , CASE /*WHEN vbIsAccessKey_MemberHoliday = TRUE AND vbUserId <> 5 AND 1=1
+                  THEN 0*/
+
+                  WHEN vbIsAccessKey_MemberHoliday = TRUE AND Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
+                  THEN (CASE WHEN Movement.TotalSumm_holiday1 <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Summ_holiday1 / Movement.TotalSumm_holiday1 ELSE 0 END)
+                     + (CASE WHEN Movement.TotalSumm_holiday2 <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Summ_holiday2 / Movement.TotalSumm_holiday2 ELSE 0 END)
+                     - (Movement.Amount_day * (DATE_PART ('DAY', Movement.BeginDateEnd   :: TIMESTAMP
+                                                               - Movement.BeginDateStart :: TIMESTAMP)
+                                             + 1)) :: TFloat
                   ELSE 0
              END :: TFloat AS Summ_diff
- 
+
              -- Ср.ЗП за день
-           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN MovementFloat_Amount.ValueData  ELSE 0 END ::TFloat AS Amount
+           , CASE WHEN vbIsAccessKey_MemberHoliday = TRUE THEN Movement.Amount_day  ELSE 0 END ::TFloat AS Amount
              --
            , CASE WHEN (Movement_PersonalService1.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                      OR Movement_PersonalService2.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
@@ -325,14 +394,20 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isLoad
 
-           , CASE WHEN Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
-                   AND (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', Movement.BeginDateEnd :: TIMESTAMP
-                                                                          - Movement.BeginDateStart :: TIMESTAMP)
-                                                        + 1)) :: TFloat
-                    <>  (CASE WHEN COALESCE (Movement.TotalDay_holiday1, 0) <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Day_holiday1 / Movement.TotalDay_holiday1 ELSE 0 END)
-                      + (CASE WHEN COALESCE (Movement.TotalDay_holiday2, 0) <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Day_holiday2 / Movement.TotalDay_holiday2 ELSE 0 END)
-                  THEN  zc_Color_Pink() --фон
+             -- фон
+           , CASE /*WHEN vbUserId <> 5 AND 1=1
+                  THEN zc_Color_White()*/
+
+                  WHEN Object_WorkTimeKind.Id <> zc_Enum_WorkTimeKind_HolidayNoZp()
+                   AND (Movement.Amount_day * (DATE_PART ('DAY', Movement.BeginDateEnd :: TIMESTAMP
+                                                               - Movement.BeginDateStart :: TIMESTAMP)
+                                             + 1)) :: TFloat
+                    <> (CASE WHEN Movement.TotalSumm_holiday1 <> 0 THEN tmpSummHoliday1.SummHoliday * Movement.Summ_holiday1 / Movement.TotalSumm_holiday1 ELSE 0 END)
+                     + (CASE WHEN Movement.TotalSumm_holiday2 <> 0 THEN tmpSummHoliday2.SummHoliday * Movement.Summ_holiday2 / Movement.TotalSumm_holiday2 ELSE 0 END)
+
+                  THEN zc_Color_Pink()
                   ELSE zc_Color_White()
+
              END ::Integer AS Color_SummHoliday
 
        FROM tmpMovement AS Movement
@@ -362,10 +437,6 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
-
-            LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                    ON MovementFloat_Amount.MovementId = Movement.Id
-                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
             LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = Movement.MovementId_1  --MovementFloat_MovementId.ValueData::Integer
             LEFT JOIN MovementDesc AS MovementDesc1 ON MovementDesc1.Id = Movement_PersonalService1.DescId
