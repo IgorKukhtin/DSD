@@ -1,11 +1,12 @@
 -- View: ObjectHistory_PriceListItem_View
 
--- DROP VIEW IF EXISTS ObjectHistory_PriceListItem_View CASCADE;
+DROP VIEW IF EXISTS ObjectHistory_PriceListItem_View; -- CASCADE;
 
 CREATE OR REPLACE VIEW ObjectHistory_PriceListItem_View AS
    SELECT ObjectLink_PriceListItem_PriceList.ChildObjectId AS PriceListId
         , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
         , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+        , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId_real
         , ObjectHistory_PriceListItem.StartDate
         , ObjectHistory_PriceListItem.EndDate
         , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
