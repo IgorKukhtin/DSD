@@ -19,12 +19,13 @@ object StickerForm: TStickerForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 81
+    Top = 105
     Width = 934
     Height = 303
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 81
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -380,37 +381,43 @@ object StickerForm: TStickerForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 384
+    Top = 408
     Width = 934
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
+    ExplicitTop = 384
   end
   object cxRightSplitter: TcxSplitter
     Left = 930
-    Top = 389
+    Top = 413
     Width = 4
-    Height = 194
+    Height = 170
     AlignSplitter = salRight
+    ExplicitTop = 389
+    ExplicitHeight = 194
   end
   object Panel: TPanel
     Left = 0
-    Top = 389
+    Top = 413
     Width = 930
-    Height = 194
+    Height = 170
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 389
+    ExplicitHeight = 194
     object cxGridProperty: TcxGrid
       Left = 5
       Top = 0
       Width = 925
-      Height = 194
+      Height = 170
       Align = alClient
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 194
       object cxGridDBTableViewProperty: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DSProperty
@@ -699,17 +706,19 @@ object StickerForm: TStickerForm
       Left = 0
       Top = 0
       Width = 5
-      Height = 194
+      Height = 170
       Control = cxGridProperty
+      ExplicitHeight = 194
     end
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
     Width = 934
-    Height = 55
+    Height = 79
     Align = alTop
     TabOrder = 5
+    ExplicitTop = -2
     object deDateStart: TcxDateEdit
       Left = 68
       Top = 30
@@ -859,6 +868,41 @@ object StickerForm: TStickerForm
       Properties.DisplayFormat = ',0.0###'
       TabOrder = 17
       Width = 49
+    end
+    object cxLabel30: TcxLabel
+      Left = 306
+      Top = 55
+      Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088':'
+    end
+    object edOrderExternal: TcxButtonEdit
+      Left = 68
+      Top = 55
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 223
+    end
+    object edGoodsProperty: TcxButtonEdit
+      Left = 398
+      Top = 54
+      Hint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 159
+    end
+    object cxLabel7: TcxLabel
+      Left = 18
+      Top = 55
+      Caption = #1047#1072#1103#1074#1082#1072':'
     end
   end
   object cxLabel3: TcxLabel
@@ -1289,6 +1333,17 @@ object StickerForm: TStickerForm
           StoredProc = spInsertReportName
         end>
       Caption = 'actInsertReportName'
+    end
+    object actGet_Params: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Params
+      StoredProcList = <
+        item
+          StoredProc = spGet_Params
+        end>
+      Caption = 'actGet_Params'
     end
     object InsertRecordProperty: TInsertRecord
       Category = 'DSDLib'
@@ -2101,6 +2156,9 @@ object StickerForm: TStickerForm
         end>
       ActionList = <
         item
+          Action = actGet_Params
+        end
+        item
           Action = actGetReportName
         end
         item
@@ -2219,6 +2277,9 @@ object StickerForm: TStickerForm
         end>
       ActionList = <
         item
+          Action = actGet_Params
+        end
+        item
           Action = actGetReportName
         end
         item
@@ -2279,6 +2340,9 @@ object StickerForm: TStickerForm
           ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
+        item
+          Action = actGet_Params
+        end
         item
           Action = actGetReportName
         end
@@ -3021,7 +3085,7 @@ object StickerForm: TStickerForm
       item
         Name = 'inRetailId'
         Value = Null
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3209,7 +3273,7 @@ object StickerForm: TStickerForm
       item
         Name = 'inRetailId'
         Value = Null
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3347,7 +3411,7 @@ object StickerForm: TStickerForm
       item
         Name = 'inRetailId'
         Value = Null
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3492,7 +3556,7 @@ object StickerForm: TStickerForm
     Left = 451
     Top = 518
   end
-  object RetailGuides: TdsdGuides
+  object GuidesRetail: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRetail
     FormNameParam.Value = 'TRetailForm'
@@ -3504,7 +3568,7 @@ object StickerForm: TStickerForm
       item
         Name = 'Key'
         Value = ''
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3513,13 +3577,177 @@ object StickerForm: TStickerForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = RetailGuides
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyId'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyName'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderExternalId'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderExternalInvNumber'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 448
+    Top = 5
+  end
+  object GuidesOrderExternal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderExternal
+    Key = '0'
+    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderExternalJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderExternal
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 496
-    Top = 29
+    Left = 156
+    Top = 48
+  end
+  object GuidesGoodsProperty: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsProperty
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TGoodsPropertyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsPropertyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 504
+    Top = 45
+  end
+  object spGet_Params: TdsdStoredProc
+    StoredProcName = 'gpGet_Params_byOrderExternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyId'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyName'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 224
   end
 end

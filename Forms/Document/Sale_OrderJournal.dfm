@@ -14,19 +14,19 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Width = 1370
     Height = 369
     TabOrder = 3
-    ExplicitTop = 76
+    ExplicitTop = 81
     ExplicitWidth = 1370
-    ExplicitHeight = 374
+    ExplicitHeight = 369
     ClientRectBottom = 369
     ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1370
-      ExplicitHeight = 374
+      ExplicitHeight = 369
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 369
         ExplicitWidth = 1370
-        ExplicitHeight = 374
+        ExplicitHeight = 369
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -864,8 +864,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Width = 239
     end
     object cxLabel30: TcxLabel
-      Left = 514
-      Top = 30
+      Left = 510
+      Top = 32
       Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090':'
     end
     object edInvNumberTransport: TcxButtonEdit
@@ -6772,7 +6772,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 868
+    Left = 724
     Top = 8
   end
 end

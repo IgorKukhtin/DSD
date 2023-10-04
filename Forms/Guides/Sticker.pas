@@ -183,10 +183,18 @@ type
     actUpdate_StickerProperty_CK: TdsdExecStoredProc;
     cb70_70: TcxCheckBox;
     ceRetail: TcxButtonEdit;
-    RetailGuides: TdsdGuides;
+    GuidesRetail: TdsdGuides;
     MeasureName: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edWeight: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
+    edOrderExternal: TcxButtonEdit;
+    GuidesOrderExternal: TdsdGuides;
+    GuidesGoodsProperty: TdsdGuides;
+    edGoodsProperty: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    spGet_Params: TdsdStoredProc;
+    actGet_Params: TdsdExecStoredProc;
 
   private
     { Private declarations }
