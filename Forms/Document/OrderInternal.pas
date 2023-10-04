@@ -172,6 +172,7 @@ type
     actOpenOrderInternalChild: TdsdOpenForm;
     bbOpenOrderInternalChild: TdxBarButton;
     actOpenOrderInternalChild_1: TdsdInsertUpdateAction;
+    OperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
