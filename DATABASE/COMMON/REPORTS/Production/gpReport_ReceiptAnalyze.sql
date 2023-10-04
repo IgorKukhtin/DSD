@@ -35,6 +35,7 @@ BEGIN
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, Amount_out_start TFloat, isStart Integer, isCost Boolean
                                            , Price1 TFloat, Price2 TFloat, Price3 TFloat
                                            , Price1_calc TFloat, Price2_calc TFloat, Price3_calc TFloat
+                                           , Koeff1_bon TFloat, Koeff2_bon TFloat, Koeff3_bon TFloat, Price1_bon TFloat, Price2_bon TFloat, Price3_bon TFloat
                                             ) ON COMMIT DROP;
    -- Ограничения по товару
    IF COALESCE( inGoodsId,0) <> 0
@@ -76,7 +77,9 @@ BEGIN
      INSERT INTO tmpChildReceiptTable (ReceiptId_parent, ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in, ReceiptId_calc, Amount_in_calc, Amount_in_calc_two, Amount_out_calc
                                      , ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, Amount_out_start, isStart, isCost
                                      , Price1, Price2, Price3, Price1_calc, Price2_calc, Price3_calc
+                                     , Koeff1_bon, Koeff2_bon, Koeff3_bon, Price1_bon, Price2_bon, Price3_bon
                                       )
+          --
           SELECT lpSelect.ReceiptId_parent, lpSelect.ReceiptId_from, lpSelect.ReceiptId, 0 AS GoodsId_in, 0 AS GoodsKindId_in, lpSelect.Amount_in
 
                , CASE WHEN ObjectLink_Receipt_GoodsKind_parent_two.ChildObjectId = zc_GoodsKind_WorkProgress()
@@ -149,10 +152,25 @@ BEGIN
                , COALESCE (PriceList2_gk.Price, PriceList2.Price, 0)
                , COALESCE (PriceList3_gk.Price, PriceList3.Price, 0)
 
+               , COALESCE (PriceList1_bon_gk.Price, PriceList1_bon_gk_b.Price, PriceList1_bon.Price, 0)
+               , COALESCE (PriceList2_bon_gk.Price, PriceList2_bon_gk_b.Price, PriceList2_bon.Price, 0)
+               , COALESCE (PriceList3_bon_gk.Price, PriceList3_bon_gk_b.Price, PriceList3_bon.Price, 0)
+
+               , COALESCE (PriceList1_bon_gk.Price, PriceList1_bon_gk_b.Price, PriceList1_bon.Price, 0) * COALESCE (PriceListSale_gk.Price, PriceListSale_gk_b.Price, PriceListSale.Price) * 1.2
+               , COALESCE (PriceList2_bon_gk.Price, PriceList2_bon_gk_b.Price, PriceList2_bon.Price, 0) * COALESCE (PriceListSale_gk.Price, PriceListSale_gk_b.Price, PriceListSale.Price) * 1.2
+               , COALESCE (PriceList3_bon_gk.Price, PriceList3_bon_gk_b.Price, PriceList3_bon.Price, 0) * COALESCE (PriceListSale_gk.Price, PriceListSale_gk_b.Price, PriceListSale.Price) * 1.2
+
+               --, ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId_in_bon
+               -- , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId_in_bon
+
+
           FROM lpSelect_Object_ReceiptChildDetail (TRUE) AS lpSelect
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                     ON ObjectLink_Receipt_Goods.ObjectId = lpSelect.ReceiptId
                                    AND ObjectLink_Receipt_Goods.DescId   = zc_ObjectLink_Receipt_Goods()
+               LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = lpSelect.ReceiptId
+                                   AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
 
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
                                     ON ObjectLink_Receipt_Parent.ObjectId = lpSelect.ReceiptId_parent
@@ -208,12 +226,101 @@ BEGIN
                                      ON ObjectFloat_Weight_parent.ObjectId = Object_Goods_parent.Id
                                     AND ObjectFloat_Weight_parent.DescId   = zc_ObjectFloat_Goods_Weight()
 
+
+              LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale_gk ON PriceListSale_gk.PriceListId = inPriceListId_sale
+                                                                            AND PriceListSale_gk.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                            AND PriceListSale_gk.GoodsKindId = ObjectLink_Receipt_GoodsKind.ChildObjectId
+                                                                            AND CURRENT_DATE >= PriceListSale_gk.StartDate AND CURRENT_DATE < PriceListSale_gk.EndDate
+                                                                            AND PriceListSale_gk.Price <> 0
+                                                                            AND lpSelect.isCost = TRUE
+              LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale_gk_b ON PriceListSale_gk_b.PriceListId = inPriceListId_sale
+                                                                              AND PriceListSale_gk_b.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                              AND PriceListSale_gk_b.GoodsKindId = zc_GoodsKind_Basis()
+                                                                              AND CURRENT_DATE >= PriceListSale_gk_b.StartDate AND CURRENT_DATE < PriceListSale_gk_b.EndDate
+                                                                              AND PriceListSale_gk_b.Price <> 0
+                                                                              AND PriceListSale_gk.GoodsId IS NULL
+                                                                              AND lpSelect.isCost = TRUE
+              LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale ON PriceListSale.PriceListId = inPriceListId_sale
+                                                                         AND PriceListSale.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                         AND PriceListSale.GoodsKindId = 0
+                                                                         AND CURRENT_DATE >= PriceListSale.StartDate AND CURRENT_DATE < PriceListSale.EndDate
+                                                                         AND PriceListSale.Price <> 0
+                                                                         AND PriceListSale_gk_b.GoodsId IS NULL
+                                                                         AND PriceListSale_gk.GoodsId IS NULL
+                                                                         AND lpSelect.isCost = TRUE
+
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_bon_gk ON PriceList1_bon_gk.PriceListId = inPriceListId_1
+                                                                              AND PriceList1_bon_gk.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                              AND PriceList1_bon_gk.GoodsKindId = ObjectLink_Receipt_GoodsKind.ChildObjectId
+                                                                              AND PriceList1_bon_gk.Price <> 0
+                                                                              AND CURRENT_DATE >= PriceList1_bon_gk.StartDate AND CURRENT_DATE < PriceList1_bon_gk.EndDate
+                                                                              AND lpSelect.isCost = TRUE
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2_bon_gk ON PriceList2_bon_gk.PriceListId = inPriceListId_2
+                                                                              AND PriceList2_bon_gk.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                              AND PriceList2_bon_gk.GoodsKindId = ObjectLink_Receipt_GoodsKind.ChildObjectId
+                                                                              AND PriceList2_bon_gk.Price <> 0
+                                                                              AND CURRENT_DATE >= PriceList2_bon_gk.StartDate AND CURRENT_DATE < PriceList2_bon_gk.EndDate
+                                                                              AND lpSelect.isCost = TRUE
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_bon_gk ON PriceList3_bon_gk.PriceListId = inPriceListId_3
+                                                                              AND PriceList3_bon_gk.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                              AND PriceList3_bon_gk.GoodsKindId = ObjectLink_Receipt_GoodsKind.ChildObjectId
+                                                                              AND PriceList3_bon_gk.Price <> 0
+                                                                              AND CURRENT_DATE >= PriceList3_bon_gk.StartDate AND CURRENT_DATE < PriceList3_bon_gk.EndDate
+                                                                              AND lpSelect.isCost = TRUE
+
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_bon_gk_b ON PriceList1_bon_gk_b.PriceListId = inPriceListId_1
+                                                                                AND PriceList1_bon_gk_b.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                                AND PriceList1_bon_gk_b.GoodsKindId = zc_GoodsKind_Basis()
+                                                                                AND PriceList1_bon_gk_b.Price <> 0
+                                                                                AND CURRENT_DATE >= PriceList1_bon_gk_b.StartDate AND CURRENT_DATE < PriceList1_bon_gk_b.EndDate
+                                                                                AND lpSelect.isCost = TRUE
+                                                                                AND PriceList1_bon_gk.GoodsId IS NULL
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2_bon_gk_b ON PriceList2_bon_gk_b.PriceListId = inPriceListId_2
+                                                                                AND PriceList2_bon_gk_b.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                                AND PriceList2_bon_gk_b.GoodsKindId = zc_GoodsKind_Basis()
+                                                                                AND PriceList2_bon_gk_b.Price <> 0
+                                                                                AND CURRENT_DATE >= PriceList2_bon_gk_b.StartDate AND CURRENT_DATE < PriceList2_bon_gk_b.EndDate
+                                                                                AND lpSelect.isCost = TRUE
+                                                                                AND PriceList2_bon_gk_b.GoodsId IS NULL
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_bon_gk_b ON PriceList3_bon_gk_b.PriceListId = inPriceListId_3
+                                                                                AND PriceList3_bon_gk_b.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                                AND PriceList3_bon_gk_b.GoodsKindId = zc_GoodsKind_Basis()
+                                                                                AND PriceList3_bon_gk_b.Price <> 0
+                                                                                AND CURRENT_DATE >= PriceList3_bon_gk_b.StartDate AND CURRENT_DATE < PriceList3_bon_gk_b.EndDate
+                                                                                AND lpSelect.isCost = TRUE
+                                                                                AND PriceList3_bon_gk_b.GoodsId IS NULL
+
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_bon ON PriceList1_bon.PriceListId = inPriceListId_1
+                                                                           AND PriceList1_bon.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                           AND PriceList1_bon.GoodsKindId = 0
+                                                                           AND PriceList1_bon.Price <> 0
+                                                                           AND CURRENT_DATE >= PriceList1_bon.StartDate AND CURRENT_DATE < PriceList1_bon.EndDate
+                                                                           AND lpSelect.isCost = TRUE
+                                                                           AND PriceList1_bon_gk_b.GoodsId IS NULL
+                                                                           AND PriceList1_bon_gk.GoodsId IS NULL
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2_bon ON PriceList2_bon.PriceListId = inPriceListId_2
+                                                                           AND PriceList2_bon.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                           AND PriceList2_bon.GoodsKindId = 0
+                                                                           AND PriceList2_bon.Price <> 0
+                                                                           AND CURRENT_DATE >= PriceList2_bon.StartDate AND CURRENT_DATE < PriceList2_bon.EndDate
+                                                                           AND lpSelect.isCost = TRUE
+                                                                           AND PriceList2_bon_gk_b.GoodsId IS NULL
+                                                                           AND PriceList2_bon_gk.GoodsId IS NULL
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_bon ON PriceList3_bon.PriceListId = inPriceListId_3
+                                                                           AND PriceList3_bon.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                                           AND PriceList3_bon.GoodsKindId = 0
+                                                                           AND PriceList3_bon.Price <> 0
+                                                                           AND CURRENT_DATE >= PriceList3_bon.StartDate AND CURRENT_DATE < PriceList3_bon.EndDate
+                                                                           AND lpSelect.isCost = TRUE
+                                                                           AND PriceList3_bon_gk_b.GoodsId IS NULL
+                                                                           AND PriceList3_bon_gk.GoodsId IS NULL
+
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_gk ON PriceList1_gk.PriceListId = inPriceListId_1
                                                                           AND PriceList1_gk.GoodsId = lpSelect.GoodsId_out
                                                                           AND PriceList1_gk.GoodsKindId = lpSelect.GoodsKindId_out
                                                                           AND CURRENT_DATE >= PriceList1_gk.StartDate AND CURRENT_DATE < PriceList1_gk.EndDate
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
-                                                                       AND PriceList1.GoodsId = lpSelect.GoodsId_out
+                                                                       AND PriceList1.GoodsId     = lpSelect.GoodsId_out
                                                                        AND PriceList1.GoodsKindId = 0
                                                                        AND CURRENT_DATE >= PriceList1.StartDate AND CURRENT_DATE < PriceList1.EndDate
                                                                        AND PriceList1_gk.GoodsId IS NULL
@@ -282,6 +389,17 @@ BEGIN
                  , COALESCE (PriceList1_gk.Price, PriceList1.Price, 0)
                  , COALESCE (PriceList2_gk.Price, PriceList2.Price, 0)
                  , COALESCE (PriceList3_gk.Price, PriceList3.Price, 0)
+
+               , COALESCE (PriceList1_bon_gk.Price, PriceList1_bon_gk_b.Price, PriceList1_bon.Price, 0)
+               , COALESCE (PriceList2_bon_gk.Price, PriceList2_bon_gk_b.Price, PriceList2_bon.Price, 0)
+               , COALESCE (PriceList3_bon_gk.Price, PriceList3_bon_gk_b.Price, PriceList3_bon.Price, 0)
+
+               , COALESCE (PriceList1_bon_gk.Price, PriceList1_bon_gk_b.Price, PriceList1_bon.Price, 0) * COALESCE (PriceListSale_gk.Price, PriceListSale_gk_b.Price, PriceListSale.Price) * 1.2
+               , COALESCE (PriceList2_bon_gk.Price, PriceList2_bon_gk_b.Price, PriceList2_bon.Price, 0) * COALESCE (PriceListSale_gk.Price, PriceListSale_gk_b.Price, PriceListSale.Price) * 1.2
+               , COALESCE (PriceList3_bon_gk.Price, PriceList3_bon_gk_b.Price, PriceList3_bon.Price, 0) * COALESCE (PriceListSale_gk.Price, PriceListSale_gk_b.Price, PriceListSale.Price) * 1.2
+
+               --, ObjectLink_Receipt_Goods.ChildObjectId
+               --, ObjectLink_Receipt_GoodsKind.ChildObjectId
          ;
 
 
@@ -315,6 +433,18 @@ BEGIN
                  , SUM (tmp.Summ2_cost_calc) AS Summ2_cost_calc
                  , SUM (tmp.Summ3_cost_calc) AS Summ3_cost_calc
 
+                 , MAX (tmp.Koeff1_bon) AS Koeff1_bon
+                 , MAX (tmp.Koeff2_bon) AS Koeff2_bon
+                 , MAX (tmp.Koeff3_bon) AS Koeff3_bon
+
+                 , SUM (tmp.Summ1_bon) AS Summ1_bon
+                 , SUM (tmp.Summ2_bon) AS Summ2_bon
+                 , SUM (tmp.Summ3_bon) AS Summ3_bon
+
+                 , SUM (tmp.Summ1_bon_calc) AS Summ1_bon_calc
+                 , SUM (tmp.Summ2_bon_calc) AS Summ2_bon_calc
+                 , SUM (tmp.Summ3_bon_calc) AS Summ3_bon_calc
+
             FROM (SELECT tmpChildReceiptTable.ReceiptId_parent
                        , tmpChildReceiptTable.ReceiptId
                        , tmpChildReceiptTable.ReceiptId_calc
@@ -328,12 +458,25 @@ BEGIN
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3 ELSE 0 END) AS Summ3_cost
 
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1_bon ELSE 0 END) AS Summ1_bon
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2_bon ELSE 0 END) AS Summ2_bon
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3_bon ELSE 0 END) AS Summ3_bon
+
+
                        , SUM (tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price1) AS Summ1_calc
                        , SUM (tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price2) AS Summ2_calc
                        , SUM (tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price3) AS Summ3_calc
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price1 ELSE 0 END) AS Summ1_cost_calc
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost_calc
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price3 ELSE 0 END) AS Summ3_cost_calc
+
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price1_bon ELSE 0 END) AS Summ1_bon_calc
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price2_bon ELSE 0 END) AS Summ2_bon_calc
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price3_bon ELSE 0 END) AS Summ3_bon_calc
+
+                       , MAX (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Koeff1_bon ELSE 0 END) AS Koeff1_bon
+                       , MAX (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Koeff2_bon ELSE 0 END) AS Koeff2_bon
+                       , MAX (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Koeff3_bon ELSE 0 END) AS Koeff3_bon
 
                   FROM tmpChildReceiptTable
                   WHERE tmpChildReceiptTable.ReceiptId_from = 0
@@ -389,6 +532,17 @@ BEGIN
                  , SUM (tmpAll.Summ1_cost_calc) AS Summ1_cost_calc
                  , SUM (tmpAll.Summ2_cost_calc) AS Summ2_cost_calc
                  , SUM (tmpAll.Summ3_cost_calc) AS Summ3_cost_calc
+
+                 , SUM (tmpAll.Summ1_bon)         AS Summ1_bon
+                 , SUM (tmpAll.Summ2_bon)         AS Summ2_bon
+                 , SUM (tmpAll.Summ3_bon)         AS Summ3_bon
+                 , SUM (tmpAll.Summ1_bon_calc)    AS Summ1_bon_calc
+                 , SUM (tmpAll.Summ2_bon_calc)    AS Summ2_bon_calc
+                 , SUM (tmpAll.Summ3_bon_calc)    AS Summ3_bon_calc
+
+                 , MAX (tmpAll.Koeff1_bon) AS Koeff1_bon
+                 , MAX (tmpAll.Koeff2_bon) AS Koeff2_bon
+                 , MAX (tmpAll.Koeff3_bon) AS Koeff3_bon
 
             FROM tmpAll
             GROUP BY tmpAll.ReceiptId_parent
@@ -453,21 +607,30 @@ BEGIN
            , tmpChild.Amount_out_Weight      :: TFloat AS Amount_out_Weight
            , tmpChild.Amount_out_Weight_calc :: TFloat AS Amount_out_Weight_calc
 
-           , CAST (tmpResult.Summ1      / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price1
-           , CAST (tmpResult.Summ2      / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price2
-           , CAST (tmpResult.Summ3      / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price3
+           , CAST ((tmpResult.Summ1 + COALESCE (tmpResult.Summ1_bon, 0)) / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price1
+           , CAST ((tmpResult.Summ2 + COALESCE (tmpResult.Summ1_bon, 0)) / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price2
+           , CAST ((tmpResult.Summ3 + COALESCE (tmpResult.Summ1_bon, 0)) / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price3
            , CAST (tmpResult.Summ1_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price1_cost
            , CAST (tmpResult.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price2_cost
            , CAST (tmpResult.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price3_cost
 
-           , CAST (tmpResult.Summ1_calc      / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price1_calc
-           , CAST (tmpResult.Summ2_calc      / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price2_calc
-           , CAST (tmpResult.Summ3_calc      / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price3_calc
+           , CAST ((tmpResult.Summ1_calc + COALESCE (tmpResult.Summ1_bon_calc, 0)) / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price1_calc
+           , CAST ((tmpResult.Summ2_calc + COALESCE (tmpResult.Summ1_bon_calc, 0)) / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price2_calc
+           , CAST ((tmpResult.Summ3_calc + COALESCE (tmpResult.Summ1_bon_calc, 0)) / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price3_calc
            , CAST (tmpResult.Summ1_cost_calc / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price1_cost_calc
            , CAST (tmpResult.Summ2_cost_calc / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price2_cost_calc
            , CAST (tmpResult.Summ3_cost_calc / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price3_cost_calc
 
            , (COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2) :: TFloat AS Price_sale -- !!!захардкодил временно!!!
+
+           , tmpResult.Koeff1_bon :: TFloat AS Price1_bon
+           , tmpResult.Koeff1_bon :: TFloat AS Price2_bon
+           , tmpResult.Koeff1_bon :: TFloat AS Price3_bon
+
+           , COALESCE (tmpResult.Summ1_bon / ObjectFloat_Value.ValueData, 0) :: TFloat AS Price1_bon_sale
+           , COALESCE (tmpResult.Summ1_bon / ObjectFloat_Value.ValueData, 0) :: TFloat AS Price2_bon_sale
+           , COALESCE (tmpResult.Summ1_bon / ObjectFloat_Value.ValueData, 0) :: TFloat AS Price3_bon_sale
+
 
            , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
 
@@ -625,7 +788,11 @@ BEGIN
 
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Goods.Objectcode     AS GoodsCode
-            , Object_Goods.ValueData      AS GoodsName
+            , CASE WHEN tmpReceiptChild.GoodsId_out = zc_Enum_InfoMoney_21501()
+                        THEN 'БОНУСИ'
+                   ELSE Object_Goods.ValueData
+              END :: TVarChar AS GoodsName
+
             , Object_GoodsKind.ValueData  AS GoodsKindName
             , Object_Measure.ValueData    AS MeasureName
 
@@ -689,7 +856,21 @@ BEGIN
                       ELSE 0 -- clBlack
               END :: Integer AS Color_calc
 
-       FROM (SELECT tmpChildReceiptTable.*
+       FROM (SELECT tmpChildReceiptTable.ReceiptId_parent, tmpChildReceiptTable.ReceiptId_from, tmpChildReceiptTable.ReceiptId, tmpChildReceiptTable.GoodsId_in, tmpChildReceiptTable.GoodsKindId_in, tmpChildReceiptTable.Amount_in
+                  , tmpChildReceiptTable.ReceiptId_calc, tmpChildReceiptTable.Amount_in_calc, tmpChildReceiptTable.Amount_in_calc_two, tmpChildReceiptTable.Amount_out_calc
+                  , tmpChildReceiptTable.ReceiptChildId
+                    --
+                  , tmpChildReceiptTable.GoodsId_out
+                  , tmpChildReceiptTable.GoodsKindId_out
+                  , tmpChildReceiptTable.Amount_out
+                  , tmpChildReceiptTable.Amount_out_start
+                  , tmpChildReceiptTable.isStart
+                  , tmpChildReceiptTable.isCost
+
+                  , tmpChildReceiptTable.Price1, tmpChildReceiptTable.Price2, tmpChildReceiptTable.Price3
+                  , tmpChildReceiptTable.Price1_calc, tmpChildReceiptTable.Price2_calc, tmpChildReceiptTable.Price3_calc
+                  , tmpChildReceiptTable.Price1_bon, tmpChildReceiptTable.Price2_bon, tmpChildReceiptTable.Price3_bon
+
                   , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := tmpChildReceiptTable.GoodsId_out
                                                    , inGoodsKindId            := tmpChildReceiptTable.GoodsKindId_out
                                                    , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
@@ -714,6 +895,51 @@ BEGIN
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                           ON ObjectBoolean_TaxExit.ObjectId = tmpChildReceiptTable.ReceiptChildId
                                          AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+
+            UNION ALL
+             SELECT tmpChildReceiptTable.ReceiptId_parent, tmpChildReceiptTable.ReceiptId_from, tmpChildReceiptTable.ReceiptId, tmpChildReceiptTable.GoodsId_in, tmpChildReceiptTable.GoodsKindId_in, tmpChildReceiptTable.Amount_in
+                  , tmpChildReceiptTable.ReceiptId_calc, tmpChildReceiptTable.Amount_in_calc, tmpChildReceiptTable.Amount_in_calc_two, tmpChildReceiptTable.Amount_out_calc
+                  , tmpChildReceiptTable.ReceiptChildId
+                    --
+                  , zc_Enum_InfoMoney_21501() AS GoodsId_out
+                  , 0 AS GoodsKindId_out
+                  , tmpChildReceiptTable.Amount_out
+                  , tmpChildReceiptTable.Amount_out_start
+                  , tmpChildReceiptTable.isStart
+                  , tmpChildReceiptTable.isCost
+
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price1
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price2
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price3
+
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price1_calc
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price2_calc
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price3_calc
+
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price1_bon_sale
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price2_bon_sale
+                  , COALESCE (tmpChildReceiptTable.Price1_bon, 0) :: TFloat AS Price3_bon_sale
+
+                --, 11 AS GroupNumber
+                  , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := tmpChildReceiptTable.GoodsId_out
+                                                   , inGoodsKindId            := tmpChildReceiptTable.GoodsKindId_out
+                                                   , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                                   , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                                   , inIsWeightMain           := FALSE
+                                                   , inIsTaxExit              := FALSE
+                                                    ) AS GroupNumber
+                  , Object_InfoMoney_View.InfoMoneyCode
+                  , Object_InfoMoney_View.InfoMoneyGroupName
+                  , Object_InfoMoney_View.InfoMoneyDestinationName
+                  , Object_InfoMoney_View.InfoMoneyName
+                  , Object_InfoMoney_View.InfoMoneyDestinationId
+                  , Object_InfoMoney_View.InfoMoneyId
+             FROM tmpChildReceiptTable
+                  LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_21501()
+
+             WHERE tmpChildReceiptTable.isCost = TRUE
+               AND tmpChildReceiptTable.Price1_bon > 0
+               --AND 1=0
             ) AS tmpReceiptChild
             LEFT JOIN tmpChild_calc ON tmpChild_calc.ReceiptId        = tmpReceiptChild.ReceiptId_from
                                    AND tmpChild_calc.ReceiptId_parent = tmpReceiptChild.ReceiptId_parent

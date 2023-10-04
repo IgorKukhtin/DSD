@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_ProductionUnion_Tax ()
+-- Function: gpReport_ReceiptProductionOutAnalyze ()
 
 DROP FUNCTION IF EXISTS gpReport_ReceiptProductionOutAnalyze_Test_ok (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
