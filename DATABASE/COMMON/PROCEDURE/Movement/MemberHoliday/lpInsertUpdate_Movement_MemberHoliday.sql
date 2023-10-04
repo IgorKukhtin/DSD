@@ -33,7 +33,7 @@ BEGIN
          PERFORM lpUnComplete_Movement (inMovementId := ioId
                                       , inUserId     := inUserId);
          -- потом удаление - в табеле удаляется WorkTimeKind
-         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (-1 * inUserId)::TVarChar);
+         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (inUserId)::TVarChar);
      END IF;
      
      -- определяем признак Создание/Корректировка
@@ -81,7 +81,6 @@ BEGIN
                                 , inDescId     := zc_Movement_MemberHoliday()
                                 , inUserId     := inUserId
                                  );
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -34,9 +34,6 @@ type
     cxLabel4: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    GoodsKindName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -73,7 +70,6 @@ type
     bbMultiAmountPartner: TdxBarButton;
     bbMultiAmountForecast: TdxBarButton;
     bbUpdateAmountAll: TdxBarButton;
-    MeasureName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     ChGoodsCode: TcxGridDBColumn;
     ChGoodsName: TcxGridDBColumn;

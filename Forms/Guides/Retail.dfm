@@ -514,6 +514,32 @@ object RetailForm: TRetailForm
           Value = ''
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsPropertyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsPropertyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsPropertyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsPropertyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OrderExternalId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OrderExternalInvNumber'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

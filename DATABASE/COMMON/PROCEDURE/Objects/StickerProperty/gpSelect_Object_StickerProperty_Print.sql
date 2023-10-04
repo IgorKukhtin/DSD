@@ -77,7 +77,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
 
              , BranchCode        Integer
               )
-AS
+ASDECLARE vbGoodsPropertyId Integer;
 $BODY$
     DECLARE vbUserId Integer;
 
@@ -89,7 +89,7 @@ $BODY$
     DECLARE vbAddLeft2      Integer;
     DECLARE vbAddLine       Integer;
 
-    DECLARE vbGoodsPropertyId Integer;
+    
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);

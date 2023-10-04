@@ -56,7 +56,7 @@ BEGIN
                                     , isErased Boolean) ON COMMIT DROP;
      INSERT INTO _tmpMI_master (GoodsId, GoodsId_basis, GoodsKindId_complete
                               , Amount, AmountRemains
-                              , TaxLoss, Koeff, TermProduction--, NormInDays, StartProductionInDays
+                              , KoeffLoss, TaxLoss, Koeff, TermProduction--, NormInDays, StartProductionInDays
                               , isErased)
                               SELECT COALESCE (MILinkObject_Goods.ObjectId
                                              , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
@@ -74,7 +74,7 @@ BEGIN
                                    , SUM (MovementItem.Amount)                                   AS Amount
                                    , SUM (COALESCE (MIFloat_AmountRemains.ValueData, 0))         AS AmountRemains
                                      --
-                                   --, CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN 1 - ObjectFloat_TaxLoss.ValueData / 100 ELSE 1 END AS KoeffLoss
+                                   , MAX (CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN 1 - ObjectFloat_TaxLoss.ValueData / 100 ELSE 1 END) AS KoeffLoss
                                    , MAX (CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN ObjectFloat_TaxLoss.ValueData ELSE 0 END) AS TaxLoss
                                    , MAX (COALESCE (MIFloat_Koeff.ValueData, 0))                 AS Koeff
                                    , MIN (COALESCE (MIFloat_TermProduction.ValueData, 0))        AS TermProduction
@@ -213,7 +213,8 @@ BEGIN
              END :: TFloat AS Amount_next  
            , 0   ::TFloat  AS AmountRemains 
            --, 0   ::TFloat  AS AmountRemains_sh
-           , _tmpMI_child.ContainerId  ::Integer
+           , _tmpMI_child.ContainerId  ::Integer  
+           , (vbOperDate :: Date - tmpGoods_params.TermProduction :: Integer) :: TDateTime AS Date_TermProd
            , FALSE AS isErased
        FROM _tmpMI_child
              LEFT JOIN tmpGoods_params ON tmpGoods_params.GoodsId_basis = _tmpMI_child.GoodsId
@@ -244,13 +245,14 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , NULL                               ::TDateTime AS PartionGoodsDate
            , 0 :: TFloat AS Amount --CASE WHEN ABS (_tmpMI_master.Amount) < 1 THEN _tmpMI_master.Amount ELSE CAST (_tmpMI_master.Amount AS NUMERIC (16, 1)) END :: TFloat AS Amount
-           , CAST (_tmpMI_master.Amount * _tmpMI_master.KoeffLoss AS NUMERIC (16, 1))  :: TFloat AS Amount_calc
+           , 0  :: TFloat AS Amount_calc
            , CAST (_tmpMI_master.TaxLoss AS NUMERIC (16, 1))                           :: TFloat AS TaxLoss
            , 0 :: TFloat AS Amount_old
            , 0 :: TFloat AS Amount_next 
            , _tmpMI_master.AmountRemains  :: TFloat
           -- , _tmpMI_master.AmountRemains_sh
-           , NULL ::Integer AS ContainerId
+           , NULL ::Integer AS ContainerId  
+           , Null :: TDateTime AS Date_TermProd
            , _tmpMI_master.isErased
        FROM _tmpMI_master
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpMI_master.GoodsId

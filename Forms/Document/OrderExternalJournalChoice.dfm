@@ -5,7 +5,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 432
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -506,10 +506,10 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
       FormName = 'actUpdate'
       FormNameParam.Value = 'actUpdate'
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
+    inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actComplete: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
     inherited actSetErased: TdsdChangeMovementStatus
@@ -537,7 +537,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         end
         item
           Name = 'OperDatePartner'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
@@ -545,7 +545,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         end
         item
           Name = 'OperDatePartner_Sale'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDatePartner_Sale'
           DataType = ftDateTime

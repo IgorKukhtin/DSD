@@ -74,16 +74,16 @@ BEGIN
             , Object_Retail.ValueData         AS RetailName  
             
             , Movement.Id                     AS MovementId
-            , zfCalc_InvNumber_isErased ('', CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END, Movement.OperDate
-                                           , Movement.StatusId) AS InvNumber
+            , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END :: TVarChar AS InvNumber
+
        FROM Object AS Object_GoodsProperty
              LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = inRetailId
 
              LEFT JOIN Movement ON Movement.Id = inMovementId
 
-             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+             LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
+                                         ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
        WHERE Object_GoodsProperty.Id = vbGoodsPropertyId
        ;
 
@@ -100,5 +100,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Params_byOrderExternal (26348745, 426441, '5')
--- SELECT * FROM gpGet_Params_byOrderExternal (0, 426441, '5')
+-- SELECT * FROM gpGet_Params_byOrderExternal (26348745,  '5')
