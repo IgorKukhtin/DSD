@@ -51,7 +51,9 @@ BEGIN
            -- 0. !!!Admin!!!
           RETURN TRUE;
 
-      ELSEIF vbUserId = 5 AND TRIM (inStoredProc) ILIKE 'gpReport_ReceiptAnalyze'
+      ELSEIF vbUserId = 5 AND (TRIM (inStoredProc) ILIKE 'gpReport_ReceiptAnalyze'
+                            OR TRIM (inStoredProc) ILIKE 'gpReport_ReceiptSaleAnalyzeReal'
+                              )
              AND 1=0
       THEN
            -- 0. !!!Admin!!!
