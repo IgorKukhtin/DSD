@@ -148,6 +148,15 @@ type
     actPrint_CalcPrice6: TdsdPrintAction;
     bbPrint_CalcPrice5: TdxBarButton;
     bbPrint_CalcPrice6: TdxBarButton;
+    Koef1_bon: TcxGridDBColumn;
+    Koef2_bon: TcxGridDBColumn;
+    Koef3_bon: TcxGridDBColumn;
+    Price1_bon: TcxGridDBColumn;
+    Price2_bon: TcxGridDBColumn;
+    Price3_bon: TcxGridDBColumn;
+    Summ1_bon: TcxGridDBColumn;
+    Summ2_bon: TcxGridDBColumn;
+    Summ3_bon: TcxGridDBColumn;
   private
     { Private declarations }
   public

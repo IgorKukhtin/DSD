@@ -3,7 +3,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
   ClientHeight = 430
   ClientWidth = 1370
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -327
+  ExplicitLeft = -476
   ExplicitWidth = 1386
   ExplicitHeight = 469
   PixelsPerInch = 96
@@ -122,6 +122,21 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
               Format = ' ,0.####'
               Kind = skSum
               Column = Profit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ1_bon
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ2_bon
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ3_bon
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -218,6 +233,21 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
               Format = ' ,0.####'
               Kind = skSum
               Column = Profit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ1_bon
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ2_bon
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ3_bon
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -590,6 +620,99 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object Koef1_bon: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089' '#1082#1086#1101#1092'. 1'
+            DataBinding.FieldName = 'Koef1_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Koef2_bon: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089' '#1082#1086#1101#1092'. 2'
+            DataBinding.FieldName = 'Koef2_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Koef3_bon: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089' '#1082#1086#1101#1092'. 3'
+            DataBinding.FieldName = 'Koef3_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Price1_bon: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1086#1085#1091#1089' 1'
+            DataBinding.FieldName = 'Price1_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Price2_bon: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1086#1085#1091#1089' 2'
+            DataBinding.FieldName = 'Price2_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Price3_bon: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1086#1085#1091#1089' 3'
+            DataBinding.FieldName = 'Price3_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Summ1_bon: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'1 '#1073#1086#1085'.'
+            DataBinding.FieldName = 'Summ1_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'12 '#1073#1086#1085#1091#1089' ('#1088#1072#1089#1095#1077#1090')'
+            Width = 75
+          end
+          object Summ2_bon: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'2 '#1073#1086#1085'.'
+            DataBinding.FieldName = 'Summ2_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'-2 '#1073#1086#1085#1091#1089' ('#1088#1072#1089#1095#1077#1090')'
+            Width = 75
+          end
+          object Summ3_bon: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'3 '#1073#1086#1085'.'
+            DataBinding.FieldName = 'Summ3_bon'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'-3 '#1073#1086#1085#1091#1089' ('#1088#1072#1089#1095#1077#1090')'
             Width = 75
           end
           object Price_sale: TcxGridDBColumn
@@ -3595,7 +3718,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = ChildView
+    View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
