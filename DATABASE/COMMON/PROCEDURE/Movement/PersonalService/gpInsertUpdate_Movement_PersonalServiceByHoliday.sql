@@ -236,8 +236,8 @@ BEGIN
              -- сохранили <Документ>
              inMovementId_1 := lpInsertUpdate_Movement_PersonalService (ioId                     := inMovementId_1
                                                                      , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar)
-                                                                     , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate1)
-                                                                     , inServiceDate             := inServiceDate1
+                                                                     , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate1) + INTERVAL '1 MONTH'
+                                                                     , inServiceDate             := DATE_TRUNC ('MONTH', inServiceDate1)
                                                                      , inComment                 := '' ::TVarChar
                                                                      , inPersonalServiceListId   := inPersonalServiceListId
                                                                      , inJuridicalId             := 0
@@ -331,15 +331,15 @@ BEGIN
 
 
      -- если нулевая сумма - 2
-     IF (COALESCE (vbSummHoliday2, 0) = 0 OR vbSummHoliday2 <> inSummHoliday2 + COALESCE (vbSummHoliday2_calc,0)) AND inSummHoliday2 > 0
+     IF (COALESCE (vbSummHoliday2, 0) = 0 OR vbSummHoliday2 <> inSummHoliday2 + COALESCE (vbSummHoliday2_calc,0)) AND (inSummHoliday2 > 0 OR inMovementId_2 > 0)
      THEN
          IF COALESCE (inMovementId_2, 0) = 0
          THEN
              -- сохранили <Документ>
              inMovementId_2 := lpInsertUpdate_Movement_PersonalService (ioId                     := inMovementId_2
                                                                      , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar)
-                                                                     , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate2)
-                                                                     , inServiceDate             := inServiceDate2
+                                                                     , inOperDate                := DATE_TRUNC ('MONTH', inServiceDate2) + INTERVAL '1 MONTH'
+                                                                     , inServiceDate             := DATE_TRUNC ('MONTH', inServiceDate2)
                                                                      , inComment                 := '' ::TVarChar
                                                                      , inPersonalServiceListId   := inPersonalServiceListId
                                                                      , inJuridicalId             := 0

@@ -312,10 +312,10 @@ BEGIN
                                          ON DATE_TRUNC ('MONTH', tmpPersonalService2.ServiceDate) = DATE_TRUNC ('MONTH', tmpData.ServiceDateEnd)
                                         AND DATE_TRUNC ('MONTH', tmpData.ServiceDateEnd)         <> DATE_TRUNC ('MONTH', tmpData.ServiceDateStart)
 
-            LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = tmpPersonalService1.MovementId  --MovementFloat_MovementId.ValueData::Integer
+            LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = COALESCE (tmpPersonalService1.MovementId, tmpData.MovementId_PersonalService1)
             LEFT JOIN MovementDesc AS MovementDesc1 ON MovementDesc1.Id = Movement_PersonalService1.DescId
 
-            LEFT JOIN Movement AS Movement_PersonalService2 ON Movement_PersonalService2.Id = tmpPersonalService2.MovementId  --MovementFloat_MovementItemId.ValueData::Integer
+            LEFT JOIN Movement AS Movement_PersonalService2 ON Movement_PersonalService2.Id = COALESCE (tmpPersonalService2.MovementId, tmpData.MovementId_PersonalService2)
             LEFT JOIN MovementDesc AS MovementDesc2 ON MovementDesc2.Id = Movement_PersonalService2.DescId
       ;
 

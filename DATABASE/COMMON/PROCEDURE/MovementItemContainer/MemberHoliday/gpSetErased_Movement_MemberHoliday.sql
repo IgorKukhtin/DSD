@@ -19,7 +19,8 @@ BEGIN
                                  , inUserId     := vbUserId);
 
      --при распроведении или удалении - в табеле автоматом  удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
+     IF vbUserId <> 5 THEN PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
+     END IF;
 
 END;
 $BODY$

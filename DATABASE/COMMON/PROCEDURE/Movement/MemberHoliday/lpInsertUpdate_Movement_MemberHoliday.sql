@@ -33,7 +33,8 @@ BEGIN
          PERFORM lpUnComplete_Movement (inMovementId := ioId
                                       , inUserId     := inUserId);
          -- потом удаление - в табеле удаляется WorkTimeKind
-         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (inUserId)::TVarChar);
+         IF inUserId <> 5 THEN PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (inUserId)::TVarChar);
+         END IF;
      END IF;
      
      -- определяем признак Создание/Корректировка
@@ -74,7 +75,8 @@ BEGIN
 
   
      -- 5.1. сначала проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, (-1 * inUserId)::TVarChar);
+     IF inUserId <> 5 THEN PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, (-1 * inUserId)::TVarChar);
+     END IF;
 
      -- 5.2. потом проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := ioId

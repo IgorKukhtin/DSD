@@ -325,6 +325,7 @@ BEGIN
                           )
        SELECT
              tmpMI.MovementItemId :: Integer     AS Id
+           , vbOperDate           :: TDateTime   AS OperDate
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
