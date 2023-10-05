@@ -60,6 +60,7 @@ type
     BadmCode: TcxGridDBColumn;
     OptimaCode: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
+    CodeUKTZED: TcxGridDBColumn;
   private
     { Private declarations }
   public

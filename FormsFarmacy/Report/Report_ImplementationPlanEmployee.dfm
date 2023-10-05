@@ -578,6 +578,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Aggregates = <>
     FieldDefs = <>
     IndexDefs = <>
+    IndexFieldNames = 'GoodsCode'
     Params = <>
     StoreDefs = True
     AfterOpen = ClientDataSetAfterOpen

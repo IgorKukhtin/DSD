@@ -859,6 +859,7 @@ BEGIN
                                                           ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
                                       FROM Object_Goods_Juridical
                                       WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                                        AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
                                         AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
@@ -1144,7 +1145,9 @@ BEGIN
           , COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)    AS isGoodsForProject
           , tmpGoodsDiscount.MaxPrice                              AS GoodsDiscountMaxPrice
           , tmpGoodsDiscount.DiscountProcent                       AS GoodsDiscountProcentSite
-          , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
+          , COALESCE(tmpGoodsUKTZED.UKTZED, CASE WHEN length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
+                                                  AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
+                                                 THEN REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '') END)::TVarChar        AS UKTZED
           , Object_Goods_PairSun_Main.MainID                       AS GoodsPairSunId
           , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
           , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbObjectId <> 4 
@@ -1395,7 +1398,8 @@ SELECT Id
      , PromoBonusPrice
      , PriceView
      , PriceSite
+     , UKTZED
 FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3') 
-where PriceView <> PriceSite --and id = 15015521
+--where PriceView <> PriceSite --and id = 15015521
 order by GoodsName
        , PartionDateKindName

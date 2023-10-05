@@ -484,8 +484,15 @@ begin
   spGetTotal.ParamByName('inTotalExecutionFixed').Value := Dataset['TotalExecutionFixed'];
   spGetTotal.ParamByName('inAmountTheFineTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1];
   spGetTotal.ParamByName('inBonusAmountTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0];
-  spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
-  spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
+  if (FCountFixedPercent * FFixedPercent < 45) and (StartOfTheMonth(deStart.Date) >= EncodeDate(202, 09, 01)) then
+  begin
+    spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5] * 0.7;
+    spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6] * 0.7;
+  end else
+  begin
+    spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
+    spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
+  end;
   spGetTotal.ParamByName('inisNewUser').Value := cdsUnit.FieldByName('isNewUser').AsBoolean;
   spGetTotal.ParamByName('inisCashier').Value := cdsUnit.FieldByName('isCashier').AsBoolean;
 
@@ -628,8 +635,15 @@ begin
     spGetTotal.ParamByName('inTotalExecutionFixed').Value := cdsResult.FieldByName('TotalExecutionFixed').AsCurrency;
     spGetTotal.ParamByName('inAmountTheFineTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0];
     spGetTotal.ParamByName('inBonusAmountTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1];
-    spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
-    spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
+    if (FCountFixedPercent * FFixedPercent < 45) and (StartOfTheMonth(deStart.Date) >= EncodeDate(202, 09, 01)) then
+    begin
+      spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5] * 0.7;
+      spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6] * 0.7;
+    end else
+    begin
+      spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
+      spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
+    end;
     spGetTotal.ParamByName('inisNewUser').Value := cdsUnit.FieldByName('isNewUser').AsBoolean;
     spGetTotal.ParamByName('inisCashier').Value := cdsUnit.FieldByName('isCashier').AsBoolean;
     spGetTotal.ParamByName('outTotal').Value := 0;
@@ -758,6 +772,7 @@ begin
           nSum := Dataset['Amount' + FUnit.Strings[I]] * Dataset['Price' + FUnit.Strings[I]] *
           (cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency + Dataset['AddBonusPercent' + FUnit.Strings[I]]) / 100;
       end;
+
       Dataset['BonusAmountTab' + FUnit.Strings[I]] := nSum;
     end;
 
@@ -838,6 +853,14 @@ begin
     end;
 
     Dataset['BonusPercentAddSum'] := nSum;
+
+    if (FCountFixedPercent * FFixedPercent < 45) and (StartOfTheMonth(deStart.Date) >= EncodeDate(202, 09, 01)) and
+      (Dataset['BonusPercentSum'] > 0) then
+    begin
+      if (Dataset['BonusAmountTab'] - Dataset['BonusPercentSum'] * 0.3) > 0 then
+        Dataset['BonusAmountTab'] := Dataset['BonusAmountTab'] - Dataset['BonusPercentSum'] * 0.3
+      else Dataset['BonusAmountTab'] := 0;
+    end;
 
     Dataset['isFixedPercent'] := Dataset['isFixedPercent' + FUnit.Strings[FUnitCalck]];
 

@@ -2,27 +2,27 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
   ClientWidth = 1083
-  ExplicitWidth = 1099
-  ExplicitHeight = 555
+  ExplicitWidth = 1101
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 195
+    Top = 196
     Width = 1083
-    Height = 321
-    ExplicitTop = 195
+    Height = 320
+    ExplicitTop = 196
     ExplicitWidth = 1083
-    ExplicitHeight = 321
-    ClientRectBottom = 321
+    ExplicitHeight = 320
+    ClientRectBottom = 320
     ClientRectRight = 1083
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1083
-      ExplicitHeight = 297
+      ExplicitHeight = 296
       inherited cxGrid: TcxGrid
         Width = 1083
-        Height = 297
+        Height = 296
         ExplicitWidth = 1083
-        ExplicitHeight = 297
+        ExplicitHeight = 296
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -722,6 +722,11 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
+          end
+          object Color_MarginPercent: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_MarginPercent'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -2119,7 +2124,7 @@
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2471,7 +2476,7 @@
       item
         ColorColumn = Percent
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = Color_calc
+        BackGroundValueColumn = Color_MarginPercent
         ColorValueList = <>
       end
       item
@@ -2507,7 +2512,7 @@
       item
         ColorColumn = GoodsName
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = Color_calc
+        BackGroundValueColumn = Color_MarginPercent
         ColorValueList = <>
       end
       item
@@ -2567,7 +2572,7 @@
       item
         ColorColumn = GoodsCode
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = Color_calc
+        BackGroundValueColumn = Color_MarginPercent
         ColorValueList = <>
       end
       item

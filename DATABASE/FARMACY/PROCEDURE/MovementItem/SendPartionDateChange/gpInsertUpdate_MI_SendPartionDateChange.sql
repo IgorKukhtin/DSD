@@ -103,7 +103,7 @@ BEGIN
 
      WHERE Container.DescId in (zc_Container_Count(), zc_Container_CountPartionDate())
        AND ((COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())::Date - MovementIncome.OperDate::Date) > 90
-        OR MovementIncome.OperDate < '19.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)  
+        OR MovementIncome.OperDate < '01.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)  
        AND Container.Id = inContainerId;
 
      IF COALESCE (vbDescId, 0) = 0
