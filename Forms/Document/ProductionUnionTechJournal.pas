@@ -175,6 +175,8 @@ type
     OperDate_LakFrom: TcxGridDBColumn;
     Amount_LakFrom: TcxGridDBColumn;
     CuterCount_LakFrom: TcxGridDBColumn;
+    actOpenFormOrderInternal: TdsdOpenForm;
+    bbOpenFormOrderInternal: TdxBarButton;
   private
     { Private declarations }
   public

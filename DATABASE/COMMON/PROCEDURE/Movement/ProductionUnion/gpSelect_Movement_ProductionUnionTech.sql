@@ -31,7 +31,8 @@ BEGIN
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
      -- 
-     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, DocumentKindId integer,MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean, isOrderSecond Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, DocumentKindId integer,MovementItemId Integer, MovementItemId_order Integer, MovementId_order Integer
+                                     , GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean, isOrderSecond Boolean) ON COMMIT DROP;
 
      -- определяется - ЦЕХ колбаса+дел-сы
      vbIsOrder:= (inFromId = inToId)
@@ -42,6 +43,7 @@ BEGIN
 
 
      WITH tmpMI_order2 AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
+                               , MAX (MovementItem.MovementId)                                  AS MovementId
                                , MAX (MovementItem.Id)                                          AS MovementItemId
                                , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)          AS GoodsId
                                , ObjectLink_Receipt_GoodsKind.ChildObjectId                     AS GoodsKindId
@@ -192,6 +194,7 @@ BEGIN
                               AND MB_Peresort.MovementId IS NULL
                            )
       , tmpMI_order22 AS (SELECT tmpMI_order2.OperDate
+                               , tmpMI_order2.MovementId     AS MovementId_order
                                , tmpMI_order2.MovementItemId AS MovementItemId_order
                                , tmpMI_order2.GoodsId
                                , tmpMI_order2.GoodsKindId
@@ -204,19 +207,22 @@ BEGIN
                           FROM tmpMI_order2
                           WHERE tmpMI_order2.ToId = inFromId
                          )
-        , tmpMI_order_find AS (SELECT tmpMI_order22.MovementItemId_order    AS MovementItemId_order
+        , tmpMI_order_find AS (SELECT tmpMI_order22.MovementId_order        AS MovementId_order
+                                    , tmpMI_order22.MovementItemId_order    AS MovementItemId_order
                                     , MAX (tmpMI_production.MovementItemId) AS MovementItemId
                                FROM tmpMI_production
                                     INNER JOIN tmpMI_order22 ON tmpMI_order22.GoodsId = tmpMI_production.GoodsId
-                                                           AND tmpMI_order22.GoodsKindId = tmpMI_production.GoodsKindId
-                                                           AND tmpMI_order22.GoodsKindId_Complete = tmpMI_production.GoodsKindId_Complete
-                                                           AND tmpMI_order22.ReceiptId = tmpMI_production.ReceiptId
-                                                           AND tmpMI_order22.OperDate = tmpMI_production.OperDate
-                                                           AND tmpMI_order22.ToId = tmpMI_production.FromId
+                                                            AND tmpMI_order22.GoodsKindId = tmpMI_production.GoodsKindId
+                                                            AND tmpMI_order22.GoodsKindId_Complete = tmpMI_production.GoodsKindId_Complete
+                                                            AND tmpMI_order22.ReceiptId = tmpMI_production.ReceiptId
+                                                            AND tmpMI_order22.OperDate = tmpMI_production.OperDate
+                                                            AND tmpMI_order22.ToId = tmpMI_production.FromId
                                WHERE tmpMI_production.StatusId <> zc_Enum_Status_Erased()
-                               GROUP BY tmpMI_order22.MovementItemId_order
+                               GROUP BY tmpMI_order22.MovementId_order
+                                      , tmpMI_order22.MovementItemId_order
                               )
        , tmpMI_order AS (SELECT tmpMI_order22.OperDate
+                              , tmpMI_order22.MovementId_order
                               , tmpMI_order22.MovementItemId_order
                               , tmpMI_order22.GoodsId
                               , tmpMI_order22.GoodsKindId
@@ -232,7 +238,7 @@ BEGIN
                          )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, DocumentKindId, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
+    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, DocumentKindId, MovementItemId, MovementItemId_order, MovementId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate, isOrderSecond)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
             , COALESCE (tmpMI_production.InvNumber, '')                                          AS InvNumber
@@ -240,6 +246,7 @@ BEGIN
             , COALESCE (tmpMI_production.DocumentKindId, 0)                                      AS DocumentKindId
             , COALESCE (tmpMI_production.MovementItemId, tmpMI_order.MovementItemId_order)       AS MovementItemId
             , tmpMI_order.MovementItemId_order                                                   AS MovementItemId_order
+            , tmpMI_order.MovementId_order                                                       AS MovementId_order
             , COALESCE (tmpMI_production.GoodsId, tmpMI_order.GoodsId)                           AS GoodsId
             , COALESCE (tmpMI_production.GoodsKindId, tmpMI_order.GoodsKindId)                   AS GoodsKindId
             , COALESCE (tmpMI_production.GoodsKindId_Complete, tmpMI_order.GoodsKindId_Complete) AS GoodsKindId_Complete
@@ -356,6 +363,10 @@ BEGIN
             , _tmpListMaster.OperDate
             , _tmpListMaster.DocumentKindId
             , Object_DocumentKind.ValueData     AS DocumentKindName
+            
+            , CASE WHEN COALESCE (Movement_Order.Id, 0) = 0 THEN -1 ELSE Movement_Order.Id END ::Integer AS MovementId_order
+            , Movement_Order.OperDate           AS OperDate_order
+            , Movement_Order.InvNumber          AS InvNumber_order
 
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
@@ -520,7 +531,9 @@ BEGIN
                                    ON ObjectFloat_Receipt_Value.ObjectId = Object_Receipt.Id
                                   AND ObjectFloat_Receipt_Value.DescId = zc_ObjectFloat_Receipt_Value() 
              
-             LEFT JOIN tmpData_Lak ON tmpData_Lak.MovementItemId_master = _tmpListMaster.MovementItemId 
+             LEFT JOIN tmpData_Lak ON tmpData_Lak.MovementItemId_master = _tmpListMaster.MovementItemId  
+             
+             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = _tmpListMaster.MovementId_order
 
            ;
 
@@ -860,6 +873,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.23         *
  12.06.23         * add Lak
  13.09.22         *
  05.10.16         * add inJuridicalBasisId
