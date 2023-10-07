@@ -1447,6 +1447,8 @@ type
     miReport_Send_PersonalGroup: TMenuItem;
     actReport_HistoryCost_Difference: TdsdOpenForm;
     miReport_HistoryCost_Difference: TMenuItem;
+    actReport_ProductionUnionTech_Analys: TdsdOpenForm;
+    miReport_ProductionUnionTech_Analys: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
