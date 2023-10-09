@@ -1874,11 +1874,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
   exit;
@@ -3298,11 +3298,17 @@ end;
 
 procedure TLoadFormTest.LoadReportProductionAnalyzeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_AnalysForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_AnalysForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_AnalysDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_AnalysDialogDialogForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionAnalyzeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionAnalyzeDialogForm');
-end;
+  }
+  end;
 
 procedure TLoadFormTest.LoadReportSaleAnalyzeFormTest;
 begin

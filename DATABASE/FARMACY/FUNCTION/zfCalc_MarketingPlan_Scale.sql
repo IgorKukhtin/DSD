@@ -42,7 +42,59 @@ BEGIN
   vbPrizeThreshold := COALESCE (vbPrizeThreshold, 0);
   vbMarkPlanThreshol := COALESCE (vbMarkPlanThreshol, 0);
 
-  IF  date_trunc('month', inOperDate) >= '01.11.2022'
+  IF  date_trunc('month', inOperDate) >= '01.10.2023'
+  THEN
+  
+    /*IF  date_trunc('month', inOperDate) >= '01.04.2023' AND inBonusAmountTab > 0 AND Round(inTotalExecutionFixed, 2) < 45
+    THEN
+      inBonusAmountTab := ROUND(inBonusAmountTab * 0.7, 2);
+    END IF;  */
+  
+    SELECT Object_Unit.ValueData ILIKE 'Апт. пункт %'
+         , Object_UnitCategory.ObjectCode 
+    INTO vbisAP, vbUnitCategoryCode
+    FROM Object AS Object_Unit
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Category
+                              ON ObjectLink_Unit_Category.ObjectId = Object_Unit.Id 
+                             AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category()
+         LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_Unit_Category.ChildObjectId
+    WHERE Object_Unit.Id        = inUniitID
+      AND Object_Unit.DescId    = zc_Object_Unit();
+      
+    IF vbUnitCategoryCode = 2 -- A
+    THEN
+      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 45 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 60 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 90 + vbPrizeThreshold 
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;
+    ELSEIF vbUnitCategoryCode = 3 -- B
+    THEN
+      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 55 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 85 + vbPrizeThreshold  
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;
+    ELSEIF vbUnitCategoryCode = 5 -- C
+    THEN
+      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 35 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 47 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 80 + vbPrizeThreshold  
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;
+    ELSEIF vbUnitCategoryCode = 8 -- D
+    THEN
+      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 42 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 65 + vbPrizeThreshold  
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;              
+    END IF;
+    
+    IF vbTotal < 0 AND vbisAP = TRUE THEN vbTotal := 0; END IF;
+    
+                                           
+  ELSEIF  date_trunc('month', inOperDate) >= '01.11.2022'
   THEN
   
     /*IF  date_trunc('month', inOperDate) >= '01.04.2023' AND inBonusAmountTab > 0 AND Round(inTotalExecutionFixed, 2) < 45

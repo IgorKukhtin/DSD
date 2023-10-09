@@ -67,7 +67,7 @@
                                      LEFT OUTER JOIN Movement  AS MovementIncome
                                                                ON MovementIncome.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                                   WHERE ((COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())::Date - MovementIncome.OperDate::Date) > 90
-                                     OR MovementIncome.OperDate < '19.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)
+                                     OR MovementIncome.OperDate < '01.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)
                                  )
             -- остатки - нашли Срок c перемещений
           , tmpContainer_In AS (SELECT tmp.ContainerId

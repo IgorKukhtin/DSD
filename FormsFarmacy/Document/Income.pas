@@ -205,6 +205,7 @@ type
     dxBarButton5: TdxBarButton;
     spPUSHInfo: TdsdStoredProc;
     actPUSHMessage: TdsdShowPUSHMessage;
+    Color_MarginPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

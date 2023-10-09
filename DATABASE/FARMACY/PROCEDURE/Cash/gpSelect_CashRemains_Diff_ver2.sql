@@ -620,6 +620,7 @@ BEGIN
                                                           ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
                                       FROM Object_Goods_Juridical
                                       WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                                        AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
                                         AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
@@ -722,7 +723,9 @@ BEGIN
             Object_DiscountExternal.ValueData                                 AS DiscountExternalName,
             tmpGoodsDiscount.GoodsDiscountId                                  AS GoodsDiscountID,
             tmpGoodsDiscount.GoodsDiscountName                                AS GoodsDiscountName,
-            tmpGoodsUKTZED.UKTZED                                             AS UKTZED,
+            COALESCE(tmpGoodsUKTZED.UKTZED, CASE WHEN length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
+                                                  AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
+                                                 THEN REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '') END)::TVarChar        AS UKTZED,
             Object_Goods_PairSun_Main.MainID                                  AS GoodsPairSunId,
             NULLIF (_DIFF.DivisionPartiesId, 0),
             CASE WHEN Object_DivisionParties.ObjectCode = 1 
@@ -861,13 +864,6 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar) OWNER TO post
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
 --
-SELECT GoodsCode 
-     , GoodsName
-     , PartionDateKindName
-     , Price
-     , PricePartionDate
-     , PromoBonusPrice
-     , PriceView
+SELECT *
 FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
-order by GoodsName
-       , PartionDateKindName
+order by GoodsName , PartionDateKindName

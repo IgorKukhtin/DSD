@@ -53,7 +53,7 @@ BEGIN
 
     IF inSession = '3'
     THEN
-      vbUserId := 12625219;
+      vbUserId := 16456639;
     END IF;
 
     vbDateStart := date_trunc('month', inStartDate);
@@ -757,6 +757,16 @@ BEGIN
            GROUP BY Implementation.UserID) AS Implementation
      WHERE tmpResult.UserID = Implementation.UserID;
      
+     IF inStartDate >= '01.09.2023'
+     THEN
+        -- Оставляем только 70 % бонуса
+       UPDATE tmpResult SET BonusAmountTab = CASE WHEN tmpResult.BonusAmountTab - COALESCE(tmpResult.AddBonusPercentTab * 0.30, 0) > 0
+                                                  THEN tmpResult.BonusAmountTab - COALESCE(tmpResult.AddBonusPercentTab * 0.30, 0) ELSE 0 END
+                          , AddBonusPercentTab = tmpResult.AddBonusPercentTab * 0.7
+                          , AddBonusPercentSum = tmpResult.AddBonusPercentSum * 0.7        
+       WHERE tmpResult.FixedPercent < 45;
+     END IF;
+
       -- Расчет итогов
 --     UPDATE tmpResult SET Total = CASE WHEN tmpResult.TotalExecutionLine >= UnitCategory.MinLineByLineImplPlan THEN
 --              tmpResult.BonusAmountTab - tmpResult.AmountTheFineTab ELSE 0 END
@@ -909,4 +919,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := CURRENT_DATE::TDateTime ,  inSession := '3');
+select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := '01.09.2023'::TDateTime,  inSession := '3');

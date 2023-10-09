@@ -178,6 +178,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = CuterCount_LakFrom
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsName
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -244,8 +249,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 77
           end
-          inherited colGoodsName: TcxGridDBColumn
+          object InvNumber_order: TcxGridDBColumn [5]
+            Caption = #8470' '#1044#1086#1082' '#1047#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumber_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
           end
           object MeasureName: TcxGridDBColumn [7]
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -541,6 +551,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 60
           end
+          inherited colGoodsName: TcxGridDBColumn
+            Options.Editing = False
+          end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -610,8 +623,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       inherited cxGridChild: TcxGrid
         Top = 297
         Width = 1076
-        ExplicitLeft = 328
-        ExplicitTop = 303
+        ExplicitTop = 297
         ExplicitWidth = 1076
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -2635,6 +2647,42 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actOpenFormOrderInternal: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1103#1074#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1103#1074#1082#1072'>'
+      ImageIndex = 24
+      FormName = 'TOrderInternalForm'
+      FormNameParam.Value = 'TOrderInternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'MovementId_order'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42086d
+          Component = MasterCDS
+          ComponentItem = 'OperDate_order'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnionTech'
@@ -2759,6 +2807,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2931,6 +2987,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     end
     object bbPrintDays2_cuter: TdxBarButton
       Action = actPrintDays2_cuter
+      Category = 0
+    end
+    object bbOpenFormOrderInternal: TdxBarButton
+      Action = actOpenFormOrderInternal
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079'>'
       Category = 0
     end
   end

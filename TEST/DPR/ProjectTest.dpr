@@ -1458,7 +1458,9 @@ uses
   Report_Send_PersonalGroupDialog in '..\..\Forms\Report\Report_Send_PersonalGroupDialog.pas' {Report_Send_PersonalGroupDialogForm: TParentForm},
   Report_HistoryCost_Difference in '..\..\Forms\Report\Report_HistoryCost_Difference.pas' {Report_HistoryCost_DifferenceForm: TParentForm},
   Report_HistoryCost_DifferenceDialog in '..\..\Forms\Report\Report_HistoryCost_DifferenceDialog.pas' {Report_HistoryCost_DifferenceDialogForm: TParentForm},
-  OrderInternalChild in '..\..\Forms\Document\OrderInternalChild.pas' {OrderInternalChildForm: TParentForm};
+  OrderInternalChild in '..\..\Forms\Document\OrderInternalChild.pas' {OrderInternalChildForm: TParentForm},
+  Report_ProductionUnionTech_Analys in '..\..\Forms\Report\Report_ProductionUnionTech_Analys.pas' {Report_ProductionUnionTech_AnalysForm: TParentForm},
+  Report_ProductionUnionTech_AnalysDialog in '..\..\Forms\Report\Report_ProductionUnionTech_AnalysDialog.pas' {Report_ProductionUnionTech_AnalysDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

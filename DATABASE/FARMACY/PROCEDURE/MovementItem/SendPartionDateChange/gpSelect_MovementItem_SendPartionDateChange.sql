@@ -149,7 +149,7 @@ BEGIN
                                      WHERE Container.DescId = zc_Container_Count()
                                        AND Container.WhereObjectId = vbUnitId
                                        AND ((COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())::Date - MovementIncome.OperDate::Date) > 90
-                                        OR MovementIncome.OperDate < '19.09.2023')
+                                        OR MovementIncome.OperDate < '01.09.2023')
                                        AND Container.Amount > 0)
                  , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id
                                                , Object_PartionDateKind.ValueData
@@ -268,7 +268,7 @@ BEGIN
                                      WHERE Container.DescId = zc_Container_Count()
                                        AND Container.WhereObjectId = vbUnitId
                                        AND ((COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())::Date - MovementIncome.OperDate::Date) > 90
-                                        OR MovementIncome.OperDate < '19.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)
+                                        OR MovementIncome.OperDate < '01.09.2023' OR COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) < CURRENT_DATE)
                                        AND Container.ObjectId IN (SELECT DISTINCT MI_Master.GoodsId FROM MI_Master)
                                        AND Container.Amount > 0)
 

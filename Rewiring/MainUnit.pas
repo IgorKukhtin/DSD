@@ -170,6 +170,9 @@ type
     CheckingHC_MCalcSumm_external: TcxGridDBBandedColumn;
     cxStyleRepository: TcxStyleRepository;
     cxStyle1: TcxStyle;
+    TimerCheckingHistoryCost: TTimer;
+    CheckingHC_DPrice: TcxGridDBBandedColumn;
+    CheckingHC_PPrice: TcxGridDBBandedColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnScriptPathClick(Sender: TObject);
@@ -192,6 +195,7 @@ type
     procedure cxgCheckingHCDBBandedTableView2StylesGetContentStyle(
       Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+    procedure TimerCheckingHistoryCostTimer(Sender: TObject);
   private
     { Private declarations }
 
@@ -358,6 +362,67 @@ begin
 
   FisProcessingEmpty := True;
 
+end;
+
+procedure TMainForm.TimerCheckingHistoryCostTimer(Sender: TObject);
+  var pZConnection: TZConnection; pZQuery: TZQuery;
+begin
+  TimerCheckingHistoryCost.Enabled := False;
+  try
+    if (FMasterUUId <> '') and (FSlaveUUId <> '') then
+    begin
+      SaveRewiringLog('Открытие отчета "Проверка HistoryCost".');
+      try
+
+        try
+          pZConnection := TZConnection.Create(Nil);
+          pZConnection.Protocol := 'postgresql-9';
+          pZConnection.HostName :=  edtSlaveServer.Text;
+          pZConnection.Database :=  edtSlaveDatabase.Text;
+          pZConnection.User     :=  edtSlaveUser.Text;
+          pZConnection.Password :=  edtSlavePassword.Text;
+          pZConnection.Port     :=  StrToInt(edtSlavePort.Text);
+          pZConnection.LibraryLocation := ZConnection.LibraryLocation;
+          pZConnection.Connect;
+
+          pZQuery := TZQuery.Create(Nil);
+          pZQuery.Connection := pZConnection;
+          pZQuery.SQL.Text := cSQLSelect_CheckingHistoryCost;
+          pZQuery.ParamByName('inMasterUUId').Value := FMasterUUId;
+          pZQuery.ParamByName('inSlaveUUId').Value := FSlaveUUId;
+          pZQuery.ParamByName('inSession').Value := edSession.Text;
+          pZQuery.Open;
+
+          SaveRewiringLog('Перенос данных "Проверка HistoryCost".');
+          LoadDataToCDS(CheckingHCCDS, pZQuery);
+        finally
+          pZQuery.Close;
+          pZConnection.Disconnect;
+          FreeAndNil(pZQuery);
+          FreeAndNil(pZConnection);
+        end;
+      except
+        on E: Exception do
+          SaveRewiringLog(Format(cExceptionMsg, [E.ClassName, E.Message]));
+
+      end;
+    end;
+  finally
+    cxTabSheetSettings.TabVisible := True;
+    cxTabSheetCheckingHC.TabVisible := True;
+    cxPageControl.ActivePage := cxTabSheetCheckingHC;
+
+    btnReadInfo.Enabled := True;
+    btnHistoryCost.Enabled := True;
+    btnRewiring.Enabled := True;
+    btnSendDocument.Enabled := True;
+
+    cxGrid1DBTableView1.OptionsData.Editing := True;
+    lblActionTake.Caption := 'Ожидание задания';
+    pbProcess.Properties.Marquee := False;
+    pbProcess.Properties.ShowTextStyle := cxtsPercent;
+    pbProcess.Position := 0;
+  end;
 end;
 
 procedure TMainForm.TimerHistoryCostTimer(Sender: TObject);
@@ -667,7 +732,7 @@ end;
 procedure TMainForm.cxPageControlPageChanging(Sender: TObject;
   NewPage: TcxTabSheet; var AllowChange: Boolean);
 begin
-  if NewPage = cxTabSheetCheckingHC then
+  if not CheckingHCCDS.Active and (NewPage = cxTabSheetCheckingHC) then
   begin
     deStartDateCheckingHC.Date := deStartDate.Date;
     deEndDateCheckingHC.Date := deEndDate.Date;
@@ -1704,47 +1769,8 @@ begin
             else SaveRewiringLog('Получены данные с слейва".');
           end;
 
-          if FListProcessing.Count <= 0 then
-          begin
-            SaveRewiringLog('Открытие отчета "Проверка HistoryCost".');
+          if FListProcessing.Count <= 0 then TimerCheckingHistoryCost.Enabled := True;
 
-            if (FMasterUUId <> '') and (FSlaveUUId <> '') then
-            begin
-              if GetInfoSlave then
-              begin
-                try
-                  ZQuery.Close;
-                  ZQuery.SQL.Text := cSQLSelect_CheckingHistoryCost;
-                  ZQuery.ParamByName('inMasterUUId').Value := FMasterUUId;
-                  ZQuery.ParamByName('inSlaveUUId').Value := FSlaveUUId;
-                  ZQuery.ParamByName('inSession').Value := edSession.Text;
-                  ZQuery.Open;
-
-                  LoadDataToCDS(CheckingHCCDS, ZQuery);
-                except
-                  on E: Exception do
-                    SaveRewiringLog(Format(cExceptionMsg, [E.ClassName, E.Message]));
-
-                end;
-                ZConnection.Disconnect;
-              end;
-            end;
-
-            cxTabSheetSettings.TabVisible := True;
-            cxTabSheetCheckingHC.TabVisible := True;
-            cxPageControl.ActivePage := cxTabSheetCheckingHC;
-
-            btnReadInfo.Enabled := True;
-            btnHistoryCost.Enabled := True;
-            btnRewiring.Enabled := True;
-            btnSendDocument.Enabled := True;
-
-            cxGrid1DBTableView1.OptionsData.Editing := True;
-            lblActionTake.Caption := 'Ожидание задания';
-            pbProcess.Properties.Marquee := False;
-            pbProcess.Properties.ShowTextStyle := cxtsPercent;
-            pbProcess.Position := 0;
-          end;
         end)
     end).Start;
 end;

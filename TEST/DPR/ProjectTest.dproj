@@ -5092,6 +5092,14 @@
 				<Form>OrderInternalChildForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ProductionUnionTech_Analys.pas">
+				<Form>Report_ProductionUnionTech_AnalysForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ProductionUnionTech_AnalysDialog.pas">
+				<Form>Report_ProductionUnionTech_AnalysDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

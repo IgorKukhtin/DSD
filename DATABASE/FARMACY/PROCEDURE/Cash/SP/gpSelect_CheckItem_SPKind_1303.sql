@@ -75,21 +75,30 @@ BEGIN
                   
                   RETURN;
             END IF;
+                        
+            raise notice 'Value 03: % %', vbPriceSale, vbPriceCalc ;
             
-            
-            -- Предложение по цене
-            IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (trunc(vbPriceCalc * 10) / 10, 0) > 0)
+            IF trunc(vbPriceCalc * 10) / 10 > inPriceSale
             THEN
-               outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов';
-               outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
+              outPrice := trunc(vbPriceCalc * 10) / 10;
+              outSentence :=  'Применить максимально допустимую цену - '||zfConvert_FloatToString(outPrice);          
+            ELSE 
+              -- Предложение по цене
+              IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (trunc(vbPriceCalc * 10) / 10, 0) > 0)
+              THEN
+                 outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов';
+                 outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
 
-               outPrice := trunc(vbPriceCalc * 10) / 10;
-               outSentence :=  'Применить максимально допустимую цену - '||zfConvert_FloatToString(outPrice);
+                 outPrice := trunc(vbPriceCalc * 10) / 10;
+                 outSentence :=  'Применить максимально допустимую цену - '||zfConvert_FloatToString(outPrice);
+                 
+              END IF;
             END IF;
 
              -- raise notice 'Value 05: % % % %', vbPriceSale, vbPriceCalc, outPrice, (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100);
-            
-            IF vbPriceSale < inPriceSale and COALESCE(outPrice, 0) = 0 OR vbPriceSale < outPrice and COALESCE(outPrice, 0) > 0
+              
+            IF vbPriceSale < inPriceSale and COALESCE(outPrice, 0) = 0 OR 
+               vbPriceSale < outPrice and COALESCE(outPrice, 0) > 0
             THEN
               outError :=  'БЛОК ОТПУСКА !'||Chr(13)||Chr(10)|| 
                            'Отпускная цена выше чем по реестру товаров соц. проекта 1303'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||
@@ -97,7 +106,7 @@ BEGIN
                            'У нас миним. цена для отпуска по ПКМУ 1303 - '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END)||'грн.';
               outError2 :=  Chr(13)||Chr(10)||'% расхождения '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END/vbPriceSale*100 - 100)||
                            Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram   в группу ПКМУ1303  (инфо для Пелиной Любови)';
-                           
+                             
               IF (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100) <= COALESCE(vbDeviationsPrice1303, 1.0)
               THEN
                 outPrice := vbPriceSale;
@@ -122,4 +131,6 @@ $BODY$
 -- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 36643, inPriceSale := 1000, inSession := '3');
 
 
-select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 37309 , inPriceSale := 1185.5 ,  inSession := '3');
+--select * from gpSelect_CheckItem_SPKind_1303_Ol(inSPKindId := 4823010 , inGoodsId := 37309 , inPriceSale := 1160 ,  inSession := '3');
+
+select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 58015 , inPriceSale := 499 ,  inSession := '3');

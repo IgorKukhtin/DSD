@@ -36,6 +36,12 @@ BEGIN
      IF COALESCE(inGoodsName, '') <> '' THEN
        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), ioId, inGoodsName);
      END IF;
+     
+     IF length(REPLACE(REPLACE(REPLACE(inFEA, ' ', ''), '.', ''), Chr(160), '')) >= 4 AND 
+        length(REPLACE(REPLACE(REPLACE(inFEA, ' ', ''), '.', ''), Chr(160), '')) <= 10
+     THEN
+       PERFORM gpUpdate_Goods_CodeUKTZED (inGoodsId, inFEA, inUserId::TVarChar);
+     END IF;
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
