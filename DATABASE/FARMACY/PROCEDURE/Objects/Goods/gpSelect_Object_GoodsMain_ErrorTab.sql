@@ -177,7 +177,7 @@ BEGIN
                                                                      AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()
                                     
                                                LEFT JOIN ObjectString AS ObjectString_Goods_CodeUKTZED
-                                                                      ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods.Id
+                                                                      ON ObjectString_Goods_CodeUKTZED.ObjectId = ObjectLink_Goods_Object.ChildObjectId
                                                                      AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()
                                     
                                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isNotUploadSites
