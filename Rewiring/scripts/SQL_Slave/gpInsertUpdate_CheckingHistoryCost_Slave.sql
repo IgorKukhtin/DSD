@@ -1,8 +1,8 @@
--- Function: _replica.gpInsertUpdate_HistoryCost_Rewiring()
+-- Function: _replica.gpInsertUpdate_CheckingHistoryCost_Slave()
 
-DROP FUNCTION IF EXISTS _replica.gpInsertUpdate_HistoryCost_Rewiring (TDateTime, TDateTime, Integer, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS _replica.gpInsertUpdate_CheckingHistoryCost_Slave (TDateTime, TDateTime, Integer, Integer, TFloat, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION _replica.gpInsertUpdate_HistoryCost_Rewiring(
+CREATE OR REPLACE FUNCTION _replica.gpInsertUpdate_CheckingHistoryCost_Slave(
     IN inStartDate       TDateTime , --
     IN inEndDate         TDateTime , --
     IN inBranchId        Integer   , --
@@ -62,4 +62,4 @@ $BODY$
 -- SELECT * FROM _replica.HistoryCost_Rewiring
 -- SELECT * FROM _replica.Container_branch_Rewiring
 -- 7620680f-e57e-4d91-a52e-c3e90c4989b7
--- SELECT * FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (inStartDate:= '01.09.2023', inEndDate:= '27.09.2023', inBranchId:= 8379, inItearationCount:= 50, inDiffSumm:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM _replica.gpInsertUpdate_CheckingHistoryCost_Slave (inStartDate:= '01.09.2023', inEndDate:= '27.09.2023', inBranchId:= 8379, inItearationCount:= 50, inDiffSumm:= 1, inSession:= zfCalc_UserAdmin());

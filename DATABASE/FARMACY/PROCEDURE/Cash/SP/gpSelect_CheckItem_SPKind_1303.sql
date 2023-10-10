@@ -76,11 +76,11 @@ BEGIN
                   RETURN;
             END IF;
                         
-            raise notice 'Value 03: % %', vbPriceSale, vbPriceCalc ;
+            -- raise notice 'Value 03: % %', vbPriceSale, vbPriceCalc ;
             
-            IF trunc(vbPriceCalc * 10) / 10 > inPriceSale
+            IF trunc(CASE WHEN vbPriceCalc < vbPriceSale THEN vbPriceCalc ELSE vbPriceSale END * 10) / 10 > inPriceSale
             THEN
-              outPrice := trunc(vbPriceCalc * 10) / 10;
+              outPrice := trunc(CASE WHEN vbPriceCalc < vbPriceSale THEN vbPriceCalc ELSE vbPriceSale END * 10) / 10;
               outSentence :=  'Применить максимально допустимую цену - '||zfConvert_FloatToString(outPrice);          
             ELSE 
               -- Предложение по цене
@@ -133,4 +133,4 @@ $BODY$
 
 --select * from gpSelect_CheckItem_SPKind_1303_Ol(inSPKindId := 4823010 , inGoodsId := 37309 , inPriceSale := 1160 ,  inSession := '3');
 
-select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 58015 , inPriceSale := 499 ,  inSession := '3');
+select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 20011 , inPriceSale := 123.5 ,  inSession := '3');

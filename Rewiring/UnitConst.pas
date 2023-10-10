@@ -30,8 +30,10 @@ const
 
   // Создаем (обновляем) на слейве функцию расчета HistoryCost
   cSQLpg_Slave_HistoryCost_Rewiring  = '\SQL_Slave\gpInsertUpdate_HistoryCost_Rewiring.sql';
-  // Создаем (обновляем) на слейве функцию расчета HistoryCost на мастере
-  cSQLpg_Slave_HistoryCost_Master  = '\SQL_Slave\gpInsertUpdate_HistoryCost_Master.sql';
+  // Создаем (обновляем) на слейве функцию расчета CheckingHistoryCost на слеве
+  cSQLpg_Slave_CheckingHistoryCost_Slave  = '\SQL_Slave\gpInsertUpdate_CheckingHistoryCost_Slave.sql';
+  // Создаем (обновляем) на слейве функцию расчета CheckingHistoryCost на мастере
+  cSQLpg_Slave_CheckingHistoryCost_Master  = '\SQL_Slave\gpInsertUpdate_CheckingHistoryCost_Master.sql';
   // Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost
   cSQLpg_Slave_SendHistoryCost  = '\SQL_Slave\gpInsertUpdate_Slave_SendHistoryCost.sql';
   // Создаем (обновляем) на слейве функцию отправки документа
@@ -125,8 +127,12 @@ const
       'SELECT RewiringUUId FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
 
         // Перерасчета цен на слейве
-  cSQL_HistoryCost_Master  =
-      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_HistoryCost_Master (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
+  cSQL_CheckingHistoryCost_Slave  =
+      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_CheckingHistoryCost_Slave (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
+
+        // Перерасчета цен на слейве
+  cSQL_CheckingHistoryCost_Master  =
+      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_CheckingHistoryCost_Master (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
 
   // Получение перечня документов
   cSQL_Rewiring_Calc  =

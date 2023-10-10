@@ -93,10 +93,10 @@ begin
 
       FZConnection.Connect;
 
-      // Перерасчета цен на слейве
+      // Перерасчета цен на слейве или мастеру
       if FisMaster then
-        FZQueryTable.SQL.Text := cSQL_HistoryCost_Master
-      else FZQueryTable.SQL.Text := cSQL_HistoryCost_Calc;
+        FZQueryTable.SQL.Text := cSQL_CheckingHistoryCost_Master
+      else FZQueryTable.SQL.Text := cSQL_CheckingHistoryCost_Slave;
       FZQueryTable.ParamByName('inStartDate').Value := FStartDate;
       FZQueryTable.ParamByName('inEndDate').Value := FEndDate;
       FZQueryTable.ParamByName('inBranchId').Value := FBranchId;
