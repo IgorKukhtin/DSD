@@ -1530,6 +1530,12 @@
           Options.Editing = False
           Width = 60
         end
+        object StartDate_PriceList: TcxGridDBColumn
+          Caption = #1044#1077#1081#1089#1090#1091#1077#1090' c... ('#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090')'
+          DataBinding.FieldName = 'StartDate_PriceList'
+          Options.Editing = False
+          Width = 70
+        end
         object PriceListName_old: TcxGridDBColumn
           Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'(old)'
           DataBinding.FieldName = 'PriceListName_old'
@@ -2010,6 +2016,14 @@
         item
           Visible = True
           ItemName = 'bbOpenForm_ContractPriceList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadPriceList'
         end>
     end
     object bbShowErased: TdxBarButton
@@ -2217,11 +2231,24 @@
       Action = macStartLoad
       Category = 0
     end
+    object bbStartLoadPriceList: TdxBarButton
+      Action = macStartLoadPriceList
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 248
     Top = 136
+    object actDoLoad_PriceList: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
     object InsertRecord_ContractPriceList: TInsertRecord
       Category = 'ContractPriceList'
       MoveParams = <>
@@ -2232,6 +2259,17 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       ImageIndex = 0
+    end
+    object actGetImportSetting_PriceList: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_PriceList
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_PriceList
+        end>
+      Caption = 'actGetImportSetting'
     end
     object actRefreshCCPartner: TdsdDataSetRefresh
       Category = 'CCPartner'
@@ -2246,6 +2284,25 @@
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macStartLoadPriceList: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_PriceList
+        end
+        item
+          Action = actDoLoad_PriceList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1048#1089#1090#1086#1088#1080#1080' '#1087#1088#1072#1081#1089#1086#1074' '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1086#1074' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1080#1089#1090#1086#1088#1080#1080' '#1087#1088#1072#1081#1089#1086#1074
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1080#1089#1090#1086#1088#1080#1080' '#1087#1088#1072#1081#1089#1086#1074
+      ImageIndex = 41
     end
     object OpenForm_ContractPriceList: TdsdOpenForm
       Category = 'ContractPriceList'
@@ -5171,5 +5228,37 @@
       end>
     Left = 736
     Top = 144
+  end
+  object spGetImportSettingId_PriceList: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TContractPriceListForm;zc_Object_ImportSetting_ContractPriceList'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 192
   end
 end

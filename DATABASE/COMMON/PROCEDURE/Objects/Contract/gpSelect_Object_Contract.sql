@@ -66,7 +66,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , DayTaxSummary TFloat
              , DocumentCount TFloat, DateDocument TDateTime
 
-             , PriceListId Integer, PriceListName TVarChar, PriceListName_old TVarChar
+             , StartDate_PriceList TDateTime, PriceListId Integer, PriceListName TVarChar, PriceListName_old TVarChar
              , PriceListGoodsId Integer, PriceListGoodsName TVarChar
              -- , PriceListPromoId Integer, PriceListPromoName TVarChar
              -- , StartPromo TDateTime, EndPromo TDateTime
@@ -131,12 +131,16 @@ BEGIN
       , tmpContractPriceList AS (SELECT ObjectLink_ContractPriceList_Contract.ChildObjectId AS ContractId
                                       , Object_PriceList.Id                  AS PriceListId
                                       , Object_PriceList.ValueData           AS PriceListName
+                                      , ObjectDate_StartDate.ValueData :: TDateTime AS StartDate 
                                  FROM Object AS Object_ContractPriceList
                                       INNER JOIN ObjectDate AS ObjectDate_EndDate
                                                             ON ObjectDate_EndDate.ObjectId = Object_ContractPriceList.Id
                                                            AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractPriceList_EndDate()
                                                            AND ObjectDate_EndDate.ValueData = zc_DateEnd()
-                                 
+                                      LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                           ON ObjectDate_StartDate.ObjectId = Object_ContractPriceList.Id
+                                                          AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractPriceList_StartDate()
+                                
                                       LEFT JOIN ObjectLink AS ObjectLink_ContractPriceList_Contract
                                                            ON ObjectLink_ContractPriceList_Contract.ObjectId = Object_ContractPriceList.Id
                                                           AND ObjectLink_ContractPriceList_Contract.DescId = zc_ObjectLink_ContractPriceList_Contract()
@@ -277,6 +281,7 @@ BEGIN
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
        , ObjectDate_Document.ValueData AS DateDocument
        
+       , tmpContractPriceList.StartDate  ::TDateTime  AS StartDate_PriceList
        , tmpContractPriceList.PriceListId    AS PriceListId 
        , tmpContractPriceList.PriceListName  AS PriceListName
        , Object_PriceList_old.ValueData      AS PriceListName_old

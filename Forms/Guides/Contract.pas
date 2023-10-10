@@ -342,6 +342,12 @@ type
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     isNotTareReturning: TcxGridDBColumn;
+    StartDate_PriceList: TcxGridDBColumn;
+    spGetImportSettingId_PriceList: TdsdStoredProc;
+    actDoLoad_PriceList: TExecuteImportSettingsAction;
+    actGetImportSetting_PriceList: TdsdExecStoredProc;
+    macStartLoadPriceList: TMultiAction;
+    bbStartLoadPriceList: TdxBarButton;
 
   private
     { Private declarations }
