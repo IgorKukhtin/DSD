@@ -114,6 +114,7 @@ type
     DayOfWeekName_partner: TcxGridDBColumn;
     OperDate_Protocol_auto: TcxGridDBColumn;
     UserName_Protocol_auto: TcxGridDBColumn;
+    PersonalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

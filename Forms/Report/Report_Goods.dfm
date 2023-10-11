@@ -733,6 +733,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PersonalGroupName: TcxGridDBColumn
+            Caption = #1041#1088#1080#1075#1072#1076#1072
+            DataBinding.FieldName = 'PersonalGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Amount_Change: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1089#1082'.1%)'
             DataBinding.FieldName = 'Amount_Change'

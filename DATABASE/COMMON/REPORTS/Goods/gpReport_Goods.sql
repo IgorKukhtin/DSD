@@ -44,6 +44,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , PersonalKVKId Integer, PersonalKVKName TVarChar
               , PositionCode_KVK Integer, PositionName_KVK TVarChar
               , UnitCode_KVK Integer, UnitName_KVK TVarChar
+              , PersonalGroupName TVarChar
               
               , InvNumber_Full   TVarChar
               , StartSale_promo  TDateTime
@@ -57,7 +58,6 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , UserName_Protocol_auto TVarChar   
               , OperDate_Insert TDateTime
               , UserName_Insert TVarChar
-              
                )
 AS
 $BODY$
@@ -109,6 +109,7 @@ BEGIN
                            , '' :: TVarChar AS PositionName_KVK
                            , 0              AS UnitCode_KVK
                            , '' :: TVarChar AS UnitName_KVK
+                           , '' :: TVarChar AS PersonalGroupName
              
                            , '' :: TVarChar   AS InvNumber_Full
                            , NULL ::TDateTime AS StartSale_promo
@@ -278,6 +279,7 @@ BEGIN
         , gpReport.PositionName_KVK
         , gpReport.UnitCode_KVK
         , gpReport.UnitName_KVK
+        , gpReport.PersonalGroupName
 
         --Акция
         , gpReport.InvNumber_Full  ::TVarChar
@@ -775,6 +777,7 @@ BEGIN
                                                          , zc_MovementLinkObject_To()
                                                          , zc_MovementLinkObject_ArticleLoss()
                                                          , zc_MovementLinkObject_PaidKind()
+                                                         , zc_MovementLinkObject_PersonalGroup()
                                                          )
                  )
 
@@ -1048,6 +1051,7 @@ BEGIN
                         , Object_PositionKVK.ValueData   AS PositionName_KVK
                         , Object_UnitKVK.ObjectCode      AS UnitCode_KVK
                         , Object_UnitKVK.ValueData       AS UnitName_KVK
+                        , Object_PersonalGroup.ValueData AS PersonalGroupName
 
                         --Акция
                         , tmpPromo.InvNumber_Full  ::TVarChar
@@ -1098,6 +1102,11 @@ BEGIN
                                            AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
                 
+                        LEFT JOIN tmpMLO_By AS MovementLinkObject_PersonalGroup
+                                            ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                           AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+                        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
+
                         LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                                   ON MovementDate_OperDatePartner.MovementId = tmpMIContainer_group.MovementId
                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -1273,6 +1282,7 @@ BEGIN
         , tmpDataAll.PositionName_KVK
         , tmpDataAll.UnitCode_KVK
         , tmpDataAll.UnitName_KVK
+        , tmpDataAll.PersonalGroupName
 
         --Акция
         , tmpDataAll.InvNumber_Full  ::TVarChar
@@ -1329,6 +1339,8 @@ BEGIN
         , tmpDataAll.PositionName_KVK
         , tmpDataAll.UnitCode_KVK
         , tmpDataAll.UnitName_KVK
+        , tmpDataAll.PersonalGroupName
+
         , tmpDataAll.InvNumber_Full
         , tmpDataAll.StartSale_promo
         , tmpDataAll.EndSale_promo
