@@ -57,7 +57,7 @@ BEGIN
      RETURN QUERY
 
      WITH -- Ограничения по товару
-          tmpGoods_Group AS (SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+          tmpGoods_Group AS (SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
                              FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = lfSelect.GoodsId
                                                                                   AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -66,7 +66,7 @@ BEGIN
                                                        AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
                              WHERE inGoodsGroupId <> 0 AND COALESCE (inGoodsId,0) = 0
                             UNION ALL
-                             SELECT Object.Id, ObjectLink_Goods_Measure.ObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+                             SELECT Object.Id, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
                              FROM Object
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
                                                                                   AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -76,7 +76,7 @@ BEGIN
                              WHERE Object.DescId = zc_Object_Goods()
                                AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId,0) = 0
                             UNION ALL
-                             SELECT inGoodsId AS GoodsId, ObjectLink_Goods_Measure.ObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+                             SELECT inGoodsId AS GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
                              FROM ObjectLink AS ObjectLink_Goods_Measure 
                                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                         ON ObjectFloat_Weight.ObjectId = inGoodsId
@@ -438,7 +438,7 @@ BEGIN
             , tmpOperationGroup.AmountOut_Weight :: TFloat AS AmountOut_kg
 
             , CASE WHEN ((tmpOperationGroup.AmountHour = 0 AND tmpOperationGroup.Amount > 0 AND tmpOperationGroup.PersonalGroupId > 0)
-                    --OR (tmpOperationGroup.AmountHour > 0 AND tmpOperationGroup.Amount = 0)
+                    OR (tmpOperationGroup.AmountHour > 0 AND tmpOperationGroup.Amount = 0)
                         )
                     AND inIsMovement = FALSE
                     AND inIsGoods    = FALSE

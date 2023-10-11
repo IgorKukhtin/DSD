@@ -60,7 +60,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Movement_Sale_
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Movement_Sale_PriceList()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 6
-                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale())||'> - сохранение данных <Путевой лист>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale())||'> - сохранение данных <Прайс лист>..'
                                   , inEnumName:= 'zc_Enum_Process_Update_Movement_Sale_PriceList');
 
 --
