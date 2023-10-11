@@ -1031,8 +1031,8 @@ inherited SaleForm: TSaleForm
     Width = 100
   end
   object cbPrinted: TcxCheckBox [16]
-    Left = 8
-    Top = 84
+    Left = -126
+    Top = 28
     Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 20
@@ -3018,6 +3018,15 @@ inherited SaleForm: TSaleForm
       Result.Value = ''
       Result.DataType = ftString
       Result.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
+      KeyFileName.Value = ''
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end

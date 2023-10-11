@@ -232,6 +232,12 @@ type
     DateAddToOrder: TcxGridDBColumn;
     GoodsGroupPromoName: TcxGridDBColumn;
     UKTZED_main: TcxGridDBColumn;
+    CodeUKTZED: TcxGridDBColumn;
+    actUpdate_CodeUKTZED: TdsdExecStoredProc;
+    actExecuteDialog_CodeUKTZED: TExecuteDialog;
+    mactGoods_SiteUpdate: TMultiAction;
+    spUpdate_CodeUKTZED: TdsdStoredProc;
+    dxBarButton21: TdxBarButton;
   private
     { Private declarations }
   public

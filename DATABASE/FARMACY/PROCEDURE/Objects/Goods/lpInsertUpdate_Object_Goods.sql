@@ -142,10 +142,11 @@ BEGIN
 
    -- сохранили свойство <Название украинское>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_NameUkr(), ioId, inNameUkr);
-   -- сохранили свойство <Код УКТЗЭД>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CodeUKTZED(), ioId, inCodeUKTZED);
    -- сохранили свойство <Од>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Exchange(), ioId, inExchangeId);
+
+   -- сохранили свойство <Код УКТЗЭД>
+   PERFORM gpUpdate_Goods_CodeUKTZED (ioId, inCodeUKTZED, inUserId::TVarChar);
 
    IF EXISTS (SELECT 1 FROM Object WHERE Object.ID = inObjectId AND Object.DescId = zc_Object_Retail())
       AND TRIM(COALESCE(inNameUkr, '')) = ''

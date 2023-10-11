@@ -792,9 +792,9 @@ begin
     end;
 
     // Создаем (обновляем) на мастере функцию загрузки HistoryCost
-    SaveRewiringLog('Создаем (обновляем) на мастере функцию загрузки HistoryCost');
+    SaveRewiringLog('Создаем (обновляем) на мастере функцию выполнения HistoryCost');
     ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Master_LoadHistoryCost);
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Master_RewiringHistoryCost);
     ZQueryExecute.ExecSQL;
 
     // Создаем (обновляем) на мастере функцию загрузки перепроведенных документов
@@ -1120,7 +1120,7 @@ begin
     // Создаем (обновляем) на слейве функцию расчета HistoryCost на мастере
     SaveRewiringLog('Создаем (обновляем) на слейве функцию расчета HistoryCost на мастере');
     ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_HistoryCost_Master);
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_CheckingHistoryCost_Master);
     ZQueryExecute.ExecSQL;
 
 //    // Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost

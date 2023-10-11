@@ -769,10 +769,10 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAdditionalEditForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAdditionalEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAdditionalEditForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAdditionalEditDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAdditionalEditDialogForm');

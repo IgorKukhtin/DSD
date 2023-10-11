@@ -199,7 +199,7 @@ BEGIN
                                         AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()   
                                         
                   LEFT JOIN ObjectString AS ObjectString_Goods_CodeUKTZED
-                                         ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods_View.Id 
+                                         ON ObjectString_Goods_CodeUKTZED.ObjectId = tmpGoodsMain.GoodsMainId
                                         AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()   
 
                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Exchange

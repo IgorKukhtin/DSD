@@ -3,29 +3,27 @@ inherited GoodsForm: TGoodsForm
   ClientHeight = 544
   ClientWidth = 1165
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1183
-  ExplicitHeight = 591
+  ExplicitWidth = 1187
+  ExplicitHeight = 600
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 30
+    Top = 35
     Width = 1165
-    Height = 514
-    ExplicitTop = 30
+    Height = 509
+    ExplicitTop = 35
     ExplicitWidth = 1165
-    ExplicitHeight = 514
-    ClientRectBottom = 514
+    ExplicitHeight = 509
+    ClientRectBottom = 509
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1165
-      ExplicitHeight = 514
+      ExplicitHeight = 509
       inherited cxGrid: TcxGrid
         Width = 1165
-        Height = 514
-        ExplicitLeft = 3
-        ExplicitTop = 3
+        Height = 509
         ExplicitWidth = 1165
-        ExplicitHeight = 514
+        ExplicitHeight = 509
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -603,6 +601,14 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 96
+          end
+          object CodeUKTZED: TcxGridDBColumn
+            Caption = #1059#1050#1058#1042#1069#1044
+            DataBinding.FieldName = 'CodeUKTZED'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end
@@ -1823,6 +1829,108 @@ inherited GoodsForm: TGoodsForm
       GuiParams = <>
       isShowModal = False
     end
+    object actUpdate_CodeUKTZED: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CodeUKTZED
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CodeUKTZED
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1076' '#1059#1050#1058#1042#1069#1044'> '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1076' '#1059#1050#1058#1042#1069#1044'> '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+    end
+    object actExecuteDialog_CodeUKTZED: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = False
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'inis_MakerName'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = False
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'inis_FormDispensing'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = False
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'inis_NumberPlates'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = False
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'inis_QtyPackage'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = False
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'inis_IsRecipe'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
+        end>
+      Caption = 'actExecuteDialog_CodeUKTZED'
+      FormName = 'TStringDialogForm'
+      FormNameParam.Value = 'TStringDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Text'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'CodeUKTZED'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1082#1086#1076' '#1059#1050#1058#1042#1069#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object mactGoods_SiteUpdate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialog_CodeUKTZED
+      ActionList = <
+        item
+          Action = actUpdate_CodeUKTZED
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1076' '#1059#1050#1058#1042#1069#1044'> '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1076' '#1059#1050#1058#1042#1069#1044'> '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1857,7 +1965,7 @@ inherited GoodsForm: TGoodsForm
     DockControlHeights = (
       0
       0
-      30
+      35
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2158,6 +2266,10 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'dxBarButton15'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton21'
         end>
     end
     object bbUpdateInvisibleSUN: TdxBarButton
@@ -2382,6 +2494,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton20: TdxBarButton
       Action = actGoods_SiteUpdate
+      Category = 0
+    end
+    object dxBarButton21: TdxBarButton
+      Action = mactGoods_SiteUpdate
       Category = 0
     end
   end
@@ -2951,6 +3067,12 @@ inherited GoodsForm: TGoodsForm
         Name = 'inis_GoodsSignOrigin'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CodeUKTZED'
+        Value = ''
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -4077,5 +4199,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 920
     Top = 232
+  end
+  object spUpdate_CodeUKTZED: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_CodeUKTZED'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeUKTZED'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CodeUKTZED'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 360
   end
 end

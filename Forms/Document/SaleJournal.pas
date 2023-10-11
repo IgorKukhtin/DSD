@@ -347,9 +347,15 @@ type
     macPrint_QualityDoc_list: TMultiAction;
     actPrint_Quality_ReportName_list: TdsdExecStoredProc;
     actPrint_QualityDoc_list: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrint_Group: TdxBarButton;
     macPrint_Group: TMultiAction;
     mactPrint_Sale_list: TMultiAction;
+    actOpenChoicePriceList: TOpenChoiceForm;
+    spUpdate_PriceList: TdsdStoredProc;
+    actUpdate_PriceList: TdsdExecStoredProc;
+    macUpdate_PriceList_list: TMultiAction;
+    macUpdate_PriceList: TMultiAction;
+    bbUpdate_PriceList: TdxBarButton;
   private
     { Private declarations }
   public

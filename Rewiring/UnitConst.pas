@@ -11,7 +11,7 @@ const
 
 
   // Создаем (обновляем) на мастере функцию загрузки HistoryCost
-  cSQLpg_Master_LoadHistoryCost  = '\SQL_Master\gpInsertUpdate_Master_LoadHistoryCost.sql';
+  cSQLpg_Master_RewiringHistoryCost  = '\SQL_Master\gpInsertUpdate_RewiringHistoryCost.sql';
   // Создаем (обновляем) на мастере функцию загрузки перепроведенных документов
   cSQLpg_Master_LoadMovement  = '\SQL_Master\gpRewiring_Master_LoadMovement.sql';
   // Создаем (обновляем) на мастере функцию с пареметрами подключения к базе
@@ -30,10 +30,10 @@ const
 
   // Создаем (обновляем) на слейве функцию расчета HistoryCost
   cSQLpg_Slave_HistoryCost_Rewiring  = '\SQL_Slave\gpInsertUpdate_HistoryCost_Rewiring.sql';
-  // Создаем (обновляем) на слейве функцию расчета HistoryCost на мастере
-  cSQLpg_Slave_HistoryCost_Master  = '\SQL_Slave\gpInsertUpdate_HistoryCost_Master.sql';
-  // Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost
-  cSQLpg_Slave_SendHistoryCost  = '\SQL_Slave\gpInsertUpdate_Slave_SendHistoryCost.sql';
+  // Создаем (обновляем) на слейве функцию расчета CheckingHistoryCost на слеве
+  cSQLpg_Slave_CheckingHistoryCost_Slave  = '\SQL_Slave\gpInsertUpdate_CheckingHistoryCost_Slave.sql';
+  // Создаем (обновляем) на слейве функцию расчета CheckingHistoryCost на мастере
+  cSQLpg_Slave_CheckingHistoryCost_Master  = '\SQL_Slave\gpInsertUpdate_CheckingHistoryCost_Master.sql';
   // Создаем (обновляем) на слейве функцию отправки документа
   cSQLpg_Slave_SendMovement  = '\SQL_Slave\gpRewiring_Slave_SendMovement.sql';
   // Создаем (обновляем) на слейве функцию что отправить надо
@@ -125,8 +125,12 @@ const
       'SELECT RewiringUUId FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
 
         // Перерасчета цен на слейве
-  cSQL_HistoryCost_Master  =
-      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_HistoryCost_Master (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
+  cSQL_CheckingHistoryCost_Slave  =
+      'SELECT Error FROM _replica.gpInsertUpdate_CheckingHistoryCost_Slave (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
+
+        // Перерасчета цен на слейве
+  cSQL_CheckingHistoryCost_Master  =
+      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_CheckingHistoryCost_Master (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
 
   // Получение перечня документов
   cSQL_Rewiring_Calc  =
@@ -140,10 +144,6 @@ const
   // Процедура перепроведения
   cSQL_Rewiring_MovementId  =
       'SELECT * FROM _replica.gpRewiring_Slave_MovementId (:inMovementId, :inIsNoHistoryCost, :inSession)';
-
-  // Отправка HistoryCost на мастер и возврат на слейв
-  cSQL_HistoryCost_Send  =
-      'SELECT * FROM _replica.gpInsertUpdate_Slave_SendHistoryCost (:inRewiringUUId, :inStartDate, :inEndDate, :inBranchId, :inSession)';
 
   // Создание роли
   cSQLCreateUser       = 'CREATE USER "%s" WITH PASSWORD ''%s'';'#13#10 +

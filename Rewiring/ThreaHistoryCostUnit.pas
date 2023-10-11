@@ -32,8 +32,6 @@ type
     FEndDate : TDateTime;
     FSession : String;
 
-    FRewiringUUId : String;
-
     FOnFinish: TOnFinish;
     FOnProcess: TOnProcess;
   protected
@@ -102,23 +100,8 @@ begin
       FZQueryTable.ParamByName('inDiffSumm').Value := 1;
       FZQueryTable.ParamByName('inSession').Value := FSession;
       FZQueryTable.Open;
-      FRewiringUUId := FZQueryTable.FieldByName('RewiringUUId').AsString;
+      FError := FZQueryTable.FieldByName('Error').AsString;
       FZQueryTable.Close;
-
-      // Отправка HistoryCost на мастер и возврат на слейв
-      if FRewiringUUId <> '' then
-      begin
-        if Assigned(OnProcess) then OnProcess('Копирование результатов', FBranchId);
-
-        FZQueryTable.SQL.Text := cSQL_HistoryCost_Send;
-        FZQueryTable.ParamByName('inRewiringUUId').Value := FRewiringUUId;
-        FZQueryTable.ParamByName('inStartDate').Value := FStartDate;
-        FZQueryTable.ParamByName('inEndDate').Value := FEndDate;
-        FZQueryTable.ParamByName('inBranchId').Value := FBranchId;
-        FZQueryTable.ParamByName('inSession').Value := FSession;
-        FZQueryTable.Open;
-        FZQueryTable.Close;
-      end else FError := 'Не получен RewiringUUId';
 
     except
       on E: Exception do

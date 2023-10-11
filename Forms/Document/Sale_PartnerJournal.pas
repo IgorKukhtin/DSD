@@ -245,6 +245,12 @@ type
     spGet_Export_FileName_2: TdsdStoredProc;
     spGetDirectoryName: TdsdStoredProc;
     actFileDirectoryDialog: TFileDialogAction;
+    spUpdate_PriceList: TdsdStoredProc;
+    actOpenChoicePriceList: TOpenChoiceForm;
+    actUpdate_PriceList: TdsdExecStoredProc;
+    macUpdate_PriceList_list: TMultiAction;
+    macUpdate_PriceList: TMultiAction;
+    bbUpdate_PriceList: TdxBarButton;
   private
     { Private declarations }
   public

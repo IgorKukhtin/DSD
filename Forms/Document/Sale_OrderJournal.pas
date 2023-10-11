@@ -318,6 +318,12 @@ type
     cxLabel30: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;
     GuidesTransport: TdsdGuides;
+    spUpdate_PriceList: TdsdStoredProc;
+    actOpenChoicePriceList: TOpenChoiceForm;
+    actUpdate_PriceList: TdsdExecStoredProc;
+    macUpdate_PriceList_list: TMultiAction;
+    macUpdate_PriceList: TMultiAction;
+    bbUpdate_PriceList: TdxBarButton;
   private
     { Private declarations }
   public
