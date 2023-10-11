@@ -145,15 +145,6 @@ BEGIN
                    FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                    WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                   )
-   , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                             , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                             , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
-                                            ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
-                        FROM Object_Goods_Juridical
-                        WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
-                          AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                          AND Object_Goods_Juridical.GoodsMainId <> 0
-                        )
    , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject 
                          WHERE MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI))
    , tmpObject AS (SELECT * FROM Object 
@@ -204,7 +195,7 @@ BEGIN
            
            , COALESCE (MIBoolean_Present.ValueData, False)                       AS isPresent
            , Null::TDateTime                                                     AS FixEndDate 
-           , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
+           , Object_Goods_Main.CodeUKTZED                                        AS UKTZED
 
            , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
            , Object_Juridical.ValueData                                          AS JuridicalName
@@ -223,6 +214,7 @@ BEGIN
 
             -- получается GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
             LEFT JOIN Object_Goods_SP AS Object_Goods_SP ON Object_Goods_SP.Id = Object_Goods_Retail.GoodsMainId
 
             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = Object_Goods_SP.IntenalSPID
@@ -257,10 +249,6 @@ BEGIN
                                              ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
             LEFT JOIN tmpObject AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
-
-            -- Коды UKTZED
-            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                    AND tmpGoodsUKTZED.Ord = 1
 
             LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
                                              ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
