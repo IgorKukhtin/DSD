@@ -1,14 +1,16 @@
 -- Function: gpRewiring_Slave_MovementId (INTEGER, TVarChar)
 
-DROP FUNCTION IF EXISTS _replica.gpRewiring_Slave_MovementId (INTEGER, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS _replica.gpRewiring_Slave_MovementId (INTEGER, Boolean, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION _replica.gpRewiring_Slave_MovementId(
     IN inMovementId        INTEGER,
-    IN inIsNoHistoryCost   Boolean              , --
+    IN inIsNoHistoryCost   Boolean,    --
+    IN inStepRewiring      INTEGER,    -- Шаг перепроведения
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id                    INTEGER,
                MovementId            INTEGER,
+               Step                  INTEGER,
 
                Transaction_Id        BIGINT,
                isErrorRewiring       Boolean,
@@ -80,14 +82,15 @@ BEGIN
      AND RewiringProtocol.isProcessed = False;
 
    -- Добавили протокол перепроводок
-   INSERT INTO _replica.RewiringProtocol (MovementId, Transaction_Id, isErrorRewiring, OperDate, ErrorData)
-   VALUES (inMovementId, vbTransaction_Id, NOT vbisComplete, CURRENT_TIMESTAMP, text_var1||COALESCE('; '||text_var2, ''))
+   INSERT INTO _replica.RewiringProtocol (MovementId, Transaction_Id, Step, isErrorRewiring, OperDate, ErrorData)
+   VALUES (inMovementId, vbTransaction_Id, inStepRewiring, NOT vbisComplete, CURRENT_TIMESTAMP, text_var1||COALESCE('; '||text_var2, ''))
    RETURNING RewiringProtocol.id INTO vbId;
    
    -- Результат
    RETURN QUERY
    SELECT RewiringProtocol.Id
         , RewiringProtocol.MovementId
+        , RewiringProtocol.Step
         , RewiringProtocol.Transaction_Id
         , RewiringProtocol.isErrorRewiring
         , RewiringProtocol.OperDate
@@ -112,4 +115,4 @@ $BODY$
 -- select * from _replica.MovementProtocol_Rewiring
 -- select * from _replica.RewiringProtocol
 
--- select * from _replica.gpRewiring_Slave_MovementId(26065315, True, '0');
+-- select * from _replica.gpRewiring_Slave_MovementId(26065315, True, 1, '0');

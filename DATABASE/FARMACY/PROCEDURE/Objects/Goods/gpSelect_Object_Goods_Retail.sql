@@ -25,7 +25,6 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
              , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime
-             --, UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
@@ -36,10 +35,9 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isExceptionUKTZED boolean
              , isOnlySP boolean
              , isUkrainianTranslation boolean
-             , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
-             , Dosage TVarChar, Volume TVarChar, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
+             , MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, isRecipe boolean
              , isLeftTheMarket boolean, DateLeftTheMarket TDateTime, DateAddToOrder TDateTime 
---           , UKTZED_main TVarChar
+             , CodeUKTZED TVarChar
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -149,10 +147,6 @@ BEGIN
                                FROM tmpGoodsMainWhoCanAll AS Object_Goods_Main
                                GROUP BY Object_Goods_Main.Id
                                )
-      , tmpUKTZED_main AS (SELECT ObjectString_Goods_UKTZED_main.*
-                           FROM ObjectString AS ObjectString_Goods_UKTZED_main
-                           WHERE ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main() 
-                           )
 
       SELECT Object_Goods_Retail.Id
            , Object_Goods_Retail.GoodsMainId
@@ -199,8 +193,6 @@ BEGIN
 
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , Object_Goods_Retail.DateInsert                            AS InsertDate
-         --, COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
-         --, Object_Goods_Retail.DateUpdate                            AS UpdateDate
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
            , Object_Goods_Main.MorionCode
@@ -223,25 +215,15 @@ BEGIN
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
 
            , Object_Goods_Main.MakerName
-           , Object_Goods_Main.MakerNameUkr
            , Object_Goods_Main.FormDispensingId
            , Object_FormDispensing.ValueData                                     AS FormDispensingName
-           , Object_Goods_Main.NumberPlates
-           , Object_Goods_Main.QtyPackage
            , Object_Goods_Main.isRecipe
            
-           , Object_Goods_Main.Dosage 
-           , Object_Goods_Main.Volume
-           , tmpGoodsMainWhoCan.GoodsWhoCanName                                        AS GoodsWhoCanName
-           , Object_Goods_Main.GoodsMethodApplId
-           , Object_GoodsMethodAppl.ValueData                                    AS GoodsMethodApplName
-           , Object_Goods_Main.GoodsSignOriginId
-           , Object_GoodsSignOrigin.ValueData                                    AS GoodsSignOriginName
 
            , Object_Goods_Main.isLeftTheMarket
            , Object_Goods_Main.DateLeftTheMarket
            , Object_Goods_Main.DateAddToOrder 
---         , CASE WHEN vbUserId = 3 THEN ObjectString_Goods_UKTZED_main.ValueData ELSE '' END :: TVarChar AS UKTZED_main
+           , Object_Goods_Main.CodeUKTZED
 
       FROM Object_Goods_Retail
 
@@ -253,9 +235,6 @@ BEGIN
            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = Object_Goods_Retail.UserInsertId
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
            LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Object_Goods_Main.FormDispensingId
-
-           LEFT JOIN Object AS Object_GoodsMethodAppl ON Object_GoodsMethodAppl.Id = Object_Goods_Main.GoodsMethodApplId
-           LEFT JOIN Object AS Object_GoodsSignOrigin ON Object_GoodsSignOrigin.Id = Object_Goods_Main.GoodsSignOriginId
            
            LEFT JOIN tmpNDS ON tmpNDS.Id = Object_Goods_Main.NDSKindId
            LEFT JOIN Object AS Object_GoodsPairSun ON Object_GoodsPairSun.Id = Object_Goods_Retail.GoodsPairSunId
@@ -271,9 +250,6 @@ BEGIN
            
            LEFT JOIN tmpGoodsMainWhoCan ON tmpGoodsMainWhoCan.ID = Object_Goods_Retail.GoodsMainId
 
-           LEFT JOIN tmpUKTZED_main AS ObjectString_Goods_UKTZED_main
-                                  ON ObjectString_Goods_UKTZED_main.ObjectId = Object_Goods_Retail.Id
-                                 AND ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main()
       WHERE Object_Goods_Retail.RetailId = vbObjectId
     --LIMIT CASE WHEN vbUserId = 3 THEN 100 ELSE 200000 END
       ;

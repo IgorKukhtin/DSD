@@ -1,6 +1,6 @@
 -- Function: _replica.gpInsertUpdate_HistoryCost_Rewiring()
 
-DROP FUNCTION IF EXISTS _replica.gpInsertUpdate_HistoryCost_Rewiring (TDateTime, TDateTime, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS _replica.gpInsertUpdate_HistoryCost_Rewiring (TDateTime, TDateTime, Integer, Integer, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION _replica.gpInsertUpdate_HistoryCost_Rewiring(
     IN inStartDate       TDateTime , --
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION _replica.gpInsertUpdate_HistoryCost_Rewiring(
     IN inBranchId        Integer   , --
     IN inItearationCount Integer   , --
     IN inDiffSumm        TFloat    , --
+    IN inisMICSlave      Boolean, --
     IN inSession         TVarChar    -- сессия пользователя
 )
   RETURNS TABLE (Error TBlob
@@ -56,6 +57,7 @@ BEGIN
                          inItearationCount := '||inItearationCount::TEXT||',
                          inInsert := 1,
                          inDiffSumm := '||inDiffSumm::TEXT||',
+                         inisMICSlave := '||inisMICSlave::TEXT||',
                          inSession := '''||inSession||''')') AS 
                    q(Transaction_Id BIGINT, CountRecord Integer);  
 
@@ -123,6 +125,5 @@ $BODY$
 */
 
 -- SELECT * FROM _replica.HistoryCost_Rewiring
--- SELECT * FROM _replica.Container_branch_Rewiring
 -- 7620680f-e57e-4d91-a52e-c3e90c4989b7
--- SELECT * FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (inStartDate:= '01.09.2023', inEndDate:= '27.09.2023', inBranchId:= 8379, inItearationCount:= 50, inDiffSumm:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (inStartDate:= '01.09.2023', inEndDate:= '27.09.2023', inBranchId:= 8379, inItearationCount:= 50, inDiffSumm:= 1, inisMICSlave := True, inSession:= zfCalc_UserAdmin());

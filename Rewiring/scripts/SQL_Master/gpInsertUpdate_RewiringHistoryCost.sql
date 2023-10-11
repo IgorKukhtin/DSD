@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_RewiringHistoryCost (TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS _replica.gpInsertUpdate_RewiringHistoryCost (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS _replica.gpInsertUpdate_RewiringHistoryCost (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION _replica.gpInsertUpdate_RewiringHistoryCost(
     IN inStartDate       TDateTime , --
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION _replica.gpInsertUpdate_RewiringHistoryCost(
     IN inItearationCount Integer , --
     IN inInsert          Integer , --
     IN inDiffSumm        TFloat , --
+    IN inisMICSlave      Boolean, --
     IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Transaction_Id        BIGINT
@@ -35,7 +36,8 @@ BEGIN
                                   , inItearationCount:= inItearationCount
                                   , inInsert:= inInsert
                                   , inDiffSumm:= inDiffSumm
-                                  , inSession:= inSession);
+                                  , inSession:= inSession
+                                  , inisMICSlave:= inisMICSlave);
 
       -- Результат
    RETURN QUERY
@@ -54,6 +56,4 @@ $BODY$
 
 -- Тест
 
--- 
-
-select * from _replica.gpInsertUpdate_RewiringHistoryCost(inStartDate:= '01.10.2023', inEndDate:= '31.10.2023', inBranchId:= 8379, inItearationCount := 50, inInsert := -1, inDiffSumm := 1, inSession:= zfCalc_UserAdmin());
+-- select * from _replica.gpInsertUpdate_RewiringHistoryCost(inStartDate:= '01.10.2023', inEndDate:= '31.10.2023', inBranchId:= 8379, inItearationCount := 50, inInsert := -1, inDiffSumm := 1, inisMICSlave := False, inSession:= zfCalc_UserAdmin());

@@ -121,52 +121,41 @@ BEGIN
 
     OPEN Cursor2 FOR
          WITH tmpResult AS (SELECT
-            ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData DESC) as Ord
-          , Object_Goods.ObjectCode                   AS GoodsCode
-          , ObjectString_Goods_NameUkr.ValueData      AS GoodsName
+            ROW_NUMBER() OVER (ORDER BY Object_Goods_Main.Name DESC) as Ord
+          , Object_Goods_Main.ObjectCode              AS GoodsCode
+          , Object_Goods_Main.NameUkr                 AS GoodsName
           , MI_UnnamedEnterprises.Amount              AS Amount
           , MIFloat_Price.ValueData                   AS Price
           , MIFloat_Summ.ValueData                    AS Summ
           , Object_NDSKind.ValueData                  AS NDSKindName
           , ObjectFloat_NDSKind_NDS.ValueData         AS NDS
-          , ObjectString_Goods_CodeUKTZED.ValueData   AS CodeUKTZED
+          , Object_Goods_Main.CodeUKTZED              AS CodeUKTZED
           , Object_Exchange.ValueData                 AS ExchangeName
         FROM
             MovementItem AS MI_UnnamedEnterprises
 
-              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_UnnamedEnterprises.ObjectId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MI_UnnamedEnterprises.ObjectId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
-                                               ON MILinkObject_NDSKind.MovementItemId = MI_UnnamedEnterprises.Id
-                                              AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
 
-              LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = COALESCE (MILinkObject_NDSKind.ObjectId, ObjectLink_Goods_NDSKind.ChildObjectId)
-              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id 
-                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                             ON MILinkObject_NDSKind.MovementItemId = MI_UnnamedEnterprises.Id
+                                            AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
 
-              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                          ON MIFloat_Price.MovementItemId = MI_UnnamedEnterprises.Id
-                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-              LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                          ON MIFloat_Summ.MovementItemId = MI_UnnamedEnterprises.Id
-                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+            LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)
+            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id 
+                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
 
-              LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
-                                     ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods.Id
-                                    AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MI_UnnamedEnterprises.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                        ON MIFloat_Summ.MovementItemId = MI_UnnamedEnterprises.Id
+                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
-              LEFT JOIN ObjectString AS ObjectString_Goods_CodeUKTZED
-                                     ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods.Id
-                                    AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()
 
-              LEFT JOIN ObjectLink AS ObjectLink_Goods_Exchange
-                                   ON ObjectLink_Goods_Exchange.ObjectId = Object_Goods.Id
-                                  AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
-              LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId
+            LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = Object_Goods_Main.ExchangeId
 
         WHERE
             MI_UnnamedEnterprises.MovementId = inMovementId

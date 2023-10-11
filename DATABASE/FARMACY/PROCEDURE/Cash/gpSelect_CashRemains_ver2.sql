@@ -1145,9 +1145,7 @@ BEGIN
           , COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)    AS isGoodsForProject
           , tmpGoodsDiscount.MaxPrice                              AS GoodsDiscountMaxPrice
           , tmpGoodsDiscount.DiscountProcent                       AS GoodsDiscountProcentSite
-          , COALESCE(tmpGoodsUKTZED.UKTZED, CASE WHEN length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
-                                                  AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                                                 THEN REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '') END)::TVarChar        AS UKTZED
+          , REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
           , Object_Goods_PairSun_Main.MainID                       AS GoodsPairSunId
           , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
           , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbObjectId <> 4 
@@ -1297,8 +1295,8 @@ BEGIN
 
 
            -- Коды UKTZED
-           LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                   AND tmpGoodsUKTZED.Ord = 1
+           /*LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                   AND tmpGoodsUKTZED.Ord = 1*/
 
            LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = CashSessionSnapShot.ObjectId
 

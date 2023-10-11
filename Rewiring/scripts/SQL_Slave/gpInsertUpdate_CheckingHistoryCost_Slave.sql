@@ -40,11 +40,6 @@ BEGIN
                          inDiffSumm := inDiffSumm,
                          inSession := inSession) AS q;         
           
-     
-     -- Сохраним контейнера для последующего удвления на мастере     
-     INSERT INTO _replica.Container_branch_Rewiring (RewiringUUId, ContainerId)
-     SELECT vbRewiringUUId, _tmpContainer_branch.ContainerId FROM _tmpContainer_branch;
-
      RETURN QUERY
      SELECT vbRewiringUUId;
 
@@ -60,6 +55,4 @@ $BODY$
 */
 
 -- SELECT * FROM _replica.HistoryCost_Rewiring
--- SELECT * FROM _replica.Container_branch_Rewiring
--- 7620680f-e57e-4d91-a52e-c3e90c4989b7
 -- SELECT * FROM _replica.gpInsertUpdate_CheckingHistoryCost_Slave (inStartDate:= '01.09.2023', inEndDate:= '27.09.2023', inBranchId:= 8379, inItearationCount:= 50, inDiffSumm:= 1, inSession:= zfCalc_UserAdmin());

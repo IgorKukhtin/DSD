@@ -723,9 +723,7 @@ BEGIN
             Object_DiscountExternal.ValueData                                 AS DiscountExternalName,
             tmpGoodsDiscount.GoodsDiscountId                                  AS GoodsDiscountID,
             tmpGoodsDiscount.GoodsDiscountName                                AS GoodsDiscountName,
-            COALESCE(tmpGoodsUKTZED.UKTZED, CASE WHEN length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
-                                                  AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                                                 THEN REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '') END)::TVarChar        AS UKTZED,
+            REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar        AS UKTZED,
             Object_Goods_PairSun_Main.MainID                                  AS GoodsPairSunId,
             NULLIF (_DIFF.DivisionPartiesId, 0),
             CASE WHEN Object_DivisionParties.ObjectCode = 1 
@@ -804,8 +802,8 @@ BEGIN
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                        ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(_DIFF.NDSKindId, Object_Goods_Main.NDSKindId)
             -- Коды UKTZED
-            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                    AND tmpGoodsUKTZED.Ord = 1
+            /*LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                    AND tmpGoodsUKTZED.Ord = 1*/
             -- Фикс цена для всей Сети
             LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
                                    ON ObjectFloat_Goods_Price.ObjectId = _DIFF.ObjectId
