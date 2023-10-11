@@ -1,30 +1,30 @@
 inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
-  ClientHeight = 535
+  ClientHeight = 553
   ClientWidth = 1165
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1181
-  ExplicitHeight = 574
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
     Width = 1165
-    Height = 374
+    Height = 392
     TabOrder = 3
     ExplicitTop = 76
     ExplicitWidth = 1165
     ExplicitHeight = 374
-    ClientRectBottom = 374
+    ClientRectBottom = 392
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1165
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1165
-        Height = 374
+        Height = 392
         ExplicitWidth = 1165
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -854,12 +854,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   end
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
-    Top = 450
+    Top = 468
     Width = 1165
     Height = 85
     Align = alBottom
     TabOrder = 6
     Visible = False
+    ExplicitTop = 450
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -974,6 +975,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
       ShowSaveDialog = False
+      FieldDefs = <>
       Left = 1208
       Top = 168
     end
@@ -3136,6 +3138,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1208
       Top = 168
     end
@@ -3178,6 +3181,68 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Param.ComponentItem = 'Directory'
       Param.DataType = ftString
       Param.MultiSelectSeparator = ','
+    end
+    object actOpenChoicePriceList: TOpenChoiceForm
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPriceList_ObjectForm'
+      ImageIndex = 56
+      FormName = 'TPriceList_ObjectForm'
+      FormNameParam.Value = 'TPriceList_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_PriceList: TdsdExecStoredProc
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceList
+        end>
+      Caption = 'actUpdate_PriceList'
+      ImageIndex = 56
+    end
+    object macUpdate_PriceList_list: TMultiAction
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PriceList
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      ImageIndex = 56
+    end
+    object macUpdate_PriceList: TMultiAction
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoicePriceList
+        end
+        item
+          Action = macUpdate_PriceList_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091' '#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'?'
+      InfoAfterExecute = #1042' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1099' '#1094#1077#1085#1099
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      ImageIndex = 56
     end
   end
   inherited MasterDS: TDataSource
@@ -3336,6 +3401,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           Visible = True
           ItemName = 'bbRoundAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PriceList'
         end
         item
           Visible = True
@@ -3603,6 +3676,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     end
     object bbbExportFile_fromMail: TdxBarButton
       Action = macExportFile_fromMail_All
+      Category = 0
+    end
+    object bbUpdate_PriceList: TdxBarButton
+      Action = macUpdate_PriceList
       Category = 0
     end
   end
@@ -5005,5 +5082,30 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     PackSize = 1
     Left = 560
     Top = 152
+  end
+  object spUpdate_PriceList: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_PriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 496
   end
 end

@@ -1,30 +1,30 @@
 inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
-  ClientHeight = 535
+  ClientHeight = 551
   ClientWidth = 1370
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1386
-  ExplicitHeight = 574
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
     Width = 1370
-    Height = 369
+    Height = 385
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1370
     ExplicitHeight = 369
-    ClientRectBottom = 369
+    ClientRectBottom = 385
     ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1370
       ExplicitHeight = 369
       inherited cxGrid: TcxGrid
         Width = 1370
-        Height = 369
+        Height = 385
         ExplicitWidth = 1370
         ExplicitHeight = 369
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -883,12 +883,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   end
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
-    Top = 450
+    Top = 466
     Width = 1370
     Height = 85
     Align = alBottom
     TabOrder = 6
     Visible = False
+    ExplicitTop = 450
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -4209,6 +4210,68 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
+    object actOpenChoicePriceList: TOpenChoiceForm
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPriceList_ObjectForm'
+      ImageIndex = 56
+      FormName = 'TPriceList_ObjectForm'
+      FormNameParam.Value = 'TPriceList_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_PriceList: TdsdExecStoredProc
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceList
+        end>
+      Caption = 'actUpdate_PriceList'
+      ImageIndex = 56
+    end
+    object macUpdate_PriceList_list: TMultiAction
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PriceList
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      ImageIndex = 56
+    end
+    object macUpdate_PriceList: TMultiAction
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoicePriceList
+        end
+        item
+          Action = macUpdate_PriceList_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091' '#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'?'
+      InfoAfterExecute = #1042' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1099' '#1094#1077#1085#1099
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      ImageIndex = 56
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4366,6 +4429,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Visible = True
           ItemName = 'bbRoundAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PriceList'
         end
         item
           Visible = True
@@ -4743,6 +4814,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
     object bbPrint_Group: TdxBarButton
       Action = macPrint_Group
+      Category = 0
+    end
+    object bbUpdate_PriceList: TdxBarButton
+      Action = macUpdate_PriceList
       Category = 0
     end
   end
@@ -6774,5 +6849,30 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end>
     Left = 724
     Top = 8
+  end
+  object spUpdate_PriceList: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_PriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 504
   end
 end
