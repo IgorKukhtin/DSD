@@ -1,9 +1,10 @@
 -- Function: gpReport_OrderInternal_choice()
 
 DROP FUNCTION IF EXISTS gpReport_OrderInternal_deflection (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderInternalPackRemains_deflection (Integer, Boolean, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpReport_OrderInternal_deflection(
+CREATE OR REPLACE FUNCTION gpReport_OrderInternalPackRemains_deflection(
     IN inMovementId        Integer   , --
     IN inIsShowAll          Boolean   , -- свернуть и показать остатки  
     IN inSession            TVarChar    -- сессия пользователя
@@ -311,4 +312,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_OrderInternal_deflection (inMovementId:= 26428963::integer , inIsShowAll := true::boolean, inSession:= zfCalc_UserAdmin()::tvarchar)
+--SELECT * FROM gpReport_OrderInternalPackRemains_deflection (inMovementId:= 26428963::integer , inIsShowAll := true::boolean, inSession:= zfCalc_UserAdmin()::tvarchar)

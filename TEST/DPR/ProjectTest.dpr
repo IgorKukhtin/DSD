@@ -1461,7 +1461,7 @@ uses
   OrderInternalChild in '..\..\Forms\Document\OrderInternalChild.pas' {OrderInternalChildForm: TParentForm},
   Report_ProductionUnionTech_Analys in '..\..\Forms\Report\Report_ProductionUnionTech_Analys.pas' {Report_ProductionUnionTech_AnalysForm: TParentForm},
   Report_ProductionUnionTech_AnalysDialog in '..\..\Forms\Report\Report_ProductionUnionTech_AnalysDialog.pas' {Report_ProductionUnionTech_AnalysDialogForm: TParentForm},
-  OrderInternal_deflection in '..\..\Forms\Document\OrderInternal_deflection.pas' {OrderInternal_deflectionForm: TParentForm};
+  OrderInternalPackRemains_deflection in '..\..\Forms\Document\OrderInternalPackRemains_deflection.pas' {OrderInternalPackRemains_deflectionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

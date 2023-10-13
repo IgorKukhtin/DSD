@@ -1,4 +1,4 @@
-unit OrderInternal_deflection;
+unit OrderInternalPackRemains_deflection;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TOrderInternal_deflectionForm = class(TAncestorDocumentForm)
+  TOrderInternalPackRemains_deflectionForm = class(TAncestorDocumentForm)
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
@@ -88,6 +88,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderInternal_deflectionForm);
+  RegisterClass(TOrderInternalPackRemains_deflectionForm);
 
 end.

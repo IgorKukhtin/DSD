@@ -1124,8 +1124,8 @@ end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternal_deflectionForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderInternal_deflectionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemains_deflectionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemains_deflectionForm');
   //exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));

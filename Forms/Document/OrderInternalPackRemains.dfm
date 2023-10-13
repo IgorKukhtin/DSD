@@ -8822,8 +8822,8 @@
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1086' '#1086#1090#1089#1090#1072#1090#1082#1091
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1086' '#1086#1090#1089#1090#1072#1090#1082#1091
       ImageIndex = 24
-      FormName = 'TOrderInternal_deflectionForm'
-      FormNameParam.Value = 'TOrderInternal_deflectionForm'
+      FormName = 'TOrderInternalPackRemains_deflectionForm'
+      FormNameParam.Value = 'TOrderInternalPackRemains_deflectionForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
