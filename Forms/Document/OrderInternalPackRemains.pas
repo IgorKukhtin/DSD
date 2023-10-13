@@ -337,6 +337,8 @@ type
     actPrintRemains_fact2: TdsdPrintAction;
     bbPrintRemains_fact2: TdxBarButton;
     spSelectPrintRemains_fact2: TdsdStoredProc;
+    actOpenFormOrderInternalPackRem: TdsdInsertUpdateAction;
+    bbOrderInternalPackRem: TdxBarButton;
   private
     { Private declarations }
   public
