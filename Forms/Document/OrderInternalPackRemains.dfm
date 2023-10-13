@@ -6758,6 +6758,8 @@
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitLeft = 89
+        ExplicitTop = -176
         object cxGridDBTableView_Det: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -7467,8 +7469,8 @@
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 716
-      Top = 64
+      Left = 720
+      Top = 63
       TabOrder = 17
       Width = 271
     end
@@ -8814,6 +8816,50 @@
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1048#1079#1084#1077#1085#1103#1090#1100' '#1092#1072#1082#1090' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1053#1045#1058'>'
       ImageIndex = 72
     end
+    object actOpenFormOrderInternalPackRem: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1086' '#1086#1090#1089#1090#1072#1090#1082#1091
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1086' '#1086#1090#1089#1090#1072#1090#1082#1091
+      ImageIndex = 24
+      FormName = 'TOrderInternalPackRemains_deflectionForm'
+      FormNameParam.Value = 'TOrderInternalPackRemains_deflectionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -8933,6 +8979,14 @@
         item
           Visible = True
           ItemName = 'bbMultiAmountForecast'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrderInternalPackRem'
         end
         item
           Visible = True
@@ -9209,6 +9263,10 @@
     object bbPrintRemains_fact2: TdxBarButton
       Action = actPrintRemains_fact2
       Caption = #1058#1045#1057#1058' '#1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095'.'#1092#1072#1082#1090')'
+      Category = 0
+    end
+    object bbOrderInternalPackRem: TdxBarButton
+      Action = actOpenFormOrderInternalPackRem
       Category = 0
     end
   end
