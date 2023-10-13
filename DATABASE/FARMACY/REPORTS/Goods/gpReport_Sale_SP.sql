@@ -140,6 +140,7 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
+    raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
     -- Таблицы
     CREATE TEMP TABLE tmpUnit (UnitId Integer, JuridicalId Integer, Address TVarChar) ON COMMIT DROP;
@@ -168,251 +169,367 @@ BEGIN
                   WHERE OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
     END IF;
 
+    raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+
+    -- выбираем продажи по товарам соц.проекта
+    CREATE TEMP TABLE tmpSaleAll ON COMMIT DROP AS
+     SELECT Movement_Sale.Id
+          , Movement_Sale.DescId
+          , Movement_Sale.OperDate
+          , MovementLinkObject_Unit.ObjectId             AS UnitId
+          , tmpUnit.Address
+          , tmpUnit.JuridicalId                          AS JuridicalId
+          , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
+          , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
+          , MovementString_InvNumberSP.ValueData         AS InvNumberSP
+          , COALESCE (Object_MedicSP.ValueData, '')            :: TVarChar  AS MedicSP
+          , COALESCE (Object_AmbulantClinicSP.ValueData, '')   :: TVarChar  AS AmbulantClinicSP
+          , Object_MemberSP.Id                                     AS MemberSPId
+          , COALESCE (Object_MemberSP.ValueData, '')  :: TVarChar  AS MemberSP
+          , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
+          , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
+          , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice
+          , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+     FROM Movement AS Movement_Sale
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                  ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
+                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+          INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                 ON MovementLinkObject_PartnerMedical.MovementId = Movement_Sale.Id
+                AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                    ON MovementBoolean_List.MovementId = Movement_Sale.Id
+                                   AND MovementBoolean_List.DescId     = zc_MovementBoolean_List()
+          LEFT JOIN MovementString AS MovementString_InvNumberSP
+                                   ON MovementString_InvNumberSP.MovementId = Movement_Sale.Id
+                                  AND MovementString_InvNumberSP.DescId     = zc_MovementString_InvNumberSP()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP
+                 ON MovementLinkObject_MedicSP.MovementId = Movement_Sale.Id
+                AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
+          LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = MovementLinkObject_MedicSP.ObjectId AND Object_MedicSP.DescId = zc_Object_MedicSP()
+
+          LEFT JOIN ObjectLink AS ObjectLink_MedicSP_AmbulantClinicSP
+                               ON ObjectLink_MedicSP_AmbulantClinicSP.ObjectId = Object_MedicSP.Id
+                              AND ObjectLink_MedicSP_AmbulantClinicSP.DescId = zc_ObjectLink_MedicSP_AmbulantClinicSP()
+          LEFT JOIN Object AS Object_AmbulantClinicSP ON Object_AmbulantClinicSP.Id = ObjectLink_MedicSP_AmbulantClinicSP.ChildObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
+                 ON MovementLinkObject_MemberSP.MovementId = Movement_Sale.Id
+                AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+          LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId AND Object_MemberSP.DescId = zc_Object_MemberSP()
+
+          LEFT JOIN MovementDate AS MovementDate_OperDateSP
+                                 ON MovementDate_OperDateSP.MovementId = Movement_Sale.Id
+                                AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
+                 ON MovementLinkObject_GroupMemberSP.MovementId = Movement_Sale.Id
+                AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
+
+          LEFT JOIN MovementLinkMovement AS MLM_Child
+                 ON MLM_Child.MovementId = Movement_Sale.Id
+                AND MLM_Child.descId = zc_MovementLinkMovement_Child()
+          LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+
+     WHERE Movement_Sale.DescId = zc_Movement_Sale()
+       AND Movement_Sale.OperDate >= inStartDate AND Movement_Sale.OperDate < inEndDate + INTERVAL '1 DAY'
+       AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
+             COALESCE (MovementLinkObject_GroupMemberSP.ObjectId ,0) <> 0 OR
+             COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
+             COALESCE (MovementLinkObject_MedicSP.ObjectId,0) <> 0 OR
+             COALESCE (MovementLinkObject_MemberSP.ObjectId,0) <> 0
+           )
+       AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
+       AND (   (MovementLinkObject_GroupMemberSP.ObjectId =  inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
+            OR (COALESCE(MovementLinkObject_GroupMemberSP.ObjectId,0) <> inGroupMemberSPId AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
+            OR COALESCE(inGroupMemberSPId,0) = 0
+            )
+       AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+   UNION
+     SELECT Movement_Check.Id
+          , Movement_Check.DescId
+          , Movement_Check.OperDate
+          , MovementLinkObject_Unit.ObjectId             AS UnitId
+          , tmpUnit.Address
+          , tmpUnit.JuridicalId                          AS JuridicalId
+          , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
+          , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
+          , MovementString_InvNumberSP.ValueData         AS InvNumberSP
+          , COALESCE(Object_MedicKashtan.ValueData, MovementString_MedicSP.ValueData, ''):: TVarChar  AS MedicSP
+          , ''                                                 :: TVarChar  AS AmbulantClinicSP
+          , Object_MemberSP.Id                                                                     AS MemberSPId
+          , COALESCE (Object_MemberSP.ValueData, Object_MemberKashtan.ValueData, Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
+          , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
+          , ObjectLink_MemberSP_GroupMemberSP.ChildObjectId   AS GroupMemberSPId
+          , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice
+          , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+     FROM Movement AS Movement_Check
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                        ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+          INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+
+          INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                        ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
+                                       AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                       AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                       ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
+                                      AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                    ON MovementBoolean_List.MovementId = Movement_Check.Id
+                                   AND MovementBoolean_List.DescId     = zc_MovementBoolean_List()
+          LEFT JOIN MovementString AS MovementString_InvNumberSP
+                                   ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
+                                  AND MovementString_InvNumberSP.DescId     = zc_MovementString_InvNumberSP()
+
+          LEFT JOIN MovementString AS MovementString_MedicSP
+                                   ON MovementString_MedicSP.MovementId = Movement_Check.Id
+                                  AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+          LEFT JOIN MovementString AS MovementString_Bayer
+                                   ON MovementString_Bayer.MovementId = Movement_Check.Id
+                                  AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                       ON MovementLinkObject_BuyerForSite.MovementId = Movement_Check.Id
+                                      AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+          LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+
+          LEFT JOIN MovementDate AS MovementDate_OperDateSP
+                                 ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
+                                AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+
+          LEFT JOIN MovementLinkMovement AS MLM_Child
+                                         ON MLM_Child.MovementId = Movement_Check.Id
+                                        AND MLM_Child.descId = zc_MovementLinkMovement_Child()
+          LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
+                                       ON MovementLinkObject_MemberSP.MovementId = Movement_Check.Id
+                                      AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+          LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
+                               ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = MovementLinkObject_MemberSP.ObjectId
+                              AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
+          LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicKashtan
+                                       ON MovementLinkObject_MedicKashtan.MovementId =  Movement_Check.Id
+                                      AND MovementLinkObject_MedicKashtan.DescId = zc_MovementLinkObject_MedicKashtan()
+          LEFT JOIN Object AS Object_MedicKashtan ON Object_MedicKashtan.Id = MovementLinkObject_MedicKashtan.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberKashtan
+                                       ON MovementLinkObject_MemberKashtan.MovementId =  Movement_Check.Id
+                                      AND MovementLinkObject_MemberKashtan.DescId = zc_MovementLinkObject_MemberKashtan()
+          LEFT JOIN Object AS Object_MemberKashtan ON Object_MemberKashtan.Id = MovementLinkObject_MemberKashtan.ObjectId
+
+     WHERE Movement_Check.DescId = zc_Movement_Check()
+       AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
+       AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
+             COALESCE (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId ,0) <> 0 OR
+             COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
+             COALESCE (MovementString_MedicSP.ValueData, '') <> '' OR
+             COALESCE (Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '') <> ''
+           )
+       AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
+       AND (   (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
+            OR (COALESCE(ObjectLink_MemberSP_GroupMemberSP.ChildObjectId, 0) <> inGroupMemberSPId AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
+            OR COALESCE(inGroupMemberSPId,0) = 0
+            )
+       AND Movement_Check.StatusId = zc_Enum_Status_Complete();
+                           
+    ANALYSE tmpSaleAll;
+    
+    raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+    
+    -- выбираем продажи по товарам соц.проекта
+    CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
+     SELECT Movement_Sale.Id   AS MovementId
+          , Movement_Sale.OperDate
+          , Movement_Sale.UnitId
+          , Movement_Sale.JuridicalId
+          , Movement_Sale.HospitalId
+          , Movement_Sale.isListSP
+          , Movement_Sale.InvNumberSP
+          , Movement_Sale.MedicSP
+          , Movement_Sale.AmbulantClinicSP
+          , Movement_Sale.MemberSPId
+          , Movement_Sale.MemberSP
+          , Movement_Sale.OperDateSP
+          , Movement_Sale.GroupMemberSPId
+          , Movement_Sale.InvNumber_Invoice
+          , Movement_Sale.InvNumber_Invoice_Full
+          , Movement_Sale.DescId
+          , MI_Sale.ObjectId                                          AS GoodsId         --tmpGoods.GoodsMainId                                      AS GoodsMainId
+          , MI_Sale.Amount
+          , MI_Sale.Id                                                AS MovementItemId
+     FROM tmpSaleAll AS Movement_Sale
+          INNER JOIN MovementItem AS MI_Sale
+                                  ON MI_Sale.MovementId = Movement_Sale.Id
+                                 AND MI_Sale.DescId = zc_MI_Master()
+                                 AND MI_Sale.isErased = FALSE
+    ;
+                            
+    ANALYSE tmpMI;
+    
+    raise notice 'Value 4: %', CLOCK_TIMESTAMP();    
+                        
+    -- выбираем продажи по товарам соц.проекта
+    CREATE TEMP TABLE tmpMI_Sum ON COMMIT DROP AS
+     SELECT Movement_Sale.MovementId
+          , Movement_Sale.OperDate
+          , Movement_Sale.UnitId
+          , Movement_Sale.JuridicalId
+          , Movement_Sale.HospitalId
+          , Movement_Sale.isListSP
+          , Movement_Sale.InvNumberSP
+          , Movement_Sale.MedicSP
+          , Movement_Sale.AmbulantClinicSP
+          , Movement_Sale.MemberSPId
+          , Movement_Sale.MemberSP
+          , Movement_Sale.OperDateSP
+          , Movement_Sale.GroupMemberSPId
+          , Movement_Sale.InvNumber_Invoice
+          , Movement_Sale.InvNumber_Invoice_Full
+          , Movement_Sale.GoodsId
+          , MIFloat_ChangePercent.ValueData                           AS ChangePercent
+          , SUM (COALESCE (-1 * MIContainer.Amount, Movement_Sale.Amount))  AS Amount
+          , SUM (COALESCE (-1 * MIContainer.Amount, Movement_Sale.Amount) * COALESCE (MIFloat_Price.ValueData, 0))     AS SummSale
+          , SUM (COALESCE (-1 * MIContainer.Amount, Movement_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummOriginal
+          , MAX(Movement_Sale.MovementItemId)::Integer                                                           AS MovementItemId
+     FROM tmpMI AS Movement_Sale
+
+          LEFT JOIN MovementItemBoolean AS MIBoolean_SP
+                  ON MIBoolean_SP.MovementItemId = Movement_Sale.MovementItemId
+                 AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
+                 --AND MIBoolean_SP.ValueData = TRUE                        -- пока перенесла в where , т,к. в чеке это св-во не сохраняется
+          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                  ON MIFloat_ChangePercent.MovementItemId = Movement_Sale.MovementItemId
+                 AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()                                         
+                                         
+          LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                 ON MIFloat_PriceSale.MovementItemId = Movement_Sale.MovementItemId
+                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                 ON MIFloat_Price.MovementItemId = Movement_Sale.MovementItemId
+                AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+          LEFT JOIN MovementItemContainer AS MIContainer
+                                          ON MIContainer.MovementItemId = Movement_Sale.MovementItemId
+                                         AND MIContainer.DescId = zc_MIContainer_Count()
+                                         
+     WHERE (MIFloat_ChangePercent.ValueData = inPercentSP OR COALESCE (inPercentSP,0) = 0)
+       AND (MIBoolean_SP.ValueData = TRUE OR Movement_Sale.DescId = zc_Movement_Check())
+                                         
+     GROUP BY Movement_Sale.MovementId
+            , Movement_Sale.UnitId
+            , Movement_Sale.JuridicalId
+            , Movement_Sale.HospitalId
+            , Movement_Sale.isListSP
+            , Movement_Sale.InvNumberSP
+            , Movement_Sale.MedicSP
+            , Movement_Sale.AmbulantClinicSP
+            , Movement_Sale.MemberSPId
+            , Movement_Sale.MemberSP
+            , Movement_Sale.OperDateSP
+            , Movement_Sale.GroupMemberSPId
+            , Movement_Sale.InvNumber_Invoice
+            , Movement_Sale.InvNumber_Invoice_Full
+            , Movement_Sale.GoodsId
+            , MIFloat_ChangePercent.ValueData
+            , Movement_Sale.OperDate
+     HAVING SUM (COALESCE (-1 * MIContainer.Amount, Movement_Sale.Amount)) <> 0;
+                            
+    ANALYSE tmpMI_Sum;
+    
+    raise notice 'Value 5: %', CLOCK_TIMESTAMP();    
+        
+    CREATE TEMP TABLE tmpGoodsSPRegistry_1303 ON COMMIT DROP AS
+    SELECT * FROM gpSelect_GoodsSPRegistry_1303_byDate(inStartDate := inStartDate, inEndDate := inEndDate, inSession := inSession);
+    
+    ANALYSE tmpGoodsSPRegistry_1303;
+    
+    raise notice 'Value 6: %', CLOCK_TIMESTAMP();    
+        
+    -- информация из партий
+    CREATE TEMP TABLE tmpMIC ON COMMIT DROP AS
+      SELECT MovementItemContainer.OperDate
+           , MovementItemContainer.ContainerId
+           , (-MovementItemContainer.Amount)::TFloat AS Amount
+           , MovementItemContainer.MovementId
+           , tmp.UnitId
+       FROM (SELECT DISTINCT tmpSaleAll.Id, tmpSaleAll.UnitId FROM tmpSaleAll) AS tmp
+             JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmp.Id
+                                       AND MovementItemContainer.DescId = zc_MIContainer_Count();
+      
+    ANALYSE tmpMIC;
+                            
+    raise notice 'Value 7: %', CLOCK_TIMESTAMP();    
+
+    CREATE TEMP TABLE tmpMIC_Info ON COMMIT DROP AS
+      SELECT tmpMIC.MovementId
+           , tmpMIC.UnitId
+           , MI_Income.GoodsId
+           , SUM (tmpMIC.Amount) AS Amount
+           , SUM (tmpMIC.Amount * MI_Income.PriceWithVAT) AS SumWithVAT
+           , SUM (tmpMIC.Amount * CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = FALSE
+                                       THEN  MI_Income.Price
+                                       ELSE (MI_Income.Price / (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                                  END) ::TFloat AS SumWithOutVAT
+
+           , MAX (ObjectFloat_NDSKind_NDS.ValueData)     AS NDS
+           , STRING_AGG (DISTINCT Object_From.ValueData, ';') AS JuridicalName_in
+           , STRING_AGG (DISTINCT '№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
+           , MAX (CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common()
+                       THEN zc_Enum_NDSKind_Medical() 
+                       ELSE MovementLinkObject_NDSKind.ObjectId END) AS NDSKindId
+      FROM tmpMIC
+           LEFT JOIN ContainerLinkObject AS CLI_MI 
+                                               ON CLI_MI.ContainerId = tmpMIC.ContainerId
+                                              AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+           LEFT JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+           LEFT JOIN MovementItem_Income_View AS MI_Income
+                                                    ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+           LEFT OUTER JOIN MovementLinkObject AS MLO_From
+                                              ON MLO_From.MovementId = MI_Income.MovementId
+                                             AND MLO_From.DescId = zc_MovementLinkObject_From()
+
+           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                     ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
+                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                        ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
+                                       AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                       AND (COALESCE (MovementLinkObject_NDSKind.ObjectId, 0) <> 13937605 OR
+                                            tmpMIC.OperDate < '01.07.2023')
+           LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                 ON ObjectFloat_NDSKind_NDS.ObjectId = CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common() THEN zc_Enum_NDSKind_Medical() ELSE MovementLinkObject_NDSKind.ObjectId END
+                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+           LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId 
+           LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+        GROUP BY MI_Income.GoodsId
+               , COALESCE(MovementBoolean_PriceWithVAT.ValueData, FALSE)
+               , tmpMIC.MovementId
+               , tmpMIC.UnitId;
+                               
+    ANALYSE tmpMIC_Info;
+                            
+    raise notice 'Value 8: %', CLOCK_TIMESTAMP();    
+
     -- Результат
     RETURN QUERY
           WITH
-          -- выбираем продажи по товарам соц.проекта
-          tmpSaleAll AS (SELECT Movement_Sale.Id
-                              , Movement_Sale.DescId
-                              , Movement_Sale.OperDate
-                              , MovementLinkObject_Unit.ObjectId             AS UnitId
-                              , tmpUnit.Address
-                              , tmpUnit.JuridicalId                          AS JuridicalId
-                              , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
-                              , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
-                              , MovementString_InvNumberSP.ValueData         AS InvNumberSP
-                              , COALESCE (Object_MedicSP.ValueData, '')            :: TVarChar  AS MedicSP
-                              , COALESCE (Object_AmbulantClinicSP.ValueData, '')   :: TVarChar  AS AmbulantClinicSP
-                              , Object_MemberSP.Id                                     AS MemberSPId
-                              , COALESCE (Object_MemberSP.ValueData, '')  :: TVarChar  AS MemberSP
-                              , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
-                              , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
-                              , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice
-                              , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
-                         FROM Movement AS Movement_Sale
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                      ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
-                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                              INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
 
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
-                                     ON MovementLinkObject_PartnerMedical.MovementId = Movement_Sale.Id
-                                    AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
-
-                              LEFT JOIN MovementBoolean AS MovementBoolean_List
-                                                        ON MovementBoolean_List.MovementId = Movement_Sale.Id
-                                                       AND MovementBoolean_List.DescId     = zc_MovementBoolean_List()
-                              LEFT JOIN MovementString AS MovementString_InvNumberSP
-                                                       ON MovementString_InvNumberSP.MovementId = Movement_Sale.Id
-                                                      AND MovementString_InvNumberSP.DescId     = zc_MovementString_InvNumberSP()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP
-                                     ON MovementLinkObject_MedicSP.MovementId = Movement_Sale.Id
-                                    AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
-                              LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = MovementLinkObject_MedicSP.ObjectId AND Object_MedicSP.DescId = zc_Object_MedicSP()
-
-                              LEFT JOIN ObjectLink AS ObjectLink_MedicSP_AmbulantClinicSP
-                                                   ON ObjectLink_MedicSP_AmbulantClinicSP.ObjectId = Object_MedicSP.Id
-                                                  AND ObjectLink_MedicSP_AmbulantClinicSP.DescId = zc_ObjectLink_MedicSP_AmbulantClinicSP()
-                              LEFT JOIN Object AS Object_AmbulantClinicSP ON Object_AmbulantClinicSP.Id = ObjectLink_MedicSP_AmbulantClinicSP.ChildObjectId
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
-                                     ON MovementLinkObject_MemberSP.MovementId = Movement_Sale.Id
-                                    AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
-                              LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId AND Object_MemberSP.DescId = zc_Object_MemberSP()
-
-                              LEFT JOIN MovementDate AS MovementDate_OperDateSP
-                                                     ON MovementDate_OperDateSP.MovementId = Movement_Sale.Id
-                                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
-                                     ON MovementLinkObject_GroupMemberSP.MovementId = Movement_Sale.Id
-                                    AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
-
-                              LEFT JOIN MovementLinkMovement AS MLM_Child
-                                     ON MLM_Child.MovementId = Movement_Sale.Id
-                                    AND MLM_Child.descId = zc_MovementLinkMovement_Child()
-                              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
-
-                         WHERE Movement_Sale.DescId = zc_Movement_Sale()
-                           AND Movement_Sale.OperDate >= inStartDate AND Movement_Sale.OperDate < inEndDate + INTERVAL '1 DAY'
-                           AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
-                                 COALESCE (MovementLinkObject_GroupMemberSP.ObjectId ,0) <> 0 OR
-                                 COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
-                                 COALESCE (MovementLinkObject_MedicSP.ObjectId,0) <> 0 OR
-                                 COALESCE (MovementLinkObject_MemberSP.ObjectId,0) <> 0
-                               )
-                           AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
-                           AND (   (MovementLinkObject_GroupMemberSP.ObjectId =  inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
-                                OR (COALESCE(MovementLinkObject_GroupMemberSP.ObjectId,0) <> inGroupMemberSPId AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
-                                OR COALESCE(inGroupMemberSPId,0) = 0
-                                )
-                           AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
-                       UNION
-                         SELECT Movement_Check.Id
-                              , Movement_Check.DescId
-                              , Movement_Check.OperDate
-                              , MovementLinkObject_Unit.ObjectId             AS UnitId
-                              , tmpUnit.Address
-                              , tmpUnit.JuridicalId                          AS JuridicalId
-                              , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
-                              , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
-                              , MovementString_InvNumberSP.ValueData         AS InvNumberSP
-                              , COALESCE(Object_MedicKashtan.ValueData, MovementString_MedicSP.ValueData, ''):: TVarChar  AS MedicSP
-                              , ''                                                 :: TVarChar  AS AmbulantClinicSP
-                              , Object_MemberSP.Id                                                                     AS MemberSPId
-                              , COALESCE (Object_MemberSP.ValueData, Object_MemberKashtan.ValueData, Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
-                              , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
-                              , ObjectLink_MemberSP_GroupMemberSP.ChildObjectId   AS GroupMemberSPId
-                              , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice
-                              , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
-                         FROM Movement AS Movement_Check
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                            ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                              INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
-                                                            ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
-                                                           AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
-                                                           AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
-                                                           ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
-                                                          AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
-
-                              LEFT JOIN MovementBoolean AS MovementBoolean_List
-                                                        ON MovementBoolean_List.MovementId = Movement_Check.Id
-                                                       AND MovementBoolean_List.DescId     = zc_MovementBoolean_List()
-                              LEFT JOIN MovementString AS MovementString_InvNumberSP
-                                                       ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
-                                                      AND MovementString_InvNumberSP.DescId     = zc_MovementString_InvNumberSP()
-
-                              LEFT JOIN MovementString AS MovementString_MedicSP
-                                                       ON MovementString_MedicSP.MovementId = Movement_Check.Id
-                                                      AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
-                              LEFT JOIN MovementString AS MovementString_Bayer
-                                                       ON MovementString_Bayer.MovementId = Movement_Check.Id
-                                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
-                                                           ON MovementLinkObject_BuyerForSite.MovementId = Movement_Check.Id
-                                                          AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
-                              LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
-
-                              LEFT JOIN MovementDate AS MovementDate_OperDateSP
-                                                     ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
-                                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
-
-                              LEFT JOIN MovementLinkMovement AS MLM_Child
-                                                             ON MLM_Child.MovementId = Movement_Check.Id
-                                                            AND MLM_Child.descId = zc_MovementLinkMovement_Child()
-                              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
-                                                           ON MovementLinkObject_MemberSP.MovementId = Movement_Check.Id
-                                                          AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
-                              LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
-
-                              LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
-                                                   ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = MovementLinkObject_MemberSP.ObjectId
-                                                  AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
-                              LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicKashtan
-                                                           ON MovementLinkObject_MedicKashtan.MovementId =  Movement_Check.Id
-                                                          AND MovementLinkObject_MedicKashtan.DescId = zc_MovementLinkObject_MedicKashtan()
-                              LEFT JOIN Object AS Object_MedicKashtan ON Object_MedicKashtan.Id = MovementLinkObject_MedicKashtan.ObjectId
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberKashtan
-                                                           ON MovementLinkObject_MemberKashtan.MovementId =  Movement_Check.Id
-                                                          AND MovementLinkObject_MemberKashtan.DescId = zc_MovementLinkObject_MemberKashtan()
-                              LEFT JOIN Object AS Object_MemberKashtan ON Object_MemberKashtan.Id = MovementLinkObject_MemberKashtan.ObjectId
-
-                         WHERE Movement_Check.DescId = zc_Movement_Check()
-                           AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
-                           AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
-                                 COALESCE (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId ,0) <> 0 OR
-                                 COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
-                                 COALESCE (MovementString_MedicSP.ValueData, '') <> '' OR
-                                 COALESCE (Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '') <> ''
-                               )
-                           AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
-                           AND (   (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
-                                OR (COALESCE(ObjectLink_MemberSP_GroupMemberSP.ChildObjectId, 0) <> inGroupMemberSPId AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
-                                OR COALESCE(inGroupMemberSPId,0) = 0
-                                )
-                           AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-                        )
 
             -- выбираем продажи по товарам соц.проекта
-            ,  tmpMI_Sum AS (SELECT Movement_Sale.Id   AS MovementId
-                                  , Movement_Sale.OperDate
-                                  , Movement_Sale.UnitId
-                                  , Movement_Sale.JuridicalId
-                                  , Movement_Sale.HospitalId
-                                  , Movement_Sale.isListSP
-                                  , Movement_Sale.InvNumberSP
-                                  , Movement_Sale.MedicSP
-                                  , Movement_Sale.AmbulantClinicSP
-                                  , Movement_Sale.MemberSPId
-                                  , Movement_Sale.MemberSP
-                                  , Movement_Sale.OperDateSP
-                                  , Movement_Sale.GroupMemberSPId
-                                  , Movement_Sale.InvNumber_Invoice
-                                  , Movement_Sale.InvNumber_Invoice_Full
-                                  , MI_Sale.ObjectId                                          AS GoodsId         --tmpGoods.GoodsMainId                                      AS GoodsMainId
-                                  , MIFloat_ChangePercent.ValueData                           AS ChangePercent
-                                  , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount))  AS Amount
-                                  , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_Price.ValueData, 0))     AS SummSale
-                                  , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummOriginal
-                                  , MAX(MI_Sale.Id)::Integer                                  AS MovementItemId
-                             FROM tmpSaleAll AS Movement_Sale
-                                  INNER JOIN MovementItem AS MI_Sale
-                                                          ON MI_Sale.MovementId = Movement_Sale.Id
-                                                         AND MI_Sale.DescId = zc_MI_Master()
-                                                         AND MI_Sale.isErased = FALSE
-                                  LEFT JOIN MovementItemBoolean AS MIBoolean_SP
-                                          ON MIBoolean_SP.MovementItemId = MI_Sale.Id
-                                         AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
-                                         --AND MIBoolean_SP.ValueData = TRUE                        -- пока перенесла в where , т,к. в чеке это св-во не сохраняется
-                                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                          ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
-                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-
-                                  LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                         ON MIFloat_PriceSale.MovementItemId = MI_Sale.Id
-                                        AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                         ON MIFloat_Price.MovementItemId = MI_Sale.Id
-                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                                  LEFT JOIN MovementItemContainer AS MIContainer
-                                                                  ON MIContainer.MovementItemId = MI_Sale.Id
-                                                                 AND MIContainer.DescId = zc_MIContainer_Count()
-                             WHERE (MIFloat_ChangePercent.ValueData = inPercentSP OR COALESCE (inPercentSP,0) = 0)
-                               AND (MIBoolean_SP.ValueData = TRUE OR Movement_Sale.DescId = zc_Movement_Check())
-                             GROUP BY Movement_Sale.Id
-                                    , Movement_Sale.UnitId
-                                    , Movement_Sale.JuridicalId
-                                    , Movement_Sale.HospitalId
-                                    , Movement_Sale.isListSP
-                                    , Movement_Sale.InvNumberSP
-                                    , Movement_Sale.MedicSP
-                                    , Movement_Sale.AmbulantClinicSP
-                                    , Movement_Sale.MemberSPId
-                                    , Movement_Sale.MemberSP
-                                    , Movement_Sale.OperDateSP
-                                    , Movement_Sale.GroupMemberSPId
-                                    , Movement_Sale.InvNumber_Invoice
-                                    , Movement_Sale.InvNumber_Invoice_Full
-                                    , MI_Sale.ObjectId
-                                    , MIFloat_ChangePercent.ValueData
-                                    , Movement_Sale.OperDate
-                             HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount)) <> 0
-                            )
-            -- выбираем продажи по товарам соц.проекта
-            ,  tmpMI AS (SELECT Movement_Sale.MovementId
+              tmpMI AS (SELECT Movement_Sale.MovementId
                               , Movement_Sale.OperDate
                               , Movement_Sale.UnitId
                               , Movement_Sale.JuridicalId
@@ -702,61 +819,6 @@ BEGIN
                                                       , zc_ObjectString_MemberSP_INN()
                                                       , zc_ObjectString_MemberSP_Passport())
                           )
-    -- информация из партий
-    , tmpMIC AS (SELECT MovementItemContainer.OperDate
-                     , MovementItemContainer.ContainerId
-                     , (-MovementItemContainer.Amount)::TFloat AS Amount
-                     , MovementItemContainer.MovementId
-                     , tmp.UnitId
-                 FROM (SELECT DISTINCT tmpSaleAll.Id, tmpSaleAll.UnitId FROM tmpSaleAll) AS tmp
-                       JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmp.Id
-                                                 AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                )
-    , tmpMIC_Info AS (SELECT tmpMIC.MovementId
-                           , tmpMIC.UnitId
-                           , MI_Income.GoodsId
-                           , SUM (tmpMIC.Amount) AS Amount
-                           , SUM (tmpMIC.Amount * MI_Income.PriceWithVAT) AS SumWithVAT
-                           , SUM (tmpMIC.Amount * CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = FALSE
-                                                       THEN  MI_Income.Price
-                                                       ELSE (MI_Income.Price / (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
-                                                  END) ::TFloat AS SumWithOutVAT
-
-                           , MAX (ObjectFloat_NDSKind_NDS.ValueData)     AS NDS
-                           , STRING_AGG (DISTINCT Object_From.ValueData, ';') AS JuridicalName_in
-                           , STRING_AGG (DISTINCT '№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
-                           , MAX (CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common()
-                                       THEN zc_Enum_NDSKind_Medical() 
-                                       ELSE MovementLinkObject_NDSKind.ObjectId END) AS NDSKindId
-                      FROM tmpMIC
-                           LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                               ON CLI_MI.ContainerId = tmpMIC.ContainerId
-                                                              AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                           LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                           LEFT OUTER JOIN MovementItem_Income_View AS MI_Income
-                                                                    ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                           LEFT OUTER JOIN MovementLinkObject AS MLO_From
-                                                              ON MLO_From.MovementId = MI_Income.MovementId
-                                                             AND MLO_From.DescId = zc_MovementLinkObject_From()
-
-                           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                     ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
-                                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                                        ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
-                                                       AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                                                       AND (COALESCE (MovementLinkObject_NDSKind.ObjectId, 0) <> 13937605 OR
-                                                            tmpMIC.OperDate < '01.07.2023')
-                           LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common() THEN zc_Enum_NDSKind_Medical() ELSE MovementLinkObject_NDSKind.ObjectId END
-                                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
-                           LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId 
-                           LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-                        GROUP BY MI_Income.GoodsId
-                               , COALESCE(MovementBoolean_PriceWithVAT.ValueData, FALSE)
-                               , tmpMIC.MovementId
-                               , tmpMIC.UnitId
-                        )
 
     , tmpPrice AS (SELECT DISTINCT
                           CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
@@ -810,7 +872,6 @@ BEGIN
                              JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
                              JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                         )
-     , tmpGoodsSPRegistry_1303 AS (select * from gpSelect_GoodsSPRegistry_1303_byDate(inStartDate := inStartDate, inEndDate := inEndDate, inSession := inSession))
      , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject
                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpGoodsSPRegistry_1303.MovementItemId FROM tmpGoodsSPRegistry_1303))
 
@@ -1102,7 +1163,10 @@ BEGIN
                 , Object_PartnerMedical.ValueData
                 , ContractName
                 , Object_Goods_Main.Name
-;
+        ;
+
+    raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+
 
 END;
 $BODY$
@@ -1128,5 +1192,5 @@ $BODY$
 -- select * from gpReport_Sale_SP(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('12.08.2022')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');
 
 
+select * from gpReport_Sale_SP(inStartDate := ('01.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
 
-select * from gpReport_Sale_SP(inStartDate := ('01.08.2023')::TDateTime , inEndDate := ('15.08.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');

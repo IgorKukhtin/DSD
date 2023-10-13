@@ -495,7 +495,7 @@ BEGIN
            , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)::Integer     AS NDSKindId
            , Object_DiscountExternal.ID                                          AS DiscountCardId
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
-           , Object_Goods_Main.CodeUKTZED                                        AS UKTZED
+           , REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar   AS UKTZED
            , Object_Goods_PairSun_Main.MainID                                    AS GoodsPairSunId
            , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0                  AS isGoodsPairSun
            , Object_Goods_PairSun.GoodsPairSunID                                 AS GoodsPairSunMainId

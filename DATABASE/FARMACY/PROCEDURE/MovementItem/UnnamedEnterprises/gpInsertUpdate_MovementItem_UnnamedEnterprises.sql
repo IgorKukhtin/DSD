@@ -119,7 +119,7 @@ BEGIN
                                              );
 
    IF (COALESCE (inGoodsNameUkr, '') <> '' OR COALESCE (inCodeUKTZED, '') <> '' OR COALESCE (inExchangeId, 0) <> 0)
-     AND EXISTS(SELECT Object_Goods_View.Id
+     AND EXISTS(SELECT Object_Goods_Retail.Id
                 FROM Object_Goods_Retail
 
                      LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId

@@ -182,9 +182,6 @@ type
     spUpdatePercentMarkup: TdsdStoredProc;
     dxBarButton13: TdxBarButton;
     MakerName: TcxGridDBColumn;
-    FormDispensingName: TcxGridDBColumn;
-    NumberPlates: TcxGridDBColumn;
-    QtyPackage: TcxGridDBColumn;
     isRecipe: TcxGridDBColumn;
     actUpdateAdditional: TdsdInsertUpdateAction;
     bbUpdateAdditional: TdxBarButton;
@@ -219,25 +216,21 @@ type
     actUpdate_Published_Revert: TdsdExecStoredProc;
     spUpdate_Published_Revert: TdsdStoredProc;
     dxBarButton19: TdxBarButton;
-    MakerNameUkr: TcxGridDBColumn;
     actGoods_SiteUpdate: TdsdOpenForm;
     dxBarButton20: TdxBarButton;
-    Dosage: TcxGridDBColumn;
-    Volume: TcxGridDBColumn;
-    GoodsWhoCanName: TcxGridDBColumn;
-    GoodsMethodApplName: TcxGridDBColumn;
-    GoodsSignOriginName: TcxGridDBColumn;
     isLeftTheMarket: TcxGridDBColumn;
     DateLeftTheMarket: TcxGridDBColumn;
     DateAddToOrder: TcxGridDBColumn;
     GoodsGroupPromoName: TcxGridDBColumn;
-    UKTZED_main: TcxGridDBColumn;
+    isNewUKTZED: TcxGridDBColumn;
     CodeUKTZED: TcxGridDBColumn;
     actUpdate_CodeUKTZED: TdsdExecStoredProc;
     actExecuteDialog_CodeUKTZED: TExecuteDialog;
-    mactGoods_SiteUpdate: TMultiAction;
+    mactUpdate_CodeUKTZED: TMultiAction;
     spUpdate_CodeUKTZED: TdsdStoredProc;
     dxBarButton21: TdxBarButton;
+    isNoRegUKTZED: TcxGridDBColumn;
+    Color_UKTZED: TcxGridDBColumn;
   private
     { Private declarations }
   public

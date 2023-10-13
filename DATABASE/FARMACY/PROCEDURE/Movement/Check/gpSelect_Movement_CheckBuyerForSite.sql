@@ -788,7 +788,7 @@ BEGIN
            , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId) AS  NDSKindId
            , Object_DiscountExternal.ID                                          AS DiscountExternalID
            , Object_DiscountExternal.ValueData                                   AS DiscountExternalName
-           , Object_Goods_Main.CodeUKTZED                                        AS UKTZED
+           , REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar  AS UKTZED
            , MovementItem.GoodsPairSunId                                         AS GoodsPairSunId     
            , MovementItem.isGoodsPairSun                                         AS isGoodsPairSun
            , MovementItem.GoodsPairSunMainId                                     AS GoodsPairSunMainId

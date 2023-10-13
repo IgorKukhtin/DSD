@@ -195,7 +195,7 @@ BEGIN
            
            , COALESCE (MIBoolean_Present.ValueData, False)                       AS isPresent
            , Null::TDateTime                                                     AS FixEndDate 
-           , Object_Goods_Main.CodeUKTZED                                        AS UKTZED
+           , REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar   AS UKTZED
 
            , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
            , Object_Juridical.ValueData                                          AS JuridicalName

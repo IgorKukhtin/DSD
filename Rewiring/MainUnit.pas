@@ -1098,12 +1098,6 @@ begin
     ZQueryExecute.SQL.Text := LiadScripts(cSQL_RewiringProtocol);
     ZQueryExecute.ExecSQL;
 
-    // Создаем (обновляем) на слейве таблицу Container_branch_Rewiring
-    SaveRewiringLog('Создаем (обновляем) на слейве таблицу Container_branch_Rewiring');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQL_Slave_Container_branch_Rewiring);
-    ZQueryExecute.ExecSQL;
-
     // Создаем (обновляем) на слейве таблицу HistoryCost_Rewiring
     SaveRewiringLog('Создаем (обновляем) на слейве таблицу HistoryCost_Rewiring');
     ZQueryExecute.Close;

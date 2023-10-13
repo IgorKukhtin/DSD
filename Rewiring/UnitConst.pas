@@ -19,8 +19,6 @@ const
 
   // Создаем (обновляем) на слейве таблицу RewiringProtocol
   cSQL_RewiringProtocol  = '\SQL_Slave\STRUCTURE\RewiringProtocol.sql';
-  // Создаем (обновляем) на слейве таблицу Container_branch_Rewiring
-  cSQL_Slave_Container_branch_Rewiring  = '\SQL_Slave\STRUCTURE\Container_branch_Rewiring.sql';
   // Создаем (обновляем) на слейве таблицу HistoryCost_Rewiring
   cSQL_Slave_HistoryCost_Rewiring  = '\SQL_Slave\STRUCTURE\HistoryCost_Rewiring.sql';
   // Создаем (обновляем) на слейве таблицу MovementItemContainer_Rewiring

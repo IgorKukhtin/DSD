@@ -162,6 +162,8 @@ type
     cxLabel44: TcxLabel;
     ceAntiTOPMP_MinProcAward: TcxCurrencyEdit;
     cxLabel45: TcxLabel;
+    ceCat_5: TcxCurrencyEdit;
+    cxLabel46: TcxLabel;
   private
     { Private declarations }
   public
