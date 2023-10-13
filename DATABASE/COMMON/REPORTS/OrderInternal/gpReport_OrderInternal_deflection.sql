@@ -17,7 +17,6 @@ RETURNS TABLE (Id                      Integer
              , GoodsGroupName          TVarChar
              , GoodsGroupNameFull      TVarChar
              , Amount                  TFloat
-             , AmountAll               TFloat
              , AmountRemains           TFloat
              , AmountRemains_calc      TFloat
              , AmountRemains_diff      TFloat
@@ -207,9 +206,7 @@ BEGIN
                       , tmpMI_master.ContainerId
 
                       , tmpMI_master.Amount
-                      , tmpMI_master.AmountRemains 
-                      , tmpMI_child.Amount AS Amount_child
-                      , (COALESCE (tmpMI_master.Amount,0)+ COALESCE (tmpMI_child.Amount,0)) AS AmountAll
+                      , (COALESCE (tmpMI_master.AmountRemains,0) + COALESCE (tmpMI_child.Amount,0)) AS AmountRemains 
                  FROM tmpMI_master
                       LEFT JOIN tmpMI_child ON tmpMI_child.GoodsId = tmpMI_master.GoodsId_basis
                                            AND tmpMI_child.GoodsKindId_complete = tmpMI_master.GoodsKindId_complete
@@ -224,7 +221,6 @@ BEGIN
             , tmp.GoodsKindId
             , SUM (tmp.Amount_start)   AS AmountRemains_calc
            , SUM (tmp.Amount)                  ::TFloat AS Amount
-           , SUM (tmp.AmountAll)                  ::TFloat AS AmountAll
            , SUM (tmp.AmountRemains)           ::TFloat AS AmountRemains
        FROM (SELECT COALESCE (tmpMI.MovementItemId, 0)                      AS MovementItemId
                   , 0                                                       AS ContainerId
@@ -233,7 +229,6 @@ BEGIN
                   , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
 
            , tmpMI.Amount                  ::TFloat
-           , tmpMI.AmountAll                  ::TFloat
            , tmpMI.AmountRemains           ::TFloat
 
              FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId = 0
@@ -254,9 +249,8 @@ BEGIN
             , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
             , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
             , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
-           , tmpMI.Amount                  ::TFloat
-          , tmpMI.AmountAll                  ::TFloat
-           , tmpMI.AmountRemains           ::TFloat
+            , tmpMI.Amount                  ::TFloat
+            , tmpMI.AmountRemains           ::TFloat
        FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId > 0
             ) AS tmpContainer
             FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId > 0
@@ -281,7 +275,6 @@ BEGIN
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            --
            , tmpData.Amount                  ::TFloat
-           , tmpData.AmountAll                  ::TFloat
            , tmpData.AmountRemains           ::TFloat
            , tmpData.AmountRemains_calc      ::TFloat
            , (COALESCE (tmpData.AmountRemains,0) - COALESCE (tmpData.AmountRemains_calc ,0))  ::TFloat AS AmountRemains_diff
