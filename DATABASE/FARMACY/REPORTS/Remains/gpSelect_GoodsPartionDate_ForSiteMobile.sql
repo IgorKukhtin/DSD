@@ -37,23 +37,6 @@ RETURNS TABLE (Id                   Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
-
-   -- DECLARE inUnitId Integer;
-
-   DECLARE vbIndex Integer;
-
-   DECLARE vbQueryText Text;
-
-   DECLARE vbDate_6 TDateTime;
-   DECLARE vbDate_3 TDateTime;
-   DECLARE vbDate_1 TDateTime;
-   DECLARE vbDate_0 TDateTime;
-   
-   DECLARE vbPriceSamples TFloat;
-   DECLARE vbSamples21 TFloat;
-   DECLARE vbSamples22 TFloat;
-   DECLARE vbSamples3 TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры

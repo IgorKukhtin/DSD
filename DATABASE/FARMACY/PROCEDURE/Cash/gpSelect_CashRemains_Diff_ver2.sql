@@ -66,6 +66,7 @@ $BODY$
    DECLARE vbSamples21 TFloat;
    DECLARE vbSamples22 TFloat;
    DECLARE vbSamples3 TFloat;
+   DECLARE vbCat_5 TFloat;
 
    DECLARE vbAreaId   Integer;
    DECLARE vbObjectId Integer;
@@ -115,7 +116,8 @@ BEGIN
          , COALESCE(ObjectFloat_CashSettings_Samples21.ValueData, 0)                             AS Samples21
          , COALESCE(ObjectFloat_CashSettings_Samples22.ValueData, 0)                             AS Samples22
          , COALESCE(ObjectFloat_CashSettings_Samples3.ValueData, 0)                              AS Samples3
-    INTO vbPriceSamples, vbSamples21, vbSamples22, vbSamples3
+         , COALESCE(ObjectFloat_CashSettings_Cat_5.ValueData, 0)                                 AS Cat_5
+    INTO vbPriceSamples, vbSamples21, vbSamples22, vbSamples3, vbCat_5
     FROM Object AS Object_CashSettings
 
          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceSamples
@@ -130,9 +132,12 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples3
                                ON ObjectFloat_CashSettings_Samples3.ObjectId = Object_CashSettings.Id 
                               AND ObjectFloat_CashSettings_Samples3.DescId = zc_ObjectFloat_CashSettings_Samples3()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Cat_5
+                               ON ObjectFloat_CashSettings_Cat_5.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Cat_5.DescId = zc_ObjectFloat_CashSettings_Cat_5()
 
     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-    LIMIT 1;    
+    LIMIT 1;       
     
     IF EXISTS(SELECT 1 FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
               WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
@@ -659,8 +664,6 @@ BEGIN
                  WHEN zc_Enum_PartionDateKind_Good() THEN vbDay_6 / 30.0 + 1.0
                  WHEN zc_Enum_PartionDateKind_Cat_5() THEN vbDay_6 / 30.0 - 1.0
                  ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth,
-                 
-                 
 
             CASE WHEN Object_Goods_Retail.IsTop = TRUE
                   AND Object_Goods_Retail.Price > 0
@@ -669,7 +672,7 @@ BEGIN
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                  ELSE
-            CASE WHEN _DIFF.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6())
+            CASE WHEN _DIFF.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
                   AND COALESCE(tmpMIPromoBonus.PromoBonus, 0) <> 0
                   AND Object_Goods_Retail.IsTop = False 
                   AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
@@ -682,7 +685,9 @@ BEGIN
                                             THEN FALSE ELSE TRUE END OR
                                        COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                  ELSE
-            CASE WHEN COALESCE(_DIFF.PartionDateKindId, 0) <> 0 AND COALESCE(_DIFF.PartionDateDiscount, 0) <> 0 THEN
+            CASE WHEN COALESCE(_DIFF.PartionDateKindId, 0) <> 0
+                  AND _DIFF.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
+                 THEN
                  CASE WHEN zfCalc_PriceCash(_DIFF.Price, 
                          CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > _DIFF.PriceWithVAT
@@ -696,7 +701,8 @@ BEGIN
                                       WHEN _DIFF.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
                                       ELSE 100 END  / 100, 
                                  CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END), 2)
-                      WHEN zfCalc_PriceCash(_DIFF.Price, 
+                      WHEN _DIFF.PartionDateKindId = zc_Enum_PartionDateKind_6() AND COALESCE(_DIFF.PartionDateDiscount, 0) > 0 AND
+                         zfCalc_PriceCash(_DIFF.Price, 
                          CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > _DIFF.PriceWithVAT
                          AND _DIFF.PriceWithVAT > 0
@@ -706,6 +712,16 @@ BEGIN
                          CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - _DIFF.PriceWithVAT) *
                                  _DIFF.PartionDateDiscount / 100, 2)
+                      WHEN _DIFF.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3()) AND COALESCE(_DIFF.PartionDateDiscount, 0) > 0
+                      THEN zfCalc_PriceCash(Round(_DIFF.Price * (100.0 - COALESCE(_DIFF.PartionDateDiscount, 0)) / 100.0, 2), 
+                                       CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                            THEN FALSE ELSE TRUE END OR
+                                       COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                      WHEN _DIFF.PartionDateKindId IN (zc_Enum_PartionDateKind_Cat_5()) AND COALESCE(vbCat_5, 0) > 0
+                      THEN zfCalc_PriceCash(Round(_DIFF.Price * (100.0 - vbCat_5) / 100.0, 2), 
+                                       CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                            THEN FALSE ELSE TRUE END OR
+                                       COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                       ELSE zfCalc_PriceCash(_DIFF.Price, 
                          CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
@@ -862,6 +878,14 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar) OWNER TO post
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
 --
-SELECT *
+SELECT Id
+     , GoodsCode 
+     , GoodsName
+     , PartionDateKindName
+     , Price
+     , PricePartionDate
+     , PromoBonusPrice
+     , PriceView
 FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
+where PartionDateKindId IS NOT NULL --PriceView <> PriceSite --and id = 15015521
 order by GoodsName , PartionDateKindName

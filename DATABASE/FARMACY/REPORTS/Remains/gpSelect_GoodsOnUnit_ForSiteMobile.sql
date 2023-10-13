@@ -54,6 +54,7 @@ $BODY$
    DECLARE vbSamples21 TFloat;
    DECLARE vbSamples22 TFloat;
    DECLARE vbSamples3 TFloat;
+   DECLARE vbCat_5 TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -73,7 +74,8 @@ BEGIN
          , COALESCE(ObjectFloat_CashSettings_Samples21.ValueData, 0)                             AS Samples21
          , COALESCE(ObjectFloat_CashSettings_Samples22.ValueData, 0)                             AS Samples22
          , COALESCE(ObjectFloat_CashSettings_Samples3.ValueData, 0)                              AS Samples3
-    INTO vbPriceSamples, vbSamples21, vbSamples22, vbSamples3
+         , COALESCE(ObjectFloat_CashSettings_Cat_5.ValueData, 0)                                 AS Cat_5
+    INTO vbPriceSamples, vbSamples21, vbSamples22, vbSamples3, vbCat_5
     FROM Object AS Object_CashSettings
 
          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceSamples
@@ -88,6 +90,9 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples3
                                ON ObjectFloat_CashSettings_Samples3.ObjectId = Object_CashSettings.Id 
                               AND ObjectFloat_CashSettings_Samples3.DescId = zc_ObjectFloat_CashSettings_Samples3()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Cat_5
+                               ON ObjectFloat_CashSettings_Cat_5.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Cat_5.DescId = zc_ObjectFloat_CashSettings_Cat_5()
 
     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
     LIMIT 1;    
@@ -1083,6 +1088,8 @@ BEGIN
                                GROUP BY Container.ObjectId
                                       , Container.WhereObjectId)
           , tmpGoodsSP AS (SELECT Object_Goods_Retail.Id      AS GoodsId
+                                , COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False) AS isElectronicPrescript
+                                , MIFloat_PriceSP.ValueData     AS PriceSP
                                                                 -- № п/п - на всякий случай
                                 , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                            FROM Movement
@@ -1103,6 +1110,10 @@ BEGIN
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
  
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                                        ON ObjectBoolean_ElectronicPrescript.ObjectId = COALESCE (MLO_MedicalProgramSP.ObjectId, 18076882)
+                                                       AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
+
                                 INNER JOIN MovementItemFloat AS MIFloat_PriceSP
                                                              ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
@@ -1200,9 +1211,11 @@ BEGIN
                                           CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     ELSE
-                    CASE WHEN COALESCE(ContainerCountPD_1.PartionDateKindId, 0) <> 0 AND COALESCE(ContainerCountPD_1.PartionDateDiscount, 0) <> 0 THEN
+                    CASE WHEN COALESCE(ContainerCountPD_1.PartionDateKindId, 0) <> 0
+                          AND ContainerCountPD_1.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
+                         THEN
                          CASE WHEN zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > ContainerCountPD_1.PriceWithVAT
                                  AND ContainerCountPD_1.PriceWithVAT <= vbPriceSamples 
                                  AND vbPriceSamples > 0
@@ -1213,29 +1226,30 @@ BEGIN
                                               WHEN ContainerCountPD_1.PartionDateKindId = zc_Enum_PartionDateKind_3() THEN 100.0 - vbSamples22
                                               WHEN ContainerCountPD_1.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
                                               ELSE 100 END  / 100, 
-                                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END), 2)
-                              WHEN zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.PriceChange, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END), 2)
+                              WHEN ContainerCountPD_1.PartionDateKindId = zc_Enum_PartionDateKind_6() AND COALESCE(ContainerCountPD_1.PartionDateDiscount, 0) > 0 AND
+                                 zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
+                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > ContainerCountPD_1.PriceWithVAT
+                                 AND ContainerCountPD_1.PriceWithVAT > 0
+                              THEN ROUND(zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_1.PriceWithVAT) *
-                                         ContainerCountPD_1.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount) AND
-                                 zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_1.PriceWithVAT) *
-                                         ContainerCountPD_1.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount) > 0
-                              THEN zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_1.PriceWithVAT) *
-                                         ContainerCountPD_1.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount)
-                              ELSE zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.PriceChange, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                         ContainerCountPD_1.PartionDateDiscount / 100, 2)
+                              WHEN ContainerCountPD_1.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3()) AND COALESCE(ContainerCountPD_1.PartionDateDiscount, 0) > 0
+                              THEN zfCalc_PriceCash(Round(COALESCE (tmpPrice_Site.Price, Price_Unit.Price) * (100.0 - COALESCE(ContainerCountPD_1.PartionDateDiscount, 0)) / 100.0, 2), 
+                                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                    THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                              WHEN ContainerCountPD_1.PartionDateKindId IN (zc_Enum_PartionDateKind_Cat_5()) AND COALESCE(vbCat_5, 0) > 0
+                              THEN zfCalc_PriceCash(Round(COALESCE (tmpPrice_Site.Price, Price_Unit.Price) * (100.0 - vbCat_5) / 100.0, 2), 
+                                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                    THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                              ELSE zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                          END
                          ELSE NULL 
@@ -1267,9 +1281,11 @@ BEGIN
                                           CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     ELSE
-                    CASE WHEN COALESCE(ContainerCountPD_3.PartionDateKindId, 0) <> 0 AND COALESCE(ContainerCountPD_3.PartionDateDiscount, 0) <> 0 THEN
+                    CASE WHEN COALESCE(ContainerCountPD_3.PartionDateKindId, 0) <> 0
+                          AND ContainerCountPD_3.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
+                         THEN
                          CASE WHEN zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > ContainerCountPD_3.PriceWithVAT
                                  AND ContainerCountPD_3.PriceWithVAT <= vbPriceSamples 
                                  AND vbPriceSamples > 0
@@ -1280,29 +1296,30 @@ BEGIN
                                               WHEN ContainerCountPD_3.PartionDateKindId = zc_Enum_PartionDateKind_3() THEN 100.0 - vbSamples22
                                               WHEN ContainerCountPD_3.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
                                               ELSE 100 END  / 100, 
-                                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END), 2)
-                              WHEN zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.PriceChange, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END), 2)
+                              WHEN ContainerCountPD_3.PartionDateKindId = zc_Enum_PartionDateKind_6() AND COALESCE(ContainerCountPD_3.PartionDateDiscount, 0) > 0 AND
+                                 zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
+                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > ContainerCountPD_3.PriceWithVAT
+                                 AND ContainerCountPD_3.PriceWithVAT > 0
+                              THEN ROUND(zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_3.PriceWithVAT) *
-                                         ContainerCountPD_3.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount) AND
-                                 zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_3.PriceWithVAT) *
-                                         ContainerCountPD_3.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount) > 0
-                              THEN zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_3.PriceWithVAT) *
-                                         ContainerCountPD_3.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount)
-                              ELSE zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.PriceChange, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                         ContainerCountPD_3.PartionDateDiscount / 100, 2)
+                              WHEN ContainerCountPD_3.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3()) AND COALESCE(ContainerCountPD_3.PartionDateDiscount, 0) > 0
+                              THEN zfCalc_PriceCash(Round(COALESCE (tmpPrice_Site.Price, Price_Unit.Price) * (100.0 - COALESCE(ContainerCountPD_3.PartionDateDiscount, 0)) / 100.0, 2), 
+                                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                    THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                              WHEN ContainerCountPD_3.PartionDateKindId IN (zc_Enum_PartionDateKind_Cat_5()) AND COALESCE(vbCat_5, 0) > 0
+                              THEN zfCalc_PriceCash(Round(COALESCE (tmpPrice_Site.Price, Price_Unit.Price) * (100.0 - vbCat_5) / 100.0, 2), 
+                                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                    THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                              ELSE zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                          END
                          ELSE NULL 
@@ -1334,9 +1351,11 @@ BEGIN
                                           CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     ELSE
-                    CASE WHEN COALESCE(ContainerCountPD_6.PartionDateKindId, 0) <> 0 AND COALESCE(ContainerCountPD_6.PartionDateDiscount, 0) <> 0 THEN
+                    CASE WHEN COALESCE(ContainerCountPD_6.PartionDateKindId, 0) <> 0
+                          AND ContainerCountPD_6.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
+                         THEN
                          CASE WHEN zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > ContainerCountPD_6.PriceWithVAT
                                  AND ContainerCountPD_6.PriceWithVAT <= vbPriceSamples 
                                  AND vbPriceSamples > 0
@@ -1347,29 +1366,30 @@ BEGIN
                                               WHEN ContainerCountPD_6.PartionDateKindId = zc_Enum_PartionDateKind_3() THEN 100.0 - vbSamples22
                                               WHEN ContainerCountPD_6.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
                                               ELSE 100 END  / 100, 
-                                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END), 2)
-                              WHEN zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.PriceChange, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END), 2)
+                              WHEN ContainerCountPD_6.PartionDateKindId = zc_Enum_PartionDateKind_6() AND COALESCE(ContainerCountPD_6.PartionDateDiscount, 0) > 0 AND
+                                 zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
+                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) > ContainerCountPD_6.PriceWithVAT
+                                 AND ContainerCountPD_6.PriceWithVAT > 0
+                              THEN ROUND(zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_6.PriceWithVAT) *
-                                         ContainerCountPD_6.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount) AND
-                                 zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_6.PriceWithVAT) *
-                                         ContainerCountPD_6.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount) > 0
-                              THEN zfCalc_PriceChange (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - (zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                 COALESCE(GoodsDiscount.GoodsId, 0) <> 0) - ContainerCountPD_6.PriceWithVAT) *
-                                         ContainerCountPD_6.PartionDateDiscount / 100, Price_Unit.FixPrice, Price_Unit.FixPercent, Price_Unit.FixDiscount)
-                              ELSE zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.PriceChange, Price_Unit.Price), 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                         ContainerCountPD_6.PartionDateDiscount / 100, 2)
+                              WHEN ContainerCountPD_6.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3()) AND COALESCE(ContainerCountPD_6.PartionDateDiscount, 0) > 0
+                              THEN zfCalc_PriceCash(Round(COALESCE (tmpPrice_Site.Price, Price_Unit.Price) * (100.0 - COALESCE(ContainerCountPD_6.PartionDateDiscount, 0)) / 100.0, 2), 
+                                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                    THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                              WHEN ContainerCountPD_6.PartionDateKindId IN (zc_Enum_PartionDateKind_Cat_5()) AND COALESCE(vbCat_5, 0) > 0
+                              THEN zfCalc_PriceCash(Round(COALESCE (tmpPrice_Site.Price, Price_Unit.Price) * (100.0 - vbCat_5) / 100.0, 2), 
+                                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                    THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                              ELSE zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                          END
                          ELSE NULL 
@@ -1460,6 +1480,6 @@ $BODY$
 
 -- тест
 
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '15704764', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ( COALESCE(lpGet_DefaultValue('zc_Object_Unit', '3'), ''), '16205549', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  

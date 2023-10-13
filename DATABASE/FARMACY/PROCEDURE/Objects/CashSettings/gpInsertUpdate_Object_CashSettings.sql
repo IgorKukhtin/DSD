@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
                                                            TFloat, TFloat, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, 
-                                                           Boolean, TVarChar, Boolean, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+                                                           Boolean, TVarChar, Boolean, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -73,6 +73,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inAntiTOPMP_CountAward       Integer   ,     -- Анти ТОП моб. прил. Количество сотрудников для начисления премии
     IN inAntiTOPMP_SumFine          TFloat    ,     -- Анти ТОП моб. прил. Сумма штрафа
     IN inAntiTOPMP_MinProcAward     TFloat    ,     -- Анти ТОП моб. прил. Минимальный процент выполнения плана для премии
+    IN inCat_5                      TFloat    ,     -- Скидка кат 5 от цены
 
     IN inSession                    TVarChar        -- сессия пользователя
 )
@@ -252,6 +253,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine(), vbID, inAntiTOPMP_SumFine);
     -- Анти ТОП моб. прил. Минимальный процент выполнения плана для премии
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward(), vbID, inAntiTOPMP_MinProcAward);
+
+    -- Скидка кат 5 от цены
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_Cat_5(), vbID, inCat_5);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);
