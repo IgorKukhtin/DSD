@@ -2,7 +2,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 430
+  ClientHeight = 415
   ClientWidth = 986
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Left = 0
     Top = 26
     Width = 986
-    Height = 404
+    Height = 389
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -29,7 +29,12 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = GoodsName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -37,6 +42,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -394,7 +400,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = dsdGoodsPropertyGuides
+        Component = GuidesGoodsProperty
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -514,6 +520,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_byGoodsProperty'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -594,6 +608,10 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     object bbUpdateisWeigth: TdxBarButton
       Action = actUpdateisWeigth
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089' '#1074' '#1087#1077#1095#1072#1090#1080' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1044#1072'/ '#1053#1077#1090
+      Category = 0
+    end
+    object bbInsert_byGoodsProperty: TdxBarButton
+      Action = macInsert_byGoodsProperty
       Category = 0
     end
   end
@@ -775,6 +793,25 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         end>
       isShowModal = True
     end
+    object actOpenChoiceFormGoodsProperty: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsPropertyForm'
+      FormName = 'TGoodsPropertyForm'
+      FormNameParam.Value = 'TGoodsPropertyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsPropertyId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -946,6 +983,39 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       ShortCut = 121
       RefreshOnTabSetChanges = True
     end
+    object actInsert_byGoodsProperty: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsert_byGoodsProperty
+      StoredProcList = <
+        item
+          StoredProc = spInsert_byGoodsProperty
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
+      Hint = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
+      ImageIndex = 74
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object macInsert_byGoodsProperty: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoiceFormGoodsProperty
+        end
+        item
+          Action = actInsert_byGoodsProperty
+        end>
+      QuestionBeforeExecute = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
+      Hint = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
+      ImageIndex = 74
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsPropertyValue'
@@ -958,7 +1028,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       item
         Name = 'inGoodsPropertyId'
         Value = Null
-        Component = dsdGoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1173,7 +1243,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Left = 112
     Top = 328
   end
-  object dsdGoodsPropertyGuides: TdsdGuides
+  object GuidesGoodsProperty: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsProperty
     FormNameParam.Value = 'TGoodsPropertyForm'
@@ -1185,14 +1255,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       item
         Name = 'Key'
         Value = ''
-        Component = dsdGoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdGoodsPropertyGuides
+        Component = GuidesGoodsProperty
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1206,7 +1276,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = dsdGoodsPropertyGuides
+        Component = GuidesGoodsProperty
       end
       item
         Component = actShowAll
@@ -1239,5 +1309,35 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     PackSize = 1
     Left = 832
     Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 576
+    Top = 224
+  end
+  object spInsert_byGoodsProperty: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_GoodsPropertyValue_byGoodsProperty'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPropertyId_mask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsPropertyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 280
   end
 end

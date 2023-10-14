@@ -789,7 +789,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
 //

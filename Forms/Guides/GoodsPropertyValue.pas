@@ -75,7 +75,7 @@ type
     bbBarCCItem2: TdxBarControlContainerItem;
     cxLabel6: TcxLabel;
     ceGoodsProperty: TcxButtonEdit;
-    dsdGoodsPropertyGuides: TdsdGuides;
+    GuidesGoodsProperty: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
@@ -95,6 +95,12 @@ type
     GoodsKindSubName: TcxGridDBColumn;
     isGoodsKind: TcxGridDBColumn;
     GoodsKindSubChoiceForm: TOpenChoiceForm;
+    actOpenChoiceFormGoodsProperty: TOpenChoiceForm;
+    FormParams: TdsdFormParams;
+    spInsert_byGoodsProperty: TdsdStoredProc;
+    macInsert_byGoodsProperty: TMultiAction;
+    actInsert_byGoodsProperty: TdsdDataSetRefresh;
+    bbInsert_byGoodsProperty: TdxBarButton;
   private
     { Private declarations }
   public
