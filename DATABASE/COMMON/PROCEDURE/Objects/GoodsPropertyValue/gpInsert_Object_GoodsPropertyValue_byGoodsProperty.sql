@@ -44,9 +44,24 @@ $BODY$
                                                    , inisGoodsKind    := tmp.isGoodsKind    :: Boolean       -- Разрешена отгрузка с таким видом тов.
                                                    , inSession        := inSession          :: TVarChar
                                                    )
-   FROM gpSelect_Object_GoodsPropertyValue (inGoodsPropertyId := inGoodsPropertyId_mask, inShowAll:= False, inSession := inSession) AS tmp;     
-   
+   FROM gpSelect_Object_GoodsPropertyValue (inGoodsPropertyId := inGoodsPropertyId_mask, inShowAll:= False, inSession := inSession) AS tmp
+
+        LEFT JOIN (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                        , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                   FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                              ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId
+                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                             ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                            AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                   WHERE ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                   ) AS tmpGoodsProperty ON tmpGoodsProperty.GoodsId     = tmp.GoodsId
+                                        AND tmpGoodsProperty.GoodsKindId = tmp.GoodsKindId
+   WHERE tmpGoodsProperty.GoodsId IS NULL; 
     
+
    if vbUserId = 5 OR vbUserId = 9457
    then
        RAISE EXCEPTION 'Test. Ok';
