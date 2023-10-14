@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_GoodsPropertyValue_byGoodsProperty(
     IN inGoodsPropertyId_mask  Integer   ,    -- Классификатор свойств товаров - откуда копировать свойства
     IN inSession               TVarChar       -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -25,27 +25,27 @@ $BODY$
    THEN
        RAISE EXCEPTION 'Ошибка.Не установлено значение <Классификатор свойств товаров> для копирования.';
    END IF;
-   
-  /*
-   PERFORM gpInsertUpdate_Object_GoodsPropertyValue (ioId             := 0                  :: Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
-                                                   , inName           := tmp.Name           :: TVarChar  ,    -- Название товара(покупателя)
-                                                   , inAmount         := tmp.Amount         :: TFloat    ,    -- Кол-во штук при сканировании
-                                                   , inBoxCount       := tmp.BoxCount       :: TFloat    ,    -- Кол-во единиц в ящике
-                                                   , inBarCode        := tmp.BarCode        :: TVarChar  ,    -- Штрих-код
-                                                   , inArticle        := tmp.Article        :: TVarChar  ,    -- Артикул
-                                                   , inBarCodeGLN     := tmp.BarCodeGLN     :: TVarChar  ,    -- Штрих-код GLN
-                                                   , inArticleGLN     := tmp.ArticleGLN     :: TVarChar  ,    -- Артикул GLN
-                                                   , inGroupName      := tmp.GroupName      :: TVarChar  ,    -- Название группы
-                                                   , inGoodsPropertyId:= inGoodsPropertyId  :: Integer   ,    -- Классификатор свойств товаров
-                                                   , inGoodsId        := tmp.GoodsId        :: Integer   ,    -- Товары
-                                                   , inGoodsKindId    := tmp.GoodsKindId    :: Integer   ,    -- Виды товара
-                                                   , inGoodsBoxId     := tmp.GoodsBoxId     :: Integer   ,    -- Товары (гофроящик) 
-                                                   , inGoodsKindSubId := tmp.GoodsKindSubId :: Integer   ,    -- Вид товара (факт расход в накладной)
-                                                   , inisGoodsKind    := tmp.isGoodsKind    :: Boolean   ,    -- Разрешена отгрузка с таким видом тов.
+  
+   --сохраняем элементы из выбранного классификатора
+   PERFORM gpInsertUpdate_Object_GoodsPropertyValue (ioId             := 0                  :: Integer       -- ключ объекта <Значения свойств товаров для классификатора>
+                                                   , inName           := tmp.Name           :: TVarChar      -- Название товара(покупателя)
+                                                   , inAmount         := tmp.Amount         :: TFloat        -- Кол-во штук при сканировании
+                                                   , inBoxCount       := tmp.BoxCount       :: TFloat        -- Кол-во единиц в ящике
+                                                   , inBarCode        := tmp.BarCode        :: TVarChar      -- Штрих-код
+                                                   , inArticle        := tmp.Article        :: TVarChar      -- Артикул
+                                                   , inBarCodeGLN     := tmp.BarCodeGLN     :: TVarChar      -- Штрих-код GLN
+                                                   , inArticleGLN     := tmp.ArticleGLN     :: TVarChar      -- Артикул GLN
+                                                   , inGroupName      := tmp.GroupName      :: TVarChar      -- Название группы
+                                                   , inGoodsPropertyId:= inGoodsPropertyId  :: Integer       -- Классификатор свойств товаров
+                                                   , inGoodsId        := tmp.GoodsId        :: Integer       -- Товары
+                                                   , inGoodsKindId    := tmp.GoodsKindId    :: Integer       -- Виды товара
+                                                   , inGoodsBoxId     := tmp.GoodsBoxId     :: Integer       -- Товары (гофроящик) 
+                                                   , inGoodsKindSubId := tmp.GoodsKindSubId :: Integer       -- Вид товара (факт расход в накладной)
+                                                   , inisGoodsKind    := tmp.isGoodsKind    :: Boolean       -- Разрешена отгрузка с таким видом тов.
                                                    , inSession        := inSession          :: TVarChar
                                                    )
    FROM gpSelect_Object_GoodsPropertyValue (inGoodsPropertyId := inGoodsPropertyId_mask, inShowAll:= False, inSession := inSession) AS tmp;     
-   */
+   
     
    if vbUserId = 5 OR vbUserId = 9457
    then
@@ -65,3 +65,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsert_Object_GoodsPropertyValue_byGoodsProperty()
+
+---SELECT * FROM gpSelect_Object_GoodsPropertyValue (inGoodsPropertyId := 8342227   , inShowAll:= False, inSession := '9457') AS tmp; 
