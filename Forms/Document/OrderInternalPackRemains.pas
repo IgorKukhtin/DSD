@@ -337,6 +337,9 @@ type
     actPrintRemains_fact2: TdsdPrintAction;
     bbPrintRemains_fact2: TdxBarButton;
     spSelectPrintRemains_fact2: TdsdStoredProc;
+    chGoodsCode_complete: TcxGridDBColumn;
+    chGoodsName_complete: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
   private
     { Private declarations }
   public

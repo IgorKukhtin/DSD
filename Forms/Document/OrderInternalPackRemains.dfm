@@ -3474,6 +3474,36 @@
             Options.Editing = False
             Width = 70
           end
+          object chGoodsCode_complete: TcxGridDBColumn
+            Caption = '***'#1050#1086#1076'('#1043#1055')'
+            DataBinding.FieldName = 'GoodsCode_complete'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1090#1077#1089#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object chGoodsName_complete: TcxGridDBColumn
+            Caption = '***'#1058#1086#1074#1072#1088'('#1043#1055')'
+            DataBinding.FieldName = 'GoodsName_complete'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1090#1077#1089#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsKindName_complete: TcxGridDBColumn
+            Caption = '***'#1042#1080#1076'('#1043#1055')'
+            DataBinding.FieldName = 'GoodsKindName_complete'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1090#1077#1089#1090
+            Options.Editing = False
+            Width = 80
+          end
         end
         object cxGridLevelChild: TcxGridLevel
           GridView = cxGridDBTableViewChild
@@ -10359,7 +10389,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'ioId'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
@@ -10371,6 +10401,22 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
