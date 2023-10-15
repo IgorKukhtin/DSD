@@ -86,6 +86,7 @@ BEGIN
    END IF;
    -- проверка
    IF inIsCorporate = TRUE AND COALESCE (ioId, 0) <> zc_Juridical_Basis()
+   AND 1=0
    THEN
       RAISE EXCEPTION 'Ошибка.Неправильно установлен признак <Главное юридическое лицо>.';
    END IF;
