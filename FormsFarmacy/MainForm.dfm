@@ -3,8 +3,8 @@
   ClientHeight = 145
   ClientWidth = 730
   KeyPreview = True
-  ExplicitWidth = 748
-  ExplicitHeight = 217
+  ExplicitWidth = 752
+  ExplicitHeight = 231
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -5545,6 +5545,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actUKTZED: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1086#1076#1099' '#1059#1050#1058#1042#1069#1044
+      FormName = 'TUKTZEDForm'
+      FormNameParam.Value = 'TUKTZEDForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6978,6 +6989,9 @@
         end
         object N378: TMenuItem
           Action = actCommentCheck
+        end
+        object N383: TMenuItem
+          Action = actUKTZED
         end
         object N307: TMenuItem
           Caption = #1058#1086#1074#1072#1088#1099' '#1089#1077#1090#1080' '#1085#1072#1089#1090#1088#1086#1081#1082#1080

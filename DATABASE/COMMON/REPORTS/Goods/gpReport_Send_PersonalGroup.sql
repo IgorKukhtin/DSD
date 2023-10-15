@@ -42,7 +42,11 @@ RETURNS TABLE (OperDate TDateTime
              , AmountOut_kg   TFloat
              , isError        Boolean
              , MovementId     Integer
-             , InvNumber      TVarChar
+             , InvNumber      TVarChar   
+             
+             , Amount_group     TFloat
+             , AmountHour_group TFloat
+
              )
 AS
 $BODY$
@@ -359,6 +363,9 @@ BEGIN
                          , SUM (COALESCE (tmp.Amount_pack,0))     AS Amount_pack
                          , SUM (COALESCE (tmp.AmountIn_pack,0))   AS AmountIn_pack
                          , SUM (COALESCE (tmp.AmountOut_pack,0))  AS AmountOut_pack
+                         
+                         , SUM (tmp.Amount_group)     AS Amount_group
+                         , SUM (tmp.AmountHour_group) AS AmountHour_group
 
                     FROM (SELECT CASE WHEN inIsDays = TRUE THEN COALESCE (tmpContainer.OperDate, tmpSheetWorkTime.OperDate) ELSE NULL END ::TDateTime AS OperDate
                                , COALESCE (tmpContainer.MovementId, 0) AS MovementId
@@ -384,8 +391,12 @@ BEGIN
                                , (COALESCE (tmpContainer.AmountIn_pack,0))   AS AmountIn_pack
                                , (COALESCE (tmpContainer.AmountOut_pack,0))  AS AmountOut_pack
                                  --
-                               , CASE WHEN COALESCE (tmpContainer.Ord, 1) = 1 THEN COALESCE (tmpSheetWorkTime.Amount, 0) ELSE 0 END AS AmountHour
-
+                               , CASE WHEN COALESCE (tmpContainer.Ord, 1) = 1 THEN COALESCE (tmpSheetWorkTime.Amount, 0) ELSE 0 END AS AmountHour  
+                               
+                               --если есть и час≥ и кг то соотношение 1 к 1, потом группиру€ пон€тно б≥ли ли ошибки по бригадам и дн€м
+                               , CASE WHEN  (COALESCE (tmpContainer.Amount,0)) <> 0 THEN 1 ELSE 0 END       AS Amount_group
+                               , CASE WHEN  (COALESCE (tmpSheetWorkTime.Amount, 0)) <> 0 THEN 1 ELSE 0 END  AS AmountHour_group
+                               
                           FROM tmpContainer
                                FULL JOIN tmpSheetWorkTime ON tmpSheetWorkTime.OperDate        = tmpContainer.OperDate
                                                          AND tmpSheetWorkTime.PersonalGroupId = tmpContainer.PersonalGroupId
@@ -437,17 +448,27 @@ BEGIN
             , tmpOperationGroup.AmountIn_Weight  :: TFloat AS AmountIn_kg
             , tmpOperationGroup.AmountOut_Weight :: TFloat AS AmountOut_kg
 
-            , CASE WHEN ((tmpOperationGroup.AmountHour = 0 AND tmpOperationGroup.Amount > 0 AND tmpOperationGroup.PersonalGroupId > 0)
-                    OR (tmpOperationGroup.AmountHour > 0 AND tmpOperationGroup.Amount = 0)
+            /*, CASE WHEN ((tmpOperationGroup.AmountHour = 0 AND tmpOperationGroup.Amount <> 0 AND tmpOperationGroup.PersonalGroupId > 0)
+                    OR (tmpOperationGroup.AmountHour > 0 AND tmpOperationGroup.Amount = 0 AND tmpOperationGroup.PersonalGroupId > 0)
                         )
-                    AND inIsMovement = FALSE
-                    AND inIsGoods    = FALSE
+                  --  AND inIsMovement = FALSE
+                  --  AND inIsGoods    = FALSE
                     THEN TRUE
                     ELSE FALSE
               END :: Boolean AS isError
-
+              */ 
+              -- сли кол-во единиц времени  = кол-ву ед. веса то ошибки нет, иначе ошибка, в какой-то из дней  не было часов или веса
+            , CASE WHEN ((tmpOperationGroup.AmountHour_group <> tmpOperationGroup.Amount_group AND tmpOperationGroup.PersonalGroupId > 0)
+                        )
+                    THEN TRUE
+                    ELSE FALSE
+              END :: Boolean AS isError
+              
             , tmpOperationGroup.MovementId      AS MovementId
             , Movement.InvNumber
+
+            , tmpOperationGroup.Amount_group     ::TFloat
+            , tmpOperationGroup.AmountHour_group ::TFloat
 
      FROM (SELECT tmpData.OperDate
                 , tmpData.MovementId
@@ -475,8 +496,11 @@ BEGIN
 
                 , SUM (tmpData.Amount_pack)      AS Amount_pack
                 , SUM (tmpData.AmountIn_pack)    AS AmountIn_pack
-                , SUM (tmpData.AmountOut_pack)   AS AmountOut_pack
-
+                , SUM (tmpData.AmountOut_pack)   AS AmountOut_pack  
+                
+                --только дл€ расчета ошибки, понимать были часы и вес по бригада + день
+                , SUM (tmpData.Amount_group)     AS Amount_group
+                , SUM (tmpData.AmountHour_group) AS AmountHour_group
 
            FROM tmpData
            GROUP BY tmpData.OperDate
@@ -520,3 +544,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Send_PersonalGroup (inStartDate:= '01.09.2023', inEndDate:= '05.09.2023', inUnitId:= 8451, inFromId:= 0, inToId:= 8459, inGoodsGroupId:= 0, inGoodsId:= 0, inModelServiceId:=5678129  , inIsMovement:= false, inIsDays:= false, inIsGoods:= true, inSession:= zfCalc_UserAdmin()); -- —клад –еализации
+
+--select * from gpReport_Send_PersonalGroup(inStartDate := ('01.09.2023')::TDateTime , inEndDate := ('05.09.2023')::TDateTime , inUnitId := 8451 , inFromId := 8459 , inToId := 0 , inGoodsGroupId := 0 , inGoodsId := 7493 , inModelServiceId := 0 , inisMovement := 'False' , inIsDays := 'True' , inisGoods := 'True' ,  inSession := '9457');

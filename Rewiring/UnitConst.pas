@@ -19,8 +19,6 @@ const
 
   // Создаем (обновляем) на слейве таблицу RewiringProtocol
   cSQL_RewiringProtocol  = '\SQL_Slave\STRUCTURE\RewiringProtocol.sql';
-  // Создаем (обновляем) на слейве таблицу Container_branch_Rewiring
-  cSQL_Slave_Container_branch_Rewiring  = '\SQL_Slave\STRUCTURE\Container_branch_Rewiring.sql';
   // Создаем (обновляем) на слейве таблицу HistoryCost_Rewiring
   cSQL_Slave_HistoryCost_Rewiring  = '\SQL_Slave\STRUCTURE\HistoryCost_Rewiring.sql';
   // Создаем (обновляем) на слейве таблицу MovementItemContainer_Rewiring
@@ -46,6 +44,8 @@ const
   cSQLpg_Slave_MovementProperties  = '\SQL_Slave\gpSelect_Slave_MovementProperties.sql';
   // Создаем (обновляем) на слейве функцию для проверки HistoryCost
   cSQLSP_Slave_CheckingHistoryCost  = '\SQL_Slave\gpSelect_CheckingHistoryCost.sql';
+  // Создаем (обновляем) на слейве функцию получения проводок для перерасчета HistoryCost на мастере
+  cSQLSP_Slave_MovementItemContainer  = '\SQL_Slave\gpSelect_Slave_MovementItemContainer.sql';
   // Создаем (обновляем) на слейве функцию с пареметрами подключения к базе
   cSQLSP_Slave_Connect  = '\SQL_Slave\gpSelect_MasterConnectParams.sql';
 
@@ -122,11 +122,11 @@ const
 
   // Перерасчета цен на слейве
   cSQL_HistoryCost_Calc  =
-      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
+      'SELECT Error FROM _replica.gpInsertUpdate_HistoryCost_Rewiring (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inisMICSlave, :inSession)';
 
         // Перерасчета цен на слейве
   cSQL_CheckingHistoryCost_Slave  =
-      'SELECT Error FROM _replica.gpInsertUpdate_CheckingHistoryCost_Slave (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
+      'SELECT RewiringUUId FROM _replica.gpInsertUpdate_CheckingHistoryCost_Slave (:inStartDate, :inEndDate, :inBranchId, :inItearationCount, :inDiffSumm, :inSession)';
 
         // Перерасчета цен на слейве
   cSQL_CheckingHistoryCost_Master  =
@@ -134,16 +134,17 @@ const
 
   // Получение перечня документов
   cSQL_Rewiring_Calc  =
-      'SELECT Q.* FROM gpComplete_Selectall_sybase (:inStartDate, :inEndDate, :inIsSale, :inIsBefoHistoryCost, :inGroupId) AS Q ' +
+      'SELECT Q.MovementId FROM gpComplete_Selectall_sybase (:inStartDate, :inEndDate, :inIsSale, :inIsBefoHistoryCost, :inGroupId) AS Q ' +
       '  LEFT JOIN _replica.RewiringProtocol ON RewiringProtocol.MovementId = Q.MovementId ' +
       '                                     AND RewiringProtocol.isErrorRewiring = FALSE ' +
       '                                     AND RewiringProtocol.isProcessed = False ' +
+      '                                     AND RewiringProtocol.Step >= %s ' +
       'WHERE COALESCE(RewiringProtocol.MovementId, 0) = 0 ' +
       'ORDER BY MovementId';
 
   // Процедура перепроведения
   cSQL_Rewiring_MovementId  =
-      'SELECT * FROM _replica.gpRewiring_Slave_MovementId (:inMovementId, :inIsNoHistoryCost, :inSession)';
+      'SELECT * FROM _replica.gpRewiring_Slave_MovementId (:inMovementId, :inIsNoHistoryCost, :inStepRewiring, :inSession)';
 
   // Создание роли
   cSQLCreateUser       = 'CREATE USER "%s" WITH PASSWORD ''%s'';'#13#10 +

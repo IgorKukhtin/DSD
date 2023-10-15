@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVargpInsertUpdate_Object_GoodsPropertyValueChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
+CREATE OR REPLACE FUNCTION (
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
     IN inName                TVarChar  ,    -- Название товара(покупателя)
     IN inAmount              TFloat    ,    -- Кол-во штук при сканировании

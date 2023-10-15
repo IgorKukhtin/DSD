@@ -5100,6 +5100,10 @@
 				<Form>Report_ProductionUnionTech_AnalysDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalPackRemains_deflection.pas">
+				<Form>OrderInternalPackRemains_deflectionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

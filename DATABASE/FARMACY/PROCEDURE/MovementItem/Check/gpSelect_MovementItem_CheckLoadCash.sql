@@ -361,15 +361,6 @@ BEGIN
                                                  AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
                                                  
                ),
-     tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                             , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                             , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
-                                            ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
-                        FROM Object_Goods_Juridical
-                        WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
-                          AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                          AND Object_Goods_Juridical.GoodsMainId <> 0
-                        ), 
      tmpGoodsPairSunMain AS (SELECT Object_Goods_Retail.GoodsPairSunId                          AS ID
                                   , Min(Object_Goods_Retail.Id)::Integer                        AS MainID
                              FROM Object_Goods_Retail
@@ -504,7 +495,7 @@ BEGIN
            , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)::Integer     AS NDSKindId
            , Object_DiscountExternal.ID                                          AS DiscountCardId
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
-           , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
+           , REPLACE(REPLACE(REPLACE(Object_Goods_Main.CodeUKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar   AS UKTZED
            , Object_Goods_PairSun_Main.MainID                                    AS GoodsPairSunId
            , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0                  AS isGoodsPairSun
            , Object_Goods_PairSun.GoodsPairSunID                                 AS GoodsPairSunMainId
@@ -572,10 +563,6 @@ BEGIN
                                              ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
             LEFT JOIN tmpObject AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
-
-            -- Коды UKTZED
-            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                    AND tmpGoodsUKTZED.Ord = 1
 
             LEFT JOIN tmpMILinkObject AS MILinkObject_DivisionParties
                                              ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id

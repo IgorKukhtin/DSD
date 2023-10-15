@@ -2271,6 +2271,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_Samples3() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_Samples3', 'Скидка сэмплов кат 3 (от 0 до 50 дней)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples3');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_Cat_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Cat_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_Cat_5', 'Скидка кат 5 от цены' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Cat_5');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_BarCode_DiscountWithVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_DiscountWithVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_BarCode(), 'zc_ObjectFloat_BarCode_DiscountWithVAT', 'Фиксированная скидка с НДС' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_DiscountWithVAT');
@@ -2470,6 +2474,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.10.23                                                                                      * zc_ObjectFloat_CashSettings_Cat_5
  11.07.23                                                                                      * zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward
  10.07.23                                                                                      * zc_ObjectFloat_CashSettings_AntiTOPMP_CountAward
  13.06.23                                                                                      * zc_ObjectFloat_CashSettings_AntiTOPMP_...

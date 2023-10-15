@@ -30,6 +30,7 @@ type
     FBranchName : String;
     FStartDate : TDateTime;
     FEndDate : TDateTime;
+    FisMICSlave: Boolean;
     FSession : String;
 
     FOnFinish: TOnFinish;
@@ -52,6 +53,7 @@ type
     property BranchName : String read FBranchName write FBranchName;
     property StartDate : TDateTime read FStartDate write FStartDate;
     property EndDate : TDateTime read FEndDate write FEndDate;
+    property isMICSlave : Boolean read FisMICSlave write FisMICSlave;
     property Session : String read FSession write FSession;
 
     property OnFinish: TOnFinish read FOnFinish write FOnFinish;
@@ -98,6 +100,8 @@ begin
       FZQueryTable.ParamByName('inBranchId').Value := FBranchId;
       FZQueryTable.ParamByName('inItearationCount').Value := 50;
       FZQueryTable.ParamByName('inDiffSumm').Value := 1;
+      FZQueryTable.ParamByName('inisMICSlave').Value := FisMICSlave;
+
       FZQueryTable.ParamByName('inSession').Value := FSession;
       FZQueryTable.Open;
       FError := FZQueryTable.FieldByName('Error').AsString;

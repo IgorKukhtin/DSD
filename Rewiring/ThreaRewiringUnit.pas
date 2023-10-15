@@ -32,6 +32,7 @@ type
     FEndDate : TDateTime;
     FIsSale : Boolean;
     FIsBefoHistoryCost : Boolean;
+    FStepRewiring : Integer;
     FSession : String;
 
     FOnFinish: TOnFinish;
@@ -56,6 +57,7 @@ type
     property EndDate : TDateTime read FEndDate write FEndDate;
     property IsSale : Boolean read FIsSale write FIsSale;
     property IsBefoHistoryCost : Boolean read FIsBefoHistoryCost write FIsBefoHistoryCost;
+    property StepRewiring : Integer read FStepRewiring write FStepRewiring;
     property Session : String read FSession write FSession;
 
     property OnFinish: TOnFinish read FOnFinish write FOnFinish;
@@ -101,7 +103,7 @@ begin
       FZQueryExecute.SQL.Text := cSQL_Rewiring_MovementId;
 
       // Перерасчета цен на слейве
-      FZQueryTable.SQL.Text := cSQL_Rewiring_Calc;
+      FZQueryTable.SQL.Text := Format(cSQL_Rewiring_Calc, [IntToStr(FStepRewiring)]);
       FZQueryTable.ParamByName('inStartDate').Value := FStartDate;
       FZQueryTable.ParamByName('inEndDate').Value := FEndDate;
       FZQueryTable.ParamByName('inIsSale').Value := FIsSale;
@@ -124,6 +126,7 @@ begin
           FZQueryExecute.Close;
           FZQueryExecute.ParamByName('inMovementId').Value := FZQueryTable.FieldByName('MovementId').AsInteger;
           FZQueryExecute.ParamByName('inIsNoHistoryCost').Value := True;
+          FZQueryExecute.ParamByName('inStepRewiring').Value := FStepRewiring;
           FZQueryExecute.ParamByName('inSession').Value := FSession;
           FZQueryExecute.Open;
         except

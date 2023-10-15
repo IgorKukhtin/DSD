@@ -1299,7 +1299,9 @@ uses
   Report_GoodsSaleChechUser in '..\..\FormsFarmacy\Report\Report_GoodsSaleChechUser.pas' {Report_GoodsSaleChechUserForm: TParentForm},
   Report_PriceList_BestPriceDialog in '..\..\FormsFarmacy\Report\Report_PriceList_BestPriceDialog.pas' {Report_PriceList_BestPriceDialogForm: TParentForm},
   Report_PriceList_BestPrice in '..\..\FormsFarmacy\Report\Report_PriceList_BestPrice.pas' {Report_PriceList_BestPriceForm: TParentForm},
-  JuridicalPriceChoice in '..\..\FormsFarmacy\Guides\JuridicalPriceChoice.pas' {JuridicalPriceChoiceForm: TParentForm};
+  JuridicalPriceChoice in '..\..\FormsFarmacy\Guides\JuridicalPriceChoice.pas' {JuridicalPriceChoiceForm: TParentForm},
+  UKTZED in '..\..\FormsFarmacy\Guides\UKTZED.pas' {UKTZEDForm: TParentForm},
+  UKTZEDEdit in '..\..\FormsFarmacy\Guides\UKTZEDEdit.pas' {UKTZEDEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1033,6 +1033,8 @@ type
     actReport_PriceList_BestPrice: TdsdOpenForm;
     N382: TMenuItem;
     actReport_ImplementationPlanEmployeeOneUser: TdsdOpenStaticForm;
+    actUKTZED: TdsdOpenForm;
+    N383: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

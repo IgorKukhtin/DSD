@@ -1662,6 +1662,10 @@ CREATE OR REPLACE FUNCTION zc_Object_StoredProcExternal() RETURNS integer AS $BO
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_StoredProcExternal', 'Внешние процедуры' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StoredProcExternal');
 
+CREATE OR REPLACE FUNCTION zc_Object_UKTZED() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UKTZED'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_UKTZED', 'Коды УКТВЭД' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UKTZED');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1682,6 +1686,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 12.10.23                                                                                        * zc_Object_UKTZED
  18.08.23                                                                                        * zc_Object_StoredProcExternal
  16.07.23         * zc_Object_CarType
                     zc_Object_BodyType

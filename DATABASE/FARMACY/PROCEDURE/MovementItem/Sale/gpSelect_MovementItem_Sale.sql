@@ -347,15 +347,6 @@ BEGIN
                                    FROM tmpRemains
                                        FULL OUTER JOIN MovementItem_Sale ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId
                                    )
-               , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                                         , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
-                                                        ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
-                                    FROM Object_Goods_Juridical
-                                    WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
-                                      AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                                      AND Object_Goods_Juridical.GoodsMainId <> 0
-                                    )
 
             --
             SELECT COALESCE(tmpRemainsFull.Id,0)                         AS Id
@@ -386,7 +377,7 @@ BEGIN
                  , tmpRemainsFull.SummIC
                  , tmpRemainsFull.isSP        ::Boolean
                  , tmpMarion.isResolution_224 ::Boolean
-                 , tmpGoodsUKTZED.UKTZED
+                 , Object_Goods_Main.CodeUKTZED                          AS UKTZED
                  , COALESCE(tmpRemainsFull.IsErased,FALSE)               AS isErased
             FROM tmpRemainsFull
                 LEFT JOIN MovementItemContainer ON MovementItemContainer.Id = tmpRemainsFull.Id 
@@ -412,10 +403,7 @@ BEGIN
                                      AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                 -- код Марион
                 LEFT JOIN tmpMarion ON tmpMarion.GoodsId = tmpRemainsFull.GoodsId
-                
-                LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                        AND tmpGoodsUKTZED.Ord = 1
-                                        
+                                                        
                 LEFT JOIN tmpForSiteMobile ON tmpForSiteMobile.Id = tmpRemainsFull.GoodsId
                                           AND COALESCE(vbInsuranceCompaniesId, 0) <> 0
                 
@@ -474,15 +462,6 @@ BEGIN
                                    JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
                                    JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                               )
-               , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                                         , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
-                                                        ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
-                                    FROM Object_Goods_Juridical
-                                    WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
-                                      AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                                      AND Object_Goods_Juridical.GoodsMainId <> 0
-                                    )
 
             SELECT
                 MovementItem_Sale.Id          AS Id
@@ -509,7 +488,7 @@ BEGIN
               , MovementItem_Sale.SummIC
               , MovementItem_Sale.isSP
               , tmpMarion.isResolution_224 ::Boolean
-              , tmpGoodsUKTZED.UKTZED
+              , Object_Goods_Main.CodeUKTZED  AS UKTZED
               , MovementItem_Sale.IsErased    AS isErased
             FROM MovementItem_Sale
                 LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId
@@ -535,8 +514,6 @@ BEGIN
                 -- код Марион
                 LEFT JOIN tmpMarion ON tmpMarion.GoodsId = MovementItem_Sale.GoodsId
 
-                LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                        AND tmpGoodsUKTZED.Ord = 1
                 ;
      END IF;
 END;

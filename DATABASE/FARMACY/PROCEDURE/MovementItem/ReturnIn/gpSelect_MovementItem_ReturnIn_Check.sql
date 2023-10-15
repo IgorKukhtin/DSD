@@ -183,16 +183,7 @@ BEGIN
           tmpPartionDateKind AS (SELECT *
                                  FROM Object AS Object_PartionDateKind
                                  WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
-                                 ),
-          tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                                  , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                                  , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId
-                                                 ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
-                             FROM Object_Goods_Juridical
-                             WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
-                               AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                               AND Object_Goods_Juridical.GoodsMainId <> 0
-                             )
+                                 )
 
             -- результат
             SELECT MovementItem.Id
@@ -219,11 +210,11 @@ BEGIN
                  , Object_PartionDateKind.ValueData  AS PartionDateKindName
 
                  , Accommodation.AccommodationId     AS AccommodationId
-                 , Object_Accommodation.ValueData AS AccommodationName
+                 , Object_Accommodation.ValueData    AS AccommodationName
 
-                 , tmpGoodsUKTZED.UKTZED             AS UKTZED
+                 , Object_Goods_Main.CodeUKTZED      AS UKTZED
 
-                 , MovementItem.isErased      AS isErased
+                 , MovementItem.isErased             AS isErased
 
             FROM tmpMI AS MovementItem
 
@@ -264,8 +255,7 @@ BEGIN
 
                   -- Коды UKTZED
                   LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
-                  LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                          AND tmpGoodsUKTZED.Ord = 1
+                  LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
          ;
 
 END;

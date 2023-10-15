@@ -340,6 +340,8 @@ type
     chGoodsCode_complete: TcxGridDBColumn;
     chGoodsName_complete: TcxGridDBColumn;
     GoodsKindName_complete: TcxGridDBColumn;
+    actOpenFormOrderInternalPackRem: TdsdInsertUpdateAction;
+    bbOrderInternalPackRem: TdxBarButton;
   private
     { Private declarations }
   public

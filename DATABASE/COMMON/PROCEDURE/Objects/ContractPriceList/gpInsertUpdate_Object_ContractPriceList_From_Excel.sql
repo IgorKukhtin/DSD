@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Contract_From_Excel (Integer, Integer, TFloat, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractPriceList_From_Excel (TVarChar, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractPriceList_From_Excel (Integer, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractPriceList_From_Excel(
     IN inContractCode       Integer   , -- 
@@ -18,7 +18,7 @@ $BODY$
     DECLARE vbStartDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_ContractPriceList());
+    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ContractPriceList());
 
     -- Проверка
     IF COALESCE(inContractCode, 0) = 0 OR (COALESCE (inPriceListName_old,'') = '' AND COALESCE (inPriceListName_new,'') ='')
@@ -30,7 +30,7 @@ BEGIN
                      FROM Object
                      WHERE Object.ObjectCode = inContractCode
                        AND Object.DescId = zc_Object_Contract()
-                     LIMIT 1;
+                     LIMIT 1
                      );
     IF COALESCE (vbContractId, 0) = 0
     THEN
@@ -65,7 +65,7 @@ BEGIN
          
          -- сохранили новый элемент
          PERFORM gpInsertUpdate_Object_ContractPriceList (ioId          := 0        
-                                                        , inComment     := NULL            ::TVarChar
+                                                        , inComment     := ''              ::TVarChar
                                                         , inContractId  := vbContractId    ::Integer
                                                         , inPriceListId := vbPriceListId   ::Integer 
                                                         , inStartDate   := inStartDate_old ::TDateTime
@@ -84,7 +84,7 @@ BEGIN
          
          -- сохранили новый элемент
          PERFORM gpInsertUpdate_Object_ContractPriceList (ioId          := 0        
-                                                        , inComment     := NULL            ::TVarChar
+                                                        , inComment     := ''              ::TVarChar
                                                         , inContractId  := vbContractId    ::Integer
                                                         , inPriceListId := vbPriceListId   ::Integer 
                                                         , inStartDate   := inStartDate_new ::TDateTime

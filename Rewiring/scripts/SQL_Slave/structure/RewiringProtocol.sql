@@ -10,6 +10,7 @@
 CREATE TABLE IF NOT EXISTS _replica.RewiringProtocol(
    Id                    SERIAL NOT NULL PRIMARY KEY, 
    MovementId            INTEGER,
+   Step                  INTEGER,
 
    Transaction_Id        BIGINT,
    isErrorRewiring       Boolean NOT NULL DEFAULT FALSE,

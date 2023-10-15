@@ -100,6 +100,5 @@ $BODY$
 */
 
 -- SELECT * FROM _replica.HistoryCost_Rewiring
--- SELECT COUNT(*) FROM _replica.Container_branch_Rewiring
 -- 7620680f-e57e-4d91-a52e-c3e90c4989b7
 -- SELECT * FROM _replica.gpInsertUpdate_CheckingHistoryCost_Master (inStartDate:= '01.09.2023', inEndDate:= '30.09.2023', inBranchId:= 8379, inItearationCount:= 50, inDiffSumm:= 1, inSession:= zfCalc_UserAdmin());

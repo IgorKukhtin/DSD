@@ -826,18 +826,28 @@ var i: integer;
         Result := Result + '1/2'
       else if Code = 190 then
         Result := Result + '3/4'
-      else if ((Code = 822) or (Code = -4051)) and (dsdProject = prFarmacy) then
-        Result := Result + '-'
-      else if ((Code = 945) or (Code = 593) or (Code = -3999)) and (dsdProject = prFarmacy) then
-        Result := Result + 'a'
-      else if (Code = 946) and (dsdProject = prFarmacy) then
-        Result := Result + 'b'
-      else if (Code = 947) and (dsdProject = prFarmacy) then
-        Result := Result + 'y'
-      else if ((Code = 180) or (Code = 769) or (Code = 8125) or (Code = 700) or (Code = 8217)) and (dsdProject = prFarmacy) then
-        Result := Result + '`'
+      else if dsdProject = prFarmacy then
+      begin
+        if ((Code = 822) or (Code = -4051)) then
+          Result := Result + '-'
+        else if ((Code = 945) or (Code = 593) or (Code = -3999)) then
+          Result := Result + 'a'
+        else if (Code = 946) then
+          Result := Result + 'b'
+        else if (Code = 947) then
+          Result := Result + 'y'
+        else if (Code = 216) then
+          Result := Result + 'D'
+        else if (Code = 231) then
+          Result := Result + 'c'
+        else if (Code = 350) then
+          Result := Result + 'S'
+        else if ((Code = 180) or (Code = 769) or (Code = 8125) or (Code = 700) or (Code = 8217)) then
+          Result := Result + '`'
 //      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
 //        Result := Result  + C
+        else Result := Result + C;
+      end
       else
         Result := Result + C;
     end;

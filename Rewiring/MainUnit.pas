@@ -173,6 +173,9 @@ type
     TimerCheckingHistoryCost: TTimer;
     CheckingHC_DPrice: TcxGridDBBandedColumn;
     CheckingHC_PPrice: TcxGridDBBandedColumn;
+    Panel4: TPanel;
+    rgStepRewiring: TRadioGroup;
+    rgMICSlave: TRadioGroup;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnScriptPathClick(Sender: TObject);
@@ -196,6 +199,7 @@ type
       Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
     procedure TimerCheckingHistoryCostTimer(Sender: TObject);
+    procedure rgStepRewiringClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -463,6 +467,7 @@ begin
         HistoryCostThread.BranchName := HistoryCost_BranchCDS.FieldByName('BranchName').AsString;
         HistoryCostThread.StartDate := HistoryCost_BranchCDS.FieldByName('StartDate').AsDateTime;
         HistoryCostThread.EndDate := HistoryCost_BranchCDS.FieldByName('EndDate').AsDateTime;
+        HistoryCostThread.isMICSlave := rgMICSlave.ItemIndex = 1;
         HistoryCostThread.Session := edSession.Text;
 
         HistoryCostThread.OnFinish := HistoryCostThreadFinish;
@@ -483,7 +488,7 @@ begin
       btnHistoryCost.Enabled := True;
       btnRewiring.Enabled := True;
       btnSendDocument.Enabled := True;
-
+      rgMICSlave.Enabled := True;
 
       cxGrid1DBTableView1.OptionsData.Editing := True;
       lblActionTake.Caption := 'Ожидание задания';
@@ -537,6 +542,7 @@ begin
         RewiringThread.EndDate := Rewiring_BranchCDS.FieldByName('EndDate').AsDateTime;
         RewiringThread.IsSale := Rewiring_BranchCDS.FieldByName('IsSale').AsBoolean;
         RewiringThread.IsBefoHistoryCost := Rewiring_BranchCDS.FieldByName('IsBefoHistoryCost').AsBoolean;
+        RewiringThread.StepRewiring := rgStepRewiring.ItemIndex;
         RewiringThread.Session := edSession.Text;
 
         RewiringThread.OnFinish := RewiringThreadFinish;
@@ -557,7 +563,7 @@ begin
       btnHistoryCost.Enabled := True;
       btnRewiring.Enabled := True;
       btnSendDocument.Enabled := True;
-
+      rgStepRewiring.Enabled := True;
 
       cxGrid1DBTableView1.OptionsData.Editing := True;
       lblActionTake.Caption := 'Ожидание задания';
@@ -791,17 +797,17 @@ begin
       Exit;
     end;
 
-    // Создаем (обновляем) на мастере функцию загрузки HistoryCost
-    SaveRewiringLog('Создаем (обновляем) на мастере функцию выполнения HistoryCost');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Master_RewiringHistoryCost);
-    ZQueryExecute.ExecSQL;
-
-    // Создаем (обновляем) на мастере функцию загрузки перепроведенных документов
-    SaveRewiringLog('Создаем (обновляем) на мастере функцию загрузки перепроведенных документов');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Master_LoadMovement);
-    ZQueryExecute.ExecSQL;
+//    // Создаем (обновляем) на мастере функцию загрузки HistoryCost
+//    SaveRewiringLog('Создаем (обновляем) на мастере функцию выполнения HistoryCost');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Master_RewiringHistoryCost);
+//    ZQueryExecute.ExecSQL;
+//
+//    // Создаем (обновляем) на мастере функцию загрузки перепроведенных документов
+//    SaveRewiringLog('Создаем (обновляем) на мастере функцию загрузки перепроведенных документов');
+//    ZQueryExecute.Close;
+//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Master_LoadMovement);
+//    ZQueryExecute.ExecSQL;
 
     // Создаем функцию с пареметрами подключения е базе
     SaveRewiringLog('Создаем функцию с пареметрами подключения е базе');
@@ -925,6 +931,7 @@ begin
   begin
     cxPageProcessing.ActivePage := tsPageProcessingHistoryCost;
     ReadInfo;
+    if rgMICSlave.ItemIndex < 0 then rgMICSlave.ItemIndex := 0;
     Exit;
   end;
 
@@ -946,6 +953,7 @@ begin
   btnHistoryCost.Enabled := False;
   btnRewiring.Enabled := False;
   btnSendDocument.Enabled := False;
+  rgMICSlave.Enabled := False;
 
   cxGrid1DBTableView1.OptionsData.Editing := False;
   FisProcessingEmpty := False;
@@ -968,6 +976,7 @@ begin
   begin
     cxPageProcessing.ActivePage := tsPageProcessingRewiring;
     ReadInfo;
+    if rgStepRewiring.ItemIndex < 0 then rgStepRewiring.ItemIndex := 0;
     Exit;
   end;
 
@@ -983,6 +992,8 @@ begin
   btnSendDocument.Enabled := False;
 
   cxGrid1DBTableView1.OptionsData.Editing := False;
+  rgStepRewiring.Enabled := False;
+
   FisProcessingEmpty := False;
 
   lblActionTake.Caption := 'Перепроведение докeментов';
@@ -1087,12 +1098,6 @@ begin
     ZQueryExecute.SQL.Text := LiadScripts(cSQL_RewiringProtocol);
     ZQueryExecute.ExecSQL;
 
-    // Создаем (обновляем) на слейве таблицу Container_branch_Rewiring
-    SaveRewiringLog('Создаем (обновляем) на слейве таблицу Container_branch_Rewiring');
-    ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQL_Slave_Container_branch_Rewiring);
-    ZQueryExecute.ExecSQL;
-
     // Создаем (обновляем) на слейве таблицу HistoryCost_Rewiring
     SaveRewiringLog('Создаем (обновляем) на слейве таблицу HistoryCost_Rewiring');
     ZQueryExecute.Close;
@@ -1117,64 +1122,70 @@ begin
     ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_HistoryCost_Rewiring);
     ZQueryExecute.ExecSQL;
 
-    // Создаем (обновляем) на слейве функцию расчета HistoryCost на мастере
-    SaveRewiringLog('Создаем (обновляем) на слейве функцию расчета HistoryCost на мастере');
+    // Создаем (обновляем) на слейве функцию проверки HistoryCost на слейве
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию проверки HistoryCost на слейве');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_CheckingHistoryCost_Slave);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) на слейве функцию проверки HistoryCost на мастере
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию проверки HistoryCost на мастере');
     ZQueryExecute.Close;
     ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_CheckingHistoryCost_Master);
     ZQueryExecute.ExecSQL;
-
-//    // Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost
-//    SaveRewiringLog('Создаем (обновляем) на слейве функцию отправки и обновления HistoryCost');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_SendHistoryCost);
-//    ZQueryExecute.ExecSQL;
-//
-//    // Создаем (обновляем) на слейве функцию отправки документа
-//    SaveRewiringLog('Создаем (обновляем) на слейве функцию отправки документа');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_SendMovement);
-//    ZQueryExecute.ExecSQL;
-//
-//    // Создаем (обновляем) на слейве функцию что отправить надо
-//    SaveRewiringLog('Создаем (обновляем) на слейве функцию что отправить надо');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringProtocol);
-//    ZQueryExecute.ExecSQL;
-//
-//    // Создаем (обновляем) на слейве функцию данных для перепроведения
-//    SaveRewiringLog('Создаем (обновляем) на слейве функцию данных для перепроведения');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringParams);
-//    ZQueryExecute.ExecSQL;
-//
-//    // Создаем (обновляем) на слейве функцию перепроводки документа
-//    SaveRewiringLog('Создаем (обновляем) на слейве функцию перепроводки документа');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementId);
-//    ZQueryExecute.ExecSQL;
-//
-//    // Создаем (обновляем) на слейве функцию получения изменившихся свойств
-//    SaveRewiringLog('Создаем (обновляем) на слейве функцию получения изменившихся свойств');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementProperties);
-//    ZQueryExecute.ExecSQL;
-//
-//    // Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций
-//    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPCalcFunctionMaster);
-//    ZQueryExecute.ExecSQL;
-//
-//    // Cоздаем (обновляем) на слейве функцию Копирование функций
-//    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Копирование функций');
-//    ZQueryExecute.Close;
-//    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPReplication_Function);
-//    ZQueryExecute.ExecSQL;
 
     // Создаем (обновляем) на слейве функцию для проверки HistoryCost
     SaveRewiringLog('Создаем (обновляем) на слейве функцию для проверки HistoryCost');
     ZQueryExecute.Close;
     ZQueryExecute.SQL.Text := LiadScripts(cSQLSP_Slave_CheckingHistoryCost);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) на слейве функцию получения проводок для перерасчета HistoryCost на мастере
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию получения проводок');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLSP_Slave_MovementItemContainer);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) на слейве функцию отправки документа
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию отправки документа');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_SendMovement);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) на слейве функцию что отправить надо
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию что отправить надо');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringProtocol);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) на слейве функцию данных для перепроведения
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию данных для перепроведения');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_RewiringParams);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) на слейве функцию перепроводки документа
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию перепроводки документа');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementId);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) на слейве функцию получения изменившихся свойств
+    SaveRewiringLog('Создаем (обновляем) на слейве функцию получения изменившихся свойств');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLpg_Slave_MovementProperties);
+    ZQueryExecute.ExecSQL;
+
+    // Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций
+    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Подсчитываем количества функций');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPCalcFunctionMaster);
+    ZQueryExecute.ExecSQL;
+
+    // Cоздаем (обновляем) на слейве функцию Копирование функций
+    SaveRewiringLog('Cоздаем (обновляем) на слейве функцию Копирование функций');
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLSPReplication_Function);
     ZQueryExecute.ExecSQL;
 
     // Создаем функцию с пареметрами подключения е базе
@@ -1492,7 +1503,7 @@ begin
                 Rewiring_BranchCDS.FieldByName('GroupId').AsInteger := ZQueryExecute.FieldByName('GroupId').AsInteger;
                 Rewiring_BranchCDS.FieldByName('GroupName').AsString := ZQueryExecute.FieldByName('GroupName').AsString;
                 Rewiring_BranchCDS.FieldByName('IsSale').AsBoolean := ZQueryExecute.FieldByName('IsSale').AsBoolean;
-                Rewiring_BranchCDS.FieldByName('IsBefoHistoryCost').AsBoolean := True;
+                Rewiring_BranchCDS.FieldByName('IsBefoHistoryCost').AsBoolean := rgStepRewiring.ItemIndex <= 0;
                 Rewiring_BranchCDS.Post;
                 ZQueryExecute.Next;
               end;
@@ -1638,6 +1649,24 @@ begin
           end)
       end).Start;
 
+end;
+
+procedure TMainForm.rgStepRewiringClick(Sender: TObject);
+begin
+  Rewiring_BranchCDS.DisableControls;
+  try
+    Rewiring_BranchCDS.First;
+    while not Rewiring_BranchCDS.Eof do
+    begin
+      Rewiring_BranchCDS.Edit;
+      Rewiring_BranchCDS.FieldByName('IsBefoHistoryCost').AsBoolean := rgStepRewiring.ItemIndex = 0;
+      Rewiring_BranchCDS.Post;
+      Rewiring_BranchCDS.Next;
+    end;
+    Rewiring_BranchCDS.First;
+  finally
+    Rewiring_BranchCDS.EnableControls;
+  end;
 end;
 
 procedure TMainForm.SendMovementThreadFinish(AError : String; AGroupId : Integer);

@@ -99,10 +99,8 @@ BEGIN
    ;
    
    DELETE FROM _replica.HistoryCost_Rewiring WHERE HistoryCost_Rewiring.RewiringUUId ILIKE inMasterUUId;
-   DELETE FROM _replica.Container_branch_Rewiring WHERE Container_branch_Rewiring.RewiringUUId ILIKE inMasterUUId;
 
    DELETE FROM _replica.HistoryCost_Rewiring WHERE HistoryCost_Rewiring.RewiringUUId ILIKE inSlaveUUId;
-   DELETE FROM _replica.Container_branch_Rewiring WHERE Container_branch_Rewiring.RewiringUUId ILIKE inSlaveUUId;
 
 END;
 $BODY$
@@ -115,7 +113,6 @@ $BODY$
  26.09.23                                                       * 
 */
 
--- SELECT DISTINCT RewiringUUId FROM _replica.Container_branch_Rewiring
 -- SELECT DISTINCT RewiringUUId FROM _replica.HistoryCost_Rewiring where RewiringUUId ILIKE ''
 -- 7620680f-e57e-4d91-a52e-c3e90c4989b7
 -- SELECT * FROM _replica.gpSelect_CheckingHistoryCost (inMasterUUId:= '4dfadf30-3688-472e-9096-d90e9affe7ec', inSlaveUUId:= 'c3030f3d-5121-4b33-acf0-98374427b7bc', inSession:= zfCalc_UserAdmin());

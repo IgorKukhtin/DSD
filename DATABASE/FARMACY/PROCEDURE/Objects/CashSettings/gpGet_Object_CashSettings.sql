@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Samples21 TFloat
              , Samples22 TFloat
              , Samples3 TFloat
+             , Cat_5 TFloat
              , TelegramBotToken TVarChar
              , SendCashErrorTelId TVarChar
              , PercentIC TFloat
@@ -98,6 +99,7 @@ BEGIN
         , ObjectFloat_CashSettings_Samples21.ValueData                             AS Samples21
         , ObjectFloat_CashSettings_Samples22.ValueData                             AS Samples22
         , ObjectFloat_CashSettings_Samples3.ValueData                              AS Samples3
+        , ObjectFloat_CashSettings_Cat_5.ValueData                                 AS Cat_5
         , ObjectString_CashSettings_TelegramBotToken.ValueData                     AS TelegramBotToken
         , ObjectString_CashSettings_SendCashErrorTelId.ValueData                   AS SendCashErrorTelId
         , ObjectFloat_CashSettings_PercentIC.ValueData                             AS PercentIC
@@ -347,6 +349,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_MinProcAward
                               ON ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Cat_5
+                              ON ObjectFloat_CashSettings_Cat_5.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_Cat_5.DescId = zc_ObjectFloat_CashSettings_Cat_5()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

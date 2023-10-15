@@ -25,7 +25,6 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
              , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime
-             --, UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
@@ -36,10 +35,9 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isExceptionUKTZED boolean
              , isOnlySP boolean
              , isUkrainianTranslation boolean
-             , MakerName TVarChar, MakerNameUkr TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
-             , Dosage TVarChar, Volume TVarChar, GoodsWhoCanName TVarChar, GoodsMethodApplId integer, GoodsMethodApplName TVarChar, GoodsSignOriginId  integer,  GoodsSignOriginName TVarChar
+             , MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, isRecipe boolean
              , isLeftTheMarket boolean, DateLeftTheMarket TDateTime, DateAddToOrder TDateTime 
---           , UKTZED_main TVarChar
+             , CodeUKTZED TVarChar, isNewUKTZED Boolean, isNoRegUKTZED Boolean, Color_UKTZED Integer
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -62,6 +60,17 @@ BEGIN
    END IF;
 
    vbAreaDneprId := (SELECT Object.Id FROM Object WHERE Object.Descid = zc_Object_Area() AND Object.ValueData LIKE 'Днепр');
+
+   CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS
+   SELECT Container.ObjectId               AS GoodsId
+        , sum(Container.Amount)::TFloat    AS Amount
+   FROM Container
+   WHERE Container.DescId        = zc_Container_Count()
+     AND Container.Amount        <> 0
+     AND Container.WhereObjectId IN (SELECT tmp.Id FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := inSession) AS tmp)
+   GROUP BY Container.ObjectId;
+                       
+   ANALYSE tmpContainer;
 
 
    RETURN QUERY
@@ -149,10 +158,21 @@ BEGIN
                                FROM tmpGoodsMainWhoCanAll AS Object_Goods_Main
                                GROUP BY Object_Goods_Main.Id
                                )
-      , tmpUKTZED_main AS (SELECT ObjectString_Goods_UKTZED_main.*
-                           FROM ObjectString AS ObjectString_Goods_UKTZED_main
-                           WHERE ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main() 
-                           )
+      , tmpCodeUKTZED AS (SELECT DISTINCT Object_UKTZED.ValueData    AS UKTZED
+                          FROM Object AS Object_UKTZED
+                          WHERE Object_UKTZED.DescId = zc_Object_UKTZED()
+                            AND Object_UKTZED.isErased = FALSE)
+      , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
+                                 , string_agg(DISTINCT REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), ''), ',')::TVarChar AS UKTZED
+                                 , max(CASE WHEN COALESCE (tmpCodeUKTZED.UKTZED, '') <> '' THEN 1 ELSE 0 END) AS RegUKTZED        
+                            FROM Object_Goods_Juridical
+                                 LEFT JOIN tmpCodeUKTZED ON tmpCodeUKTZED.UKTZED ILIKE REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')
+                            WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                              AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
+                              AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
+                              AND Object_Goods_Juridical.GoodsMainId <> 0
+                            GROUP BY Object_Goods_Juridical.GoodsMainId
+                            )
 
       SELECT Object_Goods_Retail.Id
            , Object_Goods_Retail.GoodsMainId
@@ -199,8 +219,6 @@ BEGIN
 
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , Object_Goods_Retail.DateInsert                            AS InsertDate
-         --, COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
-         --, Object_Goods_Retail.DateUpdate                            AS UpdateDate
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
            , Object_Goods_Main.MorionCode
@@ -223,25 +241,48 @@ BEGIN
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
 
            , Object_Goods_Main.MakerName
-           , Object_Goods_Main.MakerNameUkr
            , Object_Goods_Main.FormDispensingId
            , Object_FormDispensing.ValueData                                     AS FormDispensingName
-           , Object_Goods_Main.NumberPlates
-           , Object_Goods_Main.QtyPackage
            , Object_Goods_Main.isRecipe
            
-           , Object_Goods_Main.Dosage 
-           , Object_Goods_Main.Volume
-           , tmpGoodsMainWhoCan.GoodsWhoCanName                                        AS GoodsWhoCanName
-           , Object_Goods_Main.GoodsMethodApplId
-           , Object_GoodsMethodAppl.ValueData                                    AS GoodsMethodApplName
-           , Object_Goods_Main.GoodsSignOriginId
-           , Object_GoodsSignOrigin.ValueData                                    AS GoodsSignOriginName
 
            , Object_Goods_Main.isLeftTheMarket
            , Object_Goods_Main.DateLeftTheMarket
            , Object_Goods_Main.DateAddToOrder 
---         , CASE WHEN vbUserId = 3 THEN ObjectString_Goods_UKTZED_main.ValueData ELSE '' END :: TVarChar AS UKTZED_main
+           , CASE WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') <> ''
+                  THEN Object_Goods_Main.CodeUKTZED
+                  WHEN COALESCE (tmpContainer.Amount, 0) > 0
+                  THEN tmpGoodsUKTZED.UKTZED END::TVarChar
+           , CASE WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') = '' 
+                   AND COALESCE (tmpGoodsUKTZED.UKTZED, '') <> '' 
+                   AND COALESCE (tmpContainer.Amount, 0) > 0
+                  THEN TRUE
+                  ELSE FALSE END                                                 AS isNewUKTZED
+           , CASE WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') <> ''  
+                   AND COALESCE (tmpCodeUKTZED.UKTZED, '') <> ''
+                  THEN FALSE
+                  WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') <> ''
+                  THEN TRUE 
+                  WHEN COALESCE (tmpGoodsUKTZED.UKTZED, '') <> '' 
+                   AND COALESCE (tmpContainer.Amount, 0) > 0
+                  THEN tmpGoodsUKTZED.RegUKTZED = 0
+                  ELSE FALSE END                                                 AS isNoRegUKTZED
+           , CASE WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') = '' 
+                   AND COALESCE (tmpGoodsUKTZED.UKTZED, '') = '' 
+                   AND COALESCE (tmpContainer.Amount, 0) > 0
+                    OR COALESCE (Object_Goods_Main.CodeUKTZED, '') = '' 
+                   AND COALESCE (tmpGoodsUKTZED.UKTZED, '') <> '' 
+                   AND COALESCE (tmpContainer.Amount, 0) > 0
+                   AND tmpGoodsUKTZED.RegUKTZED = 1
+                  THEN zfCalc_Color (255, 165, 0) 
+                  WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') <> ''
+                   AND COALESCE (tmpCodeUKTZED.UKTZED, '') = ''
+                    OR COALESCE (Object_Goods_Main.CodeUKTZED, '') = '' 
+                   AND COALESCE (tmpGoodsUKTZED.UKTZED, '') <> '' 
+                   AND COALESCE (tmpContainer.Amount, 0) > 0
+                   AND tmpGoodsUKTZED.RegUKTZED = 0
+                  THEN zfCalc_Color (255, 0, 255) 
+                  ELSE zc_Color_White() END                                      AS Color_UKTZED
 
       FROM Object_Goods_Retail
 
@@ -253,12 +294,11 @@ BEGIN
            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = Object_Goods_Retail.UserInsertId
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
            LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Object_Goods_Main.FormDispensingId
-
-           LEFT JOIN Object AS Object_GoodsMethodAppl ON Object_GoodsMethodAppl.Id = Object_Goods_Main.GoodsMethodApplId
-           LEFT JOIN Object AS Object_GoodsSignOrigin ON Object_GoodsSignOrigin.Id = Object_Goods_Main.GoodsSignOriginId
            
            LEFT JOIN tmpNDS ON tmpNDS.Id = Object_Goods_Main.NDSKindId
            LEFT JOIN Object AS Object_GoodsPairSun ON Object_GoodsPairSun.Id = Object_Goods_Retail.GoodsPairSunId
+           
+           LEFT JOIN tmpContainer ON tmpContainer.GoodsId = Object_Goods_Retail.Id
 
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_Retail.GoodsMainId
 
@@ -270,10 +310,11 @@ BEGIN
            LEFT JOIN tmpPricelistItems ON tmpPricelistItems.GoodsMainId = Object_Goods_Retail.GoodsMainId
            
            LEFT JOIN tmpGoodsMainWhoCan ON tmpGoodsMainWhoCan.ID = Object_Goods_Retail.GoodsMainId
+           
+           LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
+           
+           LEFT JOIN tmpCodeUKTZED ON tmpCodeUKTZED.UKTZED ILIKE Object_Goods_Main.CodeUKTZED
 
-           LEFT JOIN tmpUKTZED_main AS ObjectString_Goods_UKTZED_main
-                                  ON ObjectString_Goods_UKTZED_main.ObjectId = Object_Goods_Retail.Id
-                                 AND ObjectString_Goods_UKTZED_main.DescId = zc_ObjectString_Goods_UKTZED_main()
       WHERE Object_Goods_Retail.RetailId = vbObjectId
     --LIMIT CASE WHEN vbUserId = 3 THEN 100 ELSE 200000 END
       ;
@@ -325,4 +366,6 @@ $BODY$
 -- тест
 --SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, inRetailId := 0, inSession := '3')
 -- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inRetailId := 4, inSession := '59591')
--- select * from gpSelect_Object_Goods_Retail(inContractId := 0 , inRetailId := 0 ,  inSession := '3');
+-- 
+
+select * from gpSelect_Object_Goods_Retail(inContractId := 0 , inRetailId := 0 ,  inSession := '3');

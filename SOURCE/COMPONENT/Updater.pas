@@ -113,23 +113,26 @@ begin
   StoredProc := TdsdStoredProc.Create(nil);
   try
     //основное подключение из базы
-    StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectParam');
-    StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
-    StoredProc.OutputType := otResult;
-    StoredProc.StoredProcName := 'gpGetConstName';
-    try
-      StoredProc.Execute;
-    except
-      // Если это наша ошибка, то тихонько обходим
-      on E: EStorageException do begin
-         exit;
+    if gc_ProgramName <> 'FarmacyInventory.exe' then
+    begin
+      StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectParam');
+      StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
+      StoredProc.OutputType := otResult;
+      StoredProc.StoredProcName := 'gpGetConstName';
+      try
+        StoredProc.Execute;
+      except
+        // Если это наша ошибка, то тихонько обходим
+        on E: EStorageException do begin
+           exit;
+        end;
+        // Если не наша, то возмущаемся
+        on E: Exception do
+            raise;
       end;
-      // Если не наша, то возмущаемся
-      on E: Exception do
-          raise;
-    end;
-    //основное подключение из базы
-    Connection := StoredProc.ParamByName('gpGetConstName').AsString;
+      //основное подключение из базы
+      Connection := StoredProc.ParamByName('gpGetConstName').AsString;
+    end else Connection := 'https://f.neboley.dp.ua/index.php';
     //
     //
     StringList := TStringList.Create;
