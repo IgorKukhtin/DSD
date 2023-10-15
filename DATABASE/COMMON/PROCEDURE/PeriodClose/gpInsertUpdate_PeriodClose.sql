@@ -82,6 +82,13 @@ BEGIN
    END IF;
 
 
+   -- 
+   IF NOT EXISTS (SELECT 1 FROM PeriodClose WHERE Id = ioId AND Name = inName)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет Прав изменять название.';
+   END IF;
+
+
    -- отброслили время
    inCloseDate:= DATE_TRUNC ('DAY', inCloseDate);
    inCloseDate_store:= DATE_TRUNC ('DAY', inCloseDate_store);
