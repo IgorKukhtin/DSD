@@ -57,14 +57,19 @@ BEGIN
              WITH tmpMI AS (-- получаем движение
                             SELECT MIContainer.ContainerId, MIContainer.ObjectId_Analyzer AS GoodsId
                                    -- приход, он будет zc_MI_Child в zc_Movement_ProductionUnion
-                                 , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.Amount ELSE 0 END) AS Amount_child
+                                 , SUM (CASE WHEN MIContainer.isActive = TRUE  AND MIContainer.MovementDescId = zc_Movement_Send() THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount_child
                                    -- расход, он будет zc_MI_Master в zc_Movement_ProductionUnion
-                                 , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_master
+                                 , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_Send() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_master
+                                   -- здесь внутренний расход на пр-во, вычитаем из будущего zc_MI_Child
+                                 , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.ObjectExtId_Analyzer = inUnitId AND COALESCE (MB_isAuto.ValueData, FALSE) = FALSE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_child_minus
+                                   -- здесь внутренний приход с пр-ва, вычитаем из будущего zc_MI_Master
+                                 , SUM (CASE WHEN MIContainer.isActive = TRUE  AND MIContainer.ObjectExtId_Analyzer = inUnitId AND COALESCE (MB_isAuto.ValueData, FALSE) = FALSE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount_master_minus
                             FROM MovementItemContainer AS MIContainer
+                                 LEFT JOIN MovementBoolean AS MB_isAuto ON MB_isAuto.MovementId = MIContainer.MovementId AND MB_isAuto.DescId = zc_MovementBoolean_isAuto()
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                              AND MIContainer.MovementDescId         = zc_Movement_Send()
+                              AND MIContainer.MovementDescId         IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
                             GROUP BY MIContainer.ContainerId, MIContainer.ObjectId_Analyzer
                            )
            , tmpRemains AS (-- остатки
@@ -74,30 +79,30 @@ BEGIN
                                  INNER JOIN Container ON Container.Id = tmpMI.ContainerId
                                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpMI.ContainerId
                                                                                AND MIContainer.OperDate >= inStartDate
-                            WHERE tmpMI.Amount_master > 0 AND tmpMI.Amount_child > 0
+                            WHERE tmpMI.Amount_master - COALESCE (tmpMI.Amount_master_minus) > 0 AND tmpMI.Amount_child - COALESCE (tmpMI.Amount_child_minus) > 0
                             GROUP BY tmpMI.ContainerId, Container.Amount
                            )
          , tmpMI_Master AS (-- данные по Master
                             SELECT tmpMI.ContainerId
                                  , tmpMI.GoodsId
-                                 , tmpMI.Amount_master AS Amount
+                                 , tmpMI.Amount_master - COALESCE (tmpMI.Amount_master_minus) AS Amount
                             FROM tmpMI
                             WHERE -- если есть приход
-                                  tmpMI.Amount_master > 0
+                                  tmpMI.Amount_master - COALESCE (tmpMI.Amount_master_minus) > 0
                               -- если расход и приход отличаются
-                              AND tmpMI.Amount_child <> tmpMI.Amount_master
+                              AND tmpMI.Amount_child - COALESCE (tmpMI.Amount_child_minus) <> tmpMI.Amount_master - COALESCE (tmpMI.Amount_master_minus)
                            )
          , tmpMI_Child AS (-- данные по Child
                             SELECT tmpMI.ContainerId
                                  , tmpMI.GoodsId
-                                 , tmpMI.Amount_child + COALESCE (tmpRemains.Amount, 0) AS Amount -- !!!добавили остаток!!!
+                                 , tmpMI.Amount_child - COALESCE (tmpMI.Amount_child_minus) + COALESCE (tmpRemains.Amount, 0) AS Amount -- !!!добавили остаток!!!
                             FROM tmpMI
                                  LEFT JOIN tmpRemains ON tmpRemains.ContainerId = tmpMI.ContainerId
-                            WHERE (tmpMI.Amount_child + COALESCE (tmpRemains.Amount, 0)) > 0
+                            WHERE (tmpMI.Amount_child - COALESCE (tmpMI.Amount_child_minus) + COALESCE (tmpRemains.Amount, 0)) > 0
                               -- НЕ ОГРАНИЧИВАЕМ если есть приход
-                              -- AND tmpMI.Amount_master > 0
+                              -- AND tmpMI.Amount_master - COALESCE (tmpMI.Amount_master_minus) > 0
                               -- если расход и приход отличаются
-                              AND tmpMI.Amount_child <> tmpMI.Amount_master
+                              AND tmpMI.Amount_child - COALESCE (tmpMI.Amount_child_minus) <> tmpMI.Amount_master - COALESCE (tmpMI.Amount_master_minus)
                            )
       , tmpMI_Child_res AS (-- распределили
                             SELECT tmpMI_Master.ContainerId AS ContainerId_master
@@ -187,8 +192,10 @@ BEGIN
          ;
 
 
---    RAISE EXCEPTION 'ok.  <%>'
---      , (SELECT SUM (_tmpResult.Amount) FROM _tmpResult WHERE _tmpResult.GoodsId = 5163);
+    RAISE EXCEPTION 'ok.  <%>  %'
+      , (SELECT SUM (_tmpResult.Amount) FROM _tmpResult WHERE _tmpResult.GoodsId = 4597067 and _tmpResult.DescId = zc_MI_Master())
+      , (SELECT SUM (_tmpResult.Amount) FROM _tmpResult WHERE _tmpResult.GoodsId = 4597067 and _tmpResult.DescId = zc_MI_Child())
+      ;
 
     -- Проверка
     IF EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.Amount < 0)
@@ -370,5 +377,5 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_KopchenieAll (inIsUpdate:= FALSE, inStartDate:= '30.06.2019', inEndDate:= '30.06.2019', inUnitId:= 8450, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ копчения
--- where ContainerId = 568111
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_KopchenieAll (inIsUpdate:= FALSE, inStartDate:= '30.06.2019', inEndDate:= '30.06.2019', inUnitId:= 8450, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ копчения -- where ContainerId = 568111
+-- SELECT * FROM gpUpdate_Movement_ProductionUnion_Kopchenie(inStartDate:= '30.09.2023', inEndDate:= '30.09.2023', inUnitId:= 8450, inSession:= zfCalc_UserAdmin() :: TvarChar) -- ЦЕХ копчения
