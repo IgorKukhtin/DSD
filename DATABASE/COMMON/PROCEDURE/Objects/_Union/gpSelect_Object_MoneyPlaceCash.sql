@@ -387,6 +387,7 @@ BEGIN
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = Object_BankAccount_View.CurrencyId
      WHERE Object_BankAccount_View.JuridicalId IN (zc_Juridical_Basis()
                                                  , 15505 -- дсйн рнб 
+                                                 , 9926679  -- "бй" л╡р цпсо" рнб
                                                   )
      --AND vbIsConstraint = FALSE
 
