@@ -132,6 +132,7 @@ BEGIN
                                                     , inCode                    := COALESCE(Object.ObjectCode, lfGet_ObjectCode (0, zc_Object_CarExternal()) )
                                                     , inName                    := inCarName
                                                     , inRegistrationCertificate := COALESCE(RegistrationCertificate.ValueData, '')
+                                                    , inVIN                     := ''
                                                     , inComment                 := COALESCE(ObjectString_Comment.ValueData, '')
                                                     , inCarModelId              := inCarModelId
                                                     , inCarTypeId               := ObjectLink_CarType.ChildObjectId ::Integer

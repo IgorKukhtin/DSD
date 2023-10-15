@@ -56,6 +56,15 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Для значения <%> не найдена <Валюта>.', inInternalName;
      END IF;
      
+
+        /*RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>   <%>    <%>'
+        , inInternalName
+        , vbCurrencyFromId
+        , vbCurrencyToId
+        , vbPaidKindId
+        , inOperDate
+        ;*/
+
      -- поиск
      vbAmount_find:= (SELECT MovementItem.Amount
                       FROM Movement
@@ -70,15 +79,15 @@ BEGIN
                                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
                                                             AND MILinkObject_PaidKind.ObjectId       = vbPaidKindId
-                      WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '55 DAY' AND inOperDate - INTERVAL '1 DAY'
+                      WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', inOperDate) AND inOperDate - INTERVAL '1 DAY'
                         AND Movement.StatusId = zc_Enum_Status_Complete()
                       ORDER BY Movement.OperDate DESC
                       LIMIT 1
                      );
 
      -- есди не нашли
-     IF vbAmount_find <> vbAmount
-     AND NOT EXISTS (SELECT 1
+     IF COALESCE (vbAmount_find, 0) <> vbAmount
+     /*AND NOT EXISTS (SELECT 1
                     FROM Movement
                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
@@ -93,7 +102,7 @@ BEGIN
                                                           AND MILinkObject_PaidKind.ObjectId       = vbPaidKindId
                     WHERE Movement.OperDate = inOperDate
                       AND Movement.StatusId = zc_Enum_Status_Complete()
-                   )
+                   )*/
      THEN
          PERFORM gpInsertUpdate_Movement_Currency (ioId                       := 0
                                                  , inInvNumber                := CAST (NEXTVAL ('Movement_currency_seq') AS TVarChar)

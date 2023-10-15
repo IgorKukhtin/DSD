@@ -91,6 +91,7 @@ BEGIN
                                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_CarExternal())
                                                                      , inName        := inCar
                                                                      , inRegistrationCertificate := '' ::TVarChar
+                                                    , inVIN                     := ''
                                                                      , inComment     := '' ::TVarChar
                                                                      , inCarModelId  := 0 
                                                                      , inCarTypeId   := 0
