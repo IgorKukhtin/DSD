@@ -132,7 +132,12 @@ BEGIN
                                                             AND MIFloat_RealWeightMsg.DescId         = zc_MIFloat_RealWeightMsg()
 
                             -- ЦЕХ деликатесов
-                            WHERE Movement.OperDate BETWEEN inOperDate - CASE WHEN inUnitId = 8448 THEN INTERVAL '30 DAY' ELSE INTERVAL '10 DAY' END :: INTERVAL AND inOperDate
+                            WHERE Movement.OperDate BETWEEN inOperDate - CASE WHEN inDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+                                                                                   THEN INTERVAL '100 DAY' 
+                                                                              WHEN inUnitId = 8448
+                                                                                   THEN INTERVAL '50 DAY'
+                                                                              ELSE INTERVAL '10 DAY'
+                                                                         END :: INTERVAL AND inOperDate
                               AND Movement.DescId   = zc_Movement_ProductionUnion()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
@@ -302,7 +307,10 @@ BEGIN
                                              AND MILO_Update.DescId = zc_MILinkObject_Update()
              LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
+       WHERE tmpMI.GoodsKindId_Complete = zc_GoodsKind_Basis()
+          OR inDocumentKindId NOT IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
        ORDER BY Object_Goods.ValueData
+
               , Object_GoodsKindComplete.ValueData
               , tmpMI.OperDate DESC
               , tmpMI.InvNumber DESC
