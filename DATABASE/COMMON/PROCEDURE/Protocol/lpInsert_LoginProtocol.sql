@@ -16,7 +16,15 @@ $BODY$
    DECLARE vbId_connect  Integer;
    DECLARE vbId_process  Integer;
 BEGIN
+
+     -- !!!для реплики отключили эту проц!!!
+     IF zc_isReplica_Slave() = TRUE
+     THEN
+         -- !!!отключили!!!
+         RETURN;
+     END IF;
  
+
      -- Если подключился - почти ничего не делаем
      IF inIsConnect = TRUE
      THEN
