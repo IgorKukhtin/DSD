@@ -6788,8 +6788,6 @@
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 89
-        ExplicitTop = -176
         object cxGridDBTableView_Det: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -9298,6 +9296,7 @@
     object bbOrderInternalPackRem: TdxBarButton
       Action = actOpenFormOrderInternalPackRem
       Category = 0
+      ImageIndex = 83
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
