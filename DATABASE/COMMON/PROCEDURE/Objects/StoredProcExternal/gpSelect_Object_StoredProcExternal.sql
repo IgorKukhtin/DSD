@@ -70,6 +70,8 @@ BEGIN
             --
             OR spList.ProName ILIKE 'gpSelect_Scale_Goods'
             OR spList.ProName ILIKE 'gpSelect_Scale_Partner'
+
+            OR spList.ProName ILIKE 'gpReport_Balance'
               )
           AND spList.ProName NOT ILIKE 'gpSelect_Object_Contract'
 

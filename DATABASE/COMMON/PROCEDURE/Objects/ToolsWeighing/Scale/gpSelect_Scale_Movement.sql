@@ -53,10 +53,14 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUserId_save Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     --
+     vbUserId_save:= vbUserId;
 
 
      -- !!!временно!!! менется параметр
@@ -71,7 +75,7 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND NOT EXISTS (SELECT tmpUserAdmin.UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT tmpUserAdmin.UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )*/
-       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId WHERE inIsComlete = TRUE
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId WHERE inIsComlete = TRUE OR vbUserId_save = 5
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
                          )

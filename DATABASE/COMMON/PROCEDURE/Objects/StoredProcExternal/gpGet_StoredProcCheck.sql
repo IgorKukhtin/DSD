@@ -61,7 +61,11 @@ BEGIN
       
 
       -- если отключен SRV-A
-      ELSEIF vbIsReal_only = TRUE OR 1=0
+      ELSEIF vbIsReal_only = TRUE OR 1=1
+          -- !!!такие исключения!!!
+          OR (TRIM (inStoredProc) ILIKE 'gpReport_Balance'
+              AND vbUserId <> 5
+             )
       THEN
            -- 0.1.
           RETURN FALSE;
@@ -83,7 +87,10 @@ BEGIN
                          WHERE Id = vbLastId_srv
                            AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP - INTERVAL '11 MIN')
                         )
-             AND vbUserId <> 5
+             -- AND vbUserId <> 5
+             AND (zfConvert_StringToDate (inValue2) > DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '2 MONTH'
+               OR zfConvert_StringToDate (inValue2) IS NULL
+                 )
           THEN
               -- 1.0.
               RETURN FALSE;
