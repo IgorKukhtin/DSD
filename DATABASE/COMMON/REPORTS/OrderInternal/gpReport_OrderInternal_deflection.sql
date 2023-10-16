@@ -526,7 +526,7 @@ BEGIN
                              ) AS tmpContainer  ON tmpMI.GoodsId     = tmpContainer.GoodsId
                                                             AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
                        -- WHERE tmpContainer.GoodsId = 963624
-                     /*  UNION ALL
+                       UNION ALL
                         -- результат - для zc_MI_Child
                         SELECT zc_MI_Child()                                           AS MIDescId
                              , COALESCE (tmpContainer.ContainerId,  tmpMI.ContainerId) AS ContainerId
@@ -538,7 +538,7 @@ BEGIN
                         FROM tmpContainer
                              FULL JOIN tmpMI_child AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
                         WHERE tmpContainer.MIDescId = zc_MI_Child()
-                        */) AS tmp
+                        ) AS tmp
                    WHERE (COALESCE (tmp.AmountRemains_calc,0) <> COALESCE (tmp.AmountRemains,0) OR inisShowAll = TRUE)
                          -- AND tmp.MovementItemId > 0
                    ) 

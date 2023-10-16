@@ -1,12 +1,12 @@
 inherited MainForm: TMainForm
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187' 64bit'
-  ClientHeight = 214
+  ClientHeight = 204
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 273
+  ExplicitHeight = 263
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -71,7 +71,7 @@ inherited MainForm: TMainForm
     Left = 0
     Top = 81
     Width = 1360
-    Height = 133
+    Height = 123
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -80,6 +80,7 @@ inherited MainForm: TMainForm
     Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
+    ExplicitHeight = 133
     object cxGridGetMsgDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetMsg

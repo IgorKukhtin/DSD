@@ -1,31 +1,29 @@
 inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_deflectionForm
   Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1054#1089#1090#1072#1090#1082#1086#1074' - '#1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' )>'
-  ClientHeight = 460
+  ClientHeight = 450
   ClientWidth = 922
   ExplicitWidth = 938
-  ExplicitHeight = 499
+  ExplicitHeight = 489
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 116
     Width = 922
-    Height = 344
+    Height = 334
     ExplicitTop = 116
     ExplicitWidth = 922
-    ExplicitHeight = 344
-    ClientRectBottom = 344
+    ExplicitHeight = 334
+    ClientRectBottom = 334
     ClientRectRight = 922
     inherited tsMain: TcxTabSheet
       Caption = #1044#1072#1085#1085#1099#1077
       ExplicitWidth = 922
-      ExplicitHeight = 320
+      ExplicitHeight = 310
       inherited cxGrid: TcxGrid
         Width = 922
-        Height = 320
-        ExplicitLeft = -136
-        ExplicitTop = 88
+        Height = 310
         ExplicitWidth = 922
-        ExplicitHeight = 320
+        ExplicitHeight = 310
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
