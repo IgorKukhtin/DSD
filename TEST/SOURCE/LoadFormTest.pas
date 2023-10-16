@@ -1124,6 +1124,9 @@ end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternal_deflectionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternal_deflectionForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemains_deflectionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemains_deflectionForm');
   //exit;
@@ -1147,7 +1150,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsForm');
-  exit;
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsJournalForm');
@@ -1161,10 +1164,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
-
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalChildForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalChildForm');
-  exit;
+
 
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');

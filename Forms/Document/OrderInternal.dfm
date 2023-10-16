@@ -2426,6 +2426,50 @@ inherited OrderInternalForm: TOrderInternalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actOpenFormOrderInterna_def: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1086' '#1086#1090#1089#1090#1072#1090#1082#1091
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1086' '#1086#1090#1089#1090#1072#1090#1082#1091
+      ImageIndex = 24
+      FormName = 'TOrderInternal_deflectionForm'
+      FormNameParam.Value = 'TOrderInternal_deflectionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -2578,6 +2622,10 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormOrderInterna_def'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2667,6 +2715,11 @@ inherited OrderInternalForm: TOrderInternalForm
     object bbOpenOrderInternalChild: TdxBarButton
       Action = actOpenOrderInternalChild_1
       Category = 0
+    end
+    object bbOpenFormOrderInterna_def: TdxBarButton
+      Action = actOpenFormOrderInterna_def
+      Category = 0
+      ImageIndex = 83
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

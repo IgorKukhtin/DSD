@@ -9325,6 +9325,7 @@
     object bbOrderInternalPackRem: TdxBarButton
       Action = actOpenFormOrderInternalPackRem
       Category = 0
+      ImageIndex = 83
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
