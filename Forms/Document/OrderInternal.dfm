@@ -2719,7 +2719,6 @@ inherited OrderInternalForm: TOrderInternalForm
     object bbOpenFormOrderInterna_def: TdxBarButton
       Action = actOpenFormOrderInterna_def
       Category = 0
-      Visible = ivNever
       ImageIndex = 83
     end
   end

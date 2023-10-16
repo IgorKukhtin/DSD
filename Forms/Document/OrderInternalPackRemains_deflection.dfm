@@ -22,6 +22,8 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
       inherited cxGrid: TcxGrid
         Width = 922
         Height = 320
+        ExplicitLeft = -136
+        ExplicitTop = 88
         ExplicitWidth = 922
         ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1281,7 +1283,7 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 19
       end>
     Left = 558
     Top = 313
