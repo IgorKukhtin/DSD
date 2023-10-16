@@ -30,7 +30,6 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -76,7 +75,6 @@ type
     cxLabel10: TcxLabel;
     edOperDatePartner: TcxDateEdit;
     ceComment: TcxTextEdit;
-    AmountRemains_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

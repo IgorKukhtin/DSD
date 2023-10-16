@@ -3550,6 +3550,9 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -5275,6 +5278,9 @@
     object tsAll: TcxTabSheet
       Caption = #1055#1083#1072#1085' ('#1074#1089#1077')'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -6809,6 +6815,9 @@
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095#1077#1090' '#1060#1040#1050#1058
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid_Det: TcxGrid
         Left = 0
         Top = 0

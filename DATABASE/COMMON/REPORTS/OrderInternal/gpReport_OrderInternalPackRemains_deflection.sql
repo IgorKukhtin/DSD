@@ -1,26 +1,48 @@
 -- Function: gpReport_OrderInternal_choice()
 
-DROP FUNCTION IF EXISTS gpReport_OrderInternal_deflection (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderInternalPackRemains_deflection (Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpReport_OrderInternalPackRemains_deflection(
     IN inMovementId        Integer   , --
     IN inIsShowAll          Boolean   , -- свернуть и показать остатки  
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id                      Integer
-             , GoodsId                 Integer
-             , GoodsCode               Integer
-             , GoodsName               TVarChar
-             , GoodsKindName           TVarChar
-             , MeasureName             TVarChar
-             , GoodsGroupName          TVarChar
-             , GoodsGroupNameFull      TVarChar
-             , Amount                  TFloat
-             , AmountRemains           TFloat
-             , AmountRemains_calc      TFloat
-             , AmountRemains_diff      TFloat
+RETURNS TABLE (Id                   Integer
+             , ContainerId          Integer
+             , GoodsId              Integer
+             , GoodsCode            Integer
+             , GoodsName            TVarChar
+             , GoodsId_complete     Integer
+             , GoodsCode_complete   Integer
+             , GoodsName_complete   TVarChar
+             , GoodsId_basis        Integer
+             , GoodsCode_basis      Integer
+             , GoodsName_basis      TVarChar
+             , GoodsKindId          Integer
+             , GoodsKindName        TVarChar
+             , GoodsKindId_complete   Integer
+             , GoodsKindName_complete TVarChar
+             , MeasureName            TVarChar
+             , MeasureName_complete   TVarChar
+             , MeasureName_basis      TVarChar
+             , GoodsGroupNameFull     TVarChar
+             , isCheck_basis      Boolean
+             , Remains_CEH        TFloat
+             , Remains_CEH_Next   TFloat
+             , Remains_CEH_all    TFloat
+             , Remains_CEH_err    TFloat
+             , Remains            TFloat
+             , Remains_pack       TFloat
+             , Remains_err        TFloat
+             , RemainsRK          TFloat
+             --
+             , Remains_calc       TFloat
+             , Remains_pack_calc  TFloat
+             , Remains_CEH_calc   TFloat 
+             , Remains_diff       TFloat
+             , Remains_pack_diff  TFloat
+             , Remains_CEH_diff   TFloat
+             , RemainsAll_diff    TFloat
               )
 AS
 $BODY$
@@ -31,11 +53,16 @@ BEGIN
 
     vbOperDate :=(SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
+
+     -- получааем  _Result_ChildTotal
+     PERFORM lpSelect_MI_OrderInternalPackRemains (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inUserId:= vbUserId) ;
+
+
     -- остатки
-    CREATE TEMP TABLE tmpContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount_start TFloat, AmountRK_start TFloat, AmountPrIn TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount_start TFloat, AmountRK_start TFloat, AmountPrIn TFloat, Amount_start_noUp TFloat) ON COMMIT DROP;
    
     -- Остатки кол-во для всех подразделений
-    INSERT INTO tmpContainer (ContainerId, GoodsId, GoodsKindId, Amount_start, AmountRK_start, AmountPrIn)
+    INSERT INTO tmpContainer (ContainerId, GoodsId, GoodsKindId, Amount_start, AmountRK_start, AmountPrIn, Amount_start_noUp)
        WITH -- хардкодим - ЦЕХ колбаса+дел-сы (производство)
             tmpUnit_CEH AS (SELECT UnitId, TRUE AS isContainer FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
             -- хардкодим - Склады База + Склад Поклейки этикетки
@@ -69,7 +96,13 @@ BEGIN
             , tmp.GoodsKindId
             , SUM (tmp.Amount_start + CASE WHEN tmp.ContainerId > 0 THEN tmp.Amount_next ELSE 0 END) AS Amount_start
             , SUM (tmp.AmountRK_start) AS AmountRK_start
-            , SUM (tmp.AmountPrIn) AS AmountPrIn
+            , SUM (tmp.AmountPrIn) AS AmountPrIn 
+            
+            , SUM (CASE WHEN tmp.GoodsKindId = zc_GoodsKind_Basis() AND COALESCE (tmp.Amount_start + CASE WHEN tmp.ContainerId > 0 THEN tmp.Amount_next ELSE 0 END,0) - COALESCE (tmp.AmountRK_start,0) >=0 
+                        THEN COALESCE (tmp.Amount_start + CASE WHEN tmp.ContainerId > 0 THEN tmp.Amount_next ELSE 0 END,0) - COALESCE (tmp.AmountRK_start,0) 
+                        ELSE 0 
+                   END) AS  Amount_start_noUp
+            
        FROM (SELECT CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END AS ContainerId
                   , Container.ObjectId                   AS GoodsId
                   , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -84,7 +117,7 @@ BEGIN
                                AND tmpUnit_CEH.UnitId > 0 AND tmpUnit_SKLAD.UnitId > 0
                                    THEN MIContainer.Amount
                               ELSE 0
-                         END) AS AmountPrIn
+                         END) AS AmountPrIn 
              FROM tmpGoods
                   INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                       AND Container.DescId   = zc_Container_Count()
@@ -130,175 +163,156 @@ BEGIN
      RETURN QUERY
      WITH 
       --Данные из заявки
-         tmpMI_master AS (SELECT MovementItem.Id                                AS MovementItemId
-                             , COALESCE (MIFloat_ContainerId.ValueData, 0) :: Integer AS ContainerId
-                             , MovementItem.ObjectId                          AS GoodsId
-                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
-                             , COALESCE (MILinkObject_GoodsBasis.ObjectId, 0) AS GoodsId_basis
-                             , COALESCE (MILinkObject_GoodsKindComplete.ObjectId
-                                       , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
-                                                   THEN zc_GoodsKind_Basis()
-                                              ELSE 0
-                                         END
-                                        )                                      AS GoodsKindId_complete
-                             , MovementItem.Amount                             AS Amount
-                             , COALESCE (MIFloat_AmountSecond.ValueData, 0)    AS AmountSecond
-                             , COALESCE (MIFloat_AmountRemains.ValueData, 0)   AS AmountRemains
-
-              FROM MovementItem
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                               ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
-                                               ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
-                  
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()  
-
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
-                                                    ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsBasis.DescId = zc_MILinkObject_GoodsBasis()
-
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                    ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                               ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                              AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
-              WHERE MovementItem.MovementId = inMovementId
-                AND MovementItem.DescId     = zc_MI_Master()
-                AND MovementItem.isErased   = FALSE
-              )
- 
-     , tmpMI_child AS (SELECT MovementItem.Id                                       AS MovementItemId
-                            , MovementItem.ObjectId                                 AS GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         AS GoodsKindId 
-                            , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_complete
-                            , MIFloat_ContainerId.ValueData                         AS ContainerId
-                            , MovementItem.Amount                                   AS Amount
-                       FROM MovementItem
-                            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                             ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                       WHERE MovementItem.MovementId = inMovementId
-                         AND MovementItem.DescId     = zc_MI_Child()
-                         AND MovementItem.isErased   = FALSE
-                       )
-       , tmpMI AS (SELECT tmpMI_master.MovementItemId
-                      , tmpMI_master.GoodsId
-                      , tmpMI_master.GoodsKindId
-                      , tmpMI_master.GoodsId_basis
-                      , tmpMI_master.ContainerId
-
-                      , tmpMI_master.Amount
-                      , (COALESCE (tmpMI_master.AmountRemains,0) + COALESCE (tmpMI_child.Amount,0)) AS AmountRemains 
-                 FROM tmpMI_master
-                      LEFT JOIN tmpMI_child ON tmpMI_child.GoodsId = tmpMI_master.GoodsId_basis
-                                           AND tmpMI_child.GoodsKindId_complete = tmpMI_master.GoodsKindId_complete
-                 )
+         tmpMI AS (SELECT _Result_ChildTotal.Id
+                        , _Result_ChildTotal.ContainerId
+                        , _Result_ChildTotal.GoodsId
+                        , _Result_ChildTotal.GoodsCode
+                        , _Result_ChildTotal.GoodsName
+                        , _Result_ChildTotal.GoodsId_complete
+                        , _Result_ChildTotal.GoodsCode_complete
+                        , _Result_ChildTotal.GoodsName_complete
+                        , _Result_ChildTotal.GoodsId_basis
+                        , _Result_ChildTotal.GoodsCode_basis
+                        , _Result_ChildTotal.GoodsName_basis
+                        , _Result_ChildTotal.GoodsKindId
+                        , _Result_ChildTotal.GoodsKindName
+                        , _Result_ChildTotal.GoodsKindId_complete
+                        , _Result_ChildTotal.GoodsKindName_complete
+                        , _Result_ChildTotal.MeasureName
+                        , _Result_ChildTotal.MeasureName_complete
+                        , _Result_ChildTotal.MeasureName_basis
+                        , _Result_ChildTotal.GoodsGroupNameFull
+                        , _Result_ChildTotal.isCheck_basis
+                        , _Result_ChildTotal.Remains_CEH
+                        , _Result_ChildTotal.Remains_CEH_Next
+                        , _Result_ChildTotal.Remains_CEH_err
+                        , _Result_ChildTotal.Remains
+                        , _Result_ChildTotal.Remains_pack
+                        , _Result_ChildTotal.Remains_err
+                        , _Result_ChildTotal.RemainsRK
+                        , _Result_ChildTotal.ReceiptId
+                        , _Result_ChildTotal.ReceiptCode
+                        , _Result_ChildTotal.ReceiptName
+                        , _Result_ChildTotal.ReceiptId_basis
+                        , _Result_ChildTotal.ReceiptCode_basis
+                        , _Result_ChildTotal.ReceiptName_basis
+                        , _Result_ChildTotal.UnitId
+                        , _Result_ChildTotal.UnitCode
+                        , _Result_ChildTotal.UnitName
+                        , _Result_ChildTotal.GoodsKindName_pf
+                        , _Result_ChildTotal.GoodsKindCompleteName_pf
+                        , _Result_ChildTotal.PartionDate_pf
+                        , _Result_ChildTotal.PartionGoods_start
+                        , _Result_ChildTotal.TermProduction
+                   FROM _Result_ChildTotal
+                   )
 
      , tmpData AS (SELECT *
-                   FROM (
-                  -- результат - для SKLAD
-       SELECT tmp.MovementItemId
-            , tmp.ContainerId
-            , tmp.GoodsId
-            , tmp.GoodsKindId
-            , SUM (tmp.Amount_start)   AS AmountRemains_calc
-           , SUM (tmp.Amount)                  ::TFloat AS Amount
-           , SUM (tmp.AmountRemains)           ::TFloat AS AmountRemains
-       FROM (SELECT COALESCE (tmpMI.MovementItemId, 0)                      AS MovementItemId
-                  , 0                                                       AS ContainerId
-                  , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
-                  , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
-                  , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
-
-           , tmpMI.Amount                  ::TFloat
-           , tmpMI.AmountRemains           ::TFloat
-
-             FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId = 0
-                  ) AS tmpContainer
-                  FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId = 0
-                            ) AS tmpMI ON tmpMI.GoodsId     = tmpContainer.GoodsId
-                                      AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
-            ) AS tmp
-
-       GROUP BY tmp.MovementItemId
-              , tmp.ContainerId
-              , tmp.GoodsId
-              , tmp.GoodsKindId
-      UNION ALL
-       -- результат - для CEH
-       SELECT tmpMI.MovementItemId
-            , COALESCE (tmpContainer.ContainerId,  tmpMI.ContainerId) AS ContainerId
-            , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
-            , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
-            , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
-            , tmpMI.Amount                  ::TFloat
-            , tmpMI.AmountRemains           ::TFloat
-       FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId > 0
-            ) AS tmpContainer
-            FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId > 0
-                      ) AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
-                  
-                   ) AS tmp
-           WHERE ( COALESCE (tmp.AmountRemains_calc,0) <> COALESCE (tmp.AmountRemains,0) OR inisShowAll = TRUE)
-    AND tmp.MovementItemId > 0
-)    
+                   FROM (-- результат - для SKLAD
+                         SELECT tmp.MovementItemId
+                              , tmp.ContainerId
+                              , tmp.GoodsId
+                              , tmp.GoodsKindId
+                              , SUM (tmp.Remains_calc)      AS Remains_calc
+                              , SUM (tmp.Remains_pack_calc) AS Remains_pack_calc
+                              , SUM (tmp.Remains_CEH_calc)  AS Remains_CEH_calc
+                             -- , SUM (tmp.Remains_calc_noUp) AS Remains_calc_noUp
+                         FROM (SELECT COALESCE (tmpMI.Id, 0)                      AS MovementItemId
+                                    , 0                                                       AS ContainerId
+                                    , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
+                                    , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
+                                    --, COALESCE (tmpContainer.Amount_start, 0)                 AS Remains_calc
+                                    , CASE WHEN COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) = zc_GoodsKind_Basis() 
+                                           THEN CASE WHEN COALESCE (tmpContainer.Amount_start,0) - COALESCE (tmpContainer.AmountRK_start,0) >= 0 
+                                                     THEN COALESCE (tmpContainer.Amount_start,0) - COALESCE (tmpContainer.AmountRK_start,0)
+                                                     ELSE 0
+                                                END                                             
+                                           ELSE 0--COALESCE (tmpContainer.Amount_start, 0)
+                                      END                                                     AS Remains_calc
+                                    , CASE WHEN COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) <> zc_GoodsKind_Basis() 
+                                           THEN COALESCE (tmpContainer.Amount_start, 0)                                            
+                                           ELSE 0
+                                      END                                                     AS Remains_pack_calc
+                                    , 0                                                       AS Remains_CEH_calc
+                                   -- , COALESCE (tmpContainer.Amount_start_noUp, 0)            AS Remains_calc_noUp
+                               FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId = 0
+                                    ) AS tmpContainer
+                                    FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId = 0
+                                              ) AS tmpMI ON tmpMI.GoodsId     = tmpContainer.GoodsId
+                                                        AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
+                              ) AS tmp
+                         GROUP BY tmp.MovementItemId
+                                , tmp.ContainerId
+                                , tmp.GoodsId
+                                , tmp.GoodsKindId
+                        UNION ALL
+                         -- результат - для CEH
+                         SELECT tmpMI.Id
+                              , COALESCE (tmpContainer.ContainerId,  tmpMI.ContainerId) AS ContainerId
+                              , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
+                              , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId 
+                              , 0                                                       AS Remains_calc
+                              , 0                                                       AS Remains_pack_calc 
+                              , COALESCE (tmpContainer.Amount_start, 0)                 AS Remains_CEH_calc
+                              --, COALESCE (tmpContainer.Amount_start_noUp, 0)            AS Remains_calc_noUp
+                         FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId > 0
+                              ) AS tmpContainer
+                              FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId > 0
+                                        ) AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
+                                     ) AS tmp
+                   WHERE tmp.MovementItemId > 0
+                  )    
 
        -- Результат
        SELECT
-             tmpData.MovementItemId                     AS Id
-           
-           , Object_Goods.Id                            AS GoodsId
-           , Object_Goods.ObjectCode                    AS GoodsCode
-           , Object_Goods.ValueData                     AS GoodsName  
-                      
-           , Object_GoodsKind.ValueData                 AS GoodsKindName
-           , Object_Measure.ValueData                   AS MeasureName
-           , Object_GoodsGroup.ValueData                AS GoodsGroupName
-           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+             tmpMI.Id
+           , tmpMI.ContainerId
+           , tmpMI.GoodsId
+           , tmpMI.GoodsCode
+           , tmpMI.GoodsName
+           , tmpMI.GoodsId_complete
+           , tmpMI.GoodsCode_complete
+           , tmpMI.GoodsName_complete
+           , tmpMI.GoodsId_basis
+           , tmpMI.GoodsCode_basis
+           , tmpMI.GoodsName_basis
+           , tmpMI.GoodsKindId
+           , tmpMI.GoodsKindName
+           , tmpMI.GoodsKindId_complete
+           , tmpMI.GoodsKindName_complete
+           , tmpMI.MeasureName
+           , tmpMI.MeasureName_complete
+           , tmpMI.MeasureName_basis
+           , tmpMI.GoodsGroupNameFull
+           , tmpMI.isCheck_basis
+           , tmpMI.Remains_CEH
+           , tmpMI.Remains_CEH_Next
+           , (COALESCE (tmpMI.Remains_CEH,0) + COALESCE (tmpMI.Remains_CEH_Next,0)) ::TFloat AS Remains_CEH_all
+           , tmpMI.Remains_CEH_err
+           , tmpMI.Remains
+           , tmpMI.Remains_pack
+           , tmpMI.Remains_err
+           , tmpMI.RemainsRK
            --
-           , tmpData.Amount                  ::TFloat
-           , tmpData.AmountRemains           ::TFloat
-           , tmpData.AmountRemains_calc      ::TFloat
-           , (COALESCE (tmpData.AmountRemains,0) - COALESCE (tmpData.AmountRemains_calc ,0))  ::TFloat AS AmountRemains_diff
-
+           , tmpData.Remains_calc             ::TFloat
+           , tmpData.Remains_pack_calc        ::TFloat
+           , tmpData.Remains_CEH_calc         ::TFloat
+          -- , tmpData.Remains_next_calc        ::TFloat
+           --, tmpData.Remains_calc_noUp        ::TFloat
+           
+           
+           , (COALESCE (tmpMI.Remains,0) - COALESCE (tmpData.Remains_calc,0))             ::TFloat  AS Remains_diff
+           , (COALESCE (tmpMI.Remains_pack,0) - COALESCE (tmpData.Remains_pack_calc,0))   ::TFloat  AS Remains_pack_diff
+           , ((COALESCE (tmpMI.Remains_CEH,0)+ COALESCE (tmpMI.Remains_CEH_Next,0)) - COALESCE (tmpData.Remains_CEH_calc ,0))  ::TFloat  AS Remains_CEH_diff
+           , ((COALESCE (tmpMI.Remains,0) + COALESCE (tmpMI.Remains_pack,0) + COALESCE (tmpMI.Remains_CEH,0)+ COALESCE (tmpMI.Remains_CEH_Next,0))
+             -( COALESCE (tmpData.Remains_calc,0) + COALESCE (tmpData.Remains_pack_calc,0) + COALESCE (tmpData.Remains_CEH_calc ,0)))  ::TFloat  AS RemainsAll_diff
 
        FROM tmpData
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId 
-          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId  
-          
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
-                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
+          LEFT JOIN tmpMI ON tmpMI.Id = tmpData.MovementItemId 
+       WHERE (COALESCE (tmpData.Remains_calc,0) <> COALESCE (tmpMI.Remains,0)
+             OR COALESCE (tmpData.Remains_CEH_calc,0) <> COALESCE (tmpMI.Remains_CEH,0)
+             )
+            OR inisShowAll = TRUE
          ;
 
 END;

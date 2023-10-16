@@ -1,66 +1,105 @@
 inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_deflectionForm
   Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1054#1089#1090#1072#1090#1082#1086#1074' - '#1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' )>'
   ClientHeight = 460
-  ClientWidth = 715
-  ExplicitWidth = 731
+  ClientWidth = 922
+  ExplicitWidth = 938
   ExplicitHeight = 499
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 116
-    Width = 715
+    Width = 922
     Height = 344
     ExplicitTop = 116
-    ExplicitWidth = 715
+    ExplicitWidth = 922
     ExplicitHeight = 344
     ClientRectBottom = 344
-    ClientRectRight = 715
+    ClientRectRight = 922
     inherited tsMain: TcxTabSheet
       Caption = #1044#1072#1085#1085#1099#1077
-      ExplicitWidth = 715
+      ExplicitWidth = 922
       ExplicitHeight = 320
       inherited cxGrid: TcxGrid
-        Width = 715
+        Width = 922
         Height = 320
-        ExplicitWidth = 715
+        ExplicitWidth = 922
         ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
+              Column = Remains_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountRemains
+              Column = Remains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountRemains_calc
+              Column = Remains_pack
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountRemains_diff
+              Column = Remains_CEH
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_Next
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsRK
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_pack_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_pack_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsAll_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_all
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountRemains
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountRemains_calc
+              Column = Remains_calc
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -70,7 +109,66 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountRemains_diff
+              Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_pack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_Next
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsRK
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_pack_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_pack_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsAll_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_CEH_all
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -102,6 +200,7 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
           object GoodsName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -131,22 +230,12 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
             Options.Editing = False
             Width = 45
           end
-          object Amount: TcxGridDBColumn [5]
-            Caption = '***'#1055'1 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
-            Options.Editing = False
-            Width = 55
+          inherited colIsErased: TcxGridDBColumn
+            VisibleForCustomization = False
           end
-          object AmountRemains: TcxGridDBColumn [6]
+          object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'.'
-            DataBinding.FieldName = 'AmountRemains'
+            DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -156,9 +245,9 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
             Options.Editing = False
             Width = 70
           end
-          object AmountRemains_calc: TcxGridDBColumn [7]
-            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1092#1072#1082#1090
-            DataBinding.FieldName = 'AmountRemains_calc'
+          object Remains_calc: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'. '#1060#1072#1082#1090
+            DataBinding.FieldName = 'Remains_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -167,28 +256,148 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
             Options.Editing = False
             Width = 70
           end
-          object AmountRemains_diff: TcxGridDBColumn [8]
-            Caption = #1054#1090#1082'. '#1086#1089#1090'.'
-            DataBinding.FieldName = 'AmountRemains_diff'
+          object Remains_pack: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'Remains_pack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081
+            Options.Editing = False
+            Width = 70
+          end
+          object Remains_pack_calc: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082'. '#1060#1072#1082#1090
+            DataBinding.FieldName = 'Remains_pack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Remains_CEH_all: TcxGridDBColumn
+            Caption = ' '#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086
+            DataBinding.FieldName = 'Remains_CEH_all'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' '#1074' '#1062#1077#1093#1077' ('#1057#1045#1043#1054#1044#1053#1071' +  '#1055#1054#1047#1046#1045')'
+            Options.Editing = False
+            Width = 75
+          end
+          object Remains_CEH_calc: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'.  '#1087#1088'-'#1074#1086' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'Remains_CEH_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Remains_CEH: TcxGridDBColumn
+            Caption = ' '#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
+            DataBinding.FieldName = 'Remains_CEH'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' '#1074' '#1062#1077#1093#1077' ('#1057#1045#1043#1054#1044#1053#1071')'
+            Options.Editing = False
+            Width = 75
+          end
+          object Remains_CEH_Next: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1055#1054#1047#1046#1045')'
+            DataBinding.FieldName = 'Remains_CEH_Next'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' '#1074' '#1062#1077#1093#1077' ('#1055#1054#1047#1046#1045')'
+            Options.Editing = False
+            Width = 70
+          end
+          object RemainsRK: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1056#1050
+            DataBinding.FieldName = 'RemainsRK'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Remains_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082'. '#1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'Remains_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'.'
             Width = 70
           end
-          inherited colIsErased: TcxGridDBColumn
-            VisibleForCustomization = False
+          object Remains_pack_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082'. '#1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'Remains_pack_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082'.'
+            Width = 70
+          end
+          object Remains_CEH_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082'. '#1086#1089#1090'.  '#1087#1088'-'#1074#1086
+            DataBinding.FieldName = 'Remains_CEH_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1088'-'#1074#1086
+            Width = 70
+          end
+          object RemainsAll_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082'. '#1048#1090#1086#1075#1086
+            DataBinding.FieldName = 'RemainsAll_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1080#1090#1086#1075#1086
+            Width = 70
+          end
+          object ContainerId: TcxGridDBColumn
+            Caption = #1087#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 715
+    Width = 922
     Height = 90
     TabOrder = 3
-    ExplicitWidth = 715
+    ExplicitWidth = 922
     ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -1064,7 +1273,6 @@ inherited OrderInternalPackRemains_deflectionForm: TOrderInternalPackRemains_def
         Column = GoodsName
       end
       item
-        Column = Amount
       end>
     SummaryItemList = <
       item
