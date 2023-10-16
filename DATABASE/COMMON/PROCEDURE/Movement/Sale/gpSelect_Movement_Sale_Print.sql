@@ -1668,7 +1668,11 @@ BEGIN
                    ELSE FALSE
               END :: Boolean AS isFozziTare
 
-            , tmpMI_WeighingPartner.Box_count :: Integer AS Box_count_calc
+            , CASE WHEN tmpMI_WeighingPartner.Box_count = 1 AND COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
+                   THEN tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)      
+                   ELSE tmpMI_WeighingPartner.Box_count
+              END :: Integer AS Box_count_calc
+
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
