@@ -16,17 +16,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1370
-    ExplicitHeight = 369
+    ExplicitHeight = 385
     ClientRectBottom = 385
     ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1370
-      ExplicitHeight = 369
+      ExplicitHeight = 385
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 385
         ExplicitWidth = 1370
-        ExplicitHeight = 369
+        ExplicitHeight = 385
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -889,7 +889,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitTop = 450
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -3553,7 +3552,20 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
     object mactExport_xls: TMultiAction
       Category = 'Export_Email'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
       ActionList = <
         item
           Action = actGet_Export_Email
@@ -3562,6 +3574,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           Action = actGet_Export_FileName_xls
         end
         item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actExport_fr3
         end
         item
           Action = actSMTPFile
@@ -3671,6 +3687,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item

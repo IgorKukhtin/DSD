@@ -339,9 +339,11 @@ type
     spSelectPrintRemains_fact2: TdsdStoredProc;
     chGoodsCode_complete: TcxGridDBColumn;
     chGoodsName_complete: TcxGridDBColumn;
-    GoodsKindName_complete: TcxGridDBColumn;
+    chGoodsKindName_complete: TcxGridDBColumn;
     actOpenFormOrderInternalPackRem: TdsdInsertUpdateAction;
     bbOrderInternalPackRem: TdxBarButton;
+    KeyId: TcxGridDBColumn;
+    chKeyId: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -39,6 +39,7 @@ BEGIN
                       FROM tmpExportJuridical
                       WHERE tmpExportJuridical.PartnerId = vbPartnerId)
                    , 0)
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Данная функция для Контрагента <%> не предусмотрена.'
                        , lfGet_Object_ValueData (vbPartnerId);
@@ -50,11 +51,15 @@ BEGIN
           tmpPartnerTo AS (SELECT vbPartnerId AS PartnerId)
           -- ВСЕ, кому надо отправить Email
         , tmpExportJuridical AS (SELECT tmp.PartnerId, tmp.EmailKindId, STRING_AGG (tmp.ContactPersonMail, ';') AS ContactPersonMail FROM lpSelect_Object_ExportJuridical_list() AS tmp GROUP BY tmp.PartnerId, tmp.EmailKindId)
+          -- Недавній ФОП- формат XLS
+        , tmpExport_XLS AS (SELECT DISTINCT tmp.PartnerId, tmp.EmailKindId, '' AS ContactPersonMail FROM lpSelect_Object_ExportJuridical_list() AS tmp WHERE tmp.Id = 7448983 LIMIT 1)
           -- ВСЕ параметры - откуда отправлять, для Одного Покупателя
-        , tmpEmail_from AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT tmp.EmailKindId
-                                                                                          FROM tmpPartnerTo
-                                                                                               INNER JOIN (SELECT DISTINCT tmpExportJuridical.PartnerId, tmpExportJuridical.EmailKindId FROM tmpExportJuridical) AS tmp ON tmp.PartnerId = tmpPartnerTo.PartnerId
-                                                                                          )
+        , tmpEmail_from AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= COALESCE ((SELECT tmp.EmailKindId
+                                                                                                    FROM tmpPartnerTo
+                                                                                                         INNER JOIN (SELECT DISTINCT tmpExportJuridical.PartnerId, tmpExportJuridical.EmailKindId FROM tmpExportJuridical) AS tmp ON tmp.PartnerId = tmpPartnerTo.PartnerId
+                                                                                                   )
+                                                                                                 , (SELECT tmpExport_XLS.EmailKindId FROM tmpExport_XLS)
+                                                                                                  )
                                                                        , inSession    := inSession)
                                                                         )
      SELECT CASE WHEN tmp.outExportKindId = zc_Enum_ExportKind_Glad2514900150()
@@ -66,12 +71,16 @@ BEGIN
           , ''                       :: TBlob    AS Body
           , gpGet_Mail.Value                     AS AddressFrom
           -- , tmpExportJuridical.ContactPersonMail :: TVarChar AS AddressTo
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu@ua.fm' 
+          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm' 
                  WHEN vbUserId = 9457 AND 1=0 THEN 'innafelon@gmail.com' 
                --WHEN tmp.outExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110()) THEN 'ashtu@ua.fm'
                --WHEN vbUserId = 1329039 AND 1=1 THEN 'ashtu@ua.fm'
-                 ELSE tmpExportJuridical.ContactPersonMail || ';24447183@ukr.net' -- || ';ashtu@ua.fm' 
+
+                 WHEN tmpExportJuridical.ContactPersonMail <> '' THEN tmpExportJuridical.ContactPersonMail || ';24447183@ukr.net'
+
+                 ELSE '24447183@ukr.net' -- || ';ashtu@ua.fm' 
             END :: TVarChar AS AddressTo
+
           , gpGet_Host.Value                     AS Host
           , gpGet_Port.Value                     AS Port
           , gpGet_User.Value                     AS UserName
@@ -80,6 +89,7 @@ BEGIN
      FROM gpGet_Movement_Email_FileName (inMovementId, inSession) AS tmp
           LEFT JOIN tmpPartnerTo ON tmpPartnerTo.PartnerId > 0
           LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = tmpPartnerTo.PartnerId
+          LEFT JOIN tmpExport_XLS ON 1=1
           LEFT JOIN tmpEmail_from AS gpGet_Host      ON gpGet_Host.EmailToolsId      = zc_Enum_EmailTools_Host()
           LEFT JOIN tmpEmail_from AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
           LEFT JOIN tmpEmail_from AS gpGet_Mail      ON gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()

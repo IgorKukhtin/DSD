@@ -186,6 +186,7 @@ BEGIN
 --    RAISE EXCEPTION '<%>', (select count(*) from tmpAll where tmpAll.ContainerId = 0 and tmpAll.GoodsId = 593238 and tmpAll.GoodsKindId = 8335);
 
      IF EXISTS (SELECT 1 FROM tmpAll WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis()) --  AND tmpAll.Amount_start <> 0
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка. Найден остаток = <%> для <%> <%> для подразделения = <%>.(%)'
          , (SELECT zfConvert_FloatToString (tmpAll.Amount_start) FROM tmpAll WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis() ORDER BY tmpAll.ContainerId LIMIT 1)

@@ -8,7 +8,7 @@ DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, In
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
-    IN ioId                       Integer   , -- Ключ объекта <Элемент документа>
+ INOUT ioId                       Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId               Integer   , -- Ключ объекта <Документ>
     IN inGoodsId                  Integer   , -- Товары
     IN inGoodsKindId              Integer   , -- Виды товаров
@@ -29,7 +29,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN inIsParentMulti            Boolean   DEFAULT FALSE, -- надо ли раскладывать по разным ГП
     IN inUserId                   Integer   DEFAULT 0      -- пользователь
 )
-RETURNS VOID
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
@@ -1021,6 +1021,7 @@ end if;
      IF ioId > 0 THEN
        PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
      END IF;
+     
 
 END;
 $BODY$

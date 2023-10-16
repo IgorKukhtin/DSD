@@ -44,14 +44,19 @@ BEGIN
           , tmp.PaidKindId
           , tmp.ChangePercent
           , tmp.isDiscountPrice_juridical
-  INTO vbOperDate, vbOperDatePartner, vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
+            INTO vbOperDate, vbOperDatePartner, vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
      FROM (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
+                -- Недавній ФОП- формат XLS
+              , tmpExport_XLS AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp WHERE tmp.Id = 7448983 LIMIT 1)
+           --
            SELECT Movement.OperDate AS OperDate
                 , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                 , Object_Partner.Id AS PartnerId
                 , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id), Object_Partner.Id) AS GoodsPropertyId
                 , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0) AS GoodsPropertyId_basis
-                , tmpExportJuridical.ExportKindId
+                  --
+                , COALESCE (tmpExportJuridical.ExportKindId, tmpExport_XLS.ExportKindId) AS ExportKindId
+                  --
                 , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
                 , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
                 , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice_juridical
@@ -82,6 +87,7 @@ BEGIN
                                         ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                        AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
                 LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = Object_Partner.Id
+                LEFT JOIN tmpExport_XLS ON 1=1
            WHERE Movement.Id = inMovementId
           ) AS tmp
     ;

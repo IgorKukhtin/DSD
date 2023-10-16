@@ -27,8 +27,12 @@ BEGIN
             INTO outFileName, outDefaultFileExt, outEncodingANSI, outExportType, outExportKindId
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
+          -- Недавній ФОП- формат XLS
+        , tmpExport_XLS AS (SELECT DISTINCT 0 AS PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp WHERE tmp.Id = 7448983 LIMIT 1)
+           --
         , tmpProtocol AS (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1)
      SELECT CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Mida35273055()
+
                       THEN COALESCE (ObjectString_GLNCode.ValueData, '')
                  || '_' || REPLACE (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '')
                  || '_' || Movement.InvNumber
@@ -79,6 +83,12 @@ BEGIN
 --               || '_' || COALESCE (Object_Juridical.ValueData, 'Юр_лицо') || ' №' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
                  || ' № ' || Movement.InvNumber
                  || ' - ' || REPLACE (REPLACE (COALESCE (Object_Partner.ValueData, Object_Juridical.ValueData, 'Юр_лицо'), '"', ''), '/', '_')
+                 
+                 -- !!!
+                 WHEN tmpExportJuridical.PartnerId IS NULL
+                      THEN 'Doc_Alan'
+                 || '_' || zfCalc_Text_replace (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '_')
+                 || '_' || Movement.InvNumber
 
             END AS outFileName
 
@@ -91,23 +101,40 @@ BEGIN
                     --THEN 'xlsx'  
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Tavr31929492())
                       THEN '.txt'
+
+                 -- !!!
+                 WHEN tmpExportJuridical.PartnerId IS NULL
+                      THEN 'xls'
+
             END AS outDefaultFileExt
+
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN FALSE
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917(), zc_Enum_ExportKind_Tavr31929492())
                       THEN TRUE
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN FALSE
+
+                 -- !!!
+                 WHEN tmpExportJuridical.PartnerId IS NULL
+                      THEN FALSE
+
             END AS outEncodingANSI
             
           , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Glad2514900150()
                       THEN 'cxegExportToTextUTF8'
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN 'cxegExportToExcel'
+
+                 -- !!!
+                 WHEN tmpExportJuridical.PartnerId IS NULL
+                      THEN 'cxegExportToExcel'
+
                  ELSE 'cxegExportToText'
+
             END AS outExportType
 
-          , tmpExportJuridical.ExportKindId :: Integer AS outExportKindId
+          , COALESCE (tmpExportJuridical.ExportKindId, tmpExport_XLS.ExportKindId) :: Integer AS outExportKindId
             
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -152,7 +179,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_GLNCode
                                  ON ObjectString_GLNCode.ObjectId = Object_Partner.Id
                                 AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+          --
           LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = Object_Partner.Id
+          LEFT JOIN tmpExport_XLS ON 1=1
+          --
           LEFT JOIN tmpProtocol ON 1=1
      WHERE Movement.Id = inMovementId) AS tmp
     ;

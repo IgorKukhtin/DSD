@@ -31,6 +31,123 @@ BEGIN
      -- ÔÓÎÛ˜‡‡ÂÏ  _Result_Master, _Result_Child, _Result_ChildTotal
      PERFORM lpSelect_MI_OrderInternalPackRemains (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inUserId:= vbUserId) ;
 
+     IF inShowAll = TRUE -- AND vbUserId = 5
+     THEN
+
+          -- –ÂÁÛÎ¸Ú‡Ú - ChildTotal
+          INSERT INTO _Result_ChildTotal (Id, ContainerId
+                                        , GoodsId
+                                        , GoodsCode
+                                        , GoodsName
+                                        , GoodsKindId
+                                        , GoodsKindName
+
+                                        , GoodsId_complete
+                                        , GoodsName_complete
+                                        , GoodsKindId_complete
+                                        , GoodsKindName_complete
+
+                                        , MeasureId
+                                        , MeasureName
+                                        , GoodsGroupNameFull
+                                        , isErased)
+       SELECT DISTINCT
+              -1 AS Id
+            , 0 AS ContainerId
+            , _Result_Master.GoodsId
+            , _Result_Master.GoodsCode
+            , _Result_Master.GoodsName
+            , Object_GoodsKind.Id        AS GoodsKindId
+            , Object_GoodsKind.ValueData AS GoodsKindName
+
+            , _Result_Master.GoodsId         AS GoodsId_complete
+            , _Result_Master.GoodsName       AS GoodsName_complete
+          --, _Result_Master.GoodsKindId     AS GoodsKindId_complete
+          --, _Result_Master.GoodsKindName   AS GoodsKindName_complete
+            , Object_GoodsKind_basis.Id        AS GoodsKindId_complete
+            , Object_GoodsKind_basis.ValueData AS GoodsKindName_complete
+          --, Object_GoodsKind.Id              AS GoodsKindId_complete
+          --, Object_GoodsKind.ValueData       AS GoodsKindName_complete
+
+            , _Result_Master.MeasureId
+            , _Result_Master.MeasureName
+            , _Result_Master.GoodsGroupNameFull
+            , FALSE
+
+       FROM _Result_Master
+            INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = _Result_Master.GoodsId
+            INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                     ON ObjectBoolean_Order.ObjectId  = Object_GoodsByGoodsKind_View.Id
+                                    AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                    AND ObjectBoolean_Order.ValueData = TRUE
+
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_GoodsByGoodsKind_View.GoodsKindId
+            LEFT JOIN Object AS Object_GoodsKind_basis ON Object_GoodsKind_basis.Id = zc_GoodsKind_Basis()
+
+            LEFT JOIN _Result_Child ON _Result_Child.KeyId       = _Result_Master.KeyId
+                                   AND _Result_Child.GoodsId     = _Result_Master.GoodsId
+                                   AND _Result_Child.GoodsKindId = Object_GoodsKind.Id
+
+       WHERE _Result_Child.KeyId IS NULL
+      ;
+
+          -- –ÂÁÛÎ¸Ú‡Ú - Child
+          INSERT INTO _Result_Child (Id, ContainerId
+                                        , KeyId
+                                        , GoodsId
+                                        , GoodsCode
+                                        , GoodsName
+                                        , GoodsKindId
+                                        , GoodsKindName
+
+                                        , GoodsId_complete
+                                        , GoodsKindId_complete
+
+                                        , MeasureId
+                                        , MeasureName
+                                        , GoodsGroupNameFull
+                                        , isErased)
+       SELECT DISTINCT
+              -1 AS Id
+            , 0 AS ContainerId
+            , _Result_Master.KeyId
+
+            , _Result_Master.GoodsId
+            , _Result_Master.GoodsCode
+            , _Result_Master.GoodsName
+            , Object_GoodsKind.Id        AS GoodsKindId
+            , Object_GoodsKind.ValueData AS GoodsKindName
+
+            , _Result_Master.GoodsId     AS GoodsId_complete
+          --, _Result_Master.GoodsKindId AS GoodsKindId_complete
+            , Object_GoodsKind_basis.Id  AS GoodsKindId_complete
+          --, Object_GoodsKind.Id        AS GoodsKindId_complete
+
+            , _Result_Master.MeasureId
+            , _Result_Master.MeasureName
+            , _Result_Master.GoodsGroupNameFull
+            , FALSE
+
+       FROM _Result_Master
+
+            INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = _Result_Master.GoodsId
+            INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                     ON ObjectBoolean_Order.ObjectId  = Object_GoodsByGoodsKind_View.Id
+                                    AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                    AND ObjectBoolean_Order.ValueData = TRUE
+
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_GoodsByGoodsKind_View.GoodsKindId
+            LEFT JOIN Object AS Object_GoodsKind_basis ON Object_GoodsKind_basis.Id = zc_GoodsKind_Basis()
+
+            LEFT JOIN _Result_Child ON _Result_Child.KeyId       = _Result_Master.KeyId
+                                   AND _Result_Child.GoodsId     = _Result_Master.GoodsId
+                                   AND _Result_Child.GoodsKindId = Object_GoodsKind.Id
+
+       WHERE _Result_Child.KeyId IS NULL
+      ;
+
+     END IF;
+
      --
      vbSessionId:= (SELECT MAX(MovementItem.Amount) :: Integer
                     FROM MovementItem
@@ -128,7 +245,7 @@ BEGIN
 
                LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
                                      ON ObjectFloat_NormInDays.ObjectId = Object_GoodsByGoodsKind.Id
-                                    AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays() 
+                                    AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
                                     AND COALESCE (ObjectFloat_NormInDays.ValueData,0) <> 0
           WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
             AND Object_GoodsByGoodsKind.isErased = FALSE
@@ -942,7 +1059,7 @@ BEGIN
                   , _Result_Child.isErased
 
                     --  π Ô/Ô
-                  , ROW_NUMBER() OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
+                  , ROW_NUMBER() OVER (PARTITION BY CASE WHEN inShowAll = TRUE AND _Result_Child.Id > 0 THEN _Result_Child.Id :: TVarChar
                                                          ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
                                                     END
                                        ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END DESC
@@ -963,7 +1080,9 @@ BEGIN
 
             LEFT JOIN _tmpGoodsByGoodsKind_NormPack ON _tmpGoodsByGoodsKind_NormPack.GoodsId     = _Result_Child.GoodsId
                                                    AND _tmpGoodsByGoodsKind_NormPack.GoodsKindId = _Result_Child.GoodsKindId
-       WHERE _Result_Child.Ord = 1;
+       WHERE _Result_Child.Ord = 1
+        --OR vbUserId = 5
+      ;
 
 
        --
@@ -1104,7 +1223,7 @@ BEGIN
 
             , _Result_Child.AmountPackNext_calc       :: TFloat AS AmountPackNext_calc
             , _Result_Child.AmountPackNextSecond_calc :: TFloat AS AmountPackNextSecond_calc
-                     
+
             , _tmpResult_Detail.AmountPack                :: TFloat AS AmountPack_dt
             , _tmpResult_Detail.AmountPackSecond          :: TFloat AS AmountPackSecond_dt
 
@@ -1176,6 +1295,13 @@ BEGIN
             , _Result_Child.GoodsKindName
             , _Result_Child.MeasureName
             , _Result_Child.GoodsGroupNameFull
+
+            , Object_Goods_complete.Id            AS GoodsId_complete
+            , Object_Goods_complete.ObjectCode    AS GoodsCode_complete
+            , Object_Goods_complete.ValueData     AS GoodsName_complete
+
+            , Object_GoodsKind_complete.Id        AS GoodsKindId_complete
+            , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
 
             , _Result_Child.AmountPack
             , _Result_Child.AmountPackSecond
@@ -1291,7 +1417,7 @@ BEGIN
             , (COALESCE (_Result_Child.AmountPartnerTotal,0) - COALESCE (_Result_Child.AmountPartnerOldTotal,0)) :: TFloat AS AmountPartnerTotal_diff
 
             , _Result_Child.NormPack      ::TFloat
-            , _Result_Child.HourPack_calc ::TFloat 
+            , _Result_Child.HourPack_calc ::TFloat
             , _Result_Child.NormInDays    ::TFloat
        FROM _tmpResult_Child AS _Result_Child
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
@@ -1315,7 +1441,11 @@ BEGIN
                       GROUP BY _tmpResult_Detail.ParentId
                      ) AS _tmpResult_Detail ON _tmpResult_Detail.ParentId = _Result_Child.Id
 
-       WHERE _Result_Child.GoodsId_complete > 0
+            LEFT JOIN Object AS Object_Goods_complete     ON Object_Goods_complete.Id = _Result_Child.GoodsId_complete
+            LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = _Result_Child.GoodsKindId_complete
+
+       WHERE _Result_Child.GoodsId_complete > 0 -- OR inShowAll = TRUE
+       -- OR vbUserId = 5
       ;
        RETURN NEXT Cursor2;
 
@@ -1622,7 +1752,7 @@ BEGIN
 
             , _Result_Child.GoodsCode_packTo
             , _Result_Child.GoodsName_packTo
-            , _Result_Child.GoodsKindName_packTo  
+            , _Result_Child.GoodsKindName_packTo
             , _Result_Child.NormInDays          ::TFloat
 
             -- ËÁ Ï‡ÒÚÂ‡
@@ -1780,7 +1910,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

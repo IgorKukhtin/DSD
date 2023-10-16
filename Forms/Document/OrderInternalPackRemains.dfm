@@ -2,6 +2,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' )>'
   ClientHeight = 639
   ClientWidth = 1140
+  ExplicitTop = -151
   ExplicitWidth = 1156
   ExplicitHeight = 678
   PixelsPerInch = 96
@@ -1815,6 +1816,20 @@
             Options.Editing = False
             Width = 70
           end
+          object KeyId: TcxGridDBColumn
+            DataBinding.FieldName = 'KeyId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
       object cxGridChild: TcxGrid
@@ -3494,7 +3509,7 @@
             Options.Editing = False
             Width = 80
           end
-          object GoodsKindName_complete: TcxGridDBColumn
+          object chGoodsKindName_complete: TcxGridDBColumn
             Caption = '***'#1042#1080#1076'('#1043#1055')'
             DataBinding.FieldName = 'GoodsKindName_complete'
             Visible = False
@@ -3503,6 +3518,20 @@
             HeaderHint = #1090#1077#1089#1090
             Options.Editing = False
             Width = 80
+          end
+          object chKeyId: TcxGridDBColumn
+            DataBinding.FieldName = 'KeyId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
         object cxGridLevelChild: TcxGridLevel
@@ -6788,8 +6817,6 @@
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 89
-        ExplicitTop = -176
         object cxGridDBTableView_Det: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
