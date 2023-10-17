@@ -3,27 +3,27 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1002
   AddOnFormData.SetFocusedAction = actSetFocused
-  ExplicitWidth = 1020
-  ExplicitHeight = 664
+  ExplicitWidth = 1024
+  ExplicitHeight = 673
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 159
+    Top = 161
     Width = 1002
-    Height = 458
-    ExplicitTop = 159
+    Height = 456
+    ExplicitTop = 164
     ExplicitWidth = 1002
-    ExplicitHeight = 458
-    ClientRectBottom = 458
+    ExplicitHeight = 453
+    ClientRectBottom = 456
     ClientRectRight = 1002
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1002
-      ExplicitHeight = 434
+      ExplicitHeight = 429
       inherited cxGrid: TcxGrid
         Width = 1002
-        Height = 314
+        Height = 312
         ExplicitWidth = 1002
-        ExplicitHeight = 314
+        ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -544,21 +544,23 @@ inherited SendForm: TSendForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 314
+        Top = 312
         Width = 1002
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 309
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 322
+        Top = 320
         Width = 1002
         Height = 112
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitTop = 317
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -2132,6 +2134,22 @@ inherited SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actInsert_WriteRestFromPointNoPromo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_WriteRestFromPointNoPromo
+      StoredProcList = <
+        item
+          StoredProc = spInsert_WriteRestFromPointNoPromo
+        end>
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1082#1088#1086#1084#1077' '#1084#1072#1088#1082#1077#1090' '#1090#1086#1074#1072#1088#1072
+      Hint = #1057#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1082#1088#1086#1084#1077' '#1084#1072#1088#1082#1077#1090' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 82
+      QuestionBeforeExecute = #1057#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1082#1088#1086#1084#1077' '#1084#1072#1088#1082#1077#1090' '#1090#1086#1074#1072#1088#1072'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2188,7 +2206,7 @@ inherited SendForm: TSendForm
     DockControlHeights = (
       0
       0
-      30
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2344,6 +2362,10 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbWriteRestFromPoint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton16'
         end
         item
           Visible = True
@@ -2511,6 +2533,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton15: TdxBarButton
       Action = actUpdate_AmountManual
+      Category = 0
+    end
+    object dxBarButton16: TdxBarButton
+      Action = actInsert_WriteRestFromPointNoPromo
       Category = 0
     end
   end
@@ -3951,7 +3977,7 @@ inherited SendForm: TSendForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -3959,8 +3985,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 219
+    Left = 672
+    Top = 187
   end
   object DetailDCS: TClientDataSet
     Aggregates = <>
@@ -4634,5 +4660,22 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 926
     Top = 384
+  end
+  object spInsert_WriteRestFromPointNoPromo: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Send_WriteRestFromPointNoPromo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 243
   end
 end

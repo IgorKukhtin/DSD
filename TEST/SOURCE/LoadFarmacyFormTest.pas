@@ -1564,10 +1564,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SupplementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SupplementForm');
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_NForm');
- { exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPeriodForm');

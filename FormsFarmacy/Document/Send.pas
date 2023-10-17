@@ -224,6 +224,9 @@ type
     actUpdate_AmountManual: TdsdExecStoredProc;
     spUpdate_AmountManual: TdsdStoredProc;
     dxBarButton15: TdxBarButton;
+    spInsert_WriteRestFromPointNoPromo: TdsdStoredProc;
+    actInsert_WriteRestFromPointNoPromo: TdsdExecStoredProc;
+    dxBarButton16: TdxBarButton;
   private
     { Private declarations }
   public
