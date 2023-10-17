@@ -3,7 +3,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' < '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
-  ClientHeight = 573
+  ClientHeight = 595
   ClientWidth = 355
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 44
-    Top = 518
+    Top = 547
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 218
-    Top = 518
+    Top = 547
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -267,6 +267,16 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 29
     Width = 329
   end
+  object cbNoPromo: TcxCheckBox
+    Left = 8
+    Top = 514
+    Hint = #1041#1077#1079' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
+    Caption = #1041#1077#1079' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 30
+    Width = 329
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     Left = 153
@@ -464,6 +474,13 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         Name = 'isMCS_0'
         Value = Null
         Component = cbMCS_0
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNoPromo'
+        Value = Null
+        Component = cbNoPromo
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

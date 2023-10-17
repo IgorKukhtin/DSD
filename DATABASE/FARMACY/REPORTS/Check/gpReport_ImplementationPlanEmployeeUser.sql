@@ -135,9 +135,11 @@ BEGIN
         Count(*) as FactOfManDays,
         ROW_NUMBER() OVER (PARTITION BY tmpUserUnitDay.UserID ORDER BY Count(*) DESC, Sum(tmpUserUnitDay.CountCheck) DESC) AS Ord
     FROM tmpUserUnitDay
-    WHERE tmpUserUnitDay.CountCheck >= 5
+    WHERE tmpUserUnitDay.CountCheck >= 10 OR tmpUserUnitDay.CountCheck >= 5 AND vbDateStart < '01.10.2023'
     GROUP BY tmpUserUnitDay.UserID, tmpUserUnitDay.UnitID
-    ORDER BY tmpUserUnitDay.UserID, tmpUserUnitDay.UnitID;            
+    ORDER BY tmpUserUnitDay.UserID, tmpUserUnitDay.UnitID;      
+    
+    ANALYSE tmpUserUnitDayTable;      
 
       -- Мовементы по сотруднику
     CREATE TEMP TABLE tmpMovement (

@@ -3,8 +3,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientHeight = 557
   ClientWidth = 1104
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1120
-  ExplicitHeight = 596
+  ExplicitWidth = 1126
+  ExplicitHeight = 613
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1167,6 +1167,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1773,6 +1776,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       TabOrder = 16
       Width = 172
     end
+    object cbNoPromo: TcxCheckBox
+      Left = 925
+      Top = 1
+      Hint = #1041#1077#1079' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
+      Caption = #1041#1077#1079' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 17
+      Width = 169
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 719
@@ -1809,6 +1822,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Left = 1034
     Top = 30
     Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 10
     Width = 22
   end
@@ -2124,6 +2139,13 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           Component = cbMCS_0
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isNoPromo'
+          Value = Null
+          Component = cbNoPromo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2354,6 +2376,36 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actLoadGoodsId: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = ''
+          FromParam.DataType = ftWideString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = ''
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'GoodsList'
+          ToParam.DataType = ftWideString
+          ToParam.MultiSelectSeparator = ','
+        end>
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'GoodsList'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          PairName = 'GoodsId'
+          DataType = ftInteger
+        end>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 54
+    end
   end
   inherited MasterDS: TDataSource
     Left = 456
@@ -2500,6 +2552,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNoPromo'
+        Value = Null
+        Component = cbNoPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 80
@@ -2611,6 +2671,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     end
     object bb: TdxBarButton
       Action = dsdGridToExcelTotal
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actLoadGoodsId
       Category = 0
     end
   end
@@ -3419,5 +3483,16 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     PropertiesCellList = <>
     Left = 880
     Top = 312
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'GoodsList'
+        Value = ''
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    Left = 72
+    Top = 176
   end
 end

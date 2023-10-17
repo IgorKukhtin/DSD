@@ -123,6 +123,10 @@ type
     edSummSend: TcxCurrencyEdit;
     isChoice: TcxGridDBColumn;
     cbMCS_0: TcxCheckBox;
+    cbNoPromo: TcxCheckBox;
+    actLoadGoodsId: TdsdDataToJsonAction;
+    FormParams: TdsdFormParams;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

@@ -125,6 +125,10 @@ type
     cbSendAll: TcxCheckBox;
     spUpdate_Send_Deferred: TdsdStoredProc;
     actUpdate_Send_Deferred: TdsdExecStoredProc;
+    cbNoPromo: TcxCheckBox;
+    FormParams: TdsdFormParams;
+    actLoadGoodsId: TdsdDataToJsonAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

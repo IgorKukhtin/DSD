@@ -64,6 +64,7 @@ type
     edDayListDiff: TcxCurrencyEdit;
     cbReserveTo: TcxCheckBox;
     cbMCS_0: TcxCheckBox;
+    cbNoPromo: TcxCheckBox;
   private
     { Private declarations }
   public
