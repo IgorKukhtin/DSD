@@ -354,6 +354,21 @@ AS
                                       , '01074874','24755803','04791599','01073946','01074741','25927436'
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      
+     UNION
+      -- Укрзалізниця АТ
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale43112236' AS TVarChar)
+      FROM Object AS Object_Juridical
+           JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+                   AND OH_JuridicalDetails.OKPO IN ('43112236')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
      UNION
       -- FM
