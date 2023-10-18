@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderInternal_deflection(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id                      Integer
+             , ContainerId             Integer
              , GoodsId                 Integer
              , GoodsCode               Integer
              , GoodsName               TVarChar
@@ -17,6 +18,7 @@ RETURNS TABLE (Id                      Integer
              , GoodsGroupName          TVarChar
              , GoodsGroupNameFull      TVarChar
              , Amount                  TFloat
+             , Amount_calc             TFloat
              , AmountRemains           TFloat
              , AmountRemains_calc      TFloat
              , AmountRemains_diff      TFloat
@@ -379,6 +381,7 @@ BEGIN
                         --, SUM (CASE WHEN ABS (COALESCE (MIFloat_AmountRemains.ValueData, 0)) < 1 THEN COALESCE (MIFloat_AmountRemains.ValueData, 0) ELSE CAST (COALESCE (MIFloat_AmountRemains.ValueData, 0) AS NUMERIC (16, 1)) END) :: TFloat AS AmountRemains
                         , SUM (COALESCE (MIFloat_AmountRemains.ValueData, 0))   AS AmountRemains
                         , MIFloat_ContainerId.ValueData                         AS ContainerId
+                        , MAX (CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN 1 - ObjectFloat_TaxLoss.ValueData / 100 ELSE 1 END) AS KoeffLoss
                    FROM MovementItem
                         LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                     ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
@@ -408,6 +411,13 @@ BEGIN
                         LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                     ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                    AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                                         ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+                        LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss
+                                              ON ObjectFloat_TaxLoss.ObjectId = MILinkObject_Receipt.ObjectId
+                                             AND ObjectFloat_TaxLoss.DescId = zc_ObjectFloat_Receipt_TaxLoss()
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId     = zc_MI_Master()
                      AND MovementItem.isErased   = FALSE
@@ -425,13 +435,20 @@ BEGIN
                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                         , MIFloat_ContainerId.ValueData  
                    )
-      --
+      --  
+     , tmpGoods_params AS (SELECT tmpMI_master.GoodsId_basis, MAX (tmpMI_master.KoeffLoss) AS KoeffLoss
+                           FROM tmpMI_master
+                           GROUP BY tmpMI_master.GoodsId_basis
+                          )
+                                
      , tmpMI_child AS (SELECT MovementItem.Id                                       AS MovementItemId
                             , MovementItem.ObjectId                                 AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         AS GoodsKindId
                             , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_complete
                             , MIFloat_ContainerId.ValueData                         AS ContainerId
-                            , MovementItem.Amount                                   AS Amount
+                            --, MovementItem.Amount                                   AS Amount  
+                            , CASE WHEN ABS (MovementItem.Amount) < 1 THEN MovementItem.Amount ELSE CAST (MovementItem.Amount AS NUMERIC (16, 1)) END :: TFloat AS Amount 
+                            , CAST (MovementItem.Amount * tmpGoods_params.KoeffLoss AS NUMERIC (16, 1)) :: TFloat AS Amount_calc
                        FROM MovementItem
                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
@@ -442,6 +459,7 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
                                                              ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                            LEFT JOIN tmpGoods_params ON tmpGoods_params.GoodsId_basis = MovementItem.ObjectId
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Child()
                          AND MovementItem.isErased   = FALSE
@@ -466,7 +484,7 @@ BEGIN
                               , tmp.ContainerId
                               , tmp.GoodsId
                               , tmp.GoodsKindId
-                              , SUM (tmp.Amount_start)   AS AmountRemains_calc
+                              , SUM (tmp.Amount_start)                     AS AmountRemains_calc
                               , SUM (tmp.Amount)                  ::TFloat AS Amount
                               , SUM (tmp.AmountRemains)           ::TFloat AS AmountRemains
                          FROM (SELECT COALESCE (tmpMI.MovementItemId, 0)                      AS MovementItemId
@@ -475,8 +493,8 @@ BEGIN
                                     , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
                                     , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
                   
-                             , tmpMI.Amount                  ::TFloat
-                             , tmpMI.AmountRemains           ::TFloat
+                                    , tmpMI.Amount                  ::TFloat
+                                    , tmpMI.AmountRemains           ::TFloat
                   
                                FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId = 0
                                     ) AS tmpContainer
@@ -514,9 +532,10 @@ BEGIN
                         SELECT zc_MI_Master()                                          AS MIDescId
                              , 0                                                       AS ContainerId
                              , COALESCE (tmpContainer.GoodsId, tmpMI.GoodsId)          AS GoodsId
-                             , COALESCE (tmpContainer.GoodsKindId, tmpMI.GoodsKindId) AS GoodsKindId
-                             , tmpMI.Amount
-                             , COALESCE (tmpMI.AmountRemains, 0)       ::TFloat               AS AmountRemains      
+                             , COALESCE (tmpContainer.GoodsKindId, tmpMI.GoodsKindId)  AS GoodsKindId
+                             , tmpMI.Amount                                            AS Amount
+                             , 0                                                       AS Amount_calc
+                             , COALESCE (tmpMI.AmountRemains, 0)       ::TFloat        AS AmountRemains      
                              , COALESCE (tmpContainer.Amount_start, 0)                 AS AmountRemains_calc
                         FROM tmpMI_master AS tmpMI
                              LEFT JOIN (SELECT tmpContainer.GoodsId, tmpContainer.GoodsKindId, SUM (tmpContainer.Amount_start) AS Amount_start 
@@ -526,28 +545,30 @@ BEGIN
                              ) AS tmpContainer  ON tmpMI.GoodsId     = tmpContainer.GoodsId
                                                AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
                        -- WHERE tmpContainer.GoodsId = 963624
-                     /*  UNION ALL
+                      UNION ALL
                         -- результат - для zc_MI_Child
                         SELECT zc_MI_Child()                                           AS MIDescId
                              , COALESCE (tmpContainer.ContainerId,  tmpMI.ContainerId) AS ContainerId
                              , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
                              , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
-                             , tmpMI.Amount           ::TFloat
-                             , 0
+                             , tmpMI.Amount           
+                             , tmpMI.Amount_calc
+                             , 0                                                                  AS AmountRemains
                              , COALESCE (tmpContainer.Amount_start + tmpContainer.Amount_next, 0) AS AmountRemains_calc
                         FROM tmpContainer
                              FULL JOIN tmpMI_child AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
                         WHERE tmpContainer.MIDescId = zc_MI_Child()
-                       */ ) AS tmp
-                   WHERE (COALESCE (tmp.AmountRemains_calc,0) <> COALESCE (tmp.AmountRemains,0) OR inisShowAll = TRUE)
+                        ) AS tmp
+                   WHERE (COALESCE (tmp.AmountRemains_calc,0) <> (COALESCE (tmp.AmountRemains,0) + COALESCE (tmp.Amount_calc,0))) 
+                         OR inisShowAll = TRUE
                          -- AND tmp.MovementItemId > 0
                    ) 
                       
 
        -- Результат
        SELECT
-             0                     AS Id
-           
+             0                                          AS Id
+           , tmpData.ContainerId        ::Integer       AS ContainerId
            , Object_Goods.Id                            AS GoodsId
            , Object_Goods.ObjectCode                    AS GoodsCode
            , Object_Goods.ValueData                     AS GoodsName  
@@ -558,6 +579,7 @@ BEGIN
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            --
            , tmpData.Amount                  ::TFloat
+           , tmpData.Amount_calc             ::TFloat
            , tmpData.AmountRemains           ::TFloat
            , tmpData.AmountRemains_calc      ::TFloat
            , (COALESCE (tmpData.AmountRemains,0) - COALESCE (tmpData.AmountRemains_calc ,0))  ::TFloat AS AmountRemains_diff

@@ -76,6 +76,7 @@ type
     edOperDatePartner: TcxDateEdit;
     ceComment: TcxTextEdit;
     AmountRemains_diff: TcxGridDBColumn;
+    Amount_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
