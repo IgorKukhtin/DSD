@@ -376,7 +376,8 @@ BEGIN
                                    ) AS GoodsKindId_complete
                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         AS GoodsKindId
                         , SUM (MovementItem.Amount)                                   AS Amount
-                        , SUM (CASE WHEN ABS (COALESCE (MIFloat_AmountRemains.ValueData, 0)) < 1 THEN COALESCE (MIFloat_AmountRemains.ValueData, 0) ELSE CAST (COALESCE (MIFloat_AmountRemains.ValueData, 0) AS NUMERIC (16, 1)) END) :: TFloat AS AmountRemains
+                        --, SUM (CASE WHEN ABS (COALESCE (MIFloat_AmountRemains.ValueData, 0)) < 1 THEN COALESCE (MIFloat_AmountRemains.ValueData, 0) ELSE CAST (COALESCE (MIFloat_AmountRemains.ValueData, 0) AS NUMERIC (16, 1)) END) :: TFloat AS AmountRemains
+                        , SUM (COALESCE (MIFloat_AmountRemains.ValueData, 0))   AS AmountRemains
                         , MIFloat_ContainerId.ValueData                         AS ContainerId
                    FROM MovementItem
                         LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
@@ -512,19 +513,18 @@ BEGIN
                    FROM (-- результат - для zc_MI_Master
                         SELECT zc_MI_Master()                                          AS MIDescId
                              , 0                                                       AS ContainerId
-                            -- , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
-,tmpMI.GoodsId
-                             , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
-, tmpMI.Amount
-, COALESCE (tmpMI.AmountRemains, 0)       ::TFloat               AS AmountRemains      
+                             , COALESCE (tmpContainer.GoodsId, tmpMI.GoodsId)          AS GoodsId
+                             , COALESCE (tmpContainer.GoodsKindId, tmpMI.GoodsKindId) AS GoodsKindId
+                             , tmpMI.Amount
+                             , COALESCE (tmpMI.AmountRemains, 0)       ::TFloat               AS AmountRemains      
                              , COALESCE (tmpContainer.Amount_start, 0)                 AS AmountRemains_calc
                         FROM tmpMI_master AS tmpMI
-                             inner JOIN (SELECT tmpContainer.GoodsId, tmpContainer.GoodsKindId, SUM (tmpContainer.Amount_start) AS Amount_start 
+                             LEFT JOIN (SELECT tmpContainer.GoodsId, tmpContainer.GoodsKindId, SUM (tmpContainer.Amount_start) AS Amount_start 
                               FROM tmpContainer
                               WHERE tmpContainer.MIDescId = zc_MI_Master()
                               GROUP BY tmpContainer.GoodsId, tmpContainer.GoodsKindId
                              ) AS tmpContainer  ON tmpMI.GoodsId     = tmpContainer.GoodsId
-                                                            AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
+                                               AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
                        -- WHERE tmpContainer.GoodsId = 963624
                      /*  UNION ALL
                         -- результат - для zc_MI_Child
@@ -532,13 +532,13 @@ BEGIN
                              , COALESCE (tmpContainer.ContainerId,  tmpMI.ContainerId) AS ContainerId
                              , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
                              , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
-, tmpMI.Amount           ::TFloat
-, 0
+                             , tmpMI.Amount           ::TFloat
+                             , 0
                              , COALESCE (tmpContainer.Amount_start + tmpContainer.Amount_next, 0) AS AmountRemains_calc
                         FROM tmpContainer
                              FULL JOIN tmpMI_child AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
                         WHERE tmpContainer.MIDescId = zc_MI_Child()
-                        */) AS tmp
+                       */ ) AS tmp
                    WHERE (COALESCE (tmp.AmountRemains_calc,0) <> COALESCE (tmp.AmountRemains,0) OR inisShowAll = TRUE)
                          -- AND tmp.MovementItemId > 0
                    ) 
@@ -594,5 +594,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_OrderInternal_deflection (inMovementId:= 26311928 ::integer , inIsShowAll := false::boolean, inSession:= zfCalc_UserAdmin()::tvarchar)
---where GoodsCode = 129
+--SELECT * FROM gpReport_OrderInternal_deflection (inMovementId:= 26370680  ::integer , inIsShowAll := false::boolean, inSession:= zfCalc_UserAdmin()::tvarchar)
+--where GoodsCode = 54

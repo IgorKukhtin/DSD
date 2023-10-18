@@ -1,54 +1,34 @@
 inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
-  ClientHeight = 668
+  ClientHeight = 658
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 707
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1020
-    Height = 389
+    Height = 379
     ExplicitTop = 126
     ExplicitWidth = 1020
-    ExplicitHeight = 389
-    ClientRectBottom = 389
+    ExplicitHeight = 379
+    ClientRectBottom = 379
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 365
+      ExplicitHeight = 355
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 365
+        Height = 355
         ExplicitWidth = 1020
-        ExplicitHeight = 365
+        ExplicitHeight = 355
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -320,29 +300,6 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -1757,7 +1714,7 @@ inherited OrderInternalForm: TOrderInternalForm
   end
   object cxGridChild: TcxGrid [4]
     Left = 0
-    Top = 520
+    Top = 510
     Width = 1020
     Height = 148
     Align = alBottom
@@ -1995,7 +1952,7 @@ inherited OrderInternalForm: TOrderInternalForm
   end
   object cxBottomSplitter: TcxSplitter [5]
     Left = 0
-    Top = 515
+    Top = 505
     Width = 1020
     Height = 5
     AlignSplitter = salBottom

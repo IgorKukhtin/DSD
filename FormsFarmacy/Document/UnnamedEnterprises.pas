@@ -87,6 +87,9 @@ type
     PriceUnit: TcxGridDBColumn;
     actChoiceNDSKind: TOpenChoiceForm;
     isResolution_224: TcxGridDBColumn;
+    spInsertUpdate_AllGoods: TdsdStoredProc;
+    actInsertUpdate_AllGoods: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

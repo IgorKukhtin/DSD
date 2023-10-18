@@ -53,12 +53,12 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
               Column = Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.#'
               Kind = skSum
               Column = AmountRemains
             end
             item
-              Format = ',0.####'
+              Format = ',0.#'
               Kind = skSum
               Column = AmountRemains_calc
             end
@@ -68,7 +68,7 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
               Column = GoodsName
             end
             item
-              Format = ',0.####'
+              Format = ',0.#'
               Kind = skSum
               Column = AmountRemains_diff
             end>
@@ -77,6 +77,7 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -132,7 +133,7 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             Width = 45
           end
           object Amount: TcxGridDBColumn [5]
-            Caption = '***'#1055'1 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            Caption = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -140,7 +141,6 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 55
           end
@@ -289,8 +289,8 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 619
-    Top = 376
+    Left = 627
+    Top = 352
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 1216

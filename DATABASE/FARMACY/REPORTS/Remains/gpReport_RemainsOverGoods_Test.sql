@@ -1,6 +1,6 @@
 -- Function: gpReport_RemainsOverGoods()
 
-DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_Test (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_Test (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods_Test(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -17,7 +17,9 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods_Test(
     IN inIsReserve        Boolean  ,  -- Не учитывать отложенный товар (Да/Нет)
     IN inIsIncome         Boolean  ,  -- Не учитывать товар, пришедший за последние Х дней
     IN inIsSummSend       Boolean  ,  -- Учитывать товар в затоварку, пришедший до X дней Да/Нет
-    IN inisSendAll        Boolean  ,  -- 
+    IN inisSendAll        Boolean  ,  -- Весь товар
+    IN inisNoPromo        Boolean  ,  -- Без маркет. контрактов
+    IN inGoodsList        TBlob    ,  -- Только товары
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
@@ -93,6 +95,7 @@ BEGIN
     CREATE TEMP TABLE tmpUnit_list (UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpSend (GoodsId Integer, UnitId Integer, Amount TFloat) ON COMMIT DROP;      
     CREATE TEMP TABLE tmpPrice (PriceId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, MCSNotRecalc Boolean) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIPromo (GoodsId Integer, PRIMARY KEY (GoodsId)) ON COMMIT DROP;
 
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsMainId Integer, GoodsId Integer, UnitId Integer, MCSValue TFloat
@@ -120,6 +123,51 @@ BEGIN
                      );
 
 
+    -- Товары маркетингового контракта 
+    INSERT INTO tmpMIPromo
+     SELECT DISTINCT MI_Goods.ObjectId                  AS GoodsId
+     FROM Movement
+       INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                     ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                    AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+
+       INNER JOIN MovementDate AS MovementDate_StartPromo
+                               ON MovementDate_StartPromo.MovementId = Movement.Id
+                              AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+       INNER JOIN MovementDate AS MovementDate_EndPromo
+                               ON MovementDate_EndPromo.MovementId = Movement.Id
+                              AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+
+       INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                          AND MI_Goods.DescId = zc_MI_Master()
+                                          AND MI_Goods.isErased = FALSE
+     WHERE Movement.StatusId = zc_Enum_Status_Complete()
+       AND Movement.DescId = zc_Movement_Promo()
+       AND MovementDate_StartPromo.ValueData <= inStartDate
+       AND MovementDate_EndPromo.ValueData >= inStartDate;
+       
+    ANALYSE tmpMIPromo;
+        
+    -- из JSON в таблицу
+    CREATE TEMP TABLE tblGoodsList
+    (
+      GoodsId       Integer,
+      ObjectCode    Integer
+    ) ON COMMIT DROP;
+
+    IF COALESCE (inGoodsList, '') <> ''
+    THEN
+      INSERT INTO tblGoodsList
+      SELECT DISTINCT Object_Goods_Retail.Id, J.ObjectCode
+      FROM json_populate_recordset(null::tblGoodsList, replace(replace(replace(inGoodsList, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json) AS J
+           INNER JOIN Object_Goods_Main ON Object_Goods_Main.ObjectCode = J.ObjectCode
+           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_Main.Id
+                                         AND Object_Goods_Retail.RetailId = vbObjectId
+      ;
+        
+      ANALYSE tblGoodsList;
+    END IF;
+    
       -- Ищем cтроки мастера (ключ - ид документа, товар)
       INSERT INTO tmpMIMaster (GoodsId, Amount, Summa, InvNumber, MovementId, MIMaster_Id)
          SELECT  MovementItem.ObjectId             AS GoodsId
@@ -172,15 +220,15 @@ BEGIN
                           UNION
                            SELECT ObjectBoolean_Over.ObjectId  AS UnitId
                            FROM ObjectBoolean AS ObjectBoolean_Over
-                                /*
-                                   INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                
+                                   /*INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                          ON ObjectLink_Unit_Juridical.ObjectId = ObjectBoolean_Over.ObjectId --Container.WhereObjectId
                                                         AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                                */
+                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId*/
+                                
                            WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
                              AND ObjectBoolean_Over.ValueData = TRUE;
                              
@@ -235,6 +283,10 @@ BEGIN
                         LEFT JOIN tmp_In ON tmp_In.ContainerId = tmpContainer.ContainerId
                                         AND tmp_In.GoodsId = tmpContainer.GoodsId
                                         AND tmp_In.UnitId  = tmpContainer.UnitId
+                        LEFT JOIN tmpMIPromo ON tmpMIPromo.GoodsId = tmpContainer.GoodsId
+                        LEFT JOIN tblGoodsList ON tblGoodsList.GoodsId = tmpContainer.GoodsId
+                   WHERE (COALESCE (tmpMIPromo.GoodsId, 0) = 0 or COALESCE(inisNoPromo, False) = False)
+                     AND (COALESCE (tblGoodsList.GoodsId, 0) <> 0 or COALESCE (inGoodsList, '') = '')
                    GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.UnitId
                    ;
                    
@@ -315,7 +367,7 @@ BEGIN
                                              INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
                                         WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
                                           AND MovementBoolean_Deferred.ValueData = TRUE
-                                       UNION
+                                       UNION ALL
                                         SELECT Movement.Id
                                              , MovementLinkObject_Unit.ObjectId AS UnitId
                                         FROM MovementString AS MovementString_CommentError
@@ -369,7 +421,7 @@ BEGIN
                          FROM tmp
                               LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId AND tmpSend.UnitId <> inUnitId
                               LEFT JOIN tmpReserve ON tmpReserve.GoodsId = tmp.GoodsId AND tmpReserve.UnitId = tmp.UnitId
-                        UNION
+                        UNION ALL
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
                               , COALESCE (tmpSend.Amount, 0)
@@ -451,11 +503,11 @@ BEGIN
                FROM (
                      SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
                      FROM tmpRemains
-                    UNION 
+                    UNION ALL
                      SELECT tmpPrice.GoodsId, tmpPrice.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
                      FROM tmpPrice
                      WHERE tmpPrice.MCSValue <> 0 AND inisInMCS = TRUE
-                    UNION
+                    UNION ALL
                      SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
                      FROM tmpMCS
                      WHERE inisInMCS = FALSE
@@ -466,7 +518,12 @@ BEGIN
                                        AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
                   LEFT JOIN  ObjectLink AS ObjectLink_Main 
                                         ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                       AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain();
+                                       AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                       
+                  LEFT JOIN tmpMIPromo ON tmpMIPromo.GoodsId = tmp.GoodsId
+                  LEFT JOIN tblGoodsList ON tblGoodsList.GoodsId = tmp.GoodsId
+             WHERE (COALESCE (tmpMIPromo.GoodsId, 0) = 0 or COALESCE(inisNoPromo, False) = False)
+               AND (COALESCE (tblGoodsList.GoodsId, 0) <> 0 or COALESCE (inGoodsList, '') = '');
                                        
        ANALYSE tmpGoods_list;
 
@@ -944,3 +1001,5 @@ $BODY$
 SELECT * FROM gpReport_RemainsOverGoods_Test(inUnitId := 183288 , inStartDate := ('23.02.2023')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve:='False' ,  inSession := '3')
 FETCH ALL "<unnamed portal 1>";
 */
+
+select * from gpReport_RemainsOverGoods_TEST(inUnitId := 3457773 , inStartDate := ('01.11.2023')::TDateTime , inPeriod := 30 , inDay := 12 , inDayIncome := 15 , inAssortment := 1 , inSummSend := 100 , inisMCS := 'False' , inisInMCS := 'False' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve := 'False' , inIsIncome := 'False' , inisSummSend := 'False' , inisSendAll := 'True' , inisNoPromo := 'False' , inGoodsList := '' ,  inSession := '3');

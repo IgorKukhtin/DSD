@@ -1,23 +1,23 @@
 ﻿inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' )>'
-  ClientHeight = 639
+  ClientHeight = 629
   ClientWidth = 1140
-  ExplicitTop = -151
   ExplicitWidth = 1156
-  ExplicitHeight = 678
+  ExplicitHeight = 668
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1140
-    Height = 513
+    Height = 503
     ExplicitTop = 126
     ExplicitWidth = 1140
     ExplicitHeight = 513
-    ClientRectBottom = 513
+    ClientRectBottom = 503
     ClientRectRight = 1140
     inherited tsMain: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082' / '#1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082
+      ExplicitTop = 0
       ExplicitWidth = 1140
       ExplicitHeight = 489
       inherited cxGrid: TcxGrid
@@ -3550,6 +3550,9 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -5275,6 +5278,9 @@
     object tsAll: TcxTabSheet
       Caption = #1055#1083#1072#1085' ('#1074#1089#1077')'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -6809,6 +6815,9 @@
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095#1077#1090' '#1060#1040#1050#1058
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid_Det: TcxGrid
         Left = 0
         Top = 0

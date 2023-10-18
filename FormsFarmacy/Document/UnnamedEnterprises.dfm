@@ -3,27 +3,27 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
   ClientHeight = 500
   ClientWidth = 953
   AddOnFormData.AddOnFormRefresh.ParentList = 'UnnamedEnterprises'
-  ExplicitWidth = 969
-  ExplicitHeight = 539
+  ExplicitWidth = 975
+  ExplicitHeight = 556
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 148
+    Top = 154
     Width = 953
-    Height = 352
-    ExplicitTop = 148
+    Height = 346
+    ExplicitTop = 154
     ExplicitWidth = 953
-    ExplicitHeight = 352
-    ClientRectBottom = 352
+    ExplicitHeight = 346
+    ClientRectBottom = 346
     ClientRectRight = 953
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 953
-      ExplicitHeight = 328
+      ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 953
-        Height = 328
+        Height = 322
         ExplicitWidth = 953
-        ExplicitHeight = 328
+        ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -643,6 +643,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           DetailedTexts = <>
           Kind = skSumma
         end>
+      AccelerateDraw = True
       Caption = 'actPrintXLS'
     end
     object actPrintXLSScope: TMultiAction
@@ -869,6 +870,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           CalcColumnLists = <>
           DetailedTexts = <>
         end>
+      AccelerateDraw = True
       Caption = 'actPrintScopeXLS'
     end
     object actChoiceNDSKind: TOpenChoiceForm
@@ -906,6 +908,22 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         end>
       isShowModal = True
     end
+    object actInsertUpdate_AllGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_AllGoods
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_AllGoods
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      ImageIndex = 30
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -924,7 +942,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
     DockControlHeights = (
       0
       0
-      26
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1020,6 +1038,10 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -1048,6 +1070,10 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
     end
     object dxBarButton3: TdxBarButton
       Action = actCreateSale
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actInsertUpdate_AllGoods
       Category = 0
     end
   end
@@ -1682,5 +1708,22 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
     PackSize = 1
     Left = 743
     Top = 352
+  end
+  object spInsertUpdate_AllGoods: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_UnnamedEnterprises_AllGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 548
+    Top = 356
   end
 end
