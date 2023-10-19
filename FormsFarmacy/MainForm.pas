@@ -1035,6 +1035,8 @@ type
     actReport_ImplementationPlanEmployeeOneUser: TdsdOpenStaticForm;
     actUKTZED: TdsdOpenForm;
     N383: TMenuItem;
+    actReport_GoodsOnUnitRemainsMarketing: TdsdOpenForm;
+    N384: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

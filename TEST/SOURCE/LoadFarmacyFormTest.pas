@@ -1185,10 +1185,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsSendForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsOnUnitRemainsMarketingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnitRemainsMarketingDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsOnUnitRemainsMarketingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnitRemainsMarketingForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsSendForm');
 
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceList_BestPriceForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceList_BestPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceList_BestPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceList_BestPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceList_BestPriceDialogForm');
