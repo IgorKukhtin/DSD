@@ -244,7 +244,7 @@ BEGIN
                          , CarId
                          , IsActive, IsMaster
                           )
-        -- 1. в балансе
+        -- 1.1. в балансе - НЕ перевыставление
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
 
@@ -497,6 +497,115 @@ BEGIN
                                  AND MILinkObject_MoneyPlace.ObjectId <> 1064330 
                                   -- !!!вот он БН!!!
                                  AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+
+             -- перевыставление
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
+                                  ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
+                                 AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+
+        -- !!!если НЕ перевыставление!!!
+        WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
+
+
+       UNION ALL
+        -- 1.2. в балансе - Перевыставление затрат на Юр Лицо
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+
+             , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, 0) AS ObjectId
+             , COALESCE (Object.DescId, 0) AS ObjectDescId
+
+             , COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm) AS OperSumm
+             , CASE -- когда в ОПиУ - Инвестиции, сумму в валюте попробуем провести в "другой" проводке
+                    WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+                         THEN 0
+                    WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND COALESCE (MILinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                         THEN -1 * _tmpItem.OperSumm_Currency
+                    ELSE 0
+               END AS OperSumm_Currency
+             , 0 AS OperSumm_Asset
+
+             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId)    AS MovementItemId
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId             -- не используется
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора
+             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+             , 0 AS PersonalServiceListId
+
+               -- Филиал Баланс: всегда "Главный филиал" (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал ОПиУ: здесь не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+ 
+             , COALESCE (ObjectLink_Unit_Contract.ChildObjectId, 0) AS ContractId
+
+             , COALESCE (ObjectLink_Contract_PaidKind.ChildObjectId, 0) AS PaidKindId
+
+             , 0 AS PartionMovementId
+
+             , 0 AS AnalyzerId -- не используется
+
+               -- Валюта
+             , COALESCE (MILinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
+
+             , MILinkObject_Car.ObjectId AS CarId
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+
+        FROM _tmpItem
+             LEFT JOIN tmpMI_Child AS MI_Child ON MI_Child.MovementId = inMovementId
+                                               -- AND MI_Child.DescId = zc_MI_Child()
+                                               -- AND MI_Child.isErased = FALSE
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
+                                              ON MILinkObject_Car.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyPartner
+                                              ON MILinkObject_CurrencyPartner.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
+
+             -- перевыставление
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
+                                  ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
+                                 AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                 AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+             LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
+
+        -- !!!если перевыставление!!!
+        WHERE ObjectLink_Unit_Contract.ChildObjectId > 0
 
        UNION ALL
         -- 2. забаланс

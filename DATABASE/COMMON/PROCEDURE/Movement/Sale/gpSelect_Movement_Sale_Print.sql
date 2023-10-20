@@ -683,7 +683,11 @@ BEGIN
            , CASE WHEN vbIsKiev = TRUE OR OH_JuridicalDetails_To.OKPO IN ('43536406') THEN TRUE ELSE FALSE END AS isPrintPageBarCode
 
           -- , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , CASE WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> '' THEN (OH_JuridicalDetails_To.Name ||' '|| ObjectString_ToAddress.ValueData)
+           , CASE -- WHEN vbUserId = 5 THEN Object_Juridical_curr.Id :: TvarChar -- OH_JuridicalDetails_To.Name --  ||' '|| ObjectString_ToAddress.ValueData)
+                  WHEN COALESCE (OH_JuridicalDetails_To.Name,'') <> ''
+                   AND OH_JuridicalDetails_To.JuridicalId <> 9840136 -- Óêðçàë³çíèöÿ ÀÒ
+                       THEN (OH_JuridicalDetails_To.Name ||' '|| ObjectString_ToAddress.ValueData)
+-- Object_Juridical_curr
                   ELSE COALESCE (Object_Partner.ValueData, Object_To.ValueData)
              END ::TVarChar AS ToName
 
@@ -1055,6 +1059,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Partner_Movement
                                    ON ObjectString_Partner_Movement.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_Partner_Movement.DescId = zc_ObjectString_Partner_Movement()
+
+            --LEFT JOIN Object AS Object_Juridical_curr ON Object_Juridical_curr.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)

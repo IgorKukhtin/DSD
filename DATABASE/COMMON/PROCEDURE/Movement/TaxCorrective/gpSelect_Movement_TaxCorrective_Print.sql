@@ -778,6 +778,10 @@ BEGIN
                             --, CASE WHEN COALESCE (ObjectString_DocumentTaxKind_Code.ValueData,'') = '' THEN '0' ELSE  ObjectString_DocumentTaxKind_Code.ValueData END  AS Code_DocumentTaxKind
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
                             , MovementString_FromINN.ValueData                AS INN_From
+
+                            , ObjectString_RoomNumber.ValueData               AS RoomNumber_From
+                            , ObjectString_ShortName.ValueData                AS ShortName_From
+
                        FROM tmpMovement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                          ON MovementLinkObject_From.MovementId = tmpMovement.Id
@@ -815,6 +819,13 @@ BEGIN
                                                      ON MovementString_FromINN.MovementId = tmpMovement.Id
                                                     AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
                                                     AND MovementString_FromINN.ValueData  <> ''
+
+                            LEFT JOIN ObjectString AS ObjectString_RoomNumber
+                                                   ON ObjectString_RoomNumber.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
+                                                  AND ObjectString_RoomNumber.DescId   = zc_ObjectString_Partner_RoomNumber()
+                            LEFT JOIN ObjectString AS ObjectString_ShortName
+                                                   ON ObjectString_ShortName.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
+                                                  AND ObjectString_ShortName.DescId   = zc_ObjectString_Partner_ShortName()
 
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_From.ObjectId
@@ -1033,9 +1044,23 @@ BEGIN
              END :: TVarChar AS SupplierGLNCode
 
            , tmpMovement_Data.FromName AS JuridicalName_From_inf  -- для определения признака ФОП / не ФОП
-           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
-                  THEN 'Неплатник'
-             ELSE OH_JuridicalDetails_From.FullName END                     AS JuridicalName_From
+
+           , CASE WHEN Object_From.Id = 9840136 AND 1=1 -- AND vbUserId = 5
+                       -- Укрзалізниця АТ
+                       THEN COALESCE (OH_JuridicalDetails_From.Name, '')
+
+                  WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+                       THEN 'Неплатник'
+                  ELSE OH_JuridicalDetails_From.FullName
+             END :: TVarChar AS JuridicalName_From
+
+           , CASE WHEN Object_From.Id = 9840136 AND 1=1 -- AND vbUserId = 5
+                       -- Укрзалізниця АТ
+                       THEN ', ' || TRIM (TRIM (LOWER (SPLIT_PART (tmpMovement_Data.ShortName_From, 'підрозділ', 1)))
+                         || ' ' || TRIM (SPLIT_PART (SPLIT_PART (tmpMovement_Data.ShortName_From, 'філії', 1), 'Структурний', 2)))
+                  ELSE ''
+             END :: TVarChar AS JuridicalName_From_add
+
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
@@ -1050,7 +1075,14 @@ BEGIN
                   ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO)
              END :: TVarChar AS OKPO_From_ifin
            , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) END AS INN_From
-           , OH_JuridicalDetails_From.InvNumberBranch                       AS InvNumberBranch_From
+
+           , CASE WHEN Object_To.Id = 9840136 AND tmpMovement_Data.RoomNumber_from <> '' -- AND vbUserId = 5
+                       -- Укрзалізниця АТ
+                       THEN tmpMovement_Data.RoomNumber_from
+
+                  ELSE OH_JuridicalDetails_From.InvNumberBranch
+             END :: TVarChar AS InvNumberBranch_From
+
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
            , OH_JuridicalDetails_From.AccounterName                         AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From

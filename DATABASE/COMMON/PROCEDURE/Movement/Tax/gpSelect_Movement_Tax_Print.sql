@@ -386,11 +386,23 @@ order by 4*/
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
 
            --, OH_JuridicalDetails_To.FullName            AS JuridicalName_To
-           , CASE WHEN COALESCE (MovementString_ToINN.ValueData,OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
+           , CASE WHEN Object_To.Id = 9840136 AND 1=1 -- AND vbUserId = 5
+                       -- Укрзалізниця АТ
+                       THEN COALESCE (OH_JuridicalDetails_To.Name, '')
+
+                  WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
-                  THEN 'Неплатник'
+                       THEN 'Неплатник'
                   ELSE OH_JuridicalDetails_To.FullName
-             END AS JuridicalName_To
+             END :: TVarChar AS JuridicalName_To
+
+           , CASE WHEN Object_To.Id = 9840136 AND 1=1 -- AND vbUserId = 5
+                       -- Укрзалізниця АТ
+                       THEN ', ' || TRIM (TRIM (LOWER (SPLIT_PART (ObjectString_ShortName.ValueData, 'підрозділ', 1)))
+                          || ' ' || TRIM (SPLIT_PART (SPLIT_PART (ObjectString_ShortName.ValueData, 'філії', 1), 'Структурний', 2)))
+                       
+                  ELSE ''
+             END :: TVarChar AS JuridicalName_To_add
 
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
@@ -416,7 +428,14 @@ order by 4*/
            , OH_JuridicalDetails_To.BankName            AS BankName_To
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
 --           , OH_JuridicalDetails_To.Phone               AS Phone_To
-           , OH_JuridicalDetails_To.InvNumberBranch     AS InvNumberBranch_To
+             
+           , CASE WHEN Object_To.Id = 9840136 AND ObjectString_RoomNumber.ValueData <> '' -- AND vbUserId = 5
+                       -- Укрзалізниця АТ
+                       THEN ObjectString_RoomNumber.ValueData 
+
+                  ELSE OH_JuridicalDetails_To.InvNumberBranch
+
+             END :: TVarChar AS InvNumberBranch_To
 
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
@@ -617,6 +636,12 @@ order by 4*/
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_Partner.ObjectId
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
+            LEFT JOIN ObjectString AS ObjectString_RoomNumber
+                                   ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_Partner.ObjectId
+                                  AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
+            LEFT JOIN ObjectString AS ObjectString_ShortName
+                                   ON ObjectString_ShortName.ObjectId = MovementLinkObject_Partner.ObjectId
+                                  AND ObjectString_ShortName.DescId = zc_ObjectString_Partner_ShortName()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

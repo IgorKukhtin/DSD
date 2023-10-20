@@ -102,15 +102,15 @@ BEGIN
      END IF;
           
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_PartionModel(), ioId, inPartionModelId);
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_PartionModel(), inGoodsId, inPartionModelId);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_InvNumber(), ioId, inInvNumber);
-     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_SerialNumber(), ioId, inSerialNumber);
-     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_PassportNumber(), ioId, inPassportNumber);    
+     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_InvNumber(), inGoodsId, inInvNumber);
+     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_SerialNumber(), inGoodsId, inSerialNumber);
+     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_PassportNumber(), inGoodsId, inPassportNumber);    
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_Production(), ioId, inProduction);
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_Production(), inGoodsId, inProduction);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_KW(), ioId, inKW);
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_KW(), inGoodsId, inKW);
 
 END;
 $BODY$

@@ -25,9 +25,14 @@ BEGIN
                                          , OperCount TFloat
                                          , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                          , BusinessId_Car Integer, BusinessId_Route Integer
+                                         , JuridicalId Integer, ContractId Integer, PaidKindId Integer
                                           ) ON COMMIT DROP;
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_TransportSumm_Transport (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId_50000 Integer, ContainerId Integer, AccountId Integer, AccountId_50000 Integer, OperSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem_TransportSumm_Transport (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId_50000 Integer
+                                                       , ContainerId Integer, AccountId Integer, AccountId_50000 Integer
+                                                       , ContainerId_jur Integer, AccountId_jur Integer
+                                                       , OperSumm TFloat
+                                                        ) ON COMMIT DROP;
      -- таблица - элементы по Сотруднику (ЗП) + затраты "командировочные" + "дальнобойные" + "такси", со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_SummPersonal (MovementItemId Integer, OperSumm_Add TFloat, OperSumm_AddLong TFloat, OperSumm_Taxi TFloat
                                             , ContainerId Integer, AccountId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
