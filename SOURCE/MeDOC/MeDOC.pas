@@ -554,7 +554,9 @@ begin
   ZVIT.DECLARBODY.HNUM1.Nil_ := true;
 
   ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
+  if HeaderDataSet.FieldByName('JuridicalName_To_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString + HeaderDataSet.FieldByName('JuridicalName_To_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
 
   ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').AsString;
   ZVIT.DECLARBODY.HNUM2.Nil_ := true;
@@ -923,7 +925,9 @@ begin
   ZVIT.DECLARBODY.ChildNodes['HNUM1'].SetAttributeNS('nil', NS_URI, true);
 
   ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
+  if HeaderDataSet.FieldByName('JuridicalName_To_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString + HeaderDataSet.FieldByName('JuridicalName_To_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
 
   ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').AsString;
   ZVIT.DECLARBODY.ChildNodes['HNUM2'].SetAttributeNS('nil', NS_URI, true);
@@ -1358,7 +1362,9 @@ begin
   ZVIT.DECLARBODY.ChildNodes['HNUM1'].SetAttributeNS('nil', NS_URI, true);
 
   ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
+  if HeaderDataSet.FieldByName('JuridicalName_To_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString + HeaderDataSet.FieldByName('JuridicalName_To_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
 
   ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').AsString;
   ZVIT.DECLARBODY.ChildNodes['HNUM2'].SetAttributeNS('nil', NS_URI, true);
@@ -1801,7 +1807,9 @@ begin
   ZVIT.DECLARBODY.ChildNodes['HNUM1'].SetAttributeNS('nil', NS_URI, true);
 
   ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
+  if HeaderDataSet.FieldByName('JuridicalName_To_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString + HeaderDataSet.FieldByName('JuridicalName_To_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
 
   ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').AsString;
   ZVIT.DECLARBODY.ChildNodes['HNUM2'].SetAttributeNS('nil', NS_URI, true);
@@ -3193,7 +3201,10 @@ begin
   ZVIT.DECLARBODY.ChildNodes['HPODNUM2'].SetAttributeNS('nil', NS_URI, true);
 
   // Найменування підприємства - Покупатель
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+  if HeaderDataSet.FieldByName('JuridicalName_From_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString
+                                 + HeaderDataSet.FieldByName('JuridicalName_From_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
   // ІПН підприємства - Покупатель
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').AsString;
   // Код філії покупця
@@ -3404,7 +3415,10 @@ begin
   ZVIT.DECLARBODY.ChildNodes['HPODNUM2'].SetAttributeNS('nil', NS_URI, true);
 
   // Найменування підприємства - Покупатель
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+  if HeaderDataSet.FieldByName('JuridicalName_From_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString
+                                 + HeaderDataSet.FieldByName('JuridicalName_From_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
   // ІПН підприємства - Покупатель
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').AsString;
   // Код філії покупця
@@ -3619,7 +3633,13 @@ begin
   ZVIT.DECLARBODY.ChildNodes['HPODNUM2'].SetAttributeNS('nil', NS_URI, true);
 
   // Найменування підприємства - Покупатель
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+
+  if HeaderDataSet.FieldByName('JuridicalName_From_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString
+                                 + HeaderDataSet.FieldByName('JuridicalName_From_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+
+
   // ІПН підприємства - Покупатель
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').AsString;
   // Код філії покупця
@@ -3800,7 +3820,10 @@ begin
   // Найменування підприємства - Продавец
   ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
   // Найменування підприємства - Покупатель
-  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+  if HeaderDataSet.FieldByName('JuridicalName_From_add').AsString <> ''
+  then ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString
+                                 + HeaderDataSet.FieldByName('JuridicalName_From_add').AsString
+  else ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
   // ІПН підприємства - Продавец
   ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_To').AsString;
   ZVIT.DECLARBODY.ChildNodes['HNUM2'].SetAttributeNS('nil', NS_URI, true);
