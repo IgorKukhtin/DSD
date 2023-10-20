@@ -216,7 +216,13 @@ BEGIN
      WHERE Object_Unit.DescId = zc_Object_Unit()
        AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
        -- магазин Chado-Outlet
-       AND (vbIsChado_outlet = FALSE OR Object_Unit.Id = 1550)
+       AND (vbIsChado_outlet = FALSE
+         OR Object_Unit.Id = 1550 -- магазин Chado-Outlet
+         OR Object_Unit.Id = 1539 -- магазин CHADO
+         OR Object_Unit.Id = 1535 -- магазин Vintage
+         OR Object_Unit.Id = 1530 -- магазин Terry-Luxury
+         OR Object_Unit.Id = 1534 -- магазин Terry-Vintage
+           )
        -- AND (Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId OR ObjectLink_User_Unit.ChildObjectId IS NULL)
     ;
 

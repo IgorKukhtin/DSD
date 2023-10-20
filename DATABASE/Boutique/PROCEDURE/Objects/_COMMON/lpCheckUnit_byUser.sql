@@ -17,8 +17,18 @@ BEGIN
      vbUnitId:= lpGetUnit_byUser (inUserId);
 
 
+     -- Вернули - Подразделение которое проверили
+     IF inUserId = 1234551 AND inUnitId_by IN (1550 -- магазин Chado-Outlet
+                                             , 1539 -- магазин CHADO
+                                             , 1535 -- магазин Vintage
+                                             , 1530 -- магазин Terry-Luxury
+                                             , 1534 -- магазин Terry-Vintage
+                                              )
+     THEN
+         RETURN COALESCE (inUnitId_by, 0);
+
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой ИЛИ свой Склад
-     IF vbUnitId > 0 AND COALESCE (inUnitId_by, 0) NOT IN (SELECT vbUnitId AS UnitId UNION ALL SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ObjectId = vbUnitId)
+     ELSEIF vbUnitId > 0 AND COALESCE (inUnitId_by, 0) NOT IN (SELECT vbUnitId AS UnitId UNION ALL SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ObjectId = vbUnitId)
      THEN
          RAISE EXCEPTION 'Ошибка.У Пользователя <%> - <%> нет доступак к данным подразделения <%>.'
                        , lfGet_Object_ValueData_sh (inUserId)
@@ -29,7 +39,7 @@ BEGIN
 
      -- Вернули - Подразделение которое проверили
      RETURN COALESCE (inUnitId_by, 0);
-
+     
 END;
 $BODY$
   LANGUAGE plpgsql IMMUTABLE;
