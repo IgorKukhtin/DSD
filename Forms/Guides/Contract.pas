@@ -348,6 +348,8 @@ type
     actGetImportSetting_PriceList: TdsdExecStoredProc;
     macStartLoadPriceList: TMultiAction;
     bbStartLoadPriceList: TdxBarButton;
+    ChangePercent: TcxGridDBColumn;
+    ChangePercentPartner: TcxGridDBColumn;
 
   private
     { Private declarations }

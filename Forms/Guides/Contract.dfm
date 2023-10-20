@@ -1041,6 +1041,22 @@
           Options.Editing = False
           Width = 60
         end
+        object ChangePercent: TcxGridDBColumn
+          Caption = '(-)% '#1057#1082#1080#1076'. (+)% '#1053#1072#1094'.'
+          DataBinding.FieldName = 'ChangePercent'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object ChangePercentPartner: TcxGridDBColumn
+          Caption = '% '#1053#1072#1094'. '#1055#1072#1074'.'
+          DataBinding.FieldName = 'ChangePercentPartner'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object SigningDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
           DataBinding.FieldName = 'SigningDate'
