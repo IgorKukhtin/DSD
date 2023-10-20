@@ -71,6 +71,8 @@ RETURNS TABLE (Id Integer, Code Integer
              -- , PriceListPromoId Integer, PriceListPromoName TVarChar
              -- , StartPromo TDateTime, EndPromo TDateTime
 
+             , ChangePercent TFloat, ChangePercentPartner TFloat
+
              , isErased Boolean 
               )
 AS
@@ -294,6 +296,9 @@ BEGIN
        
        -- , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
        -- , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo        
+
+       , Object_Contract_View.ChangePercent
+       , Object_Contract_View.ChangePercentPartner
 
        , Object_Contract_View.isErased
        
