@@ -63,16 +63,22 @@ BEGIN
                                  FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS lfSelect
                                 )
            , tmpContract_Key AS (SELECT -- это ObjectId - объединение
-                                        View_Contract_ContractKey.ContractKeyId
+                                        -- View_Contract_ContractKey.ContractKeyId
+                                        0 AS ContractKeyId
                                         -- это все ContractId
                                       , COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
                                         -- это "главный" ContractId
-                                      , View_Contract_ContractKey.ContractId_Key
+                                      , CASE WHEN Object.ValueData ILIKE '%физобмен%' AND COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) <> View_Contract_ContractKey.ContractId_Key 
+                                                  -- !!!замена!!!
+                                                  THEN View_Contract_ContractKey.ContractId
+                                                  ELSE View_Contract_ContractKey.ContractId_Key
+                                        END AS ContractId_Key
 
                                   FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
                                        LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
+                                       LEFT JOIN Object ON Object.Id = View_Contract_ContractKey.ContractId_Key
                                   -- WHERE 1=0
-                                 )
+                                )
                 , tmpContract AS (SELECT DISTINCT
                                          tmpPartner.PartnerId                        AS PartnerId
                                          -- "оригинал"

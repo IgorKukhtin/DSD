@@ -126,9 +126,9 @@ BEGIN
                                   , MAX (ObjectHistory_PriceListItem_Sale.StartDate)              :: TDateTime AS SaleStartDate
                                   , MAX (ObjectHistory_PriceListItem_Sale.EndDate)                :: TDateTime AS SaleEndDate
                                   , MAX (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData)   :: TFloat    AS SalePrice
-                                  , MAX (ObjectHistory_PriceListItem_Return.StartDate)            :: TDateTime AS ReturnStartDate
-                                  , MAX (ObjectHistory_PriceListItem_Return.EndDate)              :: TDateTime AS ReturnEndDate
-                                  , MAX (ObjectHistoryFloat_PriceListItem_Value_Return.ValueData) :: TFloat    AS ReturnPrice
+                                  , MAX (COALESCE (ObjectHistory_PriceListItem_Return_curr.StartDate, ObjectHistory_PriceListItem_Return.StartDate))          :: TDateTime AS ReturnStartDate
+                                  , MAX (COALESCE (ObjectHistory_PriceListItem_Return_curr.EndDate, ObjectHistory_PriceListItem_Return.EndDate))              :: TDateTime AS ReturnEndDate
+                                  , MAX (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Return_curr.ValueData, ObjectHistoryFloat_PriceListItem_Value_Return.ValueData)) :: TFloat    AS ReturnPrice
                                   , TRUE                                                          :: Boolean   AS isSync
                              FROM Object AS Object_PriceListItem
                                   JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -168,6 +168,15 @@ BEGIN
                                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return
                                                                ON ObjectHistoryFloat_PriceListItem_Value_Return.ObjectHistoryId = ObjectHistory_PriceListItem_Return.Id
                                                               AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+                                  LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return_curr
+                                                          ON ObjectHistory_PriceListItem_Return_curr.ObjectId = Object_PriceListItem.Id
+                                                         AND ObjectHistory_PriceListItem_Return_curr.DescId = zc_ObjectHistory_PriceListItem()
+                                                         AND CURRENT_DATE >= ObjectHistory_PriceListItem_Return_curr.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem_Return_curr.EndDate
+                                                         AND ObjectHistory_PriceListItem_Return.ObjectId IS NULL
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return_curr
+                                                               ON ObjectHistoryFloat_PriceListItem_Value_Return_curr.ObjectHistoryId = ObjectHistory_PriceListItem_Return_curr.Id
+                                                              AND ObjectHistoryFloat_PriceListItem_Value_Return_curr.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
 
                              WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                                AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0))
