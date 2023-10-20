@@ -13,6 +13,19 @@ RETURNS VOID
 AS
 $BODY$  
 BEGIN
+     -- !!!только Перепроведение с/с - НЕТ ограничений!!!
+     IF inUserId IN (zc_Enum_Process_Auto_PrimeCost()
+                   --, zc_Enum_Process_Auto_ReComplete()
+                   --, zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                   -- , zc_Enum_Process_Auto_Defroster()
+                   -- , zfCalc_UserAdmin() :: Integer -- временно: !!!для Админа - НЕТ ограничений!!!
+                    )
+        AND 1=0
+     THEN
+          RETURN; -- !!!выход!!!
+     END IF;
+
+
      -- Гриневич К.А.
      IF inUserId IN (9031170) AND inOperDate < CURRENT_DATE - INTERVAL '7 DAY'
      THEN
