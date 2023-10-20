@@ -1,16 +1,16 @@
 ﻿inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
-  ClientHeight = 145
-  ClientWidth = 730
+  ClientHeight = 167
+  ClientWidth = 1008
   KeyPreview = True
-  ExplicitWidth = 752
-  ExplicitHeight = 231
+  ExplicitWidth = 1030
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Width = 730
+    Width = 1008
     Height = 121
     Align = alTop
     BevelInner = bvNone
@@ -5556,6 +5556,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsOnUnitRemainsMarketing: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1089' '#1073#1086#1085#1091#1089#1086#1084
+      FormName = 'TReport_GoodsOnUnitRemainsMarketingForm'
+      FormNameParam.Value = 'TReport_GoodsOnUnitRemainsMarketingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6761,6 +6772,9 @@
       end
       object N382: TMenuItem
         Action = actReport_PriceList_BestPrice
+      end
+      object N384: TMenuItem
+        Action = actReport_GoodsOnUnitRemainsMarketing
       end
       object N275: TMenuItem
         Action = actFinalSUAJournal

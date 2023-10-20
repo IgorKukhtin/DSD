@@ -1,4 +1,4 @@
-unit Report_RemainGoods;
+unit Report_GoodsRemainsSend;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_GoodsRemainsForm = class(TAncestorReportForm)
+  TReport_GoodsRemainsSendForm = class(TAncestorReportForm)
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
@@ -38,8 +38,6 @@ type
     NDS: TcxGridDBColumn;
     actRefreshPartionPrice: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    cbPartion: TcxCheckBox;
-    cbPartionPrice: TcxCheckBox;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     MP_JuridicalName: TcxGridDBColumn;
@@ -49,9 +47,7 @@ type
     MP_SummaVAT: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
     actRefreshJuridical: TdsdDataSetRefresh;
-    cbJuridical: TcxCheckBox;
     isSP: TcxGridDBColumn;
-    cbVendorminPrices: TcxCheckBox;
     actOverdueChange: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
     MakerName: TcxGridDBColumn;
@@ -61,6 +57,9 @@ type
     OptimaCode: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
     CodeUKTZED: TcxGridDBColumn;
+    edInvNumber: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    FormParams: TdsdFormParams;
     FormDispensingName: TcxGridDBColumn;
   private
     { Private declarations }
@@ -74,6 +73,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_GoodsRemainsForm);
+  RegisterClass(TReport_GoodsRemainsSendForm);
 
 end.

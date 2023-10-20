@@ -1301,7 +1301,10 @@ uses
   Report_PriceList_BestPrice in '..\..\FormsFarmacy\Report\Report_PriceList_BestPrice.pas' {Report_PriceList_BestPriceForm: TParentForm},
   JuridicalPriceChoice in '..\..\FormsFarmacy\Guides\JuridicalPriceChoice.pas' {JuridicalPriceChoiceForm: TParentForm},
   UKTZED in '..\..\FormsFarmacy\Guides\UKTZED.pas' {UKTZEDForm: TParentForm},
-  UKTZEDEdit in '..\..\FormsFarmacy\Guides\UKTZEDEdit.pas' {UKTZEDEditForm: TParentForm};
+  UKTZEDEdit in '..\..\FormsFarmacy\Guides\UKTZEDEdit.pas' {UKTZEDEditForm: TParentForm},
+  Report_GoodsRemainsSend in '..\..\FormsFarmacy\Report\Report_GoodsRemainsSend.pas' {Report_GoodsRemainsSendForm: TParentForm},
+  Report_GoodsOnUnitRemainsMarketingDialog in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketingDialog.pas' {Report_GoodsOnUnitRemainsMarketingDialogForm: TParentForm},
+  Report_GoodsOnUnitRemainsMarketing in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketing.pas' {Report_GoodsOnUnitRemainsMarketingForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

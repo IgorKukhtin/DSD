@@ -1,30 +1,30 @@
-inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
-  Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
-  ClientHeight = 338
+inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMarketingForm
+  Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1089' '#1073#1086#1085#1091#1089#1086#1084
+  ClientHeight = 525
   ClientWidth = 1010
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1032
-  ExplicitHeight = 394
+  ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 64
     Width = 1010
-    Height = 274
+    Height = 461
     TabOrder = 3
     ExplicitTop = 64
     ExplicitWidth = 1010
-    ExplicitHeight = 274
-    ClientRectBottom = 274
+    ExplicitHeight = 461
+    ClientRectBottom = 461
     ClientRectRight = 1010
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1010
-      ExplicitHeight = 274
+      ExplicitHeight = 461
       inherited cxGrid: TcxGrid
         Width = 1010
-        Height = 274
+        Height = 461
         ExplicitWidth = 1010
-        ExplicitHeight = 274
+        ExplicitHeight = 461
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -59,12 +59,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = MP_Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = MP_SummaVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -107,17 +105,20 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = MP_Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = MP_SummaVAT
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SommaBonus
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -128,14 +129,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -177,15 +170,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 118
-          end
-          object JuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'JuridicalCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -339,77 +323,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 100
           end
-          object MP_JuridicalName: TcxGridDBColumn
-            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1084#1080#1085'.'#1094#1077#1085#1072')'
-            DataBinding.FieldName = 'MP_JuridicalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object MP_ContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1084#1080#1085'.'#1094#1077#1085#1072')'
-            DataBinding.FieldName = 'MP_ContractName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object MinPriceOnDate: TcxGridDBColumn
-            Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091'  ('#1073#1077#1079' '#1053#1044#1057')'
-            DataBinding.FieldName = 'MinPriceOnDate'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object MinPriceOnDateVAT: TcxGridDBColumn
-            Caption = #1052#1080#1085'.'#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1076#1072#1090#1091'  ('#1089' '#1053#1044#1057')'
-            DataBinding.FieldName = 'MinPriceOnDateVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object MP_Summa: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  ('#1073#1077#1079' '#1053#1044#1057')'
-            DataBinding.FieldName = 'MP_Summa'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object MP_SummaVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  ('#1089' '#1053#1044#1057')'
-            DataBinding.FieldName = 'MP_SummaVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object ContainerId: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1082#1083#1102#1095')'
-            DataBinding.FieldName = 'ContainerId'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object ConditionsKeepName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'ConditionsKeepName'
@@ -438,68 +351,51 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Width = 100
           end
           object MakerName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
+          object GoodsGroupPromoName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
+            DataBinding.FieldName = 'GoodsGroupPromoName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 112
           end
-          object BarCode: TcxGridDBColumn
-            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
-            DataBinding.FieldName = 'BarCode'
+          object PriceSip: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089#1080#1087
+            DataBinding.FieldName = 'PriceSip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 66
           end
-          object MorionCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
-            DataBinding.FieldName = 'MorionCode'
+          object ChangePercent: TcxGridDBColumn
+            Caption = '% '#1073#1086#1085#1091#1089#1072
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 63
           end
-          object BadmCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1041#1072#1076#1084
-            DataBinding.FieldName = 'BadmCode'
+          object SommaBonus: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1085#1091#1089#1072' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'SommaBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 63
-          end
-          object OptimaCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1054#1087#1090#1080#1084#1072
-            DataBinding.FieldName = 'OptimaCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 63
-          end
-          object AccommodationName: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
-            DataBinding.FieldName = 'AccommodationName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
-          object CodeUKTZED: TcxGridDBColumn
-            Caption = #1059#1050#1058#1047#1069#1044' '
-            DataBinding.FieldName = 'CodeUKTZED'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
-          end
-          object FormDispensingName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1090#1087#1091#1089#1082#1072
-            DataBinding.FieldName = 'FormDispensingName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 61
           end
         end
       end
@@ -552,35 +448,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       TabOrder = 5
       Width = 201
     end
-    object cbVendorminPrices: TcxCheckBox
-      Left = 530
-      Top = 16
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Caption = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      TabOrder = 6
-      Width = 197
-    end
-  end
-  object cbPartion: TcxCheckBox [2]
-    Left = 530
-    Top = 1
-    Action = actRefreshIsPartion
-    TabOrder = 6
-    Width = 94
-  end
-  object cbPartionPrice: TcxCheckBox [3]
-    Left = 627
-    Top = 1
-    Action = actRefreshPartionPrice
-    TabOrder = 7
-    Width = 200
-  end
-  object cbJuridical: TcxCheckBox [4]
-    Left = 840
-    Top = 1
-    Action = actRefreshJuridical
-    TabOrder = 8
-    Width = 112
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -708,11 +575,12 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actClearMainPromoBonus
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsRemainsDialogForm'
-      FormNameParam.Value = 'TReport_GoodsRemainsDialogForm'
+      FormName = 'TReport_GoodsOnUnitRemainsMarketingDialogForm'
+      FormNameParam.Value = 'TReport_GoodsOnUnitRemainsMarketingDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -738,38 +606,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inIsPartion'
-          Value = False
-          Component = cbPartion
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisPartionPrice'
-          Value = False
-          Component = cbPartionPrice
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisJuridical'
-          Value = Null
-          Component = cbJuridical
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisVendorminPrices'
-          Value = False
-          Component = cbVendorminPrices
-          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -827,6 +663,67 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end>
       isShowModal = False
     end
+    object actClearMainPromoBonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearMainPromoBonus
+      StoredProcList = <
+        item
+          StoredProc = spClearMainPromoBonus
+        end>
+      Caption = 'actClearMainPromoBonus'
+    end
+    object actMainPromoBonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMainPromoBonus
+      StoredProcList = <
+        item
+          StoredProc = spMainPromoBonus
+        end>
+      Caption = 'actMainPromoBonus'
+    end
+    object actExecuteSummaDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteSummaDialog'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoBonus'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object mactMainPromoBonus: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteSummaDialog
+      ActionList = <
+        item
+          Action = actMainPromoBonus
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072
+      ImageIndex = 38
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -837,7 +734,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     Top = 168
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_GoodsOnUnitRemains'
+    StoredProcName = 'gpSelect_GoodsOnUnitRemainsMarketing'
     Params = <
       item
         Name = 'inUnitId'
@@ -852,38 +749,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Value = 41395d
         Component = deStart
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsPartion'
-        Value = Null
-        Component = cbPartion
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPartionPrice'
-        Value = Null
-        Component = cbPartionPrice
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisJuridical'
-        Value = Null
-        Component = cbJuridical
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisVendorminPrices'
-        Value = False
-        Component = cbVendorminPrices
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -922,10 +787,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Visible = True
-          ItemName = 'bbGoodsPartyReport'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -938,7 +799,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarButton2'
         end>
     end
     object bbGoodsPartyReport: TdxBarButton
@@ -951,6 +812,10 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
     object dxBarButton1: TdxBarButton
       Action = actOverdueChange
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = mactMainPromoBonus
       Category = 0
     end
   end
@@ -999,7 +864,52 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 256
-    Top = 8
+    Left = 392
+  end
+  object spClearMainPromoBonus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_ClearMainPromoBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 240
+    Top = 256
+  end
+  object spMainPromoBonus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_MainPromoBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoBonus'
+        Value = 42370d
+        Component = FormParams
+        ComponentItem = 'PromoBonus'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 328
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'PromoBonus'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 112
+    Top = 328
   end
 end

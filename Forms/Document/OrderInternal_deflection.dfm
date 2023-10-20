@@ -45,6 +45,11 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains_diff
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = Amount_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -71,6 +76,11 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
               Format = ',0.#'
               Kind = skSum
               Column = AmountRemains_diff
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = Amount_calc
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -167,7 +177,17 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             Options.Editing = False
             Width = 70
           end
-          object AmountRemains_diff: TcxGridDBColumn [8]
+          object Amount_calc: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'Amount_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountRemains_diff: TcxGridDBColumn [9]
             Caption = #1054#1090#1082'. '#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountRemains_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -179,6 +199,15 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
           end
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
+          end
+          object ContainerId: TcxGridDBColumn
+            Caption = #1087#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
         end
       end
@@ -1073,7 +1102,7 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 12
       end>
     Left = 558
     Top = 313

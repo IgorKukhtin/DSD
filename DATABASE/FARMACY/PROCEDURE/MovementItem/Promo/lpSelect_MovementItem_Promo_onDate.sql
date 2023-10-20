@@ -15,6 +15,7 @@ RETURNS TABLE (MovementId Integer
              , InvNumber TVarChar
              , RelatedProductId Integer
              , GoodsGroupPromoName TVarChar
+             , Price TFloat
               )
 AS
 $BODY$
@@ -62,6 +63,7 @@ BEGIN
                            , MI_Goods.ObjectId                 AS GoodsId
                            , Movement.ChangePercent            AS ChangePercent
                            , Movement.RelatedProductId         AS RelatedProductId
+                           , MIFloat_Price.ValueData           AS Price
                            , Object_GoodsGroupPromo.ValueData  AS GoodsGroupPromoName
                            , ROW_NUMBER() OVER (PARTITION BY MI_Juridical.ObjectId, MI_Goods.ObjectId ORDER BY MI_Juridical.ObjectId, MI_Goods.ObjectId, Movement.EndPromo DESC, Movement.MovementId DESC) AS Ord
                       FROM tmpMovement AS Movement
@@ -73,6 +75,10 @@ BEGIN
                            LEFT JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.MovementId
                                                                  AND MI_Juridical.DescId = zc_MI_Child()
                                                                  AND MI_Juridical.isErased = FALSE
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MI_Goods.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
                                                 ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = MI_Goods.ObjectId 
@@ -90,6 +96,7 @@ BEGIN
                  , tmp.InvNumber                AS InvNumber
                  , tmp.RelatedProductId         AS RelatedProductId
                  , tmp.GoodsGroupPromoName      AS GoodsGroupPromoName
+                 , tmp.Price
             FROM tmpMI AS tmp
             WHERE tmp.Ord = 1 -- т.е. выбираем "последний"
             ;
@@ -106,4 +113,5 @@ $BODY$
  28.04.16                                        *
 */
 
--- SELECT * FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE);
+-- 
+SELECT * FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE);

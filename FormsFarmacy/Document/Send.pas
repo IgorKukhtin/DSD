@@ -227,6 +227,8 @@ type
     spInsert_WriteRestFromPointNoPromo: TdsdStoredProc;
     actInsert_WriteRestFromPointNoPromo: TdsdExecStoredProc;
     dxBarButton16: TdxBarButton;
+    actReport_GoodsRemainsSend: TdsdOpenForm;
+    bbReport_GoodsRemainsSend: TdxBarButton;
   private
     { Private declarations }
   public

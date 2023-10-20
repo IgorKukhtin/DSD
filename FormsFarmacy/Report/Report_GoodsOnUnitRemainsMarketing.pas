@@ -1,4 +1,4 @@
-unit Report_RemainGoods;
+unit Report_GoodsOnUnitRemainsMarketing;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_GoodsRemainsForm = class(TAncestorReportForm)
+  TReport_GoodsOnUnitRemainsMarketingForm = class(TAncestorReportForm)
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
@@ -38,30 +38,25 @@ type
     NDS: TcxGridDBColumn;
     actRefreshPartionPrice: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    cbPartion: TcxCheckBox;
-    cbPartionPrice: TcxCheckBox;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    MP_JuridicalName: TcxGridDBColumn;
-    MinPriceOnDate: TcxGridDBColumn;
-    MP_Summa: TcxGridDBColumn;
-    MinPriceOnDateVAT: TcxGridDBColumn;
-    MP_SummaVAT: TcxGridDBColumn;
-    ContainerId: TcxGridDBColumn;
     actRefreshJuridical: TdsdDataSetRefresh;
-    cbJuridical: TcxCheckBox;
     isSP: TcxGridDBColumn;
-    cbVendorminPrices: TcxCheckBox;
     actOverdueChange: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    GoodsGroupPromoName: TcxGridDBColumn;
+    PriceSip: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    SommaBonus: TcxGridDBColumn;
     MakerName: TcxGridDBColumn;
-    BarCode: TcxGridDBColumn;
-    MorionCode: TcxGridDBColumn;
-    BadmCode: TcxGridDBColumn;
-    OptimaCode: TcxGridDBColumn;
-    AccommodationName: TcxGridDBColumn;
-    CodeUKTZED: TcxGridDBColumn;
-    FormDispensingName: TcxGridDBColumn;
+    spClearMainPromoBonus: TdsdStoredProc;
+    spMainPromoBonus: TdsdStoredProc;
+    actClearMainPromoBonus: TdsdExecStoredProc;
+    actMainPromoBonus: TdsdExecStoredProc;
+    mactMainPromoBonus: TMultiAction;
+    actExecuteSummaDialog: TExecuteDialog;
+    FormParams: TdsdFormParams;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public
@@ -74,6 +69,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_GoodsRemainsForm);
+  RegisterClass(TReport_GoodsOnUnitRemainsMarketingForm);
 
 end.

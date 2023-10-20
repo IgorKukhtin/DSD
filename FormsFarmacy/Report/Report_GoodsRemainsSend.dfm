@@ -1,30 +1,30 @@
-inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
-  Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
-  ClientHeight = 338
-  ClientWidth = 1010
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1032
-  ExplicitHeight = 394
+inherited Report_GoodsRemainsSendForm: TReport_GoodsRemainsSendForm
+  Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1085#1080#1102
+  ClientHeight = 503
+  ClientWidth = 1100
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 1122
+  ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 64
-    Width = 1010
-    Height = 274
+    Width = 1100
+    Height = 439
     TabOrder = 3
     ExplicitTop = 64
-    ExplicitWidth = 1010
-    ExplicitHeight = 274
-    ClientRectBottom = 274
-    ClientRectRight = 1010
+    ExplicitWidth = 1100
+    ExplicitHeight = 439
+    ClientRectBottom = 439
+    ClientRectRight = 1100
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1010
-      ExplicitHeight = 274
+      ExplicitWidth = 1100
+      ExplicitHeight = 439
       inherited cxGrid: TcxGrid
-        Width = 1010
-        Height = 274
-        ExplicitWidth = 1010
-        ExplicitHeight = 274
+        Width = 1100
+        Height = 439
+        ExplicitWidth = 1100
+        ExplicitHeight = 439
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -506,13 +506,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
   end
   inherited Panel: TPanel
-    Width = 1010
+    Width = 1100
     Height = 38
-    ExplicitWidth = 1010
+    ExplicitWidth = 1100
     ExplicitHeight = 38
     inherited deStart: TcxDateEdit
       Left = 131
       Top = 4
+      Properties.ReadOnly = True
       ExplicitLeft = 131
       ExplicitTop = 4
     end
@@ -525,9 +526,9 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
     inherited cxLabel1: TcxLabel
       Left = 19
-      Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086':'
+      Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103':'
       ExplicitLeft = 19
-      ExplicitWidth = 105
+      ExplicitWidth = 106
     end
     inherited cxLabel2: TcxLabel
       Left = 8
@@ -537,12 +538,12 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       ExplicitTop = 33
     end
     object cxLabel4: TcxLabel
-      Left = 230
+      Left = 446
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 320
+      Left = 536
       Top = 4
       Properties.Buttons = <
         item
@@ -552,35 +553,18 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       TabOrder = 5
       Width = 201
     end
-    object cbVendorminPrices: TcxCheckBox
-      Left = 530
-      Top = 16
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Caption = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    object edInvNumber: TcxTextEdit
+      Left = 328
+      Top = 4
+      Properties.ReadOnly = True
       TabOrder = 6
-      Width = 197
+      Width = 74
     end
-  end
-  object cbPartion: TcxCheckBox [2]
-    Left = 530
-    Top = 1
-    Action = actRefreshIsPartion
-    TabOrder = 6
-    Width = 94
-  end
-  object cbPartionPrice: TcxCheckBox [3]
-    Left = 627
-    Top = 1
-    Action = actRefreshPartionPrice
-    TabOrder = 7
-    Width = 200
-  end
-  object cbJuridical: TcxCheckBox [4]
-    Left = 840
-    Top = 1
-    Action = actRefreshJuridical
-    TabOrder = 8
-    Width = 112
+    object cxLabel3: TcxLabel
+      Left = 232
+      Top = 5
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -708,11 +692,12 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsRemainsDialogForm'
-      FormNameParam.Value = 'TReport_GoodsRemainsDialogForm'
+      FormName = 'TReport_GoodsRemainsSendDialogForm'
+      FormNameParam.Value = 'TReport_GoodsRemainsSendDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -744,7 +729,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         item
           Name = 'inIsPartion'
           Value = False
-          Component = cbPartion
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -752,7 +736,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         item
           Name = 'inisPartionPrice'
           Value = False
-          Component = cbPartionPrice
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -760,7 +743,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         item
           Name = 'inisJuridical'
           Value = Null
-          Component = cbJuridical
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -768,7 +750,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         item
           Name = 'inisVendorminPrices'
           Value = False
-          Component = cbVendorminPrices
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -837,53 +818,13 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     Top = 168
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_GoodsOnUnitRemains'
+    StoredProcName = 'gpSelect_GoodsOnUnitRemainsSend'
     Params = <
       item
-        Name = 'inUnitId'
+        Name = 'inMovementId'
         Value = 41395d
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRemainsDate'
-        Value = 41395d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsPartion'
-        Value = Null
-        Component = cbPartion
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPartionPrice'
-        Value = Null
-        Component = cbPartionPrice
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisJuridical'
-        Value = Null
-        Component = cbJuridical
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisVendorminPrices'
-        Value = False
-        Component = cbVendorminPrices
-        DataType = ftBoolean
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -903,10 +844,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True
@@ -976,6 +913,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1001,5 +939,43 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       end>
     Left = 256
     Top = 8
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = deStart
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 264
   end
 end
