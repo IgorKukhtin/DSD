@@ -720,7 +720,7 @@ BEGIN
                    + tmpMIContainer_all.SummReturnIn_40208
                     ) AS SummOtherIn_by -- приход другой
 
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1
+              , SUM (CASE WHEN COALESCE (_tmpLocation_by.LocationId, 0) > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1
                                THEN tmpMIContainer_all.CountSendOut
                                   + tmpMIContainer_all.CountProductionOut
                                   + tmpMIContainer_all.CountSendOnPriceOut
@@ -733,7 +733,11 @@ BEGIN
                           ELSE 0
                      END) AS SummOut_by -- расход на "выбранное" подр.
     
-              , SUM (CASE WHEN (_tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL) OR tmpMIContainer_all.LocationId_by = -1 THEN tmpMIContainer_all.CountProductionOut ELSE 0 END
+              , SUM (CASE WHEN NOT (COALESCE (_tmpLocation_by.LocationId, 0) > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1)
+                           AND tmpMIContainer_all.LocationId_by = -1
+                               THEN tmpMIContainer_all.CountProductionOut
+                          ELSE 0
+                     END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                                THEN tmpMIContainer_all.CountSendOut
                                   + tmpMIContainer_all.CountSendOnPriceOut
@@ -745,7 +749,11 @@ BEGIN
                    - tmpMIContainer_all.CountSale_40208
                    + tmpMIContainer_all.CountLoss
                     ) AS CountOtherOut_by -- расход другой
-              , SUM (CASE WHEN (_tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL) OR tmpMIContainer_all.LocationId_by = -1 THEN tmpMIContainer_all.SummProductionOut ELSE 0 END
+              , SUM (CASE WHEN NOT (COALESCE (_tmpLocation_by.LocationId, 0) > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1) 
+                           AND tmpMIContainer_all.LocationId_by = -1
+                               THEN tmpMIContainer_all.SummProductionOut
+                          ELSE 0
+                     END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                                THEN tmpMIContainer_all.SummSendOut
                                   + tmpMIContainer_all.SummSendOnPriceOut

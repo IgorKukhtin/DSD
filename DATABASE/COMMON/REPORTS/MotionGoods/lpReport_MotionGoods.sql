@@ -113,17 +113,21 @@ $BODY$
 BEGIN
     -- !!!ÄËß ÒÅÑÒÀ!!!
     /*IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpLocation'))
+    AND inUserId = 5
     THEN
         CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
         CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
         --
         INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
-           SELECT 8425 AS LocationId -- Ñêëàä ÃÏ ô.Õàðüêîâ
-                , zc_ContainerLinkObject_Unit()       AS DescId
+           SELECT Object.Id
+                , tmpCLODesc.DescId
                 , tmpDesc.ContainerDescId
-           FROM (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc
+           FROM Object
+                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
+           WHERE Object.DescId IN (zc_Object_Member(), zc_Object_Personal(), zc_Object_Car())
           ;
-    END IF;*/
+    EN/D IF;*/
     -- !!!ÄËß ÒÅÑÒÀ!!!
 
 
@@ -414,6 +418,7 @@ BEGIN
                                                                  AND _tmpLocation.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                      LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = CASE WHEN vbIsCLO_Member = TRUE THEN Container.Id ELSE NULL END
                                                                 AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                                                                AND CLO_Member.ObjectId > 0
 
                      LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = ContainerLinkObject.ContainerId
                                                                  AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
