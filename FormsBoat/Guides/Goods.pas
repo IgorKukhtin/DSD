@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
   cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls, cxTextEdit,
-  cxLabel, dsdGuides, cxMaskEdit;
+  cxLabel, dsdGuides, cxMaskEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons;
 
 type
   TGoodsForm = class(TParentForm)
@@ -52,9 +52,9 @@ type
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    actChoiceGuides: TdsdChoiceGuides;
     dsdGridToExcel1: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -156,6 +156,13 @@ type
     ModelName_calc: TcxGridDBColumn;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    cxButton1: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    cxButton9: TcxButton;
   private
     { Private declarations }
   public

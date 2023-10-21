@@ -3,7 +3,7 @@ object UnitForm: TUnitForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1082#1083#1072#1076#1099'/'#1059#1095#1072#1089#1090#1082#1080' '#1089#1073#1086#1088#1082#1080'>'
   ClientHeight = 376
-  ClientWidth = 608
+  ClientWidth = 894
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object UnitForm: TUnitForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 608
-    Height = 350
+    Width = 894
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 608
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -78,6 +80,7 @@ object UnitForm: TUnitForm
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -94,6 +97,7 @@ object UnitForm: TUnitForm
       object ChildName: TcxGridDBColumn
         Caption = #1057#1082#1083#1072#1076
         DataBinding.FieldName = 'ChildName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -102,6 +106,7 @@ object UnitForm: TUnitForm
       object AccountDirectionName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountDirectionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -110,6 +115,7 @@ object UnitForm: TUnitForm
       object ProfitLossDirectionName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ProfitLossDirectionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
@@ -154,6 +160,57 @@ object UnitForm: TUnitForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 335
+    Width = 894
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitTop = 341
+    object btnInsert: TcxButton
+      Left = 344
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object cxButton1: TcxButton
+      Left = 470
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object cxButton3: TcxButton
+      Left = 67
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 2
+    end
+    object cxButton4: TcxButton
+      Left = 593
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actSetErased
+      TabOrder = 3
+    end
+    object cxButton9: TcxButton
+      Left = 185
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
     end
   end
   object DataSource: TDataSource
@@ -442,9 +499,9 @@ object UnitForm: TUnitForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -504,6 +561,12 @@ object UnitForm: TUnitForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

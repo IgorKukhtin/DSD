@@ -13,7 +13,7 @@ object Goods_limitForm: TGoods_limitForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   AddOnFormData.SetFocusedAction = actSetFocused
   PixelsPerInch = 96
@@ -22,10 +22,11 @@ object Goods_limitForm: TGoods_limitForm
     Left = 0
     Top = 26
     Width = 982
-    Height = 480
+    Height = 439
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 480
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -695,6 +696,59 @@ object Goods_limitForm: TGoods_limitForm
       21)
     Width = 140
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 465
+    Width = 982
+    Height = 41
+    Align = alBottom
+    TabOrder = 11
+    ExplicitLeft = -120
+    ExplicitTop = 335
+    ExplicitWidth = 1102
+    object btnInsert: TcxButton
+      Left = 485
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object cxButton1: TcxButton
+      Left = 611
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object cxButton3: TcxButton
+      Left = 148
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 2
+    end
+    object cxButton4: TcxButton
+      Left = 736
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actSetErased
+      TabOrder = 3
+    end
+    object cxButton9: TcxButton
+      Left = 266
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -897,11 +951,11 @@ object Goods_limitForm: TGoods_limitForm
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
@@ -916,7 +970,7 @@ object Goods_limitForm: TGoods_limitForm
       ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -994,7 +1048,7 @@ object Goods_limitForm: TGoods_limitForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErased
@@ -1009,7 +1063,7 @@ object Goods_limitForm: TGoods_limitForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErased
@@ -1025,7 +1079,7 @@ object Goods_limitForm: TGoods_limitForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -1176,9 +1230,9 @@ object Goods_limitForm: TGoods_limitForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
     end
     object dsdGridToExcel1: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1558,6 +1612,12 @@ object Goods_limitForm: TGoods_limitForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -1612,14 +1672,14 @@ object Goods_limitForm: TGoods_limitForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item
@@ -1747,7 +1807,7 @@ object Goods_limitForm: TGoods_limitForm
         Column = Name
         TextEdit = edSearchName
       end>
-    ActionNumber1 = dsdChoiceGuides
+    ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 352
     Top = 240

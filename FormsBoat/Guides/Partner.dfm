@@ -3,7 +3,7 @@ object PartnerForm: TPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Lieferanten('#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080')>'
   ClientHeight = 376
-  ClientWidth = 723
+  ClientWidth = 1102
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object PartnerForm: TPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 723
-    Height = 350
+    Width = 1102
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 723
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -331,6 +333,57 @@ object PartnerForm: TPartnerForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 335
+    Width = 1102
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitTop = 341
+    object btnInsert: TcxButton
+      Left = 485
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object cxButton1: TcxButton
+      Left = 611
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object cxButton3: TcxButton
+      Left = 148
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 2
+    end
+    object cxButton4: TcxButton
+      Left = 736
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actSetErased
+      TabOrder = 3
+    end
+    object cxButton9: TcxButton
+      Left = 266
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
     end
   end
   object DataSource: TDataSource
@@ -685,9 +738,9 @@ object PartnerForm: TPartnerForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -796,6 +849,12 @@ object PartnerForm: TPartnerForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1072#1088#1090#1085#1077#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1072#1088#1090#1085#1077#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

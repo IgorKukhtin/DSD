@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
+  cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls, Vcl.Menus, Vcl.StdCtrls,
+  cxButtons;
 
 type
   TUnit_ObjectForm = class(TParentForm)
@@ -62,6 +63,10 @@ type
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     Comment: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    cxButton3: TcxButton;
+    cxButton9: TcxButton;
   private
     { Private declarations }
   public

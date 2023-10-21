@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
+  cxCurrencyEdit, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls, Vcl.Menus,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TUnitForm = class(TParentForm)
@@ -68,6 +69,13 @@ type
     ParentName: TcxGridDBColumn;
     ChildName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    cxButton1: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    cxButton9: TcxButton;
   private
     { Private declarations }
   public
