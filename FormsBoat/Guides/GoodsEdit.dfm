@@ -266,7 +266,7 @@
     Width = 337
     Height = 655
     TabOrder = 0
-    Properties.ActivePage = Child
+    Properties.ActivePage = Main
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 655
     ClientRectRight = 337
