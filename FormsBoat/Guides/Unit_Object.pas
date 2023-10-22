@@ -65,8 +65,8 @@ type
     Comment: TcxGridDBColumn;
     actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
-    cxButton3: TcxButton;
-    cxButton9: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public

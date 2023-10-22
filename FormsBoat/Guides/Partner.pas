@@ -80,10 +80,10 @@ type
     actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnInsert: TcxButton;
-    cxButton1: TcxButton;
-    cxButton3: TcxButton;
-    cxButton4: TcxButton;
-    cxButton9: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public

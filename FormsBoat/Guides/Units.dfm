@@ -26,8 +26,6 @@ object UnitForm: TUnitForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 608
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -169,7 +167,6 @@ object UnitForm: TUnitForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitTop = 341
     object btnInsert: TcxButton
       Left = 344
       Top = 7
@@ -178,15 +175,15 @@ object UnitForm: TUnitForm
       Action = actInsert
       TabOrder = 0
     end
-    object cxButton1: TcxButton
+    object btnUpdate: TcxButton
       Left = 470
-      Top = 7
+      Top = 6
       Width = 100
       Height = 25
       Action = actUpdate
       TabOrder = 1
     end
-    object cxButton3: TcxButton
+    object btnChoiceGuides: TcxButton
       Left = 67
       Top = 7
       Width = 90
@@ -194,15 +191,15 @@ object UnitForm: TUnitForm
       Action = actChoiceGuides
       TabOrder = 2
     end
-    object cxButton4: TcxButton
+    object btnSetErased: TcxButton
       Left = 593
-      Top = 7
+      Top = 6
       Width = 100
       Height = 25
       Action = actSetErased
       TabOrder = 3
     end
-    object cxButton9: TcxButton
+    object btnFormClose: TcxButton
       Left = 185
       Top = 7
       Width = 90
