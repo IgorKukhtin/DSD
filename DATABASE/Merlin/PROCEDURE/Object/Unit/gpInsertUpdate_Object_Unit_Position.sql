@@ -28,6 +28,13 @@ BEGIN
    
 
    -- Проверка
+  -- IF inId = 106445 THEN 
+  -- IF inId = 106446 THEN 
+--   IF inId = 106447 THEN 
+    --  RAISE EXCEPTION 'Ошибка.Для <%> Left = <%>  <%>  <%>  <%>.', lfGet_Object_ValueData_sh (inId), inLeft, inTop, inWidth, inHeight;
+   --END IF;
+
+   -- Проверка
    IF inLeft < 0 THEN 
       RAISE EXCEPTION 'Ошибка.Для <%> Left = <%>.', lfGet_Object_ValueData_sh (inId), inLeft;
    END IF;
