@@ -19,7 +19,7 @@ object IncomeEditForm: TIncomeEditForm
   object cxButton1: TcxButton
     Left = 155
     Top = 345
-    Width = 75
+    Width = 90
     Height = 25
     Action = actUpdate_summ_after
     TabOrder = 9
@@ -27,7 +27,7 @@ object IncomeEditForm: TIncomeEditForm
   object cxButton2: TcxButton
     Left = 293
     Top = 345
-    Width = 75
+    Width = 90
     Height = 25
     Action = actFormClose
     Cancel = True
@@ -284,12 +284,14 @@ object IncomeEditForm: TIncomeEditForm
     Width = 75
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 96
     Top = 304
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -327,6 +329,7 @@ object IncomeEditForm: TIncomeEditForm
           StoredProc = spUpdate_summ_after
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
   end
   object FormParams: TdsdFormParams

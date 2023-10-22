@@ -124,12 +124,12 @@ type
     macPrintStiker: TMultiAction;
     Panel_btn: TPanel;
     btnInsert: TcxButton;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
-    cxButton3: TcxButton;
-    cxButton4: TcxButton;
+    btnUpdate: TcxButton;
+    btnComplete: TcxButton;
+    btnUnComplete: TcxButton;
+    btnSetErased: TcxButton;
     actFormClose: TdsdFormClose;
-    cxButton9: TcxButton;
+    btnFormClose: TcxButton;
   private
   public
   end;

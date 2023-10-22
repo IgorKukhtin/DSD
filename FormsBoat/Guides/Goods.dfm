@@ -27,7 +27,6 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 447
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -846,26 +845,23 @@ object GoodsForm: TGoodsForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -120
-    ExplicitTop = 335
-    ExplicitWidth = 1102
     object btnInsert: TcxButton
-      Left = 485
+      Left = 484
       Top = 7
       Width = 100
       Height = 25
       Action = actInsert
       TabOrder = 0
     end
-    object cxButton1: TcxButton
-      Left = 611
+    object btnUpdate: TcxButton
+      Left = 715
       Top = 7
       Width = 100
       Height = 25
       Action = actUpdate
       TabOrder = 1
     end
-    object cxButton3: TcxButton
+    object btnChoiceGuides: TcxButton
       Left = 148
       Top = 7
       Width = 90
@@ -873,23 +869,31 @@ object GoodsForm: TGoodsForm
       Action = actChoiceGuides
       TabOrder = 2
     end
-    object cxButton4: TcxButton
-      Left = 736
+    object btnSetErased: TcxButton
+      Left = 837
       Top = 7
       Width = 100
       Height = 25
       Action = actSetErased
       TabOrder = 3
     end
-    object cxButton9: TcxButton
-      Left = 266
-      Top = 7
+    object btnFormClose: TcxButton
+      Left = 268
+      Top = 6
       Width = 90
       Height = 25
       Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+    end
+    object btnInsertMask: TcxButton
+      Left = 601
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actInsertMask
+      TabOrder = 5
     end
   end
   object DataSource: TDataSource
@@ -1863,7 +1867,7 @@ object GoodsForm: TGoodsForm
     object actInsertMask: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Caption = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ShortCut = 16429
       ImageIndex = 54

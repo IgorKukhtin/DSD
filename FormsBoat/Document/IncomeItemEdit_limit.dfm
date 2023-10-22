@@ -272,7 +272,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     Top = 190
     Caption = 'S/N'
   end
-  object cxButton1: TcxButton
+  object btnGoodsChoiceForm: TcxButton
     Left = 20
     Top = 250
     Width = 150

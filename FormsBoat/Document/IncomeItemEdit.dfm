@@ -22,7 +22,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object cxButtonOK: TcxButton
-    Left = 210
+    Left = 208
     Top = 250
     Width = 90
     Height = 25
@@ -273,7 +273,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 190
     Caption = 'S/N'
   end
-  object cxButton1: TcxButton
+  object btnGoodsChoiceForm: TcxButton
     Left = 20
     Top = 250
     Width = 150

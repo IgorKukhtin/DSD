@@ -623,7 +623,6 @@ object IncomeJournalForm: TIncomeJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 457
     object btnInsert: TcxButton
       Left = 42
       Top = 7
@@ -632,7 +631,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = actInsert
       TabOrder = 0
     end
-    object cxButton1: TcxButton
+    object btnUpdate: TcxButton
       Left = 159
       Top = 7
       Width = 101
@@ -640,15 +639,15 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = actUpdate
       TabOrder = 1
     end
-    object cxButton2: TcxButton
-      Left = 304
+    object btnComplete: TcxButton
+      Left = 303
       Top = 7
       Width = 150
       Height = 25
       Action = actComplete
       TabOrder = 2
     end
-    object cxButton3: TcxButton
+    object btnUnComplete: TcxButton
       Left = 460
       Top = 7
       Width = 150
@@ -656,7 +655,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = actUnComplete
       TabOrder = 3
     end
-    object cxButton4: TcxButton
+    object btnSetErased: TcxButton
       Left = 616
       Top = 7
       Width = 150
@@ -664,7 +663,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = actSetErased
       TabOrder = 4
     end
-    object cxButton9: TcxButton
+    object btnFormClose: TcxButton
       Left = 809
       Top = 7
       Width = 153

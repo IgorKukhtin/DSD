@@ -70,7 +70,7 @@ type
     cePartNumber: TcxTextEdit;
     cxLabel9: TcxLabel;
     EnterMoveNext: TEnterMoveNext;
-    cxButton1: TcxButton;
+    btnGoodsChoiceForm: TcxButton;
     actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }

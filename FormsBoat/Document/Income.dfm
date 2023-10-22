@@ -1565,9 +1565,9 @@ object IncomeForm: TIncomeForm
     Height = 69
     Align = alBottom
     TabOrder = 6
-    object btnInsert: TcxButton
+    object btnInsertUpdateMovement: TcxButton
       Left = 24
-      Top = 5
+      Top = 6
       Width = 163
       Height = 25
       Action = actInsertUpdateMovement
@@ -1575,7 +1575,7 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 0
     end
-    object cxButton1: TcxButton
+    object btntAdd_limit: TcxButton
       Left = 223
       Top = 35
       Width = 105
@@ -1585,7 +1585,7 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 1
     end
-    object cxButton2: TcxButton
+    object btnCompleteMovement: TcxButton
       Left = 487
       Top = 6
       Width = 150
@@ -1595,7 +1595,7 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 2
     end
-    object cxButton3: TcxButton
+    object btnUnCompleteMovement: TcxButton
       Left = 487
       Top = 35
       Width = 150
@@ -1605,7 +1605,7 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 3
     end
-    object cxButton4: TcxButton
+    object btnSetErased: TcxButton
       Left = 334
       Top = 35
       Width = 105
@@ -1615,9 +1615,9 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 4
     end
-    object cxButton5: TcxButton
+    object btnShowAll: TcxButton
       Left = 681
-      Top = 5
+      Top = 6
       Width = 153
       Height = 25
       Action = actShowAll
@@ -1625,7 +1625,7 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 5
     end
-    object cxButton6: TcxButton
+    object btnInsertAction: TcxButton
       Left = 223
       Top = 5
       Width = 105
@@ -1635,9 +1635,9 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 6
     end
-    object cxButton7: TcxButton
+    object btnUpdateAction: TcxButton
       Left = 334
-      Top = 5
+      Top = 6
       Width = 105
       Height = 25
       Action = macUpdateAction
@@ -1645,9 +1645,9 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 7
     end
-    object cxButton8: TcxButton
+    object btnCompleteMovement_andSave: TcxButton
       Left = 24
-      Top = 35
+      Top = 37
       Width = 163
       Height = 25
       Action = actCompleteMovement_andSave
@@ -1655,7 +1655,7 @@ object IncomeForm: TIncomeForm
       ShowHint = True
       TabOrder = 8
     end
-    object cxButton9: TcxButton
+    object btnFormClose: TcxButton
       Left = 681
       Top = 35
       Width = 153
@@ -1765,7 +1765,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem1'
+          ItemName = 'bbsView'
         end
         item
           Visible = True
@@ -1774,7 +1774,7 @@ object IncomeForm: TIncomeForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarSubItem2'
+          ItemName = 'bbsDoc'
         end
         item
           Visible = True
@@ -1782,7 +1782,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem3'
+          ItemName = 'bbsGoods'
         end
         item
           Visible = True
@@ -1790,7 +1790,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem4'
+          ItemName = 'bbsReserv'
         end
         item
           Visible = True
@@ -1798,7 +1798,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem7'
+          ItemName = 'bbsPrint'
         end
         item
           BeginGroup = True
@@ -1807,7 +1807,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem6'
+          ItemName = 'bbsOpenForm'
         end
         item
           Visible = True
@@ -1815,7 +1815,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem5'
+          ItemName = 'bbsCost'
         end
         item
           Visible = True
@@ -1823,7 +1823,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem8'
+          ItemName = 'bbsProtocol'
         end
         item
           Visible = True
@@ -1869,19 +1869,19 @@ object IncomeForm: TIncomeForm
       Action = actRefresh
       Category = 0
     end
-    object bbPrint: TdxBarButton
+    object bbPrintStiker: TdxBarButton
       Action = macPrintStiker
       Category = 0
     end
     object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+      Action = actGridToExcel
       Category = 0
     end
-    object bbErased: TdxBarButton
+    object bbSetErased: TdxBarButton
       Action = actSetErased
       Category = 0
     end
-    object bbUnErased: TdxBarButton
+    object bbSetUnErased: TdxBarButton
       Action = actSetUnErased
       Category = 0
     end
@@ -1889,8 +1889,8 @@ object IncomeForm: TIncomeForm
       Action = actMIContainer
       Category = 0
     end
-    object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+    object bbOpenFormProtocol: TdxBarButton
+      Action = actOpenFormProtocol
       Category = 0
     end
     object bbCalcAmountPartner: TdxBarControlContainerItem
@@ -1899,24 +1899,24 @@ object IncomeForm: TIncomeForm
       Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
       Visible = ivAlways
     end
-    object bbAddMask: TdxBarButton
+    object bbInsertMask_2: TdxBarButton
       Action = actInsertMask
       Category = 0
       Visible = ivNever
     end
     object bbInsertRecordCost: TdxBarButton
-      Action = InsertRecordCost
+      Action = actInsertRecordCost
       Category = 0
     end
     object bbCompleteCost: TdxBarButton
       Action = actCompleteCost
       Category = 0
     end
-    object bbactUnCompleteCost: TdxBarButton
+    object bbUnCompleteCost: TdxBarButton
       Action = actUnCompleteCost
       Category = 0
     end
-    object bbactSetErasedCost: TdxBarButton
+    object bbSetErasedCost: TdxBarButton
       Action = actSetErasedCost
       Category = 0
     end
@@ -1924,7 +1924,7 @@ object IncomeForm: TIncomeForm
       Action = actShowErasedCost
       Category = 0
     end
-    object bbInsertRecordGoods: TdxBarButton
+    object bbInsertAction: TdxBarButton
       Action = macInsertAction
       Category = 0
     end
@@ -1962,8 +1962,8 @@ object IncomeForm: TIncomeForm
       Visible = ivAlways
       ImageIndex = 29
     end
-    object bbMovementCostProtocolOpenForm: TdxBarButton
-      Action = MovementCostProtocolOpenForm
+    object bbOpenFormProtocol_Cost: TdxBarButton
+      Action = actOpenFormProtocol_Cost
       Category = 0
     end
     object bbSetErasedChild: TdxBarButton
@@ -1998,7 +1998,7 @@ object IncomeForm: TIncomeForm
       Action = mactAdd_limit
       Category = 0
     end
-    object bbactSetUnErased: TdxBarButton
+    object bbInsertMask: TdxBarButton
       Action = macInsertMask
       Category = 0
       ImageIndex = 54
@@ -2007,7 +2007,7 @@ object IncomeForm: TIncomeForm
       Action = actSetUnErasedChild
       Category = 0
     end
-    object dxBarSubItem1: TdxBarSubItem
+    object bbsView: TdxBarSubItem
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088
       Category = 0
       Visible = ivAlways
@@ -2034,7 +2034,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbShowErasedCost'
         end>
     end
-    object dxBarSubItem2: TdxBarSubItem
+    object bbsDoc: TdxBarSubItem
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090
       Category = 0
       Visible = ivAlways
@@ -2049,7 +2049,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbUpdateActionMovement'
         end>
     end
-    object dxBarSubItem3: TdxBarSubItem
+    object bbsGoods: TdxBarSubItem
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Category = 0
       Visible = ivAlways
@@ -2065,7 +2065,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordGoods'
+          ItemName = 'bbInsertAction'
         end
         item
           Visible = True
@@ -2073,19 +2073,11 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'Separator_1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactSetUnErased'
+          ItemName = 'bbSetUnErased'
         end
         item
           Visible = True
@@ -2093,7 +2085,15 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask_2'
         end>
     end
     object Separator_1: TdxBarSeparator
@@ -2101,7 +2101,7 @@ object IncomeForm: TIncomeForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object dxBarSubItem4: TdxBarSubItem
+    object bbsReserv: TdxBarSubItem
       Caption = #1056#1077#1079#1077#1088#1074
       Category = 0
       Visible = ivAlways
@@ -2116,7 +2116,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbSetErasedChild'
         end>
     end
-    object dxBarSubItem5: TdxBarSubItem
+    object bbsCost: TdxBarSubItem
       Caption = #1047#1072#1090#1088#1072#1090#1099
       Category = 0
       Visible = ivAlways
@@ -2132,18 +2132,18 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbactUnCompleteCost'
+          ItemName = 'bbUnCompleteCost'
         end
         item
           Visible = True
-          ItemName = 'bbactSetErasedCost'
+          ItemName = 'bbSetErasedCost'
         end
         item
           Visible = True
           ItemName = 'bbOpenFormInvoice'
         end>
     end
-    object dxBarSubItem6: TdxBarSubItem
+    object bbsOpenForm: TdxBarSubItem
       Caption = #1054#1090#1082#1088#1099#1090#1100
       Category = 0
       Visible = ivAlways
@@ -2166,7 +2166,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbMIContainer'
         end>
     end
-    object dxBarSubItem7: TdxBarSubItem
+    object bbsPrint: TdxBarSubItem
       Caption = #1055#1077#1095#1072#1090#1100
       Category = 0
       Visible = ivAlways
@@ -2178,10 +2178,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrintStiker'
         end>
     end
-    object dxBarSubItem8: TdxBarSubItem
+    object bbsProtocol: TdxBarSubItem
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083
       Category = 0
       Visible = ivAlways
@@ -2189,11 +2189,11 @@ object IncomeForm: TIncomeForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbOpenFormProtocol'
         end
         item
           Visible = True
-          ItemName = 'bbMovementCostProtocolOpenForm'
+          ItemName = 'bbOpenFormProtocol_Cost'
         end>
     end
   end
@@ -2426,7 +2426,7 @@ object IncomeForm: TIncomeForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2618,7 +2618,7 @@ object IncomeForm: TIncomeForm
       Guides = StatusGuides
     end
     object actMIContainer: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'OpenForm'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -2638,8 +2638,8 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
-    object MovementCostProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
+    object actOpenFormProtocol_Cost: TdsdOpenForm
+      Category = 'OpenForm'
       TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
@@ -2669,8 +2669,8 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
+    object actOpenFormProtocol: TdsdOpenForm
+      Category = 'OpenForm'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -3245,7 +3245,7 @@ object IncomeForm: TIncomeForm
       Status = mtUncomplete
       DataSource = CostDS
     end
-    object InsertRecordCost: TInsertRecord
+    object actInsertRecordCost: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetCost
       MoveParams = <>
@@ -3260,7 +3260,7 @@ object IncomeForm: TIncomeForm
       ImageIndex = 0
     end
     object actOpenFormOrderPartner: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'OpenForm'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -3295,7 +3295,7 @@ object IncomeForm: TIncomeForm
       isShowModal = False
     end
     object actOpenFormOrderClient: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'OpenForm'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
@@ -3330,7 +3330,7 @@ object IncomeForm: TIncomeForm
       isShowModal = False
     end
     object actReport_Goods: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'OpenForm'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
