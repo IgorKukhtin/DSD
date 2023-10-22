@@ -24,9 +24,9 @@ object IncomeJournalForm: TIncomeJournalForm
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 102
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -36,7 +36,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -58,7 +58,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Left = 0
     Top = 57
     Width = 1034
-    Height = 435
+    Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -268,17 +268,17 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.Items = <
           item
             Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 11
+            ImageIndex = 76
             Value = 1
           end
           item
             Description = #1055#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 12
+            ImageIndex = 77
             Value = 2
           end
           item
             Description = #1059#1076#1072#1083#1077#1085
-            ImageIndex = 13
+            ImageIndex = 52
             Value = 3
           end>
         HeaderAlignmentHorz = taCenter
@@ -614,6 +614,65 @@ object IncomeJournalForm: TIncomeJournalForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 451
+    Width = 1034
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitTop = 457
+    object btnInsert: TcxButton
+      Left = 42
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object cxButton1: TcxButton
+      Left = 159
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object cxButton2: TcxButton
+      Left = 304
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actComplete
+      TabOrder = 2
+    end
+    object cxButton3: TcxButton
+      Left = 460
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actUnComplete
+      TabOrder = 3
+    end
+    object cxButton4: TcxButton
+      Left = 616
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actSetErased
+      TabOrder = 4
+    end
+    object cxButton9: TcxButton
+      Left = 809
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
     end
   end
   object DataSource: TDataSource
@@ -1112,7 +1171,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       DataSource = DataSource
     end
@@ -1124,9 +1183,9 @@ object IncomeJournalForm: TIncomeJournalForm
         item
           StoredProc = spMovementUnComplete
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       DataSource = DataSource
     end
@@ -1140,7 +1199,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       DataSource = DataSource
     end
@@ -1162,7 +1221,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'ShowAll'
-          Value = True
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -1218,6 +1277,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleReCompleteList
@@ -1234,6 +1294,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleCompleteList
@@ -1250,6 +1311,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleUncompleteList
@@ -1266,6 +1328,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleErasedList
@@ -1522,6 +1585,12 @@ object IncomeJournalForm: TIncomeJournalForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   object spSelect: TdsdStoredProc

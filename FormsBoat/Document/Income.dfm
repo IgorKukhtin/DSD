@@ -2,8 +2,8 @@ object IncomeForm: TIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 561
-  ClientWidth = 1051
+  ClientHeight = 607
+  ClientWidth = 1372
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1051
+    Width = 1372
     Height = 189
     Align = alTop
     BevelOuter = bvNone
@@ -545,14 +545,14 @@ object IncomeForm: TIncomeForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 215
-    Width = 1051
-    Height = 346
+    Width = 1372
+    Height = 323
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 346
-    ClientRectRight = 1051
+    ClientRectBottom = 323
+    ClientRectRight = 1372
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -560,8 +560,8 @@ object IncomeForm: TIncomeForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1051
-        Height = 169
+        Width = 1372
+        Height = 231
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -837,7 +837,7 @@ object IncomeForm: TIncomeForm
             Caption = 'Netto EK'
             DataBinding.FieldName = 'OperPrice_orig'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
@@ -848,7 +848,7 @@ object IncomeForm: TIncomeForm
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -859,7 +859,7 @@ object IncomeForm: TIncomeForm
             Caption = 'zus.Rabbat in %'
             DataBinding.FieldName = 'DiscountTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1089#1090#1088#1086#1082#1077
@@ -871,7 +871,7 @@ object IncomeForm: TIncomeForm
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -895,7 +895,7 @@ object IncomeForm: TIncomeForm
             DataBinding.FieldName = 'EmpfPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1073#1077#1079' '#1053#1044#1057
@@ -906,7 +906,7 @@ object IncomeForm: TIncomeForm
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
@@ -1084,11 +1084,12 @@ object IncomeForm: TIncomeForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 177
-        Width = 1051
-        Height = 145
+        Top = 239
+        Width = 1372
+        Height = 60
         Align = alBottom
         TabOrder = 1
+        Visible = False
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
@@ -1270,12 +1271,13 @@ object IncomeForm: TIncomeForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 169
-        Width = 1051
+        Top = 231
+        Width = 1372
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        Visible = False
       end
     end
     object cxTabSheetCost: TcxTabSheet
@@ -1284,8 +1286,8 @@ object IncomeForm: TIncomeForm
       object GridCost: TcxGrid
         Left = 0
         Top = 0
-        Width = 1051
-        Height = 322
+        Width = 1372
+        Height = 299
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
@@ -1556,6 +1558,114 @@ object IncomeForm: TIncomeForm
       end
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 538
+    Width = 1372
+    Height = 69
+    Align = alBottom
+    TabOrder = 6
+    object btnInsert: TcxButton
+      Left = 24
+      Top = 5
+      Width = 163
+      Height = 25
+      Action = actInsertUpdateMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object cxButton1: TcxButton
+      Left = 223
+      Top = 35
+      Width = 105
+      Height = 25
+      Action = mactAdd_limit
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object cxButton2: TcxButton
+      Left = 487
+      Top = 6
+      Width = 150
+      Height = 25
+      Action = actCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object cxButton3: TcxButton
+      Left = 487
+      Top = 35
+      Width = 150
+      Height = 25
+      Action = actUnCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+    end
+    object cxButton4: TcxButton
+      Left = 334
+      Top = 35
+      Width = 105
+      Height = 25
+      Action = actSetErased
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+    object cxButton5: TcxButton
+      Left = 681
+      Top = 5
+      Width = 153
+      Height = 25
+      Action = actShowAll
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object cxButton6: TcxButton
+      Left = 223
+      Top = 5
+      Width = 105
+      Height = 25
+      Action = macInsertAction
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+    end
+    object cxButton7: TcxButton
+      Left = 334
+      Top = 5
+      Width = 105
+      Height = 25
+      Action = macUpdateAction
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+    end
+    object cxButton8: TcxButton
+      Left = 24
+      Top = 35
+      Width = 163
+      Height = 25
+      Action = actCompleteMovement_andSave
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
+    end
+    object cxButton9: TcxButton
+      Left = 681
+      Top = 35
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 9
+    end
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1655,19 +1765,40 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
+          ItemName = 'dxBarSubItem1'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarSubItem2'
         end
         item
           Visible = True
-          ItemName = 'bbShowAll'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbShowErasedCost'
+          ItemName = 'dxBarSubItem3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSubItem4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSubItem7'
         end
         item
           BeginGroup = True
@@ -1676,11 +1807,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateActionMovement'
+          ItemName = 'dxBarSubItem6'
         end
         item
           Visible = True
@@ -1688,15 +1815,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactSetUnErased'
+          ItemName = 'dxBarSubItem5'
         end
         item
           Visible = True
@@ -1704,140 +1823,11 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbAdd_limit'
+          ItemName = 'dxBarSubItem8'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateAction'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedChild'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordCost'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCompleteCost'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactUnCompleteCost'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactSetErasedCost'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenFormInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenFormOrderClient'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenFormOrderPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_Goods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStickerOne'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementCostProtocolOpenForm'
         end
         item
           Visible = True
@@ -2017,6 +2007,195 @@ object IncomeForm: TIncomeForm
       Action = actSetUnErasedChild
       Category = 0
     end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 83
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErasedCost'
+        end>
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateActionMovement'
+        end>
+    end
+    object dxBarSubItem3: TdxBarSubItem
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 7
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbAdd_limit'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddMask'
+        end>
+    end
+    object Separator_1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object dxBarSubItem4: TdxBarSubItem
+      Caption = #1056#1077#1079#1077#1088#1074
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 25
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end>
+    end
+    object dxBarSubItem5: TdxBarSubItem
+      Caption = #1047#1072#1090#1088#1072#1090#1099
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 38
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCompleteCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactUnCompleteCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactSetErasedCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormInvoice'
+        end>
+    end
+    object dxBarSubItem6: TdxBarSubItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderClient'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end>
+    end
+    object dxBarSubItem7: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerOne'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end>
+    end
+    object dxBarSubItem8: TdxBarSubItem
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 34
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementCostProtocolOpenForm'
+        end>
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2061,9 +2240,12 @@ object IncomeForm: TIncomeForm
         end
         item
           StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spGet
         end>
-      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 14
       ShortCut = 113
     end
@@ -2127,9 +2309,9 @@ object IncomeForm: TIncomeForm
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
@@ -2183,7 +2365,7 @@ object IncomeForm: TIncomeForm
         item
           StoredProc = spSelectMIChild
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
@@ -2282,7 +2464,7 @@ object IncomeForm: TIncomeForm
         item
           StoredProc = spGet
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
       ShortCut = 46
@@ -2329,6 +2511,58 @@ object IncomeForm: TIncomeForm
       isSetErased = False
       DataSource = MasterDS
     end
+    object actSaveMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 14
+      Status = mtComplete
+      Guides = StatusGuides
+    end
+    object actCompleteMovement_andSave: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spChangeStatus
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 86
+      Status = mtComplete
+      Guides = StatusGuides
+    end
     object actCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
@@ -2341,9 +2575,9 @@ object IncomeForm: TIncomeForm
         end
         item
         end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 77
       Status = mtComplete
       Guides = StatusGuides
     end
@@ -2359,9 +2593,9 @@ object IncomeForm: TIncomeForm
         end
         item
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      ImageIndex = 76
       Status = mtUncomplete
       Guides = StatusGuides
     end
@@ -2379,7 +2613,7 @@ object IncomeForm: TIncomeForm
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       Guides = StatusGuides
     end
@@ -2411,7 +2645,6 @@ object IncomeForm: TIncomeForm
       Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099'>'
-      ImageIndex = 34
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
@@ -2442,7 +2675,6 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
@@ -2567,7 +2799,6 @@ object IncomeForm: TIncomeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1082#1080#1076#1082#1072' '#1044#1086#1082#1091#1084#1077#1085#1090'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1082#1080#1076#1082#1072' '#1044#1086#1082#1091#1084#1077#1085#1090'>'
       ImageIndex = 1
-      ShortCut = 113
       WithoutNext = True
     end
     object actInsertMask: TdsdExecStoredProc
@@ -2704,7 +2935,7 @@ object IncomeForm: TIncomeForm
         item
           Action = actRefreshMI
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
       ImageIndex = 0
     end
@@ -2822,7 +3053,7 @@ object IncomeForm: TIncomeForm
         item
           Action = actRefreshMI
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
       ImageIndex = 1
     end
@@ -3301,8 +3532,8 @@ object IncomeForm: TIncomeForm
         item
           Action = actRefreshMI
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1053#1086#1074#1086#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1077#1077'>'
       ImageIndex = 0
       WithoutNext = True
     end
@@ -3316,8 +3547,8 @@ object IncomeForm: TIncomeForm
         item
           Action = actPrintSticker
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077' '#1069#1090#1080#1082#1077#1090#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077' '#1069#1090#1080#1082#1077#1090#1082#1080
       ImageIndex = 18
     end
     object actUpdate_summ_after: TdsdInsertUpdateGuides
@@ -3343,6 +3574,12 @@ object IncomeForm: TIncomeForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   object MasterDS: TDataSource
@@ -3713,8 +3950,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 130
-    Top = 200
+    Left = 178
+    Top = 240
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -4151,8 +4388,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 84
-    Top = 32
+    Left = 76
+    Top = 8
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -4904,8 +5141,8 @@ object IncomeForm: TIncomeForm
       item
         Control = ceTotalSummTaxMVAT
       end>
-    Left = 720
-    Top = 40
+    Left = 1064
+    Top = 24
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
@@ -5040,6 +5277,13 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsEdit'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inTotalSummMVAT'
         Value = 0.000000000000000000
         Component = ceTotalSummMVAT
@@ -5165,6 +5409,13 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsEdit'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inTotalSummMVAT'
         Value = 0.000000000000000000
         Component = ceTotalSummMVAT
@@ -5268,40 +5519,6 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 944
     Top = 248
-  end
-  object EnterMoveNext1: TEnterMoveNext
-    EnterMoveNextList = <
-      item
-        Control = ceDiscountTax
-      end
-      item
-        Control = ceSummTaxPVAT
-      end
-      item
-        Control = ceSummTaxMVAT
-      end
-      item
-        Control = ceSummPost
-      end
-      item
-        Control = ceSummPack
-      end
-      item
-        Control = ceSummInsur
-      end
-      item
-        Control = ceTotalDiscountTax
-      end
-      item
-        Control = ceTotalSummTaxPVAT
-      end
-      item
-        Control = ceTotalSummTaxMVAT
-      end
-      item
-      end>
-    Left = 896
-    Top = 216
   end
   object HeaderExit11: THeaderExit
     ExitList = <

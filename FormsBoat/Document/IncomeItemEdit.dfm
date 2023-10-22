@@ -22,17 +22,17 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object cxButtonOK: TcxButton
-    Left = 134
-    Top = 247
-    Width = 75
+    Left = 210
+    Top = 250
+    Width = 90
     Height = 25
     Action = actInsertUpdate
     TabOrder = 6
   end
   object cxButtonCancel: TcxButton
-    Left = 287
-    Top = 247
-    Width = 75
+    Left = 325
+    Top = 250
+    Width = 90
     Height = 25
     Action = actFormClose
     Cancel = True
@@ -59,8 +59,16 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object ceAmount: TcxCurrencyEdit
     Left = 8
     Top = 116
+    ParentFont = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 0
     Width = 54
   end
@@ -73,14 +81,21 @@ object IncomeItemEditForm: TIncomeItemEditForm
     ShowHint = True
   end
   object ceOperPrice_orig: TcxCurrencyEdit
-    Left = 69
-    Top = 116
+    Left = 68
+    Top = 115
     Hint = #1042#1093'. '#1094#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+    ParentFont = False
     ParentShowHint = False
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####; -,0.####; '
-    Properties.EditFormat = ',0.####; -,0.####; '
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
     ShowHint = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 1
     Width = 64
   end
@@ -94,23 +109,24 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 116
     Hint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####; -,0.####; '
-    Properties.EditFormat = ',0.####; -,0.####; '
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
     TabOrder = 9
     Width = 80
   end
   object cxLabel10: TcxLabel
-    Left = 8
-    Top = 237
+    Left = 438
+    Top = 234
     Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
     Visible = False
   end
   object ceCountForPrice: TcxCurrencyEdit
-    Left = 9
-    Top = 252
+    Left = 439
+    Top = 249
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 16
     Visible = False
@@ -127,6 +143,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -135,24 +152,25 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel14: TcxLabel
     Left = 8
-    Top = 53
+    Top = 8
     Caption = 'Interne Nr'
   end
   object edGoodsCode: TcxTextEdit
     Left = 8
-    Top = 71
+    Top = 26
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 125
   end
   object cxLabel3: TcxLabel
     Left = 8
-    Top = 8
+    Top = 53
     Caption = 'Artikel Nr'
   end
   object edArticle: TcxTextEdit
     Left = 8
-    Top = 26
+    Top = 72
+    Properties.ReadOnly = True
     TabOrder = 21
     Width = 125
   end
@@ -162,8 +180,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Hint = '% '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####; -,0.####; '
-    Properties.EditFormat = ',0.####; -,0.####; '
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
     ShowHint = True
     TabOrder = 2
     Width = 125
@@ -186,8 +204,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Hint = #1042#1093'. '#1094#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####; -,0.####; '
-    Properties.EditFormat = ',0.####; -,0.####; '
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
     ShowHint = True
     TabOrder = 3
     Width = 80
@@ -199,14 +217,21 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = 'Gesamt EK'
   end
   object ceSummIn: TcxCurrencyEdit
-    Left = 241
+    Left = 234
     Top = 159
     Hint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
+    ParentFont = False
     ParentShowHint = False
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####; -,0.####; '
-    Properties.EditFormat = ',0.####; -,0.####; '
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
     ShowHint = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 4
     Width = 80
   end
@@ -215,8 +240,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 159
     Hint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1073#1077#1079' '#1053#1044#1057
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####; -,0.####; '
-    Properties.EditFormat = ',0.####; -,0.####; '
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
     TabOrder = 25
     Width = 80
   end
@@ -248,9 +273,21 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 190
     Caption = 'S/N'
   end
+  object cxButton1: TcxButton
+    Left = 20
+    Top = 250
+    Width = 150
+    Height = 25
+    Hint = #1042#1099#1073#1086#1088' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+    Action = actGoodsChoiceForm
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 30
+  end
   object ActionList: TActionList
-    Left = 24
-    Top = 20
+    Images = dmMain.ImageList
+    Left = 208
+    Top = 164
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -274,10 +311,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = #1054#1082
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object actRefresh_Price: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -291,6 +330,70 @@ object IncomeItemEditForm: TIncomeItemEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      ImageIndex = 7
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = edGoodsCode
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = edArticle
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPrice'
+          Value = Null
+          Component = ceOperPrice_orig
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice'
+          Value = Null
+          Component = ceOperPriceList
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EmpfPrice'
+          Value = Null
+          Component = ceEmpfPrice
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -704,8 +807,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 41
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 408
-    Top = 219
+    Left = 400
+    Top = 187
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -767,8 +870,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 89
-    Top = 47
+    Left = 457
+    Top = 55
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

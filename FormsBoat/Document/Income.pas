@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls, cxButtons;
 
 type
   TIncomeForm = class(TParentForm)
@@ -277,12 +277,34 @@ type
     edSearchName: TcxTextEdit;
     spUpdate_summ_before: TdsdStoredProc;
     spUpdate_summ_after: TdsdStoredProc;
-    EnterMoveNext1: TEnterMoveNext;
     actUpdate_summ_after: TdsdInsertUpdateGuides;
     HeaderExit11: THeaderExit;
     HeaderExit: THeaderExit;
     actUpdate_summ_before: TdsdDataSetRefresh;
     HeaderSaver1: THeaderSaver;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSubItem2: TdxBarSubItem;
+    dxBarSubItem3: TdxBarSubItem;
+    Separator_1: TdxBarSeparator;
+    dxBarSubItem4: TdxBarSubItem;
+    dxBarSubItem5: TdxBarSubItem;
+    dxBarSubItem6: TdxBarSubItem;
+    dxBarSubItem7: TdxBarSubItem;
+    dxBarSubItem8: TdxBarSubItem;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    cxButton5: TcxButton;
+    cxButton6: TcxButton;
+    cxButton7: TcxButton;
+    cxButton8: TcxButton;
+    actCompleteMovement_andSave: TChangeGuidesStatus;
+    actSaveMovement: TChangeGuidesStatus;
+    actFormClose: TdsdFormClose;
+    cxButton9: TcxButton;
   private
   public
   end;

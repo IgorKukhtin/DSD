@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, ExternalLoad;
+  dsdGuides, cxButtonEdit, ExternalLoad, Vcl.StdCtrls, cxButtons;
 
 type
   TIncomeJournalForm = class(TParentForm)
@@ -122,6 +122,14 @@ type
     InvNumberPack: TcxGridDBColumn;
     ExecuteDialogPrint: TExecuteDialog;
     macPrintStiker: TMultiAction;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    actFormClose: TdsdFormClose;
+    cxButton9: TcxButton;
   private
   public
   end;

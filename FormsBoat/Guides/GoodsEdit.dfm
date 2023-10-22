@@ -788,18 +788,6 @@
       end
     end
   end
-  object cxSpreadSheetBook1: TcxSpreadSheetBook
-    Left = 18
-    Top = 24
-    Width = 9
-    Height = 33
-    DefaultStyle.Font.Name = 'Tahoma'
-    HeaderFont.Charset = DEFAULT_CHARSET
-    HeaderFont.Color = clWindowText
-    HeaderFont.Height = -11
-    HeaderFont.Name = 'Tahoma'
-    HeaderFont.Style = []
-  end
   object ActionList: TActionList
     Left = 248
     Top = 80

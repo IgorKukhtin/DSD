@@ -200,7 +200,6 @@ type
     apSelectChild: TdsdStoredProc;
     Colors_ch1: TcxGridDBColumn;
     Color_Value_ch1: TcxGridDBColumn;
-    cxSpreadSheetBook1: TcxSpreadSheetBook;
   private
     { Private declarations }
   public
