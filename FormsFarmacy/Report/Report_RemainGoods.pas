@@ -62,6 +62,7 @@ type
     AccommodationName: TcxGridDBColumn;
     CodeUKTZED: TcxGridDBColumn;
     FormDispensingName: TcxGridDBColumn;
+    Measure: TcxGridDBColumn;
   private
     { Private declarations }
   public

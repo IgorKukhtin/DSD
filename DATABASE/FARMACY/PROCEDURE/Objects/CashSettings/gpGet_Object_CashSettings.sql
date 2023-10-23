@@ -60,6 +60,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
              , isCancelBansSUN Boolean
              , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_CountAward Integer, AntiTOPMP_SumFine TFloat, AntiTOPMP_MinProcAward TFloat
+             , UnitDeferredId Integer, UnitDeferredName TVarChar
              ) AS
 $BODY$
 BEGIN
@@ -137,6 +138,9 @@ BEGIN
         , ObjectFloat_CashSettings_AntiTOPMP_CountAward.ValueData::Integer         AS AntiTOPMP_CountAward
         , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
         , ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.ValueData                AS AntiTOPMP_MinProcAward
+        
+        , Object_UnitDeferred.Id                                                   AS UnitDeferredId
+        , Object_UnitDeferred.ValueData                                            AS UnitDeferredName
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -353,6 +357,11 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Cat_5
                               ON ObjectFloat_CashSettings_Cat_5.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_Cat_5.DescId = zc_ObjectFloat_CashSettings_Cat_5()
+
+        LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UnitDeferred
+               ON ObjectLink_CashSettings_UnitDeferred.ObjectId = Object_CashSettings.Id
+              AND ObjectLink_CashSettings_UnitDeferred.DescId = zc_ObjectLink_CashSettings_UnitDeferred()
+        LEFT JOIN Object AS Object_UnitDeferred ON Object_UnitDeferred.Id = ObjectLink_CashSettings_UnitDeferred.ChildObjectId
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

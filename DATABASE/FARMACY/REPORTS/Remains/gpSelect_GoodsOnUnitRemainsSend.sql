@@ -75,7 +75,7 @@ BEGIN
 
          , UnitRemains.MakerName, UnitRemains.BarCode, UnitRemains.MorionCode, UnitRemains.BadmCode, UnitRemains.OptimaCode, UnitRemains.AccommodationName
          , UnitRemains.CodeUKTZED, UnitRemains.FormDispensingName
-    FROM gpSelect_GoodsOnUnitRemains(inUnitId := vbUnitId , inRemainsDate := CURRENT_DATE + INTERVAL '1 DAY' , inIsPartion := 'True' , inisPartionPrice := 'False' , inisJuridical := 'False' , inisVendorminPrices := 'False' ,  inSession := inSession) AS UnitRemains
+    FROM gpSelect_GoodsOnUnitRemains(inUnitId := vbUnitId , inRemainsDate := CURRENT_DATE + INTERVAL '1 DAY' , inIsPartion := 'True' , inisPartionPrice := 'True' , inisJuridical := 'True' , inisVendorminPrices := 'True' ,  inSession := inSession) AS UnitRemains
     
          INNER JOIN tmpMI ON tmpMI.GoodsId = UnitRemains.Id
     ;

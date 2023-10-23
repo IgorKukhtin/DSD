@@ -186,7 +186,6 @@ type
     FWithoutNext: Boolean;
     FShowGauge: Boolean;
     procedure ListExecute;
-    procedure DataSourceExecute;
     procedure SaveQuestionBeforeExecute;
     procedure SaveInfoAfterExecute;
     procedure RestoreQuestionBeforeExecute;
@@ -195,6 +194,7 @@ type
     procedure SetView(const Value: TcxGridTableView);
     procedure SetDateNavigator(const Value: TcxDateNavigator);
   protected
+    procedure DataSourceExecute; virtual;
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
     function LocalExecute: Boolean; override;
@@ -220,6 +220,30 @@ type
       default false;
     property ShowGauge: Boolean read FShowGauge write FShowGauge
       default True;
+  end;
+
+  // Выполняет несколько Action подряд. В случае установки св-ва DataSource выполняет
+  // Актионы для всех записей DataSource
+  // В случае, если указаны  QuestionBeforeExecute, InfoAfterExecute то данные вопросы в Action игнорируются
+  // Дополнительно можно фильтр наложить
+
+  TMultiActionFilter = class(TMultiAction)
+  private
+
+    FFilterColumnList: TOwnedCollection;
+    FFilterList: TStringList;
+
+  protected
+    procedure DataSourceExecute; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function SetFiltered(AFiltered : Boolean): boolean;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // Установка (отмена) фильтра на поле по содержимому перед пробегом
+    property FilterColumnList: TOwnedCollection read FFilterColumnList write FFilterColumnList;
   end;
 
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
@@ -1822,12 +1846,12 @@ procedure Register;
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-  Menus, cxGridExportLink, ShellApi,
+  Menus, cxGridExportLink, ShellApi, cxFilter,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
-  frxDBSet, Printers, cxDBData,
+  frxDBSet, Printers, cxDBData, dsdAddOn,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
-  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn,
+  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin,
   dsdExportToXLSAction, dsdExportToXMLAction, PUSHMessage, Xml.XMLDoc, XMLIntf;
 
 var XML: IXMLDocument;
@@ -1858,6 +1882,7 @@ begin
     TInsertUpdateChoiceAction);
   RegisterActions('DSDLib', [TInsertRecord], TInsertRecord);
   RegisterActions('DSDLib', [TMultiAction], TMultiAction);
+  RegisterActions('DSDLib', [TMultiActionFilter], TMultiActionFilter);
   RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
   RegisterActions('DSDLib', [TUpdateRecord], TUpdateRecord);
   RegisterActions('DSDLib', [TShellExecuteAction], TShellExecuteAction);
@@ -3680,11 +3705,14 @@ begin
   inherited;
   if csDestroying in ComponentState then
     exit;
-  if (Operation = opRemove) and Assigned(ActionList) then
-    if AComponent is TCustomAction then
-      for i := 0 to ActionList.Count - 1 do
-        if TActionItem(ActionList.Items[i]).Action = AComponent then
-          TActionItem(ActionList.Items[i]).Action := nil;
+  if (Operation = opRemove) then
+  begin
+    if Assigned(ActionList) then
+      if AComponent is TCustomAction then
+        for i := 0 to ActionList.Count - 1 do
+          if TActionItem(ActionList.Items[i]).Action = AComponent then
+            TActionItem(ActionList.Items[i]).Action := nil;
+  end;
 end;
 
 procedure TMultiAction.RestoreInfoAfterExecute;
@@ -3782,6 +3810,99 @@ begin
     exit;
   end;
   FDateNavigator := Value;
+end;
+
+{ TMultiActionFilter }
+
+constructor TMultiActionFilter.Create(AOwner: TComponent);
+begin
+  inherited;
+  FActionList := TOwnedCollection.Create(Self, TActionItem);
+  FFilterColumnList := TOwnedCollection.Create(Self, TColumnCollectionItem);
+  FFilterList := TStringList.Create(True);
+  FWithoutNext := false;
+  FShowGauge := True;
+end;
+
+function TMultiActionFilter.SetFiltered(AFiltered : Boolean): Boolean;
+  var I : Integer;
+begin
+
+  if AFiltered then
+  begin
+    if Assigned(FView) then
+    begin
+      with FView.DataController.Filter do
+      begin
+        BeginUpdate;
+        try
+          root.BoolOperatorKind := TcxFilterBoolOperatorKind.fboAnd;
+          for I := 0 to FFilterColumnList.Count - 1 do
+            if Assigned(TColumnCollectionItem(FFilterColumnList.Items[I]).Column) and
+               Assigned(TcxDBDataController(View.DataController).DataSource.DataSet.FindField(TcxGridDBColumn(TColumnCollectionItem(FFilterColumnList.Items[I]).Column).DataBinding.FieldName)) then
+          begin
+            FFilterList.AddObject(IntToStr(I),
+              root.AddItem(TColumnCollectionItem(FFilterColumnList.Items[I]).Column, TcxFilterOperatorKind.foEqual,
+                           TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TcxGridDBColumn(TColumnCollectionItem(FFilterColumnList.Items[I]).Column).DataBinding.FieldName).AsVariant,
+                           TcxDBDataController(View.DataController).DataSource.DataSet.FindField(TcxGridDBColumn(TColumnCollectionItem(FFilterColumnList.Items[I]).Column).DataBinding.FieldName).AsString));
+          end;
+          Active := true;
+        finally
+          EndUpdate;
+        end;
+      end;
+    end;
+  end else
+  begin
+    if Assigned(FView) then
+    begin
+      with FView.DataController.Filter do
+      begin
+        BeginUpdate;
+        try
+          if FFilterList.Count > 0 then FFilterList.Clear;
+        finally
+          EndUpdate;
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TMultiActionFilter.DataSourceExecute;
+begin
+  if Assigned(View) then if FilterColumnList.Count > 0 then SetFiltered(True);
+  try
+    inherited DataSourceExecute;
+  finally
+    if FFilterList.Count > 0 then SetFiltered(false);
+  end;
+end;
+
+destructor TMultiActionFilter.Destroy;
+begin
+  FreeAndNil(FActionList);
+  FreeAndNil(FFilterColumnList);
+  FreeAndNil(FFilterList);
+  inherited;
+end;
+
+procedure TMultiActionFilter.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var
+  i: Integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if (Operation = opRemove) then
+  begin
+    if AComponent is TcxGridColumn then
+       for i := 0 to FilterColumnList.Count - 1 do
+          if TColumnFieldFilterItem(FilterColumnList.Items[i]).Column = AComponent then
+             TColumnFieldFilterItem(FilterColumnList.Items[i]).Column := nil;
+
+  end;
 end;
 
 { TExecServerStoredProc }

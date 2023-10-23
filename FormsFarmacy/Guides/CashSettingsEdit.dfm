@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 578
+  ClientHeight = 621
   ClientWidth = 898
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,19 +20,19 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Left = 0
     Top = 35
     Width = 898
-    Height = 502
+    Height = 545
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 502
+    ExplicitHeight = 502
+    ClientRectBottom = 545
     ClientRectRight = 898
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 0
-      ExplicitLeft = -3
-      ExplicitTop = 21
+      ExplicitHeight = 478
       object cxLabel1: TcxLabel
         Left = 14
         Top = 3
@@ -272,7 +272,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end
       object edUpperLimitPromoBonus: TcxCurrencyEdit
         Left = 402
-        Top = 250
+        Top = 255
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
         TabOrder = 33
@@ -519,10 +519,27 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Top = 251
         Caption = #1057#1082#1080#1076#1082#1072' '#1082#1072#1090' 5 '#1086#1090' '#1094#1077#1085#1099
       end
+      object edUnitDeferred: TcxButtonEdit
+        Left = 587
+        Top = 497
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 67
+        Width = 293
+      end
+      object cxLabel47: TcxLabel
+        Left = 540
+        Top = 479
+        Caption = #1047#1072#1087#1088#1077#1090' '#1086#1090#1084#1077#1085#1099' '#1086#1090#1083#1086#1078#1077#1085' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093' '#1087#1086' '#1072#1087#1090#1077#1082#1077
+      end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1057#1059#1053
       ImageIndex = 1
+      ExplicitHeight = 478
       object cbEliminateColdSUN: TcxCheckBox
         Left = 535
         Top = 71
@@ -782,6 +799,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
     object cxTabSheet3: TcxTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1083#1072#1085#1086#1074
       ImageIndex = 2
+      ExplicitHeight = 478
       object ceAntiTOPMP_Count: TcxCurrencyEdit
         Left = 410
         Top = 51
@@ -853,13 +871,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 537
+    Top = 580
     Width = 898
     Height = 41
     Align = alBottom
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 5
+    ExplicitTop = 537
     object cxButton1: TcxButton
       Left = 224
       Top = 6
@@ -1457,6 +1476,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitDeferredId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 696
@@ -1915,6 +1942,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = ceCat_5
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitDeferredId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitDeferredName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 616
@@ -2111,5 +2153,32 @@ object CashSettingsEditForm: TCashSettingsEditForm
       Action = actProtocolOpenForm
       Category = 0
     end
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitDeferred
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 728
+    Top = 544
   end
 end

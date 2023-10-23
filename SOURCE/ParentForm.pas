@@ -835,6 +835,7 @@ initialization
   RegisterClass (TInsertRecord);
   RegisterClass (TInsertUpdateChoiceAction);
   RegisterClass (TMultiAction);
+  RegisterClass (TMultiActionFilter);
   RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);
   RegisterClass (TPivotAddOn);
