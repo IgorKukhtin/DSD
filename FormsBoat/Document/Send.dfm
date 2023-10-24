@@ -360,17 +360,15 @@ object SendForm: TSendForm
     Width = 1053
     Height = 297
     Align = alClient
-    TabOrder = 3
+    TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 366
     ClientRectBottom = 297
     ClientRectRight = 1053
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 342
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -378,7 +376,6 @@ object SendForm: TSendForm
         Height = 141
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 210
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -784,8 +781,6 @@ object SendForm: TSendForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
-        ExplicitLeft = 3
-        ExplicitTop = 146
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -997,7 +992,6 @@ object SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 210
       end
     end
   end
@@ -1008,7 +1002,6 @@ object SendForm: TSendForm
     Height = 69
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 504
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 4
@@ -1101,7 +1094,7 @@ object SendForm: TSendForm
     end
     object btnFormClose: TcxButton
       Left = 729
-      Top = 35
+      Top = 37
       Width = 153
       Height = 25
       Action = actFormClose
@@ -1253,14 +1246,6 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbsOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -1653,6 +1638,14 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbReport_Goods_child'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
         end>
     end
     object bbsPartion: TdxBarSubItem

@@ -228,12 +228,12 @@ type
     bbMIDetailAllProtocolOpenForm: TdxBarButton;
     Article_ReceiptService_ch5: TcxGridDBColumn;
     ReceiptServiceCode_ch5: TcxGridDBColumn;
-    BarSubItemBoat: TdxBarSubItem;
-    BarSubItemGoods: TdxBarSubItem;
+    bbsBoat: TdxBarSubItem;
+    bbsUzel: TdxBarSubItem;
     BarSubItemGoodsSep2: TdxBarSeparator;
     BarSubItemGoodsSep1: TdxBarSeparator;
     BarSubItemGoodsChild: TdxBarSubItem;
-    BarSubItemReceiptService: TdxBarSubItem;
+    bbsWork: TdxBarSubItem;
     actSetErased_boat: TdsdUpdateErased;
     actSetUnErased_boat: TdsdUpdateErased;
     bbSetErased_boat: TdxBarButton;

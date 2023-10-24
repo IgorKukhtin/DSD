@@ -64,7 +64,6 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

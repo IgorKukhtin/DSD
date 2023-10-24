@@ -1206,9 +1206,6 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1709,7 +1706,7 @@ object OrderInternalForm: TOrderInternalForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'BarSubItemGoods'
+          ItemName = 'bbsUzel'
         end
         item
           Visible = True
@@ -1717,7 +1714,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'BarSubItemBoat'
+          ItemName = 'bbsBoat'
         end
         item
           Visible = True
@@ -1725,7 +1722,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'BarSubItemReceiptService'
+          ItemName = 'bbsWork'
         end
         item
           Visible = True
@@ -1912,7 +1909,7 @@ object OrderInternalForm: TOrderInternalForm
       Action = actMIDetailAllProtocolOpenForm
       Category = 0
     end
-    object BarSubItemBoat: TdxBarSubItem
+    object bbsBoat: TdxBarSubItem
       Caption = #1051#1086#1076#1082#1072
       Category = 0
       Visible = ivAlways
@@ -1947,7 +1944,7 @@ object OrderInternalForm: TOrderInternalForm
           ItemName = 'bbMIMasterBoatProtocolOpenForm'
         end>
     end
-    object BarSubItemGoods: TdxBarSubItem
+    object bbsUzel: TdxBarSubItem
       Caption = #1059#1079#1077#1083
       Category = 0
       Visible = ivAlways
@@ -1990,7 +1987,7 @@ object OrderInternalForm: TOrderInternalForm
           ItemName = 'bbMovementItemProtocol'
         end>
     end
-    object BarSubItemReceiptService: TdxBarSubItem
+    object bbsWork: TdxBarSubItem
       Caption = #1056#1072#1073#1086#1090#1099
       Category = 0
       Visible = ivAlways
@@ -2192,6 +2189,10 @@ object OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemGoodsSep1'
         end
         item
           Visible = True
