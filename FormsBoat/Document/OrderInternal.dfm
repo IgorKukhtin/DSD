@@ -586,7 +586,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 117
           Align = alBottom
           TabOrder = 2
-          ExplicitTop = 393
           object cxGridDBTableView_child: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -859,7 +858,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 101
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 170
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -1114,7 +1112,6 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Child
-          ExplicitTop = 385
         end
         object Panel_btn: TPanel
           Left = 1
@@ -1123,9 +1120,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 69
           Align = alBottom
           TabOrder = 5
-          ExplicitLeft = 0
-          ExplicitTop = 538
-          ExplicitWidth = 1372
           object btnInsertUpdateMovement: TcxButton
             Left = 24
             Top = 6
@@ -1136,72 +1130,55 @@ object OrderInternalForm: TOrderInternalForm
             ShowHint = True
             TabOrder = 0
           end
-          object btntAdd_limit: TcxButton
-            Left = 223
-            Top = 35
-            Width = 105
-            Height = 25
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 1
-          end
           object btnCompleteMovement: TcxButton
-            Left = 487
+            Left = 391
             Top = 6
             Width = 150
             Height = 25
             Action = actCompleteMovement
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 2
+            TabOrder = 1
           end
           object btnUnCompleteMovement: TcxButton
-            Left = 487
+            Left = 391
             Top = 37
             Width = 150
             Height = 25
             Action = actUnCompleteMovement
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 3
+            TabOrder = 2
           end
           object btnSetErased: TcxButton
-            Left = 334
-            Top = 35
-            Width = 105
+            Left = 216
+            Top = 37
+            Width = 145
             Height = 25
             Action = actSetErased
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 4
+            TabOrder = 3
           end
           object btnShowAll: TcxButton
-            Left = 681
+            Left = 585
             Top = 6
             Width = 176
             Height = 25
             Action = actShowAll
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 5
+            TabOrder = 4
           end
           object btnInsertAction: TcxButton
-            Left = 223
-            Top = 5
-            Width = 105
-            Height = 25
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 6
-          end
-          object btnUpdateAction: TcxButton
-            Left = 334
+            Left = 216
             Top = 6
-            Width = 105
+            Width = 145
             Height = 25
+            Action = actInsertRecordGoods
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 7
+            TabOrder = 5
           end
           object btnCompleteMovement_andSave: TcxButton
             Left = 24
@@ -1211,17 +1188,17 @@ object OrderInternalForm: TOrderInternalForm
             Action = actCompleteMovement_andSave
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 8
+            TabOrder = 6
           end
           object btnFormClose: TcxButton
-            Left = 681
+            Left = 585
             Top = 37
             Width = 176
             Height = 25
             Action = actFormClose
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 9
+            TabOrder = 7
           end
         end
       end
@@ -1712,14 +1689,13 @@ object OrderInternalForm: TOrderInternalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbsView'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbsDoc'
         end
@@ -1728,6 +1704,7 @@ object OrderInternalForm: TOrderInternalForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbInsertRecordGoods'
         end
@@ -1785,7 +1762,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbErasedMI_Master'
+          ItemName = 'bbsOpenForm'
         end
         item
           Visible = True
@@ -1793,19 +1770,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenOrderClientForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSticker'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -2228,6 +2193,32 @@ object OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedMI_Master'
+        end>
+    end
+    object bbsOpenForm: TdxBarSubItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenOrderClientForm'
+        end>
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
         end>
     end
   end
@@ -2648,7 +2639,7 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spErasedMIMaster
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 2
       ShortCut = 46
@@ -4432,8 +4423,8 @@ object OrderInternalForm: TOrderInternalForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 632
-    Top = 559
+    Left = 624
+    Top = 527
   end
   object DetailDS: TDataSource
     DataSet = DetailCDS

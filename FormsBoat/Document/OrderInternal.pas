@@ -270,15 +270,15 @@ type
     actCompleteMovement_andSave: TChangeGuidesStatus;
     Panel_btn: TPanel;
     btnInsertUpdateMovement: TcxButton;
-    btntAdd_limit: TcxButton;
     btnCompleteMovement: TcxButton;
     btnUnCompleteMovement: TcxButton;
     btnSetErased: TcxButton;
     btnShowAll: TcxButton;
     btnInsertAction: TcxButton;
-    btnUpdateAction: TcxButton;
     btnCompleteMovement_andSave: TcxButton;
     btnFormClose: TcxButton;
+    bbsOpenForm: TdxBarSubItem;
+    bbsPrint: TdxBarSubItem;
 
   private
   public
