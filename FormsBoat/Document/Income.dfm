@@ -25,6 +25,7 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 8
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -540,6 +541,18 @@ object IncomeForm: TIncomeForm
       Top = 23
       TabOrder = 58
       Width = 90
+    end
+    object edGoodsId1: TcxCurrencyEdit
+      Left = 1043
+      Top = 23
+      Hint = #1055#1086#1095#1090#1086#1074#1099#1077' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      ShowHint = True
+      TabOrder = 59
+      TextHint = 'GoodsId1'
+      Width = 70
     end
   end
   object cxPageControl: TcxPageControl
@@ -1681,6 +1694,23 @@ object IncomeForm: TIncomeForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId1'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsId1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 343
@@ -2094,6 +2124,14 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbInsertMask_2'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertAddLimit_Goods1'
         end>
     end
     object Separator_1: TdxBarSeparator
@@ -2196,6 +2234,17 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbOpenFormProtocol_Cost'
         end>
     end
+    object bbInsertAddLimit_Goods1: TdxBarButton
+      Action = actInsertGoods1
+      Category = 0
+    end
+    object bbInsertAddLimit_Goods2: TdxBarButton
+      Caption = #1053#1086#1074#1099#1081' '#1090#1086#1074#1072#1088
+      Category = 0
+      Hint = #1053#1086#1074#1099#1081' '#1090#1086#1074#1072#1088
+      Visible = ivAlways
+      ImageIndex = 48
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2272,6 +2321,22 @@ object IncomeForm: TIncomeForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object macInsertAddLimit_Goods1: TMultiAction
+      Category = 'Goods'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenFormInsertGoods1
+        end
+        item
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1053#1086#1074#1099#1081' '#1090#1086#1074#1072#1088
+      Hint = #1053#1086#1074#1099#1081' '#1090#1086#1074#1072#1088
+      ImageIndex = 47
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -2732,6 +2797,61 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actInsertAddLimit_Goods1_NO: TdsdInsertUpdateAction
+      Category = 'Goods'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' 1>  ('#1083#1080#1084#1080#1090')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' 1>  ('#1083#1080#1084#1080#1090')'
+      ShortCut = 45
+      ImageIndex = 47
+      FormName = 'TIncomeItemEdit_limitForm'
+      FormNameParam.Value = 'TIncomeItemEdit_limitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = 0
+          Component = FormParams
+          ComponentItem = 'GoodsId11'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      IdFieldName = 'Id'
     end
     object actUpdateActionMovement: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -3580,6 +3700,152 @@ object IncomeForm: TIncomeForm
       PostDataSetBeforeExecute = False
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
+    end
+    object actInsertGoods1: TdsdInsertUpdateAction
+      Category = 'Goods'
+      MoveParams = <>
+      Caption = #1053#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1090#1077#1089#1090
+      ImageIndex = 47
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 'null'
+          Component = FormParams
+          ComponentItem = 'GoodsId1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = edGoodsId1
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      IdFieldName = 'Id'
+    end
+    object actInsertGoods111: TdsdInsertUpdateAction
+      Category = 'Goods'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 1
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId11'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Component = FormParams
+          ComponentItem = 'GoodsId11'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      IdFieldName = 'Id'
+    end
+    object actOpenFormInsertGoods1: TdsdOpenForm
+      Category = 'Goods'
+      MoveParams = <>
+      Caption = 'dsdOpenForm1'
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          Component = FormParams
+          ComponentItem = 'GoodsId1'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = edGoodsId1
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenFormsInsertLimit_Goods1: TdsdOpenForm
+      Category = 'Goods'
+      MoveParams = <>
+      Caption = 'actOpenFormsInsertLimit_Goods1'
+      FormName = 'TIncomeItemEdit_limitForm'
+      FormNameParam.Value = 'TIncomeItemEdit_limitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = 260884
+          Component = FormParams
+          ComponentItem = 'outGoodsId1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object MasterDS: TDataSource
@@ -5141,8 +5407,8 @@ object IncomeForm: TIncomeForm
       item
         Control = ceTotalSummTaxMVAT
       end>
-    Left = 1064
-    Top = 24
+    Left = 1048
+    Top = 136
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle

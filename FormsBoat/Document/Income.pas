@@ -305,6 +305,15 @@ type
     actSaveMovement: TChangeGuidesStatus;
     actFormClose: TdsdFormClose;
     btnFormClose: TcxButton;
+    actInsertGoods1: TdsdInsertUpdateAction;
+    actInsertAddLimit_Goods1_NO: TdsdInsertUpdateAction;
+    macInsertAddLimit_Goods1: TMultiAction;
+    bbInsertAddLimit_Goods1: TdxBarButton;
+    bbInsertAddLimit_Goods2: TdxBarButton;
+    actInsertGoods111: TdsdInsertUpdateAction;
+    actOpenFormInsertGoods1: TdsdOpenForm;
+    actOpenFormsInsertLimit_Goods1: TdsdOpenForm;
+    edGoodsId1: TcxCurrencyEdit;
   private
   public
   end;
