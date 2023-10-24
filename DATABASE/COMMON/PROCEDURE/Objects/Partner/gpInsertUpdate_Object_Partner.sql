@@ -32,9 +32,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
                                                      , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
@@ -56,6 +63,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
     IN inCategory            TFloat    ,    -- категория ТТ
+                
+    IN inTaxSale_Personal       TFloat    ,   -- супервайзер - % от товарооборота
+    IN inTaxSale_PersonalTrade  TFloat    ,   -- ТП - % от товарооборота
+    IN inTaxSale_MemberSaler1   TFloat    ,   -- Продавец-1 - % от товарооборота
+    IN inTaxSale_MemberSaler2   TFloat    ,   -- Продавец-2 - % от товарооборота
     
     IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
     IN inEdiInvoice          Boolean   ,    -- EDI - Счет
@@ -68,6 +80,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
 
   
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
+    IN inMemberSaler1Id      Integer   ,    -- Физ лицо(Продавец-1)
+    IN inMemberSaler2Id      Integer   ,    -- Физ лицо(Продавец-2)
+    
     IN inPersonalId          Integer   ,    -- Физ лицо (ответственное лицо)
     IN inPersonalTradeId     Integer   ,    -- Физ лицо(торговый)
     IN inPersonalMerchId     Integer   ,    -- Физ лицо (мерчандайзер)
@@ -178,6 +193,10 @@ BEGIN
                                         , inPrepareDayCount := inPrepareDayCount
                                         , inDocumentDayCount:= inDocumentDayCount
                                         , inCategory        := inCategory
+                                        , inTaxSale_Personal      := inTaxSale_Personal
+                                        , inTaxSale_PersonalTrade := inTaxSale_PersonalTrade
+                                        , inTaxSale_MemberSaler1  := inTaxSale_MemberSaler1
+                                        , inTaxSale_MemberSaler2  := inTaxSale_MemberSaler2
                                         , inEdiOrdspr       := inEdiOrdspr
                                         , inEdiInvoice      := inEdiInvoice
                                         , inEdiDesadv       := inEdiDesadv
@@ -186,6 +205,8 @@ BEGIN
                                         , inRouteId_30201   := inRouteId_30201
                                         , inRouteSortingId  := inRouteSortingId
                                         , inMemberTakeId    := inMemberTakeId
+                                        , inMemberSaler1Id  := inMemberSaler1Id
+                                        , inMemberSaler2Id  := inMemberSaler2Id
                                         , inPersonalId      := inPersonalId
                                         , inPersonalTradeId := inPersonalTradeId
                                         , inPersonalMerchId := inPersonalMerchId
@@ -234,6 +255,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.10.23         *
  27.01.23         *
  25.05.21         *
  29.04.21         * inCategory

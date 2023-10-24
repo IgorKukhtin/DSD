@@ -31,6 +31,8 @@ RETURNS TABLE (MovementId          Integer
              , Count               TFloat
              , RealWeight          TFloat
              , CuterWeight         TFloat
+             , RealWeightShp   :: TFloat
+             , RealWeightMsg   :: TFloat
              , Amount_Order        TFloat
              , CuterCount_Order    TFloat
              , Amount_diff         TFloat
@@ -226,12 +228,13 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_From
                                                             ON MLO_From.MovementId = Movement.Id
                                                            AND MLO_From.DescId = zc_MovementLinkObject_From()
-                               INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MLO_From.ObjectId
+                               --INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MLO_From.ObjectId
 
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-                               INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = MLO_To.ObjectId
+                               --INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = MLO_To.ObjectId
+                          WHERE MLO_From.ObjectId = MLO_To.ObjectId
 
                          )
 
@@ -519,8 +522,12 @@ BEGIN
     -- для оптимизации - в Табл. 1
     CREATE TEMP TABLE _tmpRes_cur1 ON COMMIT DROP AS
       WITH
+         tmpMIFloat AS (SELECT *
+                        FROM MovementItemFloat
+                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT _tmpListMaster.MovementItemId From _tmpListMaster)
+                        )
          --  данные док. производства
-         tmpDataAll AS (SELECT _tmpListMaster.MovementId              AS MovementId
+       , tmpDataAll AS (SELECT _tmpListMaster.MovementId              AS MovementId
                                , _tmpListMaster.MovementItemId        AS MovementItemId
                                , _tmpListMaster.InvNumber             AS InvNumber
                                , zfConvert_DateToString (_tmpListMaster.OperDate)       ::TVarChar AS OperDate  
@@ -547,26 +554,35 @@ BEGIN
                                , MIString_Comment.ValueData          AS Comment
                                , MIFloat_Count.ValueData             AS Count
                                , MIFloat_RealWeight.ValueData        AS RealWeight
-                               , MIFloat_CuterWeight.ValueData       AS CuterWeight
+                               , MIFloat_CuterWeight.ValueData       AS CuterWeight 
+                               , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
+                               , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
 
                           FROM _tmpListMaster
                                LEFT JOIN MovementItemBoolean AS MIBoolean_OrderSecond
                                                              ON MIBoolean_OrderSecond.MovementItemId = _tmpListMaster.MovementItemId
                                                             AND MIBoolean_OrderSecond.DescId = zc_MIBoolean_OrderSecond()
 
-                               LEFT JOIN MovementItemFloat AS MIFloat_Count
+                               LEFT JOIN tmpMIFloat AS MIFloat_Count
                                                            ON MIFloat_Count.MovementItemId = _tmpListMaster.MovementItemId
                                                           AND MIFloat_Count.DescId = zc_MIFloat_Count()
                                                           AND _tmpListMaster.MovementId <> 0
-                               LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
+                               LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
                                                            ON MIFloat_RealWeight.MovementItemId = _tmpListMaster.MovementItemId
                                                           AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
                                                           AND _tmpListMaster.MovementId <> 0
-                               LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
+                               LEFT JOIN tmpMIFloat AS MIFloat_CuterWeight
                                                            ON MIFloat_CuterWeight.MovementItemId = _tmpListMaster.MovementItemId
                                                           AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
                                                           AND _tmpListMaster.MovementId <> 0
                   
+                               LEFT JOIN tmpMIFloat AS MIFloat_RealWeightShp
+                                                           ON MIFloat_RealWeightShp.MovementItemId = _tmpListMaster.MovementItemId
+                                                          AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
+                               LEFT JOIN tmpMIFloat AS MIFloat_RealWeightMsg
+                                                           ON MIFloat_RealWeightMsg.MovementItemId = _tmpListMaster.MovementItemId
+                                                          AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
+
                                LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                                              ON MIBoolean_PartionClose.MovementItemId = _tmpListMaster.MovementItemId
                                                             AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
@@ -626,6 +642,8 @@ BEGIN
             , SUM (tmp.Count)           AS Count
             , SUM (tmp.RealWeight)      AS RealWeight
             , SUM (tmp.CuterWeight)     AS CuterWeight 
+            , SUM (tmp.RealWeightShp) ::TFloat  AS RealWeightShp
+            , SUM (tmp.RealWeightMsg) ::TFloat  AS RealWeightMsg
 
             , SUM (tmp.Amount_Order)    AS Amount_Order
             , SUM (tmp.CuterCount_Order) AS CuterCount_Order
@@ -655,6 +673,8 @@ BEGIN
                   , _tmpListMaster.Count
                   , _tmpListMaster.RealWeight
                   , _tmpListMaster.CuterWeight 
+                  , _tmpListMaster.RealWeightShp
+                  , _tmpListMaster.RealWeightMsg
                   , _tmpListMaster.Amount_Order
                   , _tmpListMaster.CuterCount_Order
                   , _tmpListMaster.StartProductionInDays
@@ -758,20 +778,22 @@ BEGIN
 
             , tmpData.GoodsId
             , tmpData.GoodsCode 
-            , tmpData.GoodsName :: TVarChar
+            , tmpData.GoodsName       :: TVarChar
 
-            , tmpData.Amount      :: TFloat
-            , tmpData.CuterCount  :: TFloat
-            , tmpData.Amount_calc :: TFloat
+            , tmpData.Amount          :: TFloat
+            , tmpData.CuterCount      :: TFloat
+            , tmpData.Amount_calc     :: TFloat
 
             , tmpData.isPartionClose
 
-            , tmpData.Comment   :: TVarChar
-            , tmpData.Count :: TFloat
-            , tmpData.RealWeight :: TFloat
-            , tmpData.CuterWeight  :: TFloat
+            , tmpData.Comment         :: TVarChar
+            , tmpData.Count           :: TFloat
+            , tmpData.RealWeight      :: TFloat
+            , tmpData.CuterWeight     :: TFloat
+            , tmpData.RealWeightShp   :: TFloat
+            , tmpData.RealWeightMsg   :: TFloat
 
-            , tmpData.Amount_Order :: TFloat
+            , tmpData.Amount_Order     :: TFloat
             , tmpData.CuterCount_Order :: TFloat
             
             , (tmpData.Amount - tmpData.Amount_Order)         ::TFloat AS Amount_diff

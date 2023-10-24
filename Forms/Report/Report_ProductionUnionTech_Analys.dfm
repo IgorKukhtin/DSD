@@ -85,6 +85,20 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightMsg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightShp
+            end
+            item
+              Position = spFooter
+              Column = RealWeightMsg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -140,6 +154,16 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightMsg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightShp
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -246,6 +270,55 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Options.Editing = False
             Width = 70
           end
+          object RealWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'RealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
+            Options.Editing = False
+            Width = 60
+          end
+          object RealWeightMsg: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1084#1089#1078')'
+            DataBinding.FieldName = 'RealWeightMsg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1087#1086#1089#1083#1077' '#1084#1072#1089#1089#1072#1078#1077#1088#1072')'
+            Options.Editing = False
+            Width = 70
+          end
+          object RealWeightShp: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1096#1087#1088')'
+            DataBinding.FieldName = 'RealWeightShp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1087#1086#1089#1083#1077' '#1096#1087#1088#1080#1094#1077#1074#1072#1085#1080#1103')'
+            Options.Editing = False
+            Width = 70
+          end
+          object CuterWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
+            DataBinding.FieldName = 'CuterWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
+            Options.Editing = False
+            Width = 60
+          end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -256,16 +329,26 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Width = 45
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1060'-'#1043#1055
+            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1060'-'#1043#1055
             Options.Editing = False
             Width = 70
+          end
+          object Amount_calc: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object TermProduction: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1082#1086#1083'. '#1076#1085'.'
@@ -332,19 +415,6 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Options.Editing = False
             Width = 60
           end
-          object CuterWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
-            DataBinding.FieldName = 'CuterWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
-            Options.Editing = False
-            Width = 60
-          end
           object Amount_order: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'Amount_order'
@@ -404,20 +474,6 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1079#1072#1103#1074#1082#1072'/'#1092#1072#1082#1090' '#1076#1083#1103' '#1087#1092'-'#1075#1087
             Options.Editing = False
             Width = 79
-          end
-          object RealWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'RealWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
-            Options.Editing = False
-            Width = 60
           end
           object Count: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
@@ -493,8 +549,6 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
   inherited Panel: TPanel
     Width = 1176
     Height = 73
-    ExplicitLeft = -584
-    ExplicitTop = -40
     ExplicitWidth = 1176
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit

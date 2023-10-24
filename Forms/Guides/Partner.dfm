@@ -149,6 +149,54 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 70
       end
+      object TaxSale_Personal: TcxGridDBColumn
+        Caption = 'C'#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088' - %'
+        DataBinding.FieldName = 'TaxSale_Personal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088' - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxSale_PersonalTrade: TcxGridDBColumn
+        Caption = #1058#1055' - %'
+        DataBinding.FieldName = 'TaxSale_PersonalTrade'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1055' - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxSale_MemberSaler1: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-1 - %'
+        DataBinding.FieldName = 'TaxSale_MemberSaler1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1076#1072#1074#1077#1094'-1 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxSale_MemberSaler2: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-2 - %'
+        DataBinding.FieldName = 'TaxSale_MemberSaler2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1076#1072#1074#1077#1094'-2 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
       object PersonalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1091#1087#1077#1088#1074'.'
         DataBinding.FieldName = 'PersonalCode'
@@ -425,6 +473,40 @@ object PartnerForm: TPartnerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object MemberSaler1Name: TcxGridDBColumn
+        Caption = #1060#1048#1054' ('#1055#1088#1086#1076#1072#1074#1077#1094'-1)'
+        DataBinding.FieldName = 'MemberSaler1Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceMemberSaler1
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object MemberSaler2Name: TcxGridDBColumn
+        Caption = #1060#1048#1054' ('#1055#1088#1086#1076#1072#1074#1077#1094'-2)'
+        DataBinding.FieldName = 'MemberSaler2Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceMemberSaler2
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object GLNCode: TcxGridDBColumn
@@ -1638,6 +1720,60 @@ object PartnerForm: TPartnerForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberSaler1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberSaler1Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberSaler1Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberSaler2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberSaler2Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberSaler2Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

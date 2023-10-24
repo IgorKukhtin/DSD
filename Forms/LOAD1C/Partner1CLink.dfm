@@ -3,7 +3,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   ClientHeight = 401
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 436
+  ExplicitHeight = 440
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -26,6 +26,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.Footer = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -334,6 +335,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -345,27 +347,34 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actChoiceBranchForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceBranchForm'
       FormName = 'TBranchLinkForm'
       FormNameParam.Value = 'TBranchLinkForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actInsertRecordEmpty: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -376,18 +385,23 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Params = <
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
@@ -397,122 +411,156 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actChoiceContractForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceContractForm'
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = 'TContractChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actInsertPartner: TInsertUpdateChoiceAction
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       ImageIndex = 1
       FormName = 'TPartnerEditForm'
       FormNameParam.Value = 'TPartnerEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'PartnerId'
-      PostDataSetBeforeExecute = False
     end
     object actChoicePartnerForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoicePartnerForm'
       FormName = 'TPartner1CLinkPlaceForm'
       FormNameParam.Value = 'TPartner1CLinkPlaceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actGetPointName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetPointName
       StoredProcList = <
         item
@@ -523,6 +571,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actInsertPartner1CLink: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertPartner1CLink
       StoredProcList = <
         item
@@ -548,6 +597,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actUpdatePartner1CLink_Partner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdatePartner1CLink_Partner
       StoredProcList = <
         item
@@ -711,6 +761,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranchLinkForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchLinkForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -720,6 +771,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -728,6 +780,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 120
@@ -739,34 +792,44 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'BranchId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchTopId'
@@ -774,35 +837,46 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsSybase'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'BranchId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'BranchName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 624
     Top = 216
   end
@@ -813,16 +887,20 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     Params = <
       item
         Name = 'inCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -830,7 +908,9 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 344
     Top = 168
   end
@@ -845,7 +925,9 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 296
     Top = 256
   end
@@ -860,7 +942,9 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 296
     Top = 312
   end

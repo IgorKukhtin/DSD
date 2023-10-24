@@ -39,7 +39,7 @@ type
     ceRouteSorting: TcxButtonEdit;
     cxLabel8: TcxLabel;
     ceMemberTake: TcxButtonEdit;
-    dsdMemberTakeGuides: TdsdGuides;
+    GuidesMemberTake: TdsdGuides;
     dsdRouteSortingGuides: TdsdGuides;
     dsdRouteGuides: TdsdGuides;
     cePrepareDayCount: TcxCurrencyEdit;
@@ -67,10 +67,10 @@ type
     edRoomNumber: TcxTextEdit;
     cxLabel18: TcxLabel;
     cePersonal: TcxButtonEdit;
-    PersonalGuides: TdsdGuides;
+    GuidesPersonal: TdsdGuides;
     cxLabel19: TcxLabel;
     cePersonalTrade: TcxButtonEdit;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     cxLabel20: TcxLabel;
     ceArea: TcxButtonEdit;
     AreaGuides: TdsdGuides;
@@ -131,7 +131,7 @@ type
     cbDelivery7: TcxCheckBox;
     cxLabel37: TcxLabel;
     cePersonalMerch: TcxButtonEdit;
-    PersonalMerchGuides: TdsdGuides;
+    GuidesPersonalMerch: TdsdGuides;
     cxLabel38: TcxLabel;
     edCategory: TcxCurrencyEdit;
     cxLabel39: TcxLabel;
@@ -145,6 +145,20 @@ type
     GuidesUnitMobile: TdsdGuides;
     cxLabel41: TcxLabel;
     edMovementComment: TcxTextEdit;
+    edTaxSale_Personal: TcxCurrencyEdit;
+    cxLabel42: TcxLabel;
+    edTaxSale_PersonalTrade: TcxCurrencyEdit;
+    cxLabel43: TcxLabel;
+    edTaxSale_MemberSaler1: TcxCurrencyEdit;
+    cxLabel44: TcxLabel;
+    edTaxSale_MemberSaler2: TcxCurrencyEdit;
+    cxLabel45: TcxLabel;
+    cxLabel46: TcxLabel;
+    edMemberSaler1: TcxButtonEdit;
+    GuidesMemberSaler1: TdsdGuides;
+    cxLabel48: TcxLabel;
+    edMemberSaler2: TcxButtonEdit;
+    GuidesMemberSaler2: TdsdGuides;
 
   private
     { Private declarations }

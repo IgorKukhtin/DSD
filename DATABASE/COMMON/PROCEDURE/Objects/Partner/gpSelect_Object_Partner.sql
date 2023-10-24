@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
                GPSN TFloat, GPSE TFloat,
                Category TFloat,
+               TaxSale_Personal TFloat, TaxSale_PersonalTrade TFloat, TaxSale_MemberSaler1 TFloat, TaxSale_MemberSaler2 TFloat,
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
 
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, /*GLNCode_Juridical TVarChar,*/
@@ -31,6 +32,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
 
                MemberTakeId Integer, MemberTakeCode Integer, MemberTakeName TVarChar,
+               MemberSaler1Id Integer, MemberSaler1Code Integer, MemberSaler1Name TVarChar,
+               MemberSaler2Id Integer, MemberSaler2Code Integer, MemberSaler2Name TVarChar,
+               
                PersonalId Integer, PersonalCode Integer, PersonalName TVarChar,
                PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar, BranchName_PersonalTrade TVarChar, UnitName_PersonalTrade TVarChar,
                PersonalMerchId Integer, PersonalMerchCode Integer, PersonalMerchName TVarChar,
@@ -136,6 +140,11 @@ BEGIN
          , COALESCE (Partner_GPSE.ValueData,0)         ::Tfloat  AS GPSE
          , COALESCE (ObjectFloat_Category.ValueData,0) ::TFloat  AS Category
 
+         , COALESCE (ObjectFloat_TaxSale_Personal.ValueData,0)      ::TFloat  AS TaxSale_Personal
+         , COALESCE (ObjectFloat_TaxSale_PersonalTrade.ValueData,0) ::TFloat  AS TaxSale_PersonalTrade
+         , COALESCE (ObjectFloat_TaxSale_MemberSaler1.ValueData,0)  ::TFloat  AS TaxSale_MemberSaler1
+         , COALESCE (ObjectFloat_TaxSale_MemberSaler2.ValueData,0)  ::TFloat  AS TaxSale_MemberSaler2
+
          , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS EdiOrdspr
          , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS EdiInvoice
          , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     AS EdiDesadv
@@ -163,6 +172,13 @@ BEGIN
          , Object_MemberTake.Id             AS MemberTakeId
          , Object_MemberTake.ObjectCode     AS MemberTakeCode
          , Object_MemberTake.ValueData      AS MemberTakeName
+
+         , Object_MemberSaler1.Id             AS MemberSaler1Id
+         , Object_MemberSaler1.ObjectCode     AS MemberSaler1Code
+         , Object_MemberSaler1.ValueData      AS MemberSaler1Name
+         , Object_MemberSaler2.Id             AS MemberSaler2Id
+         , Object_MemberSaler2.ObjectCode     AS MemberSaler2Code
+         , Object_MemberSaler2.ValueData      AS MemberSaler2Name
 
          , Object_Personal.PersonalId        AS PersonalId
          , Object_Personal.PersonalCode      AS PersonalCode
@@ -311,6 +327,20 @@ BEGIN
                                ON ObjectFloat_ObjectCode_Basis.ObjectId = Object_Partner.Id
                               AND ObjectFloat_ObjectCode_Basis.DescId   = zc_ObjectFloat_ObjectCode_Basis()
 
+         LEFT JOIN ObjectFloat AS ObjectFloat_TaxSale_Personal
+                               ON ObjectFloat_TaxSale_Personal.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_TaxSale_Personal.DescId = zc_ObjectFloat_Partner_TaxSale_Personal()
+         LEFT JOIN ObjectFloat AS ObjectFloat_TaxSale_PersonalTrade
+                               ON ObjectFloat_TaxSale_PersonalTrade.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_TaxSale_PersonalTrade.DescId = zc_ObjectFloat_Partner_TaxSale_PersonalTrade()
+         LEFT JOIN ObjectFloat AS ObjectFloat_TaxSale_MemberSaler1
+                               ON ObjectFloat_TaxSale_MemberSaler1.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_TaxSale_MemberSaler1.DescId = zc_ObjectFloat_Partner_TaxSale_MemberSaler1()
+         LEFT JOIN ObjectFloat AS ObjectFloat_TaxSale_MemberSaler2
+                               ON ObjectFloat_TaxSale_MemberSaler2.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_TaxSale_MemberSaler2.DescId = zc_ObjectFloat_Partner_TaxSale_MemberSaler2()
+
+
          LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
                                  ON ObjectBoolean_EdiOrdspr.ObjectId = Object_Partner.Id
                                 AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
@@ -379,6 +409,16 @@ BEGIN
                               ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberSaler1
+                              ON ObjectLink_Partner_MemberSaler1.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberSaler1.DescId = zc_ObjectLink_Partner_MemberSaler1()
+         LEFT JOIN Object AS Object_MemberSaler1 ON Object_MemberSaler1.Id = ObjectLink_Partner_MemberSaler1.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberSaler2
+                              ON ObjectLink_Partner_MemberSaler2.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberSaler2.DescId = zc_ObjectLink_Partner_MemberSaler2()
+         LEFT JOIN Object AS Object_MemberSaler2 ON Object_MemberSaler2.Id = ObjectLink_Partner_MemberSaler2.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                               ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id
@@ -488,6 +528,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.10.23         *
  04.05.22         *
  29.04.21         * Category
  19.06.17         * add PersonalMerch

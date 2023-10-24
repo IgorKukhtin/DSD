@@ -22,10 +22,17 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        TDateTime, TDateTime, Integer); 
 */
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer); 
+                                                       TDateTime, TDateTime, Integer);*/ 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);
+
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
@@ -41,6 +48,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
     IN inCategory            TFloat    ,    -- категория ТТ
+    IN inTaxSale_Personal       TFloat    ,   -- супервайзер - % от товарооборота
+    IN inTaxSale_PersonalTrade  TFloat    ,   -- ТП - % от товарооборота
+    IN inTaxSale_MemberSaler1   TFloat    ,   -- Продавец-1 - % от товарооборота
+    IN inTaxSale_MemberSaler2   TFloat    ,   -- Продавец-2 - % от товарооборота
 
     IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
     IN inEdiInvoice          Boolean   ,    -- EDI - Счет
@@ -52,6 +63,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
     
     IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
+    IN inMemberSaler1Id      Integer   ,    -- Физ лицо(Продавец-1)
+    IN inMemberSaler2Id      Integer   ,    -- Физ лицо(Продавец-2)
+
     IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
     IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
     IN inPersonalMerchId     Integer   ,    -- Сотрудник (мерчандайзер)
@@ -114,6 +128,15 @@ BEGIN
 
    -- сохранили свойство <inCategory>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_Category(), ioId, inCategory);
+
+   -- сохранили свойство <inTaxSale_Personal>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_Personal(), ioId, inTaxSale_Personal);
+   -- сохранили свойство <inTaxSale_PersonalTrade>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_PersonalTrade(), ioId, inTaxSale_PersonalTrade);
+   -- сохранили свойство <inTaxSale_MemberSaler1>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_MemberSaler1(), ioId, inTaxSale_MemberSaler1);
+   -- сохранили свойство <inTaxSale_MemberSaler2>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_MemberSaler2(), ioId, inTaxSale_MemberSaler2);
    
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
@@ -127,6 +150,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
    -- сохранили связь с <Физ лицо (сотрудник экспедитор)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberTakeId);
+
+   -- сохранили связь с <Физ лицо (Продавец-1)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberSaler1(), ioId, inMemberSaler1Id);
+   -- сохранили связь с <Физ лицо (Продавец-2)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberSaler2(), ioId, inMemberSaler2Id);
    
    -- сохранили связь с <Сотрудник (супервайзер)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
@@ -174,6 +202,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.10.23         *
  27.09.21         *
  25.05.21         *
  29.04.21         * Category
