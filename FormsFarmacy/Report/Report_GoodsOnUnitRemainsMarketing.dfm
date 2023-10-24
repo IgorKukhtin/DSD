@@ -373,7 +373,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 66
           end
           object ChangePercent: TcxGridDBColumn
@@ -574,7 +573,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      BeforeAction = actClearMainPromoBonus
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
@@ -662,17 +660,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         end>
       isShowModal = False
     end
-    object actClearMainPromoBonus: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spClearMainPromoBonus
-      StoredProcList = <
-        item
-          StoredProc = spClearMainPromoBonus
-        end>
-      Caption = 'actClearMainPromoBonus'
-    end
     object actMainPromoBonus: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -758,6 +745,18 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PromoBonus'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'PriceSip'
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PriceSip'
           ToParam.DataType = ftFloat
           ToParam.MultiSelectSeparator = ','
         end>
@@ -925,15 +924,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
       end>
     Left = 392
   end
-  object spClearMainPromoBonus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_ClearMainPromoBonus'
-    DataSets = <>
-    OutputType = otResult
-    Params = <>
-    PackSize = 1
-    Left = 240
-    Top = 256
-  end
   object spMainPromoBonus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_MainPromoBonus'
     DataSets = <>
@@ -945,6 +935,14 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MakerID'
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -967,6 +965,12 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceSip'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 328
@@ -985,6 +989,14 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMakerID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MakerID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPromoBonus'
         Value = Null
         Component = MasterCDS
@@ -994,19 +1006,28 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPromo'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPriceSip'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceSip'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercentPromo'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSipPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSipPromo'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1036,6 +1057,14 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         ComponentItem = 'SommaBonus'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceSip'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSip'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1055,6 +1084,14 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMakerID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MakerID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPromoBonus'
         Value = Null
         Component = FormParams
@@ -1064,19 +1101,28 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPromo'
+        Name = 'inPriceSip'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPromo'
-        DataType = ftBoolean
+        Component = FormParams
+        ComponentItem = 'PriceSip'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceSip'
+        Name = 'inChangePercentPromo'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PriceSip'
+        ComponentItem = 'ChangePercentPromo'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSipPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSipPromo'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1112,6 +1158,14 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercent'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceSip'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSip'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

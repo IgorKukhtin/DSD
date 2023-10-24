@@ -22,7 +22,8 @@ RETURNS TABLE (ContainerId Integer
              , UnitName TVarChar, OurJuridicalName TVarChar
              , JuridicalCode  Integer, JuridicalName  TVarChar
              
-             , GoodsGroupPromoName TVarChar, PriceSip TFloat, ChangePercent TFloat, MakerName TVarChar
+             , PriceSipPromo TFloat, ChangePercentPromo TFloat
+             , GoodsGroupPromoName TVarChar, PriceSip TFloat, ChangePercent TFloat, MakerID Integer, MakerName TVarChar
              , SommaBonus TFloat
 
              )
@@ -279,9 +280,12 @@ BEGIN
              , Object_From_Income.ObjectCode                              AS JuridicalCode
              , Object_From_Income.ValueData                               AS JuridicalName
              
+             , GoodsPromo.Price                                           AS PriceSipPromo
+             , GoodsPromo.ChangePercent                                   AS ChangePercentPromo
              , GoodsPromo.GoodsGroupPromoName                             AS GoodsGroupPromoName
-             , GoodsPromo.Price                                           AS PriceSip
+             , COALESCE(tmpGoods.PriceSip, GoodsPromo.Price)::TFloat              AS PriceSip
              , COALESCE(tmpGoods.PromoBonus, GoodsPromo.ChangePercent)::TFloat    AS ChangePercent
+             , GoodsPromo.MakerID                                         AS MakerID
              , Object_Maker.ValueData                                     AS MakerName
              
              , CASE WHEN COALESCE(GoodsPromo.GoodsId, 0) = 0

@@ -49,9 +49,7 @@ type
     ChangePercent: TcxGridDBColumn;
     SommaBonus: TcxGridDBColumn;
     MakerName: TcxGridDBColumn;
-    spClearMainPromoBonus: TdsdStoredProc;
     spMainPromoBonus: TdsdStoredProc;
-    actClearMainPromoBonus: TdsdExecStoredProc;
     actMainPromoBonus: TdsdExecStoredProc;
     mactMainPromoBonus: TMultiAction;
     actExecuteSummaDialog: TExecuteDialog;

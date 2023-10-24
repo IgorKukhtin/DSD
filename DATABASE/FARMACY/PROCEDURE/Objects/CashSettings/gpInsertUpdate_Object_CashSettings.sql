@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
                                                            TFloat, TFloat, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, 
-                                                           Boolean, TVarChar, Boolean, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
+                                                           Boolean, TVarChar, Boolean, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TFloat, 
+                                                           TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -76,6 +77,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inCat_5                      TFloat    ,     -- Скидка кат 5 от цены
     
     IN inUnitDeferredId             Integer   ,     -- Запрет отмены отложен в перемещениях по аптеке
+    IN inCourseReport               TFloat    ,     -- Курс для "Отчет остатки по подразделению для маркетинга"
 
     IN inSession                    TVarChar        -- сессия пользователя
 )
@@ -262,6 +264,9 @@ BEGIN
    
    -- Запрет отмены отложен в перемещениях по аптеке
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CashSettings_UnitDeferred(), vbID, inUnitDeferredId);
+   
+    -- Курс для "Отчет остатки по подразделению для маркетинга"
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_CourseReport(), vbID, inCourseReport);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

@@ -167,6 +167,8 @@ type
     edUnitDeferred: TcxButtonEdit;
     cxLabel47: TcxLabel;
     UnitGuides: TdsdGuides;
+    ceCourseReport: TcxCurrencyEdit;
+    cxLabel48: TcxLabel;
   private
     { Private declarations }
   public

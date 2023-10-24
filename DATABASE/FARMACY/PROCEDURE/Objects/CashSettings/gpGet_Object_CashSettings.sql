@@ -61,6 +61,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isCancelBansSUN Boolean
              , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_CountAward Integer, AntiTOPMP_SumFine TFloat, AntiTOPMP_MinProcAward TFloat
              , UnitDeferredId Integer, UnitDeferredName TVarChar
+             , CourseReport TFloat
              ) AS
 $BODY$
 BEGIN
@@ -141,6 +142,8 @@ BEGIN
         
         , Object_UnitDeferred.Id                                                   AS UnitDeferredId
         , Object_UnitDeferred.ValueData                                            AS UnitDeferredName
+        
+        , ObjectFloat_CashSettings_CourseReport.ValueData                          AS CourseReport
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -362,6 +365,10 @@ BEGIN
                ON ObjectLink_CashSettings_UnitDeferred.ObjectId = Object_CashSettings.Id
               AND ObjectLink_CashSettings_UnitDeferred.DescId = zc_ObjectLink_CashSettings_UnitDeferred()
         LEFT JOIN Object AS Object_UnitDeferred ON Object_UnitDeferred.Id = ObjectLink_CashSettings_UnitDeferred.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_CourseReport
+                              ON ObjectFloat_CashSettings_CourseReport.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_CourseReport.DescId = zc_ObjectFloat_CashSettings_CourseReport()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
