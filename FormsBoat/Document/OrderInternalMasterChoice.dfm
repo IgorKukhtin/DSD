@@ -90,11 +90,12 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Left = 0
     Top = 57
     Width = 894
-    Height = 435
+    Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -355,6 +356,41 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 451
+    Width = 894
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitTop = 457
+    object btnUpdate: TcxButton
+      Left = 310
+      Top = 6
+      Width = 101
+      Height = 25
+      Action = actShowErased
+      TabOrder = 0
+    end
+    object btnFormClose: TcxButton
+      Left = 442
+      Top = 6
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object cxButton1: TcxButton
+      Left = 103
+      Top = 6
+      Width = 124
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 2
     end
   end
   object DataSource: TDataSource
@@ -1118,9 +1154,15 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Caption = #1042#1099#1073#1086#1088
+      Hint = #1042#1099#1073#1086#1088
       ImageIndex = 7
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   object spSelectMI: TdsdStoredProc
