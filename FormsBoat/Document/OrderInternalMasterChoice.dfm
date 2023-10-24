@@ -95,7 +95,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -365,7 +364,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 457
     object btnUpdate: TcxButton
       Left = 310
       Top = 6

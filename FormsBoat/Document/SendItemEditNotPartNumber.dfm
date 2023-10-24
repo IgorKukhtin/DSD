@@ -200,6 +200,7 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
     Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.) '#1086#1090' '#1082#1086#1075#1086
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 264
     Top = 59
     object actRefresh: TdsdDataSetRefresh
@@ -225,10 +226,12 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object actRefreshOperPriceList: TdsdDataSetRefresh
       Category = 'DSDLib'

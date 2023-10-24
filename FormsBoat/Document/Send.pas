@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls, cxButtons;
 
 type
   TSendForm = class(TParentForm)
@@ -269,6 +269,26 @@ type
     bbb: TdxBarButton;
     isProdOptions: TcxGridDBColumn;
     ArticleVergl: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsertUpdateMovement: TcxButton;
+    btntAdd_limit: TcxButton;
+    btnCompleteMovement: TcxButton;
+    btnUnCompleteMovement: TcxButton;
+    btnSetErased: TcxButton;
+    btnShowAll: TcxButton;
+    btnInsertAction: TcxButton;
+    btnUpdateAction: TcxButton;
+    btnCompleteMovement_andSave: TcxButton;
+    btnFormClose: TcxButton;
+    actCompleteMovement_andSave: TChangeGuidesStatus;
+    bbsView: TdxBarSubItem;
+    bbsDoc: TdxBarSubItem;
+    bbsGoods: TdxBarSubItem;
+    bbsOpenForm: TdxBarSubItem;
+    bbsPartion: TdxBarSubItem;
+    bbsReserv: TdxBarSubItem;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

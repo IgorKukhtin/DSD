@@ -1206,6 +1206,9 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1706,19 +1709,11 @@ object OrderInternalForm: TOrderInternalForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbInsertRecordGoods'
-        end
-        item
-          Visible = True
           ItemName = 'BarSubItemGoods'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbb'
         end
         item
           Visible = True
@@ -1730,14 +1725,6 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordDetailAll'
-        end
-        item
-          Visible = True
           ItemName = 'BarSubItemReceiptService'
         end
         item
@@ -1746,15 +1733,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordChild'
-        end
-        item
-          Visible = True
           ItemName = 'BarSubItemGoodsChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1771,10 +1750,6 @@ object OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbsPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1941,7 +1916,12 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1051#1086#1076#1082#1072
       Category = 0
       Visible = ivAlways
+      ImageIndex = 78
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbb'
+        end
         item
           Visible = True
           ItemName = 'bbUpdateRecordBoat'
@@ -1971,7 +1951,12 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1059#1079#1077#1083
       Category = 0
       Visible = ivAlways
+      ImageIndex = 85
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
+        end
         item
           Visible = True
           ItemName = 'bbChoiceFormOrderClientItem'
@@ -2009,7 +1994,16 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1056#1072#1073#1086#1090#1099
       Category = 0
       Visible = ivAlways
+      ImageIndex = 84
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordDetailAll'
+        end
         item
           Visible = True
           ItemName = 'bbChoiceFormReceiptService'
@@ -2055,7 +2049,12 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Category = 0
       Visible = ivAlways
+      ImageIndex = 7
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordChild'
+        end
         item
           Visible = True
           ItemName = 'bbOpenGoodsChoiceForm'
