@@ -1648,10 +1648,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_Discount() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Discount', 'Процент скидки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Discount');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_VAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_VAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_VAT', 'НДС' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_VAT');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 25.10.23                                                                                                     * zc_MIFloat_VAT
  04.07.23         * zc_MIFloat_DayPriceNalog
  17.05.23                                                                                                     * zc_MIFloat_Discount
  02.05.23         * zc_MIFloat_SummAvCardSecond
