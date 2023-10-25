@@ -602,6 +602,22 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
+      object BranchCode: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'BranchCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object BranchJur: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088'.'#1083#1080#1094#1072' '#1076#1083#1103' '#1092#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'BranchJur'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object EdiOrdspr: TcxGridDBColumn
         Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
         DataBinding.FieldName = 'EdiOrdspr'

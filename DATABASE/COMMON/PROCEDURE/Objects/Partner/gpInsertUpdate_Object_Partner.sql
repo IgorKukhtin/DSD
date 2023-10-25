@@ -37,8 +37,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
                                                      , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , Boolean, Boolean, Boolean
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
@@ -54,7 +61,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inGLNCode             TVarChar  ,    -- Код GLN
     IN inGLNCodeJuridical    TVarChar  ,    -- Код GLN - Покупатель
     IN inGLNCodeRetail       TVarChar  ,    -- Код GLN - Получатель
-    IN inGLNCodeCorporate    TVarChar  ,    -- Код GLN - Поставщик
+    IN inGLNCodeCorporate    TVarChar  ,    -- Код GLN - Поставщик 
+    
+    IN inBranchCode          TVarChar  ,    -- Номер филиала
+    IN inBranchJur           TVarChar  ,    -- Название юр.лица для филиала
         
     IN inHouseNumber         TVarChar  ,    -- Номер дома
     IN inCaseNumber          TVarChar  ,    -- Номер корпуса
@@ -116,8 +126,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inValue6              Boolean  ,  -- суббота
     IN inValue7              Boolean  ,  -- воскресенье 
     
-    IN inMovementComment     TVarChar ,  -- примечание для док продажи
-    
+    IN inMovementComment     TVarChar ,  -- примечание для док продажи  
+   
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS RECORD AS
@@ -189,7 +199,10 @@ BEGIN
                                         , inGLNCodeJuridical:= inGLNCodeJuridical
                                         , inGLNCodeRetail   := inGLNCodeRetail
                                         , inGLNCodeCorporate:= inGLNCodeCorporate
-                                        , inSchedule        := vbSchedule
+                                        , inSchedule        := vbSchedule  
+                                        , inBranchCode      := inBranchCode
+                                        , inBranchJur       := inBranchJur
+
                                         , inPrepareDayCount := inPrepareDayCount
                                         , inDocumentDayCount:= inDocumentDayCount
                                         , inCategory        := inCategory
@@ -254,7 +267,7 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  24.10.23         *
  27.01.23         *
  25.05.21         *

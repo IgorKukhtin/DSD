@@ -159,6 +159,10 @@ type
     cxLabel48: TcxLabel;
     edMemberSaler2: TcxButtonEdit;
     GuidesMemberSaler2: TdsdGuides;
+    edBranchCode: TcxTextEdit;
+    cxLabel49: TcxLabel;
+    edBranchJur: TcxTextEdit;
+    cxLabel50: TcxLabel;
 
   private
     { Private declarations }

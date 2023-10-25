@@ -52,6 +52,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean
              , UnitMobileId Integer, UnitMobileName TVarChar
              , MovementComment TVarChar
+             , BranchCode TVarChar
+             , BranchJur TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -177,7 +179,10 @@ BEGIN
 
            , CAST (0 as Integer)    AS UnitMobileId
            , CAST ('' as TVarChar)  AS UnitMobileName
-           , CAST ('' as TVarChar)  AS MovementComment
+           , CAST ('' as TVarChar)  AS MovementComment 
+           
+           , CAST ('' as TVarChar)  AS BranchCode
+           , CAST ('' as TVarChar)  AS BranchJur
 
            ;
    ELSE
@@ -298,7 +303,9 @@ BEGIN
            , Object_UnitMobile.Id        AS UnitMobileId
            , Object_UnitMobile.ValueData AS UnitMobileName 
            
-           , ObjectString_Movement.ValueData ::TVarChar AS MovementComment
+           , ObjectString_Movement.ValueData   ::TVarChar AS MovementComment
+           , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
+           , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -345,6 +352,13 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Movement
                                   ON ObjectString_Movement.ObjectId = Object_Partner.Id
                                  AND ObjectString_Movement.DescId = zc_ObjectString_Partner_Movement()
+
+           LEFT JOIN ObjectString AS ObjectString_BranchCode
+                                  ON ObjectString_BranchCode.ObjectId = Object_Partner.Id
+                                 AND ObjectString_BranchCode.DescId = zc_ObjectString_Partner_BranchCode()
+           LEFT JOIN ObjectString AS ObjectString_BranchJur
+                                  ON ObjectString_BranchJur.ObjectId = Object_Partner.Id
+                                 AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
 
            LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                  ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -514,7 +528,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

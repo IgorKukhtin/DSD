@@ -63,7 +63,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                GUID TVarChar, isGUID Boolean,
                isIrna Boolean,
                isGoodsBox Boolean, 
-               MovementComment TVarChar
+               MovementComment TVarChar,
+               BranchCode TVarChar,
+               BranchJur TVarChar
               )
 AS
 $BODY$
@@ -252,7 +254,9 @@ BEGIN
          , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
          , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
          , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
-         , ObjectString_Movement.ValueData ::TVarChar AS MovementComment
+         , ObjectString_Movement.ValueData   ::TVarChar AS MovementComment
+         , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
+         , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
                            ON Object_Partner.isErased = tmpIsErased.isErased
@@ -303,7 +307,14 @@ BEGIN
 
          LEFT JOIN ObjectString AS ObjectString_Movement
                                 ON ObjectString_Movement.ObjectId = Object_Partner.Id
-                                AND ObjectString_Movement.DescId = zc_ObjectString_Partner_Movement()
+                               AND ObjectString_Movement.DescId = zc_ObjectString_Partner_Movement()
+
+         LEFT JOIN ObjectString AS ObjectString_BranchCode
+                                ON ObjectString_BranchCode.ObjectId = Object_Partner.Id
+                               AND ObjectString_BranchCode.DescId = zc_ObjectString_Partner_BranchCode()
+         LEFT JOIN ObjectString AS ObjectString_BranchJur
+                                ON ObjectString_BranchJur.ObjectId = Object_Partner.Id
+                               AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id

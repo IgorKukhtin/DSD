@@ -793,7 +793,7 @@
     Width = 54
   end
   object cxLabel43: TcxLabel [106]
-    Left = 735
+    Left = 736
     Top = 247
     Caption = #1058#1055' - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
   end
@@ -807,7 +807,7 @@
   end
   object cxLabel44: TcxLabel [108]
     Left = 735
-    Top = 282
+    Top = 275
     Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-1 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
   end
   object edTaxSale_MemberSaler2: TcxCurrencyEdit [109]
@@ -820,7 +820,7 @@
   end
   object cxLabel45: TcxLabel [110]
     Left = 735
-    Top = 308
+    Top = 304
     Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-2 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
   end
   object cxLabel46: TcxLabel [111]
@@ -856,6 +856,28 @@
     Properties.ReadOnly = True
     TabOrder = 114
     Width = 195
+  end
+  object edBranchCode: TcxTextEdit [115]
+    Left = 736
+    Top = 367
+    TabOrder = 115
+    Width = 81
+  end
+  object cxLabel49: TcxLabel [116]
+    Left = 735
+    Top = 347
+    Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
+  end
+  object edBranchJur: TcxTextEdit [117]
+    Left = 832
+    Top = 367
+    TabOrder = 117
+    Width = 241
+  end
+  object cxLabel50: TcxLabel [118]
+    Left = 832
+    Top = 347
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088'.'#1083#1080#1094#1072' '#1076#1083#1103' '#1092#1080#1083#1080#1072#1083#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 355
@@ -980,6 +1002,22 @@
         Name = 'inGLNCodeCorporate'
         Value = Null
         Component = edGLNCodeCorporate
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchCode'
+        Value = Null
+        Component = edBranchCode
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchJur'
+        Value = Null
+        Component = edBranchJur
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2018,6 +2056,20 @@
         Value = Null
         Component = edTaxSale_MemberSaler2
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchCode'
+        Value = Null
+        Component = edBranchCode
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchJur'
+        Value = Null
+        Component = edBranchJur
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 536
