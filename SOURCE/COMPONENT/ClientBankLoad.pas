@@ -430,35 +430,35 @@ end;
 
 function TPrivatBankLoad.GetBankAccountMain: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
-    result := FDataSet.FieldByName('ACCOUNT_A').AsString
+  if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
+    result := FDataSet.FieldByName('COUNT_A').AsString
   else
-    result := FDataSet.FieldByName('ACCOUNT_B').AsString;
+    result := FDataSet.FieldByName('COUNT_A').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankAccount: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-    result := FDataSet.FieldByName('ACCOUNT_A').AsString
+  if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
+    result := FDataSet.FieldByName('COUNT_B').AsString
   else
-    result := FDataSet.FieldByName('ACCOUNT_B').AsString;
+    result := FDataSet.FieldByName('COUNT_B').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankMFOMain: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
+  if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
     result := FDataSet.FieldByName('MFO_A').AsString
   else
-    result := FDataSet.FieldByName('MFO_B').AsString;
+    result := FDataSet.FieldByName('MFO_A').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankName: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
-    result := FDataSet.FieldByName('BANK_A').AsString
+  if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
+    result := FDataSet.FieldByName('BANK_B').AsString
   else
     result := FDataSet.FieldByName('BANK_B').AsString;
   result := trim(result);
@@ -466,8 +466,8 @@ end;
 
 function TPrivatBankLoad.GetBankMFO: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-    result := FDataSet.FieldByName('MFO_A').AsString
+  if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
+    result := FDataSet.FieldByName('MFO_B').AsString
   else
     result := FDataSet.FieldByName('MFO_B').AsString;
   result := trim(result);
@@ -492,14 +492,14 @@ end;
 
 function TPrivatBankLoad.GetDocNumber: string;
 begin
-  result := FDataSet.FieldByName('N_DOC').AsString;
+  result := FDataSet.FieldByName('N_D').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetJuridicalName: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-    result := FDataSet.FieldByName('NAME_A').AsString
+  if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
+    result := FDataSet.FieldByName('NAME_B').AsString
   else
     result := FDataSet.FieldByName('NAME_B').AsString;
   result := trim(result);
@@ -507,24 +507,25 @@ end;
 
 function TPrivatBankLoad.GetOKPO: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-    result := trim(FDataSet.FieldByName('OKPO1_A').AsString)
+  if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
+    result := trim(FDataSet.FieldByName('OKPO_B').AsString)
   else
-    result := trim(FDataSet.FieldByName('OKPO2_B').AsString);
+    result := trim(FDataSet.FieldByName('OKPO_B').AsString);
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DATE_DOC').AsDateTime
+  result := FDataSet.FieldByName('DATE').AsDateTime
 end;
 
 function TPrivatBankLoad.GetOperSumm: real;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-    result := FDataSet.FieldByName('SUM_DOC').AsFloat
+  //if FDataSet.FieldByName('TIP').AsString = 'D;R;' then
+  if FDataSet.FieldByName('SUMMA').AsFloat > 0 then
+    result := FDataSet.FieldByName('SUMMA').AsFloat
   else
-    result := -FDataSet.FieldByName('SUM_DOC').AsFloat;
+    result := FDataSet.FieldByName('SUMMA').AsFloat;
 end;
 
 { TForumBankLoad }
