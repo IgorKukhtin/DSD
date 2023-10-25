@@ -5567,6 +5567,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actConvertRemainsJournal: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1050#1086#1085#1074#1077#1088#1090#1072#1094#1080#1103' '#1086#1089#1090#1072#1090#1082#1086#1074
+      FormName = 'TConvertRemainsJournalForm'
+      FormNameParam.Value = 'TConvertRemainsJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6507,6 +6529,9 @@
       end
       object N346: TMenuItem
         Action = acTReport_NotPaySumIncome
+      end
+      object N385: TMenuItem
+        Action = actConvertRemainsJournal
       end
     end
     object N200: TMenuItem [6]

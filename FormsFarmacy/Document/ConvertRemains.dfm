@@ -1,29 +1,29 @@
 inherited ConvertRemainsForm: TConvertRemainsForm
-  Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+  Caption = #1050#1086#1085#1074#1077#1088#1090#1072#1094#1080#1103' '#1086#1089#1090#1072#1090#1082#1086#1074
   ClientHeight = 479
   ClientWidth = 915
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 933
-  ExplicitHeight = 526
+  ExplicitWidth = 937
+  ExplicitHeight = 535
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 116
+    Top = 121
     Width = 915
-    Height = 363
-    ExplicitTop = 116
+    Height = 358
+    ExplicitTop = 121
     ExplicitWidth = 915
-    ExplicitHeight = 363
-    ClientRectBottom = 363
+    ExplicitHeight = 358
+    ClientRectBottom = 358
     ClientRectRight = 915
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 915
-      ExplicitHeight = 339
+      ExplicitHeight = 334
       inherited cxGrid: TcxGrid
         Width = 915
-        Height = 331
+        Height = 326
         ExplicitWidth = 915
-        ExplicitHeight = 331
+        ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -308,7 +308,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 331
+        Top = 326
         Width = 915
         Height = 8
         Touch.ParentTabletOptions = False
@@ -675,7 +675,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     DockControlHeights = (
       0
       0
-      27
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1379,9 +1379,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 
-          'TConvertRemainsForm;zc_Object_ImportSetting_TechnicalRedisc' +
-          'ount'
+        Value = 'TConvertRemainsForm;zc_Object_ImportSetting_TechnicalRediscount'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

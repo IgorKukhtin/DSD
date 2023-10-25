@@ -1304,7 +1304,9 @@ uses
   UKTZEDEdit in '..\..\FormsFarmacy\Guides\UKTZEDEdit.pas' {UKTZEDEditForm: TParentForm},
   Report_GoodsRemainsSend in '..\..\FormsFarmacy\Report\Report_GoodsRemainsSend.pas' {Report_GoodsRemainsSendForm: TParentForm},
   Report_GoodsOnUnitRemainsMarketingDialog in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketingDialog.pas' {Report_GoodsOnUnitRemainsMarketingDialogForm: TParentForm},
-  Report_GoodsOnUnitRemainsMarketing in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketing.pas' {Report_GoodsOnUnitRemainsMarketingForm: TParentForm};
+  Report_GoodsOnUnitRemainsMarketing in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketing.pas' {Report_GoodsOnUnitRemainsMarketingForm: TParentForm},
+  ConvertRemainsJournal in '..\..\FormsFarmacy\Document\ConvertRemainsJournal.pas' {ConvertRemainsJournalForm: TParentForm},
+  ConvertRemains in '..\..\FormsFarmacy\Document\ConvertRemains.pas' {ConvertRemainsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
