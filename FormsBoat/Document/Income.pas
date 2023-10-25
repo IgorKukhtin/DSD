@@ -310,9 +310,10 @@ type
     macInsertAddLimit_Goods1: TMultiAction;
     bbInsertAddLimit_Goods1: TdxBarButton;
     bbInsertAddLimit_Goods2: TdxBarButton;
-    actInsertGoods111: TdsdInsertUpdateAction;
     actOpenFormInsertGoods1: TdsdOpenForm;
     actOpenFormsInsertLimit_Goods1: TdsdOpenForm;
+    spGet_Id_Nul: TdsdStoredProc;
+    actGet_Id_Nul: TdsdExecStoredProc;
   private
   public
   end;

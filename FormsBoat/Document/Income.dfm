@@ -2225,7 +2225,7 @@ object IncomeForm: TIncomeForm
         end>
     end
     object bbInsertAddLimit_Goods1: TdxBarButton
-      Action = actInsertGoods1
+      Action = macInsertAddLimit_Goods1
       Category = 0
     end
     object bbInsertAddLimit_Goods2: TdxBarButton
@@ -2317,9 +2317,13 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actOpenFormInsertGoods1
+          Action = actGet_Id_Nul
         end
         item
+          Action = actInsertGoods1
+        end
+        item
+          Action = actOpenFormsInsertLimit_Goods1
         end
         item
           Action = actRefreshMI
@@ -3717,41 +3721,6 @@ object IncomeForm: TIncomeForm
       isShowModal = True
       IdFieldName = 'Id'
     end
-    object actInsertGoods111: TdsdInsertUpdateAction
-      Category = 'Goods'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ImageIndex = 1
-      FormName = 'TGoodsEditForm'
-      FormNameParam.Value = 'TGoodsEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'GoodsId11'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MaskId'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'GoodsId11'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      IdFieldName = 'Id'
-    end
     object actOpenFormInsertGoods1: TdsdOpenForm
       Category = 'Goods'
       MoveParams = <>
@@ -3825,11 +3794,22 @@ object IncomeForm: TIncomeForm
           Name = 'GoodsId'
           Value = 260884
           Component = FormParams
-          ComponentItem = 'outGoodsId1'
+          ComponentItem = 'GoodsId1'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actGet_Id_Nul: TdsdExecStoredProc
+      Category = 'Goods'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Id_Nul
+      StoredProcList = <
+        item
+          StoredProc = spGet_Id_Nul
+        end>
+      Caption = 'actGet_Id_Nul'
     end
   end
   object MasterDS: TDataSource
@@ -4525,8 +4505,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 224
+    Left = 872
+    Top = 352
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -5872,5 +5852,21 @@ object IncomeForm: TIncomeForm
     GetStoredProc = spGet
     Left = 976
     Top = 417
+  end
+  object spGet_Id_Nul: TdsdStoredProc
+    StoredProcName = 'gpGet_Id_Nul'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsId1'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 360
   end
 end
