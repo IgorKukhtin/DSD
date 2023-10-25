@@ -25,7 +25,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 8
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -541,18 +540,6 @@ object IncomeForm: TIncomeForm
       Top = 23
       TabOrder = 58
       Width = 90
-    end
-    object edGoodsId1: TcxCurrencyEdit
-      Left = 1043
-      Top = 23
-      Hint = #1055#1086#1095#1090#1086#1074#1099#1077' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
-      ParentShowHint = False
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####'
-      ShowHint = True
-      TabOrder = 59
-      TextHint = 'GoodsId1'
-      Width = 70
     end
   end
   object cxPageControl: TcxPageControl
@@ -1697,17 +1684,20 @@ object IncomeForm: TIncomeForm
       end
       item
         Name = 'GoodsId'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId1'
+        Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outGoodsId1'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3712,22 +3702,16 @@ object IncomeForm: TIncomeForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id'
-          Value = 'null'
-          Component = FormParams
-          ComponentItem = 'GoodsId1'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'MaskId'
           Value = Null
           MultiSelectSeparator = ','
         end
         item
           Name = 'Id'
-          Value = Null
-          Component = edGoodsId1
-          ParamType = ptInput
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'GoodsId1'
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -3759,6 +3743,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Name = 'Id'
+          Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId11'
           MultiSelectSeparator = ','
@@ -3792,7 +3777,6 @@ object IncomeForm: TIncomeForm
         item
           Name = 'GoodsId'
           Value = Null
-          Component = edGoodsId1
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>

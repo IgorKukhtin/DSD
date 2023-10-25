@@ -313,7 +313,6 @@ type
     actInsertGoods111: TdsdInsertUpdateAction;
     actOpenFormInsertGoods1: TdsdOpenForm;
     actOpenFormsInsertLimit_Goods1: TdsdOpenForm;
-    edGoodsId1: TcxCurrencyEdit;
   private
   public
   end;

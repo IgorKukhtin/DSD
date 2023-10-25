@@ -202,7 +202,7 @@
   end
   object cxLabel9: TcxLabel [26]
     Left = 8
-    Top = 155
+    Top = 152
     Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
   end
   object ceCuterWeight: TcxCurrencyEdit [27]
@@ -210,7 +210,6 @@
     Top = 175
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
     TabOrder = 27
     Width = 111
   end
@@ -483,6 +482,14 @@
         Name = 'inCuterCount'
         Value = ''
         Component = ceСuterCount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCuterWeight'
+        Value = Null
+        Component = ceCuterWeight
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
