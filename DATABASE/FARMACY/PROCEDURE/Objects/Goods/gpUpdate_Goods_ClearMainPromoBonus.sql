@@ -17,9 +17,9 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
     
     
-    UPDATE Object_Goods_Main SET PromoBonus = Null, PriceSip = Null
+    /*UPDATE Object_Goods_Main SET PromoBonus = Null, PriceSip = Null
     WHERE Object_Goods_Main.PromoBonus IS NOT NULL
-       OR Object_Goods_Main.PriceSip IS NOT NULL;
+       OR Object_Goods_Main.PriceSip IS NOT NULL;*/
 
 END;
 

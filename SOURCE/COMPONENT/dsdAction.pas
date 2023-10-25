@@ -2217,7 +2217,9 @@ begin
       result.WindowState := wsNormal;
     if isShowModal then
     begin
-      result.ShowModal;
+      if result.ShowModal = mrOk then
+        if not (Self is TOpenChoiceForm) and Assigned(TParentForm(result).AddOnFormData.Params.Params) then
+          FParams.AssignParams(TParentForm(result).AddOnFormData.Params.Params);
       if (result is TParentForm) and TParentForm(result).AddOnFormData.isFreeAtClosing then result.Free;
     end
     else result.Show
@@ -5435,7 +5437,10 @@ begin
     if isShowModal then
     begin
       try
-        Form.ShowModal;
+        if Form.ShowModal = mrOk then
+          if Form is TParentForm then
+            if Assigned(TParentForm(Form).AddOnFormData.Params.Params) then
+              FParams.AssignParams(TParentForm(Form).AddOnFormData.Params.Params);
       finally
         Form.Free;
       end;
