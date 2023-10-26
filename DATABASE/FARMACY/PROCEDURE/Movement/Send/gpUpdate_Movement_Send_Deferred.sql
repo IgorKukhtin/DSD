@@ -132,6 +132,21 @@ BEGIN
                                   ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
                                  AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
     WHERE Movement.Id = inMovementId;
+    
+    
+    IF vbisDeferred = TRUE AND
+       vbUnit_From = COALESCE ((SELECT ObjectLink_CashSettings_UnitDeferred.ChildObjectId
+                                FROM Object AS Object_CashSettings
+
+                                     LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UnitDeferred
+                                           ON ObjectLink_CashSettings_UnitDeferred.ObjectId = Object_CashSettings.Id
+                                          AND ObjectLink_CashSettings_UnitDeferred.DescId = zc_ObjectLink_CashSettings_UnitDeferred()
+
+                                WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                LIMIT 1), 0) 
+    THEN
+      RAISE EXCEPTION 'Ошибка. Отменять отложку по подразделению запрещено.';
+    END IF;
    
     IF vbisDefSUN = TRUE AND inisDeferred = TRUE
     THEN

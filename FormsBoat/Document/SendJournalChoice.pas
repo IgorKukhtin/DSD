@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, ExternalLoad;
+  dsdGuides, cxButtonEdit, ExternalLoad, Vcl.StdCtrls, cxButtons;
 
 type
   TSendJournalChoiceForm = class(TParentForm)
@@ -105,6 +105,12 @@ type
     spSelectPrint_Master: TdsdStoredProc;
     bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnFormClose: TcxButton;
+    actFormClose: TdsdFormClose;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

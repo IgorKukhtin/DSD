@@ -305,7 +305,8 @@ BEGIN
          , tmpMLO_DocumentKind AS (SELECT MovementLinkObject_DocumentKind.*
                                    FROM MovementLinkObject AS MovementLinkObject_DocumentKind
                                    WHERE MovementLinkObject_DocumentKind.MovementId IN (SELECT DISTINCT tmpMI_all.MovementId FROM tmpMI_all)
-                                     AND MovementLinkObject_DocumentKind.DescId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+                                     AND MovementLinkObject_DocumentKind.ObjectId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+                                     AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
                                    )
          , tmpMLO AS (SELECT MovementLinkObject.*
                       FROM MovementLinkObject
@@ -317,7 +318,7 @@ BEGIN
                            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_all.MovementItemId FROM tmpMI_all)
                              AND MovementItemFloat.DescId = zc_MIFloat_CuterCount()
                            )                 
-         , tmpMI_lak AS (SELECT MovementLinkObject_DocumentKind.DescId 
+         , tmpMI_lak AS (SELECT MovementLinkObject_DocumentKind.ObjectId 
                               , tmpMI_all.MovementItemId
                               , tmpMI_all.MovementItemId_master
                               , tmpMI_all.Amount
@@ -326,7 +327,8 @@ BEGIN
                          FROM tmpMI_all
                              INNER JOIN tmpMLO_DocumentKind AS MovementLinkObject_DocumentKind
                                                             ON MovementLinkObject_DocumentKind.MovementId = tmpMI_all.MovementId
-                                                           AND MovementLinkObject_DocumentKind.DescId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+                                                           AND MovementLinkObject_DocumentKind.ObjectId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) 
+                                                           AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
                              INNER JOIN tmpMLO AS MLO_From
                                                ON MLO_From.MovementId = MovementLinkObject_DocumentKind.MovementId
                                               AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -343,12 +345,12 @@ BEGIN
                                                             AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
                          )
          , tmpData_Lak AS (SELECT tmpMI.MovementItemId_master
-                                , max (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.OperDate ELSE zc_DateStart() END)   AS OperDate_to
-                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.Amount ELSE 0 END)                  AS Amount_to
-                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.CuterCount ELSE 0 END)              AS CuterCount_to
-                                , max (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.OperDate ELSE zc_DateStart() END) AS OperDate_from
-                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.Amount ELSE 0 END)                AS Amount_from
-                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.CuterCount ELSE 0 END)            AS CuterCount_from  
+                                , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.OperDate ELSE zc_DateStart() END)   AS OperDate_to
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.Amount ELSE 0 END)                  AS Amount_to
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.CuterCount ELSE 0 END)              AS CuterCount_to
+                                , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.OperDate ELSE zc_DateStart() END) AS OperDate_from
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.Amount ELSE 0 END)                AS Amount_from
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.CuterCount ELSE 0 END)            AS CuterCount_from  
                            FROM tmpMI_lak AS tmpMI
                            GROUP BY tmpMI.MovementItemId_master
                           ) 

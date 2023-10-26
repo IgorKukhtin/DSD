@@ -429,6 +429,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_MemberTake7() RETURNS Integer A
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Partner_MemberTake7', 'Физ лицо (экспедитор)-7', zc_Object_Partner(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_MemberTake7');
 --
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_MemberSaler1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_MemberSaler1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Partner_MemberSaler1', 'ФФиз лицо (Продавец-1)', zc_Object_Partner(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_MemberSaler1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_MemberSaler2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_MemberSaler2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Partner_MemberSaler2', 'Физ лицо (Продавец-2)', zc_Object_Partner(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_MemberSaler2');
+
+--
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_Personal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
@@ -2956,9 +2965,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_UnitComplInvent() RETURNS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CashSettings_UnitComplInvent', 'Проведение полной инвентаризациии по аптеке', zc_Object_CashSettings(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UnitComplInvent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_UnitDeferred() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UnitDeferred'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CashSettings_UnitDeferred', 'Запрет отмены отложен в перемещениях по аптеке', zc_Object_CashSettings(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UnitDeferred');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.10.23                                                                                      * zc_ObjectLink_CashSettings_UnitDeferred
  11.08.23         * zc_ObjectLink_Asset_PartionModel
  13.06.23                                                                                      * zc_ObjectLink_CashSettings_UnitComplInvent
  18.05.23         * zc_ObjectLink_Storage_AreaUnit

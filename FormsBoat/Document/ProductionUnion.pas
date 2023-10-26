@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls, cxButtons;
 
 type
   TProductionUnionForm = class(TParentForm)
@@ -255,11 +255,11 @@ type
     Price: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
     actPrintCalc: TdsdPrintAction;
-    BarSubItemGoods: TdxBarSubItem;
+    bbsUzel: TdxBarSubItem;
     dxBarSeparator: TdxBarSeparator;
-    BarSubItemBoat: TdxBarSubItem;
-    BarSubItemGoodsChild: TdxBarSubItem;
-    BarSubItemReceiptService: TdxBarSubItem;
+    bbsBoat: TdxBarSubItem;
+    bbsGoods: TdxBarSubItem;
+    bbsWork: TdxBarSubItem;
     actSetErased_Boat: TdsdUpdateErased;
     actSetUnErased_Boat: TdsdUpdateErased;
     actGoodsChoiceForm: TOpenChoiceForm;
@@ -297,6 +297,23 @@ type
     bbInsertRecordReceiptGoods: TdxBarButton;
     bbUpdateChoiceFormReceiptGoods: TdxBarButton;
     actOrderClientChoiceForm: TOpenChoiceForm;
+    actFormClose: TdsdFormClose;
+    bbsView: TdxBarSubItem;
+    bbsDoc: TdxBarSubItem;
+    bbsOpenForm: TdxBarSubItem;
+    bbsPrint: TdxBarSubItem;
+    Panel_btn: TPanel;
+    btnInsertUpdateMovement: TcxButton;
+    btntAdd_limit: TcxButton;
+    btnCompleteMovement: TcxButton;
+    btnUnCompleteMovement: TcxButton;
+    btnSetErased: TcxButton;
+    btnShowAll: TcxButton;
+    btnInsertAction: TcxButton;
+    btnUpdateAction: TcxButton;
+    btnCompleteMovement_andSave: TcxButton;
+    btnFormClose: TcxButton;
+    actCompleteMovement_andSave: TChangeGuidesStatus;
   private
   public
   end;

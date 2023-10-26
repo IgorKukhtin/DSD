@@ -1785,14 +1785,14 @@ BEGIN
 
                         END END) > 0
          AND _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = False
-         AND (_tmpUnit_SUN_Supplement.isSUN_Supplement_in = True OR 
+         AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True /*OR 
              COALESCE(_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, FALSE) = TRUE AND 
-             COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0)
+             COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0)*/
          AND (COALESCE(_tmpGoodsUnit_SUN_Supplement_All.GoodsId, 0) = 0 
            OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = 0)
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
          AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
-         AND  COALESCE(_tmpGoods_Sun_exception_Supplement.Amount, 0) = 0
+         AND COALESCE(_tmpGoods_Sun_exception_Supplement.Amount, 0) = 0
          AND NOT (_tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
                   AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
                   AND FLOOR(_tmpRemains_all_Supplement.SupplementMin - _tmpRemains_all_Supplement.AmountRemains) < 0)
@@ -2054,4 +2054,4 @@ $BODY$
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
 -- 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '6 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3);

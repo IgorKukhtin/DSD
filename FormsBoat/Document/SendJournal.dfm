@@ -3,7 +3,7 @@ object SendJournalForm: TSendJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 492
-  ClientWidth = 817
+  ClientWidth = 973
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,10 +22,11 @@ object SendJournalForm: TSendJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 817
+    Width = 973
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 817
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -60,12 +61,14 @@ object SendJournalForm: TSendJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 817
-    Height = 435
+    Width = 973
+    Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 817
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -369,6 +372,66 @@ object SendJournalForm: TSendJournalForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 451
+    Width = 973
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitLeft = -217
+    ExplicitWidth = 1034
+    object btnInsert: TcxButton
+      Left = 42
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 159
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnComplete: TcxButton
+      Left = 303
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actComplete
+      TabOrder = 2
+    end
+    object btnUnComplete: TcxButton
+      Left = 460
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actUnComplete
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 616
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actSetErased
+      TabOrder = 4
+    end
+    object btnFormClose: TcxButton
+      Left = 809
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -506,23 +569,7 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint3'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -621,6 +668,25 @@ object SendJournalForm: TSendJournalForm
     object bbChoiceGuides: TdxBarButton
       Action = actChoiceGuides
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint3'
+        end>
     end
   end
   object ActionList: TActionList
@@ -977,7 +1043,7 @@ object SendJournalForm: TSendJournalForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       DataSource = DataSource
     end
@@ -989,9 +1055,9 @@ object SendJournalForm: TSendJournalForm
         item
           StoredProc = spMovementUnComplete
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       DataSource = DataSource
     end
@@ -1003,9 +1069,9 @@ object SendJournalForm: TSendJournalForm
         item
           StoredProc = spMovementSetErased
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 52
       Status = mtDelete
       DataSource = DataSource
     end
@@ -1336,6 +1402,12 @@ object SendJournalForm: TSendJournalForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 7
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send'
@@ -1497,8 +1569,8 @@ object SendJournalForm: TSendJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 328
-    Top = 64
+    Left = 160
+    Top = 136
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

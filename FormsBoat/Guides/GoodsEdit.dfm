@@ -12,6 +12,7 @@
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -240,8 +241,8 @@
     end
   end
   object cxButton1: TcxButton
-    Left = 62
-    Top = 676
+    Left = 57
+    Top = 678
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -274,6 +275,7 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
+      ExplicitLeft = -1
       object edName: TcxTextEdit
         Left = 40
         Top = 114
@@ -1115,16 +1117,29 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioId'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 56
+    Left = 24
+    Top = 208
   end
   object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
         Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = 0
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>

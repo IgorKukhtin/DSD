@@ -373,7 +373,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 66
           end
           object ChangePercent: TcxGridDBColumn
@@ -384,7 +383,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 63
           end
           object SommaBonus: TcxGridDBColumn
@@ -575,7 +573,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      BeforeAction = actClearMainPromoBonus
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
@@ -663,17 +660,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         end>
       isShowModal = False
     end
-    object actClearMainPromoBonus: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spClearMainPromoBonus
-      StoredProcList = <
-        item
-          StoredProc = spClearMainPromoBonus
-        end>
-      Caption = 'actClearMainPromoBonus'
-    end
     object actMainPromoBonus: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -723,6 +709,70 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072
       ImageIndex = 38
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatr_MainPromoBonus
+      StoredProcList = <
+        item
+          StoredProc = spUpdatr_MainPromoBonus
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object actUpdatr_MainPromoBonusFilter: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatr_MainPromoBonusFilter
+      StoredProcList = <
+        item
+          StoredProc = spUpdatr_MainPromoBonusFilter
+        end>
+      Caption = 'actMainPromoBonus'
+    end
+    object mactMainPromoBonusGoods: TMultiActionFilter
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'ChangePercent'
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PromoBonus'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'PriceSip'
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PriceSip'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actUpdatr_MainPromoBonusFilter
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1082#1086#1076#1091' '#1090#1086#1074#1072#1088#1072'?'
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1082#1086#1076#1091' '#1090#1086#1074#1072#1088#1072
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1082#1086#1076#1091' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 82
+      FilterColumnList = <
+        item
+          Column = GoodsCode
+        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -787,10 +837,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -800,6 +846,14 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         item
           Visible = True
           ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end>
     end
     object bbGoodsPartyReport: TdxBarButton
@@ -816,6 +870,10 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
     end
     object dxBarButton2: TdxBarButton
       Action = mactMainPromoBonus
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = mactMainPromoBonusGoods
       Category = 0
     end
   end
@@ -866,15 +924,6 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
       end>
     Left = 392
   end
-  object spClearMainPromoBonus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_ClearMainPromoBonus'
-    DataSets = <>
-    OutputType = otResult
-    Params = <>
-    PackSize = 1
-    Left = 240
-    Top = 256
-  end
   object spMainPromoBonus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_MainPromoBonus'
     DataSets = <>
@@ -886,6 +935,14 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MakerID'
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -908,8 +965,212 @@ inherited Report_GoodsOnUnitRemainsMarketingForm: TReport_GoodsOnUnitRemainsMark
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceSip'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 328
+  end
+  object spUpdatr_MainPromoBonus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Report_MainPromoBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MakerID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoBonus'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSip'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSip'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercentPromo'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSipPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSipPromo'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumma'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSommaBonus'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SommaBonus'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceSip'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSip'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 384
+  end
+  object spUpdatr_MainPromoBonusFilter: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Report_MainPromoBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MakerID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoBonus'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoBonus'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSip'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceSip'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercentPromo'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSipPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSipPromo'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumma'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSommaBonus'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SommaBonus'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercent'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceSip'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSip'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 384
   end
 end

@@ -3,7 +3,7 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 492
-  ClientWidth = 817
+  ClientWidth = 885
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,10 +22,11 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 817
+    Width = 885
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 817
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -60,12 +61,14 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 817
-    Height = 435
+    Width = 885
+    Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 817
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -313,6 +316,42 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 451
+    Width = 885
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitLeft = -156
+    ExplicitWidth = 973
+    object btnInsert: TcxButton
+      Left = 42
+      Top = 7
+      Width = 111
+      Height = 25
+      Action = dsdChoiceGuides
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 176
+      Top = 6
+      Width = 111
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnFormClose: TcxButton
+      Left = 649
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -432,23 +471,11 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint3'
         end
         item
           Visible = True
@@ -547,6 +574,25 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint3'
+        end>
     end
   end
   object ActionList: TActionList
@@ -1248,10 +1294,16 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Caption = #1042#1099#1073#1088#1072#1090#1100
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 7
       DataSource = DataSource
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   object spSelect: TdsdStoredProc

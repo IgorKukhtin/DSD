@@ -305,6 +305,15 @@ type
     actSaveMovement: TChangeGuidesStatus;
     actFormClose: TdsdFormClose;
     btnFormClose: TcxButton;
+    actInsertGoods1: TdsdInsertUpdateAction;
+    actInsertAddLimit_Goods1_NO: TdsdInsertUpdateAction;
+    macInsertAddLimit_Goods1: TMultiAction;
+    bbInsertAddLimit_Goods1: TdxBarButton;
+    bbInsertAddLimit_Goods2: TdxBarButton;
+    actOpenFormInsertGoods1: TdsdOpenForm;
+    actOpenFormsInsertLimit_Goods1: TdsdOpenForm;
+    spGet_Id_Nul: TdsdStoredProc;
+    actGet_Id_Nul: TdsdExecStoredProc;
   private
   public
   end;

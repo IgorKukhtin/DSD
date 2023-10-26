@@ -49,14 +49,18 @@ type
     ChangePercent: TcxGridDBColumn;
     SommaBonus: TcxGridDBColumn;
     MakerName: TcxGridDBColumn;
-    spClearMainPromoBonus: TdsdStoredProc;
     spMainPromoBonus: TdsdStoredProc;
-    actClearMainPromoBonus: TdsdExecStoredProc;
     actMainPromoBonus: TdsdExecStoredProc;
     mactMainPromoBonus: TMultiAction;
     actExecuteSummaDialog: TExecuteDialog;
     FormParams: TdsdFormParams;
     dxBarButton2: TdxBarButton;
+    spUpdatr_MainPromoBonus: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    mactMainPromoBonusGoods: TMultiActionFilter;
+    dxBarButton3: TdxBarButton;
+    spUpdatr_MainPromoBonusFilter: TdsdStoredProc;
+    actUpdatr_MainPromoBonusFilter: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -45,6 +45,7 @@ type
     procedure LoadComputerAccessoriesFormTest;
     procedure LoadCompetitorMarkupsFormTest;
     procedure LoadContractFormTest;
+    procedure LoadConvertRemainsFormTest;
     procedure LoadCreditLimitDistributorFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCreateOrderFromMCSFormTest;
@@ -663,6 +664,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   }
+end;
+
+procedure TLoadFormTest.LoadConvertRemainsFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TConvertRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TConvertRemainsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TConvertRemainsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TConvertRemainsJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;
@@ -1936,12 +1947,12 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncome_PromoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncome_PromoForm');
     exit;
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsDialogForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeJournalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeJournalForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeDialogForm'));

@@ -358,12 +358,12 @@ object SendForm: TSendForm
     Left = 0
     Top = 201
     Width = 1053
-    Height = 366
+    Height = 297
     Align = alClient
-    TabOrder = 3
+    TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 366
+    ClientRectBottom = 297
     ClientRectRight = 1053
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -373,7 +373,7 @@ object SendForm: TSendForm
         Left = 0
         Top = 0
         Width = 1053
-        Height = 210
+        Height = 141
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -773,7 +773,7 @@ object SendForm: TSendForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 218
+        Top = 149
         Width = 1053
         Height = 124
         Align = alBottom
@@ -986,13 +986,121 @@ object SendForm: TSendForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 210
+        Top = 141
         Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
       end
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 498
+    Width = 1053
+    Height = 69
+    Align = alBottom
+    TabOrder = 6
+    object btnInsertUpdateMovement: TcxButton
+      Left = 24
+      Top = 4
+      Width = 163
+      Height = 25
+      Action = actInsertUpdateMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object btntAdd_limit: TcxButton
+      Left = 200
+      Top = 35
+      Width = 178
+      Height = 25
+      Action = macInsert_MI_Send
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object btnCompleteMovement: TcxButton
+      Left = 559
+      Top = 6
+      Width = 150
+      Height = 25
+      Action = actCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object btnUnCompleteMovement: TcxButton
+      Left = 559
+      Top = 37
+      Width = 150
+      Height = 25
+      Action = actUnCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 398
+      Top = 4
+      Width = 139
+      Height = 25
+      Action = actSetErased
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+    object btnShowAll: TcxButton
+      Left = 729
+      Top = 6
+      Width = 153
+      Height = 25
+      Action = actShowAll
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object btnInsertAction: TcxButton
+      Left = 200
+      Top = 4
+      Width = 178
+      Height = 25
+      Action = mactAdd
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+    end
+    object btnUpdateAction: TcxButton
+      Left = 398
+      Top = 35
+      Width = 139
+      Height = 25
+      Action = actSetErasedChild
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+    end
+    object btnCompleteMovement_andSave: TcxButton
+      Left = 24
+      Top = 35
+      Width = 163
+      Height = 25
+      Action = actCompleteMovement_andSave
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
+    end
+    object btnFormClose: TcxButton
+      Left = 729
+      Top = 37
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 9
     end
   end
   object FormParams: TdsdFormParams
@@ -1089,24 +1197,7 @@ object SendForm: TSendForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMovement'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErasedCost'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'bbsView'
         end
         item
           Visible = True
@@ -1114,49 +1205,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateActionMovement'
-        end
-        item
-          Visible = True
-          ItemName = 'bbmacUpdate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
-        end
-        item
-          Visible = True
-          ItemName = 'bbb'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErasedChild'
+          ItemName = 'bbsDoc'
         end
         item
           Visible = True
@@ -1164,11 +1213,23 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbsGoods'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbcInsert_MI_Send_Child'
+          ItemName = 'bbsPartion'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsReserv'
         end
         item
           Visible = True
@@ -1184,11 +1245,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbsOpenForm'
         end
         item
           Visible = True
@@ -1196,59 +1253,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormOrderClient'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenFormOrderPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_Goods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_Goods_child'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint3'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1277,8 +1282,9 @@ object SendForm: TSendForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
+      Caption = '   '
       Category = 0
+      Hint = '   '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -1486,6 +1492,7 @@ object SendForm: TSendForm
       Category = 0
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100
       Visible = ivAlways
+      ImageIndex = 43
       ItemLinks = <
         item
           Visible = True
@@ -1540,6 +1547,164 @@ object SendForm: TSendForm
       Action = actPartionGoodsChoiceForm
       Category = 0
     end
+    object bbsView: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 83
+      LargeImageIndex = 83
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErasedCost'
+        end>
+    end
+    object bbsDoc: TdxBarSubItem
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end>
+    end
+    object bbsGoods: TdxBarSubItem
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 7
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateActionMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddMask'
+        end>
+    end
+    object bbsOpenForm: TdxBarSubItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderClient'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods_child'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end>
+    end
+    object bbsPartion: TdxBarSubItem
+      Caption = #1055#1072#1088#1090#1080#1103
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 67
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbb'
+        end>
+    end
+    object bbsReserv: TdxBarSubItem
+      Caption = #1056#1077#1079#1077#1088#1074
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 25
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbcInsert_MI_Send_Child'
+        end>
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint3'
+        end>
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1574,7 +1739,7 @@ object SendForm: TSendForm
         item
           StoredProc = spInsertUpdateMovement
         end>
-      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
@@ -1674,7 +1839,7 @@ object SendForm: TSendForm
         item
           StoredProc = spBarcode_null
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
@@ -1805,7 +1970,7 @@ object SendForm: TSendForm
         item
           StoredProc = spErasedMIchild
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
       ImageIndex = 2
       ShortCut = 46
@@ -1874,9 +2039,9 @@ object SendForm: TSendForm
         end
         item
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       Guides = StatusGuides
     end
@@ -1894,7 +2059,7 @@ object SendForm: TSendForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       Guides = StatusGuides
     end
@@ -1912,7 +2077,7 @@ object SendForm: TSendForm
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       Guides = StatusGuides
     end
@@ -3330,6 +3495,38 @@ object SendForm: TSendForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
       ImageIndex = 0
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
+    end
+    object actCompleteMovement_andSave: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spChangeStatus
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 86
+      Status = mtComplete
+      Guides = StatusGuides
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3931,7 +4128,7 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 124
+    Left = 148
     Top = 56
   end
   object PrintHeaderCDS: TClientDataSet
@@ -4110,8 +4307,8 @@ object SendForm: TSendForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 470
-    Top = 485
+    Left = 486
+    Top = 429
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -4120,8 +4317,8 @@ object SendForm: TSendForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 521
-    Top = 485
+    Left = 537
+    Top = 437
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4175,8 +4372,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 706
-    Top = 493
+    Left = 746
+    Top = 445
   end
   object spErasedMIchild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased_Child'
@@ -4201,7 +4398,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 310
-    Top = 480
+    Top = 424
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -4291,8 +4488,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 201
-    Top = 472
+    Left = 193
+    Top = 432
   end
   object EnterMoveNext1: TEnterMoveNext
     EnterMoveNextList = <

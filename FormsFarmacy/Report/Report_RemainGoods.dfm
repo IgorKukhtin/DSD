@@ -501,6 +501,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 61
           end
+          object Measure: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084
+            DataBinding.FieldName = 'Measure'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
         end
       end
     end

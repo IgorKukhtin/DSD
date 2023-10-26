@@ -4,7 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer,
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer
+                                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inMovementItemId_order Integer   , -- Ключ объекта <Элемент документа>
@@ -22,7 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inRealWeight           TFloat    , -- Фактический вес(информативно)
     IN inRealWeightMsg        TFloat    , -- Фактический вес(после массажера)
     IN inRealWeightShp        TFloat    , -- Фактический вес(после шприцевания)
-    IN inCuterCount           TFloat    , -- Количество кутеров
+    IN inCuterCount           TFloat    , -- Количество кутеров  
+    IN inCuterWeight          TFloat    , -- Вес п/ф факт(куттер)
 
     IN inAmount               TFloat    , -- Кол-во шт.факт - !!!обратный расчет кол-во куттеров!!!
 
@@ -359,6 +362,7 @@ BEGIN
                                                                   , inRealWeightMsg      := inRealWeightMsg
                                                                   , inRealWeightShp      := inRealWeightShp
                                                                   , inCuterCount         := inCuterCount
+                                                                  , inCuterWeight        := inCuterWeight
                                                                   , inComment            := inComment
                                                                   , inGoodsKindId        := inGoodsKindId
                                                                   , inGoodsKindCompleteId:= inGoodsKindCompleteId

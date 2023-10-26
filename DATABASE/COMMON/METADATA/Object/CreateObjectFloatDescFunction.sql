@@ -283,6 +283,23 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_Category() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_Category', 'Категория ТТ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_Category');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_TaxSale_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_Personal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_TaxSale_Personal', 'супервайзер - % от товарооборота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_Personal');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_TaxSale_PersonalTrade() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_PersonalTrade'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_TaxSale_PersonalTrade', 'ТП - % от товарооборота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_PersonalTrade');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_TaxSale_MemberSaler1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_MemberSaler1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_TaxSale_MemberSaler1', 'Продавец-1 - % от товарооборота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_MemberSaler1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_TaxSale_MemberSaler2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_MemberSaler2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_TaxSale_MemberSaler2', 'Продавец-2 - % от товарооборота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_MemberSaler2');
+
+
 --
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceList_VATPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceList_VATPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -2471,9 +2488,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward() 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward', 'Анти ТОП моб. прил. Минимальный процент выполнения плана для премии' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_CourseReport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_CourseReport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_CourseReport', 'Курс для "Отчет остатки по подразделению для маркетинга"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_CourseReport');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 24.10.23                                                                                      * zc_ObjectFloat_CashSettings_CourseReport
  13.10.23                                                                                      * zc_ObjectFloat_CashSettings_Cat_5
  11.07.23                                                                                      * zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward
  10.07.23                                                                                      * zc_ObjectFloat_CashSettings_AntiTOPMP_CountAward

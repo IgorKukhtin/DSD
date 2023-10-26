@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, ExternalLoad;
+  dsdGuides, cxButtonEdit, ExternalLoad, Vcl.StdCtrls, cxButtons;
 
 type
   TProductionUnionMasterChoiceForm = class(TParentForm)
@@ -97,6 +97,11 @@ type
     cxLabel15: TcxLabel;
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnUpdate: TcxButton;
+    btnFormClose: TcxButton;
+    cxButton1: TcxButton;
   private
   public
   end;

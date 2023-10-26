@@ -184,6 +184,8 @@ type
     bbUpdateGoodsBox: TdxBarButton;
     isGoodsBox: TcxGridDBColumn;
     MovementComment: TcxGridDBColumn;
+    BranchCode: TcxGridDBColumn;
+    BranchJur: TcxGridDBColumn;
   private
     { Private declarations }
   public

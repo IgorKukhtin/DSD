@@ -3,7 +3,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072'>'
   ClientHeight = 492
-  ClientWidth = 817
+  ClientWidth = 939
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 817
+    Width = 939
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 817
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -58,12 +59,14 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 817
-    Height = 435
+    Width = 939
+    Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 817
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -431,6 +434,68 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 451
+    Width = 939
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitTop = 457
+    ExplicitWidth = 969
+    object btnInsert: TcxButton
+      Left = 16
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 133
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnComplete: TcxButton
+      Left = 262
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actComplete
+      TabOrder = 2
+    end
+    object btnUnComplete: TcxButton
+      Left = 418
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actUnComplete
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 574
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      TabOrder = 4
+    end
+    object btnFormClose: TcxButton
+      Left = 766
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -556,15 +621,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintCalc'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -607,14 +664,19 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object bbComplete: TdxBarButton
       Action = actComplete
       Category = 0
+      ImageIndex = 77
     end
     object bbUnComplete: TdxBarButton
       Action = actUnComplete
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Category = 0
+      ImageIndex = 76
     end
     object bbDelete: TdxBarButton
       Action = actSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Category = 0
+      ImageIndex = 52
     end
     object bbStatic: TdxBarStatic
       Caption = '     '
@@ -648,6 +710,21 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object bbPrintStickerTermo: TdxBarButton
       Action = actPrintStickerTermo
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCalc'
+        end>
     end
   end
   object ActionList: TActionList
@@ -1220,6 +1297,12 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   object spSelect: TdsdStoredProc

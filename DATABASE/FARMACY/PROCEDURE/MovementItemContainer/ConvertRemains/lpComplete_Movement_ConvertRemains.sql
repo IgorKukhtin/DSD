@@ -1,0 +1,44 @@
+ -- Function: lpComplete_Movement_Income (Integer, Integer)
+
+DROP FUNCTION IF EXISTS lpComplete_Movement_ConvertRemains (Integer, Integer);
+
+CREATE OR REPLACE FUNCTION lpComplete_Movement_ConvertRemains(
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inUserId            Integer    -- Пользователь
+)                              
+RETURNS VOID
+AS
+$BODY$
+BEGIN
+
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
+
+     -- !!!обязательно!!! очистили таблицу проводок
+     DELETE FROM _tmpMIContainer_insert;
+  --   DELETE FROM _tmpMIReport_insert;
+     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem;
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
+
+     -- пересчитали итоговые суммы
+     PERFORM gpInsertUpdate_ConvertRemains_TotalSumm (ioId, inSession);
+
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_ConvertRemains()
+                                , inUserId     := inUserId
+                                 );
+    
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.10.2023                                                     *
+*/
+
+-- тест
+-- 

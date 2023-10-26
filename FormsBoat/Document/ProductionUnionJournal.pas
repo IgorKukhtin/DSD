@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, ExternalLoad;
+  dsdGuides, cxButtonEdit, ExternalLoad, Vcl.StdCtrls, cxButtons;
 
 type
   TProductionUnionJournalForm = class(TParentForm)
@@ -105,6 +105,15 @@ type
     TotalSummMVAT: TcxGridDBColumn;
     TotalSummPVAT: TcxGridDBColumn;
     ModelName_parent: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnComplete: TcxButton;
+    btnUnComplete: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

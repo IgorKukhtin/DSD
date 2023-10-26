@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, ExternalLoad;
+  dsdGuides, cxButtonEdit, ExternalLoad, Vcl.StdCtrls, cxButtons;
 
 type
   TOrderInternalJournalChoiceForm = class(TParentForm)
@@ -102,6 +102,11 @@ type
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     ItemName_goods: TcxGridDBColumn;
+    Panel_btn: TPanel;
+    btnUpdate: TcxButton;
+    btnFormClose: TcxButton;
+    actFormClose: TdsdFormClose;
+    cxButton1: TcxButton;
   private
   public
   end;

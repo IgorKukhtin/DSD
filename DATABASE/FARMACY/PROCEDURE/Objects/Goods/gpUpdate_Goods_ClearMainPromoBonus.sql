@@ -17,8 +17,9 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
     
     
-    UPDATE Object_Goods_Main SET PromoBonus = Null
-    WHERE Object_Goods_Main.PromoBonus IS NOT NULL;
+    /*UPDATE Object_Goods_Main SET PromoBonus = Null, PriceSip = Null
+    WHERE Object_Goods_Main.PromoBonus IS NOT NULL
+       OR Object_Goods_Main.PriceSip IS NOT NULL;*/
 
 END;
 
@@ -32,6 +33,4 @@ $BODY$
 */
 
 -- тест
---
-
-select * from gpUpdate_Goods_ClearMainPromoBonus(inSession := '3');
+-- select * from gpUpdate_Goods_ClearMainPromoBonus(inSession := '3');

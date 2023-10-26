@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, cxBlobEdit;
+  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TOrderInternalForm = class(TParentForm)
@@ -228,12 +228,12 @@ type
     bbMIDetailAllProtocolOpenForm: TdxBarButton;
     Article_ReceiptService_ch5: TcxGridDBColumn;
     ReceiptServiceCode_ch5: TcxGridDBColumn;
-    BarSubItemBoat: TdxBarSubItem;
-    BarSubItemGoods: TdxBarSubItem;
+    bbsBoat: TdxBarSubItem;
+    bbsUzel: TdxBarSubItem;
     BarSubItemGoodsSep2: TdxBarSeparator;
     BarSubItemGoodsSep1: TdxBarSeparator;
     BarSubItemGoodsChild: TdxBarSubItem;
-    BarSubItemReceiptService: TdxBarSubItem;
+    bbsWork: TdxBarSubItem;
     actSetErased_boat: TdsdUpdateErased;
     actSetUnErased_boat: TdsdUpdateErased;
     bbSetErased_boat: TdxBarButton;
@@ -264,6 +264,21 @@ type
     actOrderClientInsertForm: TOpenChoiceForm;
     actRefreshMaster: TdsdDataSetRefresh;
     bbInsert_MI_byOrder: TdxBarButton;
+    bbsView: TdxBarSubItem;
+    bbsDoc: TdxBarSubItem;
+    actFormClose: TdsdFormClose;
+    actCompleteMovement_andSave: TChangeGuidesStatus;
+    Panel_btn: TPanel;
+    btnInsertUpdateMovement: TcxButton;
+    btnCompleteMovement: TcxButton;
+    btnUnCompleteMovement: TcxButton;
+    btnSetErased: TcxButton;
+    btnShowAll: TcxButton;
+    btnInsertAction: TcxButton;
+    btnCompleteMovement_andSave: TcxButton;
+    btnFormClose: TcxButton;
+    bbsOpenForm: TdxBarSubItem;
+    bbsPrint: TdxBarSubItem;
 
   private
   public

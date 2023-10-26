@@ -17,9 +17,9 @@ object SendItemEditForm: TSendItemEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButtonOK: TcxButton
-    Left = 96
+    Left = 94
     Top = 260
-    Width = 75
+    Width = 73
     Height = 25
     Action = actInsertUpdate
     TabOrder = 2
@@ -215,6 +215,7 @@ object SendItemEditForm: TSendItemEditForm
     Width = 200
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Top = 219
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -239,10 +240,12 @@ object SendItemEditForm: TSendItemEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object actRefreshOperPriceList: TdsdDataSetRefresh
       Category = 'DSDLib'

@@ -95,8 +95,8 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 9
-      Top = 63
+      Left = 10
+      Top = 62
       Properties.Buttons = <
         item
           Action = actCompleteMovement
@@ -228,28 +228,31 @@ object ProductionUnionForm: TProductionUnionForm
     Left = 0
     Top = 123
     Width = 1084
-    Height = 478
+    Height = 409
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 478
+    ExplicitHeight = 478
+    ClientRectBottom = 409
     ClientRectRight = 1084
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 454
       object Panel2: TPanel
         Left = 0
         Top = 145
         Width = 1084
-        Height = 309
+        Height = 240
         Align = alClient
         Caption = 'Panel2'
         TabOrder = 0
+        ExplicitHeight = 309
         object cxGridChild: TcxGrid
           Left = 1
-          Top = 193
+          Top = 124
           Width = 1082
           Height = 115
           Align = alBottom
@@ -257,6 +260,7 @@ object ProductionUnionForm: TProductionUnionForm
           LookAndFeel.Kind = lfStandard
           LookAndFeel.NativeStyle = False
           LookAndFeel.SkinName = ''
+          ExplicitTop = 193
           object cxGridDBTableViewChild: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -586,9 +590,10 @@ object ProductionUnionForm: TProductionUnionForm
           Left = 1
           Top = 1
           Width = 1082
-          Height = 184
+          Height = 115
           Align = alClient
           TabOrder = 1
+          ExplicitHeight = 184
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -860,12 +865,13 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxSplitter2: TcxSplitter
           Left = 1
-          Top = 185
+          Top = 116
           Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGridChild
+          ExplicitTop = 185
         end
       end
       object Panel3: TPanel
@@ -1260,13 +1266,15 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitHeight = 454
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
         Width = 1084
-        Height = 454
+        Height = 385
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 454
         object cxGridDBTableView_DetAll: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_All
@@ -1642,6 +1650,115 @@ object ProductionUnionForm: TProductionUnionForm
       end
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 532
+    Width = 1084
+    Height = 69
+    Align = alBottom
+    TabOrder = 6
+    ExplicitTop = 537
+    object btnInsertUpdateMovement: TcxButton
+      Left = 24
+      Top = 5
+      Width = 163
+      Height = 25
+      Action = actInsertUpdateMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object btntAdd_limit: TcxButton
+      Left = 374
+      Top = 5
+      Width = 120
+      Height = 25
+      Action = actUpdateChoiceFormOrderClientItem
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object btnCompleteMovement: TcxButton
+      Left = 510
+      Top = 5
+      Width = 150
+      Height = 25
+      Action = actCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object btnUnCompleteMovement: TcxButton
+      Left = 510
+      Top = 36
+      Width = 150
+      Height = 25
+      Action = actUnCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 374
+      Top = 36
+      Width = 120
+      Height = 25
+      Action = actSetErased
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+    object btnShowAll: TcxButton
+      Left = 761
+      Top = 5
+      Width = 184
+      Height = 25
+      Action = actShowAll_child
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object btnInsertAction: TcxButton
+      Left = 215
+      Top = 5
+      Width = 147
+      Height = 25
+      Action = actInsertRecordOrderClientItem
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+    end
+    object btnUpdateAction: TcxButton
+      Left = 215
+      Top = 36
+      Width = 147
+      Height = 25
+      Action = macInsertRecordReceiptGoods
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+    end
+    object btnCompleteMovement_andSave: TcxButton
+      Left = 24
+      Top = 36
+      Width = 163
+      Height = 25
+      Action = actCompleteMovement_andSave
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
+    end
+    object btnFormClose: TcxButton
+      Left = 761
+      Top = 36
+      Width = 184
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 9
+    end
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1728,19 +1845,47 @@ object ProductionUnionForm: TProductionUnionForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbsView'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
+          ItemName = 'bbsDoc'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbShowAll_child'
+          ItemName = 'bbsUzel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsBoat'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsWork'
         end
         item
           BeginGroup = True
@@ -1749,11 +1894,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordOrderClientItem'
-        end
-        item
-          Visible = True
-          ItemName = 'BarSubItemGoods'
+          ItemName = 'bbsOpenForm'
         end
         item
           Visible = True
@@ -1761,115 +1902,13 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordBoat'
-        end
-        item
-          Visible = True
-          ItemName = 'BarSubItemBoat'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbInsertRecordChild'
-        end
-        item
-          Visible = True
-          ItemName = 'BarSubItemGoodsChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordDetailAll'
-        end
-        item
-          Visible = True
-          ItemName = 'BarSubItemReceiptService'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbErasedMI_Master'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_MI_Child'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenOrderClientForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_Goods_master'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_Goods_child'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintCalc'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbGridToExel'
         end
@@ -2012,11 +2051,16 @@ object ProductionUnionForm: TProductionUnionForm
       Action = MIDetailProtocolOpenForm
       Category = 0
     end
-    object BarSubItemGoods: TdxBarSubItem
+    object bbsUzel: TdxBarSubItem
       Caption = #1059#1079#1077#1083
       Category = 0
       Visible = ivAlways
+      ImageIndex = 85
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordOrderClientItem'
+        end
         item
           Visible = True
           ItemName = 'bbUpdateChoiceFormOrderClientItem'
@@ -2069,11 +2113,16 @@ object ProductionUnionForm: TProductionUnionForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object BarSubItemBoat: TdxBarSubItem
+    object bbsBoat: TdxBarSubItem
       Caption = #1051#1086#1076#1082#1072
       Category = 0
       Visible = ivAlways
+      ImageIndex = 78
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordBoat'
+        end
         item
           Visible = True
           ItemName = 'bbOrderClientInsertBoatForm'
@@ -2099,11 +2148,16 @@ object ProductionUnionForm: TProductionUnionForm
           ItemName = 'bbMovementItemProtocol'
         end>
     end
-    object BarSubItemGoodsChild: TdxBarSubItem
+    object bbsGoods: TdxBarSubItem
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Category = 0
       Visible = ivAlways
+      ImageIndex = 7
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordChild'
+        end
         item
           Visible = True
           ItemName = 'bbactGoods_ReceiptServiceChoiceForm_Child'
@@ -2129,11 +2183,20 @@ object ProductionUnionForm: TProductionUnionForm
           ItemName = 'bbChildProtocol'
         end>
     end
-    object BarSubItemReceiptService: TdxBarSubItem
+    object bbsWork: TdxBarSubItem
       Caption = #1056#1072#1073#1086#1090#1099
       Category = 0
       Visible = ivAlways
+      ImageIndex = 84
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordDetailAll'
+        end
         item
           Visible = True
           ItemName = 'bbChoiceFormReceiptService'
@@ -2215,6 +2278,102 @@ object ProductionUnionForm: TProductionUnionForm
       Action = actUpdateChoiceFormReceiptGoods
       Category = 0
     end
+    object bbsView: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 83
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll_child'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end>
+    end
+    object bbsDoc: TdxBarSubItem
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_Child'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedMI_Master'
+        end>
+    end
+    object bbsOpenForm: TdxBarSubItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenOrderClientForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods_master'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods_child'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end>
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCalc'
+        end>
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2250,7 +2409,7 @@ object ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spSelectMIChild
         end>
-      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
@@ -2359,7 +2518,7 @@ object ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spSelectMI_DetailAll
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
@@ -2521,7 +2680,7 @@ object ProductionUnionForm: TProductionUnionForm
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceItemForm'
@@ -2638,6 +2797,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'/'#1051#1086#1076#1082#1072'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -2668,6 +2828,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -2683,6 +2844,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -2716,6 +2878,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2734,7 +2897,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       Guides = StatusGuides
     end
@@ -2750,9 +2913,9 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       Guides = StatusGuides
     end
@@ -2770,7 +2933,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       Guides = StatusGuides
     end
@@ -3110,6 +3273,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DetailDS
     end
@@ -3125,6 +3289,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -3867,6 +4032,38 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
+    end
+    object actCompleteMovement_andSave: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spChangeStatus
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 86
+      Status = mtComplete
+      Guides = StatusGuides
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4383,7 +4580,7 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     PackSize = 1
     Left = 124
-    Top = 56
+    Top = 80
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

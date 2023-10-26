@@ -164,6 +164,11 @@ type
     cxLabel45: TcxLabel;
     ceCat_5: TcxCurrencyEdit;
     cxLabel46: TcxLabel;
+    edUnitDeferred: TcxButtonEdit;
+    cxLabel47: TcxLabel;
+    UnitGuides: TdsdGuides;
+    ceCourseReport: TcxCurrencyEdit;
+    cxLabel48: TcxLabel;
   private
     { Private declarations }
   public
