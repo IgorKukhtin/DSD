@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxTextEdit, cxMaskEdit, cxLabel,
-  dsdGuides, ExternalLoad;
+  dsdGuides, ExternalLoad, cxCalendar;
 
 type
   TMemberForm = class(TParentForm)

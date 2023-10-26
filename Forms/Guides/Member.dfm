@@ -28,7 +28,6 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 777
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -412,6 +411,16 @@ object MemberForm: TMemberForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1076#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 80
+      end
+      object Birthday_Month: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Birthday_Date'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'MMMM'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
@@ -881,6 +890,7 @@ object MemberForm: TMemberForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actDoLoad: TExecuteImportSettingsAction
