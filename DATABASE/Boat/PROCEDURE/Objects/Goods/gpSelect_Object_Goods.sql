@@ -473,7 +473,7 @@ BEGIN
             , Object_Goods.ObjectCode             AS Code
               --
             , SUBSTRING (Object_Goods.ValueData, 1, 128) :: TVarChar AS Name
-            , zfCalc_GoodsName_all (ObjectString_Article.ValueData, SUBSTRING (Object_Goods.ValueData, 1, 128) ) AS Name_all
+            , SUBSTRING (zfCalc_GoodsName_all (ObjectString_Article.ValueData, SUBSTRING (Object_Goods.ValueData, 1, 128)), 1, 128) :: TVarChar AS Name_all
               --
             , ObjectString_Article.ValueData      AS Article
             , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
@@ -801,6 +801,8 @@ BEGIN
 
              LEFT JOIN tmpUnit_receipt  ON tmpUnit_receipt.GoodsId  = Object_Goods.Id
              LEFT JOIN tmpGoods_receipt ON tmpGoods_receipt.GoodsId = Object_Goods.Id
+         ORDER BY Object_Goods.Id  desc
+        -- LIMIT 197022
             ;
 
 END;
@@ -818,3 +820,11 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Goods (inShowAll:= FALSE, inIsLimit_100:= TRUE, inSession := zfCalc_UserAdmin())
+
+
+
+-- select * from gpSelect_Object_Goods(inShowAll := 'True' , inIsLimit_100 := 'False' ,  inSession := '5');
+-- select * from Object where descId = zc_Object_Goods() order by id desc limit 1000
+
+-- SELECT * FROM gpSelect_Object_Goods (inShowAll:= FALSE, inIsLimit_100:= TRUE, inSession := zfCalc_UserAdmin()) order by id desc limit 1000--
+-- select count(*) from Object where descId = zc_Object_Goods()
