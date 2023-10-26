@@ -8,7 +8,7 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
            , Object_BankAccount.ValueData                       AS Name
            , BankAccount_Juridical.ChildObjectId                AS JuridicalId
            , Juridical.ValueData                                AS JuridicalName
-           , ObjectBoolean_isCorporate.ValueData                AS isCorporate
+           , ((ObjectBoolean_isCorporate.ValueData = TRUE) OR (ObjectBoolean_Guide_Irna.ValueData = TRUE)) :: Boolean AS isCorporate
            , ObjectLink_BankAccount_Bank.ChildObjectId          AS BankId
            , Object_Bank_View.BankName                          AS BankName
            , Object_Bank_View.MFO                               AS MFO
