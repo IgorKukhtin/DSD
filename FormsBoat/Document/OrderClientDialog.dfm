@@ -27,6 +27,8 @@ object OrderClientDialogForm: TOrderClientDialogForm
     Caption = 'Ok'
     Default = True
     ModalResult = 1
+    OptionsImage.ImageIndex = 80
+    OptionsImage.Images = dmMain.ImageList
     TabOrder = 0
   end
   object cxButton2: TcxButton
@@ -36,6 +38,8 @@ object OrderClientDialogForm: TOrderClientDialogForm
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
+    OptionsImage.ImageIndex = 52
+    OptionsImage.Images = dmMain.ImageList
     TabOrder = 1
   end
   object edNPP: TcxCurrencyEdit
@@ -74,8 +78,8 @@ object OrderClientDialogForm: TOrderClientDialogForm
     ShowHint = True
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 172
-    Top = 79
+    Left = 164
+    Top = 39
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -112,6 +116,7 @@ object OrderClientDialogForm: TOrderClientDialogForm
     Top = 23
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 16
     Top = 107
     object actRefresh: TdsdDataSetRefresh

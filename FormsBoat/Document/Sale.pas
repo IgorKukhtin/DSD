@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, cxBlobEdit;
+  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TSaleForm = class(TParentForm)
@@ -219,6 +219,27 @@ type
     edTransportSumm_load: TcxCurrencyEdit;
     edBasis_summ_transport: TcxCurrencyEdit;
     edBasisWVAT_summ_transport: TcxCurrencyEdit;
+    actFormClose: TdsdFormClose;
+    actCompleteMovement_andSave: TChangeGuidesStatus;
+    Panel_btn: TPanel;
+    btnInsertUpdateMovement: TcxButton;
+    btntAdd_limit: TcxButton;
+    btnCompleteMovement: TcxButton;
+    btnUnCompleteMovement: TcxButton;
+    btnSetErased: TcxButton;
+    btnShowAll: TcxButton;
+    btnInsertAction: TcxButton;
+    btnUpdateAction: TcxButton;
+    btnCompleteMovement_andSave: TcxButton;
+    btnFormClose: TcxButton;
+    bbsView: TdxBarSubItem;
+    dxBarStatic1: TdxBarStatic;
+    dxBarSeparator1: TdxBarSeparator;
+    bbsDoc: TdxBarSubItem;
+    bbsGoods: TdxBarSubItem;
+    bbsPartion: TdxBarSubItem;
+    bbsOpenForm: TdxBarSubItem;
+    bbsProtocol: TdxBarSubItem;
   private
   public
   end;

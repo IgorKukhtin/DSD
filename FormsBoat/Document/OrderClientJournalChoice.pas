@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TOrderClientJournalChoiceForm = class(TParentForm)
@@ -106,6 +106,12 @@ type
     StateColor: TcxGridDBColumn;
     DateBegin: TcxGridDBColumn;
     ModelName: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnUpdate: TcxButton;
+    btnComplete: TcxButton;
+    btnFormClose: TcxButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

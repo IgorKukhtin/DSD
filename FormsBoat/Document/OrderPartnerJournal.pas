@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TOrderPartnerJournalForm = class(TParentForm)
@@ -110,6 +110,14 @@ type
     actPrintOrderConfirmation: TdsdPrintAction;
     actPrintStructure: TdsdPrintAction;
     actPrintOffer: TdsdPrintAction;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnComplete: TcxButton;
+    btnUnComplete: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
   private
   public
   end;

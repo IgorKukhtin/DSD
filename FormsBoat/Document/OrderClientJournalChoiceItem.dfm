@@ -138,11 +138,12 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     Left = 0
     Top = 88
     Width = 1034
-    Height = 404
+    Height = 363
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 404
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -198,17 +199,17 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Properties.Items = <
           item
             Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 11
+            ImageIndex = 76
             Value = 1
           end
           item
             Description = #1055#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 12
+            ImageIndex = 77
             Value = 2
           end
           item
             Description = #1059#1076#1072#1083#1077#1085
-            ImageIndex = 13
+            ImageIndex = 52
             Value = 3
           end>
         HeaderAlignmentHorz = taCenter
@@ -493,6 +494,40 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 451
+    Width = 1034
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    object btnInsert: TcxButton
+      Left = 42
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 159
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnFormClose: TcxButton
+      Left = 809
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -612,31 +647,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSticker'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStickerTermo'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -706,6 +717,25 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     object bbChoiceGuides: TdxBarButton
       Action = actChoiceGuides
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end>
     end
   end
   object ActionList: TActionList
@@ -1087,7 +1117,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Caption = #1042#1099#1073#1086
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 7
     end
@@ -1328,6 +1358,12 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderClient_Item'
@@ -1424,8 +1460,8 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 416
-    Top = 56
+    Left = 360
+    Top = 65528
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

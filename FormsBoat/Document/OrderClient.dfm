@@ -2,7 +2,7 @@ object OrderClientForm: TOrderClientForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
-  ClientHeight = 497
+  ClientHeight = 632
   ClientWidth = 1349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object OrderClientForm: TOrderClientForm
     Left = 0
     Top = 0
     Width = 1349
-    Height = 177
+    Height = 167
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -629,34 +629,37 @@ object OrderClientForm: TOrderClientForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 203
+    Top = 193
     Width = 1349
-    Height = 294
+    Height = 375
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 294
+    ClientRectBottom = 375
     ClientRectRight = 1349
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 270
       object Panel1: TPanel
         Left = 0
         Top = 0
         Width = 1349
-        Height = 85
+        Height = 166
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
+        ExplicitHeight = 85
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
           Width = 1347
-          Height = 83
+          Height = 164
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 167
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -1031,21 +1034,23 @@ object OrderClientForm: TOrderClientForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 85
+        Top = 166
         Width = 1349
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
+        ExplicitTop = 85
       end
       object Panel4: TPanel
         Left = 0
-        Top = 93
+        Top = 174
         Width = 1349
         Height = 177
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
+        ExplicitTop = 93
         object PanelProdColorItems: TPanel
           Left = 1
           Top = 1
@@ -1064,7 +1069,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitLeft = 2
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -1768,13 +1772,15 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitHeight = 270
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
         Width = 1349
-        Height = 270
+        Height = 351
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 270
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -2781,15 +2787,17 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitHeight = 270
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
         Width = 1349
-        Height = 270
+        Height = 351
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
+        ExplicitHeight = 270
         object cxGridDBTableViewInfo: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = InfoDS
@@ -2838,14 +2846,16 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitHeight = 270
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
         Width = 1349
-        Height = 270
+        Height = 351
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitHeight = 270
         object cxGridDBTableViewInvoice: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = InvoiceDS
@@ -2994,17 +3004,17 @@ object OrderClientForm: TOrderClientForm
             Properties.Items = <
               item
                 Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 11
+                ImageIndex = 76
                 Value = 1
               end
               item
                 Description = #1055#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 12
+                ImageIndex = 77
                 Value = 2
               end
               item
                 Description = #1059#1076#1072#1083#1077#1085
-                ImageIndex = 13
+                ImageIndex = 52
                 Value = 3
               end>
             HeaderAlignmentHorz = taCenter
@@ -3527,6 +3537,95 @@ object OrderClientForm: TOrderClientForm
     TabOrder = 16
     Width = 132
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 568
+    Width = 1349
+    Height = 64
+    Align = alBottom
+    TabOrder = 17
+    ExplicitTop = 438
+    object btnInsertUpdateMovement: TcxButton
+      Left = 24
+      Top = 6
+      Width = 163
+      Height = 25
+      Action = actInsertUpdateMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object btntAdd_limit: TcxButton
+      Left = 223
+      Top = 35
+      Width = 105
+      Height = 25
+      Action = SetErased
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object btnCompleteMovement: TcxButton
+      Left = 487
+      Top = 6
+      Width = 150
+      Height = 25
+      Action = CompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object btnUnCompleteMovement: TcxButton
+      Left = 487
+      Top = 35
+      Width = 150
+      Height = 25
+      Action = UnCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+    end
+    object btnShowAll: TcxButton
+      Left = 681
+      Top = 6
+      Width = 153
+      Height = 25
+      Action = actShowAll
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+    object btnInsertAction: TcxButton
+      Left = 223
+      Top = 5
+      Width = 105
+      Height = 25
+      Action = InsertRecordGoods
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object btnCompleteMovement_andSave: TcxButton
+      Left = 24
+      Top = 37
+      Width = 163
+      Height = 25
+      Action = actCompleteMovement_andSave
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+    end
+    object btnFormClose: TcxButton
+      Left = 681
+      Top = 35
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+    end
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -3600,8 +3699,8 @@ object OrderClientForm: TOrderClientForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 278
-    Top = 95
+    Left = 262
+    Top = 143
     DockControlHeights = (
       0
       0
@@ -3626,15 +3725,24 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
+          ItemName = 'bbsView'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbShowAll'
+          ItemName = 'bbsDoc'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsGoods'
         end
         item
           BeginGroup = True
@@ -3647,28 +3755,7 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChangeNPP'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChangeSumm'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -3676,7 +3763,7 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbsProtocol'
         end
         item
           Visible = True
@@ -3684,91 +3771,7 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintAgilis'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStructure'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTender'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStructureGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocol2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocol3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolInfoOpen'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtoco_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenForm_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenBankAccountJournalByInvoice'
+          ItemName = 'bbsOpenForm'
         end
         item
           Visible = True
@@ -3974,6 +3977,150 @@ object OrderClientForm: TOrderClientForm
       Action = actProtoco_Invoice
       Category = 0
     end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintAgilis'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructure'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTender'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructureGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Invoice'
+        end>
+    end
+    object bbsView: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 83
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end>
+    end
+    object Separator_1: TdxBarSeparator
+      Caption = 'Separator_1'
+      Category = 0
+      Hint = 'Separator_1'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbsDoc: TdxBarSubItem
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChangeSumm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChangeNPP'
+        end>
+    end
+    object bbsGoods: TdxBarSubItem
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 7
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end>
+    end
+    object bbsProtocol: TdxBarSubItem
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 34
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolInfoOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtoco_Invoice'
+        end>
+    end
+    object bbsOpenForm: TdxBarSubItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenForm_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenBankAccountJournalByInvoice'
+        end>
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -4004,7 +4151,7 @@ object OrderClientForm: TOrderClientForm
         item
           Action = actUpdateMovement_Summ
         end>
-      Caption = 'macChangeSumm'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1057#1091#1084#1084#1091' '#1088#1091#1095#1085'. '#1089#1082'.'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1057#1091#1084#1084#1091' '#1088#1091#1095#1085'. '#1089#1082#1080#1076#1082#1080
       ImageIndex = 38
     end
@@ -4020,7 +4167,7 @@ object OrderClientForm: TOrderClientForm
         item
           StoredProc = spSelectMI
         end>
-      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
@@ -4321,7 +4468,7 @@ object OrderClientForm: TOrderClientForm
         item
           StoredProc = spErasedMIMaster
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
       ShortCut = 46
@@ -4357,9 +4504,9 @@ object OrderClientForm: TOrderClientForm
         end
         item
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       Guides = StatusGuides
     end
@@ -4377,7 +4524,7 @@ object OrderClientForm: TOrderClientForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       Guides = StatusGuides
     end
@@ -4395,7 +4542,7 @@ object OrderClientForm: TOrderClientForm
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       Guides = StatusGuides
     end
@@ -4586,7 +4733,7 @@ object OrderClientForm: TOrderClientForm
       PostDataSetAfterExecute = True
       Action = actGoodsChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 45
       ImageIndex = 0
@@ -4945,7 +5092,7 @@ object OrderClientForm: TOrderClientForm
       TabSheet = cxTabSheetInvoice
       MoveParams = <>
       Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
       ImageIndex = 25
       FormName = 'TBankAccountJournalByInvoiceForm'
@@ -5121,6 +5268,37 @@ object OrderClientForm: TOrderClientForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
+    end
+    object actCompleteMovement_andSave: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spChangeStatus
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 86
+      Status = mtComplete
+      Guides = StatusGuides
     end
   end
   object MasterDS: TDataSource
@@ -6084,8 +6262,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1023
-    Top = 176
+    Left = 1039
+    Top = 128
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderClient'
@@ -6188,7 +6366,7 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
+    Left = 728
     Top = 352
   end
   object GuidesInvoice: TdsdGuides
@@ -6363,8 +6541,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ProdColorItemsDS: TDataSource
     DataSet = ProdColorItemsCDS
-    Left = 152
-    Top = 416
+    Left = 128
+    Top = 368
   end
   object spSelect_ProdColorItems: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProdColorItems'
@@ -6405,7 +6583,7 @@ object OrderClientForm: TOrderClientForm
       end>
     PackSize = 1
     Left = 40
-    Top = 416
+    Top = 344
   end
   object spInsertUpdateProdColorItems: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ProdColorItems'
@@ -6549,7 +6727,7 @@ object OrderClientForm: TOrderClientForm
     PacketRecords = 0
     Params = <>
     Left = 744
-    Top = 392
+    Top = 288
   end
   object DBViewAddOnProdOptItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6585,8 +6763,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ProdOptItemsDS: TDataSource
     DataSet = ProdOptItemsCDS
-    Left = 768
-    Top = 416
+    Left = 784
+    Top = 296
   end
   object spErasedOpt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'
@@ -6650,8 +6828,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 808
-    Top = 432
+    Left = 864
+    Top = 352
   end
   object spUnErasedOpt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'
@@ -6830,8 +7008,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 408
+    Left = 696
+    Top = 312
   end
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>

@@ -2,7 +2,7 @@ object SaleForm: TSaleForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1050#1083#1080#1077#1085#1090#1091'>'
-  ClientHeight = 457
+  ClientHeight = 468
   ClientWidth = 1152
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -609,37 +609,36 @@ object SaleForm: TSaleForm
     Left = 0
     Top = 203
     Width = 1152
-    Height = 254
+    Height = 196
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 235
-    ExplicitHeight = 222
-    ClientRectBottom = 254
+    ExplicitHeight = 254
+    ClientRectBottom = 196
     ClientRectRight = 1152
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 198
+      ExplicitHeight = 230
       object Panel1: TPanel
         Left = 0
         Top = 0
         Width = 1152
-        Height = 230
+        Height = 172
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitHeight = 198
+        ExplicitHeight = 230
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
           Width = 1150
-          Height = 228
+          Height = 170
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 196
+          ExplicitHeight = 228
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -981,6 +980,117 @@ object SaleForm: TSaleForm
       end
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 399
+    Width = 1152
+    Height = 69
+    Align = alBottom
+    TabOrder = 6
+    ExplicitLeft = -220
+    ExplicitTop = 388
+    ExplicitWidth = 1372
+    object btnInsertUpdateMovement: TcxButton
+      Left = 24
+      Top = 6
+      Width = 163
+      Height = 25
+      Action = actInsertUpdateMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object btntAdd_limit: TcxButton
+      Left = 223
+      Top = 35
+      Width = 117
+      Height = 25
+      Action = actInsertRecordPartion
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object btnCompleteMovement: TcxButton
+      Left = 487
+      Top = 6
+      Width = 150
+      Height = 25
+      Action = CompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object btnUnCompleteMovement: TcxButton
+      Left = 487
+      Top = 35
+      Width = 150
+      Height = 25
+      Action = UnCompleteMovement
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 352
+      Top = 35
+      Width = 116
+      Height = 25
+      Action = actPartionGoodsChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+    object btnShowAll: TcxButton
+      Left = 681
+      Top = 6
+      Width = 153
+      Height = 25
+      Action = actShowAll
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object btnInsertAction: TcxButton
+      Left = 223
+      Top = 5
+      Width = 117
+      Height = 25
+      Action = InsertRecordGoods
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+    end
+    object btnUpdateAction: TcxButton
+      Left = 352
+      Top = 6
+      Width = 116
+      Height = 25
+      Action = SetErased
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+    end
+    object btnCompleteMovement_andSave: TcxButton
+      Left = 24
+      Top = 37
+      Width = 163
+      Height = 25
+      Action = actCompleteMovement_andSave
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
+    end
+    object btnFormClose: TcxButton
+      Left = 681
+      Top = 35
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 9
+    end
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1041,8 +1151,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 183
+    Left = 280
+    Top = 207
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1087,15 +1197,15 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
+          ItemName = 'bbsView'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbShowAll'
+          ItemName = 'bbsDoc'
         end
         item
           BeginGroup = True
@@ -1104,7 +1214,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbsGoods'
         end
         item
           Visible = True
@@ -1112,15 +1222,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbsPartion'
         end
         item
           BeginGroup = True
@@ -1129,16 +1231,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordPartion'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartionGoodsChoiceForm'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'bbsOpenForm'
         end
         item
           Visible = True
@@ -1146,35 +1239,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenDocument'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbsProtocol'
         end
         item
           Visible = True
@@ -1361,6 +1426,111 @@ object SaleForm: TSaleForm
       Action = actPartionGoodsChoiceForm
       Category = 0
     end
+    object bbsView: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 83
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end>
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbsDoc: TdxBarSubItem
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end>
+    end
+    object bbsGoods: TdxBarSubItem
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 7
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end>
+    end
+    object bbsPartion: TdxBarSubItem
+      Caption = #1055#1072#1088#1090#1080#1103
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 7
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordPartion'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoodsChoiceForm'
+        end>
+    end
+    object bbsOpenForm: TdxBarSubItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
+        end>
+    end
+    object bbsProtocol: TdxBarSubItem
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 34
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end>
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1393,7 +1563,7 @@ object SaleForm: TSaleForm
         item
           StoredProc = spSelectMI
         end>
-      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
@@ -1607,7 +1777,7 @@ object SaleForm: TSaleForm
         item
           StoredProc = spErasedMIMaster
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
       ShortCut = 46
@@ -1643,9 +1813,9 @@ object SaleForm: TSaleForm
         end
         item
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       Guides = StatusGuides
     end
@@ -1663,7 +1833,7 @@ object SaleForm: TSaleForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       Guides = StatusGuides
     end
@@ -1681,7 +1851,7 @@ object SaleForm: TSaleForm
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       Guides = StatusGuides
     end
@@ -2157,7 +2327,7 @@ object SaleForm: TSaleForm
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
       ImageIndex = 28
       FormName = 'TOrderClientForm'
@@ -2332,17 +2502,48 @@ object SaleForm: TSaleForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102
       ImageIndex = 0
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
+    end
+    object actCompleteMovement_andSave: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spChangeStatus
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 86
+      Status = mtComplete
+      Guides = StatusGuides
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 646
-    Top = 183
+    Left = 814
+    Top = 167
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 584
-    Top = 183
+    Left = 768
+    Top = 103
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2973,7 +3174,7 @@ object SaleForm: TSaleForm
       end>
     PackSize = 1
     Left = 494
-    Top = 168
+    Top = 120
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetUnErased'
@@ -2997,8 +3198,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 390
-    Top = 184
+    Left = 382
+    Top = 256
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'

@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TOrderClientJournalChoiceItemForm = class(TParentForm)
@@ -108,6 +108,12 @@ type
     lbSearchName: TcxLabel;
     edSearchReceiptGoods: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnFormClose: TcxButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

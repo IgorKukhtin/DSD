@@ -59,11 +59,12 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Left = 0
     Top = 57
     Width = 1034
-    Height = 435
+    Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -236,17 +237,17 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Properties.Items = <
           item
             Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 11
+            ImageIndex = 76
             Value = 1
           end
           item
             Description = #1055#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 12
+            ImageIndex = 77
             Value = 2
           end
           item
             Description = #1059#1076#1072#1083#1077#1085
-            ImageIndex = 13
+            ImageIndex = 52
             Value = 3
           end>
         HeaderAlignmentHorz = taCenter
@@ -680,6 +681,64 @@ object OrderClientJournalForm: TOrderClientJournalForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 451
+    Width = 1034
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    object btnInsert: TcxButton
+      Left = 42
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 159
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnComplete: TcxButton
+      Left = 303
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actComplete
+      TabOrder = 2
+    end
+    object btnUnComplete: TcxButton
+      Left = 460
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actUnComplete
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 616
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actSetErased
+      TabOrder = 4
+    end
+    object btnFormClose: TcxButton
+      Left = 809
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -825,51 +884,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintSticker'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStickerTermo'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintBarcode'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStructureGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
         end
         item
           Visible = True
@@ -975,6 +994,37 @@ object OrderClientJournalForm: TOrderClientJournalForm
     object bb: TdxBarButton
       Action = actPrintMovement_Invoice
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintBarcode'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructureGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end>
     end
   end
   object ActionList: TActionList
@@ -1197,7 +1247,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       DataSource = DataSource
     end
@@ -1209,9 +1259,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           StoredProc = spMovementUnComplete
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       DataSource = DataSource
     end
@@ -1223,9 +1273,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           StoredProc = spMovementSetErased
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       DataSource = DataSource
     end
@@ -1870,6 +1920,12 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   object spSelect: TdsdStoredProc

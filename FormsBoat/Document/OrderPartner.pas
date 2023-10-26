@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, cxBlobEdit;
+  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TOrderPartnerForm = class(TParentForm)
@@ -212,6 +212,25 @@ type
     EngineNum_ch3: TcxGridDBColumn;
     EngineName_ch3: TcxGridDBColumn;
     TotalAmountPartner: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    actCompleteMovement_andSave: TChangeGuidesStatus;
+    Panel_btn: TPanel;
+    btnInsertUpdateMovement: TcxButton;
+    btntAdd_limit: TcxButton;
+    btnCompleteMovement: TcxButton;
+    btnUnCompleteMovement: TcxButton;
+    btnSetErased: TcxButton;
+    btnShowAll: TcxButton;
+    btnInsertAction: TcxButton;
+    btnUpdateAction: TcxButton;
+    btnCompleteMovement_andSave: TcxButton;
+    btnFormClose: TcxButton;
+    bbsView: TdxBarSubItem;
+    Separator_1: TdxBarSeparator;
+    bbsDoc: TdxBarSubItem;
+    bbsGoods: TdxBarSubItem;
+    bbsOpenForm: TdxBarSubItem;
+    bbsProtocol: TdxBarSubItem;
 
   private
   public

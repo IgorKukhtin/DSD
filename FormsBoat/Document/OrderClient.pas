@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, cxBlobEdit;
+  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TOrderClientForm = class(TParentForm)
@@ -459,6 +459,24 @@ type
     bbProtocol2: TdxBarButton;
     bbProtocol3: TdxBarButton;
     bbProtoco_Invoice: TdxBarButton;
+    actFormClose: TdsdFormClose;
+    actCompleteMovement_andSave: TChangeGuidesStatus;
+    Panel_btn: TPanel;
+    btnInsertUpdateMovement: TcxButton;
+    btntAdd_limit: TcxButton;
+    btnCompleteMovement: TcxButton;
+    btnUnCompleteMovement: TcxButton;
+    btnShowAll: TcxButton;
+    btnInsertAction: TcxButton;
+    btnCompleteMovement_andSave: TcxButton;
+    btnFormClose: TcxButton;
+    bbsPrint: TdxBarSubItem;
+    bbsView: TdxBarSubItem;
+    Separator_1: TdxBarSeparator;
+    bbsDoc: TdxBarSubItem;
+    bbsGoods: TdxBarSubItem;
+    bbsProtocol: TdxBarSubItem;
+    bbsOpenForm: TdxBarSubItem;
   private
   public
   end;
