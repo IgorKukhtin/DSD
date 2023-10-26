@@ -476,7 +476,8 @@ BEGIN
                                                  GROUP BY tmpContractCondition_Value_all.ContractId
                                                 )
      , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId   = zc_ObjectBoolean_Juridical_isBranchAll())
-   SELECT
+
+   SELECT DISTINCT
          Object_Contract_View.ContractId      :: Integer   AS Id
        , Object_Contract_View.ContractCode    :: Integer   AS Code
        , Object_Contract_View.InvNumber       :: TVarChar  AS InvNumber

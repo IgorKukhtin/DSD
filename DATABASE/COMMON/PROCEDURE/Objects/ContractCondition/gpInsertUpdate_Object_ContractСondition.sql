@@ -125,6 +125,7 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, NULL)
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId AS Id
                               FROM ObjectLink AS ObjectLink_Contract
+                                   -- только для одного условия
                                    INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                          ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
                                                         AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
@@ -135,11 +136,11 @@ BEGIN
                                                         AND ObjectDate_EndDate.ValueData IS NOT NULL
                                    -- еще такая группировка
                                    LEFT JOIN ObjectLink AS ObjectLink_BonusKind
-                                                        ON ObjectLink_BonusKind.ObjectId      = ObjectLink_Contract.ObjectId
-                                                       AND ObjectLink_BonusKind.DescId        = zc_ObjectLink_ContractCondition_BonusKind()
+                                                        ON ObjectLink_BonusKind.ObjectId = ObjectLink_Contract.ObjectId
+                                                       AND ObjectLink_BonusKind.DescId   = zc_ObjectLink_ContractCondition_BonusKind()
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
-                                AND COALESCE (ObjectLink_BonusKind.ChildObjectId, 0) = inBonusKindId
+                              --AND COALESCE (ObjectLink_BonusKind.ChildObjectId, 0) = inBonusKindId
                              )
              SELECT tmpData.Id
              FROM tmpData
@@ -147,18 +148,20 @@ BEGIN
             ;
 
        -- EndDate - апдейтим ВСЕМ
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, tmp.EndDate)
-       FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.ContractConditionId, tmp.EndDate)
+       FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                              AS ContractConditionId
                                    , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) AS StartDate
-                                   , COALESCE (ObjectLink_BonusKind.ChildObjectId, ObjectLink_Contract.ObjectId) AS BonusKindId
-                                   , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_BonusKind.ChildObjectId, ObjectLink_Contract.ObjectId)
+                                   , COALESCE (ObjectLink_BonusKind.ChildObjectId, 0)          AS BonusKindId
+                                   , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_BonusKind.ChildObjectId, 0)
                                                         ORDER BY COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) ASC
                                                        ) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
+                                   -- только для одного условия
                                    INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                          ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
                                                         AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                                         AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                   -- условие не удалено
                                    INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                 AND Object_ContractCondition.isErased = FALSE
                                    LEFT JOIN ObjectDate AS ObjectDate_StartDate
@@ -173,7 +176,7 @@ BEGIN
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
                              )
-             SELECT tmpData.Id, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
+             SELECT tmpData.ContractConditionId, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
              FROM tmpData
                   LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord         = tmpData.Ord + 1
                                                    AND tmpData_next.BonusKindId = tmpData.BonusKindId
@@ -205,6 +208,7 @@ BEGIN
                                   , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
                                 --, COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
                              FROM ObjectLink AS ObjectLink_Contract
+                                  -- только для одного условия
                                   INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                         ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
                                                        AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
@@ -239,16 +243,17 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), ioId, NULL);   
 
        -- EndDate - апдейтим ВСЕМ
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, tmp.EndDate)
-       FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.ContractConditionId, tmp.EndDate)
+       FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS ContractConditionId
                                    , ObjectDate_StartDate.ValueData                        AS StartDate
-                                   , COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId) AS ObjectId
-                                   , COALESCE (ObjectLink_BonusKind.ChildObjectId, ObjectLink_Contract.ObjectId)             AS BonusKindId
-                                   , ROW_NUMBER() OVER (PARTITION BY ObjectLink_BonusKind.ChildObjectId
+                                   , COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId) AS ContractConditionKindId
+                                   , COALESCE (ObjectLink_BonusKind.ChildObjectId, 0)      AS BonusKindId
+                                   , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_BonusKind.ChildObjectId, 0)
                                                                    , COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId)
                                                         ORDER BY ObjectDate_StartDate ASC
                                                        ) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
+                                   -- только НЕ для одного условия
                                    LEFT JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                         ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
                                                        AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
@@ -268,12 +273,12 @@ BEGIN
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
                              )
-             SELECT tmpData.Id, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
+             SELECT tmpData.ContractConditionId, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
              FROM tmpData
-                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord          = tmpData.Ord + 1
-                                                   AND tmpData_next.ObjectId     = tmpData.ObjectId
-                                                   AND tmpData_next.BonusKindId  = tmpData.BonusKindId
-                                                   AND tmpData_next.StartDate    > zc_DateStart()
+                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord                     = tmpData.Ord + 1
+                                                   AND tmpData_next.ContractConditionKindId = tmpData.ContractConditionKindId
+                                                   AND tmpData_next.BonusKindId             = tmpData.BonusKindId
+                                                   AND tmpData_next.StartDate               > zc_DateStart()
              ) AS tmp
       ;
    END IF;
@@ -286,7 +291,7 @@ BEGIN
                 );
    
    --
-   IF vbUserId = 5 AND 1=0
+   IF vbUserId = 5 AND 1=1
    THEN
        RAISE EXCEPTION 'Ошибка.%.', outEndDate;
    END IF;
