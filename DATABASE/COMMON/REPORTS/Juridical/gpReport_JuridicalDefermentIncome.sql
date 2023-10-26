@@ -67,10 +67,16 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     WITH tmpAccount AS (SELECT inAccountId AS AccountId
+     WITH tmpAccount AS (SELECT inAccountId AS AccountId, 0 AS AccountGroupId, 0 AS AccountDirectionId
                    -- UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700() AND AccountDirectionId = zc_Enum_AccountDirection_70100()
                    --                       AND EXISTS (SELECT 1 FROM Object_Account_View WHERE Object_Account_View.AccountId = inAccountId AND AccountDirectionId = zc_Enum_AccountDirection_70100() AND InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700()) -- Кредиторы + поставщики AND <> Товары + Прочие товары
-                   UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_70000() -- Кредиторы
+                   UNION
+                     SELECT Object_Account_View.AccountId, Object_Account_View.AccountGroupId, Object_Account_View.AccountDirectionId
+                     FROM Object_Account_View
+                     WHERE COALESCE (inAccountId, 0) = 0
+                       AND (AccountGroupId     = zc_Enum_AccountGroup_70000()     -- Кредиторы
+                         OR AccountDirectionId = zc_Enum_AccountDirection_30200() -- наши компании
+                           )
                         )
         , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
                                        FROM ObjectLink AS ObjectLink_Unit_Branch
@@ -123,7 +129,14 @@ BEGIN
                              INNER JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
                              LEFT JOIN ContainerLinkObject AS CLO_Contract
                                                            ON CLO_Contract.ContainerId = Container.Id
-                                                          AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                                          AND CLO_Contract.DescId      = zc_ContainerLinkObject_Contract()
+                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                           ON CLO_InfoMoney.ContainerId = Container.Id
+                                                          AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                             LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
+                                                  ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = CLO_InfoMoney.ObjectId
+                                                 AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+
                              -- !!!Группируем Договора!!!
                              LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
 
@@ -158,7 +171,11 @@ BEGIN
                             LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                         WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                            -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-                           AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
+                           AND (tmpAccount.AccountId > 0 OR inAccountId = 0
+                               )
+                           AND (tmpAccount.AccountDirectionId <> zc_Enum_AccountDirection_30200() -- наши компании
+                             OR ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                               )
                         GROUP BY Container.Id
                                , Container.ObjectId
                                , Container.Amount
@@ -454,6 +471,12 @@ BEGIN
                              LEFT JOIN ContainerLinkObject AS CLO_Contract
                                                            ON CLO_Contract.ContainerId = Container.Id
                                                           AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                           ON CLO_InfoMoney.ContainerId = Container.Id
+                                                          AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                             LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
+                                                  ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = CLO_InfoMoney.ObjectId
+                                                 AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
                              -- !!!Группируем Договора!!!
                              LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
 
@@ -489,6 +512,9 @@ BEGIN
                         WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                            -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                            AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
+                           AND (tmpAccount.AccountDirectionId <> zc_Enum_AccountDirection_30200() -- наши компании
+                             OR ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                               )
                         GROUP BY Container.Id
                                , Container.ObjectId
                                , Container.Amount

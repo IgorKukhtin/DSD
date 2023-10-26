@@ -392,7 +392,7 @@ BEGIN
           (CASE WHEN Operation.isNotBalance = TRUE THEN '*ç* ' ELSE '' END || Object_Account_View.AccountName_all) :: TVarChar AS AccountName,
 
           View_Contract_InvNumber.ContractCode,
-          View_Contract_InvNumber.InvNumber AS ContractName,
+          (View_Contract_InvNumber.InvNumber || CASE WHEN vbUserId = 5 THEN ' _ ' || View_Contract_InvNumber.ContractId :: TVarChar ELSE '' END )  :: TVarChar AS ContractName,
           View_Contract_InvNumber.ContractTagName,
           View_Contract_InvNumber.ContractStateKindCode,
           ObjectString_Comment.ValueData AS ContractComment,

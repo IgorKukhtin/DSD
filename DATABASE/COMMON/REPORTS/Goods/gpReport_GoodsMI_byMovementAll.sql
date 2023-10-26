@@ -36,6 +36,7 @@ RETURNS TABLE (ItemName TVarChar, StatusCode Integer
              , isBarCode  Boolean
              , isWeighing_inf Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              )   
 AS
 $BODY$
@@ -100,6 +101,8 @@ BEGIN
                             , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                             , MIContainer.ObjectExtId_analyzer       AS PartnerId
                             , MIContainer.WhereObjectId_analyzer     AS UnitId
+                            , ContainerLinkObject_Contract.ObjectId  AS ContractId
+
                             , MIContainer.MovementItemId
                             , MIContainer.MovementId
                             , MIContainer.ObjectId_analyzer          AS GoodsId
@@ -188,6 +191,9 @@ BEGIN
                              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
                                                            ON ContainerLinkObject_PaidKind.ContainerId = MIContainer.ContainerId_analyzer
                                                           AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
+                                                           ON ContainerLinkObject_Contract.ContainerId = MIContainer.ContainerId_analyzer
+                                                          AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
 
                              LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
            
@@ -232,6 +238,7 @@ BEGIN
                                   , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                                   , MovementLinkObject_From.ObjectId            AS PartnerId
                                   , MovementLinkObject_To.ObjectId              AS UnitId
+                                  , MovementLinkObject_Contract.ObjectId        AS ContractId
                              FROM Movement
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
@@ -319,6 +326,8 @@ BEGIN
                             , Movement.InfoMoneyId
                             , Movement.PartnerId
                             , Movement.UnitId
+                            , Movement.ContractId
+
                             , MovementItem.Id AS MovementItemId
                             , Movement.Id AS MovementId
                             , MovementItem.ObjectId                         AS GoodsId
@@ -406,7 +415,7 @@ BEGIN
 
        , tmpUnion AS (SELECT tmpListContainerSumm.*
                       FROM tmpListContainerSumm
-                      UNION 
+                     UNION 
                       SELECT tmpMI_dop.*
                       FROM tmpMI_dop
                       )                                       
@@ -429,6 +438,8 @@ BEGIN
                       , tmpListContainerSumm.PartnerId
                       , tmpListContainerSumm.InfoMoneyId
                       , tmpListContainerSumm.UnitId
+                      , tmpListContainerSumm.ContractId
+
                       -- , tmpListContainerSumm.GoodsId
                       -- , tmpListContainerSumm.GoodsKindId
                       -- , tmpListContainerSumm.MeasureId
@@ -460,6 +471,7 @@ BEGIN
                             , tmpListContainerSumm.PartnerId
                             , tmpListContainerSumm.InfoMoneyId
                             , tmpListContainerSumm.UnitId
+                            , tmpListContainerSumm.ContractId
                             , tmpListContainerSumm.GoodsId
                             , tmpListContainerSumm.GoodsKindId
                             , tmpListContainerSumm.MeasureId
@@ -501,6 +513,7 @@ BEGIN
                         , tmpListContainerSumm.PartnerId
                         , tmpListContainerSumm.InfoMoneyId
                         , tmpListContainerSumm.UnitId
+                        , tmpListContainerSumm.ContractId
                         , tmpListContainerSumm.GoodsId
                         , tmpListContainerSumm.GoodsKindId
                         , tmpListContainerSumm.MeasureId
@@ -541,6 +554,8 @@ BEGIN
                       , tmpListContainerSumm.PartnerId
                       , tmpListContainerSumm.InfoMoneyId
                       , tmpListContainerSumm.UnitId
+                      , tmpListContainerSumm.ContractId
+
                       , MovementLinkObject_SubjectDoc.ObjectId AS SubjectDocId
                       , tmpListContainerSumm.GoodsId
                       , tmpListContainerSumm.GoodsKindId
@@ -591,6 +606,8 @@ BEGIN
                         , tmpListContainerSumm.PartnerId
                         , tmpListContainerSumm.InfoMoneyId
                         , tmpListContainerSumm.UnitId
+                        , tmpListContainerSumm.ContractId
+
                         , tmpListContainerSumm.GoodsId
                         , tmpListContainerSumm.GoodsKindId
                         , tmpListContainerSumm.MeasureId
@@ -673,12 +690,20 @@ BEGIN
          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
          , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
          , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+         
+         , View_Contract_InvNumber.ContractId
+         , View_Contract_InvNumber.ContractCode
+         , View_Contract_InvNumber.InvNumber AS ContractNumber
+         , View_Contract_InvNumber.ContractTagName
+         , View_Contract_InvNumber.ContractTagGroupName
 
      FROM tmpOperationGroup
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpOperationGroup.StatusId
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpOperationGroup.UnitId
+
+          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
 
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
@@ -723,5 +748,4 @@ $BODY$
 */
 
 -- тест
--- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovementAll (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin());
---select * from gpReport_GoodsMI_byMovementAll (inStartDate := ('24.11.2022')::TDateTime , inEndDate := ('24.11.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 1613498 ,  inSession := '9457');
+-- SELECT * from gpReport_GoodsMI_byMovementAll (inStartDate := ('24.11.2023')::TDateTime , inEndDate := ('24.11.2023')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 1613498 ,  inSession := '9457');
