@@ -552,10 +552,36 @@ var strConn :  widestring;
     Rows: integer;
     Excel, XLSheet: Variant;
     I, J: Integer;
+    //
+    b,b1:byte;
+    f:File of byte;
 begin
   case FDataSetType of
     dtMMO: CreateMMODataSet(FileName);
     dtDBF: begin
+    //
+
+    //
+//  b:=$26;
+  b:=$65;
+  b:=$57;
+//  b:=$0;
+  assignfile(f,FileName);
+  {$I-}
+  reset(f);
+  {$I+}
+  if IOResult = 0 then
+  begin
+    seek(f,29);
+    read(f,b1);
+    ShowMessage(IntToStr(ORD(b1)));
+    seek(f,29);
+    write(f,b);
+    {$I-}
+    closeFile(f);
+    {$I+}
+  end;
+        //
         FDataSet := TVKSmartDBF.Create(nil);
         TVKSmartDBF(FDataSet).DBFFileName := AnsiString(FileName);
         TVKSmartDBF(FDataSet).OEM := FOEM;
