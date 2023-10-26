@@ -36,7 +36,7 @@ BEGIN
     -- Найти Id физ лица
     vbMemberId:= (SELECT Object.Id
                   FROM Object
-                  WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inMemberName))
+                  WHERE REPLACE (TRIM (Object.ValueData), CHR (39), '`') ILIKE (TRIM (REPLACE (inMemberName, CHR (39), '`')))
                     AND Object.ObjectCode = inMemberCode
                     AND Object.DescId = zc_Object_Member()
                   LIMIT 1 --
