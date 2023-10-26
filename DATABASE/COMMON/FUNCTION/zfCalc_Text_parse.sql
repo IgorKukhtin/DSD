@@ -50,59 +50,82 @@ $BODY$
    
 BEGIN
 
-       SELECT CASE WHEN ObjectFloat_Width1.ValueData > 0  THEN ObjectFloat_Width1.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width1
-            , CASE WHEN ObjectFloat_Width2.ValueData > 0  THEN ObjectFloat_Width2.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width2
-            , CASE WHEN ObjectFloat_Width3.ValueData > 0  THEN ObjectFloat_Width3.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width3
-            , CASE WHEN ObjectFloat_Width4.ValueData > 0  THEN ObjectFloat_Width4.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width4
-            , CASE WHEN ObjectFloat_Width5.ValueData > 0  THEN ObjectFloat_Width5.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width5
-            , CASE WHEN ObjectFloat_Width6.ValueData > 0  THEN ObjectFloat_Width6.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width6
-            , CASE WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width7
-            , CASE WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width8
-            , CASE WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width9
+       SELECT CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width1_70_70.ValueData > 0 THEN ObjectFloat_Width1_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width1.ValueData > 0  THEN ObjectFloat_Width1.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width1                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width2_70_70.ValueData > 0 THEN ObjectFloat_Width2_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width2.ValueData > 0  THEN ObjectFloat_Width2.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width2                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width3_70_70.ValueData > 0 THEN ObjectFloat_Width3_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width3.ValueData > 0  THEN ObjectFloat_Width3.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width3                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width4_70_70.ValueData > 0 THEN ObjectFloat_Width4_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width4.ValueData > 0  THEN ObjectFloat_Width4.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width4                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width5_70_70.ValueData > 0 THEN ObjectFloat_Width5_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width5.ValueData > 0  THEN ObjectFloat_Width5.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width5                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width6_70_70.ValueData > 0 THEN ObjectFloat_Width6_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width6.ValueData > 0  THEN ObjectFloat_Width6.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width6                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width7_70_70.ValueData > 0 THEN ObjectFloat_Width7_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width7                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width8_70_70.ValueData > 0 THEN ObjectFloat_Width8_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  :: Integer                       
+                   ELSE 1000                                                                                                  
+              END AS Width8                                                                                                   
+                                                                                                                              
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width9_70_70.ValueData > 0 THEN ObjectFloat_Width9_70_70.ValueData   :: Integer
+                   WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer 
+                   ELSE 1000
+              END AS Width9
 
               -- 10
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 30 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width10
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData :: Integer
+                   WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
+                   ELSE 30
+              END AS Width10
               -- 11
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width11
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData :: Integer
+                   WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
+                   ELSE 1000
+              END AS Width11
               -- 12
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width12
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData :: Integer
+                   WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
+                   ELSE 1000
+              END AS Width12
 
               -- 13
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width13
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData  :: Integer
+                   WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
+                   ELSE 1000
+              END AS Width13
               -- 14
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width14
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData  :: Integer
+                   WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
+                   ELSE 1000
+              END AS Width14
               -- 15
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 ELSE 1000 END
-            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
-              AS Width15
+            , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData  :: Integer
+                   WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
+                   ELSE 1000
+              END AS Width15
 
 
               INTO vbLen1
@@ -126,46 +149,77 @@ BEGIN
        FROM Object AS Object_StickerFile
             LEFT JOIN ObjectFloat AS ObjectFloat_Width1
                                   ON ObjectFloat_Width1.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width1.DescId = zc_ObjectFloat_StickerFile_Width1()
+                                 AND ObjectFloat_Width1.DescId   = zc_ObjectFloat_StickerFile_Width1()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width1_70_70
+                                  ON ObjectFloat_Width1_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width1_70_70.DescId   = zc_ObjectFloat_StickerFile_Width1_70_70()
                                  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width2
                                   ON ObjectFloat_Width2.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width2.DescId = zc_ObjectFloat_StickerFile_Width2()
+                                 AND ObjectFloat_Width2.DescId   = zc_ObjectFloat_StickerFile_Width2()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width2_70_70
+                                  ON ObjectFloat_Width2_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width2_70_70.DescId   = zc_ObjectFloat_StickerFile_Width2_70_70()
  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width3
                                   ON ObjectFloat_Width3.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width3.DescId = zc_ObjectFloat_StickerFile_Width3()
+                                 AND ObjectFloat_Width3.DescId   = zc_ObjectFloat_StickerFile_Width3()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width3_70_70
+                                  ON ObjectFloat_Width3_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width3_70_70.DescId   = zc_ObjectFloat_StickerFile_Width3_70_70()
  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width4
                                   ON ObjectFloat_Width4.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width4.DescId = zc_ObjectFloat_StickerFile_Width4()
+                                 AND ObjectFloat_Width4.DescId   = zc_ObjectFloat_StickerFile_Width4()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width4_70_70
+                                  ON ObjectFloat_Width4_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width4_70_70.DescId   = zc_ObjectFloat_StickerFile_Width4_70_70()
  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width5
                                   ON ObjectFloat_Width5.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width5.DescId = zc_ObjectFloat_StickerFile_Width5()
+                                 AND ObjectFloat_Width5.DescId   = zc_ObjectFloat_StickerFile_Width5()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width5_70_70
+                                  ON ObjectFloat_Width5_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width5_70_70.DescId   = zc_ObjectFloat_StickerFile_Width5_70_70()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Width6
                                   ON ObjectFloat_Width6.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width6.DescId = zc_ObjectFloat_StickerFile_Width6()
+                                 AND ObjectFloat_Width6.DescId   = zc_ObjectFloat_StickerFile_Width6()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width6_70_70
+                                  ON ObjectFloat_Width6_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width6_70_70.DescId   = zc_ObjectFloat_StickerFile_Width6_70_70()
  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width7
                                   ON ObjectFloat_Width7.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width7.DescId = zc_ObjectFloat_StickerFile_Width7()
+                                 AND ObjectFloat_Width7.DescId   = zc_ObjectFloat_StickerFile_Width7()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width7_70_70
+                                  ON ObjectFloat_Width7_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width7_70_70.DescId   = zc_ObjectFloat_StickerFile_Width7_70_70()
  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width8
                                   ON ObjectFloat_Width8.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width8.DescId = zc_ObjectFloat_StickerFile_Width8()
+                                 AND ObjectFloat_Width8.DescId   = zc_ObjectFloat_StickerFile_Width8()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width8_70_70
+                                  ON ObjectFloat_Width8_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width8_70_70.DescId   = zc_ObjectFloat_StickerFile_Width8_70_70()
  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width9
                                   ON ObjectFloat_Width9.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width9.DescId = zc_ObjectFloat_StickerFile_Width9()
+                                 AND ObjectFloat_Width9.DescId   = zc_ObjectFloat_StickerFile_Width9()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width9_70_70
+                                  ON ObjectFloat_Width9_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width9_70_70.DescId   = zc_ObjectFloat_StickerFile_Width9_70_70()
  
             LEFT JOIN ObjectFloat AS ObjectFloat_Width10
                                   ON ObjectFloat_Width10.ObjectId = Object_StickerFile.Id 
-                                 AND ObjectFloat_Width10.DescId = zc_ObjectFloat_StickerFile_Width10() 
+                                 AND ObjectFloat_Width10.DescId   = zc_ObjectFloat_StickerFile_Width10() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width10_70_70
+                                  ON ObjectFloat_Width10_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width10_70_70.DescId   = zc_ObjectFloat_StickerFile_Width10_70_70() 
+
        WHERE Object_StickerFile.Id     = inStickerFileId
          AND Object_StickerFile.DescId = zc_Object_StickerFile()
-         ;
+        ;
 
 
     -- RAISE EXCEPTION '<%>', inTradeMarkId;
@@ -321,7 +375,11 @@ BEGIN
        WHILE vbI <= vbLen AND SUBSTRING (inValue FROM vbIndex + vbI + 1 FOR 1) NOT IN ('~')
        LOOP
 
-           IF SUBSTRING (inValue FROM vbIndex + 1 + vbI FOR 1) IN (' ', '.', ',', '-', '/', ':') -- , '(', ')'
+           IF SUBSTRING (inValue FROM vbIndex + 1 + vbI FOR 3) IN ('<b>') AND inUserId = 5 AND 1=0
+           THEN vbI_save:= vbI + 3;
+           ELSEIF SUBSTRING (inValue FROM vbIndex + 1 + vbI FOR 4) IN ('</b>') AND inUserId = 5 AND 1=0
+           THEN vbI_save:= vbI + 4;
+           ELSEIF SUBSTRING (inValue FROM vbIndex + 1 + vbI FOR 1) IN (' ', '.', ',', '-', '/', ':') -- , '(', ')'
            THEN vbI_save:= vbI + 1;
            END IF;
 
@@ -337,8 +395,10 @@ BEGIN
                || CASE WHEN vbLine = 1 THEN '' ELSE CHR (13) END
                || CASE WHEN vbLen < 1000 THEN REPEAT (' ', inAddLeft) ELSE '' END
                || TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))
+               --|| CASE WHEN inUserId = 5 THEN '*' || vbLen :: TVarChar ELSE '' END
                || CASE WHEN inIsLength = TRUE THEN ' ' || LENGTH ( TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))) :: TVarChar || '-' || (vbLine + inAddLine) :: TVarChar ELSE '' END
                -- || CASE WHEN inIsLength = TRUE THEN '*' || (vbIndex + vbLen) :: TVarChar || '*' || LENGTH (inValue) :: TVarChar ELSE '' END
+               
                  ;
 
 IF inUserId = 5 and vbLine = 3 AND 1=0
@@ -347,6 +407,7 @@ THEN
                  CASE WHEN vbLine = 1 THEN '' ELSE CHR (13) END
                || CASE WHEN vbLen < 1000 THEN REPEAT (' ', inAddLeft) ELSE '' END
                || TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))
+|| ' * ' || vbLen :: TVarChar  || ' * ' || vbLen3 :: TVarChar  || ' * '
                || CASE WHEN inIsLength = TRUE THEN ' ' || LENGTH ( TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))) :: TVarChar || '-' || (vbLine + inAddLine) :: TVarChar ELSE '' END
                ;
 END IF;
