@@ -287,9 +287,12 @@ BEGIN
 
 
      -- 2.1. нашли Сумма скидки vbSummTaxMVAT_2
-     vbSummTaxMVAT_2:= vbTotalSummTaxMVAT * (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem) 
-                     / (vbTotalSumm_cost + (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem))
-                      ;
+     vbSummTaxMVAT_2:= CASE WHEN (vbTotalSumm_cost + (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem)) <> 0
+                                 THEN vbTotalSummTaxMVAT * (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem) 
+                                   / (vbTotalSumm_cost + (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem))
+                            ELSE 0
+                       END;
+
      -- 2.2. опять нашли - Сумма вх. без НДС, с учетом скидки ....
      vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
 
