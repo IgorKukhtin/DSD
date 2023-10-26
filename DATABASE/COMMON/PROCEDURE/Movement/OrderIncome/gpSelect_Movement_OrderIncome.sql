@@ -241,8 +241,8 @@ BEGIN
             LEFT JOIN Object AS Object_FromIncome          ON Object_FromIncome.Id          = Movement_Income.FromId
             LEFT JOIN Object AS Object_JuridicalFromIncome ON Object_JuridicalFromIncome.Id = Movement_Income.JuridicalId
 
-        WHERE ((inisSnab = TRUE  AND COALESCE (MovementLinkObject_Unit.ObjectId,0) <> 0)
-            OR (inisSnab = FALSE AND COALESCE (MovementLinkObject_Unit.ObjectId,0) = 0))
+--        WHERE ((inisSnab = TRUE  AND COALESCE (MovementLinkObject_Unit.ObjectId,0) <> 0)
+  --          OR (inisSnab = FALSE AND COALESCE (MovementLinkObject_Unit.ObjectId,0) = 0))
 
 /*         WHERE (Object_Contract.Id = inFromId or inFromId=0)
            AND (Object_Juridical.Id = inJuridicalId or inJuridicalId=0)
