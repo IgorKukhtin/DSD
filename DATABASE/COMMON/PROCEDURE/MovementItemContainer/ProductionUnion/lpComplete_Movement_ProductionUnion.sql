@@ -615,7 +615,7 @@ BEGIN
    , tmpContainer_all AS (SELECT tmpMI.GoodsId
                                , tmpMI.OperCount        AS Amount
                                , Container.ContainerId  AS ContainerId
-                               , Container.Amount       AS Amount_container
+                               , COALESCE (tmpContainer_rem.Amount_rem, Container.Amount) AS Amount_container
                                , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId
                                                               ORDER BY COALESCE (tmpContainer_rem.Amount_rem, 0) DESC
                                                                      , CASE WHEN COALESCE (Object_PartionGoods.ValueData, '') = ''
@@ -644,17 +644,17 @@ BEGIN
                           FROM tmpMI_summ AS tmpMI
                                INNER JOIN tmpContainer_list AS Container
                                                             ON Container.GoodsId = tmpMI.GoodsId
-                                                           AND Container.Amount  > 0
                                LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = Container.PartionGoodsId
                                                                        AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = Container.PartionGoodsId
                                LEFT JOIN tmpContainer_rem ON tmpContainer_rem.ContainerId = Container.ContainerId
+                          WHERE COALESCE (tmpContainer_rem.Amount_rem, Container.Amount) > 0
                          )
       -- итого кол-во разбили по партиям
     , tmpContainer_partion AS (SELECT DD.ContainerId
                                     , DD.GoodsId
                                     , DD.PartionGoodsId
-                                    , CASE WHEN DD.Amount - DD.AmountSUM > 0 AND DD.Ord <> 1
+                                    , CASE WHEN DD.Amount - DD.AmountSUM > 0 -- !!!! AND DD.Ord <> 1 - изменилась сортировка НАОБОРОТ!!!
                                                 THEN DD.Amount_container
                                            ELSE DD.Amount - DD.AmountSUM + DD.Amount_container
                                       END AS Amount
@@ -750,6 +750,8 @@ BEGIN
                -- !!!или подбор партий!!!
              , COALESCE (tmpContainer.Amount, _tmp.OperCount) AS OperCount
              , _tmp.OperCountCount                            AS OperCountCount
+-- , (select Amount_container from tmpContainer_all where GoodsId = 5765 and ord= 1 ) AS OperCountCount
+-- , (select ord from tmpContainer_all where GoodsId = 5765 and ContainerId = 2536789 ) AS OperCountCount
 
                -- Управленческие назначения
              , _tmp.InfoMoneyDestinationId
@@ -774,14 +776,14 @@ BEGIN
              LEFT JOIN tmpContainer_res AS tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
        ;
 
-/*IF inMovementId = 26004071
+IF inMovementId = 25588338 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.<%>  %   %'
-                                   , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild where _tmpItemChild.MovementItemId = 266516348)
-                                   , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild where _tmpItemChild.MovementItemId = 266516351)
-                                   , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild where _tmpItemChild.MovementItemId = 266516354)
+                                   , (select _tmpItemChild.OperCount from _tmpItemChild where _tmpItemChild.MovementItemId_Parent = 262115160)
+                                   , (select _tmpItemChild.OperCountCount from _tmpItemChild where _tmpItemChild.MovementItemId_Parent = 262115160)
+                                   , (select count(*) from _tmpItemChild where _tmpItemChild.ContainerId_GoodsFrom = 4983449)
                                     ;
-end if;*/
+end if;
 
 
      -- формируются Партии товара для Child(расход)-элементы, ЕСЛИ надо ...

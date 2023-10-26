@@ -27,9 +27,11 @@ RETURNS TABLE (Id Integer, LineNum Integer
              )
 AS
 $BODY$
-  
+   DECLARE vbUserId Integer;
 BEGIN
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MovementItem_ProductionUnion());
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    IF inShowAll = TRUE THEN
 
@@ -358,7 +360,7 @@ BEGIN
             , MIString_PartionGoodsChild.ValueData   AS PartionGoodsChild
             , MIDate_PartionGoodsChild.ValueData     AS PartionGoodsDateChild
 
-            , MIString_Comment.ValueData        AS Comment
+            , CASE WHEN vbUserId = 5 THEN COALESCE (MIString_Comment.ValueData, '') || ' ' || MovementItem.Id :: TVarChar ELSE MIString_Comment.ValueData END :: TVarChar AS Comment
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode

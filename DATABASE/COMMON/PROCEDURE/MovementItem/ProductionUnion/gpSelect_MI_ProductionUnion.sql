@@ -322,7 +322,7 @@ BEGIN
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
-            , Object_Goods.ValueData            AS GoodsName
+            , (Object_Goods.ValueData || CASE WHEN Movement_partion.Id > 0 THEN '   ***Партия № <' || Movement_partion.InvNumber || '> от <' || zfConvert_DateToString (Movement_partion.OperDate) || '>' ELSE '' END) :: TVarChar AS GoodsName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
             , MovementItem.Amount               AS Amount
@@ -462,6 +462,12 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                          ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                         ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                        AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+             LEFT JOIN MovementItem AS MovementItem_partion ON MovementItem_partion.Id = MIFloat_MovementItemId.ValueData :: Integer
+             LEFT JOIN Movement AS Movement_partion ON Movement_partion.Id = MovementItem_partion.MovementId
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id
