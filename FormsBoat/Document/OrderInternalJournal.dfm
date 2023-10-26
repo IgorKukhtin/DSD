@@ -24,7 +24,6 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 894
     object deStart: TcxDateEdit
       Left = 103
       Top = 5
@@ -65,8 +64,6 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 894
-    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -310,7 +307,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1101#1083#1077#1084#1077#1085#1090')'
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1101#1083#1077#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 70
       end
@@ -348,10 +345,9 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 457
     object btnInsert: TcxButton
       Left = 42
-      Top = 6
+      Top = 7
       Width = 101
       Height = 25
       Action = actInsert
@@ -359,7 +355,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     end
     object btnUpdate: TcxButton
       Left = 159
-      Top = 6
+      Top = 7
       Width = 101
       Height = 25
       Action = actUpdate
@@ -367,7 +363,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     end
     object btnComplete: TcxButton
       Left = 304
-      Top = 6
+      Top = 7
       Width = 150
       Height = 25
       Action = actComplete
@@ -375,7 +371,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     end
     object btnUnComplete: TcxButton
       Left = 460
-      Top = 6
+      Top = 7
       Width = 150
       Height = 25
       Action = actUnComplete
@@ -383,7 +379,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     end
     object btnSetErased: TcxButton
       Left = 616
-      Top = 6
+      Top = 7
       Width = 150
       Height = 25
       Action = actSetErased
@@ -391,7 +387,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     end
     object btnFormClose: TcxButton
       Left = 809
-      Top = 6
+      Top = 7
       Width = 153
       Height = 25
       Action = actFormClose
@@ -851,7 +847,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         end
         item
           Name = 'ShowAll'
-          Value = True
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -949,6 +945,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleReCompleteList
@@ -956,15 +953,16 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleCompleteList
@@ -972,15 +970,16 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
-      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
     object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleUncompleteList
@@ -988,15 +987,16 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ImageIndex = 11
     end
     object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleErasedList
@@ -1004,10 +1004,10 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 13
     end
     object mactSimpleReCompleteList: TMultiAction

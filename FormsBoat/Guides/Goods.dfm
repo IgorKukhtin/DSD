@@ -879,7 +879,7 @@ object GoodsForm: TGoodsForm
     end
     object btnFormClose: TcxButton
       Left = 268
-      Top = 6
+      Top = 7
       Width = 90
       Height = 25
       Action = actFormClose

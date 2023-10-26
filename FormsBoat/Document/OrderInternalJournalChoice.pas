@@ -103,10 +103,10 @@ type
     bbChoiceGuides: TdxBarButton;
     ItemName_goods: TcxGridDBColumn;
     Panel_btn: TPanel;
-    btnUpdate: TcxButton;
     btnFormClose: TcxButton;
     actFormClose: TdsdFormClose;
     cxButton1: TcxButton;
+    btnUpdate: TcxButton;
   private
   public
   end;

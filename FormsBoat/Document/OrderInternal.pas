@@ -279,6 +279,10 @@ type
     btnFormClose: TcxButton;
     bbsOpenForm: TdxBarSubItem;
     bbsPrint: TdxBarSubItem;
+    btnUpdateAction: TcxButton;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
 
   private
   public

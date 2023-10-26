@@ -1,7 +1,7 @@
 object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
   Left = 0
   Top = 0
-  Caption = #1042#1099#1073#1086#1088' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1101#1083#1077#1084#1077#1085#1090#1072' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
+  Caption = #1042#1099#1073#1086#1088' '#1101#1083#1077#1084#1077#1085#1090#1072' '#1089#1073#1086#1088#1082#1080' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
   ClientHeight = 492
   ClientWidth = 894
   Color = clBtnFace
@@ -365,17 +365,17 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Align = alBottom
     TabOrder = 6
     object btnUpdate: TcxButton
-      Left = 310
-      Top = 6
-      Width = 101
+      Left = 574
+      Top = 7
+      Width = 130
       Height = 25
       Action = actShowErased
       TabOrder = 0
     end
     object btnFormClose: TcxButton
-      Left = 442
-      Top = 6
-      Width = 153
+      Left = 389
+      Top = 7
+      Width = 90
       Height = 25
       Action = actFormClose
       ParentShowHint = False
@@ -383,9 +383,9 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       TabOrder = 1
     end
     object cxButton1: TcxButton
-      Left = 103
-      Top = 6
-      Width = 124
+      Left = 255
+      Top = 7
+      Width = 90
       Height = 25
       Action = actChoiceGuides
       TabOrder = 2
@@ -481,11 +481,11 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbChoiceGuides'
         end
@@ -1152,15 +1152,15 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088
-      ImageIndex = 7
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1047#1072#1082#1088#1099#1090#1100
-      ImageIndex = 87
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelectMI: TdsdStoredProc
