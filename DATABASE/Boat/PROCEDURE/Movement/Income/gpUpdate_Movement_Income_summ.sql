@@ -3,10 +3,12 @@
 DROP FUNCTION IF EXISTS gpUpdate_IncomeEdit (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_summ (Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_summ (Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Income_summ(
     IN inId                    Integer   , -- Ключ объекта <Документ>
     IN inIsBefore              Boolean   , -- временный расчет на форме, тогда промежуточно сохраняем в ..._calc
+    IN inIsEdit                Boolean   , -- 
     IN inTotalSummMVAT         TFloat    , -- Сумма по элементам (без НДС, но с учетом скидки в элементах, если была)
  INOUT ioDiscountTax           TFloat    , -- 1.1. % скидки
  INOUT ioSummTaxPVAT           TFloat    , -- 1.2. Сумма скидки с НДС
@@ -60,7 +62,7 @@ BEGIN
                        AND Movement_Income.DescId = zc_Movement_Income());
 
      -- если надо только сохранить
-     IF inIsBefore = FALSE
+     IF inIsBefore = FALSE AND inIsEdit = TRUE
      THEN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), inId, ioDiscountTax);
@@ -107,17 +109,44 @@ BEGIN
      ELSE
 
          -- Получаем сохраненные параметры - для расчета в эдит форме
-         vbDiscountTax      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_DiscountTax_calc());
-         vbSummTaxPVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTaxPVAT_calc());
-         vbSummTaxMVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTaxMVAT_calc());
+         vbDiscountTax      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_DiscountTax()
+                                                                                                                             ELSE zc_MovementFloat_DiscountTax_calc()
+                                                                                                                        END);
+         vbSummTaxPVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_SummTaxPVAT()
+                                                                                                                             ELSE zc_MovementFloat_SummTaxPVAT_calc()
+                                                                                                                        END);
+         vbSummTaxMVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_SummTaxMVAT()
+                                                                                                                             ELSE zc_MovementFloat_SummTaxMVAT_calc()
+                                                                                                                        END);
          --
-         vbSummPost         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummPost_calc());
-         vbSummPack         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummPack_calc());
-         vbSummInsur        := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummInsur_calc());
+         vbSummPost         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_SummPost()
+                                                                                                                             ELSE zc_MovementFloat_SummPost_calc()
+                                                                                                                        END);
+         vbSummPack         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_SummPack()
+                                                                                                                             ELSE zc_MovementFloat_SummPack_calc()
+                                                                                                                        END);
+         vbSummInsur        := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_SummInsur()
+                                                                                                                             ELSE zc_MovementFloat_SummInsur_calc()
+                                                                                                                        END);
          --
-         vbTotalDiscountTax := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalDiscountTax_calc());
-         vbTotalSummTaxMVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSummTaxMVAT_calc());
-         vbTotalSummTaxPVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSummTaxPVAT_calc());
+         vbTotalDiscountTax := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_TotalDiscountTax()
+                                                                                                                             ELSE zc_MovementFloat_TotalDiscountTax_calc()
+                                                                                                                        END);
+         vbTotalSummTaxMVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_TotalSummTaxMVAT()
+                                                                                                                             ELSE zc_MovementFloat_TotalSummTaxMVAT_calc()
+                                                                                                                        END);
+         vbTotalSummTaxPVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = CASE WHEN inIsEdit = FALSE
+                                                                                                                             THEN zc_MovementFloat_TotalSummTaxPVAT()
+                                                                                                                             ELSE zc_MovementFloat_TotalSummTaxPVAT_calc()
+                                                                                                                        END);
 
 
          -- если ничего не поменялось
@@ -199,23 +228,50 @@ BEGIN
          outSumm4 := COALESCE (outSumm3,0) - COALESCE (ioTotalSummTaxMVAT,0);
 
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax_calc(), inId, ioDiscountTax);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_DiscountTax()
+                                                    ELSE zc_MovementFloat_DiscountTax_calc()
+                                               END, inId, ioDiscountTax);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxPVAT_calc(), inId, ioSummTaxPVAT);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_SummTaxPVAT()
+                                                    ELSE zc_MovementFloat_SummTaxPVAT_calc()
+                                               END, inId, ioSummTaxPVAT);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxMVAT_calc(), inId, ioSummTaxMVAT);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_SummTaxMVAT()
+                                                    ELSE zc_MovementFloat_SummTaxMVAT_calc()
+                                               END, inId, ioSummTaxMVAT);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPost_calc(), inId, inSummPost);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_SummPost()
+                                                    ELSE zc_MovementFloat_SummPost_calc()
+                                               END, inId, inSummPost);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPack_calc(), inId, inSummPack);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_SummPack()
+                                                    ELSE zc_MovementFloat_SummPack_calc()
+                                               END, inId, inSummPack);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummInsur_calc(), inId, inSummInsur);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_SummInsur()
+                                                    ELSE zc_MovementFloat_SummInsur_calc()
+                                               END, inId, inSummInsur);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiscountTax_calc(), inId, ioTotalDiscountTax);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_TotalDiscountTax()
+                                                    ELSE zc_MovementFloat_TotalDiscountTax_calc()
+                                               END, inId, ioTotalDiscountTax);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxMVAT_calc(), inId, ioTotalSummTaxMVAT);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_TotalSummTaxMVAT()
+                                                    ELSE zc_MovementFloat_TotalSummTaxMVAT_calc()
+                                               END, inId, ioTotalSummTaxMVAT);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxPVAT_calc(), inId, ioTotalSummTaxPVAT);
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                    THEN zc_MovementFloat_TotalSummTaxPVAT()
+                                                    ELSE zc_MovementFloat_TotalSummTaxPVAT_calc()
+                                               END, inId, ioTotalSummTaxPVAT);
 
      END IF;
 
