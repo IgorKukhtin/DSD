@@ -72,13 +72,19 @@ BEGIN
                                                        THEN 'TRUE'
                                                   WHEN STRPOS (tmp.Name, 'isGoodsComplete') > 0
                                                        THEN 'TRUE'
+                                                  WHEN STRPOS (tmp.Name, 'isCloseInventory') > 0
+                                                       THEN 'TRUE'
+
                                                   WHEN STRPOS (tmp.Name, 'isPersonalStick')  > 0
                                                     OR ((STRPOS (tmp.Name, 'isPersonalComplete') > 0)
                                                     AND (LENGTH (tmp.Name) = LENGTH ('isPersonalComplete1'))
                                                        )
                                                        THEN 'TRUE'
+
+                                                  -- !!! всем остальным
                                                   WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
                                                        THEN 'FALSE'
+
                                                   WHEN STRPOS (tmp.Name, 'Id') > 0
                                                        THEN '0'
                                                   WHEN STRPOS (tmp.Name, 'DiffSaleOrder') > 0
@@ -127,6 +133,7 @@ BEGIN
            UNION SELECT 'isPartionGoods_20103'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isAsset'                AS Name WHERE/*inIsCeh = FALSE AND*/ vbIsSticker = FALSE
            UNION SELECT 'isReReturnIn'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isCloseInventory'       AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
            -- –ежим ScaleCeh - маркировка/сортировка
            UNION SELECT 'isModeSorting'          AS Name WHERE inIsCeh = TRUE
