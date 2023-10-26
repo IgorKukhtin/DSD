@@ -2,6 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 749
   ClientWidth = 1258
+  ExplicitLeft = -381
   ExplicitWidth = 1274
   ExplicitHeight = 788
   PixelsPerInch = 96
@@ -659,23 +660,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 120
           end
-          object INN: TcxGridDBColumn [2]
-            Caption = #1048#1053#1053
-            DataBinding.FieldName = 'INN'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object Code1C: TcxGridDBColumn [3]
+          object Code1C: TcxGridDBColumn [2]
             Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code1C'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -685,43 +670,48 @@ inherited PersonalServiceForm: TPersonalServiceForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Card: TcxGridDBColumn [4]
+          object Card: TcxGridDBColumn [3]
             Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'1)'
             DataBinding.FieldName = 'Card'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 115
           end
-          object CardSecond: TcxGridDBColumn [5]
+          object CardSecond: TcxGridDBColumn [4]
             Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'2)'
             DataBinding.FieldName = 'CardSecond'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 115
           end
-          object CardIBAN: TcxGridDBColumn [6]
+          object CardIBAN: TcxGridDBColumn [5]
             Caption = #8470' '#1082#1072#1088#1090'. IBAN '#1047#1055' ('#1060'1)'
             DataBinding.FieldName = 'CardIBAN'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 115
           end
-          object CardIBANSecond: TcxGridDBColumn [7]
+          object CardIBANSecond: TcxGridDBColumn [6]
             Caption = #8470' '#1082#1072#1088#1090'. IBAN '#1047#1055' ('#1060'2)'
             DataBinding.FieldName = 'CardIBANSecond'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 115
           end
-          object PersonalCode: TcxGridDBColumn [8]
+          object PersonalCode: TcxGridDBColumn [7]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
             Visible = False
@@ -729,6 +719,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object SummFineOthRecalc: TcxGridDBColumn [8]
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummFineOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            Width = 75
           end
           object PersonalName: TcxGridDBColumn [9]
             Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
@@ -746,23 +748,70 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object PersonalCode_to: TcxGridDBColumn [11]
+          object SummAddOthRecalc: TcxGridDBColumn [11]
+            Caption = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'SummAddOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            Width = 70
+          end
+          object FineSubjectName: TcxGridDBColumn [12]
+            Caption = #1042#1080#1076' '#1085#1072#1088#1091#1096#1077#1085#1080#1081
+            DataBinding.FieldName = 'FineSubjectName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actFineSubjectOpenChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object UnitFineSubjectName: TcxGridDBColumn [13]
+            Caption = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
+            DataBinding.FieldName = 'UnitFineSubjectName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actUnitFineSubjectChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
+            Width = 70
+          end
+          object PersonalCode_to: TcxGridDBColumn [14]
             Caption = #1050#1086#1076' ('#1082#1086#1084#1091' '#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'PersonalCode_to'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
-          object PersonalName_to: TcxGridDBColumn [12]
+          object PersonalName_to: TcxGridDBColumn [15]
             Caption = #1060#1048#1054' ('#1082#1086#1084#1091' '#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'PersonalName_to'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object IsMain: TcxGridDBColumn [13]
+          object IsMain: TcxGridDBColumn [16]
             Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
             DataBinding.FieldName = 'isMain'
             HeaderAlignmentHorz = taCenter
@@ -770,16 +819,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 60
           end
-          object IsPriceNalog: TcxGridDBColumn [14]
-            Caption = #1057#1091#1084#1084#1072' '#1091#1076'. '#1089#1092#1086#1088#1084'. '#1085#1072' '#1086#1089#1085'. '#1091#1076'. '#1085#1072#1083#1086#1075#1072' '#1087#1086' '#1060'2'
-            DataBinding.FieldName = 'IsPriceNalog'
+          object IsOfficial: TcxGridDBColumn [17]
+            Caption = #1054#1092#1086#1088#1084#1083'. '#1086#1092#1080#1094'.'
+            DataBinding.FieldName = 'isOfficial'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1085#1072#1083#1086#1075#1072' '#1087#1086' '#1060'2'
             Options.Editing = False
             Width = 60
           end
-          object DateIn: TcxGridDBColumn [15]
+          object DateIn: TcxGridDBColumn [18]
             Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
             DataBinding.FieldName = 'DateIn'
             HeaderAlignmentHorz = taCenter
@@ -787,7 +835,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 63
           end
-          object DateOut: TcxGridDBColumn [16]
+          object DateOut: TcxGridDBColumn [19]
             Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'DateOut'
             HeaderAlignmentHorz = taCenter
@@ -795,38 +843,74 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 63
           end
-          object DayPriceNalog: TcxGridDBColumn [17]
+          object IsPriceNalog: TcxGridDBColumn [20]
+            Caption = #1057#1091#1084#1084#1072' '#1091#1076'. '#1089#1092#1086#1088#1084'. '#1085#1072' '#1086#1089#1085'. '#1091#1076'. '#1085#1072#1083#1086#1075#1072' '#1087#1086' '#1060'2'
+            DataBinding.FieldName = 'IsPriceNalog'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1085#1072#1083#1086#1075#1072' '#1087#1086' '#1060'2'
+            Options.Editing = False
+            Width = 60
+          end
+          object DayPriceNalog: TcxGridDBColumn [21]
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1091#1076#1077#1088#1078'. '#1085#1072#1083#1086#1075#1072' '#1060'2'
             DataBinding.FieldName = 'DayPriceNalog'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1079#1072' '#1082#1086#1090#1086#1088#1099#1077' '#1087#1088#1086#1080#1089#1093#1086#1076#1080#1090' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1085#1072#1083#1086#1075#1072' '#1087#1086' '#1060'2'
             Options.Editing = False
             Width = 75
           end
-          object StaffListSummKindName: TcxGridDBColumn [18]
+          object StaffListSummKindName: TcxGridDBColumn [22]
             Caption = #1058#1080#1087#1099' '#1089#1091#1084#1084' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
             DataBinding.FieldName = 'StaffListSummKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object Amount: TcxGridDBColumn [19]
-            Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
-            DataBinding.FieldName = 'Amount'
+          object DayCount_child: TcxGridDBColumn [23]
+            Caption = #1054#1090#1088#1072#1073'. '#1076#1085'. 1 '#1095#1077#1083' ('#1080#1085#1092'.) ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'DayCount_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object WorkTimeHoursOne_child: TcxGridDBColumn [24]
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' 1 '#1095#1077#1083' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'WorkTimeHoursOne_child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 80
           end
-          object TotalSummChild: TcxGridDBColumn [20]
+          object Price_child: TcxGridDBColumn [25]
+            Caption = #1075#1088#1085'./'#1079#1072' '#1082#1075' '#1048#1051#1048' '#1075#1088#1085'./'#1089#1090#1072#1074#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'Price_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object TotalSummChild: TcxGridDBColumn [26]
             Caption = #1048#1090#1086#1075#1086' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1071' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'TotalSummChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -836,82 +920,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_avance: TcxGridDBColumn [21]
-            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
-            DataBinding.FieldName = 'Amount_avance'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object Amount_avance_ps: TcxGridDBColumn [22]
-            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1074'. '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
-            DataBinding.FieldName = 'Amount_avance_ps'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1087#1083#1072#1090#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1040#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
-            Options.Editing = False
-            Width = 75
-          end
-          object SummDiff: TcxGridDBColumn [23]
-            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
-            DataBinding.FieldName = 'SummDiff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1049' ('#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090')'
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountToPay: TcxGridDBColumn [24]
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'AmountToPay'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountCash: TcxGridDBColumn [25]
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
-            DataBinding.FieldName = 'AmountCash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object AmountCash_rem: TcxGridDBColumn [26]
-            Caption = #1054#1089#1090'.'#1082' '#1074#1099#1076#1072#1095#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
-            DataBinding.FieldName = 'AmountCash_rem'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object AmountCash_pay: TcxGridDBColumn [27]
-            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' ('#1080#1079' '#1082#1072#1089#1089#1099')'
-            DataBinding.FieldName = 'AmountCash_pay'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object SummService: TcxGridDBColumn [28]
+          object SummService: TcxGridDBColumn [27]
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'SummService'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -921,7 +930,40 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object SummAdd: TcxGridDBColumn [29]
+          object SummHoliday: TcxGridDBColumn [28]
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
+            DataBinding.FieldName = 'SummHoliday'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
+          object SummHosp: TcxGridDBColumn [29]
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'.'
+            DataBinding.FieldName = 'SummHosp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077
+            Width = 75
+          end
+          object SummHospOth: TcxGridDBColumn [30]
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1088#1072#1089#1087#1088'.)'
+            DataBinding.FieldName = 'SummHospOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAdd: TcxGridDBColumn [31]
             Caption = #1055#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'SummAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -931,7 +973,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummAddOth: TcxGridDBColumn [30]
+          object SummAddOth: TcxGridDBColumn [32]
             Caption = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076'.)'
             DataBinding.FieldName = 'SummAddOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -942,18 +984,187 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummAddOthRecalc: TcxGridDBColumn [31]
-            Caption = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.)'
-            DataBinding.FieldName = 'SummAddOthRecalc'
+          object SummDiff: TcxGridDBColumn [33]
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
+            DataBinding.FieldName = 'SummDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1049' ('#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090')'
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount: TcxGridDBColumn [34]
+            Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummCompensation: TcxGridDBColumn [35]
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'.'
+            DataBinding.FieldName = 'SummCompensation'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082
+            Options.Editing = False
+            Width = 75
+          end
+          object SummTransportTaxi: TcxGridDBColumn [36]
+            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportTaxi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummTransportAdd: TcxGridDBColumn [37]
+            Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummTransportAddLong: TcxGridDBColumn [38]
+            Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
+            DataBinding.FieldName = 'SummTransportAddLong'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAuditAdd: TcxGridDBColumn [39]
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
+            DataBinding.FieldName = 'SummAuditAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             Width = 70
           end
-          object SummMinus: TcxGridDBColumn [32]
+          object SummMedicdayAdd: TcxGridDBColumn [40]
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1075#1088#1085
+            DataBinding.FieldName = 'SummMedicdayAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object SummHouseAdd: TcxGridDBColumn [41]
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1078#1080#1083#1100#1077
+            DataBinding.FieldName = 'SummHouseAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
+            Width = 70
+          end
+          object SummChild: TcxGridDBColumn [42]
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077
+            DataBinding.FieldName = 'SummChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummMinusExt: TcxGridDBColumn [43]
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'.'
+            DataBinding.FieldName = 'SummMinusExt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummTransport: TcxGridDBColumn [44]
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
+            DataBinding.FieldName = 'SummTransport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummPhone: TcxGridDBColumn [45]
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
+            DataBinding.FieldName = 'SummPhone'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummSkip: TcxGridDBColumn [46]
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'SummSkip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1091#1076#1077#1088#1078#1072#1085#1080#1081' '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            Options.Editing = False
+            Width = 80
+          end
+          object SummFineOth: TcxGridDBColumn [47]
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088'.)'
+            DataBinding.FieldName = 'SummFineOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Options.Editing = False
+            Width = 75
+          end
+          object SummFine: TcxGridDBColumn [48]
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            DataBinding.FieldName = 'SummFine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummMinus: TcxGridDBColumn [49]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
             DataBinding.FieldName = 'SummMinus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -963,7 +1174,46 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object SummCard: TcxGridDBColumn [33]
+          object SummNalogRet: TcxGridDBColumn [50]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
+            DataBinding.FieldName = 'SummNalogRet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummNalog: TcxGridDBColumn [51]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
+            DataBinding.FieldName = 'SummNalog'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountToPay: TcxGridDBColumn [52]
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'AmountToPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment: TcxGridDBColumn [53]
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
+          object SummCard: TcxGridDBColumn [54]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 1'#1092'.'
             DataBinding.FieldName = 'SummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -974,28 +1224,29 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummCardRecalc: TcxGridDBColumn [34]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 1'#1092'.'
-            DataBinding.FieldName = 'SummCardRecalc'
+          object Amount_avance: TcxGridDBColumn [55]
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            DataBinding.FieldName = 'Amount_avance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummCardSecond: TcxGridDBColumn [35]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
-            DataBinding.FieldName = 'SummCardSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 75
           end
-          object SummAvCardSecond: TcxGridDBColumn [36]
+          object Amount_avance_ps: TcxGridDBColumn [56]
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1074'. '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            DataBinding.FieldName = 'Amount_avance_ps'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1087#1083#1072#1090#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1040#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvCardSecond: TcxGridDBColumn [57]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '#1040#1074#1072#1085#1089
             DataBinding.FieldName = 'SummAvCardSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1006,17 +1257,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummAvCardSecondRecalc: TcxGridDBColumn [37]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. '#1040#1074#1072#1085#1089
-            DataBinding.FieldName = 'SummAvCardSecondRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummCardSecond_Avance: TcxGridDBColumn [38]
+          object SummCardSecond_Avance: TcxGridDBColumn [58]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' '#1072#1074#1072#1085#1089' - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecond_Avance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1028,9 +1269,20 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummCardSecondRecalc: TcxGridDBColumn [39]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
-            DataBinding.FieldName = 'SummCardSecondRecalc'
+          object SummCardSecond: TcxGridDBColumn [59]
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecondCash: TcxGridDBColumn [60]
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecondCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1038,7 +1290,38 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummCardSecondDiff: TcxGridDBColumn [40]
+          object AmountCash: TcxGridDBColumn [61]
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountCash_pay: TcxGridDBColumn [62]
+            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash_pay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountCash_rem: TcxGridDBColumn [63]
+            Caption = #1054#1089#1090'.'#1082' '#1074#1099#1076#1072#1095#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummCardSecondDiff: TcxGridDBColumn [64]
             Caption = #1082#1086#1087'. '#1082#1086#1088#1088'. '#1082#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecondDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1051,291 +1334,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
               '10-90 '#1082#1086#1087'.'
             Width = 70
           end
-          object SummNalogRet: TcxGridDBColumn [41]
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
-            DataBinding.FieldName = 'SummNalogRet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummNalogRetRecalc: TcxGridDBColumn [42]
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'SummNalogRetRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object SummChild: TcxGridDBColumn [43]
-            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077
-            DataBinding.FieldName = 'SummChild'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object DayCount_child: TcxGridDBColumn [44]
-            Caption = #1054#1090#1088#1072#1073'. '#1076#1085'. 1 '#1095#1077#1083' ('#1080#1085#1092'.) ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'DayCount_child'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object WorkTimeHoursOne_child: TcxGridDBColumn [45]
-            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' 1 '#1095#1077#1083' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'WorkTimeHoursOne_child'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object Price_child: TcxGridDBColumn [46]
-            Caption = #1075#1088#1085'./'#1079#1072' '#1082#1075' '#1048#1051#1048' '#1075#1088#1085'./'#1089#1090#1072#1074#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'Price_child'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 81
-          end
-          object SummFine: TcxGridDBColumn [47]
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'SummFine'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object SummFineOth: TcxGridDBColumn [48]
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088'.)'
-            DataBinding.FieldName = 'SummFineOth'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            Options.Editing = False
-            Width = 75
-          end
-          object SummFineOthRecalc: TcxGridDBColumn [49]
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'SummFineOthRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
-            Width = 75
-          end
-          object SummHosp: TcxGridDBColumn [50]
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'.'
-            DataBinding.FieldName = 'SummHosp'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077
-            Width = 75
-          end
-          object SummHospOth: TcxGridDBColumn [51]
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1088#1072#1089#1087#1088'.)'
-            DataBinding.FieldName = 'SummHospOth'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            Options.Editing = False
-            Width = 75
-          end
-          object SummCompensation: TcxGridDBColumn [52]
-            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'.'
-            DataBinding.FieldName = 'SummCompensation'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082
-            Options.Editing = False
-            Width = 75
-          end
-          object SummCompensationRecalc: TcxGridDBColumn [53]
-            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'. ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'SummCompensationRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1074#1074#1086#1076')'
-            Width = 75
-          end
-          object PriceCompensation: TcxGridDBColumn [54]
-            Caption = #1057#1088'. '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095'. '#1082#1086#1084#1087#1077#1085#1089'.'
-            DataBinding.FieldName = 'PriceCompensation'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1089#1091#1084#1084#1099' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
-            Options.Editing = False
-            Width = 70
-          end
-          object SummHospOthRecalc: TcxGridDBColumn [55]
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'SummHospOthRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
-            Width = 75
-          end
-          object SummChildRecalc: TcxGridDBColumn [56]
-            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'SummChildRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object SummMinusExt: TcxGridDBColumn [57]
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'.'
-            DataBinding.FieldName = 'SummMinusExt'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object SummMinusExtRecalc: TcxGridDBColumn [58]
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'. ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'SummMinusExtRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object SummSocialIn: TcxGridDBColumn [59]
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
-            DataBinding.FieldName = 'SummSocialIn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummSocialAdd: TcxGridDBColumn [60]
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
-            DataBinding.FieldName = 'SummSocialAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
-          end
-          object SummAvance: TcxGridDBColumn [61]
-            Caption = #1040#1074#1072#1085#1089' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
-            DataBinding.FieldName = 'SummAvance'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object MemberName: TcxGridDBColumn [62]
-            Caption = #1060#1048#1054' ('#1040#1083#1080#1084#1077#1085#1090#1099')'
-            DataBinding.FieldName = 'MemberName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actMemberChoice
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object InfoMoneyCode: TcxGridDBColumn [63]
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object InfoMoneyName: TcxGridDBColumn [64]
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object isAuto: TcxGridDBColumn [65]
-            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
-            DataBinding.FieldName = 'isAuto'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
-            Options.Editing = False
-            Width = 38
-          end
-          object Comment: TcxGridDBColumn [66]
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 125
-          end
-          object SummTransportTaxi: TcxGridDBColumn [67]
-            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'SummTransportTaxi'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object PersonalServiceListName: TcxGridDBColumn [68]
+          object PersonalServiceListName: TcxGridDBColumn [65]
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1041#1053')'
             DataBinding.FieldName = 'PersonalServiceListName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -1350,59 +1349,96 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
-          object BankOutDate: TcxGridDBColumn [69]
-            Caption = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
-            DataBinding.FieldName = 'BankOutDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'dd.mm.yy'
+          object PriceCompensation: TcxGridDBColumn [66]
+            Caption = #1057#1088'. '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095'. '#1082#1086#1084#1087#1077#1085#1089'.'
+            DataBinding.FieldName = 'PriceCompensation'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
-            Width = 80
-          end
-          object isBankOut: TcxGridDBColumn [70]
-            Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
-            DataBinding.FieldName = 'isBankOut'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1079#1087' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1089#1091#1084#1084#1099' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          object FineSubjectName: TcxGridDBColumn [71]
-            Caption = #1042#1080#1076' '#1085#1072#1088#1091#1096#1077#1085#1080#1081
-            DataBinding.FieldName = 'FineSubjectName'
+          object SummSocialIn: TcxGridDBColumn [67]
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
+            DataBinding.FieldName = 'SummSocialIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummSocialAdd: TcxGridDBColumn [68]
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
+            DataBinding.FieldName = 'SummSocialAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object SummAvance: TcxGridDBColumn [69]
+            Caption = #1040#1074#1072#1085#1089' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            DataBinding.FieldName = 'SummAvance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object MemberName: TcxGridDBColumn [70]
+            Caption = #1060#1048#1054' ('#1040#1083#1080#1084#1077#1085#1090#1099')'
+            DataBinding.FieldName = 'MemberName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actFineSubjectOpenChoiceForm
+                Action = actMemberChoice
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 90
           end
-          object UnitFineSubjectName: TcxGridDBColumn [72]
-            Caption = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
-            DataBinding.FieldName = 'UnitFineSubjectName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actUnitFineSubjectChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+          object SummCardRecalc: TcxGridDBColumn [71]
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 1'#1092'.'
+            DataBinding.FieldName = 'SummCardRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1077#1084' '#1085#1072#1083#1072#1075#1072#1077#1090#1089#1103' '#1074#1079#1099#1089#1082#1072#1085#1080#1077
             Width = 70
           end
-          object SummNalog: TcxGridDBColumn [73]
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
-            DataBinding.FieldName = 'SummNalog'
+          object SummAvCardSecondRecalc: TcxGridDBColumn [72]
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. '#1040#1074#1072#1085#1089
+            DataBinding.FieldName = 'SummAvCardSecondRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummCardSecondRecalc: TcxGridDBColumn [73]
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecondRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummNalogRetRecalc: TcxGridDBColumn [74]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummNalogRetRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1411,7 +1447,49 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummNalogRecalc: TcxGridDBColumn [74]
+          object SummCompensationRecalc: TcxGridDBColumn [75]
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'. ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummCompensationRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1074#1074#1086#1076')'
+            Width = 75
+          end
+          object SummHospOthRecalc: TcxGridDBColumn [76]
+            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummHospOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            Width = 75
+          end
+          object SummChildRecalc: TcxGridDBColumn [77]
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummChildRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummMinusExtRecalc: TcxGridDBColumn [78]
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'. ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummMinusExtRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummNalogRecalc: TcxGridDBColumn [79]
             Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummNalogRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1421,52 +1499,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummTransportAdd: TcxGridDBColumn [75]
-            Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'SummTransportAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object SummTransportAddLong: TcxGridDBColumn [76]
-            Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'SummTransportAddLong'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object SummTransport: TcxGridDBColumn [77]
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
-            DataBinding.FieldName = 'SummTransport'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object SummPhone: TcxGridDBColumn [78]
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
-            DataBinding.FieldName = 'SummPhone'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object SummAvanceRecalc: TcxGridDBColumn [79]
+          object SummAvanceRecalc: TcxGridDBColumn [80]
             Caption = #1040#1074#1072#1085#1089' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             DataBinding.FieldName = 'SummAvanceRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1476,16 +1509,55 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object DayCompensation: TcxGridDBColumn [80]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1082#1086#1084#1087#1077#1085#1089'. '#1086#1090#1087#1091#1089#1082#1072
-            DataBinding.FieldName = 'DayCompensation'
+          object InfoMoneyCode: TcxGridDBColumn [81]
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
             Options.Editing = False
-            Width = 83
+            Width = 55
           end
-          object DayVacation: TcxGridDBColumn [81]
+          object InfoMoneyName: TcxGridDBColumn [82]
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object isAuto: TcxGridDBColumn [83]
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1088#1080' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 38
+          end
+          object BankOutDate: TcxGridDBColumn [84]
+            Caption = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            DataBinding.FieldName = 'BankOutDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            Width = 80
+          end
+          object isBankOut: TcxGridDBColumn [85]
+            Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
+            DataBinding.FieldName = 'isBankOut'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            Options.Editing = False
+            Width = 80
+          end
+          object DayVacation: TcxGridDBColumn [86]
             Caption = #1055#1086#1083#1086#1078#1077#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayVacation'
             HeaderAlignmentHorz = taCenter
@@ -1493,15 +1565,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayWork: TcxGridDBColumn [82]
-            Caption = #1056#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
-            DataBinding.FieldName = 'DayWork'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 83
-          end
-          object DayHoliday: TcxGridDBColumn [83]
+          object DayHoliday: TcxGridDBColumn [87]
             Caption = #1048#1089#1087'. '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayHoliday'
             HeaderAlignmentHorz = taCenter
@@ -1510,7 +1574,33 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayAudit: TcxGridDBColumn [84]
+          object DayCompensation: TcxGridDBColumn [88]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1082#1086#1084#1087#1077#1085#1089'. '#1086#1090#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'DayCompensation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
+            Options.Editing = False
+            Width = 83
+          end
+          object InfoMoneyName_all: TcxGridDBColumn [89]
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object DayWork: TcxGridDBColumn [90]
+            Caption = #1056#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'DayWork'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object DayAudit: TcxGridDBColumn [91]
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102', '#1076#1085'.'
             DataBinding.FieldName = 'DayAudit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1522,37 +1612,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummHoliday: TcxGridDBColumn [85]
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
-            DataBinding.FieldName = 'SummHoliday'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 74
-          end
-          object SummAuditAdd: TcxGridDBColumn [86]
-            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
-            DataBinding.FieldName = 'SummAuditAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
-            Width = 70
-          end
-          object InfoMoneyName_all: TcxGridDBColumn [87]
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-            DataBinding.FieldName = 'InfoMoneyName_all'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object DaySkip: TcxGridDBColumn [88]
+          object DaySkip: TcxGridDBColumn [92]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1076#1085
             DataBinding.FieldName = 'DaySkip'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1564,19 +1624,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 77
           end
-          object SummSkip: TcxGridDBColumn [89]
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1075#1088#1085'.'
-            DataBinding.FieldName = 'SummSkip'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1091#1076#1077#1088#1078#1072#1085#1080#1081' '#1079#1072' '#1087#1088#1086#1075#1091#1083
-            Options.Editing = False
-            Width = 80
-          end
-          object DayMedicday: TcxGridDBColumn [90]
+          object DayMedicday: TcxGridDBColumn [93]
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1076#1085'.'
             DataBinding.FieldName = 'DayMedicday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1588,46 +1636,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummMedicdayAdd: TcxGridDBColumn [91]
-            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1075#1088#1085
-            DataBinding.FieldName = 'SummMedicdayAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object INN: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
-            Options.Editing = False
+            VisibleForCustomization = False
             Width = 70
-          end
-          object SummCardSecondCash: TcxGridDBColumn [92]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
-            DataBinding.FieldName = 'SummCardSecondCash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummHouseAdd: TcxGridDBColumn [93]
-            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1078#1080#1083#1100#1077
-            DataBinding.FieldName = 'SummHouseAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
-            Width = 70
-          end
-          object IsOfficial: TcxGridDBColumn [94]
-            Caption = #1054#1092#1086#1088#1084#1083'. '#1086#1092#1080#1094'.'
-            DataBinding.FieldName = 'isOfficial'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
         end
       end
@@ -2209,6 +2232,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2302,6 +2328,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0

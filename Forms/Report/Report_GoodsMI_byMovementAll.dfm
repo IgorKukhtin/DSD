@@ -5,6 +5,7 @@ inherited Report_GoodsMI_byMovementAllForm: TReport_GoodsMI_byMovementAllForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -234
   ExplicitWidth = 1144
   ExplicitHeight = 413
   PixelsPerInch = 96
@@ -620,6 +621,38 @@ inherited Report_GoodsMI_byMovementAllForm: TReport_GoodsMI_byMovementAllForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ContractNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ContractTagGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -631,14 +664,14 @@ inherited Report_GoodsMI_byMovementAllForm: TReport_GoodsMI_byMovementAllForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
       Left = 59
       Top = 30
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 59
       ExplicitTop = 30

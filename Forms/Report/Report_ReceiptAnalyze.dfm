@@ -3,7 +3,6 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
   ClientHeight = 430
   ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 469
   PixelsPerInch = 96

@@ -77,6 +77,10 @@ type
     ChangePercent: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
     StatusCode: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    ContractNumber: TcxGridDBColumn;
+    ContractTagGroupName: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
   private
     { Private declarations }
   public

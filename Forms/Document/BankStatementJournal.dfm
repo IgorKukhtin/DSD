@@ -638,6 +638,14 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbBankPrivat'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
