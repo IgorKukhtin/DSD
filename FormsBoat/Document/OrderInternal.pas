@@ -143,7 +143,7 @@ type
     macErasedMI_Master: TMultiAction;
     bbErasedMI_Master: TdxBarButton;
     AmountSend_ch3: TcxGridDBColumn;
-    actChoiceFormOrderClientItem: TOpenChoiceForm;
+    actChoiceForm_OrderClientItem: TOpenChoiceForm;
     UnitName_ch3: TcxGridDBColumn;
     cxLabel15: TcxLabel;
     cxLabel6: TcxLabel;
@@ -261,7 +261,7 @@ type
     spInsert_MI_byOrderAll: TdsdStoredProc;
     actInsert_MI_byOrderAll: TdsdExecStoredProc;
     macInsert_MI_byOrderAll: TMultiAction;
-    actOrderClientInsertForm: TOpenChoiceForm;
+    actChoiceForm_OrderClient: TOpenChoiceForm;
     actRefreshMaster: TdsdDataSetRefresh;
     bbInsert_MI_byOrder: TdxBarButton;
     bbsView: TdxBarSubItem;

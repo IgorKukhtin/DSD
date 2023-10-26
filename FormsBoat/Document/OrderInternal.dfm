@@ -171,12 +171,12 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
     end
     object cxLabel6: TcxLabel
-      Left = 580
+      Left = 740
       Top = 46
       Caption = 'Boat'
     end
     object edProduct: TcxButtonEdit
-      Left = 580
+      Left = 740
       Top = 63
       Properties.Buttons = <
         item
@@ -185,7 +185,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 494
+      Width = 334
     end
     object edOrderClient: TcxButtonEdit
       Left = 273
@@ -197,7 +197,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 301
+      Width = 448
     end
   end
   object cxPageControl: TcxPageControl
@@ -228,7 +228,7 @@ object OrderInternalForm: TOrderInternalForm
           Top = 1
           Width = 1086
           Height = 206
-          Align = alTop
+          Align = alClient
           TabOrder = 1
           object cxGrid_MasterDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
@@ -372,10 +372,11 @@ object OrderInternalForm: TOrderInternalForm
             object DescName: TcxGridDBColumn
               Caption = #1069#1083#1077#1084#1077#1085#1090
               DataBinding.FieldName = 'DescName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 64
+              Width = 60
             end
             object Article: TcxGridDBColumn
               Caption = 'Artikel Nr'
@@ -391,7 +392,7 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 80
+              Width = 150
             end
             object EAN: TcxGridDBColumn
               DataBinding.FieldName = 'EAN'
@@ -425,7 +426,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actChoiceFormOrderClientItem
+                  Action = actChoiceForm_OrderClientItem
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -440,11 +441,12 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 70
+              Width = 100
             end
             object Comment_goods: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1059#1079#1077#1083')'
               DataBinding.FieldName = 'Comment_goods'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -467,7 +469,7 @@ object OrderInternalForm: TOrderInternalForm
               Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Width = 70
+              Width = 55
             end
             object Amount_unit: TcxGridDBColumn
               Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074
@@ -510,7 +512,7 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-              Width = 70
+              Width = 200
             end
             object CIN: TcxGridDBColumn
               Caption = 'CIN Nr.'
@@ -525,6 +527,7 @@ object OrderInternalForm: TOrderInternalForm
             object ProductName: TcxGridDBColumn
               Caption = 'Boat'
               DataBinding.FieldName = 'ProductName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
@@ -736,7 +739,7 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1083#1099' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080
-              Width = 155
+              Width = 200
             end
             object ProdColorName_goods_ch3: TcxGridDBColumn
               Caption = 'Farbe'
@@ -788,11 +791,12 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 120
+              Width = 200
             end
             object ProdColorPatternName_ch3: TcxGridDBColumn
               Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
               DataBinding.FieldName = 'ProdColorPatternName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
@@ -849,15 +853,15 @@ object OrderInternalForm: TOrderInternalForm
           Width = 1086
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
-          AlignSplitter = salTop
-          Control = cxGrid_Master
+          AlignSplitter = salBottom
+          Control = cxGrid_Detail
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
           Top = 215
           Width = 1086
           Height = 101
-          Align = alClient
+          Align = alBottom
           TabOrder = 0
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
@@ -1121,8 +1125,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 69
           Align = alBottom
           TabOrder = 5
-          ExplicitLeft = 0
-          ExplicitTop = 447
           object btnInsertUpdateMovement: TcxButton
             Left = 12
             Top = 6
@@ -1208,13 +1210,13 @@ object OrderInternalForm: TOrderInternalForm
             Top = 6
             Width = 155
             Height = 25
-            Action = actChoiceFormOrderClientItem
+            Action = actChoiceForm_OrderClientItem
             ParentShowHint = False
             ShowHint = True
             TabOrder = 8
           end
           object cxButton1: TcxButton
-            Left = 199
+            Left = 201
             Top = 37
             Width = 178
             Height = 25
@@ -1539,7 +1541,7 @@ object OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actChoiceFormOrderClientItem
+                Action = actChoiceForm_OrderClientItem
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1627,14 +1629,23 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'FormName'
-        Value = 'TOrderClientForm'
-        DataType = ftString
-        ParamType = ptInput
+        Name = 'inOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Value = 'true'
+        Name = 'MovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = 'TOrderClientForm'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1918,7 +1929,7 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbChoiceFormOrderClientItem: TdxBarButton
-      Action = actChoiceFormOrderClientItem
+      Action = actChoiceForm_OrderClientItem
       Category = 0
     end
     object bbInsertRecordDetail: TdxBarButton
@@ -2390,6 +2401,15 @@ object OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMI_Child
+        end
+        item
+          StoredProc = spSelectMI_Detail
+        end
+        item
+          StoredProc = spSelectMI_DetailAll
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2708,7 +2728,7 @@ object OrderInternalForm: TOrderInternalForm
           StoredProc = spUnErasedMIMaster
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2816,14 +2836,14 @@ object OrderInternalForm: TOrderInternalForm
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGrid_MasterDBTableView
-      Action = actChoiceFormOrderClientItem
+      Action = actChoiceForm_OrderClientItem
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ShortCut = 45
       ImageIndex = 0
     end
-    object actChoiceFormOrderClientItem: TOpenChoiceForm
+    object actChoiceForm_OrderClientItem: TOpenChoiceForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -3502,7 +3522,7 @@ object OrderInternalForm: TOrderInternalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actOrderClientInsertForm
+          Action = actChoiceForm_OrderClient
         end
         item
           Action = actInsert_MI_byOrderAll
@@ -3515,7 +3535,7 @@ object OrderInternalForm: TOrderInternalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1087#1086' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
       ImageIndex = 47
     end
-    object actOrderClientInsertForm: TOpenChoiceForm
+    object actChoiceForm_OrderClient: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3529,8 +3549,24 @@ object OrderInternalForm: TOrderInternalForm
         item
           Name = 'Key'
           Value = '0'
-          Component = FormParams
-          ComponentItem = 'MovementId_OrderClient'
+          Component = GuidesOrderClient
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_all'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName_Full'
+          Value = Null
+          Component = GuidesProduct
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -3614,8 +3650,8 @@ object OrderInternalForm: TOrderInternalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 1048
-    Top = 48
+    Left = 1024
+    Top = 88
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -3804,8 +3840,8 @@ object OrderInternalForm: TOrderInternalForm
       item
         Name = 'inMovementId_OrderClient'
         Value = Null
-        Component = GuidesOrderClient
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'MovementId_OrderClient'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -4036,8 +4072,8 @@ object OrderInternalForm: TOrderInternalForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 752
-    Top = 24
+    Left = 984
+    Top = 96
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -4405,8 +4441,8 @@ object OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 624
-    Top = 48
+    Left = 976
+    Top = 64
   end
   object GuidesOrderClient: TdsdGuides
     KeyField = 'Id'
@@ -4445,8 +4481,8 @@ object OrderInternalForm: TOrderInternalForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 64
+    Left = 656
+    Top = 40
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
@@ -5106,7 +5142,7 @@ object OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inGoodsId'
-        Value = ''
+        Value = 0
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

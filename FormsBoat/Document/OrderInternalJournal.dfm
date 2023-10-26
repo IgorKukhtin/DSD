@@ -107,17 +107,17 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Properties.Items = <
           item
             Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 11
+            ImageIndex = 76
             Value = 1
           end
           item
             Description = #1055#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 12
+            ImageIndex = 77
             Value = 2
           end
           item
             Description = #1059#1076#1072#1083#1077#1085
-            ImageIndex = 13
+            ImageIndex = 52
             Value = 3
           end>
         HeaderAlignmentHorz = taCenter
@@ -857,6 +857,11 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = 0
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -892,6 +897,11 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
           Value = Null
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = 0
           MultiSelectSeparator = ','
         end>
       isShowModal = False
