@@ -104,13 +104,18 @@ BEGIN
              AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
               AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                   )
-              -- Этих Отправляем Сразу
-              OR (Object_Retail.Id IN (310855 -- !!!Варус!!!
-                                     -- , 310846 -- !!!ВК!!!
-                                      )
-              AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
-              AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
-                 ))
+               -- Этих Отправляем Сразу
+               OR (Object_Retail.Id IN (310855 -- !!!Варус!!!
+                                      -- , 310846 -- !!!ВК!!!
+                                       )
+               AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+               AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+                  )
+               -- test
+               /*OR ((Movement_Parent.Id = 26526133 
+                AND Movement.Id        = 26526140
+                   ))*/
+                )
            ORDER BY COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
           ;
 
