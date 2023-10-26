@@ -2419,6 +2419,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_BankAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_BankAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_BankAccountDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_BankAccountDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PersonalGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PersonalGroupForm');
@@ -4033,6 +4038,7 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGLNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberGLNDialogForm');

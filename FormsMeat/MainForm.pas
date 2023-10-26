@@ -1449,6 +1449,9 @@ type
     miReport_HistoryCost_Difference: TMenuItem;
     actReport_ProductionUnionTech_Analys: TdsdOpenForm;
     miReport_ProductionUnionTech_Analys: TMenuItem;
+    actReport_Sale_BankAccount: TdsdOpenForm;
+    miReport_Sale_BankAccount: TMenuItem;
+    N256: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

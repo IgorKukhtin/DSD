@@ -1462,7 +1462,9 @@ uses
   Report_ProductionUnionTech_Analys in '..\..\Forms\Report\Report_ProductionUnionTech_Analys.pas' {Report_ProductionUnionTech_AnalysForm: TParentForm},
   Report_ProductionUnionTech_AnalysDialog in '..\..\Forms\Report\Report_ProductionUnionTech_AnalysDialog.pas' {Report_ProductionUnionTech_AnalysDialogForm: TParentForm},
   OrderInternalPackRemains_deflection in '..\..\Forms\Document\OrderInternalPackRemains_deflection.pas' {OrderInternalPackRemains_deflectionForm: TParentForm},
-  OrderInternal_deflection in '..\..\Forms\Document\OrderInternal_deflection.pas' {OrderInternal_deflectionForm: TParentForm};
+  OrderInternal_deflection in '..\..\Forms\Document\OrderInternal_deflection.pas' {OrderInternal_deflectionForm: TParentForm},
+  Report_Sale_BankAccount in '..\..\Forms\Report\Report_Sale_BankAccount.pas' {Report_Sale_BankAccountForm: TParentForm},
+  Report_Sale_BankAccountDialog in '..\..\Forms\Report\Report_Sale_BankAccountDialog.pas' {Report_Sale_BankAccountDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
