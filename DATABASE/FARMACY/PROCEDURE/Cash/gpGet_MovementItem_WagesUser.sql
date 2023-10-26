@@ -192,6 +192,7 @@ BEGIN
                                                  COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
                                                , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                                                    COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
+                                               , MIFloat_SummaFullChargeFact.ValueData                                                                        AS SummaFullChargeFact
                                                , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
                                                , MovementItem.Amount                 AS SummaTotal
                                          FROM  MovementItem
@@ -339,7 +340,7 @@ BEGIN
                  , FoundPositionsSUN.SummaFine                  AS SummaFine
                  , tmpAdditionalExpenses.SummaTechnicalRediscount AS SummaTechnicalRediscount
                  , tmpAdditionalExpenses.SummaMoneyBox          AS SummaMoneyBox
-                 , tmpAdditionalExpenses.SummaFullCharge        AS SummaFullCharge
+                 , tmpAdditionalExpenses.SummaFullChargeFact    AS SummaFullCharge
                  , tmpAdditionalExpenses.SummaMoneyBoxUsed      AS SummaMoneyBoxUsed
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
                  , ObjectString_PasswordEHels.ValueData         AS UserPassword

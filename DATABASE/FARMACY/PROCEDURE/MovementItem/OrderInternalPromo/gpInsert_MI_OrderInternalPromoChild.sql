@@ -287,14 +287,14 @@ BEGIN
 
             -- расчет коэфф.
              , tmpMI_Child_Calc AS (SELECT tmpMI_Child.*
-                                         , (((tmpMI_Child.AmountOut_real / vbDays) * tmpRemainsDay.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / tmpRemainsDay.RemainsDay) :: TFloat AS Koeff
+                                         , (((tmpMI_Child.AmountOut_real / vbDays) * tmpRemainsDay.RemainsDay - COALESCE (tmpMI_Child.Remains,0)) / NULLIF(tmpRemainsDay.RemainsDay, 0)) :: TFloat AS Koeff
                                     FROM tmpData_all AS tmpMI_Child
                                          LEFT JOIN tmpRemainsDay ON tmpRemainsDay.Id = tmpMI_Child.ParentId
                                    )
              -- Пересчитывает кол-во дней остатка без аптек с отриц. коэфф.
              , tmpRemainsDay2 AS (SELECT tmpMI_Master.Id
                                       , CASE WHEN (COALESCE (tmpChild.AmountOut_real,0) / vbDays) <> 0
-                                             THEN (COALESCE (tmpChild.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / (COALESCE (tmpChild.AmountOut_real,0) / vbDays)
+                                             THEN (COALESCE (tmpChild.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / NULLIF((COALESCE (tmpChild.AmountOut_real,0) / vbDays), 0)
                                              ELSE 0
                                         END AS RemainsDay
                                   FROM tmpMI_Master
@@ -312,15 +312,15 @@ BEGIN
                                 , tmpData_all.ParentId
                                 , tmpData_all.UnitId
                                 , tmpData_all.AmountOut_real
-                                , (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - COALESCE (tmpData_all.Remains,0))/tmpRemainsDay2.RemainsDay) AS AmountOut
+                                , (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - COALESCE (tmpData_all.Remains,0))/NULLIF(tmpRemainsDay2.RemainsDay, 0)) AS AmountOut
                                 , tmpData_all.Remains
                                 , tmpData_all.Amount_Master
-                                , SUM (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - COALESCE (tmpData_all.Remains,0))/tmpRemainsDay2.RemainsDay) OVER (PARTITION BY tmpData_all.ParentId) AS AmountOutSUM
+                                , SUM (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - COALESCE (tmpData_all.Remains,0))/NULLIF(tmpRemainsDay2.RemainsDay, 0)) OVER (PARTITION BY tmpData_all.ParentId) AS AmountOutSUM
                                 , COALESCE (tmpData_all.AmountManual,0) AS AmountManual
                            FROM tmpMI_Child_Calc AS tmpData_all
                                 LEFT JOIN tmpRemainsDay2 ON tmpRemainsDay2.Id = tmpData_all.ParentId
                            WHERE COALESCE (tmpData_all.Koeff,0) > 0
-                             AND (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - COALESCE (tmpData_all.Remains,0))/tmpRemainsDay2.RemainsDay) > 0
+                             AND (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - COALESCE (tmpData_all.Remains,0))/NULLIF(tmpRemainsDay2.RemainsDay, 0)) > 0
                            )
 
 

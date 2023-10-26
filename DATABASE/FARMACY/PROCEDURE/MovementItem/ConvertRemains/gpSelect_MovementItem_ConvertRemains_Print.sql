@@ -1,11 +1,9 @@
- -- Function: gpSelect_MovementItem_ConvertRemains()
+ -- Function: gpSelect_MovementItem_ConvertRemains_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_ConvertRemains (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ConvertRemains_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ConvertRemains(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ConvertRemains_Print(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inShowAll     Boolean      , --
-    IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id            Integer
@@ -22,7 +20,6 @@ RETURNS TABLE (Id            Integer
              , Measure       TVarChar
              , UKTZED        TVarChar
 
-             , Color_Code    Integer
              , Color_UKTZED  Integer
 
              , isErased      Boolean
@@ -35,27 +32,6 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ConvertRemains());
     vbUserId:= lpGetUserBySession (inSession);
 
-    CREATE TEMP TABLE tmpCodeUKTZED ON COMMIT DROP AS
-    SELECT DISTINCT Object_UKTZED.ValueData    AS UKTZED
-    FROM Object AS Object_UKTZED
-    WHERE Object_UKTZED.DescId = zc_Object_UKTZED()
-      AND Object_UKTZED.isErased = FALSE;
-                            
-    ANALYSE tmpCodeUKTZED;
-
-    CREATE TEMP TABLE tmpGoodsUKTZED ON COMMIT DROP AS
-    SELECT Object_Goods_Juridical.GoodsMainId
-         , string_agg(DISTINCT REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), ''), ',')::TVarChar AS UKTZED
-         , max(CASE WHEN COALESCE (tmpCodeUKTZED.UKTZED, '') <> '' THEN 1 ELSE 0 END) AS RegUKTZED        
-    FROM Object_Goods_Juridical
-         LEFT JOIN tmpCodeUKTZED ON tmpCodeUKTZED.UKTZED ILIKE REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')
-    WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
-      AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) >= 4
-      AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-      AND Object_Goods_Juridical.GoodsMainId <> 0
-    GROUP BY Object_Goods_Juridical.GoodsMainId;
-
-    ANALYSE tmpGoodsUKTZED;
     
     RETURN QUERY
        SELECT MovementItem.Id
@@ -75,27 +51,7 @@ BEGIN
             
             , Object_Goods_Main.CodeUKTZED                          AS UKTZED
             
-            , CASE WHEN COALESCE (Object_Goods_Main.ObjectCode, 0) = 0
-                   THEN zc_Color_Red()
-                   ELSE zc_Color_White()
-                   END::Integer                                     AS Color_Code
-                   
-            , CASE WHEN COALESCE (Object_Goods_Main.ObjectCode, 0) = 0
-                   THEN zc_Color_Red()
-                   WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') = '' 
-                    AND COALESCE (tmpGoodsUKTZED.UKTZED, '') = '' 
-                     OR COALESCE (Object_Goods_Main.CodeUKTZED, '') = '' 
-                    AND COALESCE (tmpGoodsUKTZED.UKTZED, '') <> '' 
-                    AND tmpGoodsUKTZED.RegUKTZED = 1
-                   THEN zfCalc_Color (255, 165, 0) 
-                   WHEN COALESCE (Object_Goods_Main.CodeUKTZED, '') <> ''
-                    AND COALESCE (tmpCodeUKTZED.UKTZED, '') = ''
-                     OR COALESCE (Object_Goods_Main.CodeUKTZED, '') = '' 
-                    AND COALESCE (tmpGoodsUKTZED.UKTZED, '') <> '' 
-                    AND tmpGoodsUKTZED.RegUKTZED = 0
-                   THEN zfCalc_Color (255, 0, 255) 
-                   ELSE zc_Color_White()
-                   END::Integer                                     AS Color_UKTZED
+            , zc_Color_White()                                      AS Color_UKTZED
 
             , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
        FROM MovementItem
@@ -119,14 +75,10 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Measure
                                          ON MIString_Measure.MovementItemId = MovementItem.Id
                                         AND MIString_Measure.DescId = zc_MIString_Measure()
-                                        
-            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-
-            LEFT JOIN tmpCodeUKTZED ON tmpCodeUKTZED.UKTZED ILIKE Object_Goods_Main.CodeUKTZED
 
        WHERE MovementItem.DescId = zc_MI_Master()
          AND MovementItem.MovementId = inMovementId
-         AND (MovementItem.isErased = FALSE  OR inIsErased = TRUE)
+         AND MovementItem.isErased = FALSE
        ORDER BY MIFloat_Number.ValueData
        ;
 
@@ -142,4 +94,4 @@ $BODY$
 
 --ТЕСТ
 -- 
-SELECT * FROM gpSelect_MovementItem_ConvertRemains (inMovementId:= 33817411 , inShowAll:= False, inIsErased:= FALSE, inSession:= '3')
+SELECT * FROM gpSelect_MovementItem_ConvertRemains_Print (inMovementId:= 33817411, inSession:= '3')

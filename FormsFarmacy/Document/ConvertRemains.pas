@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdExportToXLSAction;
 
 type
   TConvertRemainsForm = class(TAncestorDocumentForm)
@@ -32,60 +32,40 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    DiffSumm: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
     cxSplitter1: TcxSplitter;
-    spInsertUpdate_MI_ConvertRemains_Set_Zero: TdsdStoredProc;
     spGetImportSettingId: TdsdStoredProc;
     bbactStartLoad: TdxBarButton;
     GuidesUnit: TdsdGuides;
     edUnitName: TcxButtonEdit;
     dxBarButton1: TdxBarButton;
-    Remains_Amount: TcxGridDBColumn;
-    Proficit: TcxGridDBColumn;
-    Deficit: TcxGridDBColumn;
-    Remains_Summ: TcxGridDBColumn;
-    DeficitSumm: TcxGridDBColumn;
-    ProficitSumm: TcxGridDBColumn;
-    Remains_FactAmount: TcxGridDBColumn;
-    Remains_FactSumm: TcxGridDBColumn;
-    cbisRedCheck: TcxCheckBox;
-    CommentTRName: TcxGridDBColumn;
-    Explanation: TcxGridDBColumn;
-    actChoiceCommentTR: TOpenChoiceForm;
-    actChoiceGoods: TOpenChoiceForm;
+    UKTZED: TcxGridDBColumn;
+    VAT: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
-    MinExpirationDate: TcxGridDBColumn;
-    cbAdjustment: TcxCheckBox;
-    Comment: TcxGridDBColumn;
-    InvNumberSend: TcxGridDBColumn;
-    OperDateSend: TcxGridDBColumn;
-    Color_calc: TcxGridDBColumn;
-    cbCorrectionSUN: TcxCheckBox;
-    actOpenSend: TdsdInsertUpdateAction;
+    Color_UKTZED: TcxGridDBColumn;
     dxBarButton3: TdxBarButton;
-    actChoiceCommentSend: TOpenChoiceForm;
-    spUpdateCommentSend: TdsdStoredProc;
-    actUpdateCommentSend: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
-    actUpdateRedCheck: TdsdExecStoredProc;
-    spUpdateRedCheck: TdsdStoredProc;
     bbUpdateRedCheck: TdxBarButton;
-    actComplete: TdsdExecStoredProc;
-    spMovementComplete: TdsdStoredProc;
     bbComplete: TdxBarButton;
-    isDeferred: TcxGridDBColumn;
-    spUpdate_Deferred: TdsdStoredProc;
-    msctUpdate_Deferred: TMultiAction;
-    actUpdate_Deferred: TdsdExecStoredProc;
+    Measure: TcxGridDBColumn;
     bbUpdate_Deferred: TdxBarButton;
-    spPUSHComplete: TdsdStoredProc;
-    actPUSHComplete: TdsdShowPUSHMessage;
+    dsdStoredProc1: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    dxBarButton5: TdxBarButton;
+    Number: TcxGridDBColumn;
+    actPrintXLS: TdsdExportToXLS;
+    dxBarButton6: TdxBarButton;
+    actSelectPrint: TdsdExecStoredProc;
+    spTotalSumm: TdsdStoredProc;
+    actTotalSumm: TdsdExecStoredProc;
   private
     { Private declarations }
   public

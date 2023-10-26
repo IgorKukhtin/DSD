@@ -22,7 +22,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
      -- пересчитали итоговые суммы
-     PERFORM gpInsertUpdate_ConvertRemains_TotalSumm (ioId, inSession);
+     PERFORM gpInsertUpdate_ConvertRemains_TotalSumm (inMovementId, inUserId::TVarChar);
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

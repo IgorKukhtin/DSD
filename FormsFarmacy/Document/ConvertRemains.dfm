@@ -1,26 +1,26 @@
 inherited ConvertRemainsForm: TConvertRemainsForm
   Caption = #1050#1086#1085#1074#1077#1088#1090#1072#1094#1080#1103' '#1086#1089#1090#1072#1090#1082#1086#1074
   ClientHeight = 479
-  ClientWidth = 915
+  ClientWidth = 987
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 937
+  ExplicitWidth = 1009
   ExplicitHeight = 535
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 121
-    Width = 915
+    Width = 987
     Height = 358
     ExplicitTop = 121
     ExplicitWidth = 915
     ExplicitHeight = 358
     ClientRectBottom = 358
-    ClientRectRight = 915
+    ClientRectRight = 987
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 915
       ExplicitHeight = 334
       inherited cxGrid: TcxGrid
-        Width = 915
+        Width = 987
         Height = 326
         ExplicitWidth = 915
         ExplicitHeight = 326
@@ -43,12 +43,11 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             item
               Format = ',0.##;-,0.##; '
               Kind = skSum
-              Column = DiffSumm
+              Column = Summa
             end
             item
               Format = ',0.####;-,0.####; '
               Kind = skSum
-              Column = Remains_Amount
             end
             item
               Format = ',0.####;-,0.####; '
@@ -62,17 +61,10 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             item
               Format = ',0.####;-,0.####; '
               Kind = skSum
-              Column = Deficit
             end
             item
               Format = ',0.####;-,0.####; '
               Kind = skSum
-              Column = Proficit
-            end
-            item
-              Format = ',0.##;-,0.##; '
-              Kind = skSum
-              Column = Remains_Summ
             end
             item
               Format = ',0.##;-,0.##; '
@@ -81,26 +73,27 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             item
               Format = ',0.##;-,0.##; '
               Kind = skSum
-              Column = DeficitSumm
             end
             item
               Format = ',0.##;-,0.##; '
               Kind = skSum
-              Column = ProficitSumm
+            end
+            item
+              Format = ',0.##;-,0.##; '
+              Kind = skSum
             end
             item
               Format = ',0.####;-,0.####; '
               Kind = skSum
-              Column = Remains_FactAmount
             end
             item
               Format = ',0.##;-,0.##; '
               Kind = skSum
-              Column = Remains_FactSumm
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -110,9 +103,20 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object Number: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Number'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;-0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -124,11 +128,30 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 265
+            Width = 352
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object Measure: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084
+            DataBinding.FieldName = 'Measure'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1085#1076#1089
+            DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
@@ -136,172 +159,37 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             Options.Editing = False
             Width = 62
           end
-          object Remains_Amount: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains_Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 92
-          end
-          object Remains_Summ: TcxGridDBColumn
-            Caption = 'C'#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072
-            DataBinding.FieldName = 'Remains_Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 73
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 68
-          end
-          object DiffSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099
-            DataBinding.FieldName = 'DiffSumm'
+          object Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.##;-,0.##; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Styles.Footer = dmMain.cxRemainsCashContentStyle
-            Width = 70
-          end
-          object isDeferred: TcxGridDBColumn
-            Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077
-            DataBinding.FieldName = 'isDeferred'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 73
-          end
-          object CommentTRName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-            DataBinding.FieldName = 'CommentTRName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceCommentTR
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 105
-          end
-          object Explanation: TcxGridDBColumn
-            Caption = #1055#1086#1103#1089#1085#1077#1085#1080#1077
-            DataBinding.FieldName = 'Explanation'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 117
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' 2'
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 113
-          end
-          object Remains_FactAmount: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains_FactAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Remains_FactSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1092#1072#1082#1090'. '#1086#1089#1090#1072#1090#1082#1072
-            DataBinding.FieldName = 'Remains_FactSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Deficit: TcxGridDBColumn
-            Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
-            DataBinding.FieldName = 'Deficit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 76
-          end
-          object DeficitSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
-            DataBinding.FieldName = 'DeficitSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 73
-          end
-          object Proficit: TcxGridDBColumn
-            Caption = #1048#1079#1083#1080#1096#1077#1082
-            DataBinding.FieldName = 'Proficit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object ProficitSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
-            DataBinding.FieldName = 'ProficitSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-          end
-          object MinExpirationDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'ExpirationDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 86
           end
-          object InvNumberSend: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088' '#1087#1077#1088#1077#1084'. '#1057#1059#1053' '#1080#1083#1080' '#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'InvNumberSend'
+          object UKTZED: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1091#1082#1090#1079#1076
+            DataBinding.FieldName = 'UKTZED'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 94
+            Width = 105
           end
-          object OperDateSend: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084'. '#1057#1059#1053' '#1080#1083#1080' '#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'OperDateSend'
+          object VAT: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'VAT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 51
           end
-          object Color_calc: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_calc'
+          object Color_UKTZED: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_UKTZED'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
           end
         end
@@ -309,16 +197,17 @@ inherited ConvertRemainsForm: TConvertRemainsForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 326
-        Width = 915
+        Width = 987
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
+        ExplicitWidth = 915
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 915
+    Width = 987
     Height = 89
     TabOrder = 3
     ExplicitWidth = 915
@@ -381,30 +270,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 426
-    end
-    object cbisRedCheck: TcxCheckBox
-      Left = 328
-      Top = 1
-      Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
-      Properties.ReadOnly = True
-      TabOrder = 10
-      Width = 92
-    end
-    object cbAdjustment: TcxCheckBox
-      Left = 433
-      Top = 1
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072
-      Properties.ReadOnly = False
-      TabOrder = 11
-      Width = 216
-    end
-    object cbCorrectionSUN: TcxCheckBox
-      Left = 328
-      Top = 42
-      Caption = #1050#1086#1088#1088#1077#1082#1094#1080#1103' '#1057#1059#1053' '
-      Properties.ReadOnly = True
-      TabOrder = 12
-      Width = 112
     end
   end
   inherited ActionList: TActionList
@@ -473,199 +338,229 @@ inherited ConvertRemainsForm: TConvertRemainsForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      BeforeAction = actPUSHComplete
-    end
     inherited actAddMask: TdsdExecStoredProc
       AfterAction = actRefresh
-      BeforeAction = actChoiceGoods
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1087#1086#1083#1085#1086#1075#1086' '#1087#1077#1088#1077#1095#1085#1103' '#1087#1086' '#1089#1077#1090#1080
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1087#1086#1083#1085#1086#1075#1086' '#1087#1077#1088#1077#1095#1085#1103' '#1087#1086' '#1089#1077#1090#1080
     end
-    object actChoiceCommentTR: TOpenChoiceForm
-      Category = 'DSDLib'
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ChoiceCommentTR'
-      FormName = 'TCommentTRForm'
-      FormNameParam.Value = 'TCommentTRForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CommentTRId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CommentTRName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actChoiceGoods: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceGoods'
-      FormName = 'TGoodsLiteForm'
-      FormNameParam.Value = 'TGoodsLiteForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
+          Name = 'inMovementId'
           Value = Null
           Component = FormParams
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actOpenSend: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
-      ImageIndex = 1
-      FormNameParam.Value = ''
-      FormNameParam.Component = MasterCDS
-      FormNameParam.ComponentItem = 'FormName'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'IDSend'
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42005d
-          Component = edOperDate
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
         end>
-      isShowModal = False
-      CheckIDRecords = True
-      ActionType = acUpdate
-      DataSource = MasterDS
-      IdFieldName = 'IDSend'
     end
-    object actChoiceCommentSend: TOpenChoiceForm
-      Category = 'DSDLib'
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'ChoiceCommentSend'
-      FormName = 'TCommentSendForm'
-      FormNameParam.Value = 'TCommentSendForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'CommentSendId'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actUpdateCommentSend: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actChoiceCommentSend
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateCommentSend
+      StoredProc = spGetImportSettingId
       StoredProcList = <
         item
-          StoredProc = spUpdateCommentSend
+          StoredProc = spGetImportSettingId
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1057#1059#1053
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1057#1059#1053
-      ImageIndex = 79
+      Caption = 'actGetImportSetting'
+      Hint = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072
     end
-    object actUpdateRedCheck: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateRedCheck
-      StoredProcList = <
-        item
-          StoredProc = spUpdateRedCheck
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
-      ImageIndex = 7
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"?'
-    end
-    object actComplete: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      BeforeAction = actPUSHComplete
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementComplete
-        end
-        item
-          StoredProc = spGet
-        end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
-      ImageIndex = 12
-      QuestionBeforeExecute = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084'?'
-    end
-    object msctUpdate_Deferred: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
       ActionList = <
         item
-          Action = actUpdate_Deferred
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actTotalSumm
+        end
+        item
+          Action = actRefresh
         end>
-      View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
-      ImageIndex = 80
+      QuestionBeforeExecute = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
+      Caption = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
     end
-    object actUpdate_Deferred: TdsdExecStoredProc
+    object actSelectPrint: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Deferred
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spUpdate_Deferred
+          StoredProc = spSelectPrint
         end>
-      Caption = 'actUpdate_Deferred'
+      Caption = 'actSelectPrint'
     end
-    object actPUSHComplete: TdsdShowPUSHMessage
+    object actPrintXLS: TdsdExportToXLS
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spPUSHComplete
+      BeforeAction = actSelectPrint
+      ItemsDataSet = PrintItemsCDS
+      FileName = 'ConvertRemains'
+      FileNameParam.Value = 'ConvertRemains'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 3.000000000000000000
+      SignHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -16
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = [fsBold]
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = [fsBold]
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
+      ColumnParams = <
+        item
+          Caption = #1082#1086#1076
+          FieldName = 'GoodsCode'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 7
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+          FieldName = 'GoodsName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 44
+          WrapText = True
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skText
+          KindText = #1048#1090#1086#1075#1086':'
+        end
+        item
+          Caption = #1077#1076'.'#1080#1079#1084
+          FieldName = 'Measure'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 5
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1082#1086#1083'-'#1074#1086
+          FieldName = 'Amount'
+          DataType = ftFloat
+          DecimalPlace = 3
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 9
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1094#1077#1085#1072' '#1089' '#1085#1076#1089
+          FieldName = 'PriceWithVAT'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 9
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1089#1091#1084#1084' '#1089' '#1085#1076#1089
+          FieldName = 'Summa'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 12
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1082#1086#1076' '#1091#1082#1090#1079#1076
+          FieldName = 'UKTZED'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1087#1088#1080#1079#1085#1072#1082' '#1085#1076#1089
+          FieldName = 'VAT'
+          DataType = ftFloat
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 5
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end>
+      AccelerateDraw = True
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+    end
+    object actTotalSumm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spTotalSumm
       StoredProcList = <
         item
-          StoredProc = spPUSHComplete
+          StoredProc = spTotalSumm
         end>
-      Caption = 'actPUSH'
+      Caption = 'actSelectPrint'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -710,10 +605,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -726,7 +617,11 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
@@ -734,7 +629,11 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton3'
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -743,26 +642,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateRedCheck'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Deferred'
         end
         item
           Visible = True
@@ -795,34 +674,57 @@ inherited ConvertRemainsForm: TConvertRemainsForm
       Category = 0
     end
     object dxBarButton3: TdxBarButton
-      Action = actOpenSend
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       Category = 0
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Visible = ivAlways
+      ImageIndex = 1
     end
     object dxBarButton4: TdxBarButton
-      Action = actUpdateCommentSend
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1057#1059#1053
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1057#1059#1053
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object bbUpdateRedCheck: TdxBarButton
-      Action = actUpdateRedCheck
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
+      Visible = ivAlways
+      ImageIndex = 7
     end
     object bbComplete: TdxBarButton
-      Action = actComplete
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
       Category = 0
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      Visible = ivAlways
+      ImageIndex = 12
     end
     object bbUpdate_Deferred: TdxBarButton
-      Action = msctUpdate_Deferred
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Visible = ivAlways
+      ImageIndex = 80
+    end
+    object dxBarButton5: TdxBarButton
+      Action = macStartLoad
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actPrintXLS
       Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = actOpenSend
       end>
     ColorRuleList = <
       item
-        BackGroundValueColumn = Color_calc
+        ColorColumn = UKTZED
+        BackGroundValueColumn = Color_UKTZED
         ColorValueList = <>
       end>
     SummaryItemList = <
@@ -953,27 +855,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isRedCheck'
-        Value = Null
-        Component = cbisRedCheck
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isAdjustment'
-        Value = Null
-        Component = cbAdjustment
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isCorrectionSUN'
-        Value = Null
-        Component = cbCorrectionSUN
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -1020,22 +901,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisRedCheck'
-        Value = Null
-        Component = cbisRedCheck
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAdjustment'
-        Value = Null
-        Component = cbAdjustment
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1045,12 +910,14 @@ inherited ConvertRemainsForm: TConvertRemainsForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
+        Guides = GuidesUnit
       end>
     ActionItemList = <
       item
         Action = actInsertUpdateMovement
       end
       item
+        Action = actRefresh
       end>
     Left = 288
     Top = 216
@@ -1068,7 +935,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         Control = edComment
       end
       item
-        Control = cbAdjustment
       end
       item
       end
@@ -1317,16 +1183,12 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     Top = 196
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Print'
-    DataSet = PrintHeaderCDS
+    StoredProcName = 'gpSelect_MovementItem_ConvertRemains_Print'
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -1337,8 +1199,8 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 367
-    Top = 216
+    Left = 391
+    Top = 208
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1352,24 +1214,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     Left = 476
     Top = 257
   end
-  object spInsertUpdate_MI_ConvertRemains_Set_Zero: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ConvertRemains_Set_Zero'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    Left = 874
-    Top = 184
-  end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
     DataSets = <
@@ -1379,7 +1223,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TConvertRemainsForm;zc_Object_ImportSetting_TechnicalRediscount'
+        Value = 'TConvertRemainsForm;zc_Object_ImportSetting_ConvertRemains'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1405,7 +1249,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitName
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1432,164 +1275,55 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     Left = 288
     Top = 16
   end
-  object spUpdateCommentSend: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_ConvertRemains_CommentSend'
-    DataSets = <>
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementItemId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
+        Name = 'inDefaultKey'
+        Value = 
+          'TGoodsSPSearch_1303Form;zc_Object_ImportSetting_GoodsSPSearch_13' +
+          '03'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCommentSendId'
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
         Value = Null
         Component = FormParams
-        ComponentItem = 'CommentSendId'
-        ParamType = ptInput
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 678
-    Top = 312
-  end
-  object spUpdateRedCheck: TdsdStoredProc
-    StoredProcName = 'gpUpdate_ConvertRemains_RedCheck'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisRedCheck'
-        Value = Null
-        Component = cbisRedCheck
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 806
-    Top = 312
-  end
-  object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_ConvertRemains'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inmovementid'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCurrentData'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperDate'
-        Value = 42951d
-        Component = edOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 320
-    Top = 360
-  end
-  object spUpdate_Deferred: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_ConvertRemains_Deferred'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDeferred'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isDeferred'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 800
+    Left = 776
     Top = 240
   end
-  object spPUSHComplete: TdsdStoredProc
-    StoredProcName = 'gpSelect_ShowPUSH_ConvertRemainsComplete'
+  object spTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ConvertRemains_TotalSumm'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementID'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outShowMessage'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPUSHType'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outText'
-        Value = Null
-        DataType = ftWideString
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 450
-    Top = 352
+    Left = 647
+    Top = 312
   end
 end

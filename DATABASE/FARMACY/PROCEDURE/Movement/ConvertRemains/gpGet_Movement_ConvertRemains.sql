@@ -1,10 +1,9 @@
 -- Function: gpGet_Movement_ConvertRemains()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_ConvertRemains (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ConvertRemains (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ConvertRemains(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -84,4 +83,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ConvertRemains (inMovementId:= 1, inOperDate:= '01.01.2018', inSession:= '3')
+-- SELECT * FROM gpGet_Movement_ConvertRemains (inMovementId:= 1, inSession:= '3')

@@ -30,34 +30,20 @@ uses
 type
   TConvertRemainsJournalForm = class(TAncestorJournalForm)
     colUnitName: TcxGridDBColumn;
-    colTotalDiff: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalDiffSumm: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
     dxBarButton1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     colComment: TcxGridDBColumn;
-    actConvertRemains_Formation: TMultiAction;
-    actExecuteDialogData: TExecuteDialog;
-    actExecConvertRemains_Formation: TdsdExecStoredProc;
-    spConvertRemains_Formation: TdsdStoredProc;
-    colisRedCheck: TcxGridDBColumn;
-    actChoiceUnitTreeForm: TOpenChoiceForm;
-    actAddRedCheck: TdsdExecStoredProc;
-    spInsertRedCheck: TdsdStoredProc;
-    actOpenConvertRemains: TdsdOpenForm;
+    colTotalCount: TcxGridDBColumn;
     bbAddRedCheck: TdxBarButton;
-    actInsertConvertRemains: TdsdExecStoredProc;
-    spInsertConvertRemains: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
-    colisAdjustment: TcxGridDBColumn;
-    isCorrectionSUN: TcxGridDBColumn;
-    spPUSHComplete: TdsdStoredProc;
-    actPUSHComplete: TdsdShowPUSHMessage;
+    colTotalSumm: TcxGridDBColumn;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public
