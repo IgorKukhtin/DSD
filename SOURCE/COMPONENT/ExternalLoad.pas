@@ -40,6 +40,7 @@ type
     procedure Activate; override;
     procedure Close; override;
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
+    property isOEM: boolean read FOEM write FOEM default true;
   end;
 
   TODBCExternalLoad = class(TExternalLoad)
@@ -59,6 +60,7 @@ type
   private
     FInitializeDirectory: string;
     FFileName: string;
+    FisOEM: boolean;
   protected
     function GetStoredProc: TdsdStoredProc; virtual; abstract;
     function GetExternalLoad: TExternalLoad; virtual; abstract;
@@ -70,6 +72,7 @@ type
   published
     // Директория загрузки. Сделана published что бы сохранять данные по стандартной схеме
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
+    property isOEM: boolean read FisOEM write FisOEM default true;
   end;
 
   TImportSettingsItems = class (TCollectionItem)
@@ -192,6 +195,7 @@ end;
 constructor TExternalLoadAction.Create(Owner: TComponent);
 begin
   FileName := '';
+  FisOEM := True;
   inherited;
 end;
 
@@ -204,12 +208,14 @@ begin
   FExternalLoad := TFileExternalLoad(GetExternalLoad);
   try
     FExternalLoad.InitializeDirectory := InitializeDirectory;
+    FExternalLoad.isOEM := isOEM;
     if FileName <> '' then
        FExternalLoad.Open(FileName)
     else
        FExternalLoad.Activate;
     if FExternalLoad.Active then begin
        InitializeDirectory := FExternalLoad.InitializeDirectory;
+       isOEM := FExternalLoad.isOEM;
        FStoredProc := GetStoredProc;
        try
          if  FExternalLoad.RecordCount > 0 then
@@ -242,10 +248,10 @@ begin
      FAdoConnection.Connected := false;
 end;
 
-constructor TFileExternalLoad.Create(DataSetType: TDataSetType; StartRecord: integer; ExtendedProperties: string);
+constructor TFileExternalLoad.Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = '');
 begin
   inherited Create;
-  FOEM := true;
+  FOEM := True;
   FDataSetType := DataSetType;
   FExtendedProperties := ExtendedProperties;
   FStartRecord := StartRecord;
@@ -552,35 +558,10 @@ var strConn :  widestring;
     Rows: integer;
     Excel, XLSheet: Variant;
     I, J: Integer;
-    //
-    b,b1:byte;
-    f:File of byte;
 begin
   case FDataSetType of
     dtMMO: CreateMMODataSet(FileName);
     dtDBF: begin
-    //
-
-    //
-//  b:=$26;
-  b:=$65;
-  b:=$57;
-//  b:=$0;
-  assignfile(f,FileName);
-  {$I-}
-  reset(f);
-  {$I+}
-  if IOResult = 0 then
-  begin
-    seek(f,29);
-    read(f,b1);
-    ShowMessage(IntToStr(ORD(b1)));
-    seek(f,29);
-    write(f,b);
-    {$I-}
-    closeFile(f);
-    {$I+}
-  end;
         //
         FDataSet := TVKSmartDBF.Create(nil);
         TVKSmartDBF(FDataSet).DBFFileName := AnsiString(FileName);

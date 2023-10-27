@@ -70,8 +70,8 @@ BEGIN
           , MILinkObject_BankAccount.ObjectId           AS BankAccountId
           , Object_BankAccount.ValueData                AS BankAccountName
           , Object_Bank.ValueData                       AS BankName
-          , MI_Payment.isErased                         AS isErased
           , COALESCE(MIBoolean_NeedPay.ValueData,FALSE) AS NeedPay
+          , MI_Payment.isErased                         AS isErased
                                    
        FROM MovementItem AS MI_Payment
 
@@ -139,8 +139,8 @@ BEGIN
           , MI_Payment.BankAccountId                    AS BankAccountId
           , MI_Payment.BankAccountName                  AS BankAccountName
           , MI_Payment.BankName                         AS BankName
+          , MI_Payment.NeedPay                          AS NeedPay
           , MI_Payment.isErased                         AS isErased
-          , MI_Payment.isErased                         AS NeedPay
                  
        FROM tmpMI AS MI_Payment
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
