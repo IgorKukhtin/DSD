@@ -343,7 +343,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     end
     object cxButton1: TcxButton
       Left = 295
-      Top = 7
+      Top = 6
       Width = 90
       Height = 25
       Action = actChoiceGuides
@@ -351,8 +351,8 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     end
     object btnUpdate: TcxButton
       Left = 590
-      Top = 7
-      Width = 130
+      Top = 6
+      Width = 139
       Height = 25
       Action = actShowErased
       TabOrder = 2

@@ -143,7 +143,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 404
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -502,25 +501,25 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     Align = alBottom
     TabOrder = 6
     object btnInsert: TcxButton
-      Left = 42
+      Left = 339
       Top = 7
-      Width = 101
+      Width = 90
       Height = 25
       Action = actChoiceGuides
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 159
+      Left = 671
       Top = 7
-      Width = 101
+      Width = 146
       Height = 25
-      Action = actUpdate
+      Action = actShowErased
       TabOrder = 1
     end
     object btnFormClose: TcxButton
-      Left = 809
+      Left = 473
       Top = 7
-      Width = 153
+      Width = 90
       Height = 25
       Action = actFormClose
       ParentShowHint = False
@@ -1117,9 +1116,9 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
+      ImageIndex = 80
     end
     object actPrintStickerTermo: TdsdPrintAction
       Category = 'DSDLib'
@@ -1361,8 +1360,8 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1047#1072#1082#1088#1099#1090#1100
-      ImageIndex = 87
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc
