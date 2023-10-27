@@ -953,10 +953,9 @@
       Height = 33
       Align = alTop
       TabOrder = 2
-      ExplicitLeft = 26
       ExplicitTop = -6
       object lbSearchName: TcxLabel
-        Left = 8
+        Left = 5
         Top = 7
         Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
         ParentFont = False
@@ -972,9 +971,30 @@
         Top = 6
         TabOrder = 1
         DesignSize = (
-          147
+          151
           21)
-        Width = 147
+        Width = 151
+      end
+      object edSearchClientName: TcxTextEdit
+        Left = 391
+        Top = 6
+        TabOrder = 2
+        DesignSize = (
+          162
+          21)
+        Width = 162
+      end
+      object cxLabel1: TcxLabel
+        Left = 330
+        Top = 7
+        Caption = 'Kunden: '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
       end
     end
   end
@@ -4907,10 +4927,14 @@
     ColumnList = <
       item
         Column = InvNumber_OrderClient
+      end
+      item
+        Column = ClientName
+        TextEdit = edSearchClientName
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 312
-    Top = 32
+    Left = 616
+    Top = 24
   end
 end

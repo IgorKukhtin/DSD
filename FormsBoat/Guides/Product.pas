@@ -245,6 +245,8 @@ type
     Panel4: TPanel;
     lbSearchName: TcxLabel;
     edSearchInvNumber_OrderClient: TcxTextEdit;
+    edSearchClientName: TcxTextEdit;
+    cxLabel1: TcxLabel;
   private
     { Private declarations }
   public
