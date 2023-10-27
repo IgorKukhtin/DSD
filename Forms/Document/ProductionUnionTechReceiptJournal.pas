@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxImageComboBox, ChoicePeriod, cxSplitter;
+  cxImageComboBox, ChoicePeriod, cxSplitter, cxCheckBox;
 
 type
   TProductionUnionTechReceiptJournalForm = class(TAncestorDocumentMCForm)
@@ -170,6 +170,7 @@ type
     actPrintDays2_cuter: TdsdPrintAction;
     bbPrintDays2_cuter: TdxBarButton;
     CountReal: TcxGridDBColumn;
+    cbisLak: TcxCheckBox;
   private
     { Private declarations }
   public

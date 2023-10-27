@@ -1,28 +1,28 @@
 inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099')'
   ClientHeight = 685
-  ClientWidth = 1076
+  ClientWidth = 1164
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1092
+  ExplicitWidth = 1180
   ExplicitHeight = 724
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 61
-    Width = 1076
+    Width = 1164
     Height = 624
     TabOrder = 2
     ExplicitTop = 61
     ExplicitWidth = 1076
     ExplicitHeight = 624
     ClientRectBottom = 624
-    ClientRectRight = 1076
+    ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1076
       ExplicitHeight = 600
       inherited cxGrid: TcxGrid
-        Width = 1076
+        Width = 1164
         Height = 292
         ExplicitWidth = 1076
         ExplicitHeight = 292
@@ -620,11 +620,19 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             HeaderHint = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
             Width = 70
           end
+          object Partion: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
+            DataBinding.FieldName = 'Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
+            Width = 120
+          end
         end
       end
       inherited cxGridChild: TcxGrid
         Top = 297
-        Width = 1076
+        Width = 1164
         ExplicitTop = 297
         ExplicitWidth = 1076
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -863,14 +871,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 292
-        Width = 1076
+        Width = 1164
         ExplicitTop = 292
         ExplicitWidth = 1076
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1076
+    Width = 1164
     Height = 35
     ExplicitWidth = 1076
     ExplicitHeight = 35
@@ -924,33 +932,33 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       Width = 100
     end
     inherited cxLabel3: TcxLabel
-      Left = 294
+      Left = 279
       Top = 8
       Caption = #1054#1090' '#1082#1086#1075#1086' :'
-      ExplicitLeft = 294
+      ExplicitLeft = 279
       ExplicitTop = 8
       ExplicitWidth = 51
     end
     inherited cxLabel4: TcxLabel
-      Left = 548
+      Left = 530
       Top = 8
       Caption = #1050#1086#1084#1091' :'
-      ExplicitLeft = 548
+      ExplicitLeft = 530
       ExplicitTop = 8
       ExplicitWidth = 36
     end
     inherited edFrom: TcxButtonEdit
-      Left = 345
+      Left = 330
       Top = 7
-      ExplicitLeft = 345
+      ExplicitLeft = 330
       ExplicitTop = 7
       ExplicitWidth = 192
       Width = 192
     end
     inherited edTo: TcxButtonEdit
-      Left = 584
+      Left = 565
       Top = 7
-      ExplicitLeft = 584
+      ExplicitLeft = 565
       ExplicitTop = 7
       ExplicitWidth = 200
       Width = 200
@@ -961,31 +969,39 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       Caption = #1044#1072#1090#1072' '#1089' :'
     end
     object deStart: TcxDateEdit
-      Left = 52
+      Left = 50
       Top = 7
       EditValue = 42522d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
-      Width = 85
+      Width = 80
     end
     object cxLabel6: TcxLabel
-      Left = 144
+      Left = 138
       Top = 8
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
     object deEnd: TcxDateEdit
-      Left = 198
+      Left = 190
       Top = 7
       EditValue = 42522d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 13
-      Width = 85
+      Width = 80
+    end
+    object cbisLak: TcxCheckBox
+      Left = 794
+      Top = 8
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1072#1082'-'#1077
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 105
     end
   end
   object edJuridicalBasis: TcxButtonEdit [2]
-    Left = 900
+    Left = 1008
     Top = 7
     Properties.Buttons = <
       item
@@ -997,7 +1013,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     Width = 150
   end
   object cxLabel27: TcxLabel [3]
-    Left = 822
+    Left = 930
     Top = 8
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
@@ -2694,6 +2710,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisLak'
+        Value = Null
+        Component = cbisLak
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased
@@ -3866,7 +3890,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 1031
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

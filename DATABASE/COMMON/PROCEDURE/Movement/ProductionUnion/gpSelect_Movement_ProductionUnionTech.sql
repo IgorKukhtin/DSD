@@ -1,7 +1,9 @@
 -- Function: gpSelect_Movement_ProductionUnionTech()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inStartDate         TDateTime,
@@ -9,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inFromId            Integer,
     IN inToId              Integer,
     IN inJuridicalBasisId  Integer ,
+    IN inisLak             Boolean ,
     IN inIsErased          Boolean  , --
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -357,11 +360,11 @@ BEGIN
                                 , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.OperDate ELSE zc_DateStart() END)   AS OperDate_from
                                 , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.Amount,0) ELSE 0 END)     AS Amount_from
                                 , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.CuterCount,0) ELSE 0 END) AS CuterCount_from
-                                , SUM (COALESCE (tmpMI.CountReal_LAK,0)) AS CountReal_LAK  
+                                , SUM (COALESCE (tmpMI.CountReal_LAK,0)) AS CountReal_LAK
+                                , CASE WHEN inisLak = TRUE THEN tmpMI.ObjectId ELSE 0 END AS  DocumentKindId_Lak 
                            FROM tmpMI_lak AS tmpMI
                            GROUP BY tmpMI.MovementItemId_master
-                                  --, tmpMI.MovementItemId
-                                  --, tmpMI.ObjectId
+                                  , CASE WHEN inisLak = TRUE THEN tmpMI.ObjectId ELSE 0 END
                           ) 
 
 
@@ -446,8 +449,10 @@ BEGIN
             , tmpData_Lak.CuterCount_from AS CuterCount_LakFrom
             
             , tmpData_Lak.CountReal_LAK  :: TFloat
-            , MIFloat_MovementItemId.ValueData :: Integer AS MovementItem_partion
-            --, Object_DocumentKind_lak.ValueData       AS DocumentKindName_LAK 
+            , MIFloat_MovementItemId.ValueData :: Integer AS MovementItem_partion 
+            --, CASE WHEN Movement_partion.Id > 0 THEN '***Партия № <' || Movement_partion.InvNumber || '> от <' || zfConvert_DateToString (Movement_partion.OperDate) || '>' ELSE '' END ::TVarChar AS Partion 
+            , '***Партия № <' || Movement_partion.InvNumber || '> от <' || zfConvert_DateToString (Movement_partion.OperDate) || '>' ::TVarChar AS Partion  
+            , Object_DocumentKind_lak.ValueData       AS DocumentKindName_LAK 
 
        FROM _tmpListMaster
              INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
@@ -497,7 +502,9 @@ BEGIN
 
              LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
                                   ON MIFloat_MovementItemId.MovementItemId = _tmpListMaster.MovementItemId
-                                 AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                                 AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+             LEFT JOIN MovementItem AS MovementItem_partion ON MovementItem_partion.Id = MIFloat_MovementItemId.ValueData :: Integer
+             LEFT JOIN Movement AS Movement_partion ON Movement_partion.Id = MovementItem_partion.MovementId
 
              LEFT JOIN tmpMIBoolean AS MIBoolean_PartionClose
                                     ON MIBoolean_PartionClose.MovementItemId = _tmpListMaster.MovementItemId
@@ -554,7 +561,7 @@ BEGIN
              
              LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = _tmpListMaster.MovementId_order 
              
-             --LEFT JOIN Object AS Object_DocumentKind_lak ON Object_DocumentKind_lak.Id = tmpData_Lak.DocumentKindId
+             LEFT JOIN Object AS Object_DocumentKind_lak ON Object_DocumentKind_lak.Id = tmpData_Lak.DocumentKindId_Lak
 
            ;
 
