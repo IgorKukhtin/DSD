@@ -287,7 +287,7 @@ BEGIN
           , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster))
        
          --сначала выбираем для строк мастера zc_MIFloat_MovementItemId, по ним получаем строки док Lak и самb документы Lak
-         , tmpMIFloat_lak AS (SELECT MIFloat_MovementItemId.MovementItemId AS MovementItemId
+         , tmpMIFloat_lak AS (SELECT MIFloat_MovementItemId.MovementItemId     AS MovementItemId
                                   ,  MIFloat_MovementItemId.ValueData::Integer AS MovementItemId_master
                               FROM MovementItemFloat AS MIFloat_MovementItemId
                               WHERE MIFloat_MovementItemId.ValueData IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster) 
@@ -323,6 +323,7 @@ BEGIN
                               , tmpMI_all.MovementItemId_master
                               , tmpMI_all.Amount
                               , MIFloat_CuterCount.ValueData AS CuterCount
+                              , MIFloat_CountReal.ValueData  AS CountReal_LAK
                               , Movement.OperDate
                          FROM tmpMI_all
                              INNER JOIN tmpMLO_DocumentKind AS MovementLinkObject_DocumentKind
@@ -343,16 +344,24 @@ BEGIN
                              LEFT JOIN tmpMIFloat_CuterCount AS MIFloat_CuterCount
                                                              ON MIFloat_CuterCount.MovementItemId = tmpMI_all.MovementItemId
                                                             AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                             LEFT JOIN MovementItemFloat AS MIFloat_CountReal
+                                                         ON MIFloat_CountReal.MovementItemId = tmpMI_all.MovementItemId
+                                                        AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal()
                          )
          , tmpData_Lak AS (SELECT tmpMI.MovementItemId_master
-                                , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.OperDate ELSE zc_DateStart() END)   AS OperDate_to
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.Amount ELSE 0 END)                  AS Amount_to
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.CuterCount ELSE 0 END)              AS CuterCount_to
-                                , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.OperDate ELSE zc_DateStart() END) AS OperDate_from
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.Amount ELSE 0 END)                AS Amount_from
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.CuterCount ELSE 0 END)            AS CuterCount_from  
+                               -- , tmpMI.MovementItemId
+                               -- , tmpMI.ObjectId      AS DocumentKindId
+                                , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.OperDate ELSE zc_DateStart() END)     AS OperDate_to
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN COALESCE (tmpMI.Amount,0) ELSE 0 END)       AS Amount_to
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN COALESCE (tmpMI.CuterCount,0) ELSE 0 END)   AS CuterCount_to
+                                , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.OperDate ELSE zc_DateStart() END)   AS OperDate_from
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.Amount,0) ELSE 0 END)     AS Amount_from
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.CuterCount,0) ELSE 0 END) AS CuterCount_from
+                                , SUM (COALESCE (tmpMI.CountReal_LAK,0)) AS CountReal_LAK  
                            FROM tmpMI_lak AS tmpMI
                            GROUP BY tmpMI.MovementItemId_master
+                                  --, tmpMI.MovementItemId
+                                  --, tmpMI.ObjectId
                           ) 
 
 
@@ -436,6 +445,10 @@ BEGIN
             , tmpData_Lak.Amount_from     AS Amount_LakFrom
             , tmpData_Lak.CuterCount_from AS CuterCount_LakFrom
             
+            , tmpData_Lak.CountReal_LAK  :: TFloat
+            , MIFloat_MovementItemId.ValueData :: Integer AS MovementItem_partion
+            --, Object_DocumentKind_lak.ValueData       AS DocumentKindName_LAK 
+
        FROM _tmpListMaster
              INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
 
@@ -481,6 +494,10 @@ BEGIN
                                   ON MIFloat_RealWeightMsg.MovementItemId = _tmpListMaster.MovementItemId
                                  AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
                                  AND _tmpListMaster.MovementId <> 0
+
+             LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
+                                  ON MIFloat_MovementItemId.MovementItemId = _tmpListMaster.MovementItemId
+                                 AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
 
              LEFT JOIN tmpMIBoolean AS MIBoolean_PartionClose
                                     ON MIBoolean_PartionClose.MovementItemId = _tmpListMaster.MovementItemId
@@ -535,7 +552,9 @@ BEGIN
              
              LEFT JOIN tmpData_Lak ON tmpData_Lak.MovementItemId_master = _tmpListMaster.MovementItemId  
              
-             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = _tmpListMaster.MovementId_order
+             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = _tmpListMaster.MovementId_order 
+             
+             --LEFT JOIN Object AS Object_DocumentKind_lak ON Object_DocumentKind_lak.Id = tmpData_Lak.DocumentKindId
 
            ;
 
@@ -835,8 +854,8 @@ BEGIN
                                        AND MIDate_Update.DescId = zc_MIDate_Update()
 
              LEFT JOIN tmpMILinkObject AS MILO_Insert
-                                              ON MILO_Insert.MovementItemId = tmpMI_Child.MovementItemId_Child
-                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                                       ON MILO_Insert.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                      AND MILO_Insert.DescId = zc_MILinkObject_Insert()
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
              LEFT JOIN tmpMILinkObject AS MILO_Update
                                               ON MILO_Update.MovementItemId = tmpMI_Child.MovementItemId_Child
