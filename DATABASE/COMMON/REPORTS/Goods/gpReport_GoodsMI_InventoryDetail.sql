@@ -169,11 +169,72 @@ BEGIN
                                  , MIContainer.DescId
                              )
 
-    , tmpMI AS (SELECT MovementItem.*
+    , tmpContainer_find AS (SELECT MAX (tmpContainerAll.MovementItemId) AS MovementItemId
+                                 , tmpContainerAll.MovementId
+                                 , tmpContainerAll.GoodsId
+                                 , tmpContainerAll.GoodsKindId
+                            FROM tmpContainerAll
+                            GROUP BY tmpContainerAll.GoodsId
+                                   , tmpContainerAll.GoodsKindId
+                                   , tmpContainerAll.MovementId
+                            
+                          )
+
+ , tmpMI_all_1 AS (SELECT MovementItem.Id
+                         , MovementItem.MovementId
+                         , MovementItem.ObjectId
+                         , MovementItem.Amount
+                         , MovementItem.DescId
+                         , MovementItem.isErased
+                         , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                 FROM MovementItem
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpContainerAll.MovementId FROM tmpContainerAll)
                   AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.isErased = FALSE
+               ) 
+
+  , tmpMI_all AS (SELECT COALESCE (tmpContainer_find.MovementItemId, MovementItem.Id) AS Id
+                       , MovementItem.MovementId
+                       , MovementItem.ObjectId
+                       , MovementItem.Amount
+                       , MovementItem.DescId
+                       , MovementItem.isErased
+                  FROM tmpMI_all_1 AS MovementItem
+                       LEFT JOIN tmpContainerAll ON tmpContainerAll.MovementItemId = MovementItem.Id
+                       -- !!! нашли
+                       LEFT JOIN tmpContainer_find ON tmpContainer_find.GoodsId     = MovementItem.ObjectId
+                                                  AND tmpContainer_find.GoodsKindId = MovementItem.GoodsKindId
+                                                  AND tmpContainer_find.MovementId  = MovementItem.MovementId
+  
+                    -- !!! если не нашли
+                  WHERE tmpContainerAll.MovementItemId IS NULL
+
+                 UNION ALL
+                  SELECT MovementItem.Id
+                       , MovementItem.MovementId
+                       , MovementItem.ObjectId
+                       , MovementItem.Amount
+                       , MovementItem.DescId
+                       , MovementItem.isErased
+                  FROM tmpMI_all_1 AS MovementItem
+                  -- !!! не надо искать
+                  WHERE MovementItem.Id IN (SELECT tmpContainerAll.MovementItemId FROM tmpContainerAll)
+                 )
+    , tmpMI AS (SELECT MovementItem.Id
+                     , MovementItem.MovementId
+                     , MovementItem.ObjectId
+                     , SUM (MovementItem.Amount) AS Amount
+                     , MovementItem.DescId
+                     , MovementItem.isErased
+                FROM tmpMI_all AS MovementItem
+                GROUP BY MovementItem.Id
+                       , MovementItem.MovementId
+                       , MovementItem.ObjectId
+                       , MovementItem.DescId
+                       , MovementItem.isErased
                ) 
 
     , tmpContainer AS (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
@@ -387,8 +448,6 @@ BEGIN
 
           LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpOperationGroup.GoodsId
                                             AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpOperationGroup.GoodsKindId, 0)
-          LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpOperationGroup.GoodsId
-                                            AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpOperationGroup.GoodsKindId, 0)
   ;
 
 END;
@@ -405,6 +464,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inUnitId:= 8417, inGoodsGroupId:= 0, inisPartion:= FALSE, inSession:= zfCalc_UserAdmin()); -- Склад ГП ф.Одесса
--- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '12.11.2021', inEndDate:= '30.11.2021', inUnitId:= 8444, inGoodsGroupId:= 0, inisPartion:= false, inSession:= zfCalc_UserAdmin()) --8417
--- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '30.11.2021', inEndDate:= '30.11.2021', inUnitId:= 8444, inGoodsGroupId:= 1940, inPriceListId := 0, inisPartion:= true, inSession:= zfCalc_UserAdmin()) --8417
+-- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '30.11.2023', inEndDate:= '30.11.2023', inUnitId:= 8444, inGoodsGroupId:= 1940, inPriceListId := 0, inisPartion:= true, inSession:= zfCalc_UserAdmin()) --8417
