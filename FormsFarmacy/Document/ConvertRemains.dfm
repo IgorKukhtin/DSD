@@ -192,6 +192,11 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             Options.Editing = False
             VisibleForCustomization = False
           end
+          object Color_Code: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Code'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -722,6 +727,10 @@ inherited ConvertRemainsForm: TConvertRemainsForm
       item
       end>
     ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_Code
+        ColorValueList = <>
+      end
       item
         ColorColumn = UKTZED
         BackGroundValueColumn = Color_UKTZED

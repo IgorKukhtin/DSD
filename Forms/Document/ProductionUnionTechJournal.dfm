@@ -273,19 +273,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object RealWeight: TcxGridDBColumn [9]
-            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'RealWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object RealWeightMsg: TcxGridDBColumn [10]
+          object RealWeightMsg: TcxGridDBColumn [9]
             Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1084#1089#1078')'
             DataBinding.FieldName = 'RealWeightMsg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -296,6 +284,18 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderHint = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1087#1086#1089#1083#1077' '#1084#1072#1089#1089#1072#1078#1077#1088#1072')'
             Options.Editing = False
             Width = 70
+          end
+          object RealWeight: TcxGridDBColumn [10]
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'RealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object RealWeightShp: TcxGridDBColumn [11]
             Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1096#1087#1088')'
@@ -618,6 +618,31 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderHint = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1089' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1103
             Width = 70
           end
+          object CountReal_LAK: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1083#1072#1082')'
+            DataBinding.FieldName = 'CountReal_LAK'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MovementItem_partion: TcxGridDBColumn
+            Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'MovementItem_partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
+            Width = 70
+          end
+          object Partion: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
+            DataBinding.FieldName = 'Partion'
+            HeaderHint = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
+            Width = 80
+          end
         end
       end
       inherited cxGridChild: TcxGrid
@@ -922,33 +947,33 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Width = 100
     end
     inherited cxLabel3: TcxLabel
-      Left = 294
+      Left = 282
       Top = 8
       Caption = #1054#1090' '#1082#1086#1075#1086' :'
-      ExplicitLeft = 294
+      ExplicitLeft = 282
       ExplicitTop = 8
       ExplicitWidth = 51
     end
     inherited cxLabel4: TcxLabel
-      Left = 548
+      Left = 534
       Top = 8
       Caption = #1050#1086#1084#1091' :'
-      ExplicitLeft = 548
+      ExplicitLeft = 534
       ExplicitTop = 8
       ExplicitWidth = 36
     end
     inherited edFrom: TcxButtonEdit
-      Left = 345
+      Left = 331
       Top = 7
-      ExplicitLeft = 345
+      ExplicitLeft = 331
       ExplicitTop = 7
       ExplicitWidth = 192
       Width = 192
     end
     inherited edTo: TcxButtonEdit
-      Left = 584
+      Left = 570
       Top = 7
-      ExplicitLeft = 584
+      ExplicitLeft = 570
       ExplicitTop = 7
       ExplicitWidth = 200
       Width = 200
@@ -965,29 +990,29 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
-      Width = 85
+      Width = 80
     end
     object cxLabel6: TcxLabel
-      Left = 144
+      Left = 140
       Top = 8
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
     object deEnd: TcxDateEdit
-      Left = 198
+      Left = 193
       Top = 7
       EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 13
-      Width = 85
+      Width = 79
     end
     object cxLabel27: TcxLabel
-      Left = 822
+      Left = 886
       Top = 8
       Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 900
+      Left = 964
       Top = 7
       Properties.Buttons = <
         item
@@ -997,6 +1022,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Properties.ReadOnly = True
       TabOrder = 15
       Width = 150
+    end
+    object cbisLak: TcxCheckBox
+      Left = 776
+      Top = 7
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1072#1082'-'#1077
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 105
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2728,6 +2761,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisLak'
+        Value = Null
+        Component = cbisLak
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased
@@ -3910,7 +3951,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 927
+    Top = 48
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

@@ -66,6 +66,7 @@ type
     actSelectPrint: TdsdExecStoredProc;
     spTotalSumm: TdsdStoredProc;
     actTotalSumm: TdsdExecStoredProc;
+    Color_Code: TcxGridDBColumn;
   private
     { Private declarations }
   public

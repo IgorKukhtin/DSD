@@ -23,7 +23,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls, cxImageComboBox;
+  Vcl.ExtCtrls, cxImageComboBox, Vcl.StdCtrls, cxButtons, cxContainer,
+  cxTextEdit, cxLabel;
 
 type
   TProductForm = class(TParentForm)
@@ -229,6 +230,23 @@ type
     actProtocol3: TdsdOpenForm;
     bbtProtocol2: TdxBarButton;
     bbtProtocol3: TdxBarButton;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnComplete: TcxButton;
+    btnUnComplete: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
+    cxButton1: TcxButton;
+    bbsPrint: TdxBarSubItem;
+    bbsProtocol: TdxBarSubItem;
+    FieldFilter_Name: TdsdFieldFilter;
+    Panel4: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchInvNumber_OrderClient: TcxTextEdit;
+    edSearchClientName: TcxTextEdit;
+    cxLabel1: TcxLabel;
   private
     { Private declarations }
   public

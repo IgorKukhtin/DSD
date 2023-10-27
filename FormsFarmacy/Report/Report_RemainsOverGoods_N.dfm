@@ -2401,6 +2401,7 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
           ToParam.DataType = ftWideString
           ToParam.MultiSelectSeparator = ','
         end>
+      AfterAction = actRefresh
       JsonParam.Value = ''
       JsonParam.Component = FormParams
       JsonParam.ComponentItem = 'GoodsList'
