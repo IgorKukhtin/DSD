@@ -29,14 +29,16 @@
     TabOrder = 0
     object cxGrid: TcxGrid
       Left = 0
-      Top = 17
+      Top = 50
       Width = 1188
-      Height = 192
+      Height = 159
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitTop = 17
+      ExplicitHeight = 192
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -934,7 +936,7 @@
     end
     object Panel3: TPanel
       Left = 0
-      Top = 0
+      Top = 33
       Width = 1188
       Height = 17
       Align = alTop
@@ -942,27 +944,61 @@
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 14
+    end
+    object Panel4: TPanel
+      Left = 0
+      Top = 0
+      Width = 1188
+      Height = 33
+      Align = alTop
+      TabOrder = 2
+      ExplicitLeft = 26
+      ExplicitTop = -6
+      object lbSearchName: TcxLabel
+        Left = 8
+        Top = 7
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edSearchInvNumber_OrderClient: TcxTextEdit
+        Left = 115
+        Top = 6
+        TabOrder = 1
+        DesignSize = (
+          147
+          21)
+        Width = 147
+      end
     end
   end
   object PanelProdOptItems: TPanel
     Left = 529
     Top = 240
     Width = 659
-    Height = 195
+    Height = 157
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 195
     object cxGridProdOptItems: TcxGrid
       Left = 0
       Top = 17
       Width = 659
-      Height = 178
+      Height = 140
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 178
       object cxGridDBTableViewProdOptItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdOptItemsDS
@@ -1402,21 +1438,23 @@
     Left = 0
     Top = 240
     Width = 521
-    Height = 195
+    Height = 157
     Align = alLeft
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 195
     object cxGridProdColorItems: TcxGrid
       Left = 0
       Top = 17
       Width = 521
-      Height = 178
+      Height = 140
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 178
       object cxGridDBTableViewProdColorItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorItemsDS
@@ -1725,8 +1763,76 @@
     Left = 521
     Top = 240
     Width = 8
-    Height = 195
+    Height = 157
     Control = PanelProdColorItems
+    ExplicitHeight = 195
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 397
+    Width = 1188
+    Height = 38
+    Align = alBottom
+    TabOrder = 9
+    ExplicitTop = 396
+    object btnInsert: TcxButton
+      Left = 26
+      Top = 6
+      Width = 101
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 139
+      Top = 6
+      Width = 101
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnComplete: TcxButton
+      Left = 280
+      Top = 6
+      Width = 174
+      Height = 25
+      Action = actUpdate2
+      TabOrder = 2
+    end
+    object btnUnComplete: TcxButton
+      Left = 466
+      Top = 6
+      Width = 145
+      Height = 25
+      Action = actShowAllOptItems
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 648
+      Top = 6
+      Width = 155
+      Height = 25
+      Action = actUpdate_OrderClient
+      TabOrder = 4
+    end
+    object btnFormClose: TcxButton
+      Left = 1004
+      Top = 6
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object cxButton1: TcxButton
+      Left = 815
+      Top = 6
+      Width = 150
+      Height = 25
+      Action = macChangeNPP
+      TabOrder = 6
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1751,8 +1857,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 144
-    Top = 40
+    Left = 256
+    Top = 80
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1900,7 +2006,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1908,31 +2014,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbPrintStructure'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTender'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbtProtocol2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbtProtocol3'
+          ItemName = 'bbsProtocol'
         end
         item
           Visible = True
@@ -2158,6 +2240,44 @@
     object bbtProtocol3: TdxBarButton
       Action = actProtocol3
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructure'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTender'
+        end>
+    end
+    object bbsProtocol: TdxBarSubItem
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 34
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtProtocol2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtProtocol3'
+        end>
     end
   end
   object ActionList: TActionList
@@ -3815,6 +3935,12 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product'
@@ -4773,5 +4899,18 @@
     PackSize = 1
     Left = 250
     Top = 152
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchInvNumber_OrderClient
+    DataSet = MasterCDS
+    Column = InvNumber_OrderClient
+    ColumnList = <
+      item
+        Column = InvNumber_OrderClient
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 312
+    Top = 32
   end
 end
