@@ -18,7 +18,9 @@ RETURNS TABLE (MovementId Integer, OperDate TDatetime, InvNumber TVarChar, Statu
              , PaidKindName TVarChar
              , TotalSumm TFloat
              , TotalSumm_Pay TFloat
-             , Summ_Pay TFloat
+             , Summ_Pay TFloat 
+             , Amount_SendDebt TFloat
+             , Amount_pay      TFloat
               )
 AS
 $BODY$
@@ -77,7 +79,7 @@ BEGIN
   , tmpMovement_BancAccount AS(WITH 
                                tmpMovement AS (SELECT Movement.*
                                                FROM Movement
-                                               WHERE Movement.DescId = zc_Movement_BankAccount()
+                                               WHERE Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_SendDebt())
                                                  AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                                )
@@ -125,7 +127,119 @@ BEGIN
                              GROUP BY MILinkObject_Contract.ObjectId
                                     , MILinkObject_MoneyPlace.ObjectId
                                     , zc_Enum_PaidKind_FirstForm()
-                            )
+                            ) 
+  --взаимозачет
+  , tmpMovement_SendDebt AS(WITH 
+                               tmpMovement AS (SELECT Movement.*
+                                               FROM Movement
+                                               WHERE Movement.DescId IN ( zc_Movement_SendDebt())
+                                                 AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                               )
+          
+                             , tmpMI AS (SELECT MovementItem.*
+                                         FROM MovementItem
+                                         WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                           AND MovementItem.isErased = FALSE
+                                         )                                  
+
+                             , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
+                             , tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
+          
+                          -- AND (MovementItemLinkObject.ObjectId = inContractId OR COALESCE (inContractId,0) = 0)
+                          -- AND (MovementItemLinkObject.ObjectId = inJuridicalId OR COALESCE (inJuridicalId,0) = 0)
+                             , tmpTotalSumm_Child AS (SELECT MILinkObject_Contract_To.ObjectId        AS ContractId
+                                                           , COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_Juridical_To.Id) AS JuridicalId
+                                                           , MILinkObject_PaidKind_To.ObjectId        AS PaidKindId
+                                                           , SUM (MI_Child.Amount)*(-1)      ::TFloat AS Amount
+                                                      FROM tmpMovement AS Movement
+                                                          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                                                  ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                         
+                                                          LEFT JOIN tmpMI AS MI_Child 
+                                                                          ON MI_Child.MovementId = Movement.Id
+                                                                         AND MI_Child.DescId     = zc_MI_Child()
+                                                                                       
+                                                          LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = MI_Child.ObjectId
+                                                          LEFT JOIN ObjectDesc AS ObjectToDesc ON ObjectToDesc.Id = Object_Juridical_To.DescId
+                                              
+                                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalTo
+                                                                               ON ObjectLink_Partner_JuridicalTo.ObjectId = MI_Child.ObjectId
+                                                                              AND ObjectLink_Partner_JuridicalTo.DescId = zc_ObjectLink_Partner_Juridical()
+                                              
+                                                          INNER JOIN tmpMILO AS MILinkObject_Contract_To
+                                                                             ON MILinkObject_Contract_To.MovementItemId = MI_Child.Id
+                                                                            AND MILinkObject_Contract_To.DescId = zc_MILinkObject_Contract()
+                                                                            AND (MILinkObject_Contract_To.ObjectId = inContractId OR COALESCE (inContractId,0) = 0)
+                                              
+                                                          INNER JOIN tmpMILO AS MILinkObject_PaidKind_To
+                                                                             ON MILinkObject_PaidKind_To.MovementItemId = MI_Child.Id
+                                                                            AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
+                                                                            AND (MILinkObject_PaidKind_To.ObjectId = inPaidKindId OR COALESCE (inPaidKindId,0) = 0)
+                                                      WHERE (COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_Juridical_To.Id) = inJuridicalId OR COALESCE (inJuridicalId,0) = 0)
+                                                      GROUP BY MILinkObject_Contract_To.ObjectId
+                                                             , COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_Juridical_To.Id)
+                                                             , MILinkObject_PaidKind_To.ObjectId
+                                                      )
+
+                             , tmpTotalSumm_Master AS (SELECT MILinkObject_Contract_From.ObjectId      AS ContractId
+                                                            , COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_Juridical_From.Id) AS JuridicalId
+                                                            , MILinkObject_PaidKind_From.ObjectId      AS PaidKindId
+                                                            , SUM (MI_Master.Amount)*(-1)     ::TFloat AS Amount
+                                                       FROM tmpMovement AS Movement
+                                                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                                                   ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                          
+                                                           LEFT JOIN tmpMI AS MI_Master 
+                                                                           ON MI_Master.MovementId = Movement.Id
+                                                                          AND MI_Master.DescId     = zc_MI_Master()
+                                               
+                                                           LEFT JOIN Object AS Object_Juridical_From ON Object_Juridical_From.Id = MI_Master.ObjectId
+                                                           LEFT JOIN ObjectDesc AS ObjectFromDesc ON ObjectFromDesc.Id = Object_Juridical_From.DescId
+                                               
+                                                           LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalFrom
+                                                                                ON ObjectLink_Partner_JuridicalFrom.ObjectId = MI_Master.ObjectId
+                                                                               AND ObjectLink_Partner_JuridicalFrom.DescId = zc_ObjectLink_Partner_Juridical()
+                                               
+                                                           INNER JOIN tmpMILO AS MILinkObject_Contract_From
+                                                                              ON MILinkObject_Contract_From.MovementItemId = MI_Master.Id
+                                                                             AND MILinkObject_Contract_From.DescId = zc_MILinkObject_Contract()
+                                                                             AND (MILinkObject_Contract_From.ObjectId = inContractId OR COALESCE (inContractId,0) = 0)
+                                               
+                                                           INNER JOIN tmpMILO AS MILinkObject_PaidKind_From
+                                                                              ON MILinkObject_PaidKind_From.MovementItemId = MI_Master.Id
+                                                                             AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
+                                                                             AND (MILinkObject_PaidKind_From.ObjectId = inPaidKindId OR COALESCE (inPaidKindId,0) = 0)
+                                               
+                                                       WHERE (COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_Juridical_From.Id) = inJuridicalId OR COALESCE (inJuridicalId,0) = 0)
+                                                       GROUP BY MILinkObject_Contract_From.ObjectId
+                                                              , COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_Juridical_From.Id)
+                                                              , MILinkObject_PaidKind_From.ObjectId
+                                                       )
+
+                             SELECT tmp.JuridicalId
+                                  , tmp.ContractId
+                                  , tmp.PaidKindId
+                                  , SUM (tmp.Amount) AS Amount
+                             FROM (SELECT tmp.JuridicalId
+                                        , tmp.ContractId
+                                        , tmp.PaidKindId
+                                        , tmp.Amount
+                                   FROM tmpTotalSumm_Master AS tmp
+                                UNION
+                                   SELECT tmp.JuridicalId
+                                        , tmp.ContractId
+                                        , tmp.PaidKindId
+                                        , tmp.Amount
+                                   FROM tmpTotalSumm_Child AS tmp
+                                  ) AS tmp
+                             GROUP BY tmp.JuridicalId
+                                    , tmp.ContractId
+                                    , tmp.PaidKindId
+                           )
+
   --накопительная сумма долга
   , tmpMov_Sale AS (SELECT t1.Id
                          , t1.StatusId
@@ -156,6 +270,34 @@ BEGIN
                     order by t1.ContractId
                            , t1.JuridicalId, t1.ord
                     )
+  --
+  , tmpSumma AS (SELECT tmp.JuridicalId
+                      , tmp.ContractId
+                      , tmp.PaidKindId
+                      , SUM (tmp.AmountIn)        AS AmountIn
+                      , SUM (tmp.Amount_pay)      AS Amount_pay
+                      , SUM (tmp.Amount_SendDebt) AS Amount_SendDebt
+                 FROM (SELECT tmp.JuridicalId
+                            , tmp.ContractId
+                            , tmp.PaidKindId
+                            , tmp.AmountIn
+                            , tmp.AmountIn AS Amount_pay
+                            , 0            AS Amount_SendDebt
+                       FROM tmpMovement_BancAccount AS tmp
+                    UNION
+                       SELECT tmp.JuridicalId
+                            , tmp.ContractId
+                            , tmp.PaidKindId
+                            , tmp.Amount AS AmountIn 
+                            , 0          AS Amount_pay
+                            , tmp.Amount AS Amount_SendDebt
+                       FROM tmpMovement_SendDebt AS tmp
+                      ) AS tmp
+                 GROUP BY tmp.JuridicalId
+                        , tmp.ContractId
+                        , tmp.PaidKindId
+                )
+
   , tmpData AS (SELECT tmpMov_Sale.Id
                      , tmpMov_Sale.StatusId
                      , tmpMov_Sale.OperDate
@@ -166,22 +308,24 @@ BEGIN
                      , tmpMov_Sale.JuridicalId
                      , tmpMov_Sale.TotalSumm
                      , tmpMov_Sale.ord
-                     , tmpMovement_BancAccount.AmountIn AS TotalSumm_Pay
-                     , CASE WHEN tmp_BancAccount.AmountIn >= tmpMov_Sale.TotalSumm_calc THEN tmpMov_Sale.TotalSumm
+                     , tmpSumma.AmountIn        AS TotalSumm_Pay
+                     , tmpSumma.Amount_SendDebt AS Amount_SendDebt
+                     , tmpSumma.Amount_pay      AS Amount_pay
+                     , CASE WHEN tmpSumma_2.AmountIn >= tmpMov_Sale.TotalSumm_calc THEN tmpMov_Sale.TotalSumm
                             ELSE 0
                        END AS Summ_Pay 
-                     FROM tmpMov_Sale
-                     --Сумма оплаты
-                     LEFT JOIN tmpMovement_BancAccount ON tmpMovement_BancAccount.JuridicalId = tmpMov_Sale.JuridicalId
-                                                      AND tmpMovement_BancAccount.ContractId = tmpMov_Sale.ContractId
-                                                      AND tmpMovement_BancAccount.PaidKindId = tmpMov_Sale.PaidKindId
-                                                      AND tmpMov_Sale.Ord = 1
-                     --сумма для расчета распределения
-                     LEFT JOIN tmpMovement_BancAccount AS tmp_BancAccount
-                                                       ON tmp_BancAccount.JuridicalId = tmpMov_Sale.JuridicalId
-                                                      AND tmp_BancAccount.ContractId = tmpMov_Sale.ContractId
-                                                      AND tmp_BancAccount.PaidKindId = tmpMov_Sale.PaidKindId
-                                 )
+                FROM tmpMov_Sale
+                    --Сумма оплаты
+                    LEFT JOIN tmpSumma ON tmpSumma.JuridicalId = tmpMov_Sale.JuridicalId
+                                      AND tmpSumma.ContractId = tmpMov_Sale.ContractId
+                                      AND tmpSumma.PaidKindId = tmpMov_Sale.PaidKindId
+                                      AND tmpMov_Sale.Ord = 1
+                    --сумма для расчета распределения
+                    LEFT JOIN tmpSumma AS tmpSumma_2
+                                       ON tmpSumma_2.JuridicalId = tmpMov_Sale.JuridicalId
+                                      AND tmpSumma_2.ContractId = tmpMov_Sale.ContractId
+                                      AND tmpSumma_2.PaidKindId = tmpMov_Sale.PaidKindId
+                )
 
      SELECT
          tmpData.Id AS MovementId
@@ -199,9 +343,11 @@ BEGIN
        , Object_Partner.ValueData        AS PartnerName
        , Object_PaidKind.ValueData       AS PaidKindName
        
-       , tmpData.TotalSumm  ::TFloat
+       , tmpData.TotalSumm     ::TFloat
        , tmpData.TotalSumm_Pay :: TFloat
-       , tmpData.Summ_Pay :: TFloat
+       , tmpData.Summ_Pay      :: TFloat
+       , tmpData.Amount_SendDebt ::TFloat
+       , tmpData.Amount_pay    :: TFloat
      FROM tmpData
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpData.ContractId 

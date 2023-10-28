@@ -13,19 +13,19 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
     Width = 845
     Height = 396
     TabOrder = 3
-    ExplicitTop = 91
+    ExplicitTop = 87
     ExplicitWidth = 845
-    ExplicitHeight = 392
+    ExplicitHeight = 396
     ClientRectBottom = 396
     ClientRectRight = 845
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 845
-      ExplicitHeight = 392
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 845
         Height = 396
         ExplicitWidth = 845
-        ExplicitHeight = 392
+        ExplicitHeight = 396
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -37,6 +37,21 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_Pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_SendDebt
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -53,6 +68,21 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_Pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_SendDebt
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -155,7 +185,7 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             Width = 195
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -177,8 +207,32 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             Options.Editing = False
             Width = 80
           end
-          object Summ_Pay: TcxGridDBColumn
+          object Amount_pay: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'Amount_pay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount_SendDebt: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1074#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090#1072
+            DataBinding.FieldName = 'Amount_SendDebt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'C'#1091#1084#1084#1072' '#1074#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object Summ_Pay: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088'. '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'Summ_Pay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
