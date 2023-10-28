@@ -67,7 +67,7 @@ BEGIN
                               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                     ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                                   AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId
+                                                   AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR COALESCE (inJuridicalId,0) = 0)
                               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                       ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()                                                 
@@ -146,8 +146,6 @@ BEGIN
                              , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
                              , tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
           
-                          -- AND (MovementItemLinkObject.ObjectId = inContractId OR COALESCE (inContractId,0) = 0)
-                          -- AND (MovementItemLinkObject.ObjectId = inJuridicalId OR COALESCE (inJuridicalId,0) = 0)
                              , tmpTotalSumm_Child AS (SELECT MILinkObject_Contract_To.ObjectId        AS ContractId
                                                            , COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_Juridical_To.Id) AS JuridicalId
                                                            , MILinkObject_PaidKind_To.ObjectId        AS PaidKindId
