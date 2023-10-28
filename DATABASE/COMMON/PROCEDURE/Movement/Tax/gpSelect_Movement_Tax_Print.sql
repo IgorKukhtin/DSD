@@ -390,6 +390,10 @@ order by 4*/
                        -- Укрзалізниця АТ
                        THEN COALESCE (OH_JuridicalDetails_To.Name, '')
 
+                  -- Название юр.лица для филиала
+                  WHEN ObjectString_BranchJur.ValueData <> ''
+                       THEN ObjectString_BranchJur.ValueData
+
                   WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
                        THEN 'Неплатник'
@@ -397,7 +401,7 @@ order by 4*/
              END :: TVarChar AS JuridicalName_To
 
            , CASE WHEN Object_To.Id = 9840136 AND 1=1 -- AND vbUserId = 5
-                       -- Укрзалізниця АТ
+                       -- Укрзалізниця АТ - Условное обозначение
                        THEN ', ' || TRIM (TRIM (LOWER (SPLIT_PART (ObjectString_ShortName.ValueData, 'підрозділ', 1)))
                           || ' ' || TRIM (SPLIT_PART (SPLIT_PART (ObjectString_ShortName.ValueData, 'філії', 1), 'Структурний', 2)))
                        
@@ -430,8 +434,12 @@ order by 4*/
 --           , OH_JuridicalDetails_To.Phone               AS Phone_To
              
            , CASE WHEN Object_To.Id = 9840136 AND ObjectString_RoomNumber.ValueData <> '' -- AND vbUserId = 5
-                       -- Укрзалізниця АТ
+                       -- Укрзалізниця АТ - № Склада или Номер филиала или кв.:
                        THEN ObjectString_RoomNumber.ValueData 
+
+                  -- Номер филиала
+                  WHEN ObjectString_BranchCode.ValueData <> ''
+                       THEN ObjectString_BranchCode.ValueData
 
                   ELSE OH_JuridicalDetails_To.InvNumberBranch
 
@@ -636,12 +644,22 @@ order by 4*/
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_Partner.ObjectId
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
+            -- № Склада или Номер филиала или кв.:
             LEFT JOIN ObjectString AS ObjectString_RoomNumber
                                    ON ObjectString_RoomNumber.ObjectId = MovementLinkObject_Partner.ObjectId
                                   AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
+            -- Условное обозначение
             LEFT JOIN ObjectString AS ObjectString_ShortName
                                    ON ObjectString_ShortName.ObjectId = MovementLinkObject_Partner.ObjectId
                                   AND ObjectString_ShortName.DescId = zc_ObjectString_Partner_ShortName()
+            -- Номер филиала
+            LEFT JOIN ObjectString AS ObjectString_BranchCode
+                                   ON ObjectString_BranchCode.ObjectId = MovementLinkObject_Partner.ObjectId
+                                  AND ObjectString_BranchCode.DescId = zc_ObjectString_Partner_BranchCode()
+            -- Название юр.лица для филиала
+            LEFT JOIN ObjectString AS ObjectString_BranchJur
+                                   ON ObjectString_BranchJur.ObjectId = MovementLinkObject_Partner.ObjectId
+                                  AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

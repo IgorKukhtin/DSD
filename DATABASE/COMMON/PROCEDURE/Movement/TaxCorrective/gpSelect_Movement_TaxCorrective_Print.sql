@@ -779,8 +779,14 @@ BEGIN
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
                             , MovementString_FromINN.ValueData                AS INN_From
 
+                              -- № Склада или Номер филиала или кв.:
                             , ObjectString_RoomNumber.ValueData               AS RoomNumber_From
+                             -- Условное обозначение
                             , ObjectString_ShortName.ValueData                AS ShortName_From
+                              -- Номер филиала
+                            , ObjectString_BranchCode.ValueData               AS BranchCode_From
+                              -- Название юр.лица для филиала
+                            , ObjectString_BranchJur.ValueData                AS BranchJur_From
 
                        FROM tmpMovement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -820,12 +826,22 @@ BEGIN
                                                     AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
                                                     AND MovementString_FromINN.ValueData  <> ''
 
+                            -- № Склада или Номер филиала или кв.:
                             LEFT JOIN ObjectString AS ObjectString_RoomNumber
                                                    ON ObjectString_RoomNumber.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                                   AND ObjectString_RoomNumber.DescId   = zc_ObjectString_Partner_RoomNumber()
+                            -- Условное обозначение
                             LEFT JOIN ObjectString AS ObjectString_ShortName
                                                    ON ObjectString_ShortName.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                                   AND ObjectString_ShortName.DescId   = zc_ObjectString_Partner_ShortName()
+                            -- Номер филиала
+                            LEFT JOIN ObjectString AS ObjectString_BranchCode
+                                                   ON ObjectString_BranchCode.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
+                                                  AND ObjectString_BranchCode.DescId = zc_ObjectString_Partner_BranchCode()
+                            -- Название юр.лица для филиала
+                            LEFT JOIN ObjectString AS ObjectString_BranchJur
+                                                   ON ObjectString_BranchJur.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
+                                                  AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
 
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_From.ObjectId
@@ -1045,17 +1061,21 @@ BEGIN
 
            , tmpMovement_Data.FromName AS JuridicalName_From_inf  -- для определения признака ФОП / не ФОП
 
-           , CASE WHEN Object_From.Id = 9840136 AND 1=1 -- AND vbUserId = 5
+           , CASE WHEN tmpMovement_Data.FromId = 9840136 AND 1=1 -- AND vbUserId = 5
                        -- Укрзалізниця АТ
                        THEN COALESCE (OH_JuridicalDetails_From.Name, '')
+
+                  -- Название юр.лица для филиала
+                  WHEN tmpMovement_Data.BranchJur_From <> ''
+                       THEN tmpMovement_Data.BranchJur_From
 
                   WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                        THEN 'Неплатник'
                   ELSE OH_JuridicalDetails_From.FullName
              END :: TVarChar AS JuridicalName_From
 
-           , CASE WHEN Object_From.Id = 9840136 AND 1=1 -- AND vbUserId = 5
-                       -- Укрзалізниця АТ
+           , CASE WHEN tmpMovement_Data.FromId = 9840136 AND 1=1 -- AND vbUserId = 5
+                       -- Укрзалізниця АТ - Условное обозначение
                        THEN ', ' || TRIM (TRIM (LOWER (SPLIT_PART (tmpMovement_Data.ShortName_From, 'підрозділ', 1)))
                          || ' ' || TRIM (SPLIT_PART (SPLIT_PART (tmpMovement_Data.ShortName_From, 'філії', 1), 'Структурний', 2)))
                   ELSE ''
@@ -1076,9 +1096,13 @@ BEGIN
              END :: TVarChar AS OKPO_From_ifin
            , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) END AS INN_From
 
-           , CASE WHEN Object_To.Id = 9840136 AND tmpMovement_Data.RoomNumber_from <> '' -- AND vbUserId = 5
-                       -- Укрзалізниця АТ
+           , CASE WHEN tmpMovement_Data.FromId = 9840136 AND tmpMovement_Data.RoomNumber_from <> '' -- AND vbUserId = 5
+                       -- Укрзалізниця АТ - № Склада или Номер филиала или кв.:
                        THEN tmpMovement_Data.RoomNumber_from
+
+                  -- Номер филиала
+                  WHEN tmpMovement_Data.BranchCode_from <> ''
+                       THEN tmpMovement_Data.BranchCode_from
 
                   ELSE OH_JuridicalDetails_From.InvNumberBranch
              END :: TVarChar AS InvNumberBranch_From
