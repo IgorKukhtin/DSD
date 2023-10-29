@@ -54,6 +54,13 @@ type
     ContractCode: TcxGridDBColumn;
     JuridicalCode: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
+    TotalSumm_calc: TcxGridDBColumn;
+    Summ_debt: TcxGridDBColumn;
+    Summ_ReturnIn: TcxGridDBColumn;
+    TotalSumm_ReturnIn: TcxGridDBColumn;
+    TotalSumm_debt: TcxGridDBColumn;
+    Summ_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
