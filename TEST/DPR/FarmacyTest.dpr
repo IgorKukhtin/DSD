@@ -1306,7 +1306,8 @@ uses
   Report_GoodsOnUnitRemainsMarketingDialog in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketingDialog.pas' {Report_GoodsOnUnitRemainsMarketingDialogForm: TParentForm},
   Report_GoodsOnUnitRemainsMarketing in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketing.pas' {Report_GoodsOnUnitRemainsMarketingForm: TParentForm},
   ConvertRemainsJournal in '..\..\FormsFarmacy\Document\ConvertRemainsJournal.pas' {ConvertRemainsJournalForm: TParentForm},
-  ConvertRemains in '..\..\FormsFarmacy\Document\ConvertRemains.pas' {ConvertRemainsForm: TParentForm};
+  ConvertRemains in '..\..\FormsFarmacy\Document\ConvertRemains.pas' {ConvertRemainsForm: TParentForm},
+  Report_GoodsToClose in '..\..\FormsFarmacy\Report\Report_GoodsToClose.pas' {Report_GoodsToCloseForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

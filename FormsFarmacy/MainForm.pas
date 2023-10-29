@@ -1039,6 +1039,8 @@ type
     N384: TMenuItem;
     actConvertRemainsJournal: TdsdOpenForm;
     N385: TMenuItem;
+    actReport_GoodsToClose: TdsdOpenForm;
+    N386: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

@@ -5589,6 +5589,17 @@
         end>
       isShowModal = False
     end
+    object actReport_GoodsToClose: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1091#1076#1072#1083#1077#1085#1080#1103
+      FormName = 'TReport_GoodsToCloseForm'
+      FormNameParam.Value = 'TReport_GoodsToCloseForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6864,6 +6875,10 @@
       end
       object C31: TMenuItem
         Action = actReport_PriceComparisonBIG3
+      end
+      object N386: TMenuItem
+        Action = actReport_GoodsToClose
+        Caption = #1040#1085#1072#1083#1080#1079' '#1079#1072#1082#1088#1099#1090#1086#1075#1086' '#1082#1086#1076#1072
       end
       object N133: TMenuItem
         Caption = '-'
