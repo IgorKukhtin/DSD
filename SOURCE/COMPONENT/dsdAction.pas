@@ -396,11 +396,12 @@ type
     property InfoAfterExecute;
   end;
 
-  TdsdOpenForm = class(TdsdCustomAction, IFormAction)
+  TdsdCustomOpenForm = class(TdsdCustomAction, IFormAction)
   private
     FParams: TdsdParams;
     FFormName: string;
     FisShowModal: Boolean;
+    FisReturnGuiParams: Boolean;
     FFormNameParam: TdsdParam;
     procedure SetFormName(const Value: string);
     function GetFormName: string;
@@ -414,6 +415,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    property isReturnGuiParams: Boolean read FisReturnGuiParams write FisReturnGuiParams default False;
   published
     property Caption;
     property Hint;
@@ -426,14 +428,31 @@ type
     property isShowModal: Boolean read FisShowModal write FisShowModal;
   end;
 
+  TdsdOpenForm = class(TdsdCustomOpenForm)
+  private
+  public
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property FormName;
+    property FormNameParam;
+    property GuiParams;
+    property isShowModal;
+    property isReturnGuiParams;
+  end;
+
   // Откываем форму для выбора значения из справочника
-  TOpenChoiceForm = class(TdsdOpenForm, IChoiceCaller)
+  TOpenChoiceForm = class(TdsdCustomOpenForm, IChoiceCaller)
   private
     // Вызыввем процедуру после выбора элемента из справочника
     procedure SetOwner(Owner: TObject);
     procedure AfterChoice(Params: TdsdParams; Form: TForm);
   public
     constructor Create(AOwner: TComponent); override;
+    property isReturnGuiParams;
   end;
 
   TDSAction = class(TdsdCustomAction)
@@ -949,6 +968,7 @@ type
     FParams: TdsdParams;
     FFormName: string;
     FisShowModal: Boolean;
+    FisReturnGuiParams: Boolean;
     FFormNameParam: TdsdParam;
     procedure SetFormName(const Value: string);
     function GetFormName: string;
@@ -967,6 +987,7 @@ type
     property FormNameParam: TdsdParam read FFormNameParam write FFormNameParam;
     property GuiParams: TdsdParams read FParams write FParams;
     property isShowModal: Boolean read FisShowModal write FisShowModal;
+    property isReturnGuiParams: Boolean read FisReturnGuiParams write FisReturnGuiParams default False;
   end;
 
 
@@ -2138,23 +2159,24 @@ begin
   FDataSet := AValue;
 end;
 
-{ TdsdOpenForm }
+{ TdsdCustomOpenForm }
 
-procedure TdsdOpenForm.BeforeExecute;
+procedure TdsdCustomOpenForm.BeforeExecute;
 begin
 
 end;
 
-constructor TdsdOpenForm.Create(AOwner: TComponent);
+constructor TdsdCustomOpenForm.Create(AOwner: TComponent);
 begin
   inherited;
   FParams := TdsdParams.Create(Self, TdsdParam);
   FFormNameParam := TdsdParam.Create(nil);
   FFormNameParam.DataType := ftString;
   FFormNameParam.Value := '';
+  isReturnGuiParams := False;
 end;
 
-destructor TdsdOpenForm.Destroy;
+destructor TdsdCustomOpenForm.Destroy;
 begin
   FParams.Free;
   FParams := nil;
@@ -2162,14 +2184,14 @@ begin
   inherited;
 end;
 
-function TdsdOpenForm.GetFormName: string;
+function TdsdCustomOpenForm.GetFormName: string;
 begin
   result := FFormNameParam.AsString;
   if result = '' then
     result := FFormName
 end;
 
-function TdsdOpenForm.LocalExecute: Boolean;
+function TdsdCustomOpenForm.LocalExecute: Boolean;
 var
   ModalResult: TModalResult;
 begin
@@ -2180,7 +2202,7 @@ begin
     result := ModalResult = mrOk;
 end;
 
-procedure TdsdOpenForm.Notification(AComponent: TComponent;
+procedure TdsdCustomOpenForm.Notification(AComponent: TComponent;
   Operation: TOperation);
 var
   i: Integer;
@@ -2194,12 +2216,12 @@ begin
         GuiParams[i].Component := nil;
 end;
 
-procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
+procedure TdsdCustomOpenForm.OnFormClose(Params: TdsdParams);
 begin
 
 end;
 
-procedure TdsdOpenForm.SetFormName(const Value: string);
+procedure TdsdCustomOpenForm.SetFormName(const Value: string);
 begin
   if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
     ShowMessage('Используйте FormNameParam')
@@ -2207,7 +2229,7 @@ begin
     FFormName := Value;
 end;
 
-function TdsdOpenForm.ShowForm: TForm;
+function TdsdCustomOpenForm.ShowForm: TForm;
 begin
   result := TdsdFormStorageFactory.GetStorage.Load(FormName);
   BeforeExecute(result);
@@ -2218,7 +2240,7 @@ begin
     if isShowModal then
     begin
       if result.ShowModal = mrOk then
-        if not (Self is TOpenChoiceForm) and Assigned(TParentForm(result).AddOnFormData.Params.Params) then
+        if FisReturnGuiParams and (Self is TdsdOpenForm) and Assigned(TParentForm(result).AddOnFormData.Params.Params) then
           FParams.AssignParams(TParentForm(result).AddOnFormData.Params.Params);
       if (result is TParentForm) and TParentForm(result).AddOnFormData.isFreeAtClosing then result.Free;
     end
@@ -5373,6 +5395,7 @@ begin
   FFormNameParam := TdsdParam.Create(nil);
   FFormNameParam.DataType := ftString;
   FFormNameParam.Value := '';
+  FisReturnGuiParams := False;
 end;
 
 destructor TdsdOpenStaticForm.Destroy;
@@ -5438,7 +5461,7 @@ begin
     begin
       try
         if Form.ShowModal = mrOk then
-          if Form is TParentForm then
+          if FisReturnGuiParams and (Form is TParentForm) then
             if Assigned(TParentForm(Form).AddOnFormData.Params.Params) then
               FParams.AssignParams(TParentForm(Form).AddOnFormData.Params.Params);
       finally
