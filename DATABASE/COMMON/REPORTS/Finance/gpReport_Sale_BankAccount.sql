@@ -49,7 +49,7 @@ BEGIN
                               , MovementLinkObject_To.ObjectId             AS ToId
                               , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                               , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-                              , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Contract.ObjectId, MovementLinkObject_PaidKind.ObjectId ORDER BY Movement.OperDate) AS Ord
+                              , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Contract.ObjectId, MovementLinkObject_PaidKind.ObjectId ORDER BY Movement.OperDate, MovementFloat_TotalSumm.ValueData) AS Ord
                          FROM Movement 
                               INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                             ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -295,7 +295,7 @@ BEGIN
                         , tmp.ContractId
                         , tmp.PaidKindId
                 )
-
+    --распределение оплат по накладным
   , tmpData AS (SELECT tmpMov_Sale.Id
                      , tmpMov_Sale.StatusId
                      , tmpMov_Sale.OperDate
@@ -309,8 +309,8 @@ BEGIN
                      , tmpSumma.AmountIn        AS TotalSumm_Pay
                      , tmpSumma.Amount_SendDebt AS Amount_SendDebt
                      , tmpSumma.Amount_pay      AS Amount_pay
-                     , CASE WHEN tmpSumma_2.AmountIn >= tmpMov_Sale.TotalSumm_calc THEN tmpMov_Sale.TotalSumm
-                            ELSE 0
+                     , CASE WHEN tmpSumma_2.AmountIn >= tmpMov_Sale.TotalSumm_calc THEN  tmpMov_Sale.TotalSumm
+                             ELSE CASE WHEN tmpMov_Sale.TotalSumm + (tmpSumma_2.AmountIn - tmpMov_Sale.TotalSumm_calc) > 0 THEN tmpMov_Sale.TotalSumm + (tmpSumma_2.AmountIn - tmpMov_Sale.TotalSumm_calc) ELSE 0 END
                        END AS Summ_Pay 
                 FROM tmpMov_Sale
                     --Сумма оплаты
