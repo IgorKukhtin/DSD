@@ -172,6 +172,9 @@ type
     CountReal: TcxGridDBColumn;
     cbisLak: TcxCheckBox;
     actRefresh_lak: TdsdDataSetRefresh;
+    spPrintLak: TdsdStoredProc;
+    actPrintLak: TdsdPrintAction;
+    bbactPrintLak: TdxBarButton;
   private
     { Private declarations }
   public
