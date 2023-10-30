@@ -208,6 +208,7 @@ begin
   FExternalLoad := TFileExternalLoad(GetExternalLoad);
   try
     FExternalLoad.InitializeDirectory := InitializeDirectory;
+    //***
     FExternalLoad.isOEM := isOEM;
     if FileName <> '' then
        FExternalLoad.Open(FileName)

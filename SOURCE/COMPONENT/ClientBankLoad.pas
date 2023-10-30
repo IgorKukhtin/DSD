@@ -398,6 +398,7 @@ begin
   inherited Create(DataSetType);
   FStartDate := StartDate;
   FEndDate := EndDate;
+  //***
   FOEM := false;
 end;
 
@@ -426,6 +427,8 @@ constructor TPrivatBankLoad.Create(StartDate, EndDate: TDateTime);
 begin
   inherited Create(StartDate, EndDate);
   FOEM := true;
+  //FOEM := false;
+  //isOEM:= false;
 end;
 
 function TPrivatBankLoad.GetBankAccountMain: string;
