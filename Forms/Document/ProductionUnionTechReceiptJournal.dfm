@@ -96,12 +96,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakTo
+              Column = Count_LakTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakFrom
+              Column = Count_LakFrom
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -172,12 +172,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakTo
+              Column = Count_LakTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakFrom
+              Column = Count_LakFrom
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -565,9 +565,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 70
           end
-          object CuterCount_LakTo: TcxGridDBColumn
+          object Count_LakTo: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1073#1072#1090'. '#1085#1072' '#1083#1072#1082'-'#1080#1080
-            DataBinding.FieldName = 'CuterCount_LakTo'
+            DataBinding.FieldName = 'Count_LakTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -577,9 +577,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 70
           end
-          object CuterCount_LakFrom: TcxGridDBColumn
+          object Count_LakFrom: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1073#1072#1090'. '#1087#1086#1089#1083#1077' '#1083#1072#1082'-'#1080#1103
-            DataBinding.FieldName = 'CuterCount_LakFrom'
+            DataBinding.FieldName = 'Count_LakFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

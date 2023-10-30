@@ -171,15 +171,18 @@ type
     bbPrintDays2_cuter: TdxBarButton;
     OperDate_LakTo: TcxGridDBColumn;
     Amount_LakTo: TcxGridDBColumn;
-    CuterCount_LakTo: TcxGridDBColumn;
+    Count_LakTo: TcxGridDBColumn;
     OperDate_LakFrom: TcxGridDBColumn;
     Amount_LakFrom: TcxGridDBColumn;
-    CuterCount_LakFrom: TcxGridDBColumn;
+    Count_LakFrom: TcxGridDBColumn;
     actOpenFormOrderInternal: TdsdOpenForm;
     bbOpenFormOrderInternal: TdxBarButton;
     Partion: TcxGridDBColumn;
     cbisLak: TcxCheckBox;
     actRefresh_lak: TdsdDataSetRefresh;
+    spPrintLak: TdsdStoredProc;
+    actPrintLak: TdsdPrintAction;
+    bbPrintLak: TdxBarButton;
   private
     { Private declarations }
   public
