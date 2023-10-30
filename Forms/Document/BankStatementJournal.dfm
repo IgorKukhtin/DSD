@@ -253,6 +253,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankPrivatLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      isOEM = False
       ClientBankType = cbPrivatBank
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
@@ -393,8 +394,8 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         item
           Action = actRefresh
         end>
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1080#1074#1072#1090'-'#1041#1072#1085#1082#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1080#1074#1072#1090'-'#1041#1072#1085#1082#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1080#1074#1072#1090'-'#1041#1072#1085#1082#1072' ('#1048#1088#1085#1072')'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1080#1074#1072#1090'-'#1041#1072#1085#1082#1072' ('#1048#1088#1085#1072')'
       ImageIndex = 47
     end
     object BankForum: TMultiAction
