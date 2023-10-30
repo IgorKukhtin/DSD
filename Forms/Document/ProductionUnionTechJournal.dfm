@@ -96,12 +96,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakTo
+              Column = Count_LakTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakFrom
+              Column = Count_LakFrom
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -172,12 +172,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakTo
+              Column = Count_LakTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CuterCount_LakFrom
+              Column = Count_LakFrom
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -567,6 +567,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1087#1077#1088#1077#1076' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077#1084
+            Options.Editing = False
             Width = 70
           end
           object Amount_LakFrom: TcxGridDBColumn
@@ -578,28 +579,31 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1087#1086#1089#1083#1077' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
             Width = 70
           end
-          object CuterCount_LakTo: TcxGridDBColumn
+          object Count_LakTo: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1073#1072#1090'. '#1085#1072' '#1083#1072#1082'-'#1080#1080
-            DataBinding.FieldName = 'CuterCount_LakTo'
+            DataBinding.FieldName = 'Count_LakTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1085#1072' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1080
+            Options.Editing = False
             Width = 70
           end
-          object CuterCount_LakFrom: TcxGridDBColumn
+          object Count_LakFrom: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1073#1072#1090'. '#1087#1086#1089#1083#1077' '#1083#1072#1082'-'#1080#1103
-            DataBinding.FieldName = 'CuterCount_LakFrom'
+            DataBinding.FieldName = 'Count_LakFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1087#1086#1089#1083#1077' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
             Width = 70
           end
           object OperDate_LakTo: TcxGridDBColumn
@@ -608,6 +612,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1085#1072' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+            Options.Editing = False
             Width = 70
           end
           object OperDate_LakFrom: TcxGridDBColumn
@@ -616,6 +621,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1089' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
             Width = 70
           end
           object CountReal_LAK: TcxGridDBColumn
@@ -626,6 +632,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object MovementItem_partion: TcxGridDBColumn
@@ -635,13 +642,17 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
+            Options.Editing = False
             Width = 70
           end
           object Partion: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
             DataBinding.FieldName = 'Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1087#1092'-'#1075#1087
-            Width = 80
+            Options.Editing = False
+            Width = 120
           end
         end
       end
@@ -1024,10 +1035,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Width = 150
     end
     object cbisLak: TcxCheckBox
-      Left = 776
+      Left = 775
       Top = 7
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1072#1082'-'#1077
-      Properties.ReadOnly = True
+      Action = actRefresh_lak
       TabOrder = 16
       Width = 105
     end
@@ -1046,7 +1056,21 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end>
   end
   inherited ActionList: TActionList
-    object ExecuteDialog_operdate: TExecuteDialog [0]
+    object actRefresh_lak: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1072#1082'-'#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1072#1082'-'#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialog_operdate: TExecuteDialog [1]
       Category = 'Update_OperDate'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1071,7 +1095,107 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object actUpdate_OperDate: TdsdExecStoredProc [1]
+    object actPrintLak: TdsdPrintAction [2]
+      Category = 'PrintDays'
+      MoveParams = <
+        item
+          FromParam.Name = 'isDetail'
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'isDetail'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isDetail'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spPrintLak
+      StoredProcList = <
+        item
+          StoredProc = spPrintLak
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1051#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1051#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintMasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'OperDate;GoodsName;GoodsKindName_Complete'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43831d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43831d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isLoss'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalc'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdate_OperDate: TdsdExecStoredProc [3]
       Category = 'Update_OperDate'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1084,7 +1208,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 67
     end
-    object actPrintDays2_cuter: TdsdPrintAction [2]
+    object actPrintDays2_cuter: TdsdPrintAction [4]
       Category = 'PrintDays'
       MoveParams = <
         item
@@ -1186,7 +1310,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDays4: TdsdPrintAction [3]
+    object actPrintDays4: TdsdPrintAction [5]
       Category = 'PrintDays'
       MoveParams = <
         item
@@ -1296,7 +1420,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object actPrintDays1: TdsdPrintAction [5]
+    object actPrintDays1: TdsdPrintAction [7]
       Category = 'PrintDays'
       MoveParams = <
         item
@@ -1398,7 +1522,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDays2: TdsdPrintAction [6]
+    object actPrintDays2: TdsdPrintAction [8]
       Category = 'PrintDays'
       MoveParams = <
         item
@@ -1500,7 +1624,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macUpdate_OperDate: TMultiAction [7]
+    object macUpdate_OperDate: TMultiAction [9]
       Category = 'Update_OperDate'
       MoveParams = <>
       ActionList = <
@@ -1514,7 +1638,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     inherited actMISetErased: TdsdUpdateErased
       Enabled = False
     end
-    object actPrintDays3: TdsdPrintAction [10]
+    object actPrintDays3: TdsdPrintAction [12]
       Category = 'PrintDays'
       MoveParams = <
         item
@@ -1627,7 +1751,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     inherited actShowAll: TBooleanStoredProcAction
       Enabled = False
     end
-    object actPrintCeh: TdsdPrintAction [16]
+    object actPrintCeh: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintCeh
@@ -1746,7 +1870,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [18]
+    object actUpdateChildDS: TdsdUpdateDataSet [20]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1773,7 +1897,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
     end
-    object actGoodsKindChoiceChild: TOpenChoiceForm [27]
+    object actGoodsKindChoiceChild: TOpenChoiceForm [29]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1800,7 +1924,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoiceMaster: TOpenChoiceForm [28]
+    object actGoodsKindChoiceMaster: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1838,7 +1962,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object MovementProtocolOpenForm: TdsdOpenForm [30]
+    object MovementProtocolOpenForm: TdsdOpenForm [32]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1868,7 +1992,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = False
     end
-    object actUpdate: TdsdInsertUpdateAction [31]
+    object actUpdate: TdsdInsertUpdateAction [33]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')>'
@@ -1943,7 +2067,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementItemId'
     end
-    object actInsert: TdsdInsertUpdateAction [32]
+    object actInsert: TdsdInsertUpdateAction [34]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')>'
@@ -2011,7 +2135,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actPrintReceipt: TdsdPrintAction [34]
+    object actPrintReceipt: TdsdPrintAction [36]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spPrintReceipt
@@ -2051,7 +2175,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUnCompleteList: TMultiAction [35]
+    object actUnCompleteList: TMultiAction [37]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2067,7 +2191,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 11
     end
-    object actSetErasedList: TMultiAction [36]
+    object actSetErasedList: TMultiAction [38]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2083,7 +2207,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 13
     end
-    object actSimpleErased: TMultiAction [37]
+    object actSimpleErased: TMultiAction [39]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2094,7 +2218,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object spErased: TdsdExecStoredProc [38]
+    object spErased: TdsdExecStoredProc [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2105,7 +2229,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = 'spErased'
     end
-    object actSimpleUncompleteList: TMultiAction [39]
+    object actSimpleUncompleteList: TMultiAction [41]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2116,7 +2240,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object spUncomplete: TdsdExecStoredProc [40]
+    object spUncomplete: TdsdExecStoredProc [42]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2127,7 +2251,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = 'spUncomplete'
     end
-    object spCompete: TdsdExecStoredProc [41]
+    object spCompete: TdsdExecStoredProc [43]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2138,7 +2262,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = 'spCompete'
     end
-    object actSimpleCompleteList: TMultiAction [42]
+    object actSimpleCompleteList: TMultiAction [44]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2149,7 +2273,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object actCompleteList: TMultiAction [43]
+    object actCompleteList: TMultiAction [45]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2165,7 +2289,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
-    object actReCompleteList: TMultiAction [44]
+    object actReCompleteList: TMultiAction [46]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2181,7 +2305,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
-    object actSimpleReCompleteList: TMultiAction [45]
+    object actSimpleReCompleteList: TMultiAction [47]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2192,7 +2316,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object spReCompete: TdsdExecStoredProc [46]
+    object spReCompete: TdsdExecStoredProc [48]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2203,7 +2327,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = 'spReCompete'
     end
-    object actReport_TaxExit_Loss: TdsdPrintAction [47]
+    object actReport_TaxExit_Loss: TdsdPrintAction [49]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -2300,7 +2424,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actReport_TaxLoss: TdsdPrintAction [48]
+    object actReport_TaxLoss: TdsdPrintAction [50]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -2388,7 +2512,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actReceiptChoice: TOpenChoiceForm [49]
+    object actReceiptChoice: TOpenChoiceForm [51]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2448,7 +2572,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = True
     end
-    object actUnComplete: TdsdChangeMovementStatus [53]
+    object actUnComplete: TdsdChangeMovementStatus [55]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementUnComplete
@@ -2462,7 +2586,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Status = mtUncomplete
       DataSource = MasterDS
     end
-    object actComplete: TdsdChangeMovementStatus [54]
+    object actComplete: TdsdChangeMovementStatus [56]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementComplete
@@ -2476,7 +2600,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Status = mtComplete
       DataSource = MasterDS
     end
-    object actSetErased: TdsdChangeMovementStatus [55]
+    object actSetErased: TdsdChangeMovementStatus [57]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementSetErased
@@ -2927,6 +3051,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintLak'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -3033,6 +3165,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object bbOpenFormOrderInternal: TdxBarButton
       Action = actOpenFormOrderInternal
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079'>'
+      Category = 0
+    end
+    object bbPrintLak: TdxBarButton
+      Action = actPrintLak
       Category = 0
     end
   end
@@ -4302,5 +4438,50 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     PackSize = 1
     Left = 464
     Top = 424
+  end
+  object spPrintLak: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionUnionLak_Print'
+    DataSet = PrintMasterCDS
+    DataSets = <
+      item
+        DataSet = PrintMasterCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43831d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 43831d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 440
   end
 end
