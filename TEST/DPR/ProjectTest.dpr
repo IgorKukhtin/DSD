@@ -139,7 +139,6 @@ uses
   SendOnPrice_Branch in '..\..\Forms\Document\SendOnPrice_Branch.pas' {SendOnPrice_BranchForm},
   LossJournal in '..\..\Forms\Document\LossJournal.pas' {LossJournalForm},
   Loss in '..\..\Forms\Document\Loss.pas' {LossForm},
-  ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm},
   Report_ProfitLoss in '..\..\Forms\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm},
   Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm},
   ProductionUnionTechJournal in '..\..\Forms\Document\ProductionUnionTechJournal.pas' {ProductionUnionTechJournalForm},
@@ -1464,7 +1463,8 @@ uses
   OrderInternal_deflection in '..\..\Forms\Document\OrderInternal_deflection.pas' {OrderInternal_deflectionForm: TParentForm},
   Report_Sale_BankAccount in '..\..\Forms\Report\Report_Sale_BankAccount.pas' {Report_Sale_BankAccountForm: TParentForm},
   Report_Sale_BankAccountDialog in '..\..\Forms\Report\Report_Sale_BankAccountDialog.pas' {Report_Sale_BankAccountDialogForm: TParentForm},
-  AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas';
+  AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas',
+  ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
