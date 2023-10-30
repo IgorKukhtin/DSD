@@ -604,10 +604,6 @@
 				<Form>ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas">
-				<Form>AncestorDocumentMCForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashJournalUser.pas">
 				<Form>CashJournalUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5116,6 +5112,7 @@
 				<Form>Report_Sale_BankAccountDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -240,7 +240,6 @@ uses
   CommonObjectDescProcedureTest in '..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas',
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
-  AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
   CashJournalUser in '..\..\Forms\Document\CashJournalUser.pas' {CashJournalUserForm: TParentForm},
   Report_GoodsMI_OrderExternal_Sale in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas' {Report_GoodsMI_OrderExternal_SaleForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
@@ -1464,7 +1463,8 @@ uses
   OrderInternalPackRemains_deflection in '..\..\Forms\Document\OrderInternalPackRemains_deflection.pas' {OrderInternalPackRemains_deflectionForm: TParentForm},
   OrderInternal_deflection in '..\..\Forms\Document\OrderInternal_deflection.pas' {OrderInternal_deflectionForm: TParentForm},
   Report_Sale_BankAccount in '..\..\Forms\Report\Report_Sale_BankAccount.pas' {Report_Sale_BankAccountForm: TParentForm},
-  Report_Sale_BankAccountDialog in '..\..\Forms\Report\Report_Sale_BankAccountDialog.pas' {Report_Sale_BankAccountDialogForm: TParentForm};
+  Report_Sale_BankAccountDialog in '..\..\Forms\Report\Report_Sale_BankAccountDialog.pas' {Report_Sale_BankAccountDialogForm: TParentForm},
+  AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

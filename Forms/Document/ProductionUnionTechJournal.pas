@@ -179,6 +179,7 @@ type
     bbOpenFormOrderInternal: TdxBarButton;
     Partion: TcxGridDBColumn;
     cbisLak: TcxCheckBox;
+    actRefresh_lak: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

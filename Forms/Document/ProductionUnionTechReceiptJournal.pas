@@ -171,6 +171,7 @@ type
     bbPrintDays2_cuter: TdxBarButton;
     CountReal: TcxGridDBColumn;
     cbisLak: TcxCheckBox;
+    actRefresh_lak: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -361,10 +361,11 @@ BEGIN
                                 , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.Amount,0) ELSE 0 END)     AS Amount_from
                                 , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.CuterCount,0) ELSE 0 END) AS CuterCount_from
                                 , SUM (COALESCE (tmpMI.CountReal_LAK,0)) AS CountReal_LAK
-                                , CASE WHEN inisLak = TRUE THEN tmpMI.ObjectId ELSE 0 END AS  DocumentKindId_Lak 
+                                , 0 AS  DocumentKindId_Lak 
+                                --CASE WHEN inisLak = TRUE THEN tmpMI.ObjectId ELSE 0 END AS  DocumentKindId_Lak 
                            FROM tmpMI_lak AS tmpMI
                            GROUP BY tmpMI.MovementItemId_master
-                                  , CASE WHEN inisLak = TRUE THEN tmpMI.ObjectId ELSE 0 END
+                                  --, CASE WHEN inisLak = TRUE THEN tmpMI.ObjectId ELSE 0 END
                           ) 
 
 
