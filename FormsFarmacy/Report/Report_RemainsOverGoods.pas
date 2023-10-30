@@ -127,6 +127,7 @@ type
     actLoadGoodsId: TdsdDataToJsonAction;
     FormParams: TdsdFormParams;
     dxBarButton1: TdxBarButton;
+    cbOnlyPromo: TcxCheckBox;
   private
     { Private declarations }
   public

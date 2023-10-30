@@ -1324,6 +1324,20 @@ type
     property DataType: TFieldType read FDataType write FDataType default ftString;
   end;
 
+  TFilterParamCollectionItem = class(TCollectionItem)
+    FFieldParam: TdsdParam;
+    FValueParam: TdsdParam;
+  protected
+    function GetDisplayName: string; override;
+  public
+    constructor Create(Collection: TCollection); overload; override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property FieldParam: TdsdParam read FFieldParam write FFieldParam;
+    property ValueParam: TdsdParam read FValueParam write FValueParam;
+  end;
+
   TdsdDataToJsonAction = class(TdsdCustomAction)
   private
     FDataSource: TDataSource;
@@ -1335,6 +1349,8 @@ type
     FFileOpenDialog: TFileOpenDialog;
     FFileNameParam: TdsdParam;
     FStartColumns: Integer;
+
+    FFilterParam: TOwnedCollection;
 
     procedure SetDataSource(const Value: TDataSource);
     procedure SetView(const Value: TcxGridTableView);
@@ -1357,6 +1373,8 @@ type
     // Имя файла для загрузки данных
     property FileNameParam: TdsdParam read FFileNameParam write FFileNameParam;
     property StartColumns: Integer read FStartColumns write FStartColumns default 2;
+
+    property FilterParam: TOwnedCollection read FFilterParam write FFilterParam;
 
     property QuestionBeforeExecute;
     property InfoAfterExecute;
@@ -6720,12 +6738,52 @@ begin
 end;
 
 
+{ TFilterParamCollectionItem }
+
+constructor TFilterParamCollectionItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FFieldParam := TdsdParam.Create(Nil);
+  FFieldParam.DataType := ftString;
+  FValueParam := TdsdParam.Create(Nil);
+end;
+
+destructor TFilterParamCollectionItem.Destroy;
+begin
+  FValueParam.Free;
+  FFieldParam.Free;
+  inherited Destroy;
+end;
+
+function TFilterParamCollectionItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if FFieldParam.Value <> '' then
+    result := FFieldParam.Value + ' = '  + FValueParam.AsString
+  else if Assigned(FFieldParam.Component) then
+    result := FFieldParam.Component.Name + ' ' + FFieldParam.ComponentItem
+  else Result := inherited;
+end;
+
+procedure TFilterParamCollectionItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TFilterParamCollectionItem then
+  begin
+     FValueParam.Assign(TFilterParamCollectionItem(Source).ValueParam);
+     FFieldParam.Assign(TFilterParamCollectionItem(Source).FieldParam);
+  end
+  else
+    inherited Assign(Source);
+end;
+
 {  TdsdDataToJsonAction  }
 
 constructor TdsdDataToJsonAction.Create(AOwner: TComponent);
 begin
   inherited;
   FPairParams := TOwnedCollection.Create(Self, TdsdPairParamsItem);
+  FFilterParam := TOwnedCollection.Create(Self, TFilterParamCollectionItem);;
   FJsonParam := TdsdParam.Create(Nil);
   FJsonParam.DataType := ftWideString;
 
@@ -6753,6 +6811,7 @@ begin
   FreeAndNil(FFileNameParam);
   FreeAndNil(FJsonParam);
   FreeAndNil(FPairParams);
+  FreeAndNil(FFilterParam);
   inherited;
 end;
 
@@ -6791,6 +6850,33 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
   procedure DataSourceExecute;
   var
     i, j : Integer;
+
+    function isViewFilterOk : Boolean;
+    var l : Integer;
+    begin
+      Result := FFilterParam.Count = 0;
+      for l := 0 to FFilterParam.Count - 1 do
+      begin
+        if (TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value <> '') then
+          if Assigned(TcxDBDataController(View.DataController).DataSource.DataSet.FindField(TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value)) then
+            if TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value).Value <> TFilterParamCollectionItem(FFilterParam.Items[l]).ValueParam.Value then Exit;
+      end;
+      Result := True;
+    end;
+
+    function isDataSourceFilterOk : Boolean;
+    var l : Integer;
+    begin
+      Result := FFilterParam.Count = 0;
+      for l := 0 to FFilterParam.Count do
+      begin
+        if (TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value <> '') then
+          if Assigned(DataSource.DataSet.FindField(TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value)) then
+            if DataSource.DataSet.FieldByName(TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value).Value <> TFilterParamCollectionItem(FFilterParam.Items[l]).ValueParam.Value then Exit;
+      end;
+      Result := True;
+    end;
+
   begin
     if Assigned(View) then
     begin
@@ -6804,26 +6890,29 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
           begin
             View.DataController.FocusedRecordIndex :=
               View.DataController.FilteredRecordIndex[i];
-            JSONObject := TJSONObject.Create;
-            if FPairParams.Count > 0 then
+            if isViewFilterOk then
             begin
-              for j := 0 to FPairParams.Count - 1 do
-                if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
-                begin
-                  if Assigned(TcxDBDataController(View.DataController).DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
-                    AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
-                                   TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
-                                   TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
-                  else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
-                end;
-            end else
-            begin
-              for j := 0 to TcxDBDataController(View.DataController).DataSource.DataSet.FieldCount - 1 do
-                AddParamToJSON(TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DisplayText,
-                               TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].Value,
-                               TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DataType);
+              JSONObject := TJSONObject.Create;
+              if FPairParams.Count > 0 then
+              begin
+                for j := 0 to FPairParams.Count - 1 do
+                  if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
+                  begin
+                    if Assigned(TcxDBDataController(View.DataController).DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
+                      AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
+                                     TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
+                                     TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
+                    else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
+                  end;
+              end else
+              begin
+                for j := 0 to TcxDBDataController(View.DataController).DataSource.DataSet.FieldCount - 1 do
+                  AddParamToJSON(TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DisplayText,
+                                 TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].Value,
+                                 TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DataType);
+              end;
+              JsonArray.AddElement(JSONObject);
             end;
-            JsonArray.AddElement(JSONObject);
             IncProgress(1);
           end;
         finally
@@ -6846,26 +6935,29 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
           try
             while not DataSource.DataSet.Eof do
             begin
-              JSONObject := TJSONObject.Create;
-              if FPairParams.Count > 0 then
+              if isDataSourceFilterOk then
               begin
-                for j := 0 to FPairParams.Count - 1 do
-                  if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
-                  begin
-                    if Assigned(DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
-                      AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
-                                     DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
-                                     DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
-                    else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
-                  end;
-              end else
-              begin
-                for j := 0 to DataSource.DataSet.FieldCount - 1 do
-                  AddParamToJSON(DataSource.DataSet.Fields.Fields[J].FieldName,
-                                 DataSource.DataSet.Fields.Fields[J].Value,
-                                 DataSource.DataSet.Fields.Fields[J].DataType);
+                JSONObject := TJSONObject.Create;
+                if FPairParams.Count > 0 then
+                begin
+                  for j := 0 to FPairParams.Count - 1 do
+                    if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
+                    begin
+                      if Assigned(DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
+                        AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
+                                       DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
+                                       DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
+                      else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
+                    end;
+                end else
+                begin
+                  for j := 0 to DataSource.DataSet.FieldCount - 1 do
+                    AddParamToJSON(DataSource.DataSet.Fields.Fields[J].FieldName,
+                                   DataSource.DataSet.Fields.Fields[J].Value,
+                                   DataSource.DataSet.Fields.Fields[J].DataType);
+                end;
+                JsonArray.AddElement(JSONObject);
               end;
-              JsonArray.AddElement(JSONObject);
               IncProgress(1);
               DataSource.DataSet.Next
             end;
@@ -6937,6 +7029,18 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
       Result := n;
     end;
 
+    function isXLSFilterOk : Boolean;
+    var l : Integer;
+    begin
+      Result := FFilterParam.Count = 0;
+      for l := 0 to FFilterParam.Count do
+      begin
+        if (TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value <> '') then
+          if Sheet.Cells[Row, ConvertLaterToNum(TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value)].Value <> TFilterParamCollectionItem(FFilterParam.Items[l]).ValueParam.Value then Exit;
+      end;
+      Result := True;
+    end;
+
   begin
 
     if FFileNameParam.Value = '' then
@@ -6975,15 +7079,18 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
 
               if FPairParams.Count > 0 then
               begin
-                JSONObject := TJSONObject.Create;
-                for j := 0 to FPairParams.Count - 1 do
-                  if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
-                  begin
-                    AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
-                      ConvertToValue(Sheet.Cells[Row, ConvertLaterToNum(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)].Value, TdsdPairParamsItem(FPairParams.Items[j]).DataType),
-                      TdsdPairParamsItem(FPairParams.Items[j]).DataType);
-                  end;
-                JsonArray.AddElement(JSONObject);
+                if isXLSFilterOk then
+                begin
+                  JSONObject := TJSONObject.Create;
+                  for j := 0 to FPairParams.Count - 1 do
+                    if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
+                    begin
+                      AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
+                        ConvertToValue(Sheet.Cells[Row, ConvertLaterToNum(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)].Value, TdsdPairParamsItem(FPairParams.Items[j]).DataType),
+                        TdsdPairParamsItem(FPairParams.Items[j]).DataType);
+                    end;
+                  JsonArray.AddElement(JSONObject);
+                end;
                 IncProgress(1);
               end
 
@@ -7033,8 +7140,18 @@ begin
   if csDestroying in ComponentState then
     exit;
   if (Operation = opRemove)  then
+  begin
     if FJsonParam.Component = AComponent then
       FJsonParam.Component := nil;
+
+    for i := 0 to FFilterParam.Count - 1 do
+    begin
+       if TFilterParamCollectionItem(FFilterParam.Items[i]).FieldParam.Component = AComponent then
+            TFilterParamCollectionItem(FFilterParam.Items[i]).FieldParam.Component := nil;
+       if TdsdSetVisibleParamsItem(FFilterParam.Items[i]).ValueParam.Component = AComponent then
+           TFilterParamCollectionItem(FFilterParam.Items[i]).ValueParam.Component := nil;
+    end;
+  end;
 end;
 
 procedure TdsdDataToJsonAction.SetDataSource(const Value: TDataSource);

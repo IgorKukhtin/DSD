@@ -65,6 +65,7 @@ type
     cbReserveTo: TcxCheckBox;
     cbMCS_0: TcxCheckBox;
     cbNoPromo: TcxCheckBox;
+    cbOnlyPromo: TcxCheckBox;
   private
     { Private declarations }
   public

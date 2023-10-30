@@ -3,7 +3,7 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
   Top = 0
   Caption = #1040#1085#1072#1083#1080#1079' '#1079#1072#1082#1088#1099#1090#1086#1075#1086' '#1082#1086#1076#1072
   ClientHeight = 435
-  ClientWidth = 844
+  ClientWidth = 861
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,12 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
   object cxGrid: TcxGrid
     Left = 2
     Top = 26
-    Width = 842
+    Width = 859
     Height = 409
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 779
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -55,7 +54,7 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object isSelect: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083'.'
+        Caption = #1048#1079#1084'.'
         DataBinding.FieldName = 'isSelect'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -81,7 +80,15 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 393
+        Width = 332
+      end
+      object ExpirationDate: TcxGridDBColumn
+        Caption = #1052#1080#1085'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'ExpirationDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 89
       end
       object Remains: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -206,6 +213,10 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -306,6 +317,10 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
       Visible = ivAlways
       ImageIndex = 63
     end
+    object dxBarButton3: TdxBarButton
+      Action = actGoodsJson_isClose
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -337,6 +352,54 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actDataToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'JSON'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'GoodsId'
+          PairName = 'Id'
+        end
+        item
+          FieldName = 'isClose'
+          PairName = 'isClose'
+        end>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FilterParam = <
+        item
+          FieldParam.Value = 'isSelect'
+          FieldParam.DataType = ftString
+          FieldParam.MultiSelectSeparator = ','
+          ValueParam.Value = True
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+      Caption = 'actDataToJson'
+    end
+    object actGoodsJson_isClose: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actDataToJson
+      PostDataSetBeforeExecute = False
+      StoredProc = spGoodsJson_isClose
+      StoredProcList = <
+        item
+          StoredProc = spGoodsJson_isClose
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1082#1088#1099#1090'" '#1085#1072' '#1074#1089#1077' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1082#1088#1099#1090'" '#1085#1072' '#1074#1089#1077' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      ImageIndex = 7
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1082#1088#1099#1090'" '#1085#1072' '#1074#1089#1077' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099'?'
     end
   end
   object spSelect: TdsdStoredProc
@@ -394,8 +457,32 @@ object Report_GoodsToCloseForm: TReport_GoodsToCloseForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JSON'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 288
+  end
+  object spGoodsJson_isClose: TdsdStoredProc
+    StoredProcName = 'gpUpdate_GoodsJson_isClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJSON'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JSON'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 120
   end
 end
