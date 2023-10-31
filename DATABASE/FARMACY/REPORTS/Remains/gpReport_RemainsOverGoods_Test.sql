@@ -1,6 +1,6 @@
 -- Function: gpReport_RemainsOverGoods()
 
-DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_Test (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_Test (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods_Test(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods_Test(
     IN inIsSummSend       Boolean  ,  -- Учитывать товар в затоварку, пришедший до X дней Да/Нет
     IN inisSendAll        Boolean  ,  -- Весь товар
     IN inisNoPromo        Boolean  ,  -- Без маркет. контрактов
+    IN inisOnlyPromo      Boolean  ,  -- Только маркет. контракт
     IN inGoodsList        TBlob    ,  -- Только товары
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -285,7 +286,8 @@ BEGIN
                                         AND tmp_In.UnitId  = tmpContainer.UnitId
                         LEFT JOIN tmpMIPromo ON tmpMIPromo.GoodsId = tmpContainer.GoodsId
                         LEFT JOIN tblGoodsList ON tblGoodsList.GoodsId = tmpContainer.GoodsId
-                   WHERE (COALESCE (tmpMIPromo.GoodsId, 0) = 0 or COALESCE(inisNoPromo, False) = False)
+                   WHERE (COALESCE (tmpMIPromo.GoodsId, 0) = 0 or COALESCE(inisNoPromo, False) = False)                   
+                     AND (COALESCE (tmpMIPromo.GoodsId, 0) <> 0 or COALESCE(inisOnlyPromo, False) = False)
                      AND (COALESCE (tblGoodsList.GoodsId, 0) <> 0 or COALESCE (inGoodsList, '') = '')
                    GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.UnitId
                    ;
@@ -523,6 +525,7 @@ BEGIN
                   LEFT JOIN tmpMIPromo ON tmpMIPromo.GoodsId = tmp.GoodsId
                   LEFT JOIN tblGoodsList ON tblGoodsList.GoodsId = tmp.GoodsId
              WHERE (COALESCE (tmpMIPromo.GoodsId, 0) = 0 or COALESCE(inisNoPromo, False) = False)
+               AND (COALESCE (tmpMIPromo.GoodsId, 0) <> 0 or COALESCE(inisOnlyPromo, False) = False)
                AND (COALESCE (tblGoodsList.GoodsId, 0) <> 0 or COALESCE (inGoodsList, '') = '');
                                        
        ANALYSE tmpGoods_list;
@@ -1002,4 +1005,4 @@ SELECT * FROM gpReport_RemainsOverGoods_Test(inUnitId := 183288 , inStartDate :=
 FETCH ALL "<unnamed portal 1>";
 */
 
-select * from gpReport_RemainsOverGoods_TEST(inUnitId := 3457773 , inStartDate := ('01.11.2023')::TDateTime , inPeriod := 30 , inDay := 12 , inDayIncome := 15 , inAssortment := 1 , inSummSend := 100 , inisMCS := 'False' , inisInMCS := 'False' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve := 'False' , inIsIncome := 'False' , inisSummSend := 'False' , inisSendAll := 'True' , inisNoPromo := 'False' , inGoodsList := '' ,  inSession := '3');
+select * from gpReport_RemainsOverGoods_TEST(inUnitId := 3457773 , inStartDate := ('01.11.2023')::TDateTime , inPeriod := 30 , inDay := 12 , inDayIncome := 15 , inAssortment := 1 , inSummSend := 100 , inisMCS := 'False' , inisInMCS := 'False' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve := 'False' , inIsIncome := 'False' , inisSummSend := 'False' , inisSendAll := 'True' , inisNoPromo := 'False', inisOnlyPromo := 'False', inGoodsList := '' ,  inSession := '3');

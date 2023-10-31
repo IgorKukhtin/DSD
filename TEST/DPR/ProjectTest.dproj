@@ -342,9 +342,6 @@
 			<DCCReference Include="..\..\Forms\Document\Loss.pas">
 				<Form>LossForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProductionUnionJournal.pas">
-				<Form>ProductionUnionJournalForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ProfitLoss.pas">
 				<Form>Report_ProfitLossForm</Form>
 			</DCCReference>
@@ -5113,6 +5110,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas"/>
+			<DCCReference Include="..\..\Forms\Document\ProductionUnionJournal.pas">
+				<Form>ProductionUnionJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionUnion(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionUnion(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inDocumentKindId      Integer   , -- Тип документа (в документе)
+    IN inSubjectDocId        Integer               , --
     IN inIsPeresort          Boolean   , -- пересорт
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -27,11 +29,13 @@ BEGIN
                                                   , inOperDate       := inOperDate
                                                   , inFromId         := inFromId
                                                   , inToId           := inToId
-                                                  , inDocumentKindId := inDocumentKindId
+                                                  , inDocumentKindId := inDocumentKindId 
+                                                  , inSubjectDocId   := inSubjectDocId
                                                   , inIsPeresort     := inIsPeresort
                                                   , inUserId         := vbUserId
                                                    );
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SubjectDoc(), ioId, inSubjectDocId);
 
 END;
 $BODY$
@@ -40,6 +44,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.10.23         * inSubjectDocId
  13.06.16         *
  20.03.15                                        *
 */

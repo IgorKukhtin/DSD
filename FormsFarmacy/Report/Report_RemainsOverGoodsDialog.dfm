@@ -275,7 +275,17 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     ParentShowHint = False
     ShowHint = True
     TabOrder = 30
-    Width = 329
+    Width = 161
+  end
+  object cbOnlyPromo: TcxCheckBox
+    Left = 167
+    Top = 514
+    Hint = #1058#1086#1083#1100#1082#1086' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
+    Caption = #1058#1086#1083#1100#1082#1086' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 31
+    Width = 170
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -481,6 +491,13 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         Name = 'isNoPromo'
         Value = Null
         Component = cbNoPromo
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyPromo'
+        Value = Null
+        Component = cbOnlyPromo
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

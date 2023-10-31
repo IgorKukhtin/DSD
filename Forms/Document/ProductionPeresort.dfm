@@ -2,7 +2,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 502
   ClientWidth = 1128
-  ExplicitLeft = -234
   ExplicitWidth = 1144
   ExplicitHeight = 541
   PixelsPerInch = 96
@@ -1503,6 +1502,12 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       end
       item
         Name = 'inDocumentKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSubjectDocId'
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','

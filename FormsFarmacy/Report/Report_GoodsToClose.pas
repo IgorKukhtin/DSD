@@ -59,6 +59,11 @@ type
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     isClose: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    actDataToJson: TdsdDataToJsonAction;
+    actGoodsJson_isClose: TdsdExecStoredProc;
+    spGoodsJson_isClose: TdsdStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

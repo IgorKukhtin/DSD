@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalId_From Integer, JuridicalName_From TVarChar
              , ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
@@ -39,29 +40,32 @@ BEGIN
      THEN
      RETURN QUERY
          SELECT
-               0                                                AS Id
+               0                                              AS Id
              , CAST (NEXTVAL ('movement_productionunion_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
-             , Object_Status.Code                               AS StatusCode
-             , Object_Status.Name                               AS StatusName
-             , 0                     			        AS FromId
-             , CAST ('' AS TVarChar) 			        AS FromName
-             , 0                                                AS JuridicalId_From
-             , CAST ('' as TVarChar)                            AS JuridicalName_From
-             , 0                     			        AS ToId
-             , CAST ('' AS TVarChar) 				AS ToName
-             , 0                                                AS DocumentKindId
-             , CAST ('' AS TVarChar) 				AS DocumentKindName
-             , CAST (False as Boolean)                          AS isAuto
-             , Null:: TDateTime                                 AS InsertDate
+             , inOperDate                                     AS OperDate
+             , Object_Status.Code                             AS StatusCode
+             , Object_Status.Name                             AS StatusName
+             , 0                                              AS FromId
+             , CAST ('' AS TVarChar)                          AS FromName
+             , 0                                              AS JuridicalId_From
+             , CAST ('' as TVarChar)                          AS JuridicalName_From
+             , 0                                              AS ToId
+             , CAST ('' AS TVarChar)                          AS ToName
+             , 0                                              AS DocumentKindId
+             , CAST ('' AS TVarChar)                          AS DocumentKindName
+             , 0                   	                          AS SubjectDocId
+             , CAST ('' AS TVarChar)                          AS SubjectDocName
+ 
+             , CAST (False as Boolean)                        AS isAuto
+             , Null:: TDateTime                               AS InsertDate
 
-             , 0                                                AS MovementId_Production
-             , CAST ('' AS TVarChar) 				AS InvNumber_ProductionFull
+             , 0                                              AS MovementId_Production
+             , CAST ('' AS TVarChar)                          AS InvNumber_ProductionFull
 
-             , 0                                                AS MovementId_Order
-             , '' :: TVarChar                                   AS InvNumber_Order
-             , FALSE  :: Boolean                                AS isPeresort
-             , FALSE  :: Boolean                                AS isClosed
+             , 0                                              AS MovementId_Order
+             , '' :: TVarChar                                 AS InvNumber_Order
+             , FALSE  :: Boolean                              AS isPeresort
+             , FALSE  :: Boolean                              AS isClosed
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -79,7 +83,9 @@ BEGIN
          , Object_To.Id                             AS ToId
          , (CASE WHEN Object_From.ValueData ILIKE Object_To.ValueData THEN '(' || Object_To.ObjectCode :: TVarChar ||') '  ELSE '' END || Object_To.ValueData) :: TVarChar AS ToName
          , Object_DocumentKind.Id                   AS DocumentKindId
-         , Object_DocumentKind.ValueData            AS DocumentKindName
+         , Object_DocumentKind.ValueData            AS DocumentKindName 
+         , Object_SubjectDoc.Id                     AS SubjectDocId
+         , Object_SubjectDoc.ValueData              AS SubjectDocName
          , COALESCE(MovementBoolean_isAuto.ValueData, False)          AS isAuto
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
 
@@ -109,6 +115,11 @@ BEGIN
                                        ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
                                       AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
           LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                       ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                      AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+          LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
           LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                     ON MovementBoolean_isAuto.MovementId = Movement.Id
@@ -157,6 +168,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.10.23         *
  29.03.22         * isClosed
  31.05.17         *
  26.06.16         *

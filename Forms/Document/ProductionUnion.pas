@@ -115,6 +115,9 @@ type
     bbPartionGoodsAssetChoice: TdxBarButton;
     actPartionGoodsAssetChoiceMaster: TOpenChoiceForm;
     CountReal_LAK: TcxGridDBColumn;
+    cxLabel30: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
   private
     { Private declarations }
   public

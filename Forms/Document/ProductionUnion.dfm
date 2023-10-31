@@ -710,6 +710,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   inherited DataPanel: TPanel
     Width = 1128
     Height = 96
+    ExplicitTop = 4
     ExplicitWidth = 1128
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
@@ -722,16 +723,20 @@ inherited ProductionUnionForm: TProductionUnionForm
       ExplicitLeft = 370
     end
     inherited cxLabel4: TcxLabel
-      Left = 646
-      ExplicitLeft = 646
+      Left = 618
+      ExplicitLeft = 618
     end
     inherited edFrom: TcxButtonEdit
       Left = 370
       ExplicitLeft = 370
+      ExplicitWidth = 239
+      Width = 239
     end
     inherited edTo: TcxButtonEdit
-      Left = 646
-      ExplicitLeft = 646
+      Left = 618
+      ExplicitLeft = 618
+      ExplicitWidth = 231
+      Width = 231
     end
     object cxLabel5: TcxLabel
       Left = 216
@@ -739,12 +744,12 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = #1044#1072#1090#1072'/'#1074#1088'. '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
     end
     object cxLabel6: TcxLabel
-      Left = 646
+      Left = 618
       Top = 43
       Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edDocumentKind: TcxButtonEdit
-      Left = 646
+      Left = 618
       Top = 61
       Properties.Buttons = <
         item
@@ -753,7 +758,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Width = 270
+      Width = 231
     end
     object cxLabel17: TcxLabel
       Left = 414
@@ -770,7 +775,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 14
-      Width = 226
+      Width = 195
     end
     object edJuridicalFrom: TcxButtonEdit
       Left = 320
@@ -786,13 +791,29 @@ inherited ProductionUnionForm: TProductionUnionForm
       Width = 64
     end
     object cbClosed: TcxCheckBox
-      Left = 928
-      Top = 23
+      Left = 1039
+      Top = 61
       Hint = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
       Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
       Properties.ReadOnly = True
       TabOrder = 16
       Width = 145
+    end
+    object cxLabel30: TcxLabel
+      Left = 858
+      Top = 5
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+    end
+    object edSubjectDoc: TcxButtonEdit
+      Left = 858
+      Top = 23
+      Properties.Buttons = <
+        item
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 175
     end
   end
   object edIsAuto: TcxCheckBox [2]
@@ -825,12 +846,12 @@ inherited ProductionUnionForm: TProductionUnionForm
     Width = 192
   end
   object cxLabel7: TcxLabel [5]
-    Left = 928
+    Left = 858
     Top = 43
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
   end
   object edProductionMov: TcxButtonEdit [6]
-    Left = 928
+    Left = 858
     Top = 61
     Properties.Buttons = <
       item
@@ -839,11 +860,11 @@ inherited ProductionUnionForm: TProductionUnionForm
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 196
+    Width = 175
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 827
-    Top = 40
+    Left = 787
+    Top = 24
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -1841,6 +1862,21 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 176
@@ -1897,6 +1933,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsPeresort'
         Value = False
         DataType = ftBoolean
@@ -1932,8 +1976,6 @@ inherited ProductionUnionForm: TProductionUnionForm
       item
         Control = edDocumentKind
       end>
-    Left = 264
-    Top = 177
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
@@ -2699,7 +2741,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 1004
+    Left = 964
     Top = 56
   end
   object getMovementForm: TdsdStoredProc
@@ -2766,5 +2808,34 @@ inherited ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 1267
     Top = 234
+  end
+  object GuidesSubjectDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSubjectDoc
+    FormNameParam.Value = 'TSubjectDocForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSubjectDocForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 904
+    Top = 8
   end
 end
