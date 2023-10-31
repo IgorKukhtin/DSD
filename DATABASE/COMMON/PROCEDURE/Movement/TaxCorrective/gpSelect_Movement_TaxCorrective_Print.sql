@@ -1520,6 +1520,7 @@ BEGIN
 
                        , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
+                       , tmpData_all.JuridicalName_From_add
                        , tmpData_all.JuridicalAddress_From
 
                        , tmpData_all.OKPO_From
@@ -1810,6 +1811,7 @@ BEGIN
 
                        , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
+                       , tmpData_all.JuridicalName_From_add
                        , tmpData_all.JuridicalAddress_From
 
                        , tmpData_all.OKPO_From
@@ -2056,6 +2058,7 @@ BEGIN
 
                        , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
+                       , tmpData_all.JuridicalName_From_add
                        , tmpData_all.JuridicalAddress_From
 
                        , tmpData_all.OKPO_From
@@ -2272,7 +2275,8 @@ BEGIN
 
            , tmpData_all.SupplierGLNCode
 
-           , tmpData_all.JuridicalName_From
+           , tmpData_all.JuridicalName_From     :: TVarChar AS JuridicalName_From
+           , tmpData_all.JuridicalName_From_add :: TVarChar AS JuridicalName_From_add
            , tmpData_all.JuridicalAddress_From
 
            , tmpData_all.OKPO_From
