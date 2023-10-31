@@ -6868,7 +6868,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
     var l : Integer;
     begin
       Result := FFilterParam.Count = 0;
-      for l := 0 to FFilterParam.Count do
+      for l := 0 to FFilterParam.Count - 1 do
       begin
         if (TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value <> '') then
           if Assigned(DataSource.DataSet.FindField(TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value)) then
@@ -7033,7 +7033,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
     var l : Integer;
     begin
       Result := FFilterParam.Count = 0;
-      for l := 0 to FFilterParam.Count do
+      for l := 0 to FFilterParam.Count - 1 do
       begin
         if (TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value <> '') then
           if Sheet.Cells[Row, ConvertLaterToNum(TFilterParamCollectionItem(FFilterParam.Items[l]).FieldParam.Value)].Value <> TFilterParamCollectionItem(FFilterParam.Items[l]).ValueParam.Value then Exit;
