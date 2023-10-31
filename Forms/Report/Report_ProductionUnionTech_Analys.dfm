@@ -65,11 +65,11 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Column = Amount_order
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Column = CuterCount_diff
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Column = Amount_diff
             end
             item
@@ -81,10 +81,6 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Kind = skSum
               Position = spFooter
               Column = Amount_diff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -97,8 +93,14 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Column = RealWeightShp
             end
             item
-              Position = spFooter
+              Format = ',0.####'
+              Kind = skSum
               Column = RealWeightMsg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -137,18 +139,14 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Column = Amount_order
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = CuterCount_diff
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = Amount_diff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -164,6 +162,11 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Format = ',0.####'
               Kind = skSum
               Column = RealWeightShp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -181,7 +184,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1092'-'#1075#1087
+            HeaderHint = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1086#1080#1079#1074'.'
             Options.Editing = False
             Width = 70
           end
@@ -192,7 +195,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Properties.DisplayFormat = 'dd.mm.yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1092'-'#1075#1087
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1086#1080#1079#1074'.'
             Options.Editing = False
             Width = 60
           end
@@ -201,7 +204,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             DataBinding.FieldName = 'InvNumber_order'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1092'-'#1075#1087
+            HeaderHint = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1082#1072#1079
             Options.Editing = False
             Width = 70
           end
@@ -212,7 +215,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Properties.DisplayFormat = 'dd.mm.yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1092'-'#1075#1087
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1082#1072#1079
             Options.Editing = False
             Width = 60
           end
@@ -454,7 +457,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -467,7 +470,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             DataBinding.FieldName = 'CuterCount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -541,6 +544,13 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object FromName_prod: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086') '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'FromName_prod'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
