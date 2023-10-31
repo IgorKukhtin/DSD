@@ -168,6 +168,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object RaiffeisenBankLoad: TClientBankLoadAction [4]
       Category = 'Load'
       MoveParams = <>
+      isOEM = False
       ClientBankType = cbRaiffeisenBank
       StartDateParam.Value = 43831d
       StartDateParam.Component = deStart
@@ -195,6 +196,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankMarfinLoad: TClientBankLoadAction [8]
       Category = 'Load'
       MoveParams = <>
+      isOEM = False
       ClientBankType = cbMarfinBank
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
@@ -293,6 +295,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankOTPLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      isOEM = False
       ClientBankType = cbOTPBank
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
@@ -531,6 +534,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankOshadLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      isOEM = False
       ClientBankType = cbOshadBank
       StartDateParam.Value = 43831d
       StartDateParam.Component = deStart
