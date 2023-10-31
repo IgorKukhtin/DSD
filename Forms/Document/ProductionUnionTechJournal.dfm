@@ -86,12 +86,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_LakTo
+              Column = CountReal_LakTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_LakFrom
+              Column = CountReal_LakFrom
             end
             item
               Format = ',0.####'
@@ -102,6 +102,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Count_LakFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountReal_LAK
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -162,12 +167,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_LakTo
+              Column = CountReal_LakTo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_LakFrom
+              Column = CountReal_LakFrom
             end
             item
               Format = ',0.####'
@@ -183,6 +188,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colGoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountReal_LAK
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -558,9 +568,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object Amount_LakTo: TcxGridDBColumn
+          object CountReal_LakTo: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1087#1077#1088#1077#1076' '#1083#1072#1082'-'#1077#1084
-            DataBinding.FieldName = 'Amount_LakTo'
+            DataBinding.FieldName = 'CountReal_LakTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -570,9 +580,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_LakFrom: TcxGridDBColumn
+          object CountReal_LakFrom: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1087#1086#1089#1083#1077' '#1083#1072#1082'-'#1080#1103
-            DataBinding.FieldName = 'Amount_LakFrom'
+            DataBinding.FieldName = 'CountReal_LakFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

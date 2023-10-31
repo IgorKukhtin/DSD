@@ -30,7 +30,6 @@ BEGIN
                                                   , inFromId         := inFromId
                                                   , inToId           := inToId
                                                   , inDocumentKindId := inDocumentKindId 
-                                                  , inSubjectDocId   := inSubjectDocId
                                                   , inIsPeresort     := inIsPeresort
                                                   , inUserId         := vbUserId
                                                    );

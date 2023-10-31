@@ -325,9 +325,8 @@ BEGIN
          , tmpMI_lak AS (SELECT MovementLinkObject_DocumentKind.ObjectId 
                               , tmpMI_all.MovementItemId
                               , tmpMI_all.MovementItemId_master
-                              , tmpMI_all.Amount
-                              , MIFloat_Count.ValueData      AS Count
-                             -- , MIFloat_CountReal.ValueData  AS CountReal_LAK
+                              , MIFloat_CountReal.ValueData AS CountReal
+                              , MIFloat_Count.ValueData     AS Count
                               , Movement.OperDate
                          FROM tmpMI_all
                              INNER JOIN tmpMLO_DocumentKind AS MovementLinkObject_DocumentKind
@@ -344,13 +343,11 @@ BEGIN
                                               AND MLO_To.ObjectId = inToId
                              INNER JOIN Movement ON Movement.Id = tmpMI_all.MovementId
                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                                
-                            /* LEFT JOIN tmpMIFloat_CuterCount AS MIFloat_CuterCount
-                                                             ON MIFloat_CuterCount.MovementItemId = tmpMI_all.MovementItemId
-                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()*/
-                            /* LEFT JOIN MovementItemFloat AS MIFloat_CountReal
+                                                AND Movement.DescId = zc_Movement_ProductionUnion()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_CountReal
                                                          ON MIFloat_CountReal.MovementItemId = tmpMI_all.MovementItemId
-                                                        AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal() */
+                                                        AND MIFloat_CountReal.DescId = zc_MIFloat_CountReal()                                                
                              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                          ON MIFloat_Count.MovementItemId = tmpMI_all.MovementItemId
                                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
@@ -359,11 +356,11 @@ BEGIN
                                -- , tmpMI.MovementItemId
                                -- , tmpMI.ObjectId      AS DocumentKindId
                                 , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.OperDate ELSE zc_DateStart() END)     AS OperDate_to
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN COALESCE (tmpMI.Amount,0) ELSE 0 END)       AS Amount_to
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN COALESCE (tmpMI.Count,0) ELSE 0 END)        AS Count_to    --колво батонов
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN COALESCE (tmpMI.CountReal,0) ELSE 0 END)    AS CountReal_to    --вес
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakTo() THEN COALESCE (tmpMI.Count,0) ELSE 0 END)        AS Count_to     --колво батонов
                                 , max (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.OperDate ELSE zc_DateStart() END)   AS OperDate_from
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.Amount,0) ELSE 0 END)     AS Amount_from
-                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.Count,0) ELSE 0 END)      AS Count_from
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.CountReal,0) ELSE 0 END)  AS CountReal_from  --вес
+                                , SUM (CASE WHEN tmpMI.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (tmpMI.Count,0) ELSE 0 END)      AS Count_from   --колво батонов
                                -- , SUM (COALESCE (tmpMI.CountReal_LAK,0)) AS CountReal_LAK
                            FROM tmpMI_lak AS tmpMI
                            GROUP BY tmpMI.MovementItemId_master
@@ -442,13 +439,31 @@ BEGIN
             
             --данные док Lak 
             --перед лакирование
-            , tmpData_Lak.OperDate_to     AS OperDate_LakTo
-            , tmpData_Lak.Amount_to       AS Amount_LakTo
-            , tmpData_Lak.Count_to        AS Count_LakTo
+            , CASE WHEN _tmpListMaster.DocumentKindId = zc_Enum_DocumentKind_LakTo() THEN _tmpListMaster.OperDate
+                   WHEN COALESCE (_tmpListMaster.DocumentKindId,0) = 0 THEN tmpData_Lak.OperDate_to
+                   ELSE NULL
+              END ::TDateTime  AS OperDate_LakTo
+            , CASE WHEN _tmpListMaster.DocumentKindId = zc_Enum_DocumentKind_LakTo() THEN MIFloat_CountReal.ValueData
+                   WHEN COALESCE (_tmpListMaster.DocumentKindId,0) = 0 THEN tmpData_Lak.CountReal_to
+                   ELSE NULL
+              END ::TFloat     AS CountReal_LakTo
+            , CASE WHEN _tmpListMaster.DocumentKindId = zc_Enum_DocumentKind_LakTo() THEN MIFloat_Count.ValueData
+                  WHEN COALESCE (_tmpListMaster.DocumentKindId,0) = 0 THEN tmpData_Lak.Count_to 
+                  ELSE NULL
+              END ::TFloat     AS Count_LakTo
             --после лакирования
-            , tmpData_Lak.OperDate_from   AS OperDate_LakFrom
-            , tmpData_Lak.Amount_from     AS Amount_LakFrom
-            , tmpData_Lak.Count_from      AS Count_LakFrom
+            , CASE WHEN _tmpListMaster.DocumentKindId = zc_Enum_DocumentKind_LakFrom() THEN _tmpListMaster.OperDate
+                   WHEN COALESCE (_tmpListMaster.DocumentKindId,0) = 0 THEN tmpData_Lak.OperDate_from
+                   ELSE NULL
+              END ::TDateTime  AS OperDate_LakFrom
+            , CASE WHEN _tmpListMaster.DocumentKindId = zc_Enum_DocumentKind_LakFrom() THEN MIFloat_CountReal.ValueData 
+                   WHEN COALESCE (_tmpListMaster.DocumentKindId,0) = 0 THEN tmpData_Lak.CountReal_from
+                   ELSE NULL
+              END ::TFloat           AS CountReal_LakFrom
+            , CASE WHEN _tmpListMaster.DocumentKindId = zc_Enum_DocumentKind_LakFrom() THEN MIFloat_Count.ValueData
+                   WHEN COALESCE (_tmpListMaster.DocumentKindId,0) = 0 THEN tmpData_Lak.Count_from
+                   ELSE NULL
+              END ::TFloat          AS Count_LakFrom
             
             --, tmpData_Lak.CountReal_LAK  :: TFloat 
             , CASE WHEN _tmpListMaster.DocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) THEN MIFloat_CountReal.ValueData ELSE 0 END ::TFloat  AS CountReal_LAK

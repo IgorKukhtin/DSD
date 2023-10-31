@@ -170,10 +170,10 @@ type
     actPrintDays2_cuter: TdsdPrintAction;
     bbPrintDays2_cuter: TdxBarButton;
     OperDate_LakTo: TcxGridDBColumn;
-    Amount_LakTo: TcxGridDBColumn;
+    CountReal_LakTo: TcxGridDBColumn;
     Count_LakTo: TcxGridDBColumn;
     OperDate_LakFrom: TcxGridDBColumn;
-    Amount_LakFrom: TcxGridDBColumn;
+    CountReal_LakFrom: TcxGridDBColumn;
     Count_LakFrom: TcxGridDBColumn;
     actOpenFormOrderInternal: TdsdOpenForm;
     bbOpenFormOrderInternal: TdxBarButton;

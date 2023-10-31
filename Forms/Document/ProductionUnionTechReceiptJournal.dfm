@@ -86,7 +86,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_LakTo
+              Column = CountReal_LakTo
             end
             item
               Format = ',0.####'
@@ -102,6 +102,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
               Format = ',0.####'
               Kind = skSum
               Column = Count_LakFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountReal_LAK
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -162,7 +167,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_LakTo
+              Column = CountReal_LakTo
             end
             item
               Format = ',0.####'
@@ -178,6 +183,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
               Format = ',0.####'
               Kind = skSum
               Column = Count_LakFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountReal_LAK
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -541,9 +551,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object Amount_LakTo: TcxGridDBColumn
+          object CountReal_LakTo: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1087#1077#1088#1077#1076' '#1083#1072#1082'-'#1077#1084
-            DataBinding.FieldName = 'Amount_LakTo'
+            DataBinding.FieldName = 'CountReal_LakTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
