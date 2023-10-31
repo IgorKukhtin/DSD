@@ -84,6 +84,14 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 155
       end
+      object Birthday_Month: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Birthday_Date'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
