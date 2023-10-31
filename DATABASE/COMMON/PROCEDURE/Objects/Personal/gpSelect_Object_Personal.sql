@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , ReasonOutCode Integer
              , ReasonOutName TVarChar
              , Comment TVarChar
+             , Birthday_Date TVarChar
               )
 AS
 $BODY$
@@ -198,6 +199,8 @@ BEGIN
          , Object_Personal_View.ReasonOutCode
          , Object_Personal_View.ReasonOutName
          , Object_Personal_View.Comment
+         --, COALESCE (ObjectDate_Birthday.ValueData, Null)   ::TDateTime  AS Birthday_Date
+         , COALESCE (zfCalc_MonthName (ObjectDate_Birthday.ValueData),'???')   ::TVarChar  AS Birthday_Date
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
@@ -273,6 +276,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_INN
                                  ON ObjectString_INN.ObjectId = Object_Personal_View.MemberId
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN() 
+
+          LEFT JOIN ObjectDate AS ObjectDate_Birthday
+                               ON ObjectDate_Birthday.ObjectId = Object_Personal_View.MemberId
+                              AND ObjectDate_Birthday.DescId = zc_ObjectDate_Member_Birthday()
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
                                   ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal_View.PersonalId
@@ -377,17 +384,19 @@ BEGIN
          , 0                        AS ReasonOutCode
          , CAST ('' as TVarChar)    AS ReasonOutName
          , CAST ('' as TVarChar)    AS Comment
+         , CAST (NULL as TVarChar) AS Birthday_Date
     ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 31.10.23         *
  19.04.23         *
  04.05.22         *
  27.04.22         *
@@ -555,3 +564,5 @@ order by Object_p.ValueData
 --SELECT DATE_PART('YEAR', AGE ('31.01.2019'::TDateTime+ interval '1 day' , '01.04.2018'::TDateTime))
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_Personal (inStartDate:= null, inEndDate:= null, inIsPeriod:= FALSE, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+
+--SELECT zfCalc_MonthName (CURRENT_DATE)

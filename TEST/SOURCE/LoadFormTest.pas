@@ -4427,11 +4427,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
-  //exit;
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  exit;
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
