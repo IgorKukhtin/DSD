@@ -50,6 +50,61 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
+     -- проверка - один документ в день
+     IF EXISTS (SELECT 1
+                FROM Movement
+                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                            -- с такой же валютой
+                                            AND MovementItem.ObjectId = zc_Enum_Currency_Basis()
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                      ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                      ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+
+                WHERE Movement.OperDate = CASE WHEN MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN vbOperDate - INTERVAL '1 DAY'  ELSE vbOperDate END
+                  AND Movement.DescId = zc_Movement_Currency()
+                  AND Movement.StatusId IN (zc_Enum_Status_Complete())
+                  -- !!!другой док!!!
+                  AND Movement.Id <> inMovementId
+                  --
+                  AND MILinkObject_CurrencyTo.ObjectId = vbCurrencyId
+                  AND MILinkObject_PaidKind.ObjectId   = vbPaidKindId
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найден документ "Курсовая разница" % № <%> от <%> для <%> + <%>.%Дублирование запрещено.'
+                       , CHR (13)
+                       , (SELECT Movement.InvNumber
+                          FROM Movement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      -- с такой же валютой
+                                                      AND MovementItem.ObjectId = zc_Enum_Currency_Basis()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                                ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                                ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+          
+                          WHERE Movement.OperDate = CASE WHEN MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN vbOperDate - INTERVAL '1 DAY'  ELSE vbOperDate END
+                            AND Movement.DescId = zc_Movement_Currency()
+                            AND Movement.StatusId IN (zc_Enum_Status_Complete())
+                            -- !!!другой док!!!
+                            AND Movement.Id <> inMovementId
+                            --
+                            AND MILinkObject_CurrencyTo.ObjectId = vbCurrencyId
+                            AND MILinkObject_PaidKind.ObjectId   = vbPaidKindId
+                          LIMIT 1
+                         )
+                       , zfConvert_DateToString (vbOperDate)
+                       , lfGet_Object_ValueData_sh (vbPaidKindId)
+                       , lfGet_Object_ValueData_sh (vbCurrencyId)
+                       , CHR (13)
+                        ;
+     END IF;
+
+
      IF vbStatusId <> zc_Enum_Status_Complete()
      THEN
         -- Расчет Remains и запись его в zc_MI_Child
