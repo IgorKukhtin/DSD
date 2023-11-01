@@ -48,6 +48,9 @@ END IF;
              OR inGroupId = 4
                 ;
 
+    -- RAISE EXCEPTION 'Ошибка.<%>', inIsSale, vbIsSale;
+
+
      -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
      vbIsReturnIn:= -- если последние 2 дня месяца
                     DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
@@ -301,13 +304,27 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset()) -- , zc_Movement_SendOnPrice()
        AND Movement.StatusId = zc_Enum_Status_Complete()
+       -- здесь второй раз
        AND inIsBefoHistoryCost = FALSE
-       --*** AND inIsSale            = TRUE
+       --
        AND (tmpUnit_from.UnitId > 0
          OR Movement.DescId = zc_Movement_SaleAsset()
        --OR tmpUnit_To.UnitId > 0
            )
-       AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+
+       -- AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+
+       -- работает вся продажа
+       -- AND inGroupId <= 0
+
+       AND ((inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+         AND Object_From.Id = 8459 -- Розподільчий комплекс
+            )
+         OR (inGroupId <= 0
+         AND Object_From.Id <> 8459 -- Розподільчий комплекс
+            )
+           )
+
      /*AND ((inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
          AND Object_From.Id <> 8459) -- Розподільчий комплекс
          OR (inGroupId <= 0 
@@ -370,11 +387,27 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
+       -- здесь второй раз
        AND inIsBefoHistoryCost = FALSE
+       --
        AND (tmpUnit_To.UnitId > 0)
-       AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+
+       -- работают все возвраты
+       -- AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+
+       --
+       AND inGroupId <= 0
+
+       /*AND ((inGroupId = 4
+         AND Object_To.Id IN (8459, 846, 8461, 256716, 1387416) -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
+            )
+         OR (inGroupId <= 0
+         AND Object_To.Id NOT IN (8459, 846, 8461, 256716, 1387416) -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
+            )
+           )*/
+
        -- AND 1=0
-       -- AND Object_To.Id not in (8459, 846, 8461, 256716, 1387416) -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
+       -- AND Object_To.Id 
        -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
        AND vbIsReturnIn = TRUE
 
