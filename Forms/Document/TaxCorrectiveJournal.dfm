@@ -5,7 +5,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
   ExplicitWidth = 1113
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

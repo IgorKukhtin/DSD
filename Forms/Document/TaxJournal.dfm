@@ -4,7 +4,6 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -216
   ExplicitWidth = 1126
   ExplicitHeight = 549
   PixelsPerInch = 96

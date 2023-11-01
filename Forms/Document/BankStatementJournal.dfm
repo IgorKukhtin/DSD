@@ -13,6 +13,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     ClientRectRight = 872
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 872
+      ExplicitHeight = 0
       inherited cxGrid: TcxGrid
         Width = 872
         ExplicitWidth = 872
