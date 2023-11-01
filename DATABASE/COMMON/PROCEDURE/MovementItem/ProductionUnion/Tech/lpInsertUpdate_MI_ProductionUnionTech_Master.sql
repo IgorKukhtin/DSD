@@ -60,11 +60,36 @@ BEGIN
    -- сохранили свойство <Вес п/ф факт(куттер)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterWeight(), ioId, inCuterWeight);
 
+   -- закріть доступ корректировки взвешиваний после массажера и  после шприцевания определенным лицам: Гриневич Е. + Пронько Л.
+   IF inUserId IN (9031170, 954882)
+   THEN
+       IF inRealWeightMsg <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_RealWeightMsg()), 0)
+       THEN
+           RAISE EXCEPTION 'Ошибка.Нет прав изменять значение <%> %с <%> на <%>'
+                         , (SELECT MovementItemFloatDesc.ItemName FROM MovementItemFloatDesc WHERE MovementItemFloatDesc.Id = zc_MIFloat_RealWeightMsg())
+                         , CHR (13)
+                         , zfConvert_FloatToString (COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_RealWeightMsg()), 0))
+                         , zfConvert_FloatToString (inRealWeightMsg)
+                            ;
+       END IF;
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightMsg(), ioId, inRealWeightMsg);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightShp(), ioId, inRealWeightShp);
+       IF inRealWeightShp <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_RealWeightShp()), 0)
+       THEN
+           RAISE EXCEPTION 'Ошибка.Нет прав изменять значение <%> %с <%> на <%>'
+                         , (SELECT MovementItemFloatDesc.ItemName FROM MovementItemFloatDesc WHERE MovementItemFloatDesc.Id = zc_MIFloat_RealWeightShp())
+                         , CHR (13)
+                         , zfConvert_FloatToString (COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_RealWeightShp()), 0))
+                         , zfConvert_FloatToString (inRealWeightShp)
+                            ;
+       END IF;
+
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightMsg(), ioId, inRealWeightMsg);
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightShp(), ioId, inRealWeightShp);
+   END IF;
+
 
    IF vbIsInsert = TRUE
    THEN
