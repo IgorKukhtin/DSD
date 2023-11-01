@@ -56,8 +56,10 @@
  
        -- сохранили протокол
        PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);
+
    END IF;
  
+
  
  END;
  $BODY$
