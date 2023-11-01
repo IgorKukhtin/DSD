@@ -1,5 +1,5 @@
 ﻿inherited MainForm: TMainForm
-  Caption = 'ProjectBoat - 64bit'
+  Caption = 'ProjectBoat - 32bit'
   ClientHeight = 168
   ClientWidth = 805
   KeyPreview = True
@@ -146,7 +146,7 @@
     object actProductionUnionMaster: TdsdOpenForm [12]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'-'#1082#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103' ('#1091#1079#1083#1099')'
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072' ('#1091#1079#1083#1099')'
       FormName = 'TProductionUnionMasterJournalForm'
       FormNameParam.Value = 'TProductionUnionMasterJournalForm'
       FormNameParam.DataType = ftString
@@ -1045,7 +1045,7 @@
     object actProductionUnion: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'-'#1082#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072
       FormName = 'TProductionUnionJournalForm'
       FormNameParam.Value = 'TProductionUnionJournalForm'
       FormNameParam.DataType = ftString
@@ -1273,9 +1273,6 @@
       object miProductionUnionMaster: TMenuItem
         Action = actProductionUnionMaster
       end
-      object N18: TMenuItem
-        Action = actProductionPersonal
-      end
       object miLine21_: TMenuItem
         Caption = '-'
       end
@@ -1301,6 +1298,12 @@
       end
       object miReceiptService: TMenuItem
         Action = actReceiptService
+      end
+      object N22: TMenuItem
+        Caption = '-'
+      end
+      object N18: TMenuItem
+        Action = actProductionPersonal
       end
     end
     object miBoat: TMenuItem [2]

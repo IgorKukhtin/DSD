@@ -61,6 +61,8 @@ type
     TotalSumm_ReturnIn: TcxGridDBColumn;
     TotalSumm_debt: TcxGridDBColumn;
     Summ_calc: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
+    Ord_ReturnIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

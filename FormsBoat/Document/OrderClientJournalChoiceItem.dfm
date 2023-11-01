@@ -606,10 +606,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         end
         item
           Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -698,7 +694,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     end
     object bbPrint: TdxBarButton
       Action = actPrintOrderConfirmation
-      Caption = 'Print Tender'
       Category = 0
     end
     object bbShowErased: TdxBarButton
@@ -895,6 +890,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1

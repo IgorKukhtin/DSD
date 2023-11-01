@@ -476,15 +476,15 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     TabOrder = 6
     object btnUpdate: TcxButton
       Left = 543
-      Top = 6
+      Top = 7
       Width = 90
       Height = 25
       Action = actFormClose
       TabOrder = 0
     end
     object btnComplete: TcxButton
-      Left = 389
-      Top = 6
+      Left = 387
+      Top = 7
       Width = 90
       Height = 25
       Action = actChoiceGuides
@@ -492,7 +492,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     end
     object btnFormClose: TcxButton
       Left = 753
-      Top = 6
+      Top = 7
       Width = 153
       Height = 25
       Action = actShowErased
@@ -577,10 +577,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
         end
         item
           Visible = True
@@ -676,7 +672,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     end
     object bbPrint: TdxBarButton
       Action = actPrintOrderConfirmation
-      Caption = 'Print Tender'
       Category = 0
     end
     object bbShowErased: TdxBarButton
@@ -873,6 +868,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1

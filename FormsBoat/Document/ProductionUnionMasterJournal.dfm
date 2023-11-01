@@ -24,7 +24,6 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 817
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -65,8 +64,6 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 817
-    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -415,8 +412,6 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -217
-    ExplicitWidth = 1034
     object btnInsert: TcxButton
       Left = 13
       Top = 7
@@ -940,6 +935,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleReCompleteList
@@ -956,6 +952,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleCompleteList
@@ -972,6 +969,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleUncompleteList
@@ -988,6 +986,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleErasedList

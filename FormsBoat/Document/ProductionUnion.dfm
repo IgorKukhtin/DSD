@@ -230,17 +230,15 @@ object ProductionUnionForm: TProductionUnionForm
     Width = 1084
     Height = 409
     Align = alClient
-    TabOrder = 5
+    TabOrder = 4
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 478
     ClientRectBottom = 409
     ClientRectRight = 1084
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 454
       object Panel2: TPanel
         Left = 0
         Top = 145
@@ -249,7 +247,6 @@ object ProductionUnionForm: TProductionUnionForm
         Align = alClient
         Caption = 'Panel2'
         TabOrder = 0
-        ExplicitHeight = 309
         object cxGridChild: TcxGrid
           Left = 1
           Top = 124
@@ -260,7 +257,6 @@ object ProductionUnionForm: TProductionUnionForm
           LookAndFeel.Kind = lfStandard
           LookAndFeel.NativeStyle = False
           LookAndFeel.SkinName = ''
-          ExplicitTop = 193
           object cxGridDBTableViewChild: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -593,7 +589,6 @@ object ProductionUnionForm: TProductionUnionForm
           Height = 115
           Align = alClient
           TabOrder = 1
-          ExplicitHeight = 184
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -871,7 +866,6 @@ object ProductionUnionForm: TProductionUnionForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGridChild
-          ExplicitTop = 185
         end
       end
       object Panel3: TPanel
@@ -1266,6 +1260,8 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 454
       object cxGrid2: TcxGrid
         Left = 0
@@ -1657,7 +1653,6 @@ object ProductionUnionForm: TProductionUnionForm
     Height = 69
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 537
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 5

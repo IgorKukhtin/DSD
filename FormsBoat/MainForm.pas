@@ -275,6 +275,7 @@ type
     miGoodsGroupList: TMenuItem;
     actReport_Client: TdsdOpenForm;
     miReport_Client: TMenuItem;
+    N22: TMenuItem;
   private
     { Private declarations }
   public

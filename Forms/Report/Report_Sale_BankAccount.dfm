@@ -257,8 +257,19 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             Options.Editing = False
             Width = 85
           end
+          object Summ_calc: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1085#1072#1082#1083'.'
+            DataBinding.FieldName = 'Summ_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081': '#1044#1086#1083#1075'+'#1042#1086#1079#1074#1088#1072#1090#1099'+'#1054#1087#1083#1072#1090#1099
+            Width = 80
+          end
           object Summ_Pay: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086' '#1085#1072#1082#1083'.'
+            Caption = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1085#1072#1082#1083'.'
             DataBinding.FieldName = 'Summ_Pay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -267,7 +278,7 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1099#1093' '#1086#1087#1083#1072#1090' + '#1074#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090
             Options.Editing = False
-            Width = 80
+            Width = 90
           end
           object Summ_debt: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1087#1086' '#1085#1072#1082#1083'.'
@@ -292,7 +303,7 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             Width = 80
           end
           object TotalAmount_Pay: TcxGridDBColumn
-            Caption = '***'#1048#1090#1086#1075#1086' '#1088#1072#1089#1095#1077#1090#1099
+            Caption = '***'#1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'TotalAmount_Pay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -304,7 +315,7 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             Width = 80
           end
           object TotalAmount_Bank: TcxGridDBColumn
-            Caption = '***'#1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072
+            Caption = '***'#1048#1090#1086#1075#1086' '#1088'.'#1089#1095'.'
             DataBinding.FieldName = 'TotalAmount_Bank'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -351,18 +362,6 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
             Width = 80
           end
-          object Summ_calc: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1085#1072#1082#1083'.'
-            DataBinding.FieldName = 'Summ_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081': '#1044#1086#1083#1075'+'#1042#1086#1079#1074#1088#1072#1090#1099'+'#1054#1087#1083#1072#1090#1099
-            Width = 80
-          end
           object TotalSumm_calc: TcxGridDBColumn
             Caption = '***'#1053#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1086' - '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
             DataBinding.FieldName = 'TotalSumm_calc'
@@ -373,6 +372,25 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Ord: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Ord_ReturnIn: TcxGridDBColumn
+            Caption = '***'#8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord_ReturnIn'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '***'#8470' '#1087'/'#1087' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 55
           end
         end
       end
@@ -475,6 +493,12 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
       end
       item
         Component = GuidesContract
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesJuridical
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -806,25 +830,13 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
         Component = PeriodChoice
       end
       item
-        Component = deStart
-      end
-      item
-        Component = deEnd
-      end
-      item
         Component = GuidesContract
-      end
-      item
       end
       item
         Component = GuidesPaidKind
       end
       item
         Component = GuidesJuridical
-      end
-      item
-      end
-      item
       end>
     Left = 560
     Top = 208
