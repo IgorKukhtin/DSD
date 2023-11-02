@@ -33,12 +33,13 @@ BEGIN
        -- Результат - пр-во приход 
        WITH 
        -- пр-во приход
-     tmpMI_production AS (SELECT Movement.Id                                                    AS MovementId
-                               , Movement.StatusId                                              AS StatusId
-                               , Movement.InvNumber                                             AS InvNumber
-                               , Movement.OperDate                                              AS OperDate
-                               , MLO_From.ObjectId                                              AS FromId
-                               , MovementItem.Id                                                AS MovementItemId
+     tmpMI_production AS (SELECT Movement.Id          AS MovementId
+                               , Movement.StatusId    AS StatusId
+                               , Movement.InvNumber   AS InvNumber
+                               , Movement.OperDate    AS OperDate
+                               , MLO_From.ObjectId    AS FromId
+                               , MovementItem.Id      AS MovementItemId
+                               , MovementItem.Amount  AS Amount
                           FROM Movement
                                LEFT JOIN MovementBoolean AS MB_Peresort
                                                          ON MB_Peresort.MovementId = Movement.Id
@@ -54,7 +55,6 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_ProductionUnion()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -63,15 +63,19 @@ BEGIN
                               AND MB_Peresort.MovementId IS NULL
                            )
         --сначала выбираем для строк мастера zc_MIFloat_MovementItemId, по ним получаем строки док Lak и самb документы Lak
-   , tmpMIFloat_lak AS (SELECT MIFloat_MovementItemId.MovementItemId     AS MovementItemId
+   , tmpMIFloat_lak AS (SELECT DISTINCT 
+                               MIFloat_MovementItemId.MovementItemId     AS MovementItemId
                             ,  MIFloat_MovementItemId.ValueData::Integer AS MovementItemId_master
                         FROM MovementItemFloat AS MIFloat_MovementItemId
+                               INNER JOIN MovementItem ON MovementItem.Id = MIFloat_MovementItemId.MovementItemId
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                               INNER JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_ProductionUnion()
                         WHERE MIFloat_MovementItemId.ValueData IN (SELECT DISTINCT tmpMI_production.MovementItemId FROM tmpMI_production) 
                           AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
                         )
 
    , tmpMI_partion AS (
-                         SELECT  Movement_partion.OperDate                          AS OperDate
+                         SELECT  Movement_partion.OperDate                  AS OperDate
                                , Movement_partion.InvNumber                 AS InvNumber
                                , MovementItem.ObjectId                      AS GoodsId
                                , MILO_GoodsKind.ObjectId                    AS GoodsKindId
@@ -85,6 +89,7 @@ BEGIN
                                , SUM (CASE WHEN MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (MIFloat_CountReal.ValueData,0) ELSE 0 END)   AS CountReal_from
                                , SUM (CASE WHEN MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_LakTo() THEN COALESCE (MIFloat_Count.ValueData,0) ELSE 0 END)     AS Count_to
                                , SUM (CASE WHEN MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_LakFrom() THEN COALESCE (MIFloat_Count.ValueData,0) ELSE 0 END)   AS Count_from
+                               , SUM (COALESCE (tmpMI_production.Amount,0)) AS Amount_partion
                          FROM (SELECT DISTINCT tmpMIFloat_lak.MovementItemId AS Id FROM tmpMIFloat_lak) AS tmp
                                INNER JOIN MovementItem ON MovementItem.Id = tmp.Id
                                                       AND MovementItem.DescId     = zc_MI_Master()
@@ -115,7 +120,10 @@ BEGIN
                                                            ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                           AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
                                LEFT JOIN MovementItem AS MovementItem_partion ON MovementItem_partion.Id = MIFloat_MovementItemId.ValueData :: Integer
-                               LEFT JOIN Movement AS Movement_partion ON Movement_partion.Id = MovementItem_partion.MovementId 
+                               LEFT JOIN Movement AS Movement_partion ON Movement_partion.Id = MovementItem_partion.MovementId   
+                               
+                               LEFT JOIN tmpMIFloat_lak ON tmpMIFloat_lak.MovementItemId = MovementItem.Id
+                               LEFT JOIN tmpMI_production ON tmpMI_production.MovementItemId = tmpMIFloat_lak.MovementItemId_master
                          GROUP BY Movement_partion.OperDate
                                 , Movement_partion.InvNumber
                                 , MovementItem.ObjectId
@@ -134,7 +142,7 @@ BEGIN
             , tmpMI.CountReal_to                   --Вес до лак-ия
             , tmpMI.Count_from                     --Колво батонов после
             , tmpMI.Count_to                       --Колво батонов до
-            , tmpMI.RealWeight                     --Вес п/ф факт 
+            , tmpMI.Amount_partion                 --Вес п/ф факт 
             , 0 AS RealWeight_base                --Вес ГП (база),
             , 0 AS TaxExit_calc                   -- % выхода.
 
