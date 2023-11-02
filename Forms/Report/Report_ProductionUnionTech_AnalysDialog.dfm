@@ -3,7 +3,7 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1040#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074'-'#1074#1086'>'
-  ClientHeight = 300
+  ClientHeight = 276
   ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 43
-    Top = 261
+    Left = 51
+    Top = 237
     Width = 75
     Height = 27
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 217
-    Top = 261
+    Left = 201
+    Top = 237
     Width = 75
     Height = 27
     Caption = #1054#1090#1084#1077#1085#1072
@@ -97,19 +97,21 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
     Width = 308
   end
   object cbPeriodOrder: TcxCheckBox
-    Left = 11
-    Top = 58
+    Left = 8
+    Top = 64
     Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1076#1086#1082' '#1079#1072#1082#1072#1079' '#1080#1083#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' ('#1076#1072'/'#1085#1077#1090')'
+    State = cbsChecked
     TabOrder = 10
     Width = 281
   end
   object cxLabel4: TcxLabel
-    Left = 11
-    Top = 199
+    Left = 5
+    Top = 195
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    Visible = False
   end
   object edGoodsGroup: TcxButtonEdit
-    Left = 11
+    Left = 8
     Top = 218
     Properties.Buttons = <
       item
@@ -117,6 +119,7 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
         Kind = bkEllipsis
       end>
     TabOrder = 12
+    Visible = False
     Width = 308
   end
   object PeriodChoice: TPeriodChoice
@@ -218,8 +221,8 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 121
-    Top = 254
+    Left = 273
+    Top = 6
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -310,7 +313,7 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 188
+    Left = 149
+    Top = 204
   end
 end

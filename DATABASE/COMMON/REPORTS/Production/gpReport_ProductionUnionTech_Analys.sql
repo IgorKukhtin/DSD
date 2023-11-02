@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_ProductionUnionTech_Analys(
     IN inFromId            Integer,
     IN inToId              Integer,
     IN inGoodsGroupId      Integer,
-    IN inisPeriodOrder     Boolean,
+    IN inisPeriodOrder     Boolean,     --
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId          Integer
@@ -70,19 +70,18 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Select_Movement_ProductionUnionTech());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --пока только по дате заявки
+     inisPeriodOrder = TRUE;
+
+
      CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
 
-     -- Ограничения по товару
+     -- Ограничения по товару ГП
     INSERT INTO _tmpGoods (GoodsId)
        SELECT lfSelect.GoodsId
-       FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+       FROM lfSelect_Object_Goods_byGoodsGroup (1832 ) AS lfSelect    -- ГП
        WHERE inGoodsGroupId <> 0
-      UNION
-       SELECT Object.Id AS GoodsId
-       FROM Object
-       WHERE Object.DescId = zc_Object_Goods()
-         AND COALESCE (inGoodsGroupId, 0) = 0
-       ;
+             ;
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
 
@@ -109,6 +108,9 @@ BEGIN
            FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
            WHERE COALESCE (inToId,0) <> 0
          UNION 
+           SELECT (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inToId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent()) AS UnitId
+           WHERE COALESCE (inFromId ,0) <> 0
+         UNION  
            SELECT Object.Id AS UnitId 
            FROM Object
            WHERE Object.DescId = zc_Object_Unit()
@@ -135,10 +137,11 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-                                                           AND MLO_To.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) --(SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)
+                                                           AND MLO_To.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) -- --(SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)
                               INNER JOIN MovementLinkObject AS MLO_From
                                                             ON MLO_From.MovementId = Movement.Id
                                                            AND MLO_From.DescId = zc_MovementLinkObject_From()
+                                                           AND MLO_From.ObjectId IN (SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo) --
                          WHERE ((inisPeriodOrder = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate)
                             OR (inisPeriodOrder = FALSE AND Movement.OperDate BETWEEN inStartDate::TDateTime - INTERVAL '5 DAY'  AND inEndDate::TDateTime+ INTERVAL '5 DAY')
                                )
@@ -549,45 +552,13 @@ BEGIN
                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT _tmpListMaster.MovementItemId From _tmpListMaster)
                         )
                         
-      /* , tmpMI_partion AS (SELECT DISTINCT
-                                  tmpMIFloat.ValueData :: Integer AS MovementItemId_part
-                                , tmpMIFloat.MovementItemId       AS MovementItemId
-                           FROM tmpMIFloat
-                           WHERE tmpMIFloat.DescId = zc_MIFloat_MovementItemId()
-                           )*/
-                        
-        /*  LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
-                                  ON MIFloat_MovementItemId.MovementItemId = _tmpListMaster.MovementItemId
-                                 AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
-             LEFT JOIN MovementItem AS MovementItem_partion ON MovementItem_partion.Id = MIFloat_MovementItemId.ValueData :: Integer
-             LEFT JOIN Movement AS Movement_partion ON Movement_partion.Id = MovementItem_partion.MovementId
-        */        
-        
-        /*надо получить из проводок, сначала найти нужный ContainerId
-         select MovementItemContainer.ContainerId
-         where MovementItemId = партия
-            and DescId = 1
-         */      
-        
        , tmpMIContainer1 AS (SELECT MIContainer.ContainerId
                                  , MIContainer.MovementItemId
                              FROM MovementItemContainer AS MIContainer
                              WHERE MIContainer.MovementItemId IN (SELECT DISTINCT _tmpListMaster.MovementItemId From _tmpListMaster)
                                AND DescId = zc_MIContainer_Count()   -- = 1
                              ) 
-                        /*
-                         потом находятся все расходы партии и какие были приходы
-                         select  MIContainer.ContainerId, sum (MI_parent.Amount)
-                         from MIContainer
-                         join MovementItem on MovementItem.Id = MIContainer.MovementItemId
-                         AND MovementItem.DescId = 2 
-                                                              MIContainer.
-                         join MovementItem AS MI_parent on MI_parent.Id = MovementItem.ParentId
-                         AND MI_parent.DescId = 1
-                         
-                         where MIContainer.ContainerId = ContainerId
-                            and MIContainer.MovementDescId = zc_Movement_ProductionUnion
-                        */
+ 
        , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
                                   , SUM (MI_parent.Amount) AS Amount
                              FROM MovementItemContainer AS MIContainer 
@@ -680,9 +651,9 @@ BEGIN
 
 
 
-       SELECT tmp.MovementId
-            , tmp.MovementItemId
-            , tmp.InvNumber
+       SELECT 0 AS MovementId      --tmp.MovementId
+            , 0 AS MovementItemId  --tmp.MovementItemId
+            , NULL ::TVarChar AS InvNumber --tmp.InvNumber 
             , tmp.OperDate 
             , tmp.FromName_prod
 
@@ -822,14 +793,14 @@ BEGIN
                                          ON ObjectFloat_Receipt_Value.ObjectId = Object_Receipt.Id
                                         AND ObjectFloat_Receipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
                 ) AS tmp
-             GROUP BY tmp.MovementId
-                    , tmp.MovementItemId 
-                    , tmp.FromName_prod
+             GROUP BY /*tmp.MovementId
+                    , tmp.MovementItemId */
+                     tmp.FromName_prod
                     , tmp.MovementId_order
                     , tmp.MovementItemId_order
                     , tmp.InvNumber_order
                     , tmp.OperDate_order
-                    , tmp.InvNumber
+                    --, tmp.InvNumber
                     , tmp.OperDate
                     , tmp.GoodsId
                     , tmp.GoodsCode
