@@ -82,25 +82,38 @@ BEGIN
        WHERE Object.DescId = zc_Object_Goods()
          AND COALESCE (inGoodsGroupId, 0) = 0
        ;
+     -- определяется
+     vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
 
      -- если выбранна группа получаем список подразделений
      CREATE TEMP TABLE _tmpUnitFrom (UnitId Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnitTo (UnitId Integer) ON COMMIT DROP;
      
-     IF COALESCE (inFromId,0) <> 0 
-     THEN
-         INSERT INTO _tmpUnitFrom (UnitId)
-           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect;
-     END IF;
-     IF COALESCE (inToId,0) <> 0
-     THEN
-         INSERT INTO _tmpUnitTo (UnitId)
-           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect;
-     END IF;
+     INSERT INTO _tmpUnitFrom (UnitId)
+           SELECT lfSelect.UnitId 
+           FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect
+           WHERE COALESCE (inFromId,0) <> 0
+          UNION 
+           SELECT (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent()) AS UnitId
+           WHERE COALESCE (inFromId ,0) <> 0
+         UNION 
+           SELECT Object.Id AS UnitId 
+           FROM Object
+           WHERE Object.DescId = zc_Object_Unit()
+             AND COALESCE (inFromId, 0) = 0
+           ;
 
+     INSERT INTO _tmpUnitTo (UnitId)
+           SELECT lfSelect.UnitId 
+           FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
+           WHERE COALESCE (inToId,0) <> 0
+         UNION 
+           SELECT Object.Id AS UnitId 
+           FROM Object
+           WHERE Object.DescId = zc_Object_Unit()
+             AND COALESCE (inToId,0) = 0
+           ;
 
-     -- определяется
-     vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
      -- 
      CREATE TEMP TABLE _tmpListMaster (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, FromId_prod Integer, MovementItemId Integer
                                      , MovementId_order Integer, InvNumber_order TVarChar, OperDate_order TDateTime, MovementItemId_order Integer
@@ -125,12 +138,12 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MLO_From
                                                             ON MLO_From.MovementId = Movement.Id
                                                            AND MLO_From.DescId = zc_MovementLinkObject_From()
-                                                           --AND MLO_From.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom)
                          WHERE ((inisPeriodOrder = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate)
                             OR (inisPeriodOrder = FALSE AND Movement.OperDate BETWEEN inStartDate::TDateTime - INTERVAL '5 DAY'  AND inEndDate::TDateTime+ INTERVAL '5 DAY')
                                )
                             AND Movement.DescId = zc_Movement_OrderInternal()
                             AND Movement.StatusId = zc_Enum_Status_Complete() --<> zc_Enum_Status_Erased()
+--AND MLO_To.ObjectId = MLO_From.ObjectId 
                          )
       , tmpMI_ord AS (SELECT MovementItem.*
                            , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId) AS GoodsId
@@ -204,6 +217,7 @@ BEGIN
                           WHERE ((inisPeriodOrder = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate)
                               OR (inisPeriodOrder = FALSE AND (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime BETWEEN inStartDate AND inEndDate)
                                 )
+                              AND COALESCE (OrderType_Unit.ChildObjectId, Movement.ToId) IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom)
                           GROUP BY Movement.OperDate
                                  , MovementItem.GoodsId
                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId
