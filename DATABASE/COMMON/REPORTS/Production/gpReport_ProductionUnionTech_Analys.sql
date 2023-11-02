@@ -27,6 +27,7 @@ RETURNS TABLE (MovementId          Integer
              , Amount              TFloat
              , CuterCount          TFloat
              , Amount_calc         TFloat
+             , Amount_container    TFloat
              , isPartionClose      Boolean
              , Comment             TVarChar
              , Count               TFloat
@@ -547,6 +548,65 @@ BEGIN
                         FROM MovementItemFloat
                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT _tmpListMaster.MovementItemId From _tmpListMaster)
                         )
+                        
+      /* , tmpMI_partion AS (SELECT DISTINCT
+                                  tmpMIFloat.ValueData :: Integer AS MovementItemId_part
+                                , tmpMIFloat.MovementItemId       AS MovementItemId
+                           FROM tmpMIFloat
+                           WHERE tmpMIFloat.DescId = zc_MIFloat_MovementItemId()
+                           )*/
+                        
+        /*  LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
+                                  ON MIFloat_MovementItemId.MovementItemId = _tmpListMaster.MovementItemId
+                                 AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+             LEFT JOIN MovementItem AS MovementItem_partion ON MovementItem_partion.Id = MIFloat_MovementItemId.ValueData :: Integer
+             LEFT JOIN Movement AS Movement_partion ON Movement_partion.Id = MovementItem_partion.MovementId
+        */        
+        
+        /*надо получить из проводок, сначала найти нужный ContainerId
+         select MovementItemContainer.ContainerId
+         where MovementItemId = партия
+            and DescId = 1
+         */      
+        
+       , tmpMIContainer1 AS (SELECT MIContainer.ContainerId
+                                 , MIContainer.MovementItemId
+                             FROM MovementItemContainer AS MIContainer
+                             WHERE MIContainer.MovementItemId IN (SELECT DISTINCT _tmpListMaster.MovementItemId From _tmpListMaster)
+                               AND DescId = zc_MIContainer_Count()   -- = 1
+                             ) 
+                        /*
+                         потом находятся все расходы партии и какие были приходы
+                         select  MIContainer.ContainerId, sum (MI_parent.Amount)
+                         from MIContainer
+                         join MovementItem on MovementItem.Id = MIContainer.MovementItemId
+                         AND MovementItem.DescId = 2 
+                                                              MIContainer.
+                         join MovementItem AS MI_parent on MI_parent.Id = MovementItem.ParentId
+                         AND MI_parent.DescId = 1
+                         
+                         where MIContainer.ContainerId = ContainerId
+                            and MIContainer.MovementDescId = zc_Movement_ProductionUnion
+                        */
+       , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
+                                  , SUM (MI_parent.Amount) AS Amount
+                             FROM MovementItemContainer AS MIContainer 
+                                 JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                                  AND MovementItem.DescId = zc_MI_Child() -- =2 
+                                 JOIN MovementItem AS MI_parent 
+                                                   ON MI_parent.Id = MovementItem.ParentId
+                                                  AND MI_parent.DescId = zc_MI_Master()  --1
+                             WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer1.ContainerId FROM tmpMIContainer1)
+                               AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
+                             GROUP BY MIContainer.ContainerId
+                             )
+       , tmpMIContainer AS (SELECT tmpMIContainer1.MovementItemId
+                                 , SUM (tmpMIContainer2.Amount) AS Amount
+                            FROM tmpMIContainer1
+                                 JOIN tmpMIContainer2 ON tmpMIContainer2.ContainerId = tmpMIContainer1.ContainerId
+                            GROUP BY tmpMIContainer1.MovementItemId
+                            )
+
          --  данные док. производства
        , tmpDataAll AS (SELECT _tmpListMaster.MovementId              AS MovementId
                                , _tmpListMaster.MovementItemId        AS MovementItemId
@@ -578,7 +638,8 @@ BEGIN
                                , MIFloat_RealWeight.ValueData        AS RealWeight
                                , MIFloat_CuterWeight.ValueData       AS CuterWeight 
                                , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
-                               , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
+                               , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg 
+                               , tmpMIContainer.Amount           ::TFloat  AS Amount_container
 
                           FROM _tmpListMaster
                                LEFT JOIN MovementItemBoolean AS MIBoolean_OrderSecond
@@ -604,7 +665,7 @@ BEGIN
                                LEFT JOIN tmpMIFloat AS MIFloat_RealWeightMsg
                                                     ON MIFloat_RealWeightMsg.MovementItemId = _tmpListMaster.MovementItemId
                                                    AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
-
+             
                                LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                                              ON MIBoolean_PartionClose.MovementItemId = _tmpListMaster.MovementItemId
                                                             AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
@@ -612,7 +673,9 @@ BEGIN
                                LEFT JOIN MovementItemString AS MIString_Comment
                                                             ON MIString_Comment.MovementItemId = _tmpListMaster.MovementItemId
                                                            AND MIString_Comment.DescId = zc_MIString_Comment()
-                                                           AND _tmpListMaster.MovementId <> 0    
+                                                           AND _tmpListMaster.MovementId <> 0 
+
+                               LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = _tmpListMaster.MovementItemId
                           )
 
 
@@ -662,6 +725,8 @@ BEGIN
             , SUM (tmp.CuterCount)   AS CuterCount
             , SUM (tmp.Amount_calc)  AS Amount_calc
             
+            , SUM (tmp.Amount_container) ::TFloat AS Amount_container
+            
             , SUM (tmp.Count)           AS Count
             , SUM (tmp.RealWeight)      AS RealWeight
             , SUM (tmp.CuterWeight)     AS CuterWeight 
@@ -692,7 +757,8 @@ BEGIN
                   , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                   , _tmpListMaster.Amount
                   , _tmpListMaster.CuterCount
-                  , COALESCE (ObjectFloat_Receipt_Value.ValueData, 0) * _tmpListMaster.CuterCount AS  Amount_calc
+                  , COALESCE (ObjectFloat_Receipt_Value.ValueData, 0) * _tmpListMaster.CuterCount AS  Amount_calc 
+                  , _tmpListMaster.Amount_container 
                   , COALESCE (_tmpListMaster.isPartionClose, FALSE) AS isPartionClose
                   , _tmpListMaster.Comment
                   , _tmpListMaster.Count
@@ -812,6 +878,7 @@ BEGIN
             , tmpData.Amount          :: TFloat
             , tmpData.CuterCount      :: TFloat
             , tmpData.Amount_calc     :: TFloat
+            , tmpData.Amount_container ::TFloat
 
             , tmpData.isPartionClose
 

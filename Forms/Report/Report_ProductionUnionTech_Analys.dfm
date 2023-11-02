@@ -101,6 +101,11 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Format = ',0.####'
               Kind = skSum
               Column = Amount_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_container
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -167,6 +172,11 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
               Format = ',0.####'
               Kind = skSum
               Column = Amount_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_container
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -442,6 +452,17 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1082#1091#1090#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
             Options.Editing = False
             Width = 60
+          end
+          object Amount_container: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1043#1055' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'Amount_container'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object isOrderSecond: TcxGridDBColumn
             Caption = #1044#1086#1079#1072#1103#1074#1082#1072
