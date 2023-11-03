@@ -841,47 +841,47 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (tmpMI_ReceiptChild.GoodsKindId, tmpMI_Child.GoodsKindId)
 
             LEFT JOIN tmpMILinkObject AS MILO_GoodsKindComplete
-                                            ON MILO_GoodsKindComplete.MovementItemId = tmpMI_Child.MovementItemId_Child
-                                           AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                      ON MILO_GoodsKindComplete.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                     AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
             LEFT JOIN tmpMIBoolean AS MIBoolean_TaxExit
-                                          ON MIBoolean_TaxExit.MovementItemId =  tmpMI_Child.MovementItemId_Child
-                                         AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
+                                   ON MIBoolean_TaxExit.MovementItemId =  tmpMI_Child.MovementItemId_Child
+                                  AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
             LEFT JOIN tmpMIBoolean AS MIBoolean_WeightMain
-                                          ON MIBoolean_WeightMain.MovementItemId =  tmpMI_Child.MovementItemId_Child
-                                         AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
+                                   ON MIBoolean_WeightMain.MovementItemId =  tmpMI_Child.MovementItemId_Child
+                                  AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
 
             LEFT JOIN tmpMIDate AS MIDate_PartionGoods
-                                       ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                      AND MIDate_PartionGoods.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                               AND MIDate_PartionGoods.MovementItemId = tmpMI_Child.MovementItemId_Child
 
             LEFT JOIN tmpMIString AS MIString_PartionGoods
-                                         ON MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                        AND MIString_PartionGoods.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                  ON MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                 AND MIString_PartionGoods.MovementItemId = tmpMI_Child.MovementItemId_Child
 
             LEFT JOIN tmpMIFloat AS MIFloat_AmountReceipt
-                                        ON MIFloat_AmountReceipt.MovementItemId = tmpMI_Child.MovementItemId_Child
-                                       AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
+                                 ON MIFloat_AmountReceipt.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
 
             LEFT JOIN tmpMIString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = tmpMI_Child.MovementItemId_Child
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                                  ON MIString_Comment.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                 AND MIString_Comment.DescId = zc_MIString_Comment()
 
              LEFT JOIN tmpMIDate AS MIDate_Insert
-                                        ON MIDate_Insert.MovementItemId = tmpMI_Child.MovementItemId_Child
-                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                 ON MIDate_Insert.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
              LEFT JOIN tmpMIDate AS MIDate_Update
-                                        ON MIDate_Update.MovementItemId = tmpMI_Child.MovementItemId_Child
-                                       AND MIDate_Update.DescId = zc_MIDate_Update()
+                                 ON MIDate_Update.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                AND MIDate_Update.DescId = zc_MIDate_Update()
 
              LEFT JOIN tmpMILinkObject AS MILO_Insert
                                        ON MILO_Insert.MovementItemId = tmpMI_Child.MovementItemId_Child
                                       AND MILO_Insert.DescId = zc_MILinkObject_Insert()
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
              LEFT JOIN tmpMILinkObject AS MILO_Update
-                                              ON MILO_Update.MovementItemId = tmpMI_Child.MovementItemId_Child
-                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
+                                       ON MILO_Update.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                      AND MILO_Update.DescId = zc_MILinkObject_Update()
              LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight

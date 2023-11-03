@@ -53,6 +53,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
     FromName_prod: TcxGridDBColumn;
+    Amount_container: TcxGridDBColumn;
   private
     { Private declarations }
   public
