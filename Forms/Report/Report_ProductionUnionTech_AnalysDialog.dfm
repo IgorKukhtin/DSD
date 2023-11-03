@@ -63,9 +63,9 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel5: TcxLabel
-    Left = 11
+    Left = 8
     Top = 91
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086' '#1079#1072#1103#1074#1082#1072'):'
   end
   object edFromGroup: TcxButtonEdit
     Left = 11
@@ -81,8 +81,8 @@ object Report_ProductionUnionTech_AnalysDialogForm: TReport_ProductionUnionTech_
   end
   object cxLabel8: TcxLabel
     Left = 11
-    Top = 145
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
+    Top = 141
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091' '#1079#1072#1103#1074#1082#1072'):'
   end
   object edToGroup: TcxButtonEdit
     Left = 11

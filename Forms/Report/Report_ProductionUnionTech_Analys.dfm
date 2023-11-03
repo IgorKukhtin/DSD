@@ -15,17 +15,17 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
     Height = 346
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1176
+    ExplicitWidth = 920
     ExplicitHeight = 346
     ClientRectBottom = 346
     ClientRectRight = 920
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1176
+      ExplicitWidth = 920
       ExplicitHeight = 346
       inherited cxGrid: TcxGrid
         Width = 920
         Height = 346
-        ExplicitWidth = 1176
+        ExplicitWidth = 920
         ExplicitHeight = 346
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -589,9 +589,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
   inherited Panel: TPanel
     Width = 920
     Height = 73
-    ExplicitLeft = 8
-    ExplicitTop = -32
-    ExplicitWidth = 1176
+    ExplicitWidth = 920
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 125

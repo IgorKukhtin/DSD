@@ -137,11 +137,11 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-                                                           AND MLO_To.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) -- --(SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)
+                                                           AND MLO_To.ObjectId IN (SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo) -- --(SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)
                               INNER JOIN MovementLinkObject AS MLO_From
                                                             ON MLO_From.MovementId = Movement.Id
                                                            AND MLO_From.DescId = zc_MovementLinkObject_From()
-                                                           AND MLO_From.ObjectId IN (SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo) --
+                                                           AND MLO_From.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) --
                          WHERE ((inisPeriodOrder = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate)
                             OR (inisPeriodOrder = FALSE AND Movement.OperDate BETWEEN inStartDate::TDateTime - INTERVAL '5 DAY'  AND inEndDate::TDateTime+ INTERVAL '5 DAY')
                                )
