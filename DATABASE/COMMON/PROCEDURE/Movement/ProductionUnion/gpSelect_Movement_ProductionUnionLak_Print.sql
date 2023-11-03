@@ -71,9 +71,9 @@ BEGIN
                               AND MB_Peresort.MovementId IS NULL
                            )
 
-   , tmpMI_Lak AS (SELECT  /*Movement.OperDate                            AS OperDate
-                         , Movement.InvNumber                           AS InvNumber
-                         , */Movement_partion.OperDate                    AS OperDate_partion  
+   , tmpMI_Lak AS (SELECT  Movement.OperDate                            AS OperDate
+                         --, Movement.InvNumber                           AS InvNumber
+                         , Movement_partion.OperDate                    AS OperDate_partion  
                          , Movement_partion.InvNumber                   AS InvNumber_partion
                          , MovementItem.ObjectId                        AS GoodsId
                          , MILO_GoodsKind.ObjectId                      AS GoodsKindId
@@ -116,9 +116,9 @@ BEGIN
                          LEFT JOIN MovementItem AS MovementItem_partion ON MovementItem_partion.Id = MIFloat_MovementItemId.ValueData :: Integer
                          LEFT JOIN Movement AS Movement_partion ON Movement_partion.Id = MovementItem_partion.MovementId   
                          
-                   GROUP BY /*Movement.OperDate
-                          , Movement.InvNumber 
-                          ,*/ Movement_partion.OperDate
+                   GROUP BY Movement.OperDate
+                          --, Movement.InvNumber 
+                          , Movement_partion.OperDate
                           , Movement_partion.InvNumber
                           , MovementItem.ObjectId
                           , MILO_GoodsKind.ObjectId
@@ -126,14 +126,38 @@ BEGIN
                           , MIFloat_MovementItemId.ValueData    
                           , COALESCE (MovementItem_partion.Amount,0)
                    )
- --вес база из проводок
- 
+     --вес база из проводок из партии
+   , tmpMIContainer1 AS (SELECT MIContainer.ContainerId
+                              , MIContainer.MovementItemId
+                         FROM MovementItemContainer AS MIContainer
+                         WHERE MIContainer.MovementItemId IN (SELECT DISTINCT tmpMI_Lak.MovementItemId_partion From tmpMI_Lak)
+                           AND DescId = zc_MIContainer_Count()   -- = 1
+                         ) 
+
+   , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
+                              , SUM (MI_parent.Amount) AS Amount
+                         FROM MovementItemContainer AS MIContainer 
+                             JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                              AND MovementItem.DescId = zc_MI_Child() -- =2 
+                             JOIN MovementItem AS MI_parent 
+                                               ON MI_parent.Id = MovementItem.ParentId
+                                              AND MI_parent.DescId = zc_MI_Master()  --1
+                         WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer1.ContainerId FROM tmpMIContainer1)
+                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
+                         GROUP BY MIContainer.ContainerId
+                         )
+   , tmpMIContainer AS (SELECT tmpMIContainer1.MovementItemId
+                             , SUM (tmpMIContainer2.Amount) AS Amount
+                        FROM tmpMIContainer1
+                             JOIN tmpMIContainer2 ON tmpMIContainer2.ContainerId = tmpMIContainer1.ContainerId
+                        GROUP BY tmpMIContainer1.MovementItemId
+                        )
  
        SELECT
-             /* tmpMI.InvNumber
-            , tmpMI.OperDate
-            ,*/ tmpMI.InvNumber_partion AS InvNumber
-            , tmpMI.OperDate_partion    AS OperDate
+             --tmpMI.InvNumber
+              tmpMI.OperDate
+            , tmpMI.InvNumber_partion
+            , tmpMI.OperDate_partion 
 
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
@@ -144,9 +168,11 @@ BEGIN
             , tmpMI.Count_from                     --Колво батонов после
             , tmpMI.Count_to                       --Колво батонов до
             , tmpMI.Amount_partion                 --Вес п/ф факт 
-            , 0 AS RealWeight_base                --Вес ГП (база),
-            , 0 AS TaxExit_calc                   -- % выхода.
-
+            , tmpMIContainer.Amount  AS RealWeight_base --Вес ГП (база),
+            , CASE WHEN COALESCE (tmpMI.Amount_partion,0) <> 0 THEN (tmpMIContainer.Amount *100 / tmpMI.Amount_partion) ELSE 0 END ::TFloat  AS TaxExit_calc                    -- % выхода.
+             
+            , tmpMIContainer.Amount           ::TFloat  AS Amount_container
+             
             , Object_GoodsKind.Id                   AS GoodsKindId
             , Object_GoodsKind.ObjectCode           AS GoodsKindCode
             , Object_GoodsKind.ValueData            AS GoodsKindName
@@ -171,6 +197,8 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind         ON Object_GoodsKind.Id         = tmpMI.GoodsKindId
              LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI.GoodsKindId_Complete
              LEFT JOIN Object AS Object_Measure           ON Object_Measure.Id           = ObjectLink_Goods_Measure.ChildObjectId
+             
+             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI.MovementItemId_partion
         ;
 
 

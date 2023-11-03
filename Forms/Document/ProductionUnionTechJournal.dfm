@@ -1132,7 +1132,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate;GoodsName;GoodsKindName_Complete;OperDate;InvNumber'
+          IndexFieldNames = 
+            'OperDate;GoodsName;GoodsKindName_Complete;OperDate;OperDate_part' +
+            'ion;InvNumber_partion'
         end>
       Params = <
         item
