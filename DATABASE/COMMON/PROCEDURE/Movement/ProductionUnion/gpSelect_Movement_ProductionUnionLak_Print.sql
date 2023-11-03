@@ -171,8 +171,7 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind         ON Object_GoodsKind.Id         = tmpMI.GoodsKindId
              LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI.GoodsKindId_Complete
              LEFT JOIN Object AS Object_Measure           ON Object_Measure.Id           = ObjectLink_Goods_Measure.ChildObjectId
-       
-             ;
+        ;
 
 
     -- Результат - 1
