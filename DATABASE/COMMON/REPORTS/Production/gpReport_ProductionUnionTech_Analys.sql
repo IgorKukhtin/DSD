@@ -80,7 +80,7 @@ BEGIN
     INSERT INTO _tmpGoods (GoodsId)
        SELECT lfSelect.GoodsId
        FROM lfSelect_Object_Goods_byGoodsGroup (1832 ) AS lfSelect    -- ГП
-       WHERE inGoodsGroupId <> 0
+       --WHERE inGoodsGroupId <> 0
              ;
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
@@ -137,13 +137,13 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-                                                           AND MLO_To.ObjectId IN (SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo) -- --(SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)
+                                                           AND MLO_To.ObjectId IN (SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)  --(SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) --(SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo) -- --(SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)
                               INNER JOIN MovementLinkObject AS MLO_From
                                                             ON MLO_From.MovementId = Movement.Id
                                                            AND MLO_From.DescId = zc_MovementLinkObject_From()
                                                            AND MLO_From.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) --
                          WHERE ((inisPeriodOrder = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate)
-                            OR (inisPeriodOrder = FALSE AND Movement.OperDate BETWEEN inStartDate::TDateTime - INTERVAL '5 DAY'  AND inEndDate::TDateTime+ INTERVAL '5 DAY')
+                           -- OR (inisPeriodOrder = FALSE AND Movement.OperDate BETWEEN inStartDate::TDateTime - INTERVAL '5 DAY'  AND inEndDate::TDateTime+ INTERVAL '5 DAY')
                                )
                             AND Movement.DescId = zc_Movement_OrderInternal()
                             AND Movement.StatusId = zc_Enum_Status_Complete() --<> zc_Enum_Status_Erased()
@@ -219,9 +219,9 @@ BEGIN
                                                     ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                                    AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit() 
                           WHERE ((inisPeriodOrder = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate)
-                              OR (inisPeriodOrder = FALSE AND (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime BETWEEN inStartDate AND inEndDate)
+                             -- OR (inisPeriodOrder = FALSE AND (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime BETWEEN inStartDate AND inEndDate)
                                 )
-                              AND COALESCE (OrderType_Unit.ChildObjectId, Movement.ToId) IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom)
+                              AND COALESCE (OrderType_Unit.ChildObjectId, Movement.ToId) IN (SELECT _tmpUnitTo.UnitId FROM _tmpUnitTo)
                           GROUP BY Movement.OperDate
                                  , MovementItem.GoodsId
                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId
@@ -260,7 +260,7 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-                               INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MLO_To.ObjectId
+                               INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = MLO_To.ObjectId
                           WHERE MLO_From.ObjectId = MLO_To.ObjectId
                             AND COALESCE (MLO_DocumentKind.ObjectId,0) = 0
                           )
@@ -501,6 +501,7 @@ BEGIN
                       
                   FROM tmpMI_production
                        FULL JOIN tmpMI_order ON tmpMI_order.MovementItemId_find = tmpMI_production.MovementItemId
+                  WHERE COALESCE (tmpMI_order.OperDate_order, tmpMI_production.OperDate_calc) BETWEEN inStartDate AND inEndDate
                   )
 
        SELECT tmp.MovementId
@@ -909,4 +910,4 @@ $BODY$
 
 --select * from gpReport_ProductionUnionTech_Analys(inStartDate := ('11.09.2023')::TDateTime , inEndDate := ('11.09.2023')::TDateTime , inFromId := 8447 , inToId := 8447 , inGoodsGroupId:=0, inisPeriodOrder := 'False',  inSession := '5')
 --select * from gpReport_ProductionUnionTech_Analys(inStartDate := ('30.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime , inFromId := 8447 , inToId := 8447 , inGoodsGroupId := 0 , inisPeriodOrder := 'True' ,  inSession := '9457');
--- select * from gpReport_ProductionUnionTech_Analys(inStartDate := ('30.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime , inFromId := 8447 , inToId := 8447 , inGoodsGroupId := 0 , inisPeriodOrder := 'True' ,  inSession := '9457');
+--select * from gpReport_ProductionUnionTech_Analys(inStartDate := ('30.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime , inFromId := 8447 , inToId := 8447 , inGoodsGroupId := 0 , inisPeriodOrder := 'True' ,  inSession := '9457');
