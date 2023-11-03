@@ -599,9 +599,9 @@ BEGIN
                                      , Movement.OperDate
                                      , MovementLinkObject_DocumentKind.ObjectId AS DocumentKindId
                                      , MovementItem.Amount
-                               /*  , MAX (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_CuterWeight() THEN tmpPartionAll.OperDate ELSE NULL::TDateTime END)            AS OperDate_cuter 
+                               /*  , MAX (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_CuterWeight() THEN MIDate_Insert.ValueData ELSE NULL::TDateTime END)            AS OperDate_cuter 
                                  , SUM (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_CuterWeight() THEN Amount /*COALESCE (MIFloat_CuterWeight.ValueData,0)*/ ELSE 0 END) AS CuterWeight
-                                 , MAX (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight() THEN tmpPartionAll.OperDate ELSE NULL ::TDateTime END )           AS OperDate_real
+                                 , MAX (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight() THEN MIDate_Insert.ValueData ELSE NULL ::TDateTime END )           AS OperDate_real
                                  , SUM (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight() THEN /*COALESCE (MIFloat_RealWeight.ValueData,0)*/ ELSE 0 END)  AS RealWeight
                                  */
                             FROM tmpPartionAll
@@ -619,18 +619,22 @@ BEGIN
          , tmpMI_Weight AS (SELECT tmpPartionWeight.MovementItemId_prod
                                  --, MIFloat_MovementItemId.MovementItemId     AS MovementItemId
                                  --, Movement.OperDate
-                                 --, MovementLinkObject_DocumentKind.ObjectId AS DocumentKindId
-                                 , MAX (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_CuterWeight() THEN tmpPartionWeight.OperDate ELSE NULL::TDateTime END)            AS OperDate_cuter 
-                                 , SUM (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_CuterWeight() THEN tmpPartionWeight.Amount /*COALESCE (MIFloat_CuterWeight.ValueData,0)*/ ELSE 0 END) AS CuterWeight
-                                 , MAX (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_RealWeight() THEN tmpPartionWeight.OperDate ELSE NULL ::TDateTime END )           AS OperDate_real
-                                 , SUM (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_RealWeight() THEN tmpPartionWeight.Amount /*COALESCE (MIFloat_RealWeight.ValueData,0)*/ ELSE 0 END)   AS RealWeight
+                                 --, MovementLinkObject_DocumentKind.ObjectId AS DocumentKindId                                                               
+                                 , MAX (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_CuterWeight() THEN MIDate_Insert.ValueData ELSE NULL   ::TDateTime END)  AS OperDate_cuter 
+                                 , SUM (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_CuterWeight() THEN tmpPartionWeight.Amount ELSE 0 END)                   AS CuterWeight
+                                 , MAX (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_RealWeight()  THEN MIDate_Insert.ValueData ELSE NULL   ::TDateTime END ) AS OperDate_real
+                                 , SUM (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_RealWeight()  THEN tmpPartionWeight.Amount ELSE 0 END)                   AS RealWeight
                             FROM tmpPartionWeight
-                                 LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
+                                 /*LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
                                                       ON MIFloat_RealWeight.MovementItemId = tmpPartionWeight.MovementItemId
                                                      AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
                                  LEFT JOIN tmpMIFloat AS MIFloat_CuterWeight
                                                       ON MIFloat_CuterWeight.MovementItemId = tmpPartionWeight.MovementItemId
                                                      AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+                                */
+                                 LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                            ON MIDate_Insert.MovementItemId = tmpPartionWeight.MovementItemId
+                                                           AND MIDate_Insert.DescId = zc_MIDate_Insert()
                                                                                                                      
                             GROUP BY tmpPartionWeight.MovementItemId_prod 
                                    --, MIFloat_MovementItemId.MovementItemId
@@ -918,8 +922,8 @@ BEGIN
             , tmpData.InvNumber_order :: TVarChar
             , tmpData.OperDate_order  :: TVarChar 
             
-            , zfConvert_DateToString (tmpData.OperDate_cuter)  :: TVarChar AS OperDate_cuter
-            , zfConvert_DateToString (tmpData.OperDate_real)   :: TVarChar AS OperDate_real
+            , zfConvert_DateTimeToString (tmpData.OperDate_cuter)  :: TVarChar AS OperDate_cuter
+            , zfConvert_DateTimeToString (tmpData.OperDate_real)   :: TVarChar AS OperDate_real
             , zfConvert_DateToString (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin
             , zfConvert_DateToString (tmpData.OperDate_ContainerMax)  :: TVarChar AS OperDate_ContainerMax
             , tmpData.GoodsId

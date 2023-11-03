@@ -342,6 +342,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
           end
           object CuterWeight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1092#1072#1088#1096#1072
@@ -360,6 +361,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
           end
           object RealWeight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1050#1042#1050
@@ -1061,7 +1063,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementId'
+          ComponentItem = 'MovementId_order'
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1346,7 +1348,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
         Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementId'
+        ComponentItem = 'MovementId_order'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
