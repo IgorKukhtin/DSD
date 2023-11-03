@@ -566,15 +566,19 @@ BEGIN
  
        , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
                                   , SUM (MI_parent.Amount) AS Amount
-                                  , MIN (Movement.OperDate) AS OperDate_min
-                                  , MAX (Movement.OperDate) AS OperDate_max
+                                  , MIN (MovementDate_Insert.ValueData) AS OperDate_min
+                                  , MAX (MovementDate_Insert.ValueData) AS OperDate_max
                              FROM MovementItemContainer AS MIContainer 
                                  JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                                                   AND MovementItem.DescId = zc_MI_Child() -- =2 
                                  JOIN MovementItem AS MI_parent 
                                                    ON MI_parent.Id = MovementItem.ParentId
                                                   AND MI_parent.DescId = zc_MI_Master()  --1
-                                 LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                -- LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                 LEFT JOIN MovementDate AS MovementDate_Insert
+                                                        ON MovementDate_Insert.MovementId = MIContainer.MovementId
+                                                       AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                  
                              WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer1.ContainerId FROM tmpMIContainer1)
                                AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
                              GROUP BY MIContainer.ContainerId
@@ -922,10 +926,10 @@ BEGIN
             , tmpData.InvNumber_order :: TVarChar
             , tmpData.OperDate_order  :: TVarChar 
             
-            , zfConvert_DateTimeToString (tmpData.OperDate_cuter)  :: TVarChar AS OperDate_cuter
-            , zfConvert_DateTimeToString (tmpData.OperDate_real)   :: TVarChar AS OperDate_real
-            , zfConvert_DateToString (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin
-            , zfConvert_DateToString (tmpData.OperDate_ContainerMax)  :: TVarChar AS OperDate_ContainerMax
+            , zfConvert_DateTimeToString (tmpData.OperDate_cuter)         :: TVarChar AS OperDate_cuter
+            , zfConvert_DateTimeToString (tmpData.OperDate_real)          :: TVarChar AS OperDate_real
+            , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin    --zfConvert_DateToString
+            , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMax)  :: TVarChar AS OperDate_ContainerMax    --zfConvert_DateToString
             , tmpData.GoodsId
             , tmpData.GoodsCode 
             , tmpData.GoodsName       :: TVarChar
