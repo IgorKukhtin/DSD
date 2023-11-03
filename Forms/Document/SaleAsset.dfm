@@ -2,6 +2,7 @@ inherited SaleAssetForm: TSaleAssetForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' ('#1054#1057')>'
   ClientHeight = 668
   ClientWidth = 1079
+  ExplicitLeft = -202
   ExplicitWidth = 1095
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -440,7 +441,6 @@ inherited SaleAssetForm: TSaleAssetForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
