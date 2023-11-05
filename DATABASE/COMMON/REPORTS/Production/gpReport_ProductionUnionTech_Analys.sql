@@ -74,8 +74,14 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Select_Movement_ProductionUnionTech());
      vbUserId:= lpGetUserBySession (inSession);
 
-     --пока только по дате заявки
+     -- пока только по дате заявки
      inisPeriodOrder = TRUE;
+
+
+     -- замена - Склады База + Реализации
+     IF COALESCE (inFromId, 0) = 0 THEN inFromId:= 8457; END IF;
+     -- замена - Цех ковбаса+делікатеси
+     IF COALESCE (inToId, 0)   = 0 THEN inToId  := 8446; END IF;
 
 
      CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
