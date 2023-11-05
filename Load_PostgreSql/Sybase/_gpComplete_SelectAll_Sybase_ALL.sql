@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
     IN inIsBefoHistoryCost  Boolean   , --
     IN inGroupId            Integer     -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 )
-RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar, BranchCode Integer, BranchName TVarChar
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar, BranchCode Integer, BranchName TVarChar, MovementDescId Integer, MovementDescCode TVarChar, MovementDescItemName TVarChar
               )
 AS
 $BODY$
@@ -244,6 +244,9 @@ END IF;
                  ELSE tmp.BranchCode + 1000
             END :: Integer AS BranchCode
           , tmp.BranchName
+          , Movement.DescId AS MovementDescId
+          , MovementDesc.Code
+          , MovementDesc.ItemName
      FROM (
      -- 1.0. zc_Movement_IncomeCost
      SELECT Movement.Id AS MovementId
@@ -304,7 +307,7 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset()) -- , zc_Movement_SendOnPrice()
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       -- здесь второй раз
+       -- !!!здесь второй раз!!!
        AND inIsBefoHistoryCost = FALSE
        --
        AND (tmpUnit_from.UnitId > 0
@@ -387,24 +390,25 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       -- здесь второй раз
+       -- !!!здесь второй раз!!!
        AND inIsBefoHistoryCost = FALSE
        --
        AND (tmpUnit_To.UnitId > 0)
 
-       -- работают все возвраты
+       -- здесь все для inGroupId = 4
        -- AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
-       --
-       AND inGroupId <= 0
+       -- здесь все для inGroupId = 0
+       -- AND inGroupId <= 0
 
-       /*AND ((inGroupId = 4
+       -- здесь часть для inGroupId = 4 остальное для inGroupId = 0
+       AND ((inGroupId = 4
          AND Object_To.Id IN (8459, 846, 8461, 256716, 1387416) -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
             )
          OR (inGroupId <= 0
          AND Object_To.Id NOT IN (8459, 846, 8461, 256716, 1387416) -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
             )
-           )*/
+           )
 
        -- AND 1=0
        -- AND Object_To.Id 
@@ -715,6 +719,9 @@ END IF;
 */
 
     ) AS tmp
+    LEFT JOIN Movement ON Movement.Id = tmp.MovementId
+    LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
     -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
 
     -- WHERE tmp.MovementId >= 2212722 OR tmp.Code = 'zc_Movement_Inventory'
