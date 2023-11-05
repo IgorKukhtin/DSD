@@ -40,7 +40,7 @@ BEGIN
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyGroupId_Detail Integer, InfoMoneyDestinationId_Detail Integer, InfoMoneyId_Detail Integer
                                , BusinessId Integer
                                , ContainerId_ProfitLoss Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
+                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isAsset Boolean
                                , PartionGoodsId Integer
                                 ) ON COMMIT DROP;
      -- таблица - элементы 20202 

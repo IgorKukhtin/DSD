@@ -170,7 +170,12 @@ BEGIN
             OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = ABS (inUserId))
          THEN
              -- Нашли
-             vbInsertDate:= (SELECT MIN (tmp.OperDate) FROM (SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId) AS tmp);
+             vbInsertDate:= (SELECT MIN (tmp.OperDate) 
+                             FROM (SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId
+                         UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId
+                         UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId
+                                  ) AS tmp
+                            );
              -- Нашли
              vbIsNalog:= EXISTS (SELECT 1
                                  FROM MovementItem

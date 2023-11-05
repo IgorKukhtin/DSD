@@ -767,7 +767,7 @@ BEGIN
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyGroupId_Detail, InfoMoneyDestinationId_Detail, InfoMoneyId_Detail
                          , BusinessId
                          , ContainerId_ProfitLoss
-                         , isPartionCount, isPartionSumm, isTareReturning
+                         , isPartionCount, isPartionSumm, isTareReturning, isAsset
                          , PartionGoodsId)
         SELECT
               _tmp.MovementItemId
@@ -943,6 +943,8 @@ BEGIN
                    ELSE FALSE
                END AS isTareReturning
 
+            , _tmp.isAsset
+
             , 0 AS PartionGoodsId -- Партии товара, сформируем позже
 
         FROM (SELECT
@@ -988,6 +990,7 @@ BEGIN
 
                    , tmp.isPartionCount
                    , tmp.isPartionSumm
+                   , tmp.isAsset
 
               FROM
              (-- перевод цены в валюту zc_Enum_Currency_Basis
@@ -1061,6 +1064,7 @@ BEGIN
 
                    , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
                    , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
+                   , COALESCE (ObjectBoolean_Asset.ValueData, FALSE)        AS isAsset
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
@@ -1106,6 +1110,11 @@ BEGIN
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
                                            ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
                                           AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset
+                                           ON ObjectBoolean_Asset.ObjectId = MovementItem.ObjectId
+                                          AND ObjectBoolean_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
+
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
                                         ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
@@ -1361,6 +1370,18 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate:= _tmpItem.PartionGoodsDate)
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                    THEN 0
+
+                                               WHEN _tmpItem.isAsset = TRUE
+                                                AND _tmpItem.PartionGoods <> ''
+                                                   THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= vbUnitId
+                                                                                        , inGoodsId       := _tmpItem.GoodsId
+                                                                                        , inStorageId     := NULL
+                                                                                      --, inPartionModelId:= ???
+                                                                                        , inInvNumber     := _tmpItem.PartionGoods
+                                                                                      --, inPartNumber    := ???
+                                                                                        , inOperDate      := vbOperDate
+                                                                                        , inPrice         := CASE WHEN _tmpItem.OperCount_Partner > 0 THEN _tmpItem.OperSumm_Partner / _tmpItem.OperCount_Partner ELSE 0 END
+                                                                                         )
 
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
