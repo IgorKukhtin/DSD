@@ -330,6 +330,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isPositionLevel'
+        Value = Null
+        Component = ceisPositionLevel
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Comment'
         Value = ''
         Component = edComment
