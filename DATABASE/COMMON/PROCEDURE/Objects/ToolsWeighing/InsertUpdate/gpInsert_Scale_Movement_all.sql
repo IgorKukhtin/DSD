@@ -62,7 +62,8 @@ $BODY$
 
    DECLARE vbIsUpak_UnComplete Boolean;
    
-   DECLARE vbIsDocMany Boolean;
+   DECLARE vbIsDocMany        Boolean;
+   DECLARE vbIsCloseInventory Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -144,6 +145,8 @@ BEGIN
      vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
                        ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
                   END;
+
+
      -- определили <Тип документа>
      IF inMovementDescId_next < 0
      THEN vbMovementDescId:= ABS (inMovementDescId_next);
@@ -179,6 +182,34 @@ BEGIN
      ELSE
          vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
      END IF;
+
+
+     -- !!!определили параметр!!!
+     IF vbMovementDescId = zc_Movement_Inventory()
+     THEN 
+         vbIsCloseInventory:= (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+                               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
+                                                                     , inLevel2      := 'Movement'
+                                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                                     , inItemName    := 'isCloseInventory'
+                                                                     , inDefaultValue:= 'TRUE'
+                                                                     , inSession     := inSession
+                                                                      ) AS RetV
+                                     FROM MovementFloat
+                                     WHERE MovementFloat.MovementId = inMovementId
+                                       AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                       AND MovementFloat.ValueData > 0
+                                    ) AS tmp
+                              );
+
+         IF vbMovementDescId = zc_Movement_Inventory()
+         THEN
+             -- Розподільчий комплекс
+             vbIsCloseInventory:= 8459 <> COALESCE ((SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()), 0);
+         END IF;
+
+      END IF;
+
      -- определили <ПЕРЕРАБОТКА>
      vbGoodsId_ReWork:= (SELECT CASE WHEN TRIM (tmp.RetV) = '' THEN '0' ELSE TRIM (tmp.RetV) END :: Integer
                          FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
@@ -1856,7 +1887,7 @@ BEGIN
                                                               , inUserId         := vbUserId);
                ELSE
                -- <Инвентаризация>
-               IF vbMovementDescId = zc_Movement_Inventory()
+               IF vbMovementDescId = zc_Movement_Inventory() AND COALESCE (vbIsCloseInventory, TRUE) = TRUE
                THEN
                    -- Проводим Документ
                    PERFORM gpComplete_Movement_Inventory (inMovementId     := vbMovementId_begin
