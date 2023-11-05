@@ -2724,7 +2724,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate;GoodsName;GoodsKindName_Complete'
+          IndexFieldNames = 
+            'OperDate;GoodsName;GoodsKindName_Complete;OperDate;OperDate_part' +
+            'ion;InvNumber_partion'
         end>
       Params = <
         item

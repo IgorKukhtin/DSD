@@ -336,8 +336,35 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Options.Editing = False
             Width = 60
           end
+          object OperDate_cuter: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1079#1074'. '#1092#1072#1088#1096#1072
+            DataBinding.FieldName = 'OperDate_cuter'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CuterWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1092#1072#1088#1096#1072
+            DataBinding.FieldName = 'CuterWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object OperDate_real: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1050#1042#1050
+            DataBinding.FieldName = 'OperDate_real'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object RealWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
+            Caption = #1042#1077#1089' '#1050#1042#1050
             DataBinding.FieldName = 'RealWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -345,7 +372,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
+            HeaderHint = #1042#1077#1089' '#1087#1077#1088#1077#1076#1072#1095#1072' '#1050#1042#1050
             Options.Editing = False
             Width = 60
           end
@@ -374,19 +401,6 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             HeaderHint = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1087#1086#1089#1083#1077' '#1096#1087#1088#1080#1094#1077#1074#1072#1085#1080#1103')'
             Options.Editing = False
             Width = 70
-          end
-          object CuterWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
-            DataBinding.FieldName = 'CuterWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1092'-'#1075#1087
-            Options.Editing = False
-            Width = 60
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -580,6 +594,22 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OperDate_ContainerMin: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089'... ('#1043#1055')'
+            DataBinding.FieldName = 'OperDate_ContainerMin'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDate_ContainerMax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086'... ('#1043#1055')'
+            DataBinding.FieldName = 'OperDate_ContainerMax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
         end
@@ -830,13 +860,16 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1056#1072#1089#1093#1086#1076'/'#1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1056#1072#1089#1093#1086#1076'/'#1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')'
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'OperDate_order;GoodsName;GoodsKindName_Complete;OperDate;OperDat' +
+            'e_cuter;OperDate_real'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -899,8 +932,8 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      ReportName = #1054#1090#1095#1077#1090'_'#1040#1085#1072#1083#1080#1079' '#1047#1072#1103#1074#1082#1080' '#1053#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1040#1085#1072#1083#1080#1079' '#1047#1072#1103#1074#1082#1080' '#1053#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1030,7 +1063,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementId'
+          ComponentItem = 'MovementId_order'
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1149,6 +1182,14 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
         item
           Visible = True
           ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1307,7 +1348,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
         Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementId'
+        ComponentItem = 'MovementId_order'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

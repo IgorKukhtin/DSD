@@ -20,7 +20,11 @@ RETURNS TABLE (MovementId          Integer
              , MovementItemId_order  Integer
              , InvNumber_order       TVarChar
              , OperDate_order        TVarChar --TDateTime
-
+             , OperDate_cuter  TVarChar
+             , OperDate_real   TVarChar
+             , OperDate_ContainerMin  TVarChar
+             , OperDate_ContainerMax  TVarChar
+            
              , GoodsId             Integer
              , GoodsCode           Integer
              , GoodsName           TVarChar
@@ -562,22 +566,84 @@ BEGIN
  
        , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
                                   , SUM (MI_parent.Amount) AS Amount
+                                  , MIN (MovementDate_Insert.ValueData) AS OperDate_min
+                                  , MAX (MovementDate_Insert.ValueData) AS OperDate_max
                              FROM MovementItemContainer AS MIContainer 
                                  JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                                                   AND MovementItem.DescId = zc_MI_Child() -- =2 
                                  JOIN MovementItem AS MI_parent 
                                                    ON MI_parent.Id = MovementItem.ParentId
                                                   AND MI_parent.DescId = zc_MI_Master()  --1
+                                -- LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                 LEFT JOIN MovementDate AS MovementDate_Insert
+                                                        ON MovementDate_Insert.MovementId = MIContainer.MovementId
+                                                       AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                  
                              WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer1.ContainerId FROM tmpMIContainer1)
                                AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
                              GROUP BY MIContainer.ContainerId
                              )
        , tmpMIContainer AS (SELECT tmpMIContainer1.MovementItemId
                                  , SUM (tmpMIContainer2.Amount) AS Amount
+                                 , MIN (tmpMIContainer2.OperDate_min) AS OperDate_min
+                                 , MAX (tmpMIContainer2.OperDate_max) AS OperDate_max
                             FROM tmpMIContainer1
                                  JOIN tmpMIContainer2 ON tmpMIContainer2.ContainerId = tmpMIContainer1.ContainerId
                             GROUP BY tmpMIContainer1.MovementItemId
                             )
+       --док. взвешивания , для кот док. произв. смеш. явл. партией 
+         , tmpPartionAll AS (SELECT MIFloat_MovementItemId.ValueData::Integer AS MovementItemId_prod
+                              , MIFloat_MovementItemId.MovementItemId     AS MovementItemId
+                         FROM MovementItemFloat AS MIFloat_MovementItemId
+                         WHERE MIFloat_MovementItemId.ValueData IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster) 
+                           AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                         )
+         , tmpPartionWeight AS (SELECT tmpPartionAll.MovementItemId_prod
+                                     , tmpPartionAll.MovementItemId
+                                     , Movement.OperDate
+                                     , MovementLinkObject_DocumentKind.ObjectId AS DocumentKindId
+                                     , MovementItem.Amount
+                               /*  , MAX (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_CuterWeight() THEN MIDate_Insert.ValueData ELSE NULL::TDateTime END)            AS OperDate_cuter 
+                                 , SUM (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_CuterWeight() THEN Amount /*COALESCE (MIFloat_CuterWeight.ValueData,0)*/ ELSE 0 END) AS CuterWeight
+                                 , MAX (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight() THEN MIDate_Insert.ValueData ELSE NULL ::TDateTime END )           AS OperDate_real
+                                 , SUM (CASE WHEN MovementLinkObject_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight() THEN /*COALESCE (MIFloat_RealWeight.ValueData,0)*/ ELSE 0 END)  AS RealWeight
+                                 */
+                            FROM tmpPartionAll
+                                 INNER JOIN MovementItem ON MovementItem.Id = tmpPartionAll.MovementItemId
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = False
+                                 INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                    AND Movement.DescId = zc_Movement_WeighingProduction()
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                                              ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                                             AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+                                                             AND MovementLinkObject_DocumentKind.ObjectId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
+                                )
+             
+         , tmpMI_Weight AS (SELECT tmpPartionWeight.MovementItemId_prod
+                                 --, MIFloat_MovementItemId.MovementItemId     AS MovementItemId
+                                 --, Movement.OperDate
+                                 --, MovementLinkObject_DocumentKind.ObjectId AS DocumentKindId                                                               
+                                 , MAX (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_CuterWeight() THEN MIDate_Insert.ValueData ELSE NULL   ::TDateTime END)  AS OperDate_cuter 
+                                 , SUM (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_CuterWeight() THEN tmpPartionWeight.Amount ELSE 0 END)                   AS CuterWeight
+                                 , MAX (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_RealWeight()  THEN MIDate_Insert.ValueData ELSE NULL   ::TDateTime END ) AS OperDate_real
+                                 , SUM (CASE WHEN tmpPartionWeight.DocumentKindId = zc_Enum_DocumentKind_RealWeight()  THEN tmpPartionWeight.Amount ELSE 0 END)                   AS RealWeight
+                            FROM tmpPartionWeight
+                                 /*LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
+                                                      ON MIFloat_RealWeight.MovementItemId = tmpPartionWeight.MovementItemId
+                                                     AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+                                 LEFT JOIN tmpMIFloat AS MIFloat_CuterWeight
+                                                      ON MIFloat_CuterWeight.MovementItemId = tmpPartionWeight.MovementItemId
+                                                     AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+                                */
+                                 LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                            ON MIDate_Insert.MovementItemId = tmpPartionWeight.MovementItemId
+                                                           AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                                                                                                     
+                            GROUP BY tmpPartionWeight.MovementItemId_prod 
+                                   --, MIFloat_MovementItemId.MovementItemId
+                            )
+
 
          --  данные док. производства
        , tmpDataAll AS (SELECT _tmpListMaster.MovementId              AS MovementId
@@ -607,11 +673,15 @@ BEGIN
                                , COALESCE (MIBoolean_PartionClose.ValueData, FALSE) AS isPartionClose
                                , MIString_Comment.ValueData          AS Comment
                                , MIFloat_Count.ValueData             AS Count
-                               , MIFloat_RealWeight.ValueData        AS RealWeight
-                               , MIFloat_CuterWeight.ValueData       AS CuterWeight 
+                               , tmpMI_Weight.RealWeight             AS RealWeight
+                               , tmpMI_Weight.CuterWeight            AS CuterWeight 
                                , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
                                , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg 
-                               , tmpMIContainer.Amount           ::TFloat  AS Amount_container
+                               , tmpMIContainer.Amount           ::TFloat  AS Amount_container 
+                               , tmpMIContainer.OperDate_min  AS OperDate_ContainerMin
+                               , tmpMIContainer.OperDate_max  AS OperDate_ContainerMax
+                               , tmpMI_Weight.OperDate_cuter
+                               , tmpMI_Weight.OperDate_real
 
                           FROM _tmpListMaster
                                LEFT JOIN MovementItemBoolean AS MIBoolean_OrderSecond
@@ -622,7 +692,7 @@ BEGIN
                                                     ON MIFloat_Count.MovementItemId = _tmpListMaster.MovementItemId
                                                    AND MIFloat_Count.DescId = zc_MIFloat_Count()
                                                    AND _tmpListMaster.MovementId <> 0
-                               LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
+                               /*LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
                                                     ON MIFloat_RealWeight.MovementItemId = _tmpListMaster.MovementItemId
                                                    AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
                                                    AND _tmpListMaster.MovementId <> 0
@@ -630,7 +700,7 @@ BEGIN
                                                     ON MIFloat_CuterWeight.MovementItemId = _tmpListMaster.MovementItemId
                                                    AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
                                                    AND _tmpListMaster.MovementId <> 0
-                  
+                               */
                                LEFT JOIN tmpMIFloat AS MIFloat_RealWeightShp
                                                     ON MIFloat_RealWeightShp.MovementItemId = _tmpListMaster.MovementItemId
                                                    AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
@@ -648,6 +718,9 @@ BEGIN
                                                            AND _tmpListMaster.MovementId <> 0 
 
                                LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = _tmpListMaster.MovementItemId
+                               
+                               LEFT JOIN tmpMI_Weight ON tmpMI_Weight.MovementItemId_prod = _tmpListMaster.MovementItemId
+                               
                           )
 
 
@@ -661,8 +734,13 @@ BEGIN
             , tmp.MovementId_order
             , tmp.MovementItemId_order
             , tmp.InvNumber_order
-            , tmp.OperDate_order
- 
+            , tmp.OperDate_order 
+          
+            , tmp.OperDate_cuter
+            , tmp.OperDate_real
+            , MIN (tmp.OperDate_ContainerMin) AS OperDate_ContainerMin
+            , MAX (tmp.OperDate_ContainerMax) AS OperDate_ContainerMax 
+
             , tmp.GoodsId
             , tmp.GoodsCode
             , tmp.GoodsName
@@ -720,8 +798,11 @@ BEGIN
                   , _tmpListMaster.MovementId_order
                   , _tmpListMaster.MovementItemId_order
                   , _tmpListMaster.InvNumber_order
-                  , _tmpListMaster.OperDate_order
-                  
+                  , _tmpListMaster.OperDate_order 
+                  , _tmpListMaster.OperDate_cuter
+                  , _tmpListMaster.OperDate_real
+                  ,  (_tmpListMaster.OperDate_ContainerMin) AS OperDate_ContainerMin
+                  ,  (_tmpListMaster.OperDate_ContainerMax) AS OperDate_ContainerMax                
                   , Object_Goods.Id                     AS GoodsId
                   , Object_Goods.ObjectCode             AS GoodsCode
                   , Object_Goods.ValueData              AS GoodsName
@@ -826,7 +907,9 @@ BEGIN
                     , tmp.PartionGoodsDateClose
                     , tmp.isOrderSecond 
                     , tmp.StartProductionInDays
-                    --, tmp.OperDate_fact
+                    --, tmp.OperDate_fact 
+                    , tmp.OperDate_cuter
+                    , tmp.OperDate_real
            ;
 
     -- Результат
@@ -841,8 +924,12 @@ BEGIN
             , tmpData.MovementId_order
             , tmpData.MovementItemId_order
             , tmpData.InvNumber_order :: TVarChar
-            , tmpData.OperDate_order  :: TVarChar
-
+            , tmpData.OperDate_order  :: TVarChar 
+            
+            , zfConvert_DateTimeToString (tmpData.OperDate_cuter)         :: TVarChar AS OperDate_cuter
+            , zfConvert_DateTimeToString (tmpData.OperDate_real)          :: TVarChar AS OperDate_real
+            , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin    --zfConvert_DateToString
+            , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMax)  :: TVarChar AS OperDate_ContainerMax    --zfConvert_DateToString
             , tmpData.GoodsId
             , tmpData.GoodsCode 
             , tmpData.GoodsName       :: TVarChar

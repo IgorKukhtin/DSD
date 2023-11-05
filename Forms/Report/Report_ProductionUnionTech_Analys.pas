@@ -54,6 +54,10 @@ type
     GuidesGoodsGroup: TdsdGuides;
     FromName_prod: TcxGridDBColumn;
     Amount_container: TcxGridDBColumn;
+    OperDate_cuter: TcxGridDBColumn;
+    OperDate_real: TcxGridDBColumn;
+    OperDate_ContainerMin: TcxGridDBColumn;
+    OperDate_ContainerMax: TcxGridDBColumn;
   private
     { Private declarations }
   public
