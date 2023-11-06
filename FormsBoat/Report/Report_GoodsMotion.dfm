@@ -4,7 +4,6 @@
   ClientWidth = 1189
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -295
   ExplicitWidth = 1205
   ExplicitHeight = 380
   PixelsPerInch = 96
