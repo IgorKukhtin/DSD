@@ -15,6 +15,7 @@ RETURNS TABLE (MovementId          Integer
              , MovementItemId      Integer
              , InvNumber           TVarChar
              , OperDate            TVarChar --TDateTime
+             , FromId_prod         Integer
              , FromName_prod       TVarChar
              , MovementId_order      Integer
              , MovementItemId_order  Integer
@@ -48,6 +49,7 @@ RETURNS TABLE (MovementId          Integer
              , GoodsKindName       TVarChar
              , MeasureName         TVarChar
              , GoodsGroupNameFull  TVarChar
+             , GoodsGroupId        Integer
              , GoodsGroupName      TVarChar
              , GoodsKindId_Complete   Integer
              , GoodsKindCode_Complete Integer
@@ -575,6 +577,11 @@ BEGIN
                                   , MIN (MovementDate_Insert.ValueData) AS OperDate_min
                                   , MAX (MovementDate_Insert.ValueData) AS OperDate_max
                              FROM MovementItemContainer AS MIContainer 
+                                 INNER JOIN MovementLinkObject AS MLO_To
+                                                               ON MLO_To.MovementId = MIContainer.MovementId
+                                                              AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                                              AND MLO_To.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) 
+
                                  JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                                                   AND MovementItem.DescId = zc_MI_Child() -- =2 
                                  JOIN MovementItem AS MI_parent 
@@ -584,7 +591,7 @@ BEGIN
                                  LEFT JOIN MovementDate AS MovementDate_Insert
                                                         ON MovementDate_Insert.MovementId = MIContainer.MovementId
                                                        AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-                                  
+ 
                              WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer1.ContainerId FROM tmpMIContainer1)
                                AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
                              GROUP BY MIContainer.ContainerId
@@ -734,7 +741,8 @@ BEGIN
        SELECT 0 AS MovementId      --tmp.MovementId
             , 0 AS MovementItemId  --tmp.MovementItemId
             , NULL ::TVarChar AS InvNumber --tmp.InvNumber 
-            , tmp.OperDate 
+            , tmp.OperDate
+            , tmp.FromId_prod 
             , tmp.FromName_prod
 
             , tmp.MovementId_order
@@ -759,6 +767,7 @@ BEGIN
             , tmp.GoodsKindName
             , tmp.MeasureName
             , tmp.GoodsGroupNameFull
+            , tmp.GoodsGroupId
             , tmp.GoodsGroupName
 
             , tmp.GoodsKindId_Complete
@@ -800,6 +809,7 @@ BEGIN
                   , _tmpListMaster.InvNumber
                   , _tmpListMaster.OperDate 
                   , _tmpListMaster.FromId_prod 
+                  , Object_Unit.Id        AS FromId_prod
                   , Object_Unit.ValueData AS FromName_prod
                   , _tmpListMaster.MovementId_order
                   , _tmpListMaster.MovementItemId_order
@@ -813,6 +823,7 @@ BEGIN
                   , Object_Goods.ObjectCode             AS GoodsCode
                   , Object_Goods.ValueData              AS GoodsName
                   , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                  , Object_GoodsGroup.Id                        AS GoodsGroupId
                   , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                   , _tmpListMaster.Amount
                   , _tmpListMaster.CuterCount
@@ -883,7 +894,8 @@ BEGIN
                 ) AS tmp
              GROUP BY /*tmp.MovementId
                     , tmp.MovementItemId */
-                     tmp.FromName_prod
+                      tmp.FromId_prod
+                    , tmp.FromName_prod
                     , tmp.MovementId_order
                     , tmp.MovementItemId_order
                     , tmp.InvNumber_order
@@ -897,7 +909,8 @@ BEGIN
                     , tmp.GoodsKindId
                     , tmp.GoodsKindCode
                     , tmp.GoodsKindName
-                    , tmp.GoodsGroupNameFull
+                    , tmp.GoodsGroupNameFull 
+                    , tmp.GoodsGroupId
                     , tmp.GoodsGroupName
                     , tmp.MeasureName
                     , tmp.GoodsKindId_Complete
@@ -924,7 +937,8 @@ BEGIN
     SELECT    tmpData.MovementId
             , tmpData.MovementItemId
             , tmpData.InvNumber :: TVarChar
-            , tmpData.OperDate  :: TVarChar
+            , tmpData.OperDate  :: TVarChar    
+            , tmpData.FromId_prod   :: Integer
             , tmpData.FromName_prod :: TVarChar
             
             , tmpData.MovementId_order
@@ -965,6 +979,7 @@ BEGIN
             , tmpData.GoodsKindName
             , tmpData.MeasureName
             , tmpData.GoodsGroupNameFull
+            , tmpData.GoodsGroupId
             , tmpData.GoodsGroupName
 
             , tmpData.GoodsKindId_Complete

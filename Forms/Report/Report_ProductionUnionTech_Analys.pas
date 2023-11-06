@@ -58,6 +58,8 @@ type
     OperDate_real: TcxGridDBColumn;
     OperDate_ContainerMin: TcxGridDBColumn;
     OperDate_ContainerMax: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public
