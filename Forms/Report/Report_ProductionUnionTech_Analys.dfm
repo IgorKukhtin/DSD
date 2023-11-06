@@ -589,23 +589,23 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Width = 100
           end
           object FromName_prod: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086') '#1087#1088#1086#1080#1079#1074'.'
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'FromName_prod'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object OperDate_ContainerMin: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089'... ('#1043#1055')'
-            DataBinding.FieldName = 'OperDate_ContainerMin'
+          object ToName_prod: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'ToName_prod'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object OperDate_ContainerMax: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1086'... ('#1043#1055')'
+            Caption = #1044#1072#1090#1072' ('#1043#1055')'
             DataBinding.FieldName = 'OperDate_ContainerMax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1082,11 +1082,111 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
     end
+    object actReport_Goods_to: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'> ('#1082#1086#1084#1091')'
+      ImageIndex = 24
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 43831d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43831d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId_prod'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToName_prod'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartner'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'> ('#1086#1090' '#1082#1086#1075#1086')'
       ImageIndex = 26
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'
@@ -1297,6 +1397,10 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
         end
         item
           Visible = True
+          ItemName = 'bbReport_Goods_to'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1334,6 +1438,10 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbReport_Goods_to: TdxBarButton
+      Action = actReport_Goods_to
       Category = 0
     end
   end

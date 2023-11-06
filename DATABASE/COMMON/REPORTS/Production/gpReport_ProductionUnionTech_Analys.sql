@@ -17,13 +17,15 @@ RETURNS TABLE (MovementId          Integer
              , OperDate            TVarChar --TDateTime
              , FromId_prod         Integer
              , FromName_prod       TVarChar
+             , ToId_prod            Integer
+             , ToName_prod          TVarChar
              , MovementId_order      Integer
              , MovementItemId_order  Integer
              , InvNumber_order       TVarChar
              , OperDate_order        TVarChar --TDateTime
              , OperDate_cuter  TVarChar
              , OperDate_real   TVarChar
-             , OperDate_ContainerMin  TVarChar
+             --, OperDate_ContainerMin  TVarChar
              , OperDate_ContainerMax  TVarChar
             
              , GoodsId             Integer
@@ -189,7 +191,8 @@ BEGIN
                                , MovementItem.GoodsId                                           AS GoodsId
                                , ObjectLink_Receipt_GoodsKind.ChildObjectId                     AS GoodsKindId
                                , COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
-                               , COALESCE (MILO_ReceiptBasis.ObjectId, 0)                       AS ReceiptId
+                               , COALESCE (MILO_ReceiptBasis.ObjectId, 0)                       AS ReceiptId 
+                               , Movement.FromId                                                AS FromId
                                -- , MLO_To.ObjectId                                                AS ToId
                                , COALESCE (OrderType_Unit.ChildObjectId, Movement.ToId)         AS ToId
                                , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
@@ -240,6 +243,7 @@ BEGIN
                                  , COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis())
                                  , MILO_ReceiptBasis.ObjectId
                                  , COALESCE (OrderType_Unit.ChildObjectId,  Movement.ToId)
+                                 , Movement.FromId
                                  , MIFloat_StartProductionInDays.ValueData
                                  , Movement.OperDate
                                  , Movement.Id
@@ -441,7 +445,8 @@ BEGIN
                                , tmpMI.GoodsKindId
                                , tmpMI.GoodsKindId_Complete
                                , tmpMI.ReceiptId
-                               , tmpMI.StartProductionInDays
+                               , tmpMI.StartProductionInDays  
+                               , tmpMI.FromId
                                , tmpMI.ToId
                                , tmpMI.Amount
                                , CASE WHEN tmpMI.AmountSecond <> 0 THEN TRUE ELSE FALSE END AS isOrderSecond
@@ -473,6 +478,7 @@ BEGIN
                               , tmpMI_order22.GoodsKindId_Complete
                               , tmpMI_order22.ReceiptId 
                               , tmpMI_order22.StartProductionInDays
+                              , tmpMI_order22.FromId
                               , tmpMI_order22.ToId
                               , tmpMI_order22.Amount
                               , tmpMI_order22.CuterCount
@@ -573,15 +579,19 @@ BEGIN
                              ) 
  
        , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
+                                  , MLO_From.ObjectId      AS FromId
+                                  , MLO_To.ObjectId        AS ToId
                                   , SUM (MI_parent.Amount) AS Amount
-                                  , MIN (MovementDate_Insert.ValueData) AS OperDate_min
+                                  --, MIN (MovementDate_Insert.ValueData) AS OperDate_min
                                   , MAX (MovementDate_Insert.ValueData) AS OperDate_max
                              FROM MovementItemContainer AS MIContainer 
                                  INNER JOIN MovementLinkObject AS MLO_To
                                                                ON MLO_To.MovementId = MIContainer.MovementId
                                                               AND MLO_To.DescId = zc_MovementLinkObject_To()
                                                               AND MLO_To.ObjectId IN (SELECT _tmpUnitFrom.UnitId FROM _tmpUnitFrom) 
-
+                                 LEFT JOIN MovementLinkObject AS MLO_From
+                                                              ON MLO_From.MovementId = MIContainer.MovementId
+                                                             AND MLO_From.DescId = zc_MovementLinkObject_From()
                                  JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                                                   AND MovementItem.DescId = zc_MI_Child() -- =2 
                                  JOIN MovementItem AS MI_parent 
@@ -595,14 +605,20 @@ BEGIN
                              WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer1.ContainerId FROM tmpMIContainer1)
                                AND MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
                              GROUP BY MIContainer.ContainerId
+                                    , MLO_To.ObjectId
+                                    , MLO_From.ObjectId
                              )
        , tmpMIContainer AS (SELECT tmpMIContainer1.MovementItemId
+                                 , tmpMIContainer2.FromId
+                                 , tmpMIContainer2.ToId
                                  , SUM (tmpMIContainer2.Amount) AS Amount
-                                 , MIN (tmpMIContainer2.OperDate_min) AS OperDate_min
+                                -- , MIN (tmpMIContainer2.OperDate_min) AS OperDate_min
                                  , MAX (tmpMIContainer2.OperDate_max) AS OperDate_max
                             FROM tmpMIContainer1
                                  JOIN tmpMIContainer2 ON tmpMIContainer2.ContainerId = tmpMIContainer1.ContainerId
                             GROUP BY tmpMIContainer1.MovementItemId
+                                   , tmpMIContainer2.FromId
+                                   , tmpMIContainer2.ToId
                             )
        --док. взвешивания , для кот док. произв. смеш. явл. партией 
          , tmpPartionAll AS (SELECT MIFloat_MovementItemId.ValueData::Integer AS MovementItemId_prod
@@ -663,7 +679,9 @@ BEGIN
                                , _tmpListMaster.MovementItemId        AS MovementItemId
                                , _tmpListMaster.InvNumber             AS InvNumber
                                , zfConvert_DateToString (_tmpListMaster.OperDate)       ::TVarChar AS OperDate
-                               , _tmpListMaster.FromId_prod           AS FromId_prod  
+                               --, _tmpListMaster.FromId_prod           AS FromId_prod 
+                               , tmpMIContainer.FromId                AS FromId_prod
+                               , tmpMIContainer.ToId                  AS ToId_prod
                                , _tmpListMaster.MovementId_order      AS MovementId_order
                                ,  zfConvert_DateToString (_tmpListMaster.OperDate_order)::TVarChar AS OperDate_order
                                , _tmpListMaster.InvNumber_order       AS InvNumber_order
@@ -691,7 +709,7 @@ BEGIN
                                , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
                                , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg 
                                , tmpMIContainer.Amount           ::TFloat  AS Amount_container 
-                               , tmpMIContainer.OperDate_min  AS OperDate_ContainerMin
+                              -- , tmpMIContainer.OperDate_min  AS OperDate_ContainerMin
                                , tmpMIContainer.OperDate_max  AS OperDate_ContainerMax
                                , tmpMI_Weight.OperDate_cuter
                                , tmpMI_Weight.OperDate_real
@@ -743,7 +761,9 @@ BEGIN
             , NULL ::TVarChar AS InvNumber --tmp.InvNumber 
             , tmp.OperDate
             , tmp.FromId_prod 
-            , tmp.FromName_prod
+            , tmp.FromName_prod 
+            , tmp.ToId_prod
+            , tmp.ToName_prod
 
             , tmp.MovementId_order
             , tmp.MovementItemId_order
@@ -752,7 +772,7 @@ BEGIN
           
             , tmp.OperDate_cuter
             , tmp.OperDate_real
-            , MIN (tmp.OperDate_ContainerMin) AS OperDate_ContainerMin
+            --, MIN (tmp.OperDate_ContainerMin) AS OperDate_ContainerMin
             , MAX (tmp.OperDate_ContainerMax) AS OperDate_ContainerMax 
 
             , tmp.GoodsId
@@ -809,15 +829,16 @@ BEGIN
                   , _tmpListMaster.InvNumber
                   , _tmpListMaster.OperDate 
                   , _tmpListMaster.FromId_prod 
-                  , Object_Unit.Id        AS FromId_prod
-                  , Object_Unit.ValueData AS FromName_prod
+                  , Object_Unit.ValueData     AS FromName_prod 
+                  , Object_Unit_to.Id         AS ToId_prod
+                  , Object_Unit_to.ValueData  AS ToName_prod
                   , _tmpListMaster.MovementId_order
                   , _tmpListMaster.MovementItemId_order
                   , _tmpListMaster.InvNumber_order
                   , _tmpListMaster.OperDate_order 
                   , _tmpListMaster.OperDate_cuter
                   , _tmpListMaster.OperDate_real
-                  ,  (_tmpListMaster.OperDate_ContainerMin) AS OperDate_ContainerMin
+                 -- ,  (_tmpListMaster.OperDate_ContainerMin) AS OperDate_ContainerMin
                   ,  (_tmpListMaster.OperDate_ContainerMax) AS OperDate_ContainerMax                
                   , Object_Goods.Id                     AS GoodsId
                   , Object_Goods.ObjectCode             AS GoodsCode
@@ -863,6 +884,7 @@ BEGIN
                    LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = _tmpListMaster.GoodsKindId_Complete
                    LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = _tmpListMaster.ReceiptId
                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpListMaster.FromId_prod
+                   LEFT JOIN Object AS Object_Unit_to ON Object_Unit_to.Id = _tmpListMaster.ToId_prod
       
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                         ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -895,7 +917,9 @@ BEGIN
              GROUP BY /*tmp.MovementId
                     , tmp.MovementItemId */
                       tmp.FromId_prod
-                    , tmp.FromName_prod
+                    , tmp.FromName_prod  
+                    , tmp.ToId_prod 
+                    , tmp.ToName_prod
                     , tmp.MovementId_order
                     , tmp.MovementItemId_order
                     , tmp.InvNumber_order
@@ -939,7 +963,9 @@ BEGIN
             , tmpData.InvNumber :: TVarChar
             , tmpData.OperDate  :: TVarChar    
             , tmpData.FromId_prod   :: Integer
-            , tmpData.FromName_prod :: TVarChar
+            , tmpData.FromName_prod :: TVarChar 
+            , tmpData.ToId_prod   :: Integer
+            , tmpData.ToName_prod :: TVarChar
             
             , tmpData.MovementId_order
             , tmpData.MovementItemId_order
@@ -948,7 +974,7 @@ BEGIN
             
             , zfConvert_DateTimeToString (tmpData.OperDate_cuter)         :: TVarChar AS OperDate_cuter
             , zfConvert_DateTimeToString (tmpData.OperDate_real)          :: TVarChar AS OperDate_real
-            , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin    --zfConvert_DateToString
+           -- , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin    --zfConvert_DateToString
             , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMax)  :: TVarChar AS OperDate_ContainerMax    --zfConvert_DateToString
             , tmpData.GoodsId
             , tmpData.GoodsCode 
