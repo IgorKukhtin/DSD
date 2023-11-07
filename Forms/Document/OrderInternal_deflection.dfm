@@ -49,7 +49,21 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             item
               Format = ',0.#'
               Kind = skSum
-              Column = Amount_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_child_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -80,7 +94,21 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             item
               Format = ',0.#'
               Kind = skSum
-              Column = Amount_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_child_calc
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -143,7 +171,7 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             Width = 45
           end
           object Amount: TcxGridDBColumn [5]
-            Caption = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088'-'#1074#1086
+            Caption = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088'-'#1074#1086' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -154,8 +182,20 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             Options.Editing = False
             Width = 55
           end
-          object AmountRemains: TcxGridDBColumn [6]
-            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089
+          object Amount_child: TcxGridDBColumn [6]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1060' ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'Amount_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountRemains: TcxGridDBColumn [7]
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -166,8 +206,20 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             Options.Editing = False
             Width = 70
           end
-          object AmountRemains_calc: TcxGridDBColumn [7]
-            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1092#1072#1082#1090
+          object AmountRemains_child: TcxGridDBColumn [8]
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089' ('#1087#1088#1086#1080#1079#1074')'
+            DataBinding.FieldName = 'AmountRemains_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089' ('#1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075#1086'))'
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountRemains_calc: TcxGridDBColumn [9]
+            Caption = #1054#1089#1090'. '#1085#1072#1095'.  ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'AmountRemains_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -177,17 +229,18 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_calc: TcxGridDBColumn [8]
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075#1086')'
-            DataBinding.FieldName = 'Amount_calc'
+          object AmountRemains_child_calc: TcxGridDBColumn [10]
+            Caption = #1054#1089#1090'. '#1085#1072#1095'.  ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'AmountRemains_child_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object AmountRemains_diff: TcxGridDBColumn [9]
+          object AmountRemains_diff: TcxGridDBColumn [11]
             Caption = #1054#1090#1082'. '#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountRemains_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -208,6 +261,14 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object PartionGoodsDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
         end
       end
@@ -273,8 +334,8 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
       Width = 231
     end
     object cxLabel8: TcxLabel
-      Left = 420
-      Top = 5
+      Left = 456
+      Top = 90
       Caption = #1050#1086#1084#1091
     end
     object edTo: TcxButtonEdit
@@ -370,6 +431,10 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
       ImageIndexFalse = 62
     end
     inherited actShowAll: TBooleanStoredProcAction
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+      ImageIndex = 62
+      Value = True
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
     end
