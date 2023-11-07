@@ -887,7 +887,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDialogForm'));
@@ -904,7 +904,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartnerDialogForm');
 
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClient_byBoatChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClient_byBoatChoiceForm');
 
@@ -939,9 +939,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionDialogForm');
+  exit;
    {//
-
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionPersonalDialogForm'));

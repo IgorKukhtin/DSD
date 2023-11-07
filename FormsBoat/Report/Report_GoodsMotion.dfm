@@ -67,6 +67,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = AmountEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_basis
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -113,6 +118,11 @@
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_basis
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -591,6 +601,18 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object Amount_basis: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1072#1073#1083#1086#1085
+            DataBinding.FieldName = 'Amount_basis'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
+            Options.Editing = False
+            Width = 55
           end
         end
       end
