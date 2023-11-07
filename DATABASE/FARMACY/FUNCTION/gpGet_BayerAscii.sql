@@ -24,4 +24,4 @@ $BODY$
  21.07.23                                                       *
 */
 
--- SELECT * FROM gpGet_BayerAscii (inBayer := 'ֲ'ÿקוסכאג'||chr('8297')||chr('8217'))
+-- SELECT * FROM gpGet_BayerAscii (inBayer := '')
