@@ -307,6 +307,8 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_ForCount
                                                       ON MIFloat_ForCount.MovementItemId = MovementItem.Id
                                                      AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
+
+                          INNER JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = MovementItem.ObjectId
                     
                     )
    
