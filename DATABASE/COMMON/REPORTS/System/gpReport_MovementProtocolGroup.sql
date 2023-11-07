@@ -67,7 +67,9 @@ BEGIN
                 )
 
     -- Данные из протокола строк документа
-  , tmpMovementProtocol AS (SELECT MovementProtocol.Id                  AS Id
+  , tmpMovementProtocol AS (-- 1.1.
+                            SELECT MovementProtocol.Id                  AS Id
+                            
                                  , MovementProtocol.UserId              AS UserId
                                  , MovementProtocol.OperDate            AS OperDate_Protocol
                                  , MovementProtocol.MovementId          AS MovementId
@@ -88,6 +90,7 @@ BEGIN
                               AND inIsMovement = FALSE
 
                            UNION ALL
+                            -- 1.2.
                             SELECT MovementProtocol.Id                  AS Id
                                  , MovementProtocol.UserId              AS UserId
                                  , MovementProtocol.OperDate            AS OperDate_Protocol
@@ -109,6 +112,7 @@ BEGIN
                               AND inIsMovement = TRUE
      
                            UNION ALL
+                            -- 2.1.
                             SELECT MovementProtocol.Id                  AS Id
                                  , MovementProtocol.UserId              AS UserId
                                  , MovementProtocol.OperDate            AS OperDate_Protocol
@@ -130,6 +134,7 @@ BEGIN
                               AND inIsMovement = FALSE
 
                            UNION ALL
+                            -- 2.2.
                             SELECT MovementProtocol.Id                  AS Id
                                  , MovementProtocol.UserId              AS UserId
                                  , MovementProtocol.OperDate            AS OperDate_Protocol
@@ -150,6 +155,49 @@ BEGIN
                               AND (Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
                               AND inIsMovement = TRUE
      
+                           UNION ALL
+                            -- 3.1.
+                            SELECT MovementProtocol.Id                  AS Id
+                                 , MovementProtocol.UserId              AS UserId
+                                 , MovementProtocol.OperDate            AS OperDate_Protocol
+                                 , MovementProtocol.MovementId          AS MovementId
+                                 , Movement.ParentId                    AS ParentId
+                                 , Movement.StatusId                    AS StatusId_Movement
+                                 , Movement.OperDate                    AS OperDate_Movement
+                                 , Movement.InvNumber                   AS InvNumber_Movement
+                                 , Movement.DescId                      AS DescId_Movement
+                                 , MovementDesc.ItemName                AS DescName_Movement
+                                   -- № п/п
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id ASC) AS Ord
+                            FROM MovementProtocol_arc_arc AS MovementProtocol
+                                 LEFT JOIN Movement ON Movement.Id = MovementProtocol.MovementId
+                                 LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     
+                            WHERE (MovementProtocol.UserId = inUserId OR inUserId = 0)
+                              AND (MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
+                              AND inIsMovement = FALSE
+
+                           UNION ALL
+                            -- 3.2.
+                            SELECT MovementProtocol.Id                  AS Id
+                                 , MovementProtocol.UserId              AS UserId
+                                 , MovementProtocol.OperDate            AS OperDate_Protocol
+                                 , MovementProtocol.MovementId          AS MovementId
+                                 , Movement.ParentId                    AS ParentId
+                                 , Movement.StatusId                    AS StatusId_Movement
+                                 , Movement.OperDate                    AS OperDate_Movement
+                                 , Movement.InvNumber                   AS InvNumber_Movement
+                                 , Movement.DescId                      AS DescId_Movement
+                                 , MovementDesc.ItemName                AS DescName_Movement
+                                   -- № п/п
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id ASC) AS Ord
+                            FROM Movement
+                                 LEFT JOIN MovementProtocol_arc_arc AS MovementProtocol ON MovementProtocol.MovementId = Movement.Id
+                                 LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     
+                            WHERE (MovementProtocol.UserId = inUserId OR inUserId = 0)
+                              AND (Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
+                              AND inIsMovement = TRUE
                            )
         , tmpMovementDate AS (SELECT MovementDate.*
                               FROM MovementDate
