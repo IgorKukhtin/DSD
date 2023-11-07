@@ -133,7 +133,8 @@ BEGIN
            UNION SELECT 'isPartionGoods_20103'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isAsset'                AS Name WHERE/*inIsCeh = FALSE AND*/ vbIsSticker = FALSE
            UNION SELECT 'isReReturnIn'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
-           UNION SELECT 'isCloseInventory'       AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+         --UNION SELECT 'isCloseInventory'       AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+         --UNION SELECT 'isCloseInventory'       AS Name WHERE inIsCeh = TRUE  AND vbIsSticker = FALSE
 
            -- Режим ScaleCeh - маркировка/сортировка
            UNION SELECT 'isModeSorting'          AS Name WHERE inIsCeh = TRUE

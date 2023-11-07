@@ -43,6 +43,7 @@ RETURNS TABLE (Number              Integer
              , isListInventory     Boolean -- Scale + ScaleCeh - инвентаризация только для списка
              , isAsset             Boolean -- Scale + ScaleCeh - открыть справочник ОС
              , isReReturnIn        Boolean -- Scale - открыть журнал документов Возврат от покупателя
+             , isCloseInventory    Boolean
                )
 AS
 $BODY$
@@ -104,13 +105,14 @@ BEGIN
                                        , isListInventory          Boolean
                                        , isAsset                  Boolean
                                        , isReReturnIn             Boolean
+                                       , isCloseInventory         Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
     INSERT INTO _tmpToolsWeighing (Number, MovementDescId, MovementDescId_next, FromId, ToId, FromId_next, ToId_next
                                  , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
                                  , isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isPersonalGroup, isOrderInternal
-                                 , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset, isReReturnIn, ItemName
+                                 , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset, isReReturnIn, isCloseInventory, ItemName
                                   )
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
@@ -176,6 +178,7 @@ BEGIN
             , CASE WHEN tmp.isListInventory     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isListInventory
             , CASE WHEN tmp.isAsset             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isAsset
             , CASE WHEN tmp.isReReturnIn        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReReturnIn
+            , CASE WHEN tmp.isCloseInventory    ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCloseInventory
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
                         THEN 'после Шприцевания' -- 'Упаковка'
@@ -216,7 +219,7 @@ BEGIN
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isListInventory',    'FALSE',                                                     inSession)          END AS isListInventory
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isAsset',            'FALSE',                                                     inSession)          END AS isAsset
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isReReturnIn',       'FALSE',                                                     inSession)          END AS isReReturnIn
-
+                        , CASE WHEN                    vbIsSticker = TRUE  THEN 'TRUE'  ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isCloseInventory',   'TRUE',                                                      inSession)          END AS isCloseInventory
 
                    FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
                   ) AS tmp
@@ -469,6 +472,7 @@ BEGIN
            , _tmpToolsWeighing.isListInventory
            , _tmpToolsWeighing.isAsset
            , _tmpToolsWeighing.isReReturnIn
+           , _tmpToolsWeighing.isCloseInventory
 
        FROM _tmpToolsWeighing
             LEFT JOIN Object AS Object_PriceList              ON Object_PriceList.Id              = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
@@ -582,6 +586,8 @@ BEGIN
             , FALSE AS isListInventory
             , FALSE AS isAsset
             , FALSE AS isReReturnIn
+            , FALSE AS isCloseInventory
+
        FROM (SELECT DISTINCT
                     _tmpToolsWeighing.MovementDescId
                   , _tmpToolsWeighing.OrderById
@@ -598,7 +604,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
