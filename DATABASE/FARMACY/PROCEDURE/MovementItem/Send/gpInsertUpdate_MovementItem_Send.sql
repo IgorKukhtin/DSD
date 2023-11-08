@@ -407,6 +407,7 @@ BEGIN
     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_Cashless())
        AND vbUserId NOT IN (8037524, 758920, 8037524)
+       AND vbFromId <> 183288
     THEN
       -- Для роли "Кассир аптеки"
       IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser

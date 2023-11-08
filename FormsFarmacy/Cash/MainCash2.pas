@@ -3948,6 +3948,14 @@ begin
             end;
           end;
 
+          if (CheckCDS.FieldByName('PriceLoad').asCurrency > 0) and (CheckCDS.FieldByName('PriceLoad').asCurrency < CheckCDS.FieldByName('Price').asCurrency) then
+          begin
+            ShowMessage('Цена товара <' + FieldByName('GoodsName').AsString +
+              '> больше загруженной с сайта. Перезагрузите заказ и повторите отпуск.');
+            exit;
+          end;
+
+
   //        if (FieldByName('Amount').AsCurrency > 0) and
   //           ((FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (DiscountServiceForm.gCode = 0) and (FormParams.ParamByName('SPKindId').Value = 0) or
   //           (FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (FieldByName('Price').AsCurrency > 0) AND
@@ -4635,6 +4643,8 @@ begin
         // ***20.07.16
         CheckCDS.FieldByName('PriceSale').asCurrency :=
           vipList.FieldByName('PriceSale').asCurrency;
+        CheckCDS.FieldByName('PriceLoad').asCurrency :=
+          vipList.FieldByName('PriceLoad').asCurrency;
         CheckCDS.FieldByName('ChangePercent').asCurrency :=
           vipList.FieldByName('ChangePercent').asCurrency;
         CheckCDS.FieldByName('SummChangePercent').asCurrency :=
@@ -5564,6 +5574,9 @@ begin
             nPrice := 0.1;
           if nPrice < 0.1 then
             nPrice := 0.1;
+
+          if (CheckCDS.FieldByName('PriceLoad').asCurrency > 0) and (CheckCDS.FieldByName('PriceLoad').asCurrency < nPrice) then
+            nPrice := CheckCDS.FieldByName('PriceLoad').asCurrency;
 
           if nPrice <> CheckCDS.FieldByName('Price').asCurrency then
           begin

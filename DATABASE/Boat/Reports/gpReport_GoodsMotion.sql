@@ -37,7 +37,9 @@ RETURNS TABLE  (LocationId Integer, DescName_location TVarChar, LocationCode Int
 
               , EKPrice                TFloat -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
               , CostPrice              TFloat -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
-              , OperPriceList          TFloat -- Цена по прайсу без НДС
+              , OperPriceList          TFloat -- Цена по прайсу без НДС  
+              
+              , Amount_basis TFloat --Кол-во - Шаблон сборка модели
 
                 -- Заказ Клиента
               , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar, ModelName_OrderClient TVarChar
@@ -284,6 +286,33 @@ BEGIN
 
                                WHERE inIsOrderClient = TRUE
                               )
+ 
+   -- если по заказам = да нужно показать все узлы, что в документе (закл. комплектующие)
+  , tmpMI_order AS (SELECT tmpList.MovementId_order 
+                         , tmpList.InvNumberFull_OrderClient
+                         , tmpList.FromName_OrderClient
+                         , tmpList.ProductName_OrderClient
+                         , tmpList.CIN_OrderClient
+                         , tmpList.ModelName_OrderClient
+                         , MovementItem.ObjectId AS GoodsId
+                          -- Количество шаблон сборки
+                         , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) AS Amount_basis
+                    FROM tmpMIFloat_OrderClient AS tmpList
+                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpList.MovementId_order
+                                                 AND MovementItem.DescId     = zc_MI_Child()
+                                                 AND MovementItem.isErased   = False
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                           ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods() 
+                          LEFT JOIN MovementItemFloat AS MIFloat_ForCount
+                                                      ON MIFloat_ForCount.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
+
+                          INNER JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = MovementItem.ObjectId
+                    
+                    )
+   
+ 
           -- РЕЗУЛЬТАТ
         , tmpDataAll AS (SELECT tmpMIContainer_group.LocationId
                               , tmpMIContainer_group.GoodsId
@@ -376,6 +405,111 @@ BEGIN
                              OR SUM (tmpMIContainer_group.SummOut)     <> 0
                              OR SUM (tmpMIContainer_group.SummEnd)     <> 0
                         )
+   , _tmpDataAll AS (SELECT tmpDataAll.LocationId
+                          , tmpDataAll.GoodsId
+                          , tmpDataAll.PartionId
+
+                            -- из партии
+                          , tmpDataAll.GoodsSizeId
+                          , tmpDataAll.MeasureId
+                          , tmpDataAll.GoodsGroupId
+                          , tmpDataAll.GoodsTagId
+                          , tmpDataAll.GoodsTypeId
+                          , tmpDataAll.ProdColorId
+                            -- если нужен "поставщик"
+                          , tmpDataAll.FromId_partion
+                            -- S/N
+                          , tmpDataAll.PartNumber
+
+                            -- Заказ Клиента
+                          , tmpDataAll.MovementId_order
+                          , tmpDataAll.InvNumberFull_OrderClient
+                          , tmpDataAll.FromName_OrderClient
+                          , tmpDataAll.ProductName_OrderClient
+                          , tmpDataAll.CIN_OrderClient
+                          , tmpDataAll.ModelName_OrderClient
+
+                            -- кол-во
+                          , tmpDataAll.AmountStart
+                          , tmpDataAll.AmountIn
+                          , tmpDataAll.AmountOut
+                          , tmpDataAll.AmountEnd
+                            -- суммы
+                          , tmpDataAll.SummStart
+                          , tmpDataAll.SummIn
+                          , tmpDataAll.SummOut
+                          , tmpDataAll.SummEnd
+
+                            -- информативно по партии - Кол-во приход
+                          , tmpDataAll.Amount_partion 
+                          , 0 AS Amount_basis
+
+                     FROM tmpDataAll 
+                   UNION ALL
+                     SELECT 0 AS LocationId
+                          , tmpDataAll.GoodsId
+                          , 0 AS PartionId
+
+                            -- из партии
+                          , 0 AS GoodsSizeId
+                          , ObjectLink_Measure.ObjectId    AS MeasureId
+                          , ObjectLink_GoodsGroup.ObjectId AS GoodsGroupId
+                          , ObjectLink_GoodsTag.ObjectId   AS GoodsTagId
+                          , ObjectLink_GoodsType.ObjectId  AS GoodsTypeId
+                          , ObjectLink_ProdColor.ObjectId  AS ProdColorId
+                            -- если нужен "поставщик"
+                          , 0 AS FromId_partion
+                            -- S/N
+                          , '' AS PartNumber
+
+                            -- Заказ Клиента
+                          , tmpDataAll.MovementId_order
+                          , tmpDataAll.InvNumberFull_OrderClient
+                          , tmpDataAll.FromName_OrderClient
+                          , tmpDataAll.ProductName_OrderClient
+                          , tmpDataAll.CIN_OrderClient
+                          , tmpDataAll.ModelName_OrderClient
+
+                            -- кол-во
+                          , 0 AS AmountStart
+                          , 0 AS AmountIn
+                          , 0 AS AmountOut
+                          , 0 AS AmountEnd
+                            -- суммы
+                          , 0 AS SummStart
+                          , 0 AS SummIn
+                          , 0 AS SummOut
+                          , 0 AS SummEnd
+
+                            -- информативно по партии - Кол-во приход
+                          , 0 AS Amount_partion 
+                          , tmpDataAll.Amount_basis
+                     FROm tmpMI_order AS tmpDataAll 
+                          LEFT JOIN (SELECT DISTINCT tmpDataAll.GoodsId, tmpDataAll.MovementId_order
+                                     FROM tmpDataAll) AS tmp
+                                                      ON tmp.MovementId_order = tmpDataAll.MovementId_order
+                                                     AND tmp.GoodsId = tmpDataAll.GoodsId                                        
+                          LEFT JOIN ObjectLink AS ObjectLink_ProdColor
+                                               ON ObjectLink_ProdColor.ObjectId = tmpDataAll.GoodsId
+                                              AND ObjectLink_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsTag
+                                               ON ObjectLink_GoodsTag.ObjectId = tmpDataAll.GoodsId
+                                              AND ObjectLink_GoodsTag.DescId   = zc_ObjectLink_Goods_GoodsTag()
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsType
+                                               ON ObjectLink_GoodsType.ObjectId = tmpDataAll.GoodsId
+                                              AND ObjectLink_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
+                          LEFT JOIN ObjectLink AS ObjectLink_Measure
+                                               ON ObjectLink_Measure.ObjectId = tmpDataAll.GoodsId
+                                              AND ObjectLink_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                               ON ObjectLink_GoodsGroup.ObjectId = tmpDataAll.GoodsId
+                                              AND ObjectLink_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                     WHERE inIsOrderClient = TRUE
+                       AND tmp.GoodsId IS NULL
+
+
+                    )
+
 
        -- РЕЗУЛЬТАТ
        SELECT tmpDataAll.LocationId        AS LocationId
@@ -438,7 +572,9 @@ BEGIN
               -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
             , Object_PartionGoods.CostPrice :: TFloat AS CostPrice
               -- Цена по прайсу без НДС
-            , tmpPriceBasis.ValuePrice      :: TFloat AS OperPriceList
+            , tmpPriceBasis.ValuePrice      :: TFloat AS OperPriceList  
+            
+            , tmpDataAll.Amount_basis ::TFloat
 
               -- Заказ Клиента
             , tmpDataAll.InvNumberFull_OrderClient   ::TVarChar
@@ -458,7 +594,7 @@ BEGIN
               -- надо вернуть дату, тогда в гриде не будет кривых данных
             , CURRENT_TIMESTAMP :: TDateTime   AS tmpDate
 
-       FROM tmpDataAll
+       FROM _tmpDataAll AS tmpDataAll
             -- партия
             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpDataAll.GoodsId
        

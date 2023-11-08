@@ -26,10 +26,10 @@ BEGIN
     RAISE EXCEPTION 'Нет данных для изменения.';
   END IF;
         
-  /*IF inSession <> '3'
+  IF inSession <> '3'
   THEN
     RAISE EXCEPTION 'В разработке.';
-  END IF;*/
+  END IF;
   
   -- из JSON в таблицу
   CREATE TEMP TABLE tblJSON
@@ -68,7 +68,7 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (tblJSON.Id, vbUserId)
    FROM tblJSON;
   
-  --RAISE EXCEPTION 'Выполнено.';  
+  RAISE EXCEPTION 'Выполнено.';  
   
 
 END;

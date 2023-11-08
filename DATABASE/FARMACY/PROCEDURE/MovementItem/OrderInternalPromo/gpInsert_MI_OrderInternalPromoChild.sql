@@ -665,10 +665,10 @@ BEGIN
                                WHERE tmpData.Id IS NULL);
                                
     -- !!!ВРЕМЕННО для ТЕСТА!!!
-/*    IF inSession = zfCalc_UserAdmin()
+    IF inSession = zfCalc_UserAdmin()
     THEN
         RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inSession, inSession, inSession;
-    END IF;*/
+    END IF;
                                
 
 END;

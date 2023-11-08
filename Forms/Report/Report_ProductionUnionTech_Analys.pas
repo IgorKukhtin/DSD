@@ -56,8 +56,11 @@ type
     Amount_container: TcxGridDBColumn;
     OperDate_cuter: TcxGridDBColumn;
     OperDate_real: TcxGridDBColumn;
-    OperDate_ContainerMin: TcxGridDBColumn;
     OperDate_ContainerMax: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
+    actReport_Goods_to: TdsdOpenForm;
+    bbReport_Goods_to: TdxBarButton;
   private
     { Private declarations }
   public
