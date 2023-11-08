@@ -31,6 +31,7 @@ $BODY$
     
     DECLARE vbMovementId_tax Integer;
     DECLARE vbOperDate_Tax TDateTime;
+    DECLARE vbOperDate_Tax_Tax TDateTime;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -98,6 +99,7 @@ BEGIN
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
           , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
+
           , CASE WHEN (CURRENT_DATE >= '01.03.2021' /*OR vbUserId = 5*/)
                   AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
                   AND COALESCE (MovementString_InvNumberRegistered_tax.ValueData, '') = ''
@@ -128,8 +130,10 @@ BEGIN
                  ELSE Movement_Tax.OperDate
             END AS OperDate_Tax
 
+          , Movement_Tax.OperDate AS OperDate_Tax_Tax
+
             INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin, vbIsLongUKTZED, vbDocumentTaxKindId_tax, vbDocumentTaxKindId
-               , vbMovementId_tax, vbOperDate_Tax
+               , vbMovementId_tax, vbOperDate_Tax, vbOperDate_Tax_Tax
 
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
                             THEN inMovementId
@@ -1289,8 +1293,17 @@ BEGIN
 
            --, COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNum
            , CASE WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE tmpMI.NPP END :: Integer AS LineNum
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin < '01.12.2018' THEN 'X'
-                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay(), zc_Enum_DocumentTaxKind_ChangeErr()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
+
+           , CASE WHEN tmpContract.ContractId = 888997 --  в корректировках по Сильпо (только по 12 договору) в печатной форме - Все сводные корректировки, которые будут формироваться с привязкой до 01.10.2023 должны выгружаться без отметки "До зведеної податкової накладної".
+                   AND vbOperDate_Tax_Tax < '01.10.2023' THEN ''
+                  
+                --WHEN tmpContract.ContractId = 888997 --  в корректировках по Сильпо (только по 12 договору) в печатной форме - Все сводные корректировки, которые будут формироваться с привязкой до 01.10.2023 должны выгружаться без отметки "До зведеної податкової накладної".
+                -- AND vbUserId = 5 THEN EXTRACT (MONTH FROM vbOperDate_Tax_Tax) :: TVarChar
+                  
+                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
+                   AND vbOperDate_begin < '01.12.2018' THEN 'X'
+                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay(), zc_Enum_DocumentTaxKind_ChangeErr())
+                   AND vbOperDate_begin >= '01.12.2018' THEN '4'
                   ELSE ''
              END    AS TaxKind --признак  сводной корректировки
 
