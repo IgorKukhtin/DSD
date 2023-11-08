@@ -235,7 +235,7 @@ inherited OrderInternal_deflectionForm: TOrderInternal_deflectionForm
             DataBinding.FieldName = 'AmountRemains_child_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
