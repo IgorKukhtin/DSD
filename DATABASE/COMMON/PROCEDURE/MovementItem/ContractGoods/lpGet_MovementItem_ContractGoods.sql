@@ -13,10 +13,12 @@ CREATE OR REPLACE FUNCTION lpGet_MovementItem_ContractGoods(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
-             , ValuePrice TFloat
+             , ValuePrice TFloat, ValuePrice_orig TFloat
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
-             , CurrencyId Integer, CurrencyValue TFloat, ParValue TFloat
+             , PaidKindId Integer, PaidKindName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
+             , CurrencyValue TFloat, ParValue TFloat
               )
 AS
 $BODY$
@@ -30,6 +32,7 @@ BEGIN
                                        , MovementItem.ObjectId          AS CurrencyId_value
                                        , MovementItem.Amount            AS CurrencyValue
                                        , MIFloat_ParValue.ValueData     AS ParValue
+                                       , MILinkObject_PaidKind.ObjectId AS PaidKindId
                                   FROM Movement
                                        LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -40,6 +43,9 @@ BEGIN
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                                         ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                                        AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                                        ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                                       AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
                                   WHERE Movement.OperDate = inOperDate - INTERVAL '1 DAY'
                                     AND Movement.DescId   = zc_Movement_CurrencyList()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -51,7 +57,8 @@ BEGIN
                                , MLO_Contract.ObjectId                          AS ContractId
                                , ObjectLink_Contract_Juridical.ChildObjectId    AS JuridicalId
                                , MLO_Currency.ObjectId                          AS CurrencyId
-                                                                                
+                               , ObjectLink_Contract_PaidKind.ChildObjectId     AS PaidKindId
+                                                                           
                                , MovementItem.Id                                AS MovementItemId
                                , MovementItem.ObjectId                          AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
@@ -69,6 +76,9 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                     ON ObjectLink_Contract_Juridical.ObjectId = MLO_Contract.ObjectId
                                                    AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                               LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                    ON ObjectLink_Contract_PaidKind.ObjectId = MLO_Contract.ObjectId
+                                                   AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
@@ -92,23 +102,30 @@ BEGIN
               , tmpData.MovementItemId
               , tmpData.GoodsId
               , tmpData.GoodsKindId
-              , (tmpData.ValuePrice / CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
+              , (tmpData.ValuePrice * CASE WHEN COALESCE (tmpData.CurrencyId, 0) IN (0, zc_Enum_Currency_Basis()) THEN 1
                                            WHEN tmpCurrencyList.CurrencyValue > 0 AND tmpCurrencyList.ParValue > 0 THEN tmpCurrencyList.CurrencyValue / tmpCurrencyList.ParValue
                                            WHEN tmpCurrencyList.CurrencyValue > 0 THEN tmpCurrencyList.CurrencyValue
                                            ELSE 1
                                       END) :: TFloat AS ValuePrice
+              , tmpData.ValuePrice :: TFloat AS ValuePrice_orig
               , tmpData.JuridicalId
               , Object_Juridical.ValueData AS JuridicalName
               , Object_Contract_InvNumber_View.ContractId   AS ContractId
               , Object_Contract_InvNumber_View.ContractCode AS ContractCode
               , Object_Contract_InvNumber_View.InvNumber    AS ContractName
-              , tmpData.CurrencyId
+              , tmpData.PaidKindId :: Integer AS PaidKindId
+              , Object_PaidKind.ValueData     AS PaidKindName
+              , tmpData.CurrencyId :: Integer AS CurrencyId
+              , Object_Currency.ValueData     AS CurrencyName
               , tmpCurrencyList.CurrencyValue :: TFloat
               , tmpCurrencyList.ParValue      :: TFloat
          FROM tmpData
               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
               LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = tmpData.ContractId
               LEFT JOIN tmpCurrencyList ON tmpCurrencyList.CurrencyId = tmpData.CurrencyId
+                                       AND tmpCurrencyList.PaidKindId = tmpData.PaidKindId
+              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
+              LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = tmpData.CurrencyId
          WHERE tmpData.Ord = 1
         ;
 
