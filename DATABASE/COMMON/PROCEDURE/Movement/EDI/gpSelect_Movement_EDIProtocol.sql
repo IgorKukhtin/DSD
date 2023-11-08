@@ -39,6 +39,16 @@ BEGIN
                     FROM MovementProtocol_arc AS MovementProtocol
                          
                     WHERE MovementProtocol.MovementId = inMovementId AND MovementProtocol.isInsert IS NULL
+
+                   UNION ALL
+                    SELECT inMovementId AS Id
+                         , XPATH ('/XML/EDIEvent/@Value', MovementProtocol.ProtocolData :: XML) AS X
+                         , MovementProtocol.OperDate
+                         , MovementProtocol.UserId
+                    FROM MovementProtocol_arc_arc AS MovementProtocol
+                         
+                    WHERE MovementProtocol.MovementId = inMovementId AND MovementProtocol.isInsert IS NULL
+
                    ) AS MovementProtocolData
              ) AS MovementProtocolData
              LEFT JOIN Object AS Object_User ON Object_User.Id = MovementProtocolData.UserId; 
