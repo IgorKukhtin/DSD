@@ -246,6 +246,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Options.Editing = False
         Width = 70
       end
+      object OperDatePartner: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
+        DataBinding.FieldName = 'OperDatePartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        Width = 69
+      end
       object OperDate_parent: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
         DataBinding.FieldName = 'OperDate_parent'
