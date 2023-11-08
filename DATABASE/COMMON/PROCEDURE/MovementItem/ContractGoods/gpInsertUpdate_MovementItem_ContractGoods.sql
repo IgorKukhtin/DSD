@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
     IN inisSave                 Boolean   , -- cохранить да/нет
     IN inPrice                  TFloat    , --
     IN inChangePrice            TFloat    , -- Скидка в цене
-    IN inChangePercent          TFloat    , -- % Скидки
+    IN inChangePercent          TFloat    , -- % Скидки 
+    IN inCountForAmount         TFloat    , -- Коэфф перевода из кол-ва поставщика
     IN inComment                TVarChar  , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -110,6 +112,7 @@ BEGIN
                                                       , inPrice        := inPrice
                                                       , inChangePrice   := inChangePrice
                                                       , inChangePercent := inChangePercent
+                                                      , inCountForAmount:= inCountForAmount
                                                       , inComment      := inComment
                                                       , inUserId       := vbUserId
                                                        ) AS tmp;
@@ -121,6 +124,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.23         *
  28.07.22         *
  05.07.21         *
 */

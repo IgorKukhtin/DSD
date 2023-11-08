@@ -700,10 +700,23 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_PriceNalog() RETURNS Integer AS $BOD
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PriceNalog', 'Ставка налога' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceNalog');  
  
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DiffPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiffPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DiffPrice', 'Разрешенный % отклонение для цены' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiffPrice');  
+ 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_RoundPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_RoundPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_RoundPrice', 'Кол-во знаков для округления' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_RoundPrice');  
+ 
+    
+ 
+ 
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 08.11.23         * zc_MovementFloat_RoundPrice
+                    zc_MovementFloat_DiffPrice       
  04.07.23         * zc_MovementFloat_PriceNalog
  02.05.23         * zc_MovementFloat_TotalSummAvCardSecond
                     zc_MovementFloat_TotalSummAvCardSecondRecalc

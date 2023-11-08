@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, TDateTime, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -11,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
     --IN inEndBeginDate        TDateTime , -- По какую дату действует
    OUT outEndBeginDate       TDateTime , -- По какую дату действует
     IN inContractId          Integer   , -- 
-    IN inCurrencyId          Integer   , -- Валюта 
+    IN inCurrencyId          Integer   , -- Валюта
+    IN inDiffPrice           TFloat    ,  -- Разрешенный % отклонение для цены
+    IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления
     IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -31,6 +34,8 @@ BEGIN
                                                 --, inEndBeginDate := inEndBeginDate
                                                 , inContractId   := inContractId 
                                                 , inCurrencyId   := inCurrencyId
+                                                , inDiffPrice    := inDiffPrice
+                                                , inRoundPrice   := inRoundPrice
                                                 , inComment      := inComment
                                                 , inUserId       := vbUserId
                                                  ) AS tmp;
@@ -42,6 +47,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.23         *
  15.09.22         *
  05.07.21         *
 */

@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ContractGoods(
     IN inisBonusNo           Boolean   , -- нет начисления по бонусам
     IN inPrice               TFloat    , -- 
     IN inChangePrice         TFloat    , -- Скидка в цене
-    IN inChangePercent       TFloat    , -- % Скидки
+    IN inChangePercent       TFloat    , -- % Скидки 
+    IN inCountForAmount      TFloat    , -- Коэфф перевода из кол-ва поставщика
     IN inComment             TVarChar  , -- 
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -44,7 +46,9 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForAmount(), ioId, inCountForAmount);
 
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_BonusNo(), ioId, inisBonusNo);
@@ -75,7 +79,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 2807
+ 08.11.23         *
+ 28.07
  05.07.21         *
 */
 

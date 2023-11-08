@@ -24,11 +24,13 @@ BEGIN
                                                   , ioInvNumber    := vbInvNumber
                                                   , inOperDate     := inOperDate
                                                   , inContractId   := tmp.ContractId
+                                                  , inCurrencyId   := tmp.CurrencyId
+                                                  , inDiffPrice    := tmp.DiffPrice ::TFloat
+                                                  , inRoundPrice   := tmp.RoundPrice::TFloat
                                                   , inComment      := '' ::TVarChar
                                                   , inUserId       := vbUserId
                                                    )
      FROM gpGet_Movement_ContractGoods (ioId, inOperDate, FALSE, inSession) AS tmp;
-
 
      -- записываем строки ContractGoodsGoods документа
      PERFORM gpInsertUpdate_MovementItem_ContractGoods (ioId                 := 0

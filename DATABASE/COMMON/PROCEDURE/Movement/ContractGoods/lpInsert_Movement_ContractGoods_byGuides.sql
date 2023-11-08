@@ -73,6 +73,7 @@ BEGIN
                                                        , inPrice        := inPrice 
                                                        , inChangePrice   := 0 ::TFloat
                                                        , inChangePercent := 0 ::TFloat
+                                                       , inCountForAmount:= 1 ::TFloat
                                                        , inComment      := '' ::TVarChar
                                                        , inUserId       := inUserId
                                                         ) AS tmp;
