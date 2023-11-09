@@ -1,8 +1,8 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{A409EC74-B7D5-47CD-BA6A-8C1B58C73E85}</ProjectGuid>
-        <MainSource>ProjectComponent_D28.dpk</MainSource>
-        <ProjectVersion>19.5</ProjectVersion>
+        <MainSource>ProjectComponent_D29.dpk</MainSource>
+        <ProjectVersion>20.1</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -65,11 +65,11 @@
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <SanitizedProjectName>ProjectComponent_D28</SanitizedProjectName>
+        <SanitizedProjectName>ProjectComponent_D29</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_BplOutput>..\BIN\Bpl\$(ProductVersion)</DCC_BplOutput>
-        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;ZLibExD28;fs28;frx28;frxDB28;frxe28;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxThemeRS28;cxDataRS28;cxEditorsRS28;dxmdsRS28;cxPageControlRS28;dxLayoutControlRS28;dxComnRS28;cxTreeListRS28;cxExportRS28;dxBarRS28;dxBarExtItemsRS28;cxGridRS28;cxPivotGridRS28;cxVerticalGridRS28;dxSkinsCoreRS28;GMLib_D28_VCL;GMLib_D28;cxSchedulerRS28;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;ZComponentD28;ZParseSqlD28;ZCoreD28;ZDbcD28;ZPlainD28;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;ZLibExD29;fs29;frx29;frxDB29;frxe29;dxCoreRS29;cxLibraryRS29;dxGDIPlusRS29;dxThemeRS29;cxDataRS29;cxEditorsRS29;dxmdsRS29;cxPageControlRS29;dxLayoutControlRS29;dxComnRS29;cxTreeListRS29;cxExportRS29;dxBarRS29;dxBarExtItemsRS29;cxGridRS29;cxPivotGridRS29;cxVerticalGridRS29;dxSkinsCoreRS29;GMLib_D29_VCL;GMLib_D29;cxSchedulerRS29;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;ZComponentD29;ZParseSqlD29;ZCoreD29;ZDbcD29;ZPlainD29;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -83,7 +83,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxThemeRS28;cxDataRS28;cxEditorsRS28;dxmdsRS28;cxPageControlRS28;dxLayoutControlRS28;dxComnRS28;cxTreeListRS28;cxExportRS28;dxBarRS28;dxBarExtItemsRS28;cxGridRS28;cxPivotGridRS28;cxVerticalGridRS28;dxSkinsCoreRS28;GMLib_D28_VCL;GMLib_D28;cxSchedulerRS28;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;dxCoreRS29;cxLibraryRS29;dxGDIPlusRS29;dxThemeRS29;cxDataRS29;cxEditorsRS29;dxmdsRS29;cxPageControlRS29;dxLayoutControlRS29;dxComnRS29;cxTreeListRS29;cxExportRS29;dxBarRS29;dxBarExtItemsRS29;cxGridRS29;cxPivotGridRS29;cxVerticalGridRS29;dxSkinsCoreRS29;GMLib_D29_VCL;GMLib_D29;cxSchedulerRS29;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -136,32 +136,32 @@
         <DCCReference Include="IndyProtocols.dcp"/>
         <DCCReference Include="vclie.dcp"/>
         <DCCReference Include="DbxCommonDriver.dcp"/>
-        <DCCReference Include="dxCoreRS28.dcp"/>
-        <DCCReference Include="cxLibraryRS28.dcp"/>
-        <DCCReference Include="dxGDIPlusRS28.dcp"/>
-        <DCCReference Include="dxmdsRS28.dcp"/>
-        <DCCReference Include="dxBarRS28.dcp"/>
-        <DCCReference Include="dxComnRS28.dcp"/>
-        <DCCReference Include="dxBarExtItemsRS28.dcp"/>
-        <DCCReference Include="cxGridRS28.dcp"/>
-        <DCCReference Include="cxExportRS28.dcp"/>
-        <DCCReference Include="cxPivotGridRS28.dcp"/>
-        <DCCReference Include="cxTreeListRS28.dcp"/>
-        <DCCReference Include="cxVerticalGridRS28.dcp"/>
-        <DCCReference Include="fs28.dcp"/>
-        <DCCReference Include="frx28.dcp"/>
-        <DCCReference Include="frxe28.dcp"/>
-        <DCCReference Include="frxDB28.dcp"/>
-        <DCCReference Include="ZLibExD28.dcp"/>
-        <DCCReference Include="GMLib_D28.dcp"/>
-        <DCCReference Include="GMLib_D28_VCL.dcp"/>
-        <DCCReference Include="cxSchedulerRS28.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
-        <DCCReference Include="ZComponentD28.dcp"/>
-        <DCCReference Include="ZParseSqlD28.dcp"/>
-        <DCCReference Include="ZCoreD28.dcp"/>
-        <DCCReference Include="ZDbcD28.dcp"/>
-        <DCCReference Include="ZPlainD28.dcp"/>
+        <DCCReference Include="dxCoreRS29.dcp"/>
+        <DCCReference Include="cxLibraryRS29.dcp"/>
+        <DCCReference Include="dxGDIPlusRS29.dcp"/>
+        <DCCReference Include="dxmdsRS29.dcp"/>
+        <DCCReference Include="dxBarRS29.dcp"/>
+        <DCCReference Include="dxComnRS29.dcp"/>
+        <DCCReference Include="dxBarExtItemsRS29.dcp"/>
+        <DCCReference Include="cxGridRS29.dcp"/>
+        <DCCReference Include="cxExportRS29.dcp"/>
+        <DCCReference Include="cxPivotGridRS29.dcp"/>
+        <DCCReference Include="cxTreeListRS29.dcp"/>
+        <DCCReference Include="cxVerticalGridRS29.dcp"/>
+        <DCCReference Include="fs29.dcp"/>
+        <DCCReference Include="frx29.dcp"/>
+        <DCCReference Include="frxe29.dcp"/>
+        <DCCReference Include="frxDB29.dcp"/>
+        <DCCReference Include="ZLibExD29.dcp"/>
+        <DCCReference Include="GMLib_D29.dcp"/>
+        <DCCReference Include="GMLib_D29_VCL.dcp"/>
+        <DCCReference Include="cxSchedulerRS29.dcp"/>
+        <DCCReference Include="dxSkinsCoreRS29.dcp"/>
+        <DCCReference Include="ZComponentD29.dcp"/>
+        <DCCReference Include="ZParseSqlD29.dcp"/>
+        <DCCReference Include="ZCoreD29.dcp"/>
+        <DCCReference Include="ZDbcD29.dcp"/>
+        <DCCReference Include="ZPlainD29.dcp"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
         <DCCReference Include="..\SOURCE\UtilConst.pas"/>
         <DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -253,7 +253,24 @@
         </DCCReference>
         <DCCReference Include="..\SOURCE\EUSignCP\EUSignCP.pas"/>
         <DCCReference Include="..\SOURCE\EUSignCP\EUSignCPOwnUI.pas"/>
-        <None Include="ModelSupport_ProjectComponent_D28\default.txaPackage"/>
+        <DCCReference Include="..\SOURCE\StorageSQLite.pas"/>
+        <DCCReference Include="..\SOURCE\GoogleOTPDialogPsw.pas">
+            <Form>GoogleOTPDialogPswForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\GoogleOTPRegistration.pas">
+            <Form>GoogleOTPRegistrationForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\GoogleOTP.pas"/>
+        <DCCReference Include="..\SOURCE\PriorityPause.pas">
+            <Form>PriorityPauseForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\UAECMRXML.pas"/>
+        <None Include="ModelSupport_ProjectComponent_D29\default.txaPackage"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -272,7 +289,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">ProjectComponent_D28.dpk</Source>
+                    <Source Name="MainSource">ProjectComponent_D29.dpk</Source>
                 </Source>
                 <VersionInfo>
                     <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
@@ -302,15 +319,15 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D28.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D29.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
-                <DeployFile LocalName="..\BIN64\Bpl\21.0\ProjectComponent_D28.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\BIN\Bpl\22.0\ProjectComponent_D28.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\BIN\Bpl\22.0\ProjectComponent_D28.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN64\Bpl\21.0\ProjectComponent_D29.bpl" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\Bpl\22.0\ProjectComponent_D29.bpl" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\BIN\Bpl\23.0\ProjectComponent_D29.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>ProjectComponent_D28.bpl</RemoteName>
+                        <RemoteName>ProjectComponent_D29.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -400,6 +417,16 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
+                <DeployClass Name="AndroidSplashImageDefV21">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-anydpi-v21</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-anydpi-v21</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="AndroidSplashStyles">
                     <Platform Name="Android">
                         <RemoteDir>res\values</RemoteDir>
@@ -420,6 +447,66 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
+                <DeployClass Name="AndroidSplashStylesV31">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\values-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_AdaptiveIcon">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-anydpi-v26</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-anydpi-v26</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_AdaptiveIconBackground">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_AdaptiveIconForeground">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_AdaptiveIconMonochrome">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_AdaptiveIconV33">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-anydpi-v33</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-anydpi-v33</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="Android_Colors">
                     <Platform Name="Android">
                         <RemoteDir>res\values</RemoteDir>
@@ -427,6 +514,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\values</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_ColorsDark">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values-night-v21</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\values-night-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -597,6 +694,56 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\values</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_VectorizedNotificationIcon">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-anydpi-v24</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-anydpi-v24</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_VectorizedSplash">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_VectorizedSplashDark">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-night-anydpi-v21</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-night-anydpi-v21</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_VectorizedSplashV31">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-anydpi-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-anydpi-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_VectorizedSplashV31Dark">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-night-anydpi-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-night-anydpi-v31</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

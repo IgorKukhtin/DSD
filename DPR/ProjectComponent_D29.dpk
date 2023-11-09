@@ -1,4 +1,4 @@
-package ProjectComponent_D28;
+package ProjectComponent_D29;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -45,32 +45,32 @@ requires
   IndyProtocols,
   vclie,
   DbxCommonDriver,
-  dxCoreRS28,
-  cxLibraryRS28,
-  dxGDIPlusRS28,
-  dxmdsRS28,
-  dxBarRS28,
-  dxComnRS28,
-  dxBarExtItemsRS28,
-  cxGridRS28,
-  cxExportRS28,
-  cxPivotGridRS28,
-  cxTreeListRS28,
-  cxVerticalGridRS28,
-  fs28,
-  frx28,
-  frxe28,
-  frxDB28,
-  ZLibExD28,
-  GMLib_D28,
-  GMLib_D28_VCL,
-  cxSchedulerRS28,
-  dxSkinsCoreRS28,
-  ZComponentD28,
-  ZParseSqlD28,
-  ZCoreD28,
-  ZDbcD28,
-  ZPlainD28;
+  dxCoreRS29,
+  cxLibraryRS29,
+  dxGDIPlusRS29,
+  dxmdsRS29,
+  dxBarRS29,
+  dxComnRS29,
+  dxBarExtItemsRS29,
+  cxGridRS29,
+  cxExportRS29,
+  cxPivotGridRS29,
+  cxTreeListRS29,
+  cxVerticalGridRS29,
+  fs29,
+  frx29,
+  frxe29,
+  frxDB29,
+  ZLibExD29,
+  GMLib_D29,
+  GMLib_D29_VCL,
+  cxSchedulerRS29,
+  dxSkinsCoreRS29,
+  ZComponentD29,
+  ZParseSqlD29,
+  ZCoreD29,
+  ZDbcD29,
+  ZPlainD29;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -149,6 +149,14 @@ contains
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
-  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  StorageSQLite in '..\SOURCE\StorageSQLite.pas',
+  GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  GoogleOTP in '..\SOURCE\GoogleOTP.pas',
+  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
+  DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
 
 end.
