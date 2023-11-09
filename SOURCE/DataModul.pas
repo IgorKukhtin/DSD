@@ -18,7 +18,9 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
   {$IFDEF VER330} , cxImageList, System.ImageList {$ENDIF}
-  {$IFDEF VER340} , cxImageList, System.ImageList {$ENDIF};
+  {$IFDEF VER340} , cxImageList, System.ImageList {$ENDIF}
+  {$IFDEF VER350} , cxImageList, System.ImageList {$ENDIF}
+  {$IFDEF VER360} , cxImageList, System.ImageList {$ENDIF};
 
 type
 
