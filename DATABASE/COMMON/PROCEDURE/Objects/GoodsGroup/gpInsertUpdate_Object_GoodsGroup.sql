@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_GoodsGroup()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                  Integer   ,    -- ключ объекта <Группа товаров>
@@ -10,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
     IN inTaxImport           TVarChar  ,    -- признак импортированного товара
     IN inDKPP                TVarChar  ,    -- Послуги згідно з ДКПП
     IN inTaxAction           TVarChar  ,    -- Код виду діяльності сільск-господар товаровиробника
-    IN inName                TVarChar  ,    -- Название объекта <Группа товаров>
+    IN inName                TVarChar  ,    -- Название объекта <Группа товаров> 
+    IN inCodeUKTZED_new      TVarChar  , --
+    IN inDateUKTZED_new      TDateTime , --
     IN inParentId            Integer   ,    -- ссылка на группу товаров
     IN inGroupStatId         Integer   ,    -- ссылка на группу товаров (статистика)
     IN inGoodsGroupAnalystId Integer   ,    -- ***Группа аналитики
@@ -73,7 +76,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
 
    -- сохранили свойство
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_UKTZED(), ioId, inCodeUKTZED);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_UKTZED(), ioId, inCodeUKTZED); 
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_UKTZED_new(), ioId, inCodeUKTZED_new);
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsGroup_UKTZED_new(), ioId, inDateUKTZED_new);
+     
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_TaxImport(), ioId, inTaxImport);
    -- сохранили свойство
@@ -635,6 +643,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.11.23         *
  10.03.17         *
  18.11.15         * add zc_ObjectLink_GoodsGroup_InfoMoney
  14.04.15         * add GoodsPlatform

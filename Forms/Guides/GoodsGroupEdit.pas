@@ -23,7 +23,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
   TGoodsGroupEditForm = class(TParentForm)
@@ -72,6 +72,10 @@ type
     cxLabel12: TcxLabel;
     ceTaxAction: TcxTextEdit;
     ceisAsset: TcxCheckBox;
+    cxLabel13: TcxLabel;
+    ceCodeUKTZED_new: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    edDateUKTZED_new: TcxDateEdit;
   private
     { Private declarations }
   public
