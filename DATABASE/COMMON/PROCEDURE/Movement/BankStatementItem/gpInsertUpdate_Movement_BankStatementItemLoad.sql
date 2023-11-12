@@ -44,7 +44,7 @@ BEGIN
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
  
 
-    IF vbUserId = '5' AND 1=0 THEN inOperDate:= inOperDate + INTERVAL '1 DAY'; END IF;
+    IF vbUserId = '5' AND 1=1 THEN inOperDate:= inOperDate + INTERVAL '10 DAY'; END IF;
 
     --
   --IF inBankMFOMain = '380805' THEN inAmount:= -1 * inAmount; END IF;
