@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_UKTZED(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , CodeUKTZED TVarChar, CodeUKTZED_Calc TVarChar, CodeUKTZED_group TVarChar
+             , CodeUKTZED TVarChar, CodeUKTZED_Calc TVarChar, CodeUKTZED_group TVarChar 
+             , CodeUKTZED_new TVarChar, DateUKTZED_new TDateTime
              , TaxImport TVarChar, TaxImport_Calc TVarChar, TaxImport_Group TVarChar
              , DKPP TVarChar, DKPP_Calc TVarChar, DKPP_Group TVarChar
              , TaxAction TVarChar, TaxAction_Calc TVarChar, TaxAction_Group TVarChar
@@ -49,7 +50,10 @@ BEGIN
             , Object_Goods.ValueData      AS Name
             , ObjectString_Goods_UKTZED.ValueData AS CodeUKTZED
             , CASE WHEN ObjectString_Goods_UKTZED.ValueData <> '' THEN ObjectString_Goods_UKTZED.ValueData ELSE tmpUKTZED.CodeUKTZED END :: TVarChar AS CodeUKTZED_Calc
-            , tmpUKTZED.CodeUKTZED        AS CodeUKTZED_group
+            , tmpUKTZED.CodeUKTZED        AS CodeUKTZED_group   
+            
+            , ObjectString_Goods_UKTZED_new.ValueData ::TVarChar  AS CodeUKTZED_new
+            , ObjectDate_Goods_UKTZED_new.ValueData   ::TDateTime AS DateUKTZED_new
 
             , ObjectString_Goods_TaxImport.ValueData AS TaxImport
             , CASE WHEN ObjectString_Goods_TaxImport.ValueData <> '' THEN ObjectString_Goods_TaxImport.ValueData ELSE tmpTaxImport.TaxImport END :: TVarChar AS TaxImport_Calc
@@ -172,6 +176,13 @@ BEGIN
                                    AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
              LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                    ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+             LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                  ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                 AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
+
              LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
                                     ON ObjectString_Goods_TaxImport.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
@@ -203,7 +214,8 @@ ALTER FUNCTION gpSelect_Object_Goods_UKTZED (Boolean, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.23         *
  06.01.17         * add CodeUKTZED
 */
 

@@ -487,7 +487,7 @@ BEGIN
                                    , tmpContainer.GoodsKindId
                                    , tmpContainer.Amount_start
                                    , tmpContainer.Amount_next
-                              FROM tmpContaine
+                              FROM tmpContainer
                               WHERE MIDescId = zc_MI_Child()
                              )
 
@@ -530,8 +530,8 @@ BEGIN
            , Object_Goods.ObjectCode                    AS GoodsCode
            , Object_Goods.ValueData                     AS GoodsName  
                       
-           , CASE WHEN tmpData.MIDescId = zc_MI_Master() THEN Object_GoodsKind.ValueData ELSE NULL END ::TVarChar AS GoodsKindName
-           , CASE WHEN tmpData.MIDescId = zc_MI_Child()  THEN Object_GoodsKind.ValueData ELSE NULL END ::TVarChar AS GoodsKindName_child
+           , CASE WHEN tmpData.MIDescId = zc_MI_Child() THEN Object_GoodsKind.ValueData ELSE NULL END ::TVarChar AS GoodsKindName
+           , CASE WHEN tmpData.MIDescId = zc_MI_Master()  THEN Object_GoodsKind.ValueData ELSE NULL END ::TVarChar AS GoodsKindName_child
            , Object_Measure.ValueData                   AS MeasureName
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull

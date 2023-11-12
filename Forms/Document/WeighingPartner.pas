@@ -182,6 +182,8 @@ type
     PartionGoods: TcxGridDBColumn;
     AssetName_two: TcxGridDBColumn;
     AssetName: TcxGridDBColumn;
+    cxLabel25: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
   private
   public
   end;

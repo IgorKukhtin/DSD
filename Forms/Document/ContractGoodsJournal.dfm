@@ -491,6 +491,24 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             Options.Editing = False
             Width = 78
           end
+          object DiffPrice: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'. '#1076#1083#1103' '#1094#1077#1085#1099
+            DataBinding.FieldName = 'DiffPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085#1085#1099#1081' % '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1099
+            Options.Editing = False
+            Width = 70
+          end
+          object RoundPrice: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1085'. '#1076#1083#1103' '#1086#1082#1088#1091#1075#1083'.'
+            DataBinding.FieldName = 'RoundPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1085#1072#1082#1086#1074' '#1076#1083#1103' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end

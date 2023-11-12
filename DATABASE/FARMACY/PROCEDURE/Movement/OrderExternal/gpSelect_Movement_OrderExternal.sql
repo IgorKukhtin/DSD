@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_OrderExternal()
+-- Function: gpSelect_Movement_OrderExternal_Ol()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar);
 
@@ -48,15 +48,37 @@ BEGIN
 
      vbCURRENT_DOW := CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN 7 ELSE EXTRACT (DOW FROM CURRENT_DATE) END ; -- день недели сегодня
 
-     -- raise notice'ObjectProtocol 1: %', CLOCK_TIMESTAMP();
-     
-     CREATE TEMP TABLE tmpMovement_OrderExternal ON COMMIT DROP AS
+      -- raise notice'ObjectProtocol 1: %', CLOCK_TIMESTAMP();
+
+     CREATE TEMP TABLE tmpMovement_OrderExternalAll ON COMMIT DROP AS
      WITH
         tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                       UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                       UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                       )
-      , tmpUnit  AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+      SELECT Movement.Id                                        AS Id
+           , Movement.InvNumber                                 AS InvNumber
+           , Movement.OperDate                                  AS OperDate
+           , Movement.StatusId                                  AS StatusId
+           , MovementLinkObject_To.ObjectId                     AS ToId
+       FROM Movement
+                                                             
+            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId 
+                                                             
+            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                           
+       WHERE Movement.DescId = zc_Movement_OrderExternal()
+         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+                                         
+     ANALYSE tmpMovement_OrderExternalAll;
+                                         
+      -- raise notice'ObjectProtocol 2: %', CLOCK_TIMESTAMP();
+           
+     CREATE TEMP TABLE tmpMovement_OrderExternal ON COMMIT DROP AS
+     WITH
+        tmpUnit  AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                      FROM ObjectLink AS ObjectLink_Unit_Juridical
                         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
@@ -74,7 +96,7 @@ BEGIN
            , MovementLinkObject_From.ObjectId                   AS FromId
            , Object_From.ObjectCode                             AS FromCode
            , Object_From.ValueData                              AS FromName
-           , MovementLinkObject_To.ObjectId                     AS ToId
+           , Movement.ToId                                      AS ToId
            , Object_To.Code                                     AS ToCode
            , Object_To.Name                                     AS ToName
            , Object_To.JuridicalId                              AS JuridicalId
@@ -89,10 +111,8 @@ BEGIN
            , COALESCE(MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred          
 
-       FROM Movement
+       FROM tmpMovement_OrderExternalAll AS Movement
                                          
-            JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId 
-
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
@@ -117,13 +137,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                         
-            JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+            INNER JOIN tmpUnit ON tmpUnit.UnitId = Movement.ToId
 
-            LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = Movement.ToId
                                                   
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -135,13 +151,12 @@ BEGIN
                                            ON MLM_Master.MovementId = Movement.Id
                                           AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MLM_Master.MovementChildId
-
-       WHERE Movement.DescId = zc_Movement_OrderExternal()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+            
+       ;
                                          
      ANALYSE tmpMovement_OrderExternal;
                                          
-     -- raise notice'ObjectProtocol 2: %', CLOCK_TIMESTAMP();
+      -- raise notice'ObjectProtocol 21: %', CLOCK_TIMESTAMP();
      
      
      CREATE TEMP TABLE tmpOrderShedule ON COMMIT DROP AS
@@ -169,7 +184,7 @@ BEGIN
      
      ANALYSE tmpOrderShedule;
                                          
-     -- raise notice'ObjectProtocol 3: %', CLOCK_TIMESTAMP();
+      -- raise notice'ObjectProtocol 3: %', CLOCK_TIMESTAMP();
                                          
       
      RETURN QUERY
@@ -354,7 +369,7 @@ BEGIN
                            ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
     ;
 
-     -- raise notice'ObjectProtocol 20: %', CLOCK_TIMESTAMP();
+      -- raise notice'ObjectProtocol 20: %', CLOCK_TIMESTAMP();
 
 END;
 $BODY$

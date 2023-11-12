@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_WeighingPartner_bySale(
     IN inGoodsKindId      Integer      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, InvNumber TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
              , Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
@@ -57,6 +57,7 @@ BEGIN
 
    WITH -- Взвешивания
    tmpWeighingPartner AS (SELECT Movement.*
+                               , MovementDate_OperDatePartner.ValueData ::TDateTime AS OperDatePartner
                                , MovementDate_StartWeighing.ValueData  AS StartWeighing
                                , MovementDate_EndWeighing.ValueData    AS EndWeighing
                           FROM Movement
@@ -66,6 +67,9 @@ BEGIN
                                LEFT JOIN MovementDate AS MovementDate_EndWeighing
                                                       ON MovementDate_EndWeighing.MovementId =  Movement.Id
                                                      AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
+                               LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                      ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                     AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                           WHERE Movement.ParentId = inMovementId_sale
                             AND Movement.DescId   = zc_Movement_WeighingPartner()
                           )
@@ -73,6 +77,7 @@ BEGIN
  , tmpMovementItem AS (SELECT tmpWeighingPartner.Id AS MovementId
                             , tmpWeighingPartner.InvNumber
                             , tmpWeighingPartner.OperDate
+                            , tmpWeighingPartner.OperDatePartner
                             , tmpWeighingPartner.StartWeighing
                             , tmpWeighingPartner.EndWeighing
                             , MovementItem.ObjectId
@@ -115,7 +120,8 @@ BEGIN
 
  , tmpMI AS (SELECT MovementItem.MovementId
                   , MovementItem.InvNumber
-                  , MovementItem.OperDate
+                  , MovementItem.OperDate 
+                  , MovementItem.OperDatePartner
                   , MovementItem.StartWeighing
                   , MovementItem.EndWeighing
                   , CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
@@ -182,106 +188,106 @@ BEGIN
                                                AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
 
                   LEFT JOIN tmpMIDate AS MIDate_Insert
-                                             ON MIDate_Insert.MovementItemId = MovementItem.Id
-                                            AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                      ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                     AND MIDate_Insert.DescId = zc_MIDate_Insert()
                   LEFT JOIN tmpMIDate AS MIDate_Update
-                                             ON MIDate_Update.MovementItemId = MovementItem.Id
-                                            AND MIDate_Update.DescId = zc_MIDate_Update()
+                                      ON MIDate_Update.MovementItemId = MovementItem.Id
+                                     AND MIDate_Update.DescId = zc_MIDate_Update()
                   LEFT JOIN tmpMIDate AS MIDate_PartionGoods
-                                             ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                      ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
                   LEFT JOIN tmpMIDate AS MIDate_StartBegin
-                                             ON MIDate_StartBegin.MovementItemId = MovementItem.Id
-                                            AND MIDate_StartBegin.DescId = zc_MIDate_StartBegin()
+                                      ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                     AND MIDate_StartBegin.DescId = zc_MIDate_StartBegin()
                   LEFT JOIN tmpMIDate AS MIDate_EndBegin
-                                             ON MIDate_EndBegin.MovementItemId = MovementItem.Id
-                                            AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
+                                      ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                     AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
 
                   LEFT JOIN tmpMIFloat AS MIFloat_ChangePercentAmount
-                                              ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                                       ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                      AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
                   LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
-                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                       ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                   LEFT JOIN tmpMIFloat AS MIFloat_PromoMovement
-                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
-                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                       ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                      AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
 
                   LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
-                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                   LEFT JOIN tmpMIFloat AS MIFloat_RealWeight
-                                              ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
-                                             AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+                                       ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
+                                      AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
                   LEFT JOIN tmpMIFloat AS MIFloat_CountTare
-                                              ON MIFloat_CountTare.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
+                                       ON MIFloat_CountTare.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
                   LEFT JOIN tmpMIFloat AS MIFloat_WeightTare
-                                              ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
-                                             AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
+                                       ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
+                                      AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
 
                   LEFT JOIN tmpMIFloat AS MIFloat_CountTare1
-                                              ON MIFloat_CountTare1.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountTare1.DescId = zc_MIFloat_CountTare1()
+                                       ON MIFloat_CountTare1.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountTare1.DescId = zc_MIFloat_CountTare1()
                   LEFT JOIN tmpMIFloat AS MIFloat_WeightTare1
-                                              ON MIFloat_WeightTare1.MovementItemId = MovementItem.Id
-                                             AND MIFloat_WeightTare1.DescId = zc_MIFloat_WeightTare1()
+                                       ON MIFloat_WeightTare1.MovementItemId = MovementItem.Id
+                                      AND MIFloat_WeightTare1.DescId = zc_MIFloat_WeightTare1()
                   LEFT JOIN tmpMIFloat AS MIFloat_CountTare2
-                                              ON MIFloat_CountTare2.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountTare2.DescId = zc_MIFloat_CountTare2()
+                                       ON MIFloat_CountTare2.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountTare2.DescId = zc_MIFloat_CountTare2()
                   LEFT JOIN tmpMIFloat AS MIFloat_WeightTare2
-                                              ON MIFloat_WeightTare2.MovementItemId = MovementItem.Id
-                                             AND MIFloat_WeightTare2.DescId = zc_MIFloat_WeightTare2()
+                                       ON MIFloat_WeightTare2.MovementItemId = MovementItem.Id
+                                      AND MIFloat_WeightTare2.DescId = zc_MIFloat_WeightTare2()
                   LEFT JOIN tmpMIFloat AS MIFloat_CountTare3
-                                              ON MIFloat_CountTare3.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountTare3.DescId = zc_MIFloat_CountTare3()
+                                       ON MIFloat_CountTare3.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountTare3.DescId = zc_MIFloat_CountTare3()
                   LEFT JOIN tmpMIFloat AS MIFloat_WeightTare3
-                                              ON MIFloat_WeightTare3.MovementItemId = MovementItem.Id
-                                             AND MIFloat_WeightTare3.DescId = zc_MIFloat_WeightTare3()
+                                       ON MIFloat_WeightTare3.MovementItemId = MovementItem.Id
+                                      AND MIFloat_WeightTare3.DescId = zc_MIFloat_WeightTare3()
                   LEFT JOIN tmpMIFloat AS MIFloat_CountTare4
-                                              ON MIFloat_CountTare4.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountTare4.DescId = zc_MIFloat_CountTare4()
+                                       ON MIFloat_CountTare4.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountTare4.DescId = zc_MIFloat_CountTare4()
                   LEFT JOIN tmpMIFloat AS MIFloat_WeightTare4
-                                              ON MIFloat_WeightTare4.MovementItemId = MovementItem.Id
-                                             AND MIFloat_WeightTare4.DescId = zc_MIFloat_WeightTare4()
+                                       ON MIFloat_WeightTare4.MovementItemId = MovementItem.Id
+                                      AND MIFloat_WeightTare4.DescId = zc_MIFloat_WeightTare4()
                   LEFT JOIN tmpMIFloat AS MIFloat_CountTare5
-                                              ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
+                                       ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
                   LEFT JOIN tmpMIFloat AS MIFloat_WeightTare5
-                                              ON MIFloat_WeightTare5.MovementItemId = MovementItem.Id
-                                             AND MIFloat_WeightTare5.DescId = zc_MIFloat_WeightTare5()
+                                       ON MIFloat_WeightTare5.MovementItemId = MovementItem.Id
+                                      AND MIFloat_WeightTare5.DescId = zc_MIFloat_WeightTare5()
                   LEFT JOIN tmpMIFloat AS MIFloat_CountTare6
-                                              ON MIFloat_CountTare6.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountTare6.DescId = zc_MIFloat_CountTare6()
+                                       ON MIFloat_CountTare6.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountTare6.DescId = zc_MIFloat_CountTare6()
                   LEFT JOIN tmpMIFloat AS MIFloat_WeightTare6
-                                              ON MIFloat_WeightTare6.MovementItemId = MovementItem.Id
-                                             AND MIFloat_WeightTare6.DescId = zc_MIFloat_WeightTare6()
+                                       ON MIFloat_WeightTare6.MovementItemId = MovementItem.Id
+                                      AND MIFloat_WeightTare6.DescId = zc_MIFloat_WeightTare6()
 
                   LEFT JOIN tmpMIFloat AS MIFloat_CountPack
-                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                                       ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                   LEFT JOIN tmpMIFloat AS MIFloat_HeadCount
-                                              ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                       ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
 
                   LEFT JOIN tmpMIFloat AS MIFloat_BoxCount
-                                              ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                                       ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                      AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
                   LEFT JOIN tmpMIFloat AS MIFloat_BoxNumber
-                                              ON MIFloat_BoxNumber.MovementItemId = MovementItem.Id
-                                             AND MIFloat_BoxNumber.DescId = zc_MIFloat_BoxNumber()
+                                       ON MIFloat_BoxNumber.MovementItemId = MovementItem.Id
+                                      AND MIFloat_BoxNumber.DescId = zc_MIFloat_BoxNumber()
                   LEFT JOIN tmpMIFloat AS MIFloat_LevelNumber
-                                              ON MIFloat_LevelNumber.MovementItemId = MovementItem.Id
-                                             AND MIFloat_LevelNumber.DescId = zc_MIFloat_LevelNumber()
+                                       ON MIFloat_LevelNumber.MovementItemId = MovementItem.Id
+                                      AND MIFloat_LevelNumber.DescId = zc_MIFloat_LevelNumber()
 
                   LEFT JOIN tmpMIFloat AS MIFloat_Price
-                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                   LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
-                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                                             AND MIFloat_Price.ValueData <> 0 -- !!!временно!!!
+                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                      AND MIFloat_Price.ValueData <> 0 -- !!!временно!!!
 
                   LEFT JOIN tmpMILO AS MILinkObject_Box
                                     ON MILinkObject_Box.MovementItemId = MovementItem.Id
@@ -311,6 +317,7 @@ BEGIN
 
              tmpMI.MovementId
            , tmpMI.OperDate
+           , tmpMI.OperDatePartner
            , tmpMI.InvNumber
            , tmpMI.StartWeighing
            , tmpMI.EndWeighing
@@ -385,7 +392,8 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName_all
 
        FROM (SELECT tmpMI.MovementId
-                  , tmpMI.OperDate
+                  , tmpMI.OperDate 
+                  , tmpMI.OperDatePartner
                   , tmpMI.InvNumber
                   , tmpMI.StartWeighing
                   , tmpMI.EndWeighing
@@ -469,6 +477,7 @@ BEGIN
                    , tmpMI.WeightTare6
                    , tmpMI.MovementId
                    , tmpMI.OperDate
+                   , tmpMI.OperDatePartner
                    , tmpMI.InvNumber
                    , tmpMI.StartWeighing
                    , tmpMI.EndWeighing
@@ -505,6 +514,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.23         *
  18.10.22         *
  04.08.22         *
 */

@@ -3,7 +3,6 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
   ClientWidth = 927
   AddOnFormData.Params = FormParams
   ExplicitWidth = 943
-  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -177,6 +176,14 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            Width = 84
           end
           object StartWeighing: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
@@ -948,8 +955,8 @@ inherited WeighingPartner_bySaleForm: TWeighingPartner_bySaleForm
     Top = 128
   end
   inherited BarManager: TdxBarManager
-    Left = 112
-    Top = 88
+    Left = 192
+    Top = 160
     DockControlHeights = (
       0
       0

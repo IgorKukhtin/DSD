@@ -1012,6 +1012,12 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_DayPriceNalog', 'Кол-во дней за которые происходит удержания налога по Ф2' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayPriceNalog');
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_CountForAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CountForAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_CountForAmount', 'Коэфф перевода из кол-ва поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CountForAmount');
+
+
+
 
 
 
@@ -1656,6 +1662,7 @@ INSERT INTO MovementItemFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 08.11.23         * zc_MIFloat_CountForAmount
  25.10.23                                                                                                     * zc_MIFloat_VAT
  04.07.23         * zc_MIFloat_DayPriceNalog
  17.05.23                                                                                                     * zc_MIFloat_Discount

@@ -12,17 +12,17 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     Width = 987
     Height = 358
     ExplicitTop = 121
-    ExplicitWidth = 915
+    ExplicitWidth = 987
     ExplicitHeight = 358
     ClientRectBottom = 358
     ClientRectRight = 987
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 915
+      ExplicitWidth = 987
       ExplicitHeight = 334
       inherited cxGrid: TcxGrid
         Width = 987
         Height = 326
-        ExplicitWidth = 915
+        ExplicitWidth = 987
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -186,6 +186,15 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             Options.Editing = False
             Width = 51
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Color_UKTZED: TcxGridDBColumn
             DataBinding.FieldName = 'Color_UKTZED'
             Visible = False
@@ -207,7 +216,6 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
-        ExplicitWidth = 915
       end
     end
   end
@@ -215,7 +223,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
     Width = 987
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 915
+    ExplicitWidth = 987
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8

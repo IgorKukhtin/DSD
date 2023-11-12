@@ -109,6 +109,25 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Options.Editing = False
         Width = 55
       end
+      object CodeUKTZED_new: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
+        DataBinding.FieldName = 'CodeUKTZED_new'
+        FooterAlignmentHorz = taCenter
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 141
+      end
+      object DateUKTZED_new: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074'. '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
+        DataBinding.FieldName = 'DateUKTZED_new'
+        FooterAlignmentHorz = taCenter
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1076#1083#1103' '#1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
+        Width = 91
+      end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -288,7 +307,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 64
+    Left = 24
     Top = 160
   end
   object dxBarManager: TdxBarManager
@@ -564,12 +583,12 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 112
-    Top = 152
+    Left = 80
+    Top = 128
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 40
-    Top = 152
+    Left = 128
+    Top = 320
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Goods'
@@ -606,10 +625,12 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 232
     Top = 184
@@ -633,6 +654,24 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Component = ClientDataSet
         ComponentItem = 'CodeUKTZED'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeUKTZED_new'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CodeUKTZED_new'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateUKTZED_new'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DateUKTZED_new'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

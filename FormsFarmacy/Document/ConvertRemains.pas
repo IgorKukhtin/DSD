@@ -67,6 +67,7 @@ type
     spTotalSumm: TdsdStoredProc;
     actTotalSumm: TdsdExecStoredProc;
     Color_Code: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

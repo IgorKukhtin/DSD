@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
+             , DiffPrice TFloat, RoundPrice TFloat
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isMask Boolean --вернуть false
@@ -72,6 +73,9 @@ BEGIN
              , ObjectCurrency.Id         AS CurrencyId	-- грн
              , ObjectCurrency.ValueData  AS CurrencyName
 
+             , CAST (0 AS TFloat) 		 AS DiffPrice
+             , CAST (0 AS TFloat) 		 AS RoundPrice
+
              , CAST ('' AS TVarChar) 		                    AS Comment
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate 
@@ -112,6 +116,9 @@ BEGIN
            , COALESCE (Object_Currency.Id, Object_CurrencyInf.Id)                AS CurrencyId
            , COALESCE (Object_Currency.ValueData, Object_CurrencyInf.ValueData)  AS CurrencyName
 
+           , MovementFloat_DiffPrice.ValueData  ::TFloat AS DiffPrice
+           , MovementFloat_RoundPrice.ValueData ::TFloat AS RoundPrice
+
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData                AS InsertName
@@ -123,6 +130,13 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementFloat AS MovementFloat_DiffPrice
+                                    ON MovementFloat_DiffPrice.MovementId = Movement.Id
+                                   AND MovementFloat_DiffPrice.DescId = zc_MovementFloat_DiffPrice()
+            LEFT JOIN MovementFloat AS MovementFloat_RoundPrice
+                                    ON MovementFloat_RoundPrice.MovementId = Movement.Id
+                                   AND MovementFloat_RoundPrice.DescId = zc_MovementFloat_RoundPrice()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -167,6 +181,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.23         *
  15.09.22         *
  02.08.22         * 
 */

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_ConvertRemains_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ConvertRemains_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ConvertRemains_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ConvertRemains_From_Excel(
     IN inMovementId               Integer   ,    -- Идентификатор документа
@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ConvertRemains_From_Excel(
     
     IN inGoodsName                TVarChar  ,    -- Название товара
     IN inMeasure                  TVarChar  ,    -- Единица измерения
+    IN inMeasureConv              TVarChar  ,    -- Единица измерения
+    IN inComment                  TVarChar  ,    -- Комментарий
 
     IN inSession                  TVarChar       -- текущий пользователь
 )
@@ -39,7 +41,7 @@ BEGIN
   -- определяется <Торговая сеть>
   vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', ABS (vbUserId));
   
-  IF COALESCE(inMeasure, '') = ''
+  IF COALESCE(inVAT, '') = '' OR COALESCE(inNumber, '') = ''
   THEN
     RETURN;
   END IF;
@@ -110,6 +112,29 @@ BEGIN
                     WHEN inMeasure ILIKE 'шт%'
                     THEN 'шт'
                     END;
+                    
+  IF COALESCE (vbMeasure, '') = ''
+  THEN
+    vbMeasure := CASE WHEN inMeasureConv ILIKE 'бан%'
+                      THEN 'банк'
+                      WHEN inMeasureConv ILIKE '%блок%'
+                      THEN 'блок'
+                      WHEN inMeasureConv ILIKE '%пак%' OR inMeasure ILIKE '%уп%'
+                      THEN 'паков'
+                      WHEN inMeasureConv ILIKE 'пар%'
+                      THEN 'пар'
+                      WHEN inMeasureConv ILIKE 'пач%'
+                      THEN 'пач'
+                      WHEN inMeasureConv ILIKE 'пля%'
+                      THEN 'пляш'
+                      WHEN inMeasureConv ILIKE 'туб%'
+                      THEN 'туб'
+                      WHEN inMeasureConv ILIKE 'фл%'
+                      THEN 'флак'
+                      WHEN inMeasureConv ILIKE 'шт%'
+                      THEN 'шт'
+                      END;  
+  END IF;
        
   -- ищем если уже создали
   SELECT MovementItem.Id
@@ -162,6 +187,7 @@ BEGIN
                                                     , inVAT                 := vbVAT
                                                     , inGoodsName           := inGoodsName
                                                     , inMeasure             := vbMeasure
+                                                    , inComment             := inComment
                                                     , inUserId              := vbUserId);
 
                                                           

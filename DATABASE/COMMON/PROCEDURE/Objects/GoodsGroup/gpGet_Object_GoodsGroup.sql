@@ -6,7 +6,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
     IN inId          Integer,       -- Группа товаров 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar
+             , CodeUKTZED_new TVarChar, DateUKTZED_new TDateTime
+             , Name TVarChar
              , TaxImport TVarChar, DKPP TVarChar, TaxAction TVarChar
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
@@ -30,7 +32,9 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_GoodsGroup()) AS Code
-           , CAST ('' as TVarChar)  AS CodeUKTZED
+           , CAST ('' as TVarChar)     AS CodeUKTZED
+           , CAST ('' as TVarChar)     AS CodeUKTZED_new
+           , CAST (Null as TDateTime)  AS DateUKTZED_new
            , CAST ('' as TVarChar)  AS Name
            , CAST ('' as TVarChar)  AS TaxImport
            , CAST ('' as TVarChar)  AS DKPP
@@ -60,7 +64,9 @@ BEGIN
        SELECT 
              Object_GoodsGroup.Id            AS Id
            , Object_GoodsGroup.ObjectCode    AS Code
-           , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
+           , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') ::TVarChar  AS CodeUKTZED
+           , ObjectString_GoodsGroup_UKTZED_new.ValueData                ::TVarChar  AS CodeUKTZED_new
+           , ObjectDate_GoodsGroup_UKTZED_new.ValueData                  ::TDateTime AS DateUKTZED_new
            , Object_GoodsGroup.ValueData     AS Name
 
            , COALESCE (ObjectString_GoodsGroup_TaxImport.ValueData,'') :: TVarChar AS TaxImport
@@ -144,6 +150,13 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsGroup_Asset
                                    ON ObjectBoolean_GoodsGroup_Asset.ObjectId = Object_GoodsGroup.Id 
                                   AND ObjectBoolean_GoodsGroup_Asset.DescId = zc_ObjectBoolean_GoodsGroup_Asset()
+
+             LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED_new
+                                    ON ObjectString_GoodsGroup_UKTZED_new.ObjectId = Object_GoodsGroup.Id
+                                   AND ObjectString_GoodsGroup_UKTZED_new.DescId = zc_ObjectString_GoodsGroup_UKTZED_new()
+             LEFT JOIN ObjectDate AS ObjectDate_GoodsGroup_UKTZED_new
+                                  ON ObjectDate_GoodsGroup_UKTZED_new.ObjectId = Object_GoodsGroup.Id
+                                 AND ObjectDate_GoodsGroup_UKTZED_new.DescId = zc_ObjectDate_GoodsGroup_UKTZED_new()
            
        WHERE Object_GoodsGroup.Id = inId;
    END IF;
@@ -151,12 +164,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.11.23         *
  10.03.17         * 
  24.11.14         * add GoodsGroupAnalyst
  15.09.14         * add GoodsTag

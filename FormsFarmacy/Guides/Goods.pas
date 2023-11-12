@@ -231,6 +231,7 @@ type
     dxBarButton21: TdxBarButton;
     isNoRegUKTZED: TcxGridDBColumn;
     Color_UKTZED: TcxGridDBColumn;
+    NameUkr: TcxGridDBColumn;
   private
     { Private declarations }
   public

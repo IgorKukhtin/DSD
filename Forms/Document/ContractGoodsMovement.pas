@@ -94,6 +94,11 @@ type
     cxLabel14: TcxLabel;
     edCurrency: TcxButtonEdit;
     GuidesCurrency: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edDiffPrice: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    edRoundPrice: TcxCurrencyEdit;
+    CountForAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

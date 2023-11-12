@@ -39,6 +39,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , PriceListId_first Integer, PriceListName_first TVarChar
              , PriceListId_curr Integer, PriceListName_curr TVarChar
              
+             , DiffPrice TFloat, RoundPrice TFloat
+             
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -173,7 +175,10 @@ BEGIN
            , Object_PriceList_first.Id           AS PriceListId_first
            , Object_PriceList_first.ValueData    AS PriceListName_first
            , Object_PriceList_curr.Id            AS PriceListId_curr
-           , Object_PriceList_curr.ValueData     AS PriceListName_curr           
+           , Object_PriceList_curr.ValueData     AS PriceListName_curr
+           
+           , MovementFloat_DiffPrice.ValueData  ::TFloat AS DiffPrice
+           , MovementFloat_RoundPrice.ValueData ::TFloat AS RoundPrice           
 
            , MovementString_Comment.ValueData    AS Comment
 
@@ -196,6 +201,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndBegin
                                    ON MovementDate_EndBegin.MovementId = Movement.Id
                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
+
+            LEFT JOIN MovementFloat AS MovementFloat_DiffPrice
+                                    ON MovementFloat_DiffPrice.MovementId = Movement.Id
+                                   AND MovementFloat_DiffPrice.DescId = zc_MovementFloat_DiffPrice()
+            LEFT JOIN MovementFloat AS MovementFloat_RoundPrice
+                                    ON MovementFloat_RoundPrice.MovementId = Movement.Id
+                                   AND MovementFloat_RoundPrice.DescId = zc_MovementFloat_RoundPrice()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Currency
                                          ON MovementLinkObject_Currency.MovementId = Movement.Id
@@ -245,6 +257,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.11.23         * 
  15.09.22         *
  05.07.21         *
 */

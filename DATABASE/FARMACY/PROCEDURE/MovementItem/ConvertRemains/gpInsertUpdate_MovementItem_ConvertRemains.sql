@@ -1,6 +1,6 @@
 -- Function: gpInsert_MovementItem_ConvertRemains()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ConvertRemains (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ConvertRemains (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ConvertRemains(
  INOUT ioId                     Integer   ,    -- Ключ объекта <Элемент документа>
@@ -13,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ConvertRemains(
     IN inVAT                    TFloat    ,    -- НДС
 
     IN inMeasure                TVarChar  ,    -- Единица измерения
+
+    IN inComment                TVarChar  ,    -- Комментарий
 
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -34,6 +36,7 @@ BEGIN
                                                       , inPriceWithVAT        := inPriceWithVAT
                                                       , inVAT                 := inVAT
                                                       , inMeasure             := inMeasure
+                                                      , inComment             := inComment
                                                       , inUserId              := vbUserId);
 
      -- пересчитали итоговые суммы

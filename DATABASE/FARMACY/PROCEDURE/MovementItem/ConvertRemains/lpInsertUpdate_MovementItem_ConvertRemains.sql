@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_ConvertRemains()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ConvertRemains (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ConvertRemains (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ConvertRemains(
  INOUT ioId                     Integer   ,    -- Ключ объекта <Элемент документа>
@@ -15,6 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ConvertRemains(
 
     IN inGoodsName              TVarChar  ,    -- Название товара
     IN inMeasure                TVarChar  ,    -- Единица измерения
+
+    IN inComment                TVarChar  ,    -- Комментарий
 
     IN inUserId                 Integer        -- пользователь
 )
@@ -41,6 +43,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), ioId, inGoodsName);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Measure(), ioId, inMeasure);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
     
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

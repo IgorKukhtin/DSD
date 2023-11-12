@@ -329,12 +329,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Width = 94
     end
     object cxLabel23: TcxLabel
-      Left = 9
+      Left = 175
       Top = 84
       Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
     end
     object ed: TcxButtonEdit
-      Left = 9
+      Left = 175
       Top = 99
       Properties.Buttons = <
         item
@@ -344,22 +344,22 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 38
-      Width = 246
+      Width = 295
     end
     object cxLabel24: TcxLabel
-      Left = 262
+      Left = 476
       Top = 84
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 262
+      Left = 476
       Top = 99
       Properties.ReadOnly = True
       TabOrder = 40
-      Width = 319
+      Width = 276
     end
     object cbisList: TcxCheckBox
-      Left = 587
+      Left = 758
       Top = 99
       Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
       Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
@@ -1224,6 +1224,24 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Properties.ReadOnly = True
     TabOrder = 14
     Width = 118
+  end
+  object cxLabel25: TcxLabel
+    Left = 9
+    Top = 84
+    Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088'.'
+  end
+  object edOperDatePartner: TcxDateEdit
+    Left = 9
+    Top = 99
+    Hint = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+    EditValue = 42184d
+    ParentShowHint = False
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    ShowHint = True
+    TabOrder = 16
+    Width = 104
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2216,6 +2234,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'OperDate_parent'
         Value = 0d
         Component = edOperDate_parent
@@ -2644,8 +2669,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
-    Left = 136
-    Top = 48
+    Left = 133
+    Top = 24
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2705,8 +2730,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 47
-    Top = 50
+    Left = 23
+    Top = 42
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
@@ -2731,7 +2756,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     PackSize = 1
     Left = 76
-    Top = 50
+    Top = 42
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -3229,7 +3254,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 150
-    Top = 88
+    Left = 270
+    Top = 104
   end
 end

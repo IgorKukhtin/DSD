@@ -3,7 +3,7 @@ unit dsdExportToXLSAction;
 interface
 
 uses Data.DB, System.Classes, System.SysUtils, System.Win.ComObj, System.StrUtils,
-     Vcl.Graphics, Vcl.ActnList, Vcl.Dialogs, dsdAction, dsdDB;
+     Vcl.Graphics, Vcl.ActnList, Vcl.Dialogs, dsdAction, dsdDB, Variants;
 
 type
 
@@ -132,6 +132,7 @@ type
     FColumnParams : TdsdColumnParams;
     FFileType : TdsdFileType;
     FSheetName : string;
+    FAccelerateDraw : Boolean;
     procedure SetTitleFont(Value: TFont);
     procedure SetHeaderFont(Value: TFont);
     procedure SetSignFont(Value: TFont);
@@ -165,6 +166,7 @@ type
     property FileType : TdsdFileType read FFileType write FFileType default ftOpenXMLWorkbook;
     property SheetName : string read FSheetName write FSheetName;
     property NumberColumn : boolean read FNumberColumn write FNumberColumn default False;
+    property AccelerateDraw : Boolean read FAccelerateDraw write FAccelerateDraw default False;
 
     property Caption;
     property Hint;
@@ -429,6 +431,7 @@ begin
   FFileType := ftOpenXMLWorkbook;
   FSheetName := '';
   FNumberColumn := False;
+  FAccelerateDraw := False;
 end;
 
 destructor TdsdExportToXLS.Destroy;
@@ -526,6 +529,7 @@ function TdsdExportToXLS.LocalExecute: Boolean;
      nCurr : Extended;
      cFileName, S : string;
      i64 : Currency;
+     aData: Variant;
 
  const xlLeft = - 4131;
        xlRight = -4152;
@@ -740,32 +744,55 @@ begin
     end;
 
       // Данные
+    aData := VarArrayCreate([1, FItemsDataSet.RecordCount, 1, nColumnCount], varVariant);
     FItemsDataSet.First;
     while not FItemsDataSet.Eof do
     begin
 
-      if FColumnParams.Count > 0 then
+      if FAccelerateDraw then
       begin
-        for I := 0 to nColumnCount - 1 do
+        if FColumnParams.Count > 0 then
         begin
-          xlRange := xlSheet.Cells[nDataStart + nDataCount, I + 1];
-          if (FColumnParams.Items[I].FCalcColumn = ccNone) and FColumnParams.Items[I].FFieldExists then
+          for I := 0 to nColumnCount - 1 do
           begin
-            if not FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).IsNull then
-              case FColumnParams.Items[I].DataType of
-                ftAutoInc, ftLargeint : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended;
-                ftSmallint, ftInteger, ftWord, ftBytes : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsInteger;
-                ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsDateTime;
-                ftFloat, ftCurrency, ftBCD : if FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).DataType in [ftFloat, ftCurrency, ftBCD] then
-                                               xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended
-                                             else if TryStrToFloat(StringReplace(FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString, '.',
-                                                    FormatSettings.DecimalSeparator, [rfReplaceAll]), nCurr) then xlRange.Value := nCurr
-                                                  else xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
-                ftBoolean : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
+            if (FColumnParams.Items[I].FCalcColumn = ccNone) and FColumnParams.Items[I].FFieldExists then
+            begin
+              if not FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).IsNull then
+                case FColumnParams.Items[I].DataType of
+                  ftAutoInc, ftLargeint : aData[FItemsDataSet.RecNo, I + 1] := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended;
+                  ftSmallint, ftInteger, ftWord, ftBytes : aData[FItemsDataSet.RecNo, I + 1] := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsInteger;
+                  ftDate, ftTime, ftDateTime : aData[FItemsDataSet.RecNo, I + 1] := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsDateTime;
+                  ftFloat, ftCurrency, ftBCD : if FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).DataType in [ftFloat, ftCurrency, ftBCD] then
+                                                 aData[FItemsDataSet.RecNo, I + 1] := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended
+                                               else if TryStrToFloat(StringReplace(FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString, '.',
+                                                      FormatSettings.DecimalSeparator, [rfReplaceAll]), nCurr) then aData[FItemsDataSet.RecNo, I + 1] := nCurr
+                                                    else aData[FItemsDataSet.RecNo, I + 1] := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                  ftBoolean : aData[FItemsDataSet.RecNo, I + 1] := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
+                  else
+                  begin
+                    aData[FItemsDataSet.RecNo, I + 1] := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                  end;
+                end;
+            end;
+          end;
+        end else
+        begin
+          for I := 0 to nColumnCount - 1 do
+          begin
+            xlRange := xlSheet.Cells[nDataStart + nDataCount, I + 1];
+            if FItemsDataSet.Fields.Fields[I].DataType in [ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes, ftFloat, ftCurrency, ftBCD] then
+               xlRange.HorizontalAlignment := xlRight
+            else xlRange.HorizontalAlignment := xlLeft;
+            if not FItemsDataSet.Fields.Fields[I].IsNull then
+              case FItemsDataSet.Fields.Fields[I].DataType of
+                ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsLargeInt;
+                ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsDateTime;
+                ftFloat, ftCurrency, ftBCD : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsExtended;
+                ftBoolean : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsBoolean;
                 else
                 begin
                   xlRange.NumberFormat := AnsiChar(64);
-                  xlRange.FormulaR1C1 := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                  xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString;
                   xlRange.NumberFormat := '';
                 end;
               end;
@@ -773,30 +800,68 @@ begin
         end;
       end else
       begin
-        for I := 0 to nColumnCount - 1 do
+        if FColumnParams.Count > 0 then
         begin
-          xlRange := xlSheet.Cells[nDataStart + nDataCount, I + 1];
-          if FItemsDataSet.Fields.Fields[I].DataType in [ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes, ftFloat, ftCurrency, ftBCD] then
-             xlRange.HorizontalAlignment := xlRight
-          else xlRange.HorizontalAlignment := xlLeft;
-          if not FItemsDataSet.Fields.Fields[I].IsNull then
-            case FItemsDataSet.Fields.Fields[I].DataType of
-              ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsLargeInt;
-              ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsDateTime;
-              ftFloat, ftCurrency, ftBCD : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsExtended;
-              ftBoolean : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsBoolean;
-              else
-              begin
-                xlRange.NumberFormat := AnsiChar(64);
-                xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString;
-                xlRange.NumberFormat := '';
-              end;
+          for I := 0 to nColumnCount - 1 do
+          begin
+            xlRange := xlSheet.Cells[nDataStart + nDataCount, I + 1];
+            if (FColumnParams.Items[I].FCalcColumn = ccNone) and FColumnParams.Items[I].FFieldExists then
+            begin
+              if not FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).IsNull then
+                case FColumnParams.Items[I].DataType of
+                  ftAutoInc, ftLargeint : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended;
+                  ftSmallint, ftInteger, ftWord, ftBytes : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsInteger;
+                  ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsDateTime;
+                  ftFloat, ftCurrency, ftBCD : if FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).DataType in [ftFloat, ftCurrency, ftBCD] then
+                                                 xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended
+                                               else if TryStrToFloat(StringReplace(FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString, '.',
+                                                      FormatSettings.DecimalSeparator, [rfReplaceAll]), nCurr) then xlRange.Value := nCurr
+                                                    else xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                  ftBoolean : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
+                  else
+                  begin
+                    xlRange.NumberFormat := AnsiChar(64);
+                    xlRange.FormulaR1C1 := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
+                    xlRange.NumberFormat := '';
+                  end;
+                end;
             end;
+          end;
+        end else
+        begin
+          for I := 0 to nColumnCount - 1 do
+          begin
+            xlRange := xlSheet.Cells[nDataStart + nDataCount, I + 1];
+            if FItemsDataSet.Fields.Fields[I].DataType in [ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes, ftFloat, ftCurrency, ftBCD] then
+               xlRange.HorizontalAlignment := xlRight
+            else xlRange.HorizontalAlignment := xlLeft;
+            if not FItemsDataSet.Fields.Fields[I].IsNull then
+              case FItemsDataSet.Fields.Fields[I].DataType of
+                ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsLargeInt;
+                ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsDateTime;
+                ftFloat, ftCurrency, ftBCD : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsExtended;
+                ftBoolean : xlRange.Value := FItemsDataSet.Fields.Fields[I].AsBoolean;
+                else
+                begin
+                  xlRange.NumberFormat := AnsiChar(64);
+                  xlRange.Value := FItemsDataSet.Fields.Fields[I].AsString;
+                  xlRange.NumberFormat := '';
+                end;
+              end;
+          end;
         end;
       end;
 
       Inc(nDataCount);
       FItemsDataSet.Next;
+    end;
+
+    if FAccelerateDraw then
+    begin
+      //выделяем диапазон для вставки данных
+      xlRange := xlSheet.Range[xlSheet.Cells[nDataStart, 1], xlSheet.Cells[nDataStart + nDataCount - 1, nColumnCount]];
+      //вставляем данные
+      xlRange.Value := aData;
     end;
 
       // Рисуем рамку вокруг шапки

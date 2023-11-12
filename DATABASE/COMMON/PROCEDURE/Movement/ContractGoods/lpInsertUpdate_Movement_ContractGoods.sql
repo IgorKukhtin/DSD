@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_Movement_ContractGoods()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
    OUT outEndBeginDate       TDateTime , -- По какую дату действует
     IN inContractId          Integer   , --
     IN inCurrencyId          Integer   , -- Валюта 
+    IN inDiffPrice           TFloat    ,  -- Разрешенный % отклонение для цены
+    IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -91,6 +94,11 @@ BEGIN
      -- сохранили свойство <Дата окончания> текущего документа
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), ioId, outEndBeginDate);
 
+     -- Разрешенный % отклонение для цены
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiffPrice(), ioId, inDiffPrice);
+     -- Кол-во знаков для округления
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_RoundPrice(), ioId, inRoundPrice);
+     
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
@@ -128,6 +136,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.23         *
  15.09.22         *
  14.09.22         *
  05.07.21         *

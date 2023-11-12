@@ -58,6 +58,8 @@ type
     JuridicalName: TcxGridDBColumn;
     macInsertMask: TMultiAction;
     CurrencyName: TcxGridDBColumn;
+    DiffPrice: TcxGridDBColumn;
+    RoundPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -75,11 +75,15 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Measure
                                          ON MIString_Measure.MovementItemId = MovementItem.Id
                                         AND MIString_Measure.DescId = zc_MIString_Measure()
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
 
        WHERE MovementItem.DescId = zc_MI_Master()
          AND MovementItem.MovementId = inMovementId
          AND MovementItem.isErased = FALSE
-         AND MovementItem.Amount > 0
+         AND MovementItem.Amount > 0 
+         AND COALESCE(MIString_Comment.ValueData , '') = ''
        ORDER BY MIFloat_Number.ValueData
        ;
 

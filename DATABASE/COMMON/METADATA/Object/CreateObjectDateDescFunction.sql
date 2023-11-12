@@ -238,6 +238,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_In() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_In', 'Дата прихода от поставщика' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_In');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_UKTZED_new() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_UKTZED_new'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_UKTZED_new', 'дата с которой действует новый Код УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_UKTZED_new');
 
 CREATE OR REPLACE FUNCTION zc_Object_ReportBonus_Month() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_Object_ReportBonus_Month'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
@@ -680,6 +683,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 09.11.23         * zc_ObjectDate_Goods_UKTZED_new
  19.04.23         * zc_ObjectDate_Personal_Send
  29.03.23         * zc_ObjectDate_GoodsGroup_UKTZED_new
  18.01.23                                                                                     * zc_ObjectDate_PartionDateWages_DateStart
