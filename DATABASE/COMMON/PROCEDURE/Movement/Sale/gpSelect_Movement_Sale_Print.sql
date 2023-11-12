@@ -1425,7 +1425,8 @@ BEGIN
                     , ObjectLink_GoodsGroup.ChildObjectId
             )
       , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
-      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED
+        -- на дату
+      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDatePartner) AS CodeUKTZED
                       FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                      )
         -- ÷ены из прайса
@@ -1648,9 +1649,13 @@ BEGIN
            , CASE WHEN vbOperDate < '01.01.2017'
                        THEN ''
 
+                  -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDatePartner
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED_new.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED_new.ValueData FROM 1 FOR 4) END
+                  -- у товара
                   WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
-
+                  -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
@@ -1675,7 +1680,7 @@ BEGIN
               END :: Boolean AS isFozziTare
 
             , CASE WHEN tmpMI_WeighingPartner.Box_count = 1 AND COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
-                   THEN tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)      
+                   THEN tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)
                    ELSE tmpMI_WeighingPartner.Box_count
               END :: Integer AS Box_count_calc
 
@@ -1726,9 +1731,16 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
 
             -- 2 раза по виду товара и без
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId

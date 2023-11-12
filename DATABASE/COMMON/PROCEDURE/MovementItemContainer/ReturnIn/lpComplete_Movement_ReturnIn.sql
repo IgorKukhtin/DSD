@@ -2150,51 +2150,71 @@ END IF;
 
      -- 1.3.1.2. определяется ContainerId - Транзит
      UPDATE _tmpItemSumm SET ContainerId_Transit = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
-                                                                                     , inUnitId                 := CLO_Unit.ObjectId
-                                                                                     , inCarId                  := CLO_Car.ObjectId
-                                                                                     , inMemberId               := CLO_Member.ObjectId
+                                                                                     , inUnitId                 := _tmpItemSumm_find.UnitId
+                                                                                     , inCarId                  := _tmpItemSumm_find.CarId
+                                                                                     , inMemberId               := _tmpItemSumm_find.MemberId
                                                                                      , inBranchId               := vbBranchId_To -- эта аналитика нужна для филиала
-                                                                                     , inJuridicalId_basis      := CLO_JuridicalBasis.ObjectId
-                                                                                     , inBusinessId             := CLO_Business.ObjectId
+                                                                                     , inJuridicalId_basis      := _tmpItemSumm_find.JuridicalId_Basis
+                                                                                     , inBusinessId             := _tmpItemSumm_find.BusinessId
                                                                                      , inAccountId              := vbAccountId_GoodsTransit
                                                                                      , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
-                                                                                     , inInfoMoneyId            := CLO_InfoMoney.ObjectId
-                                                                                     , inInfoMoneyId_Detail     := CLO_InfoMoneyDetail.ObjectId
+                                                                                     , inInfoMoneyId            := _tmpItemSumm_find.InfoMoneyId
+                                                                                     , inInfoMoneyId_Detail     := _tmpItemSumm_find.InfoMoneyId_Detail
                                                                                      , inContainerId_Goods      := _tmpItem.ContainerId_GoodsTransit
-                                                                                     , inGoodsId                := CLO_Goods.ObjectId
-                                                                                     , inGoodsKindId            := CLO_GoodsKind.ObjectId
+                                                                                     , inGoodsId                := _tmpItemSumm_find.GoodsId
+                                                                                     , inGoodsKindId            := _tmpItemSumm_find.GoodsKindId
                                                                                      , inIsPartionSumm          := _tmpItem.isPartionSumm
-                                                                                     , inPartionGoodsId         := CLO_PartionGoods.ObjectId
-                                                                                     , inAssetId                := CLO_Asset.ObjectId
+                                                                                     , inPartionGoodsId         := _tmpItemSumm_find.PartionGoodsId
+                                                                                     , inAssetId                := _tmpItemSumm_find.AssetId
                                                                                       )
-     FROM (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId FROM _tmpItemSumm) AS _tmpItemSumm_find
-          INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm_find.MovementItemId
-          LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = _tmpItemSumm_find.ContainerId
-                                                             AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
-          LEFT JOIN ContainerLinkObject AS CLO_Business ON CLO_Business.ContainerId = _tmpItemSumm_find.ContainerId
-                                                       AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
-          LEFT JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = _tmpItemSumm_find.ContainerId
-                                                        AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-          LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail ON CLO_InfoMoneyDetail.ContainerId = _tmpItemSumm_find.ContainerId
-                                                              AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-          LEFT JOIN ContainerLinkObject AS CLO_Goods ON CLO_Goods.ContainerId = _tmpItemSumm_find.ContainerId
-                                                    AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
-          LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpItemSumm_find.ContainerId
-                                                        AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-          LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = _tmpItemSumm_find.ContainerId
-                                                           AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-          LEFT JOIN ContainerLinkObject AS CLO_Asset ON CLO_Asset.ContainerId = _tmpItemSumm_find.ContainerId
-                                                    AND CLO_Asset.DescId = zc_ContainerLinkObject_AssetTo()
-          LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = _tmpItemSumm_find.ContainerId
-                                                   AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-          LEFT JOIN ContainerLinkObject AS CLO_Car ON CLO_Car.ContainerId = _tmpItemSumm_find.ContainerId
-                                                  AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
-          LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = _tmpItemSumm_find.ContainerId
+     FROM (WITH _tmpItemSumm_find AS (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId FROM _tmpItemSumm)
+              , tmpCLO AS (SELECT * FROM ContainerLinkObject WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT _tmpItemSumm_find.ContainerId FROM _tmpItemSumm_find))
+           SELECT _tmpItemSumm_find.MovementItemId
+                , _tmpItemSumm_find.ContainerId
+
+                , CLO_Unit.ObjectId            AS UnitId
+                , CLO_Car.ObjectId             AS CarId
+                , CLO_Member.ObjectId          AS MemberId
+                , CLO_JuridicalBasis.ObjectId  AS JuridicalId_Basis
+                , CLO_Business.ObjectId        AS BusinessId
+                , CLO_InfoMoney.ObjectId       AS InfoMoneyId
+                , CLO_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
+                , CLO_Goods.ObjectId           AS GoodsId
+                , CLO_GoodsKind.ObjectId       AS GoodsKindId
+                , CLO_PartionGoods.ObjectId    AS PartionGoodsId
+                , CLO_Asset.ObjectId           AS AssetId
+                
+           FROM _tmpItemSumm_find
+                LEFT JOIN tmpCLO AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = _tmpItemSumm_find.ContainerId
+                                                                   AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                LEFT JOIN tmpCLO AS CLO_Business ON CLO_Business.ContainerId = _tmpItemSumm_find.ContainerId
+                                                             AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
+                LEFT JOIN tmpCLO AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = _tmpItemSumm_find.ContainerId
+                                                              AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                LEFT JOIN tmpCLO AS CLO_InfoMoneyDetail ON CLO_InfoMoneyDetail.ContainerId = _tmpItemSumm_find.ContainerId
+                                                                    AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                LEFT JOIN tmpCLO AS CLO_Goods ON CLO_Goods.ContainerId = _tmpItemSumm_find.ContainerId
+                                                          AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                LEFT JOIN tmpCLO AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpItemSumm_find.ContainerId
+                                                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                LEFT JOIN tmpCLO AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = _tmpItemSumm_find.ContainerId
+                                                                 AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                LEFT JOIN tmpCLO AS CLO_Asset ON CLO_Asset.ContainerId = _tmpItemSumm_find.ContainerId
+                                                          AND CLO_Asset.DescId = zc_ContainerLinkObject_AssetTo()
+                LEFT JOIN tmpCLO AS CLO_Unit ON CLO_Unit.ContainerId = _tmpItemSumm_find.ContainerId
+                                                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                LEFT JOIN tmpCLO AS CLO_Car ON CLO_Car.ContainerId = _tmpItemSumm_find.ContainerId
+                                                        AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
+                LEFT JOIN tmpCLO AS CLO_Member ON CLO_Member.ContainerId = _tmpItemSumm_find.ContainerId
                                                      AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
+           WHERE vbAccountId_GoodsTransit <> 0
+          ) AS _tmpItemSumm_find
+          INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm_find.MovementItemId
      WHERE _tmpItemSumm.MovementItemId = _tmpItemSumm_find.MovementItemId
        AND _tmpItemSumm.ContainerId    = _tmpItemSumm_find.ContainerId
        AND vbAccountId_GoodsTransit <> 0
     ;
+
 
      -- 1.3.2. формируются Проводки для суммового учета (c/c остаток) + !!!есть MovementItemId!!!
         WITH tmpMIContainer AS

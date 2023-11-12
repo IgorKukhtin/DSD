@@ -403,7 +403,15 @@ BEGIN
                                ELSE Object_Goods.ValueData
                           END :: TVarChar AS GoodsName
                         , ObjectString_Goods_RUS.ValueData         AS GoodsName_RUS
-                        , ObjectString_Goods_UKTZED.ValueData      AS Goods_UKTZED
+
+                        , CASE -- на дату у товара
+                               WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate_Tax_Tax
+                                    THEN ObjectString_Goods_UKTZED_new.ValueData
+                               -- у товара
+                               WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                                    THEN ObjectString_Goods_UKTZED.ValueData
+                          END AS Goods_UKTZED
+
                         , ObjectString_Goods_TaxImport.ValueData   AS Goods_TaxImport
                         , ObjectString_Goods_DKPP.ValueData        AS Goods_DKPP
                         , ObjectString_Goods_TaxAction.ValueData   AS Goods_TaxAction
@@ -420,9 +428,17 @@ BEGIN
                         LEFT JOIN ObjectDate AS ObjectDate_BUH
                                              ON ObjectDate_BUH.ObjectId = tmp.GoodsId
                                             AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
+
                         LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                                ON ObjectString_Goods_UKTZED.ObjectId = tmp.GoodsId
                                               AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+                        LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                               ON ObjectString_Goods_UKTZED_new.ObjectId = tmp.GoodsId
+                                              AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+                        LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                             ON ObjectDate_Goods_UKTZED_new.ObjectId = tmp.GoodsId
+                                            AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
+
                         LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
                                                ON ObjectString_Goods_TaxImport.ObjectId = tmp.GoodsId
                                               AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
@@ -448,7 +464,9 @@ BEGIN
                                              --AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (Object_GoodsKind.Id,0)
                    )
 
-    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDate_Tax_Tax) AS CodeUKTZED
+                       FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
+                      )
     , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpTaxAction AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxAction (tmp.GoodsGroupId) AS TaxAction FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)

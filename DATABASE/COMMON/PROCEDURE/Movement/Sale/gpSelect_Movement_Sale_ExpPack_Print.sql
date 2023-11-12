@@ -23,6 +23,7 @@ $BODY$
 
     DECLARE vbWeighingCount   Integer;
     DECLARE vbOperDate TDateTime;
+    DECLARE vbOperDatePartner TDateTime;
     DECLARE vbIsLongUKTZED Boolean;
 
 BEGIN
@@ -40,8 +41,8 @@ BEGIN
      -- параметры из документа
      SELECT Movement.OperDate
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
-          
-  INTO vbOperDate, vbIsLongUKTZED
+
+          INTO vbOperDate, vbIsLongUKTZED
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -52,6 +53,8 @@ BEGIN
 
       WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_SendOnPrice()
     ;
+     -- параметр из документа
+     vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
 
 
      -- определяется параметр
@@ -169,7 +172,8 @@ BEGIN
 
 
 
-      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED
+        -- на дату
+      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDatePartner) AS CodeUKTZED
                       FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                      )
 
@@ -178,26 +182,26 @@ BEGIN
                             , Object_StickerNorm.ValueData           AS StickerNormName
                             , ObjectBlob_Info.ValueData              AS Info
                        FROM (SELECT Object_Sticker.Id
-                             FROM Object AS Object_Sticker 
+                             FROM Object AS Object_Sticker
                              WHERE Object_Sticker.DescId = zc_Object_Sticker()
                                AND Object_Sticker.isErased = false
                               ) AS Object_Sticker
                        LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
                                             ON ObjectLink_Sticker_Goods.ObjectId = Object_Sticker.Id
                                            AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
-                      
+
                        LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerSort
-                                            ON ObjectLink_Sticker_StickerSort.ObjectId = Object_Sticker.Id 
+                                            ON ObjectLink_Sticker_StickerSort.ObjectId = Object_Sticker.Id
                                            AND ObjectLink_Sticker_StickerSort.DescId = zc_ObjectLink_Sticker_StickerSort()
                        LEFT JOIN Object AS Object_StickerSort ON Object_StickerSort.Id = ObjectLink_Sticker_StickerSort.ChildObjectId
 
                        LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerNorm
-                                            ON ObjectLink_Sticker_StickerNorm.ObjectId = Object_Sticker.Id 
+                                            ON ObjectLink_Sticker_StickerNorm.ObjectId = Object_Sticker.Id
                                            AND ObjectLink_Sticker_StickerNorm.DescId = zc_ObjectLink_Sticker_StickerNorm()
                        LEFT JOIN Object AS Object_StickerNorm ON Object_StickerNorm.Id = ObjectLink_Sticker_StickerNorm.ChildObjectId
 
                        LEFT JOIN ObjectBlob AS ObjectBlob_Info
-                                            ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
+                                            ON ObjectBlob_Info.ObjectId = Object_Sticker.Id
                                            AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
                         )
 
@@ -256,9 +260,13 @@ BEGIN
            , CASE WHEN vbOperDate < '01.01.2017'
                        THEN ''
 
+                  -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDatePartner
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED_new.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED_new.ValueData FROM 1 FOR 4) END
+                  -- у товара
                   WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
-
+                  -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
@@ -378,12 +386,12 @@ BEGIN
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate 
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, Object_From.Id)
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate 
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectString AS ObjectString_FromAddress
@@ -396,14 +404,22 @@ BEGIN
 
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = MovementItem.GoodsGroupId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
             LEFT JOIN tmpSticker ON tmpSticker.GoodsId = MovementItem.ObjectId
+
       ORDER BY MovementItem.MovementId, MovementItem.Id
 --       ORDER BY MovementString_InvNumberPartner.ValueData
       ;

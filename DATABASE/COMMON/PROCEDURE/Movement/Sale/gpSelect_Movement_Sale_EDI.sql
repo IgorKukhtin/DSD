@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_EDI (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_EDI(
-    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId    Integer,    -- ключ Документа
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -35,6 +35,7 @@ $BODY$
     DECLARE vbWeighingCount TFloat;
 
     DECLARE vbOperDate_insert TDateTime;
+    DECLARE vbOperDatePartner TDateTime;
 
     DECLARE vbIsProcess_BranchIn Boolean;
 
@@ -47,6 +48,8 @@ BEGIN
 
      -- параметры
      vbOperDate_insert:= (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1);
+     -- параметр из документа
+     vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
      -- параметры из Взвешивания
      vbStoreKeeperName:= (SELECT Object_User.ValueData
                           FROM Movement
@@ -945,7 +948,9 @@ BEGIN
                     , MIFloat_Price.ValueData
                     , MIFloat_CountForPrice.ValueData
             )
-    , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+      -- на дату
+    , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDatePartner) AS CodeUKTZED
+                    FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
        -- 
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -958,9 +963,13 @@ BEGIN
                   WHEN zc_Measure_Sh() THEN 'PCE'
                   ELSE 'KGM'
              END::TVarChar                   AS DELIVEREDUNIT
-           , CASE WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+           , CASE -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDatePartner
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED_new.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED_new.ValueData FROM 1 FOR 4) END
+                  -- у товара
+                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
-
+                  -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
@@ -1062,6 +1071,13 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()

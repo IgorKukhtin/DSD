@@ -15,6 +15,7 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
 
     DECLARE vbOperDate  TDateTime;
+    DECLARE vbOperDatePartner TDateTime;
     DECLARE vbIsLongUKTZED Boolean;
     DECLARE vbToId Integer;
 
@@ -27,7 +28,10 @@ BEGIN
 
 
      -- параметр из документа - !!!временно!!!
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- параметр из документа
+     vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
+                                
      -- Юр лицо
      vbToId := (SELECT MovementLinkObject_To.ObjectId AS ToId
                 FROM MovementLinkObject AS MovementLinkObject_To
@@ -273,7 +277,10 @@ tmpMI AS
                                                        AND ObjectFloat_GK_DaysQ.DescId   = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
                             )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
-          , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+            -- на дату
+          , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDatePartner) AS CodeUKTZED
+                          FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+
           , tmpGoodsQuality AS
             (SELECT tmpMIGoods.GoodsId          AS GoodsId
                   , Object_Quality.Id           AS QualityId
@@ -564,9 +571,13 @@ tmpMI AS
            , Object_Measure.ValueData                                                 AS MeasureName
            , Object_Goods.ObjectCode                                                  AS GoodsCode
 
-           , CASE WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+           , CASE -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDatePartner
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED_new.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED_new.ValueData FROM 1 FOR 4) END
+                  -- у товара
+                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
-
+                  -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
@@ -679,6 +690,13 @@ tmpMI AS
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()

@@ -59,7 +59,14 @@ BEGIN
            , 0                                      AS LineNum
            , tmpGoods.GoodsId                       AS GoodsId
            , tmpGoods.GoodsCode                     AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
+
+           , CASE -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate
+                       THEN ObjectString_Goods_UKTZED_new.ValueData
+                  -- у товара
+                  ELSE COALESCE (ObjectString_Goods_UKTZED.ValueData,'')
+             END :: TVarChar AS GoodsCodeUKTZED
+
            , tmpGoods.GoodsName                     AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
@@ -113,6 +120,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = tmpGoods.GoodsId
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
@@ -140,7 +153,14 @@ BEGIN
              END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
+
+           , CASE -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate
+                       THEN ObjectString_Goods_UKTZED_new.ValueData
+                  -- у товара
+                  ELSE COALESCE (ObjectString_Goods_UKTZED.ValueData,'')
+             END :: TVarChar AS GoodsCodeUKTZED
+
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
                   ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
@@ -182,9 +202,16 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_BUH
                                  ON ObjectDate_BUH.ObjectId = Object_Goods.Id
                                 AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()                                  
+
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -235,7 +262,14 @@ BEGIN
              END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
+
+           , CASE -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate
+                       THEN ObjectString_Goods_UKTZED_new.ValueData
+                  -- у товара
+                  ELSE COALESCE (ObjectString_Goods_UKTZED.ValueData,'')
+             END :: TVarChar AS GoodsCodeUKTZED
+
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
                   ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
@@ -275,9 +309,16 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_BUH
                                  ON ObjectDate_BUH.ObjectId = Object_Goods.Id
                                 AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
+
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id

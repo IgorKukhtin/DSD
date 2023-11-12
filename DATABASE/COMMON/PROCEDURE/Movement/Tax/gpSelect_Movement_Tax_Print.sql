@@ -27,8 +27,9 @@ $BODY$
 
     DECLARE vbCurrencyPartnerId Integer;
 
-    DECLARE vbOperDate_begin TDateTime;
-    DECLARE vbOperDate_rus   TDateTime;
+    DECLARE vbOperDate_begin   TDateTime;
+    DECLARE vbOperDate_rus     TDateTime;
+    DECLARE vbOperDate_Tax_Tax TDateTime;
 
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
@@ -170,6 +171,8 @@ order by 4*/
                       THEN COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate)
                  ELSE CURRENT_DATE
             END AS OperDate_rus
+            
+          , Movement_Tax.OperDate AS OperDate_Tax_Tax
           
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
           
@@ -182,7 +185,7 @@ order by 4*/
           , ObjectFloat_Price.ValueData         :: TFloat   AS Price_DocumentTaxKind
        
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
-               , vbOperDate_begin, vbOperDate_rus, vbIsLongUKTZED
+               , vbOperDate_begin, vbOperDate_rus, vbOperDate_Tax_Tax, vbIsLongUKTZED
                , vbInfoMoneyId
                
                , vbGoods_DocumentTaxKind
@@ -777,7 +780,11 @@ order by 4*/
           AND MovementItem.Amount     <> 0
        )
     , tmpGoods     AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
-    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+      -- на дату
+    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDate_Tax_Tax) AS CodeUKTZED
+                       FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
+                      )
+      --
     , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpTaxAction AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxAction (tmp.GoodsGroupId) AS TaxAction FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
@@ -869,9 +876,13 @@ order by 4*/
            , CASE WHEN Movement.OperDate < '01.01.2017'
                        THEN ''
 
+                  -- на дату у товара
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate_Tax_Tax
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED_new.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED_new.ValueData FROM 1 FOR 4) END
+                  -- у товара
                   WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
-
+                  -- на дату у группы товара
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
@@ -1048,6 +1059,13 @@ order by 4*/
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
+                                   ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED_new.DescId = zc_ObjectString_Goods_UKTZED_new()
+            LEFT JOIN ObjectDate AS ObjectDate_Goods_UKTZED_new
+                                 ON ObjectDate_Goods_UKTZED_new.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
+
             LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
                                    ON ObjectString_Goods_TaxImport.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
