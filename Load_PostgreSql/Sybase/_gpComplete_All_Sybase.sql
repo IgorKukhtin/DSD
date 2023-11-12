@@ -39,7 +39,7 @@ BEGIN
    --IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 18 AND vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;
    
 
-   -- IF vbOperDate < '28.02.2023' THEN RETURN; END IF;
+    --IF vbOperDate >= '01.11.2023' AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN RETURN; END IF;
      
 
 
