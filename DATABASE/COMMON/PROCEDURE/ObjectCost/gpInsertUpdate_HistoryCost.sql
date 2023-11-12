@@ -250,13 +250,16 @@ end if;
        -- , tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
       , tmpMIFloat_Summ AS (SELECT MIFloat_Summ.MovementItemId, MIFloat_Summ.DescId, MIFloat_Summ.ValueData
                             FROM MovementItem
+                                 JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                              AND Movement.OperDate between inStartDate AND  inEndDate
+                                              AND Movement.DescId  = zc_Movement_Inventory()
                                  LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                              ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                             AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-                            WHERE MovementItem.MovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
-                              AND MovementItem.DescId = zc_MI_Master()
+                            /*WHERE MovementItem.MovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
+                              AND MovementItem.DescId = zc_MI_Master()*/
                               AND MovementItem.isErased = FALSE
-                              AND inEndDate < '01.01.2023'
+                              -- AND inEndDate < '01.01.2023'
                            )
 
 
@@ -386,7 +389,7 @@ end if;
                    LEFT JOIN tmpMIFloat_Summ AS MIFloat_Summ
                                              ON MIFloat_Summ.MovementItemId = MIContainer.MovementItemId
                                             AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-                                            AND MIContainer.MovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
+                                          --AND MIContainer.MovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
 
               GROUP BY Container.Id
                      , Container.UnitId
@@ -397,6 +400,8 @@ end if;
               HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                   OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN      MIContainer.Amount ELSE 0 END), 0) <> 0)
                   OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END), 0) <> 0)
+                  OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIFloat_Summ.ValueData <> 0 AND MIContainer.MovementDescId IN (zc_Movement_Inventory()) THEN MIFloat_Summ.ValueData ELSE 0 END), 0) <> 0)
+
              UNION ALL
               SELECT Container.Id AS ContainerId
                    , Container.UnitId
@@ -592,6 +597,9 @@ end if;
                       ELSE FALSE
                  END
        ;
+
+    -- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpItem_group);
+
 
      -- !!!Оптимизация!!!
      ANALYZE _tmpMaster;
@@ -1791,4 +1799,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (3705946, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2023', inEndDate:= '31.08.2023', inBranchId:= 0, inItearationCount:= 100, inInsert:= -12345, inDiffSumm:= 1, inSession:= '2') WHERE CalcSummCurrent <> CalcSummNext ORDER BY ABS (Price) DESC -- ORDER BY ABS (Price) DESC
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.10.2023', inEndDate:= '31.10.2023', inBranchId:= 0, inItearationCount:= 100, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (4504111)
