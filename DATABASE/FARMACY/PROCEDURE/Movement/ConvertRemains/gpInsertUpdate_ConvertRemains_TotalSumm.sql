@@ -21,8 +21,14 @@ BEGIN
                                        ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                       AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
+           LEFT JOIN MovementItemString AS MIString_Comment
+                                        ON MIString_Comment.MovementItemId = MovementItem.Id
+                                       AND MIString_Comment.DescId = zc_MIString_Comment()
+                                       
       WHERE MovementItem.MovementId = inMovementId
         AND MovementItem.isErased = FALSE
+        AND MovementItem.Amount > 0 
+        AND COALESCE(MIString_Comment.ValueData , '') = ''
         AND MovementItem.DescId = zc_MI_Master();
 
       -- Сохранили свойство <Итого количество>

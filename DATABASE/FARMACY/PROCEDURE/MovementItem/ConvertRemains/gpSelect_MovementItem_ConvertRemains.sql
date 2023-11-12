@@ -21,10 +21,11 @@ RETURNS TABLE (Id            Integer
 
              , Measure       TVarChar
              , UKTZED        TVarChar
+             , Comment       TVarChar
 
              , Color_Code    Integer
              , Color_UKTZED  Integer
-
+             
              , isErased      Boolean
              )
 AS
@@ -75,6 +76,8 @@ BEGIN
             
             , Object_Goods_Main.CodeUKTZED                          AS UKTZED
             
+            , MIString_Comment.ValueData                            AS Comment
+            
             , CASE WHEN COALESCE (Object_Goods_Main.ObjectCode, 0) = 0
                    THEN zc_Color_Red()
                    ELSE zc_Color_White()
@@ -119,6 +122,9 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Measure
                                          ON MIString_Measure.MovementItemId = MovementItem.Id
                                         AND MIString_Measure.DescId = zc_MIString_Measure()
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
                                         
             LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
 
@@ -126,7 +132,7 @@ BEGIN
 
        WHERE MovementItem.DescId = zc_MI_Master()
          AND MovementItem.MovementId = inMovementId
-         AND (MovementItem.isErased = FALSE AND MovementItem.Amount > 0  OR inIsErased = TRUE)
+         AND (MovementItem.isErased = FALSE AND MovementItem.Amount > 0 AND COALESCE(MIString_Comment.ValueData , '') = ''  OR inIsErased = TRUE)
        ORDER BY MIFloat_Number.ValueData
        ;
 

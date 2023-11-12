@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inRetailId    Integer,       -- торговая сеть
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar
+RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, NameUkr TVarChar
              , isErased Boolean
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
@@ -179,6 +179,7 @@ BEGIN
            , Object_Goods_Main.ObjectCode                                             AS GoodsCodeInt
            , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Goods_Retail.GoodsMainId) AS IdBarCode
            , Object_Goods_Main.Name                                                   AS GoodsName
+           , Object_Goods_Main.NameUkr                                                AS GoodsNameUkr
            , Object_Goods_Retail.isErased
            , Object_Goods_Main.GoodsGroupId
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName

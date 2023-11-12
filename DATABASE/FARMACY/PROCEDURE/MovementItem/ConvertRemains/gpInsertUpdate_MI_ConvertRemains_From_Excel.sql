@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_ConvertRemains_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ConvertRemains_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ConvertRemains_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ConvertRemains_From_Excel(
     IN inMovementId               Integer   ,    -- Идентификатор документа
@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ConvertRemains_From_Excel(
     IN inGoodsName                TVarChar  ,    -- Название товара
     IN inMeasure                  TVarChar  ,    -- Единица измерения
     IN inMeasureConv              TVarChar  ,    -- Единица измерения
+    IN inComment                  TVarChar  ,    -- Комментарий
 
     IN inSession                  TVarChar       -- текущий пользователь
 )
@@ -186,6 +187,7 @@ BEGIN
                                                     , inVAT                 := vbVAT
                                                     , inGoodsName           := inGoodsName
                                                     , inMeasure             := vbMeasure
+                                                    , inComment             := inComment
                                                     , inUserId              := vbUserId);
 
                                                           
