@@ -1,50 +1,55 @@
-a-- Function: lfGet_Object_GoodsGroup_CodeUKTZED (Integer)
+-- Function: lfGet_Object_GoodsGroup_CodeUKTZED (Integer)
 -- находим ближайший не пустой Код УКТ ЗЕД в группе
 
 DROP FUNCTION IF EXISTS lfGet_Object_GoodsGroup_CodeUKTZED_new (Integer);
 
 CREATE OR REPLACE FUNCTION lfGet_Object_GoodsGroup_CodeUKTZED_new (
- inObjectId               Integer    -- начальный эл-нт дерева 
+ inObjectId    Integer
 )
-  RETURNS TABLE (CodeUKTZED_new         TVarChar,
-                 DateUKTZED_new         TDateTime
-          )
+RETURNS TABLE (CodeUKTZED_new         TVarChar
+             , DateUKTZED_new         TDateTime
+              )
 AS
 $BODY$
-DECLARE
-  vbCodeUKTZED_new TVarChar;
-  vbDateUKTZED_new TDateTime;
 BEGIN
-     vbCodeUKTZED_new:= (SELECT CASE WHEN ObjectString_GoodsGroup_UKTZED_new.ValueData <> ''
-                                     THEN ObjectString_GoodsGroup_UKTZED_new.ValueData
-                                   ELSE (SELECT tmp.CodeUKTZED_new FROM lfGet_Object_GoodsGroup_CodeUKTZED_new (ObjectLink_GoodsGroup.ChildObjectId) AS tmp)
-                                   END
-                          FROM Object
-                             LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED_new
-                                                    ON ObjectString_GoodsGroup_UKTZED_new.ObjectId = Object.Id 
-                                                   AND ObjectString_GoodsGroup_UKTZED_new.DescId = zc_ObjectString_GoodsGroup_UKTZED_new()
-                             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
-                                                  ON ObjectLink_GoodsGroup.ObjectId = Object.Id
-                                                 AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                          WHERE Object.Id = inObjectId);
 
-     vbDateUKTZED_new:= (SELECT CASE WHEN ObjectDate_GoodsGroup_UKTZED_new.ValueData IS NOT NULL
-                                     THEN ObjectDate_GoodsGroup_UKTZED_new.ValueData
-                                   ELSE (SELECT tmp.DateUKTZED_new FROM lfGet_Object_GoodsGroup_CodeUKTZED_new (ObjectLink_GoodsGroup.ChildObjectId) AS tmp)
-                                   END
-                          FROM Object
-                             LEFT JOIN ObjectDate AS ObjectDate_GoodsGroup_UKTZED_new
-                                                  ON ObjectDate_GoodsGroup_UKTZED_new.ObjectId = Object.Id 
-                                                 AND ObjectDate_GoodsGroup_UKTZED_new.DescId = zc_ObjectDate_GoodsGroup_UKTZED_new()
-                             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
-                                                  ON ObjectLink_GoodsGroup.ObjectId = Object.Id
-                                                 AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                          WHERE Object.Id = inObjectId);
-  
-   RETURN QUERY                                                       
-   SELECT vbCodeUKTZED_new ::TVarChar   AS CodeUKTZED_new
-        , vbDateUKTZED_new ::TDateTime  AS DateUKTZED_new
-    ;
+     IF COALESCE (inObjectId, 0) = 0
+     THEN
+         RETURN QUERY
+           SELECT ''   :: TVarChar  AS CodeUKTZED_new
+                , NULL :: TDateTime AS DateUKTZED_new
+                 ;
+
+     ELSEIF EXISTS (SELECT 1
+                    FROM ObjectString AS ObjectString_GoodsGroup_UKTZED_new
+                    WHERE ObjectString_GoodsGroup_UKTZED_new.ObjectId  = inObjectId
+                      AND ObjectString_GoodsGroup_UKTZED_new.DescId    = zc_ObjectString_GoodsGroup_UKTZED_new()
+                      AND ObjectString_GoodsGroup_UKTZED_new.ValueData <> ''
+                   )
+     THEN
+         --
+         RETURN QUERY
+           SELECT ObjectString_GoodsGroup_UKTZED_new.ValueData AS CodeUKTZED_new
+                , ObjectDate_GoodsGroup_UKTZED_new.ValueData   AS DateUKTZED_new
+           FROM Object
+                LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED_new
+                                       ON ObjectString_GoodsGroup_UKTZED_new.ObjectId = Object.Id
+                                      AND ObjectString_GoodsGroup_UKTZED_new.DescId = zc_ObjectString_GoodsGroup_UKTZED_new()
+                LEFT JOIN ObjectDate AS ObjectDate_GoodsGroup_UKTZED_new
+                                     ON ObjectDate_GoodsGroup_UKTZED_new.ObjectId = Object.Id
+                                    AND ObjectDate_GoodsGroup_UKTZED_new.DescId = zc_ObjectDate_GoodsGroup_UKTZED_new()
+           WHERE Object.Id = inObjectId
+          ;
+     ELSE 
+         -- рекурсия
+         RETURN QUERY
+           SELECT lfGet.CodeUKTZED_new
+                , lfGet.DateUKTZED_new
+           FROM lfGet_Object_GoodsGroup_CodeUKTZED_new ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_GoodsGroup_Parent())
+                                                       ) AS lfGet
+          ;
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
