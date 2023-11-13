@@ -2569,8 +2569,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoods: TcxButtonEdit
-      Left = 858
-      Top = 30
+      Left = 862
+      Top = 29
       Properties.Buttons = <
         item
           Default = True

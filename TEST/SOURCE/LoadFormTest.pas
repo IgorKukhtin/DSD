@@ -2420,6 +2420,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_PartionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_PartionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_PartionDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_PartionDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_BankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_BankAccountDialogForm'));
