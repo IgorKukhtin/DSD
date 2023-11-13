@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS gpReport_Goods_Partion (TDateTime, Integer, Integer, Int
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_Partion (
     IN inOperDate          TDateTime ,
-    IN inGoodsGroupId      Integer   ,
-    IN inGoodsId           Integer   ,
     IN inUnitGroupId       Integer,    -- группа подразделений на самом деле может быть и подразделением
     IN inLocationId        Integer,    --
+    IN inGoodsGroupId      Integer   ,
+    IN inGoodsId           Integer   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
