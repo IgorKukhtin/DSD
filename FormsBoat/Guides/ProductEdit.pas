@@ -291,6 +291,7 @@ type
     edTaxKind: TcxButtonEdit;
     GuidesTaxKind: TdsdGuides;
     InvNumber_Invoice_Full_ch2: TcxGridDBColumn;
+    cxButton5: TcxButton;
   private
     { Private declarations }
   public

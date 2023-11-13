@@ -3,7 +3,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Lieferanten / Kunden>'
   ClientHeight = 397
-  ClientWidth = 796
+  ClientWidth = 853
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,18 +14,20 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 796
-    Height = 371
+    Width = 853
+    Height = 330
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 796
+    ExplicitHeight = 371
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -58,7 +60,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 178
+        Width = 300
       end
       object DescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -70,6 +72,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -81,35 +84,38 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1082#1072#1083#1077#1085#1076#1072#1088#1085#1099#1093' '#1076#1085#1103#1093
         Options.Editing = False
-        Width = 65
+        Width = 80
+      end
+      object InfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object InfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object InfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1059#1055
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 42
-      end
-      object InfoMoneyGroupName: TcxGridDBColumn
-        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 69
-      end
-      object InfoMoneyDestinationName: TcxGridDBColumn
-        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-        DataBinding.FieldName = 'InfoMoneyDestinationName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 57
+        Width = 200
       end
       object TaxKind_Value: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
@@ -125,15 +131,16 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 65
+        Width = 80
       end
       object TaxKindName_Comment: TcxGridDBColumn
-        Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1053#1044#1057
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName_Comment'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 65
+        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -148,6 +155,41 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 356
+    Width = 853
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitTop = 362
+    object btnUpdate: TcxButton
+      Left = 423
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      TabOrder = 0
+    end
+    object btnComplete: TcxButton
+      Left = 267
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 1
+    end
+    object btnFormClose: TcxButton
+      Left = 616
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actShowErased
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
     end
   end
   object DataSource: TDataSource
@@ -212,6 +254,10 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'dxBarButton1'
@@ -300,17 +346,18 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocolOpenForm
       Category = 0
     end
     object dxBarButton1: TdxBarButton
-      Action = ShowErased
+      Action = actShowErased
       Category = 0
     end
     object dxBarSubItem1: TdxBarSubItem
@@ -373,7 +420,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Images = dmMain.ImageList
     Left = 256
     Top = 160
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -483,9 +530,9 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -497,7 +544,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -541,7 +588,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object ShowErased: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = dsdStoredProc
@@ -687,6 +734,12 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       isSetErased = False
       DataSource = DataSource
     end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ClientPartner'
@@ -699,7 +752,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       item
         Name = 'inisShowAll'
         Value = Null
-        Component = ShowErased
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -717,13 +770,13 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

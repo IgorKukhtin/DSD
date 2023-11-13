@@ -26,18 +26,18 @@ object ClientEditForm: TClientEditForm
     TabOrder = 0
   end
   object cxButton1: TcxButton
-    Left = 142
+    Left = 101
     Top = 375
-    Width = 75
+    Width = 90
     Height = 25
     Action = actInsertUpdateGuides
     Default = True
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 256
+    Left = 215
     Top = 375
-    Width = 75
+    Width = 90
     Height = 25
     Action = actFormClose
     Cancel = True
@@ -58,7 +58,6 @@ object ClientEditForm: TClientEditForm
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitHeight = 337
       object cxLabel2: TcxLabel
         Left = 10
         Top = 8
@@ -99,7 +98,7 @@ object ClientEditForm: TClientEditForm
       object edFax: TcxTextEdit
         Left = 202
         Top = 202
-        TabOrder = 8
+        TabOrder = 7
         Width = 183
       end
       object cxLabel5: TcxLabel
@@ -110,7 +109,7 @@ object ClientEditForm: TClientEditForm
       object edPhone: TcxTextEdit
         Left = 10
         Top = 202
-        TabOrder = 10
+        TabOrder = 9
         Width = 183
       end
       object cxLabel7: TcxLabel
@@ -121,7 +120,7 @@ object ClientEditForm: TClientEditForm
       object edMobile: TcxTextEdit
         Left = 394
         Top = 202
-        TabOrder = 12
+        TabOrder = 11
         Width = 174
       end
       object cxLabel9: TcxLabel
@@ -132,7 +131,7 @@ object ClientEditForm: TClientEditForm
       object edStreet: TcxTextEdit
         Left = 10
         Top = 159
-        TabOrder = 18
+        TabOrder = 17
         Width = 273
       end
       object edEmail: TcxTextEdit
@@ -160,7 +159,7 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 13
+        TabOrder = 12
         Width = 130
       end
       object cxLabel20: TcxLabel
@@ -171,7 +170,7 @@ object ClientEditForm: TClientEditForm
       object edTaxNumber: TcxTextEdit
         Left = 295
         Top = 26
-        TabOrder = 16
+        TabOrder = 14
         Width = 127
       end
       object cxLabel21: TcxLabel
@@ -188,25 +187,25 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 19
+        TabOrder = 18
         Width = 130
       end
       object edName1: TcxTextEdit
         Left = 10
         Top = 245
-        TabOrder = 20
+        TabOrder = 19
         Width = 183
       end
       object edName2: TcxTextEdit
         Left = 202
         Top = 245
-        TabOrder = 21
+        TabOrder = 20
         Width = 183
       end
       object edName3: TcxTextEdit
         Left = 394
         Top = 245
-        TabOrder = 23
+        TabOrder = 22
         Width = 174
       end
       object cxLabel22: TcxLabel
@@ -222,7 +221,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 25
+        TabOrder = 24
         Width = 273
       end
       object cxLabel23: TcxLabel
@@ -238,7 +237,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 28
+        TabOrder = 27
         Width = 130
       end
       object edPLZ: TcxButtonEdit
@@ -271,7 +270,6 @@ object ClientEditForm: TClientEditForm
     object Detail: TcxTabSheet
       Caption = 'Detail'
       ImageIndex = 1
-      ExplicitHeight = 449
       object edIBAN: TcxTextEdit
         Left = 270
         Top = 112
@@ -308,13 +306,13 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 2
+        TabOrder = 1
         Width = 255
       end
       object cxLabel16: TcxLabel
-        Left = 270
-        Top = 46
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Left = 264
+        Top = 49
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       end
       object edInfoMoney: TcxButtonEdit
         Left = 270
@@ -325,13 +323,13 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 4
+        TabOrder = 3
         Width = 271
       end
       object edMember: TcxTextEdit
         Left = 3
         Top = 65
-        TabOrder = 6
+        TabOrder = 5
         Width = 255
       end
       object cxLabel10: TcxLabel
@@ -347,7 +345,7 @@ object ClientEditForm: TClientEditForm
       object edWWW: TcxTextEdit
         Left = 3
         Top = 161
-        TabOrder = 11
+        TabOrder = 10
         Width = 255
       end
       object cxLabel6: TcxLabel
@@ -360,7 +358,7 @@ object ClientEditForm: TClientEditForm
         Top = 22
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
-        TabOrder = 5
+        TabOrder = 4
         Width = 130
       end
       object cxLabel17: TcxLabel
@@ -376,7 +374,7 @@ object ClientEditForm: TClientEditForm
         Top = 22
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 7
+        TabOrder = 6
         Width = 130
       end
       object ceDayBank: TcxCurrencyEdit
@@ -384,7 +382,7 @@ object ClientEditForm: TClientEditForm
         Top = 22
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 9
+        TabOrder = 8
         Width = 130
       end
       object cxLabel18: TcxLabel
@@ -396,6 +394,7 @@ object ClientEditForm: TClientEditForm
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 168
     Top = 40
     object actDataSetRefresh: TdsdDataSetRefresh
@@ -421,10 +420,12 @@ object ClientEditForm: TClientEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object actVATNumberValidation: TdsdVATNumberValidation
       Category = 'DSDLib'
@@ -453,6 +454,7 @@ object ClientEditForm: TClientEditForm
       Company_Address.DataType = ftString
       Company_Address.MultiSelectSeparator = ','
       Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' Tax Number'
+      ImageIndex = 10
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -925,7 +927,7 @@ object ClientEditForm: TClientEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 136
+    Left = 95
     Top = 371
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

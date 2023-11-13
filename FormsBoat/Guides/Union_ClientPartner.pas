@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
   TUnion_ClientPartnerForm = class(TParentForm)
@@ -45,14 +45,14 @@ type
     Name: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     DescName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
-    ShowErased: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     TaxKind_Value: TcxGridDBColumn;
     TaxKindName_Info: TcxGridDBColumn;
     TaxKindName_Comment: TcxGridDBColumn;
@@ -72,6 +72,11 @@ type
     bbUpdate_partner: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnUpdate: TcxButton;
+    btnComplete: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public

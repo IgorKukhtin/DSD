@@ -474,6 +474,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 457
     object btnUpdate: TcxButton
       Left = 543
       Top = 7

@@ -21,11 +21,11 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     Left = 0
     Top = 26
     Width = 674
-    Height = 350
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 612
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -103,6 +103,41 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 335
+    Width = 674
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitLeft = -179
+    ExplicitWidth = 853
+    object btnUpdate: TcxButton
+      Left = 359
+      Top = 6
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      TabOrder = 0
+    end
+    object btnComplete: TcxButton
+      Left = 203
+      Top = 6
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 1
+    end
+    object btnFormClose: TcxButton
+      Left = 753
+      Top = 7
+      Width = 153
+      Height = 25
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
     end
   end
   object DataSource: TDataSource
@@ -291,9 +326,9 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -323,6 +358,12 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

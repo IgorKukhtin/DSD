@@ -833,6 +833,14 @@ object OrderInternalForm: TOrderInternalForm
               Options.Editing = False
               Width = 108
             end
+            object ForCount_ch3: TcxGridDBColumn
+              DataBinding.FieldName = 'ForCount'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
             object isErased_ch3: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
               DataBinding.FieldName = 'isErased'
@@ -1251,9 +1259,6 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2981,7 +2986,6 @@ object OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = macErasedMI_Master_list

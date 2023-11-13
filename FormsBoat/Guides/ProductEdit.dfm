@@ -19,7 +19,7 @@ object ProductEditForm: TProductEditForm
   object cxButton1: TcxButton
     Left = 8
     Top = 524
-    Width = 75
+    Width = 80
     Height = 25
     Action = actInsertUpdateGuides
     Default = True
@@ -28,7 +28,7 @@ object ProductEditForm: TProductEditForm
   object cxButton2: TcxButton
     Left = 103
     Top = 524
-    Width = 75
+    Width = 80
     Height = 25
     Action = actFormClose
     Cancel = True
@@ -38,7 +38,7 @@ object ProductEditForm: TProductEditForm
   object cxButton4: TcxButton
     Left = 206
     Top = 524
-    Width = 106
+    Width = 134
     Height = 25
     Action = mactLoadAgilis_all
     TabOrder = 2
@@ -1575,7 +1575,16 @@ object ProductEditForm: TProductEditForm
       end
     end
   end
+  object cxButton5: TcxButton
+    Left = 391
+    Top = 524
+    Width = 134
+    Height = 25
+    Action = CompleteMovement
+    TabOrder = 8
+  end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 136
     Top = 163
     object actDataSetRefresh: TdsdDataSetRefresh
@@ -1624,10 +1633,12 @@ object ProductEditForm: TProductEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object UnCompleteMovementInvoice: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -1745,8 +1756,8 @@ object ProductEditForm: TProductEditForm
         end
         item
         end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1047#1072#1082#1072#1079
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
       ImageIndex = 77
       Status = mtComplete
       Guides = GuidesStatus
@@ -1843,6 +1854,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089' '#1089#1072#1081#1090#1072
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#1089' '#1089#1072#1081#1090#1072
+      ImageIndex = 10
     end
     object actMovementProtocolOpenFormBank: TdsdOpenForm
       Category = 'Doc'
@@ -4643,8 +4655,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 504
+    Left = 416
+    Top = 480
   end
   object spMovementSetErasedBank: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
@@ -4660,8 +4672,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 504
+    Left = 504
+    Top = 480
   end
   object spMovementUnCompleteBank: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_BankAccount'
@@ -4677,8 +4689,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
-    Top = 496
+    Left = 464
+    Top = 472
   end
   object spSelectBank: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccountByProduct'

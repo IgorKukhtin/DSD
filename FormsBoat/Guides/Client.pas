@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
   TClientForm = class(TParentForm)
@@ -67,6 +67,13 @@ type
     DiscountTax: TcxGridDBColumn;
     TaxKind_Value: TcxGridDBColumn;
     TaxKindName_Info: TcxGridDBColumn;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public

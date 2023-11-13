@@ -500,7 +500,7 @@ object OrderClientForm: TOrderClientForm
       Width = 70
     end
     object edSummDiscount3: TcxCurrencyEdit
-      Left = 435
+      Left = 431
       Top = 145
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1086#1087#1094#1080#1081' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
       ParentShowHint = False
@@ -642,7 +642,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 270
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -651,7 +650,6 @@ object OrderClientForm: TOrderClientForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitHeight = 85
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -659,7 +657,6 @@ object OrderClientForm: TOrderClientForm
           Height = 164
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 167
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -1040,7 +1037,6 @@ object OrderClientForm: TOrderClientForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
-        ExplicitTop = 85
       end
       object Panel4: TPanel
         Left = 0
@@ -1050,7 +1046,6 @@ object OrderClientForm: TOrderClientForm
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
-        ExplicitTop = 93
         object PanelProdColorItems: TPanel
           Left = 1
           Top = 1
@@ -1772,7 +1767,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitHeight = 270
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -1780,7 +1774,6 @@ object OrderClientForm: TOrderClientForm
         Height = 351
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 270
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -2787,7 +2780,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitHeight = 270
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2797,7 +2789,6 @@ object OrderClientForm: TOrderClientForm
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
-        ExplicitHeight = 270
         object cxGridDBTableViewInfo: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = InfoDS
@@ -2846,7 +2837,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitHeight = 270
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2855,7 +2845,6 @@ object OrderClientForm: TOrderClientForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 270
         object cxGridDBTableViewInvoice: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = InvoiceDS
@@ -3534,7 +3523,7 @@ object OrderClientForm: TOrderClientForm
     Left = 344
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 16
+    TabOrder = 15
     Width = 132
   end
   object Panel_btn: TPanel
@@ -3544,7 +3533,6 @@ object OrderClientForm: TOrderClientForm
     Height = 64
     Align = alBottom
     TabOrder = 17
-    ExplicitTop = 438
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6

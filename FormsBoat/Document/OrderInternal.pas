@@ -283,6 +283,7 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     cxButton3: TcxButton;
+    ForCount_ch3: TcxGridDBColumn;
 
   private
   public

@@ -19,7 +19,7 @@
   object cxButton1: TcxButton
     Left = 169
     Top = 335
-    Width = 75
+    Width = 90
     Height = 25
     Action = actInsertUpdateGuides
     Default = True
@@ -28,7 +28,7 @@
   object cxButton2: TcxButton
     Left = 318
     Top = 335
-    Width = 75
+    Width = 90
     Height = 25
     Action = actFormClose
     Cancel = True
@@ -49,8 +49,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitLeft = -104
-      ExplicitTop = 21
       object edName: TcxTextEdit
         Left = 10
         Top = 72
@@ -129,7 +127,7 @@
       object edStreet: TcxTextEdit
         Left = 10
         Top = 161
-        TabOrder = 14
+        TabOrder = 13
         Width = 273
       end
       object edEmail: TcxTextEdit
@@ -151,7 +149,7 @@
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 15
+        TabOrder = 14
         Width = 130
       end
       object cxLabel16: TcxLabel
@@ -168,7 +166,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 17
+        TabOrder = 15
         Width = 130
       end
       object cxLabel20: TcxLabel
@@ -179,7 +177,7 @@
       object edTaxNumber: TcxTextEdit
         Left = 292
         Top = 30
-        TabOrder = 19
+        TabOrder = 17
         Width = 130
       end
       object cxLabel19: TcxLabel
@@ -240,9 +238,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = 'Detail'
       ImageIndex = 1
-      ExplicitLeft = -24
-      ExplicitTop = 21
-      ExplicitHeight = 401
       object cxLabel7: TcxLabel
         Left = 287
         Top = 99
@@ -268,13 +263,13 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 2
+        TabOrder = 1
         Width = 265
       end
       object cxLabel15: TcxLabel
         Left = 287
         Top = 56
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       end
       object edInfoMoney: TcxButtonEdit
         Left = 287
@@ -285,7 +280,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 4
+        TabOrder = 2
         Width = 266
       end
       object cxLabel12: TcxLabel
@@ -296,13 +291,13 @@
       object edCodeDB: TcxTextEdit
         Left = 15
         Top = 30
-        TabOrder = 6
+        TabOrder = 4
         Width = 130
       end
       object edMember: TcxTextEdit
         Left = 15
         Top = 74
-        TabOrder = 7
+        TabOrder = 5
         Width = 265
       end
       object cxLabel10: TcxLabel
@@ -313,7 +308,7 @@
       object edWWW: TcxTextEdit
         Left = 15
         Top = 163
-        TabOrder = 9
+        TabOrder = 7
         Width = 265
       end
       object ceDiscountTax: TcxCurrencyEdit
@@ -321,7 +316,7 @@
         Top = 30
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 10
+        TabOrder = 8
         Width = 127
       end
       object Код: TcxLabel
@@ -334,7 +329,7 @@
         Top = 30
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 12
+        TabOrder = 10
         Width = 130
       end
       object cxLabel17: TcxLabel
@@ -367,6 +362,7 @@
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 160
     Top = 27
     object actDataSetRefresh: TdsdDataSetRefresh
@@ -392,10 +388,12 @@
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
   end
   object spInsertUpdate: TdsdStoredProc

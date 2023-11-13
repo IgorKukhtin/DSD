@@ -97,6 +97,7 @@ object PartnerForm: TPartnerForm
       object TaxKindName_Info: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName_Info'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -122,6 +123,7 @@ object PartnerForm: TPartnerForm
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -196,6 +198,7 @@ object PartnerForm: TPartnerForm
       object IBAN: TcxGridDBColumn
         Caption = #1088'/'#1089#1095
         DataBinding.FieldName = 'IBAN'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -205,6 +208,7 @@ object PartnerForm: TPartnerForm
       object WWW: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089' '#1089#1072#1081#1090#1072
         DataBinding.FieldName = 'WWW'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -214,15 +218,17 @@ object PartnerForm: TPartnerForm
       object Member: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1072#1085#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'Member'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 80
+        Width = 100
       end
       object Email: TcxGridDBColumn
         Caption = #1069#1083'. '#1087#1086#1095#1090#1072
         DataBinding.FieldName = 'Email'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -233,6 +239,7 @@ object PartnerForm: TPartnerForm
       object CodeDB: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1085#1072#1096' '#1074' '#1080#1093' '#1073#1072#1079#1077')'
         DataBinding.FieldName = 'CodeDB'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -266,7 +273,7 @@ object PartnerForm: TPartnerForm
         Width = 70
       end
       object InfoMoneyGroupName: TcxGridDBColumn
-        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1043#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -275,7 +282,7 @@ object PartnerForm: TPartnerForm
         Width = 100
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
-        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -284,7 +291,7 @@ object PartnerForm: TPartnerForm
         Width = 100
       end
       object InfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1059#1055
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -340,6 +347,7 @@ object PartnerForm: TPartnerForm
     Height = 41
     Align = alBottom
     TabOrder = 5
+    ExplicitTop = 341
     object btnInsert: TcxButton
       Left = 485
       Top = 7
