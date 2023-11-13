@@ -79,7 +79,8 @@ BEGIN
                                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
                                                             AND MILinkObject_PaidKind.ObjectId       = vbPaidKindId
-                      WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', inOperDate) AND inOperDate - INTERVAL '1 DAY'
+                      WHERE Movement.DescId = zc_Movement_Currency()
+                        AND Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', inOperDate) AND inOperDate -- - INTERVAL '1 DAY'
                         AND Movement.StatusId = zc_Enum_Status_Complete()
                       ORDER BY Movement.OperDate DESC
                       LIMIT 1
@@ -100,12 +101,50 @@ BEGIN
                                                            ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
                                                           AND MILinkObject_PaidKind.ObjectId       = vbPaidKindId
-                    WHERE Movement.OperDate = inOperDate
+                    WHERE Movement.DescId   = zc_Movement_Currency()
+                      AND Movement.OperDate = inOperDate
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                    )*/
      THEN
-         PERFORM gpInsertUpdate_Movement_Currency (ioId                       := 0
-                                                 , inInvNumber                := CAST (NEXTVAL ('Movement_currency_seq') AS TVarChar)
+
+         PERFORM gpInsertUpdate_Movement_Currency (ioId                       := (SELECT Movement.Id
+                                                                                  FROM Movement
+                                                                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                                                              AND MovementItem.DescId     = zc_MI_Master()
+                                                                                                              AND MovementItem.ObjectId   = vbCurrencyFromId
+                                                                                       INNER JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                                                                                         ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                                                                                        AND MILinkObject_CurrencyTo.DescId         = zc_MILinkObject_Currency()
+                                                                                                                        AND MILinkObject_CurrencyTo.ObjectId       = vbCurrencyToId
+                                                                                       INNER JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                                                                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                                                                                        AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
+                                                                                                                        AND MILinkObject_PaidKind.ObjectId       = vbPaidKindId
+                                                                                  WHERE Movement.DescId = zc_Movement_Currency()
+                                                                                    AND Movement.OperDate = inOperDate
+                                                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                                  LIMIT 1
+                                                                                 )
+                                                 , inInvNumber                := COALESCE ((SELECT Movement.InvNumber
+                                                                                            FROM Movement
+                                                                                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                                                                                        AND MovementItem.ObjectId   = vbCurrencyFromId
+                                                                                                 INNER JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                                                                                                   ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                                                                                                  AND MILinkObject_CurrencyTo.DescId         = zc_MILinkObject_Currency()
+                                                                                                                                  AND MILinkObject_CurrencyTo.ObjectId       = vbCurrencyToId
+                                                                                                 INNER JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                                                                                                   ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                                                                                                  AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
+                                                                                                                                  AND MILinkObject_PaidKind.ObjectId       = vbPaidKindId
+                                                                                            WHERE Movement.DescId   = zc_Movement_Currency()
+                                                                                              AND Movement.OperDate = inOperDate
+                                                                                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                                            LIMIT 1
+                                                                                           )
+                                                                                         , CAST (NEXTVAL ('Movement_currency_seq') AS TVarChar)
+                                                                                         )
                                                  , inOperDate                 := inOperDate
                                                  , inAmount                   := vbAmount
                                                  , inParValue                 := vbParValue
@@ -115,6 +154,37 @@ BEGIN
                                                  , inPaidKindId               := vbPaidKindId
                                                  , inSession                  := inSession
                                                   );
+
+         IF 1 < (SELECT COUNT(*)
+                        FROM Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.ObjectId   = vbCurrencyFromId
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                               ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_CurrencyTo.DescId         = zc_MILinkObject_Currency()
+                                                              AND MILinkObject_CurrencyTo.ObjectId       = vbCurrencyToId
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
+                                                              AND MILinkObject_PaidKind.ObjectId       = vbPaidKindId
+                        WHERE Movement.DescId   = zc_Movement_Currency()
+                          AND Movement.OperDate = inOperDate
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                   )
+         THEN
+            RAISE EXCEPTION 'Îøèáêà.<%>   <%>   <%>   <%>    <%>   <%>   <%>    <%>'
+            , inInternalName
+            , vbCurrencyFromId
+            , vbCurrencyToId
+            , vbPaidKindId
+            , inOperDate
+            , CHR (13)
+            , vbAmount_find
+            , vbAmount
+            ;
+         END IF;
+
      END IF;
 
 END;
