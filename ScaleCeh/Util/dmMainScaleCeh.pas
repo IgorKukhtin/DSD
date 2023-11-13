@@ -56,6 +56,8 @@ type
     function gpInsert_MovementCeh_all(var execParamsMovement:TParams): Boolean;
     function gpUpdate_ScaleCeh_Movement_ArticleLoss(execParams:TParams): Boolean;
     function gpUpdate_ScaleCeh_Movement_Status(execParams:TParams): Boolean;
+    // Scale + ScaleCeh
+    function gpUpdate_Scale_Movement_Status_2(MovementId_parent:Integer): Boolean;
     //
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkPartion(var ValueStep_obv : Integer; MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
@@ -644,6 +646,24 @@ begin
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpUpdate_ScaleCeh_Movement_ArticleLoss');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpUpdate_Scale_Movement_Status_2(MovementId_parent:Integer): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_Movement_Status';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, MovementId_parent);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_PersonalComlete');
        end;}
     end;
     Result:=true;
