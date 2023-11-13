@@ -8,7 +8,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateT
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -29,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
     IN inPartionGoods         TVarChar  , -- Партия товара
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
     IN inComment              TVarChar  , --
+    IN inIsProtocol           Boolean   , --
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -131,12 +133,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SubjectDoc(), ioId, inSubjectDocId);
 
 
-   -- !!!только при создании!!!
-   IF vbIsInsert = TRUE
-   THEN
-     -- сохранили связь с <Пользователь>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, vbUserId);
-   END IF;
+     -- !!!только при создании!!!
+     IF vbIsInsert = TRUE
+     THEN
+       -- сохранили связь с <Пользователь>
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, vbUserId);
+     END IF;
 
      -- сохранили связь с документом <Заявки сторонние>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order);
@@ -151,7 +153,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+     IF inIsProtocol = TRUE
+     THEN
+         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
