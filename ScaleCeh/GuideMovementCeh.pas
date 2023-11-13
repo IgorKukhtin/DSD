@@ -82,6 +82,8 @@ type
     actComplete: TAction;
     actUnComplete: TAction;
     bbChangeOperDatePartner: TSpeedButton;
+    actUpdateStatus: TAction;
+    bbUpdateStatus: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -99,6 +101,7 @@ type
     procedure actCompleteExecute(Sender: TObject);
     procedure actUnCompleteExecute(Sender: TObject);
     procedure bbChangeOperDatePartnerClick(Sender: TObject);
+    procedure actUpdateStatusExecute(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -324,6 +327,15 @@ begin
      RefreshDataSet;
      if MovementId <> '' then
         CDS.Locate('Id',MovementId,[loCaseInsensitive]);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementCehForm.actUpdateStatusExecute(Sender: TObject);
+begin
+     if MessageDlg('Действительно Провести документ <Инвентаризация>?',mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+     //
+     if DMMainScaleCehForm.gpUpdate_Scale_Movement_Status_2(CDS.FieldByName('MovementId_parent').AsInteger) = true
+     then actRefreshExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementCehForm.actExitExecute(Sender: TObject);

@@ -34,6 +34,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitTop = 2
       object ButtonExit: TSpeedButton
         Left = 326
         Top = 4
@@ -71,7 +72,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         ShowHint = True
       end
       object bbChoice: TSpeedButton
-        Left = 73
+        Left = 67
         Top = 3
         Width = 31
         Height = 29
@@ -127,7 +128,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         OnClick = bbViewMIClick
       end
       object SpeedButton1: TSpeedButton
-        Left = 175
+        Left = 187
         Top = 3
         Width = 31
         Height = 29
@@ -176,7 +177,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         ShowHint = True
       end
       object SpeedButton2: TSpeedButton
-        Left = 212
+        Left = 224
         Top = 3
         Width = 31
         Height = 29
@@ -225,7 +226,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
         ShowHint = True
       end
       object bbChangeOperDatePartner: TSpeedButton
-        Left = 123
+        Left = 143
         Top = 3
         Width = 31
         Height = 29
@@ -242,6 +243,24 @@ object GuideMovementCehForm: TGuideMovementCehForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbChangeOperDatePartnerClick
+      end
+      object bbUpdateStatus: TSpeedButton
+        Left = 106
+        Top = 3
+        Width = 31
+        Height = 29
+        Action = actUpdateStatus
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          80000080000000808000800000008000800080800000C0C0C000808080000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00444444444444
+          4444444444444444444444444904444444444444999044444444444499904444
+          4444444999990444444444999999044444444899049990444444890444499044
+          4444444444499904444444444444990444444444444449904444444444444489
+          0444444444444448904444444444444449904444444444444444}
+        ParentShowHint = False
+        ShowHint = True
       end
     end
     object cxDBGrid: TcxGrid
@@ -709,6 +728,11 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Category = 'ScaleLib'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1090#1072#1090#1091#1089' - '#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
       OnExecute = actUnCompleteExecute
+    end
+    object actUpdateStatus: TAction
+      Category = 'ScaleLib'
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1077#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
+      OnExecute = actUpdateStatusExecute
     end
   end
   object FormParams: TdsdFormParams
