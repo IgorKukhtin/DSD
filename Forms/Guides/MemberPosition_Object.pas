@@ -60,6 +60,8 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     PositionName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    actUpdateActionGLN: TdsdInsertUpdateAction;
+    bbUpdateActionGLN: TdxBarButton;
   private
     { Private declarations }
   public

@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PositionId Integer, Posi
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , BranchId Integer, BranchName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar 
+             , GLN TVarChar
              , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -80,6 +81,7 @@ BEGIN
          , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
          , Object_Unit.ObjectCode                   AS UnitCode
          , Object_Unit.ValueData                    AS UnitName
+         , ObjectString_GLN.ValueData   :: TVarChar AS GLN
 
          , Object_Member.isErased                   AS isErased
 
@@ -102,6 +104,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Member.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
+
+         LEFT JOIN ObjectString AS ObjectString_GLN
+                                ON ObjectString_GLN.ObjectId = Object_Member.Id
+                               AND ObjectString_GLN.DescId = zc_ObjectString_Member_GLN()
+
          LEFT JOIN ObjectLink AS ObjectLink_Member_InfoMoney
                               ON ObjectLink_Member_InfoMoney.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_InfoMoney.DescId = zc_ObjectLink_Member_InfoMoney()
@@ -146,6 +153,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.11.23         *
  29.11.16         *
 */
 
