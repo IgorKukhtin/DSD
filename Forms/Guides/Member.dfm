@@ -913,7 +913,7 @@ object MemberForm: TMemberForm
     object actUpdateActionGLN: TdsdInsertUpdateAction
       Category = 'GLN'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN'
       ImageIndex = 77
       FormName = 'TMemberGLNEditForm'
       FormNameParam.Value = 'TMemberGLNEditForm'
