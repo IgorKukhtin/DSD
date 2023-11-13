@@ -3,7 +3,7 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1082#1086#1076' UKTZED)>'
   ClientHeight = 332
-  ClientWidth = 586
+  ClientWidth = 699
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 586
+    Width = 699
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 586
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -310,6 +311,14 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_UKTZEDnew'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -366,6 +375,10 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbStartLoad_UKTZEDnew: TdxBarButton
+      Action = macStartLoad_UKTZEDnew
       Category = 0
     end
   end
@@ -539,6 +552,45 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
       Caption = 'actUpdateDataSource'
       DataSource = DataSource
     end
+    object actGetImportSetting_UKTZEDnew: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_UKTZEDnew'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object macStartLoad_UKTZEDnew: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_UKTZEDnew
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1082#1086#1076#1086#1074' '#1059#1050#1058#1047' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1082#1086#1076#1072' '#1059#1050#1058#1047' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1059#1050#1058#1047' '#1085#1072' '#1076#1072#1090#1091
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1086#1076' '#1059#1050#1058#1047' '#1085#1072' '#1076#1072#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsGroup'
@@ -647,5 +699,47 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
     PackSize = 1
     Left = 464
     Top = 179
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 512
+    Top = 128
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsGroupForm;zc_Object_ImportSetting_GoodsGroupUKTZED'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 136
   end
 end
