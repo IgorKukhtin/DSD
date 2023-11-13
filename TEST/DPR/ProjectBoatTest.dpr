@@ -62,7 +62,7 @@ uses
   AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
-  AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
+  AncestorJournal in '..\..\FormsBoat\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
