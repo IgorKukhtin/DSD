@@ -182,6 +182,8 @@ BEGIN
 
            UNION SELECT 'BranchId'               AS Name WHERE inIsCeh = FALSE
            UNION SELECT 'DiffSaleOrder'          AS Name WHERE inIsCeh = FALSE
+           
+           UNION SELECT 'isOperDatePartner'      AS Name WHERE inIsCeh = FALSE
 
                 ) AS tmp
            ORDER BY 1

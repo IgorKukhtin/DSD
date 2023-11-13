@@ -38,6 +38,8 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , CountForPrice         TFloat
              , CountForPrice_Return  TFloat
              , Price_Income          TFloat
+             , Price_Income_from     TFloat
+             , Price_Income_to       TFloat
              , CountForPrice_Income  TFloat
 
              , Color_calc            Integer
@@ -528,6 +530,8 @@ BEGIN
                  , 0 :: TFloat                     AS CountForPrice_Return
 
                  , 0 :: TFloat                     AS Price_Income
+                 , 0 :: TFloat                     AS Price_Income_from
+                 , 0 :: TFloat                     AS Price_Income_to
                  , 1 :: TFloat                     AS CountForPrice_Income
 
                  , CASE WHEN (tmpMI.Amount_Order - tmpMI.Amount_Weighing) > 0
@@ -632,7 +636,7 @@ BEGIN
         -- Результат - товары zc_Movement_ContractGoods
         RETURN QUERY
            WITH tmpContractGoods
-                     AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.ValuePrice
+                     AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.ValuePrice, tmp.ValuePrice_from, tmp.ValuePrice_to
                          FROM lpGet_MovementItem_ContractGoods (inOperDate:= inOperDate, inJuridicalId:=0, inPartnerId:= 0, inContractId:= -1 * inOrderExternalId, inGoodsId:= 0, inUserId:= vbUserId) AS tmp
                         )
 
@@ -647,6 +651,8 @@ BEGIN
                               , View_InfoMoney.InfoMoneyDestinationName
                               , View_InfoMoney.InfoMoneyName
                               , tmpContractGoods.ValuePrice
+                              , tmpContractGoods.ValuePrice_from
+                              , tmpContractGoods.ValuePrice_to
                               , tmpContractGoods.GoodsKindId
                          FROM tmpContractGoods
                               LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpContractGoods.GoodsId
@@ -709,8 +715,10 @@ BEGIN
                 , 1 :: TFloat                 AS CountForPrice
                 , 1 :: TFloat                 AS CountForPrice_Return
 
-                , tmpGoods.ValuePrice :: TFloat AS Price_Income
-                , 1 :: TFloat                   AS CountForPrice_Income
+                , tmpGoods.ValuePrice      :: TFloat AS Price_Income
+                , tmpGoods.ValuePrice_from :: TFloat AS Price_Income_from
+                , tmpGoods.ValuePrice_to   :: TFloat AS Price_Income_to
+                , 1 :: TFloat                        AS CountForPrice_Income
 
                 , 0                           AS Color_calc -- clBlack
                 , 0                           AS MovementId_Promo
@@ -1309,6 +1317,8 @@ BEGIN
                 , 1 :: TFloat                 AS CountForPrice_Return
 
                 , 0 :: TFloat                 AS Price_Income
+                , 0 :: TFloat                 AS Price_Income_from
+                , 0 :: TFloat                 AS Price_Income_to
                 , 1 :: TFloat                 AS CountForPrice_Income
 
                 , 0                           AS Color_calc -- clBlack
