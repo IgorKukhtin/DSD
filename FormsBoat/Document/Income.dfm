@@ -86,7 +86,7 @@ object IncomeForm: TIncomeForm
     object cxLabel4: TcxLabel
       Left = 601
       Top = 5
-      Caption = #1050#1086#1084#1091
+      Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 271

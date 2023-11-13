@@ -154,6 +154,8 @@ type
     Price_Income: TcxGridDBColumn;
     gbPriceIncome: TGroupBox;
     EditPriceIncome: TcxCurrencyEdit;
+    Price_Income_from: TcxGridDBColumn;
+    Price_Income_to: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -224,6 +226,7 @@ type
     procedure bbGoodsRemainsClick(Sender: TObject);
   private
     oldParam1, oldParam2:Integer;
+    oldParam3:TDateTime;
     fCloseOK : Boolean;
     fModeSave : Boolean;
     fStartWrite : Boolean;
@@ -258,7 +261,14 @@ begin
 end;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave, isDialog : Boolean) : Boolean;
+var OperDate_params:TDateTime;
 begin
+     //
+     if SettingMain.isOperDatePartner = TRUE
+     then OperDate_params:= execParamsMovement.ParamByName('OperDatePartner').AsDateTime
+     else OperDate_params:=execParamsMovement.ParamByName('OperDate').AsDateTime;
+
+     //
      fModeSave:= isModeSave;
      fCloseOK:=false;
      fChoicePartionGoods_20103:= false;
@@ -292,6 +302,7 @@ begin
      begin
        oldParam1:=-1;
        oldParam2:=-1;
+       oldParam3:=Date+1;
        //
        Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
        if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ: ' + Self.Caption;
@@ -307,6 +318,7 @@ begin
      begin
        oldParam1:=-1;
        oldParam2:=-1;
+       oldParam3:=Date+1;
        //
        Self.Caption:='Параметры продукции для покупателя <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
        if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
@@ -326,12 +338,20 @@ begin
      with spSelect do
      begin
        if ((oldParam1 <> execParamsMovement.ParamByName('ContractId').AsInteger)
-       or (oldParam2 <> execParamsMovement.ParamByName('FromId').AsInteger))
+        or (oldParam2 <> execParamsMovement.ParamByName('FromId').AsInteger)
+        or (oldParam3 <> OperDate_params)
+          )
        then begin
              oldParam1:= execParamsMovement.ParamByName('ContractId').AsInteger;
              oldParam2:= execParamsMovement.ParamByName('FromId').AsInteger;
+             oldParam3:= OperDate_params;
              //
-             Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+             Params.ParamByName('inOperDate').Value:= OperDate_params;
+             //
+             Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('FromCode').asString + ')'
+                                                                 + execParamsMovement.ParamByName('FromName').asString + '>'
+                                                                 + ' от <'+DateToStr(OperDate_params)+'>'
+                                                                 ;
              if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
              Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
              Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
@@ -349,6 +369,7 @@ begin
      begin
        oldParam1:=-1;
        oldParam2:=-1;
+       oldParam3:=Date;
        //
        Self.Caption:='Параметры продукции по заявке на <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
        if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
@@ -361,6 +382,7 @@ begin
      else begin
            oldParam1:=-1;
            oldParam2:=-1;
+           oldParam3:=Date+1;
            //
            if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - Параметры продукции'
            else Self.Caption:= 'Параметры продукции';
@@ -385,6 +407,8 @@ begin
   begin
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible:= false;
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_from').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_to').Index].Visible:= false;
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Return').Index].Visible:= false;
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_OrderWeight').Index].Caption:= 'Заявка (кол-во)';
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_diffWeight').Index].Caption:= 'Разница (кол-во)';
@@ -873,6 +897,20 @@ begin
                      exit;
             end;
             //
+            if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+              or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+              and (CDS.FieldByName('Price_Income_from').AsFloat > 0)
+              and (CDS.FieldByName('Price_Income_from').AsFloat < CDS.FieldByName('Price_Income_to').AsFloat)
+              and ((CDS.FieldByName('Price_Income_from').AsFloat > ParamsMI.ParamByName('BoxCount').AsFloat)
+                or (CDS.FieldByName('Price_Income_to').AsFloat   < ParamsMI.ParamByName('BoxCount').AsFloat)
+                  )
+            then begin
+                     Result:= false;
+                     //ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
+                     ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации.');
+                     exit;
+            end
+            else
             if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
               or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
               and (CDS.FieldByName('Price_Income').AsFloat > 0)
@@ -1890,6 +1928,7 @@ begin
   //
   oldParam1:=-1;
   oldParam2:=-1;
+  oldParam3:=Date+1;
   // tare-main
   PanelTare.Visible:= SettingMain.WeightTare1 = 0;
   rgTareWeight.Visible:= SettingMain.WeightTare1 = 0;

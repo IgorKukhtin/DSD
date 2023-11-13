@@ -45,43 +45,57 @@ object InfoMoneyForm: TInfoMoneyForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
       object InfoMoneyGroup: TcxGridDBColumn
-        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'InfoMoneyGroupName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         Width = 150
       end
       object InfoMoneyDestination: TcxGridDBColumn
-        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         Width = 184
       end
       object Name: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         Width = 190
       end
       object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
         DataBinding.FieldName = 'UnitName'
+        GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 157
+        Width = 200
       end
       object isProfitLoss: TcxGridDBColumn
         Caption = #1047#1072#1090#1088#1072#1090#1099' '#1087#1086' '#1086#1087#1083#1072#1090#1077
         DataBinding.FieldName = 'isProfitLoss'
+        Visible = False
+        GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 69
+        Width = 70
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

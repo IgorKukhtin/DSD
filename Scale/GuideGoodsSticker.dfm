@@ -385,8 +385,8 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Caption = 'PanelPrint'
           TabOrder = 2
           object btnPrint: TButton
-            Left = 26
-            Top = 0
+            Left = 20
+            Top = 1
             Width = 100
             Height = 33
             Caption = #1055#1045#1063#1040#1058#1068
@@ -402,8 +402,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 4
-          ExplicitLeft = -1
-          ExplicitTop = 333
           object cbPreviewPrint: TcxCheckBox
             Left = 20
             Top = 0
@@ -421,8 +419,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = -1
-        ExplicitTop = -1
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
@@ -500,8 +496,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 3
-          ExplicitLeft = 5
-          ExplicitTop = 326
           object cb_70_70: TcxCheckBox
             Left = 15
             Top = -1

@@ -245,6 +245,7 @@ inherited DialogPrintForm: TDialogPrintForm
       Properties.DateButtons = [btnToday]
       Properties.SaveTime = False
       Properties.ShowTime = False
+      Properties.OnChange = DateValueEditPropertiesChange
       TabOrder = 0
       Width = 95
     end

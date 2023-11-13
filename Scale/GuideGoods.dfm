@@ -317,6 +317,9 @@ object GuideGoodsForm: TGuideGoodsForm
         object Price_Income: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
           DataBinding.FieldName = 'Price_Income'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -324,6 +327,30 @@ object GuideGoodsForm: TGuideGoodsForm
           Options.Editing = False
           VisibleForCustomization = False
           Width = 55
+        end
+        object Price_Income_from: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1086#1090' ('#1089#1087#1077#1094'.)'
+          DataBinding.FieldName = 'Price_Income_from'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object Price_Income_to: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1076#1086' ('#1089#1087#1077#1094'.)'
+          DataBinding.FieldName = 'Price_Income_to'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
         object Amount_Order: TcxGridDBColumn
           Caption = #1047#1072#1103#1074#1082#1072
@@ -1448,8 +1475,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Caption = #1062#1045#1053#1040' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
         TabOrder = 2
         Visible = False
-        ExplicitLeft = -1
-        ExplicitTop = 125
         object EditPriceIncome: TcxCurrencyEdit
           Left = 5
           Top = 16

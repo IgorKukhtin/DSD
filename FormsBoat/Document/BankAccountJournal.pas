@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TBankAccountJournalForm = class(TAncestorJournalForm)
@@ -70,6 +71,14 @@ type
     InfoMoneyGroupName_Invoice: TcxGridDBColumn;
     InfoMoneyDestinationName_Invoice: TcxGridDBColumn;
     InfoMoneyName_all_Invoice: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnComplete: TcxButton;
+    btnUnComplete: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public

@@ -349,7 +349,9 @@ begin
        //Execute;
     end;
     //
-    actPrint.ReportNameParam.Value:=CDS.FieldByName('StickerFileName').asString;
+    if cb_70_70.Checked = TRUE
+    then actPrint.ReportNameParam.Value:=CDS.FieldByName('StickerFileName_70_70').asString
+    else actPrint.ReportNameParam.Value:=CDS.FieldByName('StickerFileName').asString;
     actPrint.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
     actPrint.WithOutPreview:= not cbPreviewPrint.Checked;
     //actPrint.WithOutPreview:= TRUE;
@@ -713,8 +715,9 @@ begin
           and(rgGoodsKind.ItemIndex>=0)
           and(rgPriceList.ItemIndex>=0)
           and(ParamsMI.ParamByName('RealWeight').AsFloat>=1)
-          and (CDS.FieldByName('StickerFileName').asString <> '')
-          ;
+          and (((CDS.FieldByName('StickerFileName').asString <> '') and (cb_70_70.Checked = FALSE))
+            or ((CDS.FieldByName('StickerFileName_70_70').asString <> '') and (cb_70_70.Checked = TRUE))
+              );
      //
      if fModeSave = FALSE then
      begin
@@ -723,9 +726,14 @@ begin
           exit;
      end;
      //
-     if CDS.FieldByName('StickerFileName').asString = '' then
+     if (CDS.FieldByName('StickerFileName').asString = '') and (cb_70_70.Checked = FALSE) then
      begin
           ShowMessage ('Ошибка.Шаблон для печати НЕ найден.');
+          exit;
+     end;
+     if (CDS.FieldByName('StickerFileName_70_70').asString = '') and (cb_70_70.Checked = TRUE) then
+     begin
+          ShowMessage ('Ошибка.Шаблон для печати 70 x 70 НЕ найден.');
           exit;
      end;
      //

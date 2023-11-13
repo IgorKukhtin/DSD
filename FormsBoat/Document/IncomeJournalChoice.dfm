@@ -221,12 +221,12 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             Width = 91
           end
           object ToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
+            Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1084#1091
-            Width = 91
+            Width = 120
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086

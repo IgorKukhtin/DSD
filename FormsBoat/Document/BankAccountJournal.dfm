@@ -1,27 +1,27 @@
 inherited BankAccountJournalForm: TBankAccountJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 356
-  ClientWidth = 835
+  ClientWidth = 1094
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 851
+  ExplicitWidth = 1110
   ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 835
-    Height = 299
+    Width = 1094
+    Height = 258
     TabOrder = 3
     ExplicitWidth = 835
     ExplicitHeight = 299
-    ClientRectBottom = 299
-    ClientRectRight = 835
+    ClientRectBottom = 258
+    ClientRectRight = 1094
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 835
       ExplicitHeight = 299
       inherited cxGrid: TcxGrid
-        Width = 835
-        Height = 299
+        Width = 1094
+        Height = 258
         ExplicitWidth = 835
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -161,6 +161,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object InfoMoneyCode_Invoice: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode_Invoice'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
@@ -168,7 +169,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 33
           end
           object InfoMoneyGroupName_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1043#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -178,7 +179,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 80
           end
           object InfoMoneyDestinationName_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -188,7 +189,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 80
           end
           object InfoMoneyName_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -197,7 +198,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 80
           end
           object InfoMoneyName_all_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_all_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -207,7 +208,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 80
           end
           object UnitName_Invoice: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
             DataBinding.FieldName = 'UnitName_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -396,13 +397,73 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 835
+    Width = 1094
     ExplicitWidth = 835
     inherited deStart: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
+    end
+  end
+  object Panel_btn: TPanel [2]
+    Left = 0
+    Top = 315
+    Width = 1094
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitLeft = -193
+    ExplicitWidth = 1028
+    object btnInsert: TcxButton
+      Left = 42
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 159
+      Top = 7
+      Width = 101
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnComplete: TcxButton
+      Left = 303
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actComplete
+      TabOrder = 2
+    end
+    object btnUnComplete: TcxButton
+      Left = 460
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actUnComplete
+      TabOrder = 3
+    end
+    object btnSetErased: TcxButton
+      Left = 616
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actSetErased
+      TabOrder = 4
+    end
+    object btnFormClose: TcxButton
+      Left = 809
+      Top = 7
+      Width = 153
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1027,6 +1088,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   inherited MasterDS: TDataSource

@@ -1363,17 +1363,17 @@ object ProductEditForm: TProductEditForm
               Properties.Items = <
                 item
                   Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-                  ImageIndex = 11
+                  ImageIndex = 76
                   Value = 1
                 end
                 item
                   Description = #1055#1088#1086#1074#1077#1076#1077#1085
-                  ImageIndex = 12
+                  ImageIndex = 77
                   Value = 2
                 end
                 item
                   Description = #1059#1076#1072#1083#1077#1085
-                  ImageIndex = 13
+                  ImageIndex = 52
                   Value = 3
                 end>
               HeaderAlignmentHorz = taCenter
@@ -1709,9 +1709,9 @@ object ProductEditForm: TProductEditForm
         end
         item
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       Guides = GuidesStatus
     end
@@ -1747,7 +1747,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       Guides = GuidesStatus
     end
@@ -1763,9 +1763,9 @@ object ProductEditForm: TProductEditForm
         end
         item
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 52
       Status = mtDelete
       Guides = GuidesStatus
     end
@@ -2163,7 +2163,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       DataSource = InvoiceDS
     end
@@ -2175,9 +2175,9 @@ object ProductEditForm: TProductEditForm
         item
           StoredProc = spMovementUnCompleteInv
         end>
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 11
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 76
       Status = mtUncomplete
       DataSource = InvoiceDS
     end
@@ -2191,7 +2191,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       DataSource = InvoiceDS
     end

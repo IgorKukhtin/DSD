@@ -5,7 +5,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 835
-  ExplicitHeight = 394
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -203,7 +203,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Width = 33
           end
           object InfoMoneyGroupName_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1043#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -213,7 +213,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Width = 80
           end
           object InfoMoneyDestinationName_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -223,7 +223,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Width = 80
           end
           object InfoMoneyName_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -232,7 +232,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Width = 80
           end
           object InfoMoneyName_all_Invoice: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_all_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -242,7 +242,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Width = 80
           end
           object UnitName_Invoice: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
             DataBinding.FieldName = 'UnitName_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter

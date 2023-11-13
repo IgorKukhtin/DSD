@@ -83,6 +83,8 @@ type
     WeightTare5:Double;   // only Scale
     WeightTare6:Double;   // only Scale
 
+    isOperDatePartner:Boolean; // only Scale - 301 and 302
+
     UnitId1, UnitId2, UnitId3, UnitId4, UnitId5:Integer;
     UnitName1, UnitName2, UnitName3, UnitName4, UnitName5 :String;
 
@@ -108,7 +110,9 @@ type
 
   function Recalc_PartionGoods(Edit:TEdit):Boolean;
 
-  function GetArrayStickerFileList_Index_byName (ArrayList:TArrayStickerFileList;FileName:String):Integer;
+
+  function GetArrayStickerFileList_Index_byName       (ArrayList:TArrayStickerFileList;FileName      :String):Integer;
+  function GetArrayStickerFileList_Index_byName_70_70 (ArrayList:TArrayStickerFileList;FileName_70_70:String):Integer;
 
   function GetArrayList_Value_byName   (ArrayList:TArrayList;Name:String):String;
   function GetArrayList_Index_byNumber (ArrayList:TArrayList;Number:Integer):Integer;
@@ -782,6 +786,14 @@ begin
   Result:=-1;
   for i := 0 to Length(ArrayList)-1 do
     if ArrayList[i].FileName = FileName then begin Result:=i;break;end;
+end;
+{------------------------------------------------------------------------}
+function GetArrayStickerFileList_Index_byName_70_70 (ArrayList:TArrayStickerFileList;FileName_70_70:String):Integer;
+var i: Integer;
+begin
+  Result:=-1;
+  for i := 0 to Length(ArrayList)-1 do
+    if ArrayList[i].FileName_70_70 = FileName_70_70 then begin Result:=i;break;end;
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Index_byNumber(ArrayList:TArrayList;Number:Integer):Integer;

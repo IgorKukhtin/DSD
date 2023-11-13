@@ -272,6 +272,9 @@ type
     infoPanelDocInsert: TPanel;
     DocInsertLabel: TLabel;
     cbDocInsert: TCheckBox;
+    OperDatePartnerPanel: TPanel;
+    Label4: TLabel;
+    OperDatePartnerEdit: TEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -548,6 +551,8 @@ begin
           //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
           //DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
           EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
+          ParamsMovement.ParamByName('OperDatePartner').AsDateTime:=Date;//!!!теперь эта даты!!!
+          //
           gpInitialize_MovementDesc;
           //
           Initialize_afterSave_all;
@@ -1880,7 +1885,11 @@ begin
   PanelPartionGoods.Visible:=(SettingMain.isGoodsComplete = FALSE) or (SettingMain.isPartionDate = TRUE)
                           or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
                              ;
-  bbSetPartionGoods.Visible:= SettingMain.isPartionDate = TRUE;
+  bbSetPartionGoods.Visible:= (SettingMain.isPartionDate = TRUE) or (SettingMain.isOperDatePartner = TRUE);
+  if SettingMain.isOperDatePartner = TRUE then bbSetPartionGoods.Hint:= 'Установить <Дата поставщика>';
+  OperDatePartnerPanel.Visible:= SettingMain.isOperDatePartner = TRUE;
+  ParamsMovement.ParamByName('OperDatePartner').AsDateTime:=Date;
+  //OperDatePartnerEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
   //
   infoReasonPanel.Visible:= SettingMain.isReason = TRUE;
   //
@@ -2028,6 +2037,9 @@ begin
   then EditReReturnIn.Text:='№ ' + ParamsMovement.ParamByName('InvNumber_reReturnIn').AsString
                          +' от ' + DateToStr(ParamsMovement.ParamByName('OperDate_reReturnIn').AsDateTime)
   else EditReReturnIn.Text:='' ;
+  //
+  OperDatePartnerEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+  //
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.RefreshDataSet;
@@ -2343,16 +2355,39 @@ procedure TMainForm.bbSetPartionGoodsClick(Sender: TObject);
 begin
      with DialogDateValueForm do
      begin
-          LabelDateValue.Caption:='Партия ДАТА';
+          if SettingMain.isOperDatePartner = TRUE
+          then LabelDateValue.Caption:='Дата поставщика'
+          else LabelDateValue.Caption:='Партия ДАТА';
+          //
           ActiveControl:=DateValueEdit;
-          try DateValueEdit.Text:=DateToStr(StrToDate(EditPartionGoods.Text));
-          except
-               DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
+          //
+          if SettingMain.isOperDatePartner = TRUE
+          then begin
+                 DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+          end
+          else begin
+            try DateValueEdit.Text:=DateToStr(StrToDate(EditPartionGoods.Text));
+            except
+                 DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
+            end;
+            isPartionGoodsDate:=true;
           end;
-          isPartionGoodsDate:=true;
           if not Execute then begin EditPartionGoods.Text:=''; exit;end;
           //
-          EditPartionGoods.Text:=DateValueEdit.Text;
+          if SettingMain.isOperDatePartner = TRUE
+          then begin
+                   try ParamsMovement.ParamByName('OperDatePartner').AsDateTime:= StrToDate(DateValueEdit.Text);
+                   except ParamsMovement.ParamByName('OperDatePartner').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime;
+                   end;
+                   //
+                   if not DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement)
+                   then OperDatePartnerEdit.Text:= 'ошибка сохранения'
+                   else OperDatePartnerEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+                   //
+                   myActiveControl;
+          end
+          else
+               EditPartionGoods.Text:=DateValueEdit.Text;
           //
      end;
 end;

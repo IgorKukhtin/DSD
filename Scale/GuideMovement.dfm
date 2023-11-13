@@ -89,7 +89,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChangeMember: TSpeedButton
-        Left = 70
+        Left = 73
         Top = 3
         Width = 31
         Height = 29
@@ -107,7 +107,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbPrint: TSpeedButton
-        Left = 428
+        Left = 432
         Top = 3
         Width = 31
         Height = 29
@@ -126,7 +126,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintClick
       end
       object bbViewMI: TSpeedButton
-        Left = 175
+        Left = 200
         Top = 3
         Width = 31
         Height = 29
@@ -280,7 +280,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_DesadvClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 278
+        Left = 300
         Top = 3
         Width = 31
         Height = 29
@@ -304,7 +304,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 310
+        Left = 332
         Top = 3
         Width = 31
         Height = 29
@@ -323,7 +323,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_diffClick
       end
       object bbPrint_diff: TSpeedButton
-        Left = 387
+        Left = 398
         Top = 3
         Width = 31
         Height = 29
@@ -347,7 +347,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrint_diffClick
       end
       object bbPrint_ReestrKind: TSpeedButton
-        Left = 245
+        Left = 267
         Top = 3
         Width = 31
         Height = 29
@@ -366,7 +366,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrint_ReestrKindClick
       end
       object bbSale_Order_diffTax: TSpeedButton
-        Left = 342
+        Left = 364
         Top = 3
         Width = 31
         Height = 29
@@ -433,7 +433,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintPackWeight_FozzyClick
       end
       object bbExport_Email: TSpeedButton
-        Left = 209
+        Left = 233
         Top = 3
         Width = 31
         Height = 29
@@ -497,7 +497,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbQualityDoc_listClick
       end
       object bbChangeOperDatePartner: TSpeedButton
-        Left = 107
+        Left = 136
         Top = 3
         Width = 31
         Height = 29
@@ -515,7 +515,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChangeTransport: TSpeedButton
-        Left = 138
+        Left = 167
         Top = 3
         Width = 31
         Height = 29
@@ -529,6 +529,24 @@ object GuideMovementForm: TGuideMovementForm
           8888888890888C478888888890888C478888888890888C478888888890888C47
           8888888890888C478888888890888C478888888890888CC0888888999908CCC4
           7888888990888EC0888888889888888888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object bbUpdateStatus: TSpeedButton
+        Left = 105
+        Top = 3
+        Width = 31
+        Height = 29
+        Action = actUpdateStatus
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          80000080000000808000800000008000800080800000C0C0C000808080000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00444444444444
+          4444444444444444444444444904444444444444999044444444444499904444
+          4444444999990444444444999999044444444899049990444444890444499044
+          4444444444499904444444444444990444444444444449904444444444444489
+          0444444444444448904444444444444449904444444444444444}
         ParentShowHint = False
         ShowHint = True
       end
@@ -1504,6 +1522,11 @@ object GuideMovementForm: TGuideMovementForm
       Category = 'ScaleLib'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
       OnExecute = actChangeTransportExecute
+    end
+    object actUpdateStatus: TAction
+      Category = 'ScaleLib'
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1077#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
+      OnExecute = actUpdateStatusExecute
     end
   end
   object FormParams: TdsdFormParams

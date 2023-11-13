@@ -755,6 +755,7 @@ begin
                               //+'  and FromId='+IntToStr(ParamsMovement_local.ParamByName('FromId').asInteger)
                               +'     )'
                               +'  or MovementDescId='+IntToStr(-1*ParamsMovement_local.ParamByName('MovementDescId').asInteger)
+                              +'  or ('+IntToStr(SettingMain.BranchCode)+'>1000)'
                               ;
               CDS.Filtered:=true;
               CDS.Locate('MovementDescId',ParamsMovement_local.ParamByName('MovementDescId').asString,[]);

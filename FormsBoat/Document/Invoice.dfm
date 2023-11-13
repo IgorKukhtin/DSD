@@ -10,14 +10,18 @@
   inherited bbOk: TcxButton
     Left = 55
     Top = 466
+    Width = 90
     ExplicitLeft = 55
     ExplicitTop = 466
+    ExplicitWidth = 90
   end
   inherited bbCancel: TcxButton
     Left = 199
     Top = 466
+    Width = 90
     ExplicitLeft = 199
     ExplicitTop = 466
+    ExplicitWidth = 90
   end
   object Код: TcxLabel [2]
     Left = 15
@@ -39,7 +43,7 @@
     Width = 100
   end
   object ceAmountIn: TcxCurrencyEdit [5]
-    Left = 17
+    Left = 15
     Top = 128
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -65,7 +69,7 @@
     Caption = 'Kredit'
   end
   object cxLabel6: TcxLabel [9]
-    Left = 14
+    Left = 15
     Top = 155
     Caption = 'Lieferanten / Kunden'
   end
@@ -84,7 +88,8 @@
   object cxLabel5: TcxLabel [11]
     Left = 15
     Top = 206
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    Hint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 15
@@ -96,7 +101,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 208
+    Width = 320
   end
   object cxLabel10: TcxLabel [13]
     Left = 15
@@ -107,16 +112,17 @@
     Left = 15
     Top = 425
     TabOrder = 9
-    Width = 319
+    Width = 320
   end
   object cxLabel9: TcxLabel [15]
-    Left = 234
-    Top = 108
+    Left = 151
+    Top = 396
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    Visible = False
   end
   object edPaidKind: TcxButtonEdit [16]
-    Left = 234
-    Top = 128
+    Left = 223
+    Top = 400
     Properties.Buttons = <
       item
         Default = True
@@ -124,6 +130,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
+    Visible = False
     Width = 100
   end
   object edInvNumber: TcxTextEdit [17]
@@ -149,7 +156,7 @@
   object cxLabel14: TcxLabel [19]
     Left = 15
     Top = 255
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
   end
   object cxLabel15: TcxLabel [20]
     Left = 15
@@ -167,7 +174,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 319
+    Width = 320
   end
   object cxLabel17: TcxLabel [22]
     Left = 234
@@ -214,13 +221,13 @@
     Width = 155
   end
   object cxLabel2: TcxLabel [28]
-    Left = 234
-    Top = 155
+    Left = 235
+    Top = 108
     Caption = '% '#1053#1044#1057
   end
   object edVATPercent: TcxCurrencyEdit [29]
     Left = 235
-    Top = 175
+    Top = 128
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
@@ -242,16 +249,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 31
-    Width = 319
+    Width = 320
   end
   object cxLabel44: TcxLabel [32]
-    Left = 234
-    Top = 206
-    Caption = #1058#1080#1087' '#1053#1044#1057
+    Left = 235
+    Top = 155
+    Caption = #1042#1080#1076' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit [33]
-    Left = 234
-    Top = 228
+    Left = 235
+    Top = 175
     Properties.Buttons = <
       item
         Default = True
@@ -270,8 +277,15 @@
     Top = 44
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 302
     Top = 99
+    inherited FormClose: TdsdFormClose
+      ImageIndex = 52
+    end
+    inherited InsertUpdateGuides: TdsdInsertUpdateGuides
+      ImageIndex = 80
+    end
     object actGetPlanDate: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -824,8 +838,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 202
-    Top = 97
+    Left = 258
+    Top = 385
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

@@ -62,6 +62,10 @@ type
     function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalLoss(execParams:TParams): Boolean;
+
+    // Scale + ScaleCeh
+    function gpUpdate_Scale_Movement_Status(MovementId_parent:Integer): Boolean;
+
   end;
 
   function gpInitialize_Const: Boolean; // Scale + ScaleCeh
@@ -273,6 +277,24 @@ begin
          ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_PersonalComlete');
        end;}
     end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_Status(MovementId_parent:Integer): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_Movement_Status';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, MovementId_parent);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_PersonalComlete');
+       end;}
+    end;
+    Result:=true;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement_findOldPeriod(var execParamsMovement:TParams): Boolean;
@@ -588,6 +610,7 @@ begin
        Params.Clear;
        Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inOperDatePartner', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDatePartner').AsDateTime);
        Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
        Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
        Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
@@ -1670,6 +1693,8 @@ begin
        SettingMain.WeightTare6:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare6'));
        //
        SettingMain.isPartionDate:=GetArrayList_Value_byName(Default_Array,'isPartionDate') = AnsiUpperCase('TRUE');
+       //
+       SettingMain.isOperDatePartner:=GetArrayList_Value_byName(Default_Array,'isOperDatePartner') = AnsiUpperCase('TRUE');
        //
        SettingMain.isReason:=GetArrayList_Value_byName(Default_Array,'isReason') = AnsiUpperCase('TRUE');
        //

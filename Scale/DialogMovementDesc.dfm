@@ -13,6 +13,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   OnShow = FormShow
+  ExplicitTop = -40
   ExplicitWidth = 683
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -198,7 +199,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
-      Options = [dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      Options = [dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       ParentFont = False
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -213,7 +214,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         item
           Expanded = False
           FieldName = 'MovementDescName'
-          Width = 600
+          Width = 800
           Visible = True
         end>
     end

@@ -37,8 +37,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 17
-      ExplicitHeight = 192
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -370,17 +368,17 @@
           Properties.Items = <
             item
               Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-              ImageIndex = 11
+              ImageIndex = 76
               Value = 1
             end
             item
               Description = #1055#1088#1086#1074#1077#1076#1077#1085
-              ImageIndex = 12
+              ImageIndex = 77
               Value = 2
             end
             item
               Description = #1059#1076#1072#1083#1077#1085
-              ImageIndex = 13
+              ImageIndex = 52
               Value = 3
             end>
           HeaderAlignmentHorz = taCenter
@@ -944,7 +942,6 @@
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 14
     end
     object Panel4: TPanel
       Left = 0
@@ -953,7 +950,6 @@
       Height = 33
       Align = alTop
       TabOrder = 2
-      ExplicitTop = -6
       object lbSearchName: TcxLabel
         Left = 5
         Top = 7
@@ -1007,7 +1003,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 195
     object cxGridProdOptItems: TcxGrid
       Left = 0
       Top = 17
@@ -1018,7 +1013,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 178
       object cxGridDBTableViewProdOptItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdOptItemsDS
@@ -1463,7 +1457,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 195
     object cxGridProdColorItems: TcxGrid
       Left = 0
       Top = 17
@@ -1474,7 +1467,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 178
       object cxGridDBTableViewProdColorItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorItemsDS
@@ -1785,7 +1777,6 @@
     Width = 8
     Height = 157
     Control = PanelProdColorItems
-    ExplicitHeight = 195
   end
   object Panel_btn: TPanel
     Left = 0
@@ -1794,7 +1785,6 @@
     Height = 38
     Align = alBottom
     TabOrder = 9
-    ExplicitTop = 396
     object btnInsert: TcxButton
       Left = 26
       Top = 6
@@ -3635,7 +3625,7 @@
     object actUpdate_OrderClient: TdsdInsertUpdateAction
       Category = 'Movement'
       MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1047#1072#1082#1072#1079
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079
       ShortCut = 115
       ImageIndex = 28

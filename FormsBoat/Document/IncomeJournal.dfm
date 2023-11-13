@@ -356,7 +356,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 80
       end
       object TaxKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1053#1044#1057
+        Caption = #1042#1080#1076' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -364,7 +364,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 70
       end
       object TaxKindName_info: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1053#1044#1057' ('#1086#1087#1080#1089#1072#1085#1080#1077')'
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName_info'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -372,12 +372,12 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 87
       end
       object ToName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1091
+        Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1091
-        Width = 91
+        HeaderHint = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
+        Width = 120
       end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -623,6 +623,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 457
     object btnInsert: TcxButton
       Left = 42
       Top = 7

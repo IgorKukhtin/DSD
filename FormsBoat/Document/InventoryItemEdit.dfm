@@ -260,6 +260,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Width = 407
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 384
     Top = 125
     object actRefresh: TdsdDataSetRefresh

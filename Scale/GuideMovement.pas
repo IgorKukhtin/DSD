@@ -147,6 +147,8 @@ type
     TotalCountPartner: TcxGridDBColumn;
     TotalCountKg: TcxGridDBColumn;
     TotalCountSh: TcxGridDBColumn;
+    bbUpdateStatus: TSpeedButton;
+    actUpdateStatus: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -182,6 +184,7 @@ type
     procedure bbQualityDoc_listClick(Sender: TObject);
     procedure actChangeOperDatePartnerExecute(Sender: TObject);
     procedure actChangeTransportExecute(Sender: TObject);
+    procedure actUpdateStatusExecute(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -444,6 +447,15 @@ begin
      RefreshDataSet;
      if MovementId <> '' then
         CDS.Locate('Id',MovementId,[loCaseInsensitive]);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.actUpdateStatusExecute(Sender: TObject);
+begin
+     if MessageDlg('Действительно Провести документ <Инвентаризация>?',mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+     //
+     if DMMainScaleForm.gpUpdate_Scale_Movement_Status(CDS.FieldByName('MovementId_parent').AsInteger)
+     then actRefreshExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.actChangeOperDatePartnerExecute(Sender: TObject);
