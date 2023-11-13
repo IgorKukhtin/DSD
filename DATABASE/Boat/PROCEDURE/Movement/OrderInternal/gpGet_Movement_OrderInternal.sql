@@ -22,6 +22,25 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
+     
+
+     --
+     IF COALESCE (inMovementId_OrderClient, 0) = 0
+     THEN
+         inMovementId_OrderClient:= (SELECT MIFloat_MovementId.ValueData
+                                     FROM MovementItem
+                                          INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                     WHERE MovementItem.MovementId = inMovementId
+                                       AND MovementItem.DescId     = zc_MI_Master()
+                                       AND MovementItem.isErased   = FALSE
+                                       AND MIFloat_MovementId.ValueData > 0
+                                     ORDER BY MovementItem.Id DESC
+                                     LIMIT 1
+                                    );
+     END IF;
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN

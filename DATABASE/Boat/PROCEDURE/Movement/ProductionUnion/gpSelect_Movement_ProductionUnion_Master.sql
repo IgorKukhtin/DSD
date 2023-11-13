@@ -88,7 +88,8 @@ BEGIN
                            FROM Movement_ProductionUnion AS Movement
                                JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
-                                                AND (MovementItem.isErased  = inIsErased OR inIsErased = TRUE)
+                                                -- !!!никогда в журнале не показывать удаленные элементы!!!
+                                                AND MovementItem.isErased   = FALSE
 
                                LEFT JOIN MovementItemLinkObject AS MILO_ReceiptProdModel
                                                                 ON MILO_ReceiptProdModel.MovementItemId = MovementItem.Id

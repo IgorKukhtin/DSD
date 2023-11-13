@@ -128,7 +128,7 @@ BEGIN
          , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
          , Object_Status.ObjectCode                            AS StatusCode
          , Object_Status.ValueData                             AS StatusName
-         , MovementFloat_VATPercent.ValueData    ::TFloat      AS VATPercent
+         , COALESCE (MovementFloat_VATPercent.ValueData, 0)    ::TFloat      AS VATPercent
          , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN MovementFloat_Amount.ValueData      ELSE 0 END::TFloat AS AmountIn
          , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
          , Object_Object.Id                                    AS ObjectId

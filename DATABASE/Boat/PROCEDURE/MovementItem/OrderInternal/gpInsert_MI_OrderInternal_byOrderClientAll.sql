@@ -132,6 +132,18 @@ BEGIN
 
     -- test
     --RAISE EXCEPTION '%', (select count(*)  from _tmpOrder);
+    
+
+    -- проверка
+    IF NOT EXISTS (SELECT 1 FROM _tmpOrder)
+    THEN
+          RAISE EXCEPTION 'Ошибка.Для Заказ Клиента № <%> от <%>%нет данных по сборке узлов.%Необходимо сначала провести документ Заказ Клиента.'
+                         , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_OrderClient)
+                         , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId_OrderClient)
+                         , CHR (13)
+                         , CHR (13)
+                          ;
+    END IF;
 
     -- сохраняем - zc_MI_Master - Новый 
     PERFORM lpInsertUpdate_MovementItem_OrderInternal (ioId                    := COALESCE (_tmpMI_Master.Id, 0)

@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, NPP Integer, ParentId Integer
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ColorPatternId     Integer, ColorPatternName     TVarChar
              , Amount TFloat
+             , ForCount TFloat
              , Price TFloat
              , Summ TFloat
              , isErased Boolean
@@ -94,6 +95,8 @@ BEGIN
           , Object_ColorPattern.ValueData  AS ColorPatternName
 
           , MovementItem.Amount   :: TFloat AS Amount
+          , 1 :: TFloat AS ForCount
+
           , (tmpMIContainer.Amount / CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 1 END) ::TFloat AS Price
           , tmpMIContainer.Amount :: TFloat AS Summ
 

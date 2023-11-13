@@ -73,7 +73,8 @@ BEGIN
                            FROM Movement_OrderInternal AS Movement
                                JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
-                                                AND (MovementItem.isErased  = inIsErased OR inIsErased = TRUE)
+                                                -- !!!никогда в журнале не показывать удаленные элементы!!!
+                                                AND MovementItem.isErased   = FALSE
 
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                 ON MILinkObject_Unit.MovementItemId = MovementItem.Id

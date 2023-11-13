@@ -43,6 +43,13 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма - или <Приход> или <Расход>.';
      END IF;
 
+     -- проверка
+     IF COALESCE (inMovementId_Invoice, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не выбран документ Счет.';
+     END IF;
+
+
      -- !!!очень важный расчет!!!
      IF inAmountIn <> 0 THEN
         vbAmount := inAmountIn;

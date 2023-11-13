@@ -121,8 +121,9 @@ BEGIN
 
                    FROM tmpMovement_OrderClient AS Movement
                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                               AND MovementItem.isErased   = FALSE
                                                AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail())
+                                               -- !!!никогда в журнале не показывать удаленные элементы!!!
+                                               AND MovementItem.isErased   = FALSE
                         -- какой Узел собирается
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                          ON MILinkObject_Goods.MovementItemId = MovementItem.Id
