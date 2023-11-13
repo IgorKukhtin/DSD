@@ -1,9 +1,5 @@
 program ProjectBoatTest;
 
-
-
-
-
 uses
   Forms,
   DUnitTestRunner,
@@ -59,7 +55,7 @@ uses
   AncestorDialog in '..\..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
-  AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
+  AncestorEditDialog in '..\..\FormsBoat\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   AncestorJournal in '..\..\FormsBoat\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},

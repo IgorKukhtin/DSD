@@ -175,7 +175,7 @@
 				<Form>AncestorDocumentMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorEditDialog.pas">
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorEditDialog.pas">
 				<Form>AncestorEditDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

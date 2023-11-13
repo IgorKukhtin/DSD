@@ -1,4 +1,3 @@
-
 unit MainForm;
 
 interface
@@ -1457,6 +1456,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure actRefreshMsg_afterExecute(Sender: TObject);
     procedure actUpdateProgramExecute(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     procedure ChangeKeyboard(var Message: TMessage); message WM_ChangeKeyboard;
   public
@@ -1468,7 +1468,7 @@ var
 
 implementation
 {$R *.dfm}
-uses IdIPWatch;
+uses IdIPWatch, UnilWin;
 
 procedure TMainForm.actRefreshMsg_afterExecute(Sender: TObject);
 begin
@@ -1517,6 +1517,15 @@ begin
   //отметили "Выход"
   spProtocol_isExit.Execute;
   inherited;
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  inherited;
+  if GetFilePlatfotm64(ParamStr(0))
+  then Caption:= 'Управленческий Учет «Project» - 64bit'
+  else Caption:= 'Управленческий Учет «Project» - 32bit';
+
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

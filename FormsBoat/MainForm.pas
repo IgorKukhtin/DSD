@@ -1,4 +1,3 @@
-
 unit MainForm;
 
 interface
@@ -276,6 +275,7 @@ type
     actReport_Client: TdsdOpenForm;
     miReport_Client: TMenuItem;
     N22: TMenuItem;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -286,8 +286,16 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses Dialogs, Forms, SysUtils, IdGlobal
- ;
+uses Dialogs, Forms, SysUtils, IdGlobal, UnilWin;
 {$R *.dfm}
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  inherited;
+  //
+  if GetFilePlatfotm64(ParamStr(0))
+  then Caption:= '«ProjectBoat» - 64bit'
+  else Caption:= '«ProjectBoat» - 32bit';
+end;
 
 end.
