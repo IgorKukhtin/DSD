@@ -287,7 +287,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         Width = 109
       end
       object ProductName_parent: TcxGridDBColumn
-        Caption = #1051#1086#1076#1082#1072
+        Caption = 'Boat'
         DataBinding.FieldName = 'ProductName_parent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

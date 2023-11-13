@@ -229,7 +229,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 85
       end
       object StatusCode: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089
+        Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082'.'#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Images = dmMain.ImageList
@@ -251,7 +251,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+        Width = 80
       end
       object NPP: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
