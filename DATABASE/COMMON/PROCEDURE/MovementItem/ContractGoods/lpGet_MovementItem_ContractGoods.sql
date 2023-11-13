@@ -13,7 +13,22 @@ CREATE OR REPLACE FUNCTION lpGet_MovementItem_ContractGoods(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
-             , ValuePrice TFloat, ValuePrice_from TFloat, ValuePrice_to TFloat, ValuePrice_orig TFloat
+
+               -- цена расчетная в грн - с учетом курса и округления
+             , ValuePrice TFloat
+               -- миним расчетная цена в грн - с учетом курса и округления
+             , ValuePrice_from TFloat
+               -- макс расчетная цена в грн - с учетом курса и округления
+             , ValuePrice_to TFloat
+               -- цена Спецификации в CurrencyId
+             , ValuePrice_orig TFloat
+               -- Коэфф перевода из кол-ва поставщика
+             , CountForAmount TFloat
+               -- Разрешенный % отклонение для цены
+             , DiffPrice TFloat
+               -- Кол-во знаков для округления
+             , RoundPrice TFloat
+               --
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -83,6 +98,8 @@ BEGIN
                                                                       END       AS ValuePrice
                                  --
                                , COALESCE (MIF_Price.ValueData, 0)              AS ValuePrice_orig
+                                 -- Коэфф перевода из кол-ва поставщика
+                               , CASE WHEN MIF_CountForAmount.ValueData > 0 THEN MIF_CountForAmount.ValueData ELSE 1 END AS CountForAmount
                                  -- Разрешенный % отклонение для цены
                                , COALESCE (MFloat_DiffPrice.ValueData, 0)       AS DiffPrice
                                -- Кол-во знаков для округления
@@ -116,7 +133,10 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIF_Price
                                                            ON MIF_Price.MovementItemId = MovementItem.Id
                                                           AND MIF_Price.DescId         = zc_MIFloat_Price()
-
+                               -- Коэфф перевода из кол-ва поставщика
+                               LEFT JOIN MovementItemFloat AS MIF_CountForAmount
+                                                           ON MIF_CountForAmount.MovementItemId = MovementItem.Id
+                                                          AND MIF_CountForAmount.DescId         = zc_MIFloat_CountForAmount()
                                -- Разрешенный % отклонение для цены
                                LEFT JOIN MovementFloat AS MFloat_DiffPrice
                                                        ON MFloat_DiffPrice.MovementId = Movement.Id
@@ -177,6 +197,11 @@ BEGIN
                  END) :: TFloat AS ValuePrice_to
 
               , tmpData.ValuePrice_orig :: TFloat AS ValuePrice_orig
+
+              , tmpData.CountForAmount  :: TFloat AS CountForAmount
+              , tmpData.DiffPrice       :: TFloat AS DiffPrice
+              , tmpData.RoundPrice      :: TFloat AS RoundPrice
+
               , tmpData.JuridicalId
               , Object_Juridical.ValueData AS JuridicalName
               , Object_Contract_InvNumber_View.ContractId   AS ContractId
