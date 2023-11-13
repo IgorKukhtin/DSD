@@ -833,7 +833,10 @@ BEGIN
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_Income_seq') AS TVarChar)
                                                   , inOperDate              := inOperDate
-                                                  , inOperDatePartner       := inOperDate
+                                                  , inOperDatePartner       := CASE WHEN inBranchCode BETWEEN 301 AND 310
+                                                                                    THEN inOperDatePartner
+                                                                                    ELSE inOperDate
+                                                                               END
                                                   , inInvNumberPartner      := ''
                                                   , inPriceWithVAT          := PriceWithVAT -- определяются по прайлисту
                                                   , inVATPercent            := VATPercent
@@ -1137,8 +1140,29 @@ BEGIN
 
     -- сохранили <строчная часть>
      SELECT MAX (tmpId) INTO vbId_tmp
-     FROM (-- элементы документа (были сохранены раньше)
-           WITH tmpMI AS (SELECT MovementItem.Id                                     AS MovementItemId
+     FROM (WITH -- Товары в договорах(Спецификация)
+                tmpContractGoods
+                     AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.CountForAmount
+                         FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                     THEN COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                                                  , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                                                   )
+                                                                                     ELSE NULL
+                                                                                END
+                                                              , inJuridicalId:= 0
+                                                              , inPartnerId  := 0
+                                                              , inContractId := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                     THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                                                     ELSE -1
+                                                                                END
+                                                              , inGoodsId    := 0
+                                                              , inUserId     := vbUserId
+                                                               ) AS tmp
+                         WHERE inBranchCode BETWEEN 301 AND 310
+                           AND vbMovementDescId = zc_Movement_Income()
+                        )
+                -- элементы документа (были сохранены раньше)
+              , tmpMI AS (SELECT MovementItem.Id                                     AS MovementItemId
                                , MovementItem.ObjectId                               AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                                , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
@@ -1500,7 +1524,12 @@ BEGIN
 
                                   ELSE MovementItem.Amount -- обычное значение
 
-                             END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount -- !!!* вес только для пересортицы в переработку!!
+                             END
+                             -- !!!* вес только для пересортицы в переработку!!
+                           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                             -- Коэфф перевода из кол-ва поставщика
+                           * CASE WHEN tmpContractGoods.CountForAmount > 0 THEN tmpContractGoods.CountForAmount ELSE 1 END
+                             AS Amount
 
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -- формируется только расход = вес со скидкой
@@ -1510,7 +1539,10 @@ BEGIN
 
                                   ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) -- обычное значение = вес со скидкой
 
-                             END AS AmountChangePercent
+                             END
+                             -- Коэфф перевода из кол-ва поставщика
+                           * CASE WHEN tmpContractGoods.CountForAmount > 0 THEN tmpContractGoods.CountForAmount ELSE 1 END
+                             AS AmountChangePercent
 
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN 0 -- не заполняется, т.к. сейчас расход
@@ -1523,7 +1555,10 @@ BEGIN
 
                                   ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) -- обычное значение = вес со скидкой
 
-                             END AS AmountPartner
+                             END
+                             -- Коэфф перевода из кол-ва поставщика
+                           * CASE WHEN tmpContractGoods.CountForAmount > 0 THEN tmpContractGoods.CountForAmount ELSE 1 END
+                             AS AmountPartner
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
                                        THEN NULL
@@ -1535,9 +1570,14 @@ BEGIN
                                        THEN NULL
                                   -- если есть - берем из мобильного торговоого
                                   ELSE COALESCE (tmpMI.Price, COALESCE (MIFloat_Price.ValueData, 0))
-                             END AS Price
+                             END
+                             AS Price
+
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
                                        THEN NULL
+                                  -- Коэфф перевода из кол-ва поставщика
+                                  WHEN tmpContractGoods.CountForAmount > 0
+                                       THEN tmpContractGoods.CountForAmount
                                   -- если есть - берем из мобильного торговоого
                                   ELSE COALESCE (tmpMI.CountForPrice, COALESCE (MIFloat_CountForPrice.ValueData, 0))
                              END AS CountForPrice
@@ -1556,7 +1596,11 @@ BEGIN
 
                            , CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN 1 ELSE 0 END AS isBarCode_value
 
-                           , MovementItem.Amount                                 AS Amount_mi
+                           , MovementItem.Amount
+                             -- Коэфф перевода из кол-ва поставщика
+                           * CASE WHEN tmpContractGoods.CountForAmount > 0 THEN tmpContractGoods.CountForAmount ELSE 1 END
+                             AS Amount_mi
+
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MLO_To.ObjectId, 0) END AS UnitId_to
                            , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
                                        THEN 0 -- надо суммировать
@@ -1564,6 +1608,7 @@ BEGIN
                                        THEN MovementItem.Id -- пока не надо суммировать
                                   ELSE 0 -- можно суммировать, даже для Обвалки
                              END AS myId
+
                       FROM MovementItem
                            LEFT JOIN MovementLinkObject AS MLO_To
                                                         ON MLO_To.MovementId = MovementItem.MovementId
@@ -1649,9 +1694,14 @@ BEGIN
                                           AND vbMovementDescId  = zc_Movement_ReturnIn()
                                           AND vbMovementId_find > 0
 
+                           -- Товары в договорах(Спецификация)
+                           LEFT JOIN tmpContractGoods ON tmpContractGoods.GoodsId     = MovementItem.ObjectId
+                                                     AND tmpContractGoods.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
+
                      UNION ALL
                       -- элементы документа (были сохранены раньше)
                       SELECT tmpMI.MovementItemId

@@ -10,11 +10,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inId                     Integer   , -- Ключ объекта <Документ>
     IN inOperDate               TDateTime , -- Дата документа
+    IN inOperDatePartner        TDateTime , -- Дата накладной у контрагента
     IN inMovementDescId         Integer   , -- Вид документа
     IN inMovementDescNumber     Integer   , -- Вид документа
     IN inFromId                 Integer   , -- От кого (в документе)
@@ -41,6 +43,7 @@ RETURNS TABLE (Id        Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
    DECLARE vbTotalSumm TFloat;
 
    DECLARE vbPriceListId_Dnepr Integer;
@@ -92,6 +95,9 @@ BEGIN
      END IF;
 
 
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (inId, 0) = 0;
+
      -- сохранили
      inId:= gpInsertUpdate_Movement_WeighingPartner (ioId                  := inId
                                                    , inOperDate            := inOperDate
@@ -140,6 +146,7 @@ BEGIN
                                                    , inPartionGoods        := '' :: TVarChar
                                                    , inChangePercent       := inChangePercent
                                                    , inComment             := inComment
+                                                   , inIsProtocol          := FALSE
                                                    , inSession             := inSession
                                                     );
 
@@ -167,6 +174,16 @@ BEGIN
 
      -- сохранили свойство <IP>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inId, inIP);
+     
+
+     IF inMovementDescId IN (zc_Movement_Income()) AND inBranchCode BETWEEN 301 AND 310
+     THEN
+         -- сохранили свойство <Дата накладной у контрагента>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inId, inOperDatePartner);
+     END IF;
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inId, vbUserId, vbIsInsert);
 
 
 -- !!! ВРЕМЕННО !!!
