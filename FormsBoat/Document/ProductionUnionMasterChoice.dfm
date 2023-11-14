@@ -86,9 +86,9 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       Width = 297
     end
     object cxLabel4: TcxLabel
-      Left = 12
-      Top = 30
-      Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+      Left = 19
+      Top = 31
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -98,7 +98,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 114
+      Left = 102
       Top = 31
       TabOrder = 9
       DesignSize = (
@@ -116,8 +116,6 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 57
-    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

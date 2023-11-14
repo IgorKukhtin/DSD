@@ -95,8 +95,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 57
-    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -365,7 +363,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Width = 894
     Height = 41
     Align = alBottom
-    TabOrder = 6
+    TabOrder = 5
     object btnUpdate: TcxButton
       Left = 574
       Top = 7
@@ -396,7 +394,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
   object cxLabel4: TcxLabel
     Left = 17
     Top = 29
-    Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+    Caption = #8470' '#1079#1072#1082#1072#1079#1072' :'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
@@ -406,13 +404,13 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Style.IsFontAssigned = True
   end
   object edInvNumber_OrderClient: TcxTextEdit
-    Left = 118
-    Top = 30
+    Left = 96
+    Top = 29
     TabOrder = 8
     DesignSize = (
-      131
+      123
       21)
-    Width = 131
+    Width = 123
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

@@ -78,7 +78,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     object cxLabel3: TcxLabel
       Left = 710
       Top = 4
-      Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -88,7 +88,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 809
+      Left = 785
       Top = 5
       TabOrder = 7
       DesignSize = (
@@ -106,8 +106,6 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 42
-    ExplicitTop = 37
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

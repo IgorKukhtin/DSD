@@ -112,6 +112,9 @@ type
     btnComplete: TcxButton;
     btnFormClose: TcxButton;
     bbsPrint: TdxBarSubItem;
+    cxLabel3: TcxLabel;
+    edInvNumber_OrderClient: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
   public
   end;
