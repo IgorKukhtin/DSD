@@ -54,6 +54,27 @@ object SaleJournalForm: TSaleJournalForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object cxLabel3: TcxLabel
+      Left = 523
+      Top = 4
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber_OrderClient: TcxTextEdit
+      Left = 608
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -64,7 +85,7 @@ object SaleJournalForm: TSaleJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 435
+    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -380,6 +401,13 @@ object SaleJournalForm: TSaleJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object InvNumber_Parent_choice: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. OrderClient (choice)'
+        DataBinding.FieldName = 'InvNumber_Parent_choice'
+        Visible = False
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1335,6 +1363,230 @@ object SaleJournalForm: TSaleJournalForm
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_full'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber_full'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_all'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber_all'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Comment'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment_Invoice'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Comment_Invoice'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountIn'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'TotalSumm'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Invoice'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber_Invoice'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Invoice'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_Invoice'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BarCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BarCode'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ToId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ToName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName_Full'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProductName_Full'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProductId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptProdModelId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptProdModelCode'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isEnabled'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceWithVAT'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PriceWithVAT'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'VATPercent'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1054#1050
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 80
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale'
@@ -1586,5 +1838,18 @@ object SaleJournalForm: TSaleJournalForm
     Params = <>
     Left = 532
     Top = 318
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber_OrderClient
+    DataSet = ClientDataSet
+    Column = InvNumber_Parent_choice
+    ColumnList = <
+      item
+        Column = InvNumber_Parent_choice
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 736
+    Top = 152
   end
 end

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber Integer
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , MovementId_Parent Integer, InvNumber_Parent TVarChar, Comment_parent TVarChar
+             , MovementId_Parent Integer, InvNumber_Parent TVarChar, InvNumber_Parent_choice TVarChar, Comment_parent TVarChar
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
@@ -73,6 +73,7 @@ BEGIN
 
              , Movement_Parent.Id               AS MovementId_Parent
              , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_Parent
+             , Movement_Parent.InvNumber               ::TVarChar AS InvNumber_Parent_choice
              , MovementString_Comment_parent.ValueData ::TVarChar AS Comment_parent
 
              , MovementFloat_TotalCount.ValueData         AS TotalCount

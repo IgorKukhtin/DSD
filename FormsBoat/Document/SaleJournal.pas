@@ -113,6 +113,11 @@ type
     btnUnComplete: TcxButton;
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
+    cxLabel3: TcxLabel;
+    edInvNumber_OrderClient: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    InvNumber_Parent_choice: TcxGridDBColumn;
+    actChoiceGuides: TdsdChoiceGuides;
   private
   public
   end;
