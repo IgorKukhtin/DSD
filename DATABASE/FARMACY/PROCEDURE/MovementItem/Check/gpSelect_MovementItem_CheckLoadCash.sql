@@ -310,8 +310,8 @@ BEGIN
                     , MovementItem.Amount                 AS Amount
                     , MIFloat_Price.ValueData             AS Price
                     , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
-                                      , COALESCE (MB_RoundingDown.ValueData, False)
-                                      , COALESCE (MB_RoundingTo10.ValueData, False)
+                                      , COALESCE (MB_RoundingDown.ValueData, True)
+                                      , COALESCE (MB_RoundingTo10.ValueData, True)
                                       , COALESCE (MB_RoundingTo50.ValueData, False)) AS AmountSumm
                     , MovementItem.isErased               AS isErased
                     , MovementItem.MovementId             AS MovementId
@@ -602,4 +602,4 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 -- тест
 -- 
  
-select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 31511778  ,  inSession := '3');
+select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 33988558 ,  inSession := '3');

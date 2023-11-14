@@ -21,7 +21,21 @@ uses
   cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess,
   cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
   Vcl.ComCtrls, cxBlobEdit, cxMemo, cxRichEdit, cxEditRepositoryItems,
-  dxDateRanges, cxImage, UtilConst;
+  dxDateRanges, cxImage, UtilConst, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinValentine,
+  dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxScrollbarAnnotations;
 
 type
 
@@ -2252,7 +2266,7 @@ begin
 
         CalcTotalSumm;
       end
-      else
+      else if FormParams.ParamByName('SiteDiscount').Value <> 0 then
         SetSiteDiscount(FormParams.ParamByName('SiteDiscount').Value);
     end;
 
@@ -2286,7 +2300,11 @@ begin
           (CheckCDS.FieldByName('AccommodationName').AsVariant <>
           RemainsCDS.FieldByName('AccommodationName').AsVariant) or
           (CheckCDS.FieldByName('Multiplicity').AsVariant <>
-          RemainsCDS.FieldByName('Multiplicity').AsVariant)) then
+          RemainsCDS.FieldByName('Multiplicity').AsVariant) or
+          (CheckCDS.FieldByName('Summ').asCurrency <>
+           GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+           CheckCDS.FieldByName('Price').asCurrency,
+           FormParams.ParamByName('RoundingDown').Value))) then
         begin
           CheckCDS.Edit;
           CheckCDS.FieldByName('Remains').asCurrency :=
@@ -2310,6 +2328,10 @@ begin
             CheckCDS.FieldByName('PriceSale').asCurrency then
             CheckCDS.FieldByName('Multiplicity').AsVariant :=
               RemainsCDS.FieldByName('Multiplicity').AsVariant;
+          CheckCDS.FieldByName('Summ').asCurrency :=
+            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('Price').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value);
           CheckCDS.Post;
         end;
         CheckCDS.Next;
@@ -6825,6 +6847,28 @@ begin
           CheckCDS.FieldByName('Summ').asCurrency;
         CheckCDS.Post;
       end
+      else if (RemainsCDS.FieldByName('PromoBonusPrice').asCurrency > 0) and
+              (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) and
+              (FormParams.ParamByName('InvNumberOrder').Value = '') and
+              ((CheckCDS.FieldByName('PricePartionDate').asCurrency = 0) or
+              (CheckCDS.FieldByName('PricePartionDate').asCurrency >
+               CheckCDS.FieldByName('PromoBonusPrice').asCurrency)) then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          GetPrice(RemainsCDS.FieldByName('PromoBonusPrice').asCurrency, 0);
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
+      end
       else if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
       begin
         CheckCDS.Edit;
@@ -6873,25 +6917,7 @@ begin
         CheckCDS.Post;
 
       end // Если есть бонусная скидка
-      else if (RemainsCDS.FieldByName('PromoBonusPrice').asCurrency > 0) and
-              (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) and
-              (FormParams.ParamByName('InvNumberOrder').Value = '')then
-      begin
-        CheckCDS.Edit;
-        CheckCDS.FieldByName('Price').asCurrency :=
-          GetPrice(RemainsCDS.FieldByName('PromoBonusPrice').asCurrency, 0);
-        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
-        CheckCDS.FieldByName('Summ').asCurrency :=
-          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-          CheckCDS.FieldByName('Price').asCurrency,
-          FormParams.ParamByName('RoundingDown').Value);
-        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-          CheckCDS.FieldByName('PriceSale').asCurrency,
-          FormParams.ParamByName('RoundingDown').Value) -
-          CheckCDS.FieldByName('Summ').asCurrency;
-        CheckCDS.Post;
-      end else
+      else
       begin
         CheckCDS.Edit;
         CheckCDS.FieldByName('Price').asCurrency :=
@@ -9625,7 +9651,10 @@ begin
         else if Assigned(SourceClientDataSet.FindField('PromoBonusPrice')) and
           (SourceClientDataSet.FieldByName('PromoBonusPrice').asCurrency > 0) and
           (not Assigned(SourceClientDataSet.FindField('PriceLoad')) or
-          (SourceClientDataSet.FieldByName('PriceLoad').asCurrency = 0)) then
+          (SourceClientDataSet.FieldByName('PriceLoad').asCurrency = 0)) and
+          ((SourceClientDataSet.FieldByName('PricePartionDate').asCurrency = 0) or
+          (SourceClientDataSet.FieldByName('PricePartionDate').asCurrency >
+           SourceClientDataSet.FieldByName('PromoBonusPrice').asCurrency)) then
         begin
           // цена БЕЗ скидки
           lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
@@ -11993,7 +12022,10 @@ begin
             CheckCDS.FieldByName('Price').asCurrency,
             FormParams.ParamByName('RoundingDown').Value);
         end else if (RemainsCDS.FieldByName('PromoBonusPrice').asCurrency > 0) and
-                    (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
+                    (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) and
+                    ((RemainsCDS.FieldByName('PricePartionDate').asCurrency = 0) or
+                    (RemainsCDS.FieldByName('PricePartionDate').asCurrency >
+                     RemainsCDS.FieldByName('PromoBonusPrice').asCurrency)) then
         begin
           CheckCDS.FieldByName('Price').asCurrency :=
             GetPrice(RemainsCDS.FieldByName('PromoBonusPrice').asCurrency, 0);

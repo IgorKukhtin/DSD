@@ -32,6 +32,7 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 0
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
         DataController.DataSource = CheckDS
         DataController.KeyFieldNames = 
@@ -55,16 +56,19 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'GoodsCode'
+          DataBinding.IsNullValueType = True
         end
         object CheckGridColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
+          DataBinding.IsNullValueType = True
           Styles.OnGetContentStyle = CheckGridColNameStylesGetContentStyle
           Width = 150
         end
         object CheckGridColAmount: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'Amount'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -73,6 +77,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColPrice: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'Price'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -81,6 +86,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColSumm: TcxGridDBColumn
           Caption = #1057#1091#1084#1084#1072
           DataBinding.FieldName = 'Summ'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -89,6 +95,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColPriceSale: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082'.'
           DataBinding.FieldName = 'PriceSale'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -97,6 +104,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColChangePercent: TcxGridDBColumn
           Caption = '% '#1089#1082'.'
           DataBinding.FieldName = 'ChangePercent'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -106,6 +114,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColSummChangePercent: TcxGridDBColumn
           Caption = #1089#1091#1084#1084#1072' '#1089#1082'.'
           DataBinding.FieldName = 'SummChangePercent'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -115,6 +124,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColAmountOrder: TcxGridDBColumn
           Caption = #1047#1072#1082#1072#1079
           DataBinding.FieldName = 'AmountOrder'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -122,33 +132,39 @@ inherited MainCashForm2: TMainCashForm2
         end
         object CheckGridColor_calc: TcxGridDBColumn
           DataBinding.FieldName = 'Color_calc'
+          DataBinding.IsNullValueType = True
           Visible = False
         end
         object CheckGridColor_ExpirationDate: TcxGridDBColumn
           DataBinding.FieldName = 'Color_ExpirationDate'
+          DataBinding.IsNullValueType = True
           Visible = False
         end
         object CheckGridAccommodationName: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
           DataBinding.FieldName = 'AccommodationName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Width = 57
         end
         object CheckGridPartionDateKindName: TcxGridDBColumn
           Caption = #1058#1080#1087' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
           DataBinding.FieldName = 'PartionDateKindName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Width = 62
         end
         object CheckGridNDS: TcxGridDBColumn
           Caption = #1053#1044#1057
           DataBinding.FieldName = 'NDS'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Width = 46
         end
         object CheckDivisionPartiesName: TcxGridDBColumn
           Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081
           DataBinding.FieldName = 'DivisionPartiesName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
         end
@@ -156,6 +172,7 @@ inherited MainCashForm2: TMainCashForm2
           AlternateCaption = 'dmMain.cxemainsCashContentStyle'
           Caption = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1089#1082#1080#1076#1082#1080
           DataBinding.FieldName = 'FixEndDate'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = CheckGridColNameStylesGetContentStyle
@@ -164,6 +181,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckJuridicalName: TcxGridDBColumn
           Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
           DataBinding.FieldName = 'JuridicalName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 80
@@ -190,6 +208,7 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 2
       object ExpirationDateView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
         DataController.DataSource = ExpirationDateDS
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -206,15 +225,18 @@ inherited MainCashForm2: TMainCashForm2
         object ExpirationDateExpirationDate: TcxGridDBColumn
           Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
           DataBinding.FieldName = 'ExpirationDate'
+          DataBinding.IsNullValueType = True
           Width = 122
         end
         object ExpirationDateAmount: TcxGridDBColumn
           Caption = #1054#1089#1090'.'
           DataBinding.FieldName = 'Amount'
+          DataBinding.IsNullValueType = True
           Width = 33
         end
         object ExpirationDateColor_calc: TcxGridDBColumn
           DataBinding.FieldName = 'Color_calc'
+          DataBinding.IsNullValueType = True
           Visible = False
         end
       end
@@ -249,6 +271,7 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
         DataController.DataSource = RemainsDS
@@ -273,6 +296,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColIsSP: TcxGridDBColumn
           Caption = #1057#1055
           DataBinding.FieldName = 'isSP'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 25
@@ -280,6 +304,7 @@ inherited MainCashForm2: TMainCashForm2
         object Color_IPE: TcxGridDBColumn
           Caption = #1055#1083#1072#1085
           DataBinding.FieldName = 'Color_IPE'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxImageComboBoxProperties'
           Properties.Alignment.Horz = taLeftJustify
           Properties.Images = dmMain.ImageList
@@ -314,6 +339,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
+          DataBinding.IsNullValueType = True
           OnCustomDrawCell = MainColNameCustomDrawCell
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -322,6 +348,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'GoodsCode'
+          DataBinding.IsNullValueType = True
           OnCustomDrawCell = MainColCodeCustomDrawCell
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -330,6 +357,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainBarCode: TcxGridDBColumn
           Caption = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
           DataBinding.FieldName = 'BarCode'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           HeaderHint = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103
           Options.Editing = False
@@ -338,6 +366,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColRemains: TcxGridDBColumn
           Caption = #1054#1057#1058'.'
           DataBinding.FieldName = 'Remains'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
           Properties.DisplayFormat = ',0.###'
@@ -349,6 +378,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColPrice: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'PriceView'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
@@ -358,6 +388,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainPriceSite: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1089#1072#1081#1090' / '#1087#1088#1080#1083#1086#1078'.'
           DataBinding.FieldName = 'PriceSite'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
           HeaderAlignmentHorz = taCenter
@@ -366,6 +397,7 @@ inherited MainCashForm2: TMainCashForm2
         end
         object MainColPriceNight: TcxGridDBColumn
           Caption = #1053#1086#1095#1085#1072#1103' '#1094#1077#1085#1072
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Horz = taRightJustify
           OnGetDisplayText = MainColPriceNightGetDisplayText
@@ -376,6 +408,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColPriceSP: TcxGridDBColumn
           Caption = #1044#1086#1087#1083#1072#1090#1072' '#1087#1072#1094#1080#1077#1085#1090#1086#1084' '#1057#1055
           DataBinding.FieldName = 'PriceSP'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -386,6 +419,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColPriceSaleSP: TcxGridDBColumn
           Caption = #1062'.'#1089#1087' '#1073#1077#1079' '#1089#1082
           DataBinding.FieldName = 'PriceSaleSP'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -397,6 +431,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainGridPriceChange: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
           DataBinding.FieldName = 'PriceChange'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
@@ -406,6 +441,7 @@ inherited MainCashForm2: TMainCashForm2
         end
         object MainGridPriceChangeNight: TcxGridDBColumn
           Caption = #1053#1086#1095#1085#1072#1103' '#1094#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Horz = taRightJustify
           OnGetDisplayText = MainGridPriceChangeNightGetDisplayText
@@ -415,6 +451,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainFixPercent: TcxGridDBColumn
           Caption = #1055#1088#1086#1094'. '#1089#1082#1080#1076#1082#1080
           DataBinding.FieldName = 'FixPercent'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = '0.## %'
           HeaderAlignmentHorz = taCenter
@@ -425,6 +462,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainFixDiscount: TcxGridDBColumn
           Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
           DataBinding.FieldName = 'FixDiscount'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
@@ -435,6 +473,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainMultiplicity: TcxGridDBColumn
           Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1086#1090#1087'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
           DataBinding.FieldName = 'Multiplicity'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 68
@@ -442,6 +481,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainFixEndDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1089#1082#1080#1076#1082#1080
           DataBinding.FieldName = 'FixEndDate'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
@@ -450,6 +490,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColIntenalSPName: TcxGridDBColumn
           Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1055')'
           DataBinding.FieldName = 'IntenalSPName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 80
@@ -457,6 +498,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColReserved: TcxGridDBColumn
           Caption = 'VIP'
           DataBinding.FieldName = 'Reserved'
+          DataBinding.IsNullValueType = True
           OnGetDisplayText = MainColReservedGetDisplayText
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -465,6 +507,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColMCSValue: TcxGridDBColumn
           Caption = #1053#1058#1047
           DataBinding.FieldName = 'MCSValue'
+          DataBinding.IsNullValueType = True
           OnGetDisplayText = MainColReservedGetDisplayText
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -472,6 +515,7 @@ inherited MainCashForm2: TMainCashForm2
         end
         object MainColor_calc: TcxGridDBColumn
           DataBinding.FieldName = 'Color_calc'
+          DataBinding.IsNullValueType = True
           Visible = False
           Options.Editing = False
           VisibleForCustomization = False
@@ -479,6 +523,7 @@ inherited MainCashForm2: TMainCashForm2
         end
         object MaincolisFirst: TcxGridDBColumn
           DataBinding.FieldName = 'isFirst'
+          DataBinding.IsNullValueType = True
           HeaderGlyph.SourceDPI = 96
           HeaderGlyph.Data = {
             424DFA0900000000000036000000280000001900000019000000010020000000
@@ -569,6 +614,7 @@ inherited MainCashForm2: TMainCashForm2
         end
         object MaincolIsSecond: TcxGridDBColumn
           DataBinding.FieldName = 'isSecond'
+          DataBinding.IsNullValueType = True
           HeaderGlyph.SourceDPI = 96
           HeaderGlyph.Data = {
             424DFA0900000000000036000000280000001900000019000000010020000000
@@ -659,6 +705,7 @@ inherited MainCashForm2: TMainCashForm2
         end
         object MaincolIsPromo: TcxGridDBColumn
           DataBinding.FieldName = 'isPromo'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxImageComboBoxProperties'
           Properties.Images = dmMain.ImageList
           Properties.Items = <
@@ -760,6 +807,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainMakerName: TcxGridDBColumn
           Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
           DataBinding.FieldName = 'MakerName'
+          DataBinding.IsNullValueType = True
           GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
@@ -769,6 +817,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainAmountIncome: TcxGridDBColumn
           Caption = #1058#1086#1074#1072#1088' ('#1086#1090' '#1087#1086#1089#1090'.) '#1074' '#1087#1091#1090#1080
           DataBinding.FieldName = 'AmountIncome'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
@@ -779,6 +828,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainPriceSaleIncome: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' ('#1074' '#1087#1091#1090#1080')'
           DataBinding.FieldName = 'PriceSaleIncome'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
           HeaderAlignmentHorz = taCenter
@@ -789,6 +839,7 @@ inherited MainCashForm2: TMainCashForm2
         object mainMinExpirationDate: TcxGridDBColumn
           Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085'. '#1086#1089#1090'.'
           DataBinding.FieldName = 'MinExpirationDate'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           HeaderHint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
           Options.Editing = False
@@ -797,6 +848,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainNDS: TcxGridDBColumn
           Caption = #1053#1044#1057
           DataBinding.FieldName = 'NDS'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 30
@@ -804,6 +856,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainConditionsKeepName: TcxGridDBColumn
           Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
           DataBinding.FieldName = 'ConditionsKeepName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           HeaderHint = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
           Options.Editing = False
@@ -811,6 +864,7 @@ inherited MainCashForm2: TMainCashForm2
         end
         object MainColor_ExpirationDate: TcxGridDBColumn
           DataBinding.FieldName = 'Color_ExpirationDate'
+          DataBinding.IsNullValueType = True
           Visible = False
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -820,12 +874,14 @@ inherited MainCashForm2: TMainCashForm2
         object MainGoodsGroupName: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
           DataBinding.FieldName = 'GoodsGroupName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 150
         end
         object MainisGoodsId_main: TcxGridDBColumn
           DataBinding.FieldName = 'GoodsId_main'
+          DataBinding.IsNullValueType = True
           Visible = False
           Options.Editing = False
           Width = 76
@@ -833,6 +889,7 @@ inherited MainCashForm2: TMainCashForm2
         object MorionCode: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
           DataBinding.FieldName = 'MorionCode'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 0
           Properties.DisplayFormat = ',0;-,0; ;'
@@ -843,6 +900,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainMCSValueOld: TcxGridDBColumn
           Caption = #1053#1058#1047' - '#1072#1074#1090#1086#1084'. '#1074#1077#1088#1085#1077#1090#1089#1103
           DataBinding.FieldName = 'MCSValueOld'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -854,6 +912,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainisMCSNotRecalcOld: TcxGridDBColumn
           Caption = #1057#1087#1077#1094#1082'. - '#1072#1074#1090#1086#1084'. '#1074#1077#1088#1085#1077#1090#1089#1103
           DataBinding.FieldName = 'isMCSNotRecalcOld'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           HeaderHint = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
           Options.Editing = False
@@ -862,6 +921,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainStartDateMCSAuto: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1053#1058#1047' '#1089
           DataBinding.FieldName = 'StartDateMCSAuto'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 70
@@ -869,6 +929,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainEndDateMCSAuto: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1053#1058#1047' '#1087#1086
           DataBinding.FieldName = 'EndDateMCSAuto'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 70
@@ -876,6 +937,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainisMCSAuto: TcxGridDBColumn
           Caption = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1085#1072' '#1087#1077#1088#1080#1086#1076
           DataBinding.FieldName = 'isMCSAuto'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           HeaderHint = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1091#1089#1090#1072#1085#1086#1074#1080#1083' '#1092#1072#1088#1084#1072#1094#1077#1074#1090' '#1085#1072' '#1087#1077#1088#1080#1086#1076
           Options.Editing = False
@@ -884,6 +946,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainisAccommodationName: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
           DataBinding.FieldName = 'AccommodationName'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
@@ -899,6 +962,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainisGoodsAnalog: TcxGridDBColumn
           Caption = #1040#1085#1072#1083#1086#1075#1080' '#1087#1086' '#1076#1077#1081#1089#1090#1074#1091#1102#1097#1077#1084#1091' '#1074#1077#1097#1077#1089#1090#1074#1091
           DataBinding.FieldName = 'GoodsAnalog'
+          DataBinding.IsNullValueType = True
           OnGetProperties = MainisGoodsAnalogGetProperties
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -907,6 +971,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainGoodsAnalogATC: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1040#1058#1057
           DataBinding.FieldName = 'GoodsAnalogATC'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 88
@@ -914,6 +979,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainGoodsActiveSubstance: TcxGridDBColumn
           Caption = #1044#1077#1081#1089#1090#1074#1091#1102#1097#1077#1077' '#1074#1077#1097#1077#1089#1090#1074#1086
           DataBinding.FieldName = 'GoodsActiveSubstance'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 91
@@ -921,6 +987,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainisPartionDateKindName: TcxGridDBColumn
           Caption = #1058#1080#1087' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
           DataBinding.FieldName = 'PartionDateKindName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 56
@@ -928,6 +995,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainPricePartionDate: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1087#1088#1077#1087#1072#1088#1072#1090#1072
           DataBinding.FieldName = 'PricePartionDate'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.####'
@@ -938,6 +1006,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainNotSold: TcxGridDBColumn
           Caption = #1053#1077' '#1087#1088#1086#1076#1072#1074#1072#1083#1089#1103' 100 '#1076#1085#1077#1081
           DataBinding.FieldName = 'NotSold'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 78
@@ -945,6 +1014,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainDeferredSend: TcxGridDBColumn
           Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093
           DataBinding.FieldName = 'DeferredSend'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
           Properties.DisplayFormat = ',0.###'
@@ -955,6 +1025,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainDeferredTR: TcxGridDBColumn
           Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1058#1055
           DataBinding.FieldName = 'DeferredTR'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -965,6 +1036,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainRemainsSun: TcxGridDBColumn
           Caption = #1055#1088#1080#1096#1083#1086' '#1087#1086' '#1057#1059#1053
           DataBinding.FieldName = 'RemainsSun'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
           Properties.DisplayFormat = ',0.###'
@@ -975,6 +1047,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainNotTransferTime: TcxGridDBColumn
           Caption = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
           DataBinding.FieldName = 'NotTransferTime'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 93
@@ -982,12 +1055,14 @@ inherited MainCashForm2: TMainCashForm2
         object MainNotSold60: TcxGridDBColumn
           Caption = #1058#1077#1082#1091#1097#1080#1077' '#1053#1077#1083#1080#1082#1074#1080#1076#1099' ('#1073#1077#1079' '#1087#1088#1086#1076#1072#1078') '
           DataBinding.FieldName = 'NotSold60'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Width = 100
         end
         object MainGoodsDiscountName: TcxGridDBColumn
           Caption = #1044#1083#1103' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
           DataBinding.FieldName = 'GoodsDiscountName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 99
@@ -995,12 +1070,14 @@ inherited MainCashForm2: TMainCashForm2
         object MainUKTZED: TcxGridDBColumn
           Caption = #1050#1086#1076'  '#1059#1050#1058#1047#1045#1044
           DataBinding.FieldName = 'UKTZED'
+          DataBinding.IsNullValueType = True
           Options.Editing = False
           Width = 80
         end
         object MainDivisionPartiesName: TcxGridDBColumn
           Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081
           DataBinding.FieldName = 'DivisionPartiesName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 92
@@ -1008,6 +1085,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainisBanFiscalSale: TcxGridDBColumn
           Caption = #1047#1072#1087#1088#1077#1090' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1080
           DataBinding.FieldName = 'isBanFiscalSale'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 81
@@ -1015,6 +1093,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainAmountSendIn: TcxGridDBColumn
           Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097'.'
           DataBinding.FieldName = 'AmountSendIn'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1025,6 +1104,7 @@ inherited MainCashForm2: TMainCashForm2
         object MultiplicitySale: TcxGridDBColumn
           Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1076#1077#1083#1080#1090#1077#1083#1100')'
           DataBinding.FieldName = 'MultiplicitySale'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
           Properties.DisplayFormat = ',0.###;-,0.###;  ;'
@@ -1035,12 +1115,14 @@ inherited MainCashForm2: TMainCashForm2
         object MainisOrder408: TcxGridDBColumn
           Caption = #1055#1088#1080#1082#1072#1079' 408'
           DataBinding.FieldName = 'isOrder408'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
         end
         object MainPriceSaleOOC1303: TcxGridDBColumn
           Caption = #1052#1072#1082#1089'. '#1088#1086#1079#1085' '#1094#1077#1085#1072' '#1056#1054#1054#1062'  ('#1055#1050#1052#1059'1303)'
           DataBinding.FieldName = 'PriceSaleOOC1303'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
           HeaderAlignmentHorz = taCenter
@@ -1050,6 +1132,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainPriceSale1303: TcxGridDBColumn
           Caption = #1052#1080#1085'. '#1088#1086#1079#1085' '#1094#1077#1085#1072' ('#1055#1050#1052#1059'1303)'
           DataBinding.FieldName = 'PriceSale1303'
+          DataBinding.IsNullValueType = True
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
           HeaderAlignmentHorz = taCenter
@@ -1059,6 +1142,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainBrandSPName: TcxGridDBColumn
           Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' ('#1057#1055')'
           DataBinding.FieldName = 'BrandSPName'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 120
@@ -1066,6 +1150,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainisElRecipe: TcxGridDBColumn
           Caption = #1069#1083'. '#1088#1077#1094#1077#1087#1090
           DataBinding.FieldName = 'isElRecipe'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 59
@@ -1073,12 +1158,14 @@ inherited MainCashForm2: TMainCashForm2
         object MainisAsinoMain: TcxGridDBColumn
           Caption = #1040#1089#1080#1085#1086
           DataBinding.FieldName = 'isAsinoMain'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
         end
         object MainisAsinoPresent: TcxGridDBColumn
           Caption = #1055#1086#1076#1072#1088#1086#1082' '#1040#1089#1080#1085#1086
           DataBinding.FieldName = 'isAsinoPresent'
+          DataBinding.IsNullValueType = True
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
         end
