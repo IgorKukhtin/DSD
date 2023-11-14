@@ -21,7 +21,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Left = 0
     Top = 0
     Width = 894
-    Height = 31
+    Height = 58
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
@@ -62,7 +62,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edInvNumber: TcxTextEdit
-      Left = 65
+      Left = 68
       Top = 4
       Properties.ReadOnly = True
       TabOrder = 5
@@ -88,13 +88,15 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 84
     Width = 894
-    Height = 394
+    Height = 367
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 57
+    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -391,6 +393,27 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       TabOrder = 2
     end
   end
+  object cxLabel4: TcxLabel
+    Left = 17
+    Top = 29
+    Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edInvNumber_OrderClient: TcxTextEdit
+    Left = 118
+    Top = 30
+    TabOrder = 8
+    DesignSize = (
+      131
+      21)
+    Width = 131
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -424,8 +447,8 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
-    Top = 112
+    Left = 8
+    Top = 168
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -444,8 +467,8 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 112
+    Left = 40
+    Top = 168
     DockControlHeights = (
       0
       0
@@ -596,8 +619,8 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
-    Top = 112
+    Left = 72
+    Top = 160
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -1225,7 +1248,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 112
-    Top = 112
+    Top = 176
     object N3: TMenuItem
       Action = actInsert
     end
@@ -1363,8 +1386,8 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 868
-    Top = 132
+    Left = 780
+    Top = 148
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1496,5 +1519,18 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       end>
     Left = 680
     Top = 16
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber_OrderClient
+    DataSet = ClientDataSet
+    Column = InvNumberFull_OrderClient
+    ColumnList = <
+      item
+        Column = InvNumberFull_OrderClient
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 680
+    Top = 224
   end
 end

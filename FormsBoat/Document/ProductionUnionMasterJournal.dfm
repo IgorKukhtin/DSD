@@ -54,6 +54,27 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object cxLabel3: TcxLabel
+      Left = 470
+      Top = 4
+      Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber_OrderClient: TcxTextEdit
+      Left = 576
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -64,6 +85,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1272,6 +1294,42 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1054#1050
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 80
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnion_Master'
@@ -1433,7 +1491,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 536
+    Left = 376
     Top = 8
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -1528,5 +1586,18 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber_OrderClient
+    DataSet = ClientDataSet
+    Column = InvNumberFull_OrderClient
+    ColumnList = <
+      item
+        Column = InvNumberFull_OrderClient
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 624
+    Top = 160
   end
 end

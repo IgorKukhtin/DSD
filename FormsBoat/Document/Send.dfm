@@ -294,7 +294,7 @@ object SendForm: TSendForm
         Width = 131
       end
       object lbSearchArticle: TcxLabel
-        Left = 2
+        Left = 1
         Top = 6
         Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
         ParentFont = False

@@ -108,6 +108,12 @@ type
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     actFormClose: TdsdFormClose;
+    lbSearchArticle: TcxLabel;
+    edInvNumber: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edInvNumber_OrderClient: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    actChoiceGuides: TdsdChoiceGuides;
   private
   public
   end;

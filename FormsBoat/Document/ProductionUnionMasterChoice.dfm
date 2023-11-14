@@ -21,7 +21,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     Left = 0
     Top = 0
     Width = 894
-    Height = 31
+    Height = 56
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
@@ -85,16 +85,39 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       TabOrder = 7
       Width = 297
     end
+    object cxLabel4: TcxLabel
+      Left = 12
+      Top = 30
+      Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber_OrderClient: TcxTextEdit
+      Left = 114
+      Top = 31
+      TabOrder = 9
+      DesignSize = (
+        151
+        21)
+      Width = 151
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 82
     Width = 894
-    Height = 394
+    Height = 369
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 57
+    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1487,5 +1510,20 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       end>
     Left = 680
     Top = 16
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber_OrderClient
+    DataSet = ClientDataSet
+    Column = InvNumberFull_OrderClient
+    ColumnList = <
+      item
+        Column = InvNumberFull_OrderClient
+      end
+      item
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 72
+    Top = 232
   end
 end

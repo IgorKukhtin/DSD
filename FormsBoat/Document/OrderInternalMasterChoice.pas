@@ -102,6 +102,9 @@ type
     btnFormClose: TcxButton;
     cxButton1: TcxButton;
     actFormClose: TdsdFormClose;
+    cxLabel4: TcxLabel;
+    edInvNumber_OrderClient: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
   public
   end;

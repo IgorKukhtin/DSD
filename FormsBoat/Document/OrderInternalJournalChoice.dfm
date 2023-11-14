@@ -54,6 +54,48 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object lbSearchArticle: TcxLabel
+      Left = 474
+      Top = 4
+      Caption = #8470' '#1076#1086#1082'.: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber: TcxTextEdit
+      Left = 533
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
+    object cxLabel3: TcxLabel
+      Left = 687
+      Top = 4
+      Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber_OrderClient: TcxTextEdit
+      Left = 787
+      Top = 5
+      TabOrder = 7
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -1493,5 +1535,22 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber
+    DataSet = ClientDataSet
+    Column = InvNumber
+    ColumnList = <
+      item
+        Column = InvNumber
+      end
+      item
+        Column = InvNumberFull_OrderClient
+        TextEdit = edInvNumber_OrderClient
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 688
+    Top = 168
   end
 end
