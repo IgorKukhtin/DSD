@@ -481,7 +481,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'MemberId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -679,7 +679,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         Name = 'inId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Id'
+        ComponentItem = 'MemberId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PersonalPosition(
     IN inIsShowAll    Boolean,    --
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
+RETURNS TABLE (Id Integer, MemberId Integer, MemberCode Integer, MemberName TVarChar,
                GLN TVarChar,
                DriverCertificate TVarChar, Card TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
@@ -44,6 +44,7 @@ BEGIN
    RETURN QUERY 
      SELECT 
            Object_Personal_View.PersonalId   AS Id
+         , Object_Personal_View.MemberId     AS MemberId
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
          , ObjectString_GLN.ValueData   :: TVarChar AS GLN
