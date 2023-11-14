@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, Integer, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
     IN inColorPatternId         Integer   , -- Шаблон Boat Structure 
     IN inProdColorPatternId     Integer   , -- Boat Structure  
     IN inProdOptionsId          Integer   , -- Опция
-    IN inAmount                 TFloat    , -- Количество 
+    IN inAmount                 TFloat    , -- Количество     
+    IN inForCount               TFloat    , -- Для кол-во
     IN inUserId                 Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -36,7 +38,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ProdColorPattern(), ioId, inProdColorPatternId);
      -- сохранили связь с <Options>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ProdOptions(), ioId, inProdOptionsId);
-
+     -- сохранили свойство <Для кол-во>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ForCount(), ioId, CASE WHEN inForCount > 0 THEN inForCount ELSE 1 END);
 
      IF vbIsInsert = TRUE
      THEN
@@ -55,6 +58,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.23         *
  12.07.21         *
 */
 

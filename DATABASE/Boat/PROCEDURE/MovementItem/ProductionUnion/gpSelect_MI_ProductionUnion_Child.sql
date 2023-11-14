@@ -94,7 +94,7 @@ BEGIN
           , Object_ColorPattern.Id         AS ColorPatternId
           , Object_ColorPattern.ValueData  AS ColorPatternName
 
-          , MovementItem.Amount   :: NUMERIC (16, 8) AS Amount
+          , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) :: NUMERIC (16, 8)  AS Amount
           , COALESCE (MIFloat_ForCount.ValueData,1) :: TFloat AS ForCount
 
           , (tmpMIContainer.Amount / CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 1 END) ::TFloat AS Price
@@ -193,6 +193,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.23         *
  12.07.21         *
 */
 

@@ -118,6 +118,7 @@ type
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    InvNumber_parent_choice: TcxGridDBColumn;
   private
   public
   end;

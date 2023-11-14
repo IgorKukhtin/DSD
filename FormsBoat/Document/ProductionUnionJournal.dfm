@@ -85,6 +85,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 51
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -446,6 +447,14 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
+      end
+      object InvNumber_parent_choice: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumber_parent_choice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1604,11 +1613,12 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Top = 346
   end
   object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber_OrderClient
     DataSet = ClientDataSet
-    Column = InvNumber_parent
+    Column = InvNumber_parent_choice
     ColumnList = <
       item
-        Column = InvNumber_parent
+        Column = InvNumber_parent_choice
         TextEdit = edInvNumber_OrderClient
       end>
     ActionNumber1 = actChoiceGuides

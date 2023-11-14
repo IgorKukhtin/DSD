@@ -230,7 +230,7 @@ object ProductionUnionForm: TProductionUnionForm
     Width = 1084
     Height = 409
     Align = alClient
-    TabOrder = 4
+    TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 409
@@ -458,6 +458,14 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 80
+            end
+            object ForCount_ch1: TcxGridDBColumn
+              DataBinding.FieldName = 'ForCount'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
             end
             object Price_ch1: TcxGridDBColumn
               Caption = #1062#1077#1085#1072' '#1089'/'#1089
@@ -1260,9 +1268,6 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 454
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1270,7 +1275,6 @@ object ProductionUnionForm: TProductionUnionForm
         Height = 385
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 454
         object cxGridDBTableView_DetAll: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_All
@@ -4875,6 +4879,15 @@ object ProductionUnionForm: TProductionUnionForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inForCount'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'ForCount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 230
@@ -5086,7 +5099,7 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 182
+    Left = 166
     Top = 495
   end
   object spUnErasedMIDetail: TdsdStoredProc
@@ -5237,7 +5250,7 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 867
+    Left = 995
     Top = 425
   end
   object DetailDS_All: TDataSource

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, Integer, TFloat, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
     IN inColorPatternId         Integer   , -- Шаблон Boat Structure 
     IN inProdColorPatternId     Integer   , -- Boat Structure  
     IN inProdOptionsId          Integer   , -- Опция
-    IN inAmount                 TFloat    , -- Количество резерв
+    IN inAmount                 TFloat    , -- Количество резерв 
+    IN inForCount               TFloat    , -- Для кол-во
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -43,6 +45,7 @@ BEGIN
                                                  , inProdColorPatternId:= inProdColorPatternId
                                                  , inProdOptionsId     := inProdOptionsId
                                                  , inAmount            := inAmount
+                                                 , inForCount          := inForCount
                                                  , inUserId            := vbUserId
                                                   ) AS tmp;
 

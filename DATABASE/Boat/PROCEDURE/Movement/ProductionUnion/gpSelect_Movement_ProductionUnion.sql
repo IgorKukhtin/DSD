@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , MovementId_parent Integer
-             , InvNumber_parent TVarChar
+             , InvNumber_parent TVarChar, InvNumber_parent_choice TVarChar
              , DescName_parent TVarChar
              , FromName_parent TVarChar
              , ProductName_parent TVarChar
@@ -102,6 +102,7 @@ BEGIN
 
              , Movement_Parent.Id                         AS MovementId_parent
              , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+             , Movement_Parent.InvNumber       ::TVarChar AS InvNumber_parent_choice
              , MovementDesc_Parent.ItemName               AS DescName_parent
              , Object_From_parent.ValueData               AS FromName_parent
              , Object_Product_parent.ValueData            AS ProductName_parent
