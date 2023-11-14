@@ -2347,6 +2347,7 @@ begin
       RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
       RemainsCDS.EnableControls;
+      CalcTotalSumm;
     end;
 
   finally
