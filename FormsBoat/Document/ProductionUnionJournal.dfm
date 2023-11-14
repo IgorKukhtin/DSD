@@ -55,7 +55,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel3: TcxLabel
-      Left = 519
+      Left = 523
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
       ParentFont = False
@@ -85,7 +85,6 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 51
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
