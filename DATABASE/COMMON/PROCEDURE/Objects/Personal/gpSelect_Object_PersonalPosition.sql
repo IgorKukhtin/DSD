@@ -103,7 +103,7 @@ BEGIN
                                  ON ObjectString_Card.ObjectId = Object_Personal_View.MemberId 
                                 AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
          LEFT JOIN ObjectString AS ObjectString_GLN
-                                ON ObjectString_GLN.ObjectId = Object_Member.Id
+                                ON ObjectString_GLN.ObjectId = Object_Personal_View.MemberId
                                AND ObjectString_GLN.DescId = zc_ObjectString_Member_GLN()
       
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
