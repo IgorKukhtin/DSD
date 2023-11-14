@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PersonalPosition(
     IN inIsShowAll    Boolean,    --
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar, Card TVarChar,
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
+               GLN TVarChar,
+               DriverCertificate TVarChar, Card TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
@@ -44,7 +46,7 @@ BEGIN
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
-
+         , ObjectString_GLN.ValueData   :: TVarChar AS GLN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
 
@@ -100,6 +102,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Card
                                  ON ObjectString_Card.ObjectId = Object_Personal_View.MemberId 
                                 AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
+         LEFT JOIN ObjectString AS ObjectString_GLN
+                                ON ObjectString_GLN.ObjectId = Object_Member.Id
+                               AND ObjectString_GLN.DescId = zc_ObjectString_Member_GLN()
       
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId

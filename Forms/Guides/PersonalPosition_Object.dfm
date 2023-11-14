@@ -41,7 +41,6 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
@@ -54,6 +53,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object MemberName: TcxGridDBColumn
@@ -61,13 +61,21 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 200
+      end
+      object GLN: TcxGridDBColumn
+        DataBinding.FieldName = 'GLN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 68
       end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object PositionLevelName: TcxGridDBColumn
@@ -76,6 +84,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 113
       end
       object PersonalGroupName: TcxGridDBColumn
@@ -84,6 +93,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 133
       end
       object StorageLineName: TcxGridDBColumn
@@ -100,6 +110,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object isErased: TcxGridDBColumn
@@ -109,6 +120,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 35
       end
     end
@@ -218,6 +230,18 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateActionGLN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -285,6 +309,10 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       Hint = 'edPosition'
       Visible = ivAlways
       Control = edPosition
+    end
+    object bbUpdateActionGLN: TdxBarButton
+      Action = actUpdateActionGLN
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -438,6 +466,56 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateActionGLN: TdsdInsertUpdateAction
+      Category = 'GLN'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      ImageIndex = 77
+      FormName = 'TMemberGLNEditForm'
+      FormNameParam.Value = 'TMemberGLNEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate_GLN: TdsdExecStoredProc
+      Category = 'GLN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GLN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GLN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      ImageIndex = 77
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GLN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GLN
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PersonalPosition'
@@ -490,10 +568,13 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end
@@ -588,5 +669,31 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
     PackSize = 1
     Left = 440
     Top = 264
+  end
+  object spUpdate_GLN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_GLN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLN'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GLN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 88
   end
 end

@@ -65,6 +65,11 @@ type
     spGet: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     StorageLineName: TcxGridDBColumn;
+    spUpdate_GLN: TdsdStoredProc;
+    actUpdateActionGLN: TdsdInsertUpdateAction;
+    actUpdate_GLN: TdsdExecStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    bbUpdateActionGLN: TdxBarButton;
   private
     { Private declarations }
   public
