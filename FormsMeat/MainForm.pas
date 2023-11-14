@@ -1451,6 +1451,8 @@ type
     actReport_Sale_BankAccount: TdsdOpenForm;
     miReport_Sale_BankAccount: TMenuItem;
     N256: TMenuItem;
+    actReport_Goods_Partion: TdsdOpenForm;
+    miReport_Goods_Partion: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

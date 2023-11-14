@@ -62,6 +62,9 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actUpdateActionGLN: TdsdInsertUpdateAction;
     bbUpdateActionGLN: TdxBarButton;
+    spUpdate_GLN: TdsdStoredProc;
+    actUpdate_GLN: TdsdExecStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

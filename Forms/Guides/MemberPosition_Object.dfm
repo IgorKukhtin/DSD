@@ -42,7 +42,6 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
@@ -74,6 +73,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 195
       end
       object BranchName: TcxGridDBColumn
@@ -98,6 +98,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 58
       end
     end
@@ -435,8 +436,8 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
     object actUpdateActionGLN: TdsdInsertUpdateAction
       Category = 'GLN'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
       ImageIndex = 77
       FormName = 'TMemberGLNEditForm'
       FormNameParam.Value = 'TMemberGLNEditForm'
@@ -456,6 +457,31 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actUpdate_GLN: TdsdExecStoredProc
+      Category = 'GLN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GLN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GLN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      ImageIndex = 77
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GLN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GLN
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
   end
   object spSelect: TdsdStoredProc
@@ -611,5 +637,31 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       end>
     Left = 384
     Top = 128
+  end
+  object spUpdate_GLN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_GLN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLN'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GLN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 296
   end
 end

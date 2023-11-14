@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  ExternalLoad;
 
 type
   TCountryForm = class(TParentForm)
@@ -63,6 +64,12 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

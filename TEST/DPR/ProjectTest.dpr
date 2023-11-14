@@ -1464,7 +1464,9 @@ uses
   Report_Sale_BankAccount in '..\..\Forms\Report\Report_Sale_BankAccount.pas' {Report_Sale_BankAccountForm: TParentForm},
   Report_Sale_BankAccountDialog in '..\..\Forms\Report\Report_Sale_BankAccountDialog.pas' {Report_Sale_BankAccountDialogForm: TParentForm},
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas',
-  ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm};
+  ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm},
+  Report_Goods_Partion in '..\..\Forms\Report\Report_Goods_Partion.pas' {Report_Goods_PartionForm: TParentForm},
+  Report_Goods_PartionDialog in '..\..\Forms\Report\Report_Goods_PartionDialog.pas' {Report_Goods_PartionDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

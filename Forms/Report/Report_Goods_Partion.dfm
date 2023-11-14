@@ -3,7 +3,7 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1089#1083#1077#1078#1080#1074#1072#1077#1084#1086#1089#1090#1100' '#1087#1072#1088#1090#1080#1081'>'
   ClientHeight = 479
-  ClientWidth = 1344
+  ClientWidth = 1176
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,11 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 80
-    Width = 1344
+    Width = 1176
     Height = 399
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 465
+    ExplicitWidth = 1344
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -717,10 +717,11 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1344
+    Width = 1176
     Height = 54
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1344
     object edGoodsGroup: TcxButtonEdit
       Left = 594
       Top = 3
