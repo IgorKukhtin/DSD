@@ -87,7 +87,7 @@ object PartnerForm: TPartnerForm
         Width = 60
       end
       object TaxKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1053#1044#1057
+        Caption = #1058#1080#1087' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -347,7 +347,6 @@ object PartnerForm: TPartnerForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitTop = 341
     object btnInsert: TcxButton
       Left = 485
       Top = 7

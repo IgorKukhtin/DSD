@@ -3,7 +3,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   ClientHeight = 356
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -134
   ExplicitWidth = 1044
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -13,17 +12,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Height = 258
     TabOrder = 3
     ExplicitWidth = 1028
-    ExplicitHeight = 299
+    ExplicitHeight = 258
     ClientRectBottom = 258
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 299
+      ExplicitHeight = 258
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 258
         ExplicitWidth = 1028
-        ExplicitHeight = 299
+        ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -424,7 +423,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 70
           end
           object TaxKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1053#1044#1057
+            Caption = #1058#1080#1087' '#1053#1044#1057
             DataBinding.FieldName = 'TaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -606,8 +605,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -6
-    ExplicitWidth = 1034
     object btnInsert: TcxButton
       Left = 42
       Top = 7

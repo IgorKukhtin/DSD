@@ -25,8 +25,6 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 731
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -88,7 +86,7 @@ object ClientForm: TClientForm
         Width = 55
       end
       object TaxKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1053#1044#1057
+        Caption = #1058#1080#1087' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -340,8 +338,6 @@ object ClientForm: TClientForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitLeft = -205
-    ExplicitWidth = 1102
     object btnInsert: TcxButton
       Left = 485
       Top = 7

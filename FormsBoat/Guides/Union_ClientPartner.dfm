@@ -26,8 +26,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 796
-    ExplicitHeight = 371
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -125,9 +123,18 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         Options.Editing = False
         Width = 61
       end
+      object TaxKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object TaxKindName_Info: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName_Info'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -164,7 +171,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitTop = 362
     object btnUpdate: TcxButton
       Left = 423
       Top = 7

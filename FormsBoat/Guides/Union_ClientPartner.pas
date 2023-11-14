@@ -77,6 +77,7 @@ type
     btnUpdate: TcxButton;
     btnComplete: TcxButton;
     btnFormClose: TcxButton;
+    TaxKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

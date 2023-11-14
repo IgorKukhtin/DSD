@@ -356,7 +356,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 80
       end
       object TaxKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1053#1044#1057
+        Caption = #1058#1080#1087' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -623,7 +623,6 @@ object IncomeJournalForm: TIncomeJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 457
     object btnInsert: TcxButton
       Left = 42
       Top = 7
