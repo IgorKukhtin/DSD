@@ -39,7 +39,7 @@
   object deEnd: TcxDateEdit
     Left = 107
     Top = 27
-    EditValue = 42005d
+    EditValue = 44927d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,7 +47,7 @@
   object deStart: TcxDateEdit
     Left = 11
     Top = 27
-    EditValue = 42005d
+    EditValue = 44927d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90
@@ -79,7 +79,7 @@
   object cxLabel3: TcxLabel
     Left = 11
     Top = 58
-    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
+    Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080':'
   end
   object cxLabel2: TcxLabel
     Left = 207
