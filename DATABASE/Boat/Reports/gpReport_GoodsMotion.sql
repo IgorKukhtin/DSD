@@ -42,7 +42,8 @@ RETURNS TABLE  (LocationId Integer, DescName_location TVarChar, LocationCode Int
               , Amount_basis TFloat --Кол-во - Шаблон сборка модели
 
                 -- Заказ Клиента
-              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar, ModelName_OrderClient TVarChar
+              , InvNumberFull_OrderClient TVarChar, InvNumber_OrderClient TVarChar, FromName_OrderClient TVarChar
+              , ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar, ModelName_OrderClient TVarChar
 
                 -- из партии
               , PartionId            Integer
@@ -257,6 +258,7 @@ BEGIN
     -- Заказ Клиента
   , tmpMIFloat_OrderClient AS (SELECT tmpList.MovementId_order
                                     , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+                                    , Movement_OrderClient.InvNumber  AS InvNumber_OrderClient
                                     , Object_From.ValueData                                                           AS FromName_OrderClient
                                     , zfCalc_ValueData_isErased (Object_Product.ValueData,   Object_Product.isErased) AS ProductName_OrderClient
                                     , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN_OrderClient
@@ -290,6 +292,7 @@ BEGIN
    -- если по заказам = да нужно показать все узлы, что в документе (закл. комплектующие)
   , tmpMI_order AS (SELECT tmpList.MovementId_order 
                          , tmpList.InvNumberFull_OrderClient
+                         , tmpList.InvNumber_OrderClient
                          , tmpList.FromName_OrderClient
                          , tmpList.ProductName_OrderClient
                          , tmpList.CIN_OrderClient
@@ -334,6 +337,7 @@ BEGIN
                                 -- Заказ Клиента
                               , tmpMIContainer_group.MovementId_order
                               , MIFloat_MovementId.InvNumberFull_OrderClient
+                              , MIFloat_MovementId.InvNumber_OrderClient
                               , MIFloat_MovementId.FromName_OrderClient
                               , MIFloat_MovementId.ProductName_OrderClient
                               , MIFloat_MovementId.CIN_OrderClient
@@ -389,7 +393,8 @@ BEGIN
 
                                   -- Заказ Клиента
                                 , tmpMIContainer_group.MovementId_order
-                                , MIFloat_MovementId.InvNumberFull_OrderClient
+                                , MIFloat_MovementId.InvNumberFull_OrderClient  
+                                , MIFloat_MovementId.InvNumber_OrderClient
                                 , MIFloat_MovementId.FromName_OrderClient
                                 , MIFloat_MovementId.ProductName_OrderClient
                                 , MIFloat_MovementId.CIN_OrderClient
@@ -422,7 +427,8 @@ BEGIN
 
                             -- Заказ Клиента
                           , tmpDataAll.MovementId_order
-                          , tmpDataAll.InvNumberFull_OrderClient
+                          , tmpDataAll.InvNumberFull_OrderClient 
+                          , tmpDataAll.InvNumber_OrderClient
                           , tmpDataAll.FromName_OrderClient
                           , tmpDataAll.ProductName_OrderClient
                           , tmpDataAll.CIN_OrderClient
@@ -466,6 +472,7 @@ BEGIN
                             -- Заказ Клиента
                           , tmpDataAll.MovementId_order
                           , tmpDataAll.InvNumberFull_OrderClient
+                          , tmpDataAll.InvNumber_OrderClient
                           , tmpDataAll.FromName_OrderClient
                           , tmpDataAll.ProductName_OrderClient
                           , tmpDataAll.CIN_OrderClient
@@ -577,6 +584,7 @@ BEGIN
 
               -- Заказ Клиента
             , tmpDataAll.InvNumberFull_OrderClient   ::TVarChar
+            , tmpDataAll.InvNumber_OrderClient        ::TVarChar
             , tmpDataAll.FromName_OrderClient        ::TVarChar
             , tmpDataAll.ProductName_OrderClient     ::TVarChar
             , tmpDataAll.CIN_OrderClient             ::TVarChar

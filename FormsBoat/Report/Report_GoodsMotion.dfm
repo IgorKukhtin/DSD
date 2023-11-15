@@ -168,6 +168,16 @@
             Options.Editing = False
             Width = 100
           end
+          object InvNumber_OrderClient: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'InvNumber_OrderClient'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+            Options.Editing = False
+            Width = 100
+          end
           object CIN_OrderClient: TcxGridDBColumn
             Caption = 'CIN Nr.'
             DataBinding.FieldName = 'CIN_OrderClient'
@@ -617,9 +627,9 @@
         end
       end
       object cxLabel4: TcxLabel
-        Left = 391
+        Left = 395
         Top = 108
-        Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+        Caption = #8470' '#1079#1072#1082#1072#1079#1072': '
         ParentFont = False
         Style.Font.Charset = DEFAULT_CHARSET
         Style.Font.Color = clBlue
@@ -633,9 +643,9 @@
         Top = 109
         TabOrder = 2
         DesignSize = (
-          131
+          102
           21)
-        Width = 131
+        Width = 102
       end
     end
   end
@@ -765,9 +775,9 @@
     end
   end
   object lbSearchArticle: TcxLabel [2]
-    Left = 155
+    Left = 152
     Top = 221
-    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr:'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
@@ -781,9 +791,9 @@
     Top = 247
     TabOrder = 7
     DesignSize = (
-      125
+      109
       21)
-    Width = 125
+    Width = 109
   end
   object cbPartion: TcxCheckBox [4]
     Left = 874
@@ -1470,6 +1480,18 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedInvNumber_OrderClient'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbExecuteDialog'
         end
         item
@@ -1580,6 +1602,20 @@
     object bbOpenDocumentPartion: TdxBarButton
       Action = macOpenDocumentPartion
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel4
+    end
+    object bbedInvNumber_OrderClient: TdxBarControlContainerItem
+      Caption = 'edInvNumber_OrderClient'
+      Category = 0
+      Hint = 'edInvNumber_OrderClient'
+      Visible = ivAlways
+      Control = edInvNumber_OrderClient
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1898,13 +1934,13 @@
         Column = Article_all
       end
       item
-        Column = InvNumberFull_OrderClient
+        Column = InvNumber_OrderClient
         TextEdit = edInvNumber_OrderClient
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 224
-    Top = 184
+    Left = 488
+    Top = 224
   end
   object getMovementFormPartion: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'

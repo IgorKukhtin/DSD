@@ -88,6 +88,8 @@ type
     DescName_goods: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    bbedInvNumber_OrderClient: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
