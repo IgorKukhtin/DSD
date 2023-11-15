@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
   TTaxKindForm = class(TParentForm)
@@ -61,6 +62,10 @@ type
     Comment: TcxGridDBColumn;
     spUpdate_Code: TdsdStoredProc;
     Code: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnChoiceGuides: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public

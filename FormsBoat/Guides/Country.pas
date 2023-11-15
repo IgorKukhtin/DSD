@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad;
+  ExternalLoad, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
   TCountryForm = class(TParentForm)
@@ -70,6 +70,13 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public

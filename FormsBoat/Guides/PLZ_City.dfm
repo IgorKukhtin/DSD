@@ -3,7 +3,7 @@ object PLZ_CityForm: TPLZ_CityForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1086#1088#1086#1076#1072'>'
   ClientHeight = 376
-  ClientWidth = 612
+  ClientWidth = 563
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,13 @@ object PLZ_CityForm: TPLZ_CityForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 612
-    Height = 350
+    Width = 563
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 612
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -61,6 +63,34 @@ object PLZ_CityForm: TPLZ_CityForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 335
+    Width = 563
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitLeft = -21
+    ExplicitWidth = 633
+    object btnChoiceGuides: TcxButton
+      Left = 195
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 0
+    end
+    object btnFormClose: TcxButton
+      Left = 313
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
     end
   end
   object DataSource: TDataSource
@@ -237,9 +267,9 @@ object PLZ_CityForm: TPLZ_CityForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -269,6 +299,12 @@ object PLZ_CityForm: TPLZ_CityForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

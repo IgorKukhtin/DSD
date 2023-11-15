@@ -1,18 +1,21 @@
 inherited PaidKindForm: TPaidKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1086#1088#1084#1099' '#1086#1087#1083#1072#1090'>'
-  ClientWidth = 336
-  ExplicitWidth = 352
-  ExplicitHeight = 346
+  ClientWidth = 350
+  ExplicitWidth = 366
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 336
-    ClientRectRight = 336
+    Width = 350
+    ExplicitWidth = 336
+    ClientRectRight = 350
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
+      ExplicitWidth = 336
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 336
+        Width = 350
+        Height = 241
+        ExplicitWidth = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -38,9 +41,47 @@ inherited PaidKindForm: TPaidKindForm
           end
         end
       end
+      object Panel_btn: TPanel
+        Left = 0
+        Top = 241
+        Width = 350
+        Height = 41
+        Align = alBottom
+        TabOrder = 1
+        ExplicitTop = 335
+        ExplicitWidth = 633
+        object btnChoiceGuides: TcxButton
+          Left = 51
+          Top = 8
+          Width = 90
+          Height = 25
+          Action = ChoiceGuides
+          TabOrder = 0
+        end
+        object btnFormClose: TcxButton
+          Left = 169
+          Top = 8
+          Width = 90
+          Height = 25
+          Action = actFormClose
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 1
+        end
+      end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 59
+    Top = 184
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Left = 32
+    Top = 200
+  end
   inherited ActionList: TActionList
+    Left = 103
+    Top = 167
     inherited ChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -65,6 +106,14 @@ inherited PaidKindForm: TPaidKindForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
+      Caption = #1054#1050
+      ImageIndex = 80
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -125,5 +174,9 @@ inherited PaidKindForm: TPaidKindForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 256
     Top = 256
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 104
+    Top = 168
   end
 end

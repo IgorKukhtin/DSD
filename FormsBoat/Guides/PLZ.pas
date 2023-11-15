@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
   TPLZForm = class(TParentForm)
@@ -65,6 +66,13 @@ type
     AreaCode: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     CountryName: TcxGridDBColumn;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public
