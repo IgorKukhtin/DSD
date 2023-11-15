@@ -310,7 +310,6 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -352,9 +351,6 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Master
                                    ON MovementDate_OperDatePartner_Master.MovementId =  MovementLinkMovement_Master.MovementChildId
                                   AND MovementDate_OperDatePartner_Master.DescId = zc_MovementDate_OperDatePartner()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_Master
-                                         ON MovementLinkObject_Partner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
-                                        AND MovementLinkObject_Partner_Master.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Master
                                          ON MovementLinkObject_From_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_From_Master.DescId = zc_MovementLinkObject_From()
@@ -370,6 +366,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
                                          ON MovementLinkObject_DocumentTaxKind_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_Master
+                                         ON MovementLinkObject_Partner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkObject_Partner_Master.DescId     = zc_MovementLinkObject_Partner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                       ON MovementBoolean_isPartner.MovementId = Movement_DocumentMaster.Id
@@ -392,8 +391,12 @@ BEGIN
             LEFT JOIN Object AS Object_StatusChild ON Object_StatusChild.Id = Movement_DocumentChild.StatusId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_Child
-                                         ON MovementLinkObject_Partner_Child.MovementId = MovementLinkMovement_Child.MovementChildId
-                                        AND MovementLinkObject_Partner_Child.DescId = zc_MovementLinkObject_Partner()
+                                         ON MovementLinkObject_Partner_Child.MovementId = Movement_DocumentChild.Id
+                                        AND MovementLinkObject_Partner_Child.DescId     = zc_MovementLinkObject_Partner()
+
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_Partner_Child.ObjectId)
+
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Child
                                          ON MovementLinkObject_To_Child.MovementId = MovementLinkMovement_Child.MovementChildId
                                         AND MovementLinkObject_To_Child.DescId = zc_MovementLinkObject_To()
