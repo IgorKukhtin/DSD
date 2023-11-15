@@ -21,11 +21,12 @@ object TaxKindForm: TTaxKindForm
     Left = 0
     Top = 26
     Width = 646
-    Height = 350
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -127,6 +128,33 @@ object TaxKindForm: TTaxKindForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 335
+    Width = 646
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitWidth = 633
+    object btnChoiceGuides: TcxButton
+      Left = 195
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 0
+    end
+    object btnFormClose: TcxButton
+      Left = 313
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
     end
   end
   object DataSource: TDataSource
@@ -342,9 +370,9 @@ object TaxKindForm: TTaxKindForm
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -397,6 +425,12 @@ object TaxKindForm: TTaxKindForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

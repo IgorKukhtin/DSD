@@ -2,8 +2,8 @@ object PLZForm: TPLZForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1095#1090#1086#1074#1099#1077' '#1072#1076#1088#1077#1089#1072'>'
-  ClientHeight = 376
-  ClientWidth = 660
+  ClientHeight = 382
+  ClientWidth = 702
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object PLZForm: TPLZForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 660
-    Height = 350
+    Width = 702
+    Height = 315
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 660
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -122,6 +124,58 @@ object PLZForm: TPLZForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 341
+    Width = 702
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitTop = 347
+    object btnInsert: TcxButton
+      Left = 341
+      Top = 8
+      Width = 100
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 467
+      Top = 8
+      Width = 100
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 28
+      Top = 8
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      Caption = #1054#1050
+      TabOrder = 2
+    end
+    object btnSetErased: TcxButton
+      Left = 592
+      Top = 8
+      Width = 100
+      Height = 25
+      Action = actSetErased
+      TabOrder = 3
+    end
+    object btnFormClose: TcxButton
+      Left = 146
+      Top = 8
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
     end
   end
   object DataSource: TDataSource
@@ -440,7 +494,7 @@ object PLZForm: TPLZForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -500,6 +554,12 @@ object PLZForm: TPLZForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

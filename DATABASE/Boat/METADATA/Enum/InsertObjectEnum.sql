@@ -6408,7 +6408,9 @@ BEGIN
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
                                                               inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
-                                                              inSession      := vbUserId::TVarChar);
+                                                              inSession      := vbUserId::TVarChar); 
+     --Создали Enum
+    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Country');                                                          
  
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCountryName';
