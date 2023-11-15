@@ -19,6 +19,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TFloat, TFloat, TFloat
                                                      , Integer, Integer, Integer, Integer, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar , TVarChar, TVarChar, TVarChar
+                                                     , TFloat, TFloat, TFloat
+                                                     , Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId              Integer,       -- ключ объекта <>
@@ -30,6 +35,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inMobile          TVarChar,
     IN inIBAN            TVarChar,
     IN inStreet          TVarChar,
+    IN inStreet_add      TVarChar,
     IN inMember          TVarChar,
     IN inWWW             TVarChar,
     IN inEmail           TVarChar,
@@ -83,6 +89,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Partner_IBAN(), ioId, inIBAN);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Partner_Street(), ioId, inStreet);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Partner_Street_add(), ioId, inStreet_add);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Partner_Member(), ioId, inMember);
    -- сохранили свойство <>

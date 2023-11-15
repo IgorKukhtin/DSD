@@ -23,6 +23,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
@@ -34,6 +38,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inMobile          TVarChar,
     IN inIBAN            TVarChar,
     IN inStreet          TVarChar,
+    IN inStreet_add      TVarChar,
     IN inMember          TVarChar,
     IN inWWW             TVarChar,
     IN inEmail           TVarChar,
@@ -87,7 +92,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_IBAN(), ioId, inIBAN);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Street(), ioId, inStreet);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Street(), ioId, inStreet); 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Street_add(), ioId, inStreet_add);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Member(), ioId, inMember);
    -- сохранили свойство <>
@@ -204,6 +211,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.11.23         *
  02.02.21         *
  04.01.21         *
  08.10.20         *

@@ -48,6 +48,7 @@ BEGIN
            , COALESCE (ObjectString_Mobile.ValueData,'')::TVarChar   AS Mobile
            , COALESCE (ObjectString_IBAN.ValueData,'')::TVarChar     AS IBAN
            , COALESCE (ObjectString_Street.ValueData,'')::TVarChar   AS Street
+           , COALESCE (ObjectString_Street_add.ValueData,'')::TVarChar AS Street_add
            , COALESCE (ObjectString_Member.ValueData,'')::TVarChar   AS Member
            , COALESCE (ObjectString_WWW.ValueData,'')::TVarChar      AS WWW
            , COALESCE (ObjectString_Email.ValueData,'')::TVarChar    AS Email
@@ -110,6 +111,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Client.Id
                                 AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
+          LEFT JOIN ObjectString AS ObjectString_Street_add
+                                 ON ObjectString_Street_add.ObjectId = Object_Client.Id
+                                AND ObjectString_Street_add.DescId = zc_ObjectString_Client_Street_add()
           LEFT JOIN ObjectString AS ObjectString_Member
                                  ON ObjectString_Member.ObjectId = Object_Client.Id
                                 AND ObjectString_Member.DescId = zc_ObjectString_Client_Member()
@@ -195,6 +199,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+15.11.23          *
 04.01.21          *
 22.10.20          *
 */

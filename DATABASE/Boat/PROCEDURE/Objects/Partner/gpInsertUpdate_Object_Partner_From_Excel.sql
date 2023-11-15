@@ -142,6 +142,7 @@ BEGIN
                                            , inMobile   := TRIM (inMobile) :: TVarChar
                                            , inIBAN     := TRIM (inIBAN)   :: TVarChar
                                            , inStreet   := TRIM (inStreet) :: TVarChar
+                                           , inStreet_add := ''            :: TVarChar
                                            , inMember   := TRIM (inMember) :: TVarChar
                                            , inWWW      := TRIM (inWWW)    :: TVarChar
                                            , inEmail    := TRIM (inEmail)  :: TVarChar
@@ -176,6 +177,7 @@ BEGIN
                                            , inMobile   := TRIM (inMobile)
                                            , inIBAN     := TRIM (inIBAN)
                                            , inStreet   := TRIM (inStreet)
+                                           , inStreet_add:= TRIM (tmp.Street_add)
                                            , inMember   := TRIM (inMember)
                                            , inWWW      := TRIM (inWWW)
                                            , inEmail    := TRIM (inEmail)
@@ -189,7 +191,7 @@ BEGIN
                                            , inInfoMoneyId  := COALESCE (tmp.InfoMoneyId, zc_Enum_InfoMoney_10101())
                                            , inTaxKindId    := COALESCE (tmp.TaxKindId, zc_Enum_TaxKind_Basis())
                                            , inPaidKindId   := COALESCE (tmp.PaidKindId, zc_Enum_PaidKind_FirstForm() ::Integer) 
-                                           , inSession      := inSession                              :: TVarChar
+                                           , inSession      := inSession :: TVarChar
                                             )
        FROM gpSelect_Object_Partner (TRUE, inSession) AS tmp
        WHERE tmp.Id = vbPartnerId;
@@ -204,6 +206,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.11.23         *
  17.06.21         *
  09.11.20         *
 */

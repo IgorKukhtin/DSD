@@ -27,6 +27,7 @@ BEGIN
                                                     , inProdColorPatternId:= tmp.ProdColorPatternId
                                                     , inProdOptionsId     := tmp.ProdOptionsId
                                                     , inAmount            := COALESCE (tmp.Value,0) :: TFloat
+                                                    , inForCount          := tmp.ForCount
                                                     , inUserId            := vbUserId
                                                     )
      FROM gpSelect_MI_ProductionUnion_Child (inMovementId, TRUE, FALSE, inSession) AS tmp

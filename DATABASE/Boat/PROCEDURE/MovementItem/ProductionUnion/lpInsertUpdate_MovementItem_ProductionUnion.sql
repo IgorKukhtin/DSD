@@ -125,6 +125,7 @@ BEGIN
                                                     , inProdColorPatternId:= tmpReceiptGoodsChild.ProdColorPatternId
                                                     , inProdOptionsId     := tmpReceiptGoodsChild.ProdOptionsId
                                                     , inAmount            := tmpReceiptGoodsChild.Value * inAmount
+                                                    , inForCount          := 1
                                                     , inUserId            := inUserId
                                                      )
      FROM (WITH tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId      AS GoodsId_master

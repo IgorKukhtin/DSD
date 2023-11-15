@@ -47,7 +47,8 @@ BEGIN
            , COALESCE (ObjectString_Phone.ValueData,'')::TVarChar    AS Phone
            , COALESCE (ObjectString_Mobile.ValueData,'')::TVarChar   AS Mobile
            , COALESCE (ObjectString_IBAN.ValueData,'')::TVarChar     AS IBAN
-           , COALESCE (ObjectString_Street.ValueData,'')::TVarChar   AS Street
+           , COALESCE (ObjectString_Street.ValueData,'')::TVarChar   AS Street 
+           , COALESCE (ObjectString_Street_add.ValueData,'')::TVarChar AS Street_add
            , COALESCE (ObjectString_Member.ValueData,'')::TVarChar   AS Member
            , COALESCE (ObjectString_WWW.ValueData,'')::TVarChar      AS WWW
            , COALESCE (ObjectString_Email.ValueData,'')::TVarChar    AS Email
@@ -107,7 +108,10 @@ BEGIN
                                 AND ObjectString_IBAN.DescId = zc_ObjectString_Partner_IBAN()
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Partner.Id
-                                AND ObjectString_Street.DescId = zc_ObjectString_Partner_Street()
+                                AND ObjectString_Street.DescId = zc_ObjectString_Partner_Street() 
+          LEFT JOIN ObjectString AS ObjectString_Street_add
+                                 ON ObjectString_Street_add.ObjectId = Object_Partner.Id
+                                AND ObjectString_Street_add.DescId = zc_ObjectString_Partner_Street_add()
           LEFT JOIN ObjectString AS ObjectString_Member
                                  ON ObjectString_Member.ObjectId = Object_Partner.Id
                                 AND ObjectString_Member.DescId = zc_ObjectString_Partner_Member()
@@ -200,6 +204,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.11.23         *
  17.06.21         *
  02.02.21         *
  09.11.20         *

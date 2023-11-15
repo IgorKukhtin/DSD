@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Client(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name1 TVarChar, Name2 TVarChar, Name3 TVarChar
              , Fax TVarChar, Phone TVarChar, Mobile TVarChar
-             , IBAN TVarChar, Street TVarChar, Member TVarChar
+             , IBAN TVarChar, Street TVarChar, Street_add TVarChar, Member TVarChar
              , WWW TVarChar, Email TVarChar, CodeDB TVarChar
              , TaxNumber TVarChar
              , Comment TVarChar
@@ -44,6 +44,7 @@ BEGIN
            , '' :: TVarChar           AS Mobile
            , '' :: TVarChar           AS IBAN
            , '' :: TVarChar           AS Street
+           , '' :: TVarChar           AS Street_add
            , '' :: TVarChar           AS Member
            , '' :: TVarChar           AS WWW
            , '' :: TVarChar           AS Email
@@ -81,6 +82,7 @@ BEGIN
            , ObjectString_Mobile.ValueData   AS Mobile
            , ObjectString_IBAN.ValueData     AS IBAN
            , ObjectString_Street.ValueData   AS Street
+           , COALESCE (ObjectString_Street_add.ValueData,'')::TVarChar AS Street_add
            , ObjectString_Member.ValueData   AS Member
            , ObjectString_WWW.ValueData      AS WWW
            , ObjectString_Email.ValueData    AS Email
@@ -124,7 +126,10 @@ BEGIN
                                 AND ObjectString_IBAN.DescId = zc_ObjectString_Client_IBAN()
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Client.Id
-                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
+                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street() 
+          LEFT JOIN ObjectString AS ObjectString_Street_add
+                                 ON ObjectString_Street_add.ObjectId = Object_Client.Id
+                                AND ObjectString_Street_add.DescId = zc_ObjectString_Client_Street_add()
           LEFT JOIN ObjectString AS ObjectString_Member
                                  ON ObjectString_Member.ObjectId = Object_Client.Id
                                 AND ObjectString_Member.DescId = zc_ObjectString_Client_Member()

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Fax TVarChar, Phone TVarChar, Mobile TVarChar
-             , IBAN TVarChar, Street TVarChar, Member TVarChar
+             , IBAN TVarChar, Street TVarChar, Street_add TVarChar, Member TVarChar
              , WWW TVarChar, Email TVarChar, CodeDB TVarChar
              , TaxNumber TVarChar
              , Comment TVarChar
@@ -41,6 +41,7 @@ BEGIN
            , '' :: TVarChar           AS Mobile
            , '' :: TVarChar           AS IBAN
            , '' :: TVarChar           AS Street
+           , '' :: TVarChar           AS Street_add
            , '' :: TVarChar           AS Member
            , '' :: TVarChar           AS WWW
            , '' :: TVarChar           AS Email
@@ -75,6 +76,7 @@ BEGIN
            , ObjectString_Mobile.ValueData   AS Mobile
            , ObjectString_IBAN.ValueData     AS IBAN
            , ObjectString_Street.ValueData   AS Street
+           , ObjectString_Street_add.ValueData   AS Street_add
            , ObjectString_Member.ValueData   AS Member
            , ObjectString_WWW.ValueData      AS WWW
            , ObjectString_Email.ValueData    AS Email
@@ -116,6 +118,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Partner.Id
                                 AND ObjectString_Street.DescId = zc_ObjectString_Partner_Street()
+          LEFT JOIN ObjectString AS ObjectString_Street_add
+                                 ON ObjectString_Street_add.ObjectId = Object_Partner.Id
+                                AND ObjectString_Street_add.DescId = zc_ObjectString_Partner_Street_add()
           LEFT JOIN ObjectString AS ObjectString_Member
                                  ON ObjectString_Member.ObjectId = Object_Partner.Id
                                 AND ObjectString_Member.DescId = zc_ObjectString_Partner_Member()
@@ -189,6 +194,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.11.23         *
  17.06.21         *
  02.02.21         *
  09.11.20         *
