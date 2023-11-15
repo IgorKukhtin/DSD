@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Lieferanten('#1055#1086#1089#1090#1072#1074#1097#1080#1082')>'
-  ClientHeight = 368
+  ClientHeight = 413
   ClientWidth = 588
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 169
-    Top = 335
+    Left = 158
+    Top = 375
     Width = 90
     Height = 25
     Action = actInsertUpdateGuides
@@ -26,8 +26,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 318
-    Top = 335
+    Left = 314
+    Top = 375
     Width = 90
     Height = 25
     Action = actFormClose
@@ -39,11 +39,11 @@
     Left = 8
     Top = 8
     Width = 569
-    Height = 305
+    Height = 345
     TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 305
+    ClientRectBottom = 345
     ClientRectRight = 569
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
@@ -76,15 +76,15 @@
         Width = 130
       end
       object cxLabel3: TcxLabel
-        Left = 292
-        Top = 231
+        Left = 10
+        Top = 275
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object edComment: TcxTextEdit
-        Left = 292
-        Top = 251
+        Left = 10
+        Top = 294
         TabOrder = 6
-        Width = 268
+        Width = 550
       end
       object cxLabel4: TcxLabel
         Left = 10
@@ -98,15 +98,15 @@
         Width = 273
       end
       object cxLabel5: TcxLabel
-        Left = 292
-        Top = 185
+        Left = 294
+        Top = 231
         Caption = #1058#1077#1083'. '#1085#1086#1084#1077#1088
       end
       object edPhone: TcxTextEdit
-        Left = 292
-        Top = 205
+        Left = 294
+        Top = 251
         TabOrder = 10
-        Width = 268
+        Width = 266
       end
       object cxLabel6: TcxLabel
         Left = 10
@@ -130,11 +130,22 @@
         TabOrder = 13
         Width = 273
       end
-      object edEmail: TcxTextEdit
-        Left = 292
+      object edStreet_add: TcxTextEdit
+        Left = 294
         Top = 161
+        TabOrder = 18
+        Width = 266
+      end
+      object cxLabel25: TcxLabel
+        Left = 294
+        Top = 143
+        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
+      end
+      object edEmail: TcxTextEdit
+        Left = 294
+        Top = 205
         TabOrder = 21
-        Width = 268
+        Width = 266
       end
       object cxLabel13: TcxLabel
         Left = 10
@@ -198,8 +209,8 @@
         Width = 130
       end
       object cxLabel11: TcxLabel
-        Left = 292
-        Top = 143
+        Left = 294
+        Top = 185
         Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
       end
       object cxLabel22: TcxLabel
@@ -238,8 +249,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = 'Detail'
       ImageIndex = 1
-      ExplicitLeft = -3
-      ExplicitTop = 21
       object cxLabel7: TcxLabel
         Left = 287
         Top = 99
@@ -310,7 +319,7 @@
       object edWWW: TcxTextEdit
         Left = 15
         Top = 163
-        TabOrder = 6
+        TabOrder = 5
         Width = 265
       end
       object ceDiscountTax: TcxCurrencyEdit
@@ -318,7 +327,7 @@
         Top = 30
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 7
+        TabOrder = 6
         Width = 127
       end
       object Код: TcxLabel
@@ -331,7 +340,7 @@
         Top = 30
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 9
+        TabOrder = 8
         Width = 130
       end
       object cxLabel17: TcxLabel
@@ -360,17 +369,6 @@
         Left = 15
         Top = 56
         Caption = #1050#1086#1085#1090#1072#1085#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
-      end
-      object edStreet_add: TcxTextEdit
-        Left = 15
-        Top = 208
-        TabOrder = 18
-        Width = 265
-      end
-      object cxLabel25: TcxLabel
-        Left = 15
-        Top = 189
-        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
       end
     end
   end

@@ -307,9 +307,8 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_ForCount
                                                       ON MIFloat_ForCount.MovementItemId = MovementItem.Id
                                                      AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
-
-                          INNER JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = MovementItem.ObjectId
-                    
+                          --INNER JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = MovementItem.ObjectId  
+                    WHERE inIsOrderClient = TRUE
                     )
    
  
@@ -442,9 +441,11 @@ BEGIN
 
                             -- информативно по партии - Кол-во приход
                           , tmpDataAll.Amount_partion 
-                          , 0 AS Amount_basis
+                          , COALESCE (tmpMI_order.Amount_basis,0) AS Amount_basis
 
-                     FROM tmpDataAll 
+                     FROM tmpDataAll
+                          LEFT JOIN tmpMI_order ON tmpMI_order.MovementId_order = tmpDataAll.MovementId_order 
+                                               AND tmpMI_order.GoodsId = tmpDataAll.GoodsId--and 1=0
                    UNION ALL
                      SELECT 0 AS LocationId
                           , tmpDataAll.GoodsId
@@ -506,8 +507,6 @@ BEGIN
                                               AND ObjectLink_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
                      WHERE inIsOrderClient = TRUE
                        AND tmp.GoodsId IS NULL
-
-
                     )
 
 

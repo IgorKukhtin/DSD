@@ -86,6 +86,8 @@ type
     macOpenDocumentPartion: TMultiAction;
     bbOpenDocumentPartion: TdxBarButton;
     DescName_goods: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edInvNumber_OrderClient: TcxTextEdit;
   private
     { Private declarations }
   public

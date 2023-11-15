@@ -230,7 +230,7 @@ object ProductionUnionForm: TProductionUnionForm
     Width = 1084
     Height = 409
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 409
@@ -454,7 +454,7 @@ object ProductionUnionForm: TProductionUnionForm
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 2
-              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 80
@@ -1268,6 +1268,9 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0

@@ -616,6 +616,27 @@
           end
         end
       end
+      object cxLabel4: TcxLabel
+        Left = 391
+        Top = 108
+        Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edInvNumber_OrderClient: TcxTextEdit
+        Left = 480
+        Top = 109
+        TabOrder = 2
+        DesignSize = (
+          131
+          21)
+        Width = 131
+      end
     end
   end
   inherited Panel: TPanel
@@ -1875,6 +1896,10 @@
     ColumnList = <
       item
         Column = Article_all
+      end
+      item
+        Column = InvNumberFull_OrderClient
+        TextEdit = edInvNumber_OrderClient
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

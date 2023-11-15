@@ -184,7 +184,6 @@ BEGIN
                                   ON ObjectLink_ProdColor.ObjectId = Object_Goods.Id
                                  AND ObjectLink_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
              LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId
-
     ;
 
 END;

@@ -58,7 +58,6 @@ object ClientEditForm: TClientEditForm
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitHeight = 360
       object cxLabel2: TcxLabel
         Left = 10
         Top = 8
@@ -97,10 +96,10 @@ object ClientEditForm: TClientEditForm
         Width = 558
       end
       object edFax: TcxTextEdit
-        Left = 202
+        Left = 153
         Top = 206
         TabOrder = 7
-        Width = 183
+        Width = 130
       end
       object cxLabel5: TcxLabel
         Left = 10
@@ -111,18 +110,18 @@ object ClientEditForm: TClientEditForm
         Left = 10
         Top = 206
         TabOrder = 9
-        Width = 183
+        Width = 130
       end
       object cxLabel7: TcxLabel
-        Left = 394
+        Left = 295
         Top = 188
         Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081
       end
       object edMobile: TcxTextEdit
-        Left = 394
+        Left = 295
         Top = 206
         TabOrder = 11
-        Width = 174
+        Width = 130
       end
       object cxLabel9: TcxLabel
         Left = 10
@@ -135,15 +134,26 @@ object ClientEditForm: TClientEditForm
         TabOrder = 15
         Width = 273
       end
-      object edEmail: TcxTextEdit
-        Left = 295
-        Top = 163
-        TabOrder = 26
-        Width = 273
-      end
-      object cxLabel12: TcxLabel
+      object cxLabel25: TcxLabel
         Left = 295
         Top = 144
+        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
+      end
+      object edStreet_add: TcxTextEdit
+        Left = 295
+        Top = 163
+        TabOrder = 19
+        Width = 273
+      end
+      object edEmail: TcxTextEdit
+        Left = 438
+        Top = 206
+        TabOrder = 26
+        Width = 130
+      end
+      object cxLabel12: TcxLabel
+        Left = 438
+        Top = 188
         Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
       end
       object cxLabel19: TcxLabel
@@ -222,7 +232,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 22
+        TabOrder = 21
         Width = 273
       end
       object cxLabel23: TcxLabel
@@ -263,7 +273,7 @@ object ClientEditForm: TClientEditForm
         Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' Tax Number:'
       end
       object cxLabel4: TcxLabel
-        Left = 202
+        Left = 153
         Top = 188
         Caption = #1060#1072#1082#1089
       end
@@ -271,7 +281,6 @@ object ClientEditForm: TClientEditForm
     object Detail: TcxTabSheet
       Caption = 'Detail'
       ImageIndex = 1
-      ExplicitHeight = 361
       object edIBAN: TcxTextEdit
         Left = 270
         Top = 112
@@ -347,7 +356,7 @@ object ClientEditForm: TClientEditForm
       object edWWW: TcxTextEdit
         Left = 3
         Top = 161
-        TabOrder = 8
+        TabOrder = 7
         Width = 255
       end
       object cxLabel6: TcxLabel
@@ -392,17 +401,6 @@ object ClientEditForm: TClientEditForm
         Top = 3
         Hint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1073#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1076#1085#1103#1093
         Caption = #1054#1090#1089#1088'. '#1074' '#1073#1072#1085#1082'. '#1076#1085'.'
-      end
-      object cxLabel25: TcxLabel
-        Left = 3
-        Top = 187
-        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
-      end
-      object edStreet_add: TcxTextEdit
-        Left = 3
-        Top = 207
-        TabOrder = 19
-        Width = 255
       end
     end
   end
@@ -675,8 +673,8 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 168
+    Left = 488
+    Top = 144
   end
   object FormParams: TdsdFormParams
     Params = <

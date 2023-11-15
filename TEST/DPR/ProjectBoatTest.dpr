@@ -146,7 +146,6 @@ uses
   MemberEdit in '..\..\FormsBoat\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   Member in '..\..\FormsBoat\Guides\Member.pas' {MemberForm: TParentForm},
   Client in '..\..\FormsBoat\Guides\Client.pas' {ClientForm: TParentForm},
-  ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
   Partner in '..\..\FormsBoat\Guides\Partner.pas' {PartnerForm: TParentForm},
   PartnerEdit in '..\..\FormsBoat\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   Position in '..\..\FormsBoat\Guides\Position.pas' {PositionForm: TParentForm},
@@ -366,7 +365,8 @@ uses
   GoodsGroup in '..\..\FormsBoat\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
   GoodsGroup_List in '..\..\FormsBoat\Guides\GoodsGroup_List.pas' {GoodsGroup_ListForm: TParentForm},
   Report_Client in '..\..\FormsBoat\Report\Report_Client.pas' {Report_ClientForm: TParentForm},
-  Report_ClientDialog in '..\..\FormsBoat\Report\Report_ClientDialog.pas' {Report_ClientDialogForm: TParentForm};
+  Report_ClientDialog in '..\..\FormsBoat\Report\Report_ClientDialog.pas' {Report_ClientDialogForm: TParentForm},
+  ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

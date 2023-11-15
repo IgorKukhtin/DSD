@@ -422,10 +422,6 @@
 				<Form>ClientForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ClientEdit.pas">
-				<Form>ClientEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\Partner.pas">
 				<Form>PartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1264,6 +1260,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Report\Report_ClientDialog.pas">
 				<Form>Report_ClientDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ClientEdit.pas">
+				<Form>ClientEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
