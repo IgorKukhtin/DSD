@@ -549,14 +549,14 @@ BEGIN
            , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, tmpTransportGoods.OperDate) ELSE tmpTransportGoods.OperDate END :: TDateTime AS OperDate
            , tmpTransportGoods.InvNumberMark
            , tmpTransportGoods.CarName
-           , ''::TVArChar                       AS CarBrandName
-           , tmpTransportGoods.CarModelName
+           , tmpTransportGoods.BrandName  AS CarBrandName
+           , tmpTransportGoods.ModelName  AS CarModelName
            , tmpTransportGoods.CarTrailerName
            , ''::TVArChar                       AS CarTrailerBrandName
            , tmpTransportGoods.CarTrailerModelName
            , tmpTransportGoods.PersonalDriverName
            --, 'Гуменний Володимир Антонович'::TVarChar AS PersonalDriverName
-           , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
+           , Upper(REPLACE(COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData), ' ', '')) :: TVarChar AS DriverCertificate
            --, 'ВХО320611'::TVarChar AS DriverCertificate
            , COALESCE (ObjectString_DriverINN_external.ValueData, ObjectString_DriverINN.ValueData) :: TVarChar AS DriverINN
            --, '3234715572'::TVarChar AS DriverINN
@@ -589,6 +589,9 @@ BEGIN
           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.Днiпро'
                   END  :: TVarChar   AS PlaceOf
+          , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN Split_Part(COALESCE (ObjectString_PlaceOf.ValueData, ''), ',', 1)
+                  ELSE '' -- 'м.Днiпро'
+                  END  :: TVarChar   AS PlaceOfDescription
 
         --, tmpCar_param.Length :: TVarChar  AS Length
         --, tmpCar_param.Width  :: TVarChar  AS Width 

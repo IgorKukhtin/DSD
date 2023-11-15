@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime
              , InvNumberPartner_Sale TVarChar, OperDatePartner_Sale TDateTime
              , RouteName TVarChar
-             , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
+             , CarName TVarChar, CarModelName TVarChar, CarBrandName TVarChar, CarTrailerName TVarChar
              , PersonalDriverName TVarChar
              , CarJuridicalName TVarChar
              , MemberName1 TVarChar
@@ -33,7 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ReestrKindName TVarChar
              , OperDate_reestr TDateTime, InvNumber_reestr TVarChar
              , StatusCode_reestr Integer, StatusName_reestr TVarChar
-             , CarName_reestr TVarChar, CarModelName_reestr TVarChar
+             , CarName_reestr TVarChar, CarModelName_reestr TVarChar, CarBrandName_reestr TVarChar
              , PersonalDriverName_reestr TVarChar, MemberName_reestr TVarChar
              , InvNumber_Transport_reestr TVarChar, OperDate_Transport_reestr TDateTime
 
@@ -104,7 +104,8 @@ BEGIN
 
            , Object_Route.ValueData          AS RouteName
            , Object_Car.ValueData            AS CarName
-           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
+           , COALESCE (Object_CarModel.ValueData,'') ::TVarChar AS CarModelName
+           , COALESCE (Object_CarType.ValueData, '')  ::TVarChar AS CarBrandName
            , Object_CarTrailer.ValueData     AS CarTrailerName
            , Object_PersonalDriver.ValueData AS PersonalDriverName
            , COALESCE (OH_JuridicalDetails_car.FullName, CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() 
@@ -136,7 +137,8 @@ BEGIN
            , Object_Status_reestr.ValueData             AS StatusName_reestr
 
            , Object_Car_reestr.ValueData                AS CarName_reestr
-           , (COALESCE (Object_CarModel_reestr.ValueData,'') || COALESCE (' ' || Object_CarType_reestr.ValueData, '') ) ::TVarChar AS CarModelName_reestr
+           , COALESCE (Object_CarModel_reestr.ValueData,'') ::TVarChar AS CarModelName_reestr
+           , COALESCE (Object_CarType_reestr.ValueData, '') ::TVarChar AS CarBrandName_reestr
            , Object_PersonalDriver_reestr.PersonalName  AS PersonalDriverName_reestr
            , Object_Member_reestr.ValueData             AS MemberName_reestr
 
@@ -652,4 +654,4 @@ $BODY$
 -- тест
 -- 
 
-SELECT * FROM gpSelect_Movement_TransportGoods_EDIN (inStartDate:= '01.07.2023', inEndDate:= '20.07.2023', inIsErased:=false, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin()) 
+select * from gpSelect_Movement_TransportGoods_EDIN(instartdate := ('06.11.2023')::TDateTime , inenddate := ('13.11.2023')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

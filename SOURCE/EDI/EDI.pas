@@ -5565,7 +5565,7 @@ end;
 
 function TdsdEDINAction.ShowError(AError : String): Boolean;
 begin
-  FErrorParam.Value := AError;
+  FErrorParam.Value := Copy(AError, 1, 255);
   if Assigned(FUpdateError) then FUpdateError.Execute;
 
   raise Exception.Create(AError);
@@ -5599,60 +5599,60 @@ begin
 
     // Создать XML
     UAECMR := UAECMRXML.NewUAECMR;
-    // Технічні дані
+    // ***** Початок змісту документа
     UAECMR.ECMR.ExchangedDocumentContext.SpecifiedTransactionID := '0';
     UAECMR.ECMR.ExchangedDocumentContext.BusinessProcessSpecifiedDocumentContextParameter.ID := 'urn:ua:e-transport.gov.ua:ettn:01';
     UAECMR.ECMR.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameter.ID := 'urn:ua:e-transport.gov.ua:ettn:01:generic:001';
 
-    // Реквізити ТТН
+    // ***** Реквізити ТТН
     // порядковий номер (серія) документа ТТН
     UAECMR.ECMR.ExchangedDocument.ID := HeaderDataSet.FieldByName('InvNumber').asString;
     // Дата і час складання документа (виписування ТТН)
     UAECMR.ECMR.ExchangedDocument.IssueDateTime.DateTime := gfFormatToDateTime (HeaderDataSet.FieldByName('OperDate').AsDateTime);
     // Додані записи
-    // CA - Перевізник
-    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
-    begin
-      ContentCode.ListAgencyID := 'GLN';
-      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_car').asString; // '9864232596110';
-      Content := 'CA';
-    end;
-    // OB - Замовник
-    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
-    begin
-      ContentCode.ListAgencyID := 'GLN';
-      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_from').asString; // '9864232596127';
-      Content := 'OB';
-    end;
-    // CZ - Вантажовідправник
-    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
-    begin
-      ContentCode.ListAgencyID := 'GLN';
-      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_from').asString; // '9864065749080'
-      Content := 'CZ';
-    end;
-    // CN - Вантажоодержувач
-    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
-    begin
-      ContentCode.ListAgencyID := 'GLN';
-      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_to').asString; // '9864232596127';
-      Content := 'CN';
-    end;
-
-    // DR - Водій
-    if HeaderDataSet.FieldByName('GLN_Driver').asString <> '' then
-      with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
-      begin
-        ContentCode.ListAgencyID := 'GLN';
-        ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_Driver').asString; // '9864232596745';
-        Content := 'DR';
-      end;
+//    // CA - Перевізник
+//    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
+//    begin
+//      ContentCode.ListAgencyID := 'GLN';
+//      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_car').asString; // '9864232596110';
+//      Content := 'CA';
+//    end;
+//    // OB - Замовник
+//    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
+//    begin
+//      ContentCode.ListAgencyID := 'GLN';
+//      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_from').asString; // '9864232596127';
+//      Content := 'OB';
+//    end;
+//    // CZ - Вантажовідправник
+//    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
+//    begin
+//      ContentCode.ListAgencyID := 'GLN';
+//      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_from').asString; // '9864065749080'
+//      Content := 'CZ';
+//    end;
+//    // CN - Вантажоодержувач
+//    with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
+//    begin
+//      ContentCode.ListAgencyID := 'GLN';
+//      ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_to').asString; // '9864232596127';
+//      Content := 'CN';
+//    end;
+//
+//    // DR - Водій
+//    if HeaderDataSet.FieldByName('GLN_Driver').asString <> '' then
+//      with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
+//      begin
+//        ContentCode.ListAgencyID := 'GLN';
+//        ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_Driver').asString; // '9864232596745';
+//        Content := 'DR';
+//      end;
 
     // Місце складання документа
     UAECMR.ECMR.ExchangedDocument.IssueLogisticsLocation.Name := HeaderDataSet.FieldByName('PlaceOf').asString;
-    //UAECMR.ECMR.ExchangedDocument.IssueLogisticsLocation.Description := HeaderDataSet.FieldByName('PlaceOf').asString;
+    UAECMR.ECMR.ExchangedDocument.IssueLogisticsLocation.Description := HeaderDataSet.FieldByName('PlaceOfDescription').asString;
 
-    // Інформація про перевезення
+    // ***** Інформація про перевезення
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.GrossWeightMeasure.UnitCode := 'KGM';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.GrossWeightMeasure.NodeValue := RoundTo(HeaderDataSet.FieldByName('Weight_all').AsCurrency, -1);
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.GrossWeightMeasure;
@@ -5660,7 +5660,7 @@ begin
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.AssociatedInvoiceAmount.NodeValue := RoundTo(HeaderDataSet.FieldByName('TotalSumm').AsCurrency, -2);
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignmentItemQuantity := HeaderDataSet.FieldByName('TotalCountKg').AsFloat;
 
-    // Вантажовідправник
+    // * Вантажовідправник
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Id.SchemeAgencyID := 'ЄДРПОУ';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Id.NodeValue := HeaderDataSet.FieldByName('OKPO_From').asString; // 32132132;
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString; // 'ТОВ "Вантажовідправник_v3"';
@@ -5676,8 +5676,10 @@ begin
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.CountryID := 'UA';
     if HeaderDataSet.FieldByName('CountrySubDivisionName_From').asString <> '' then
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.CountrySubDivisionName := HeaderDataSet.FieldByName('CountrySubDivisionName_From').asString;
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.SpecifiedGovernmentRegistration.ID := HeaderDataSet.FieldByName('GLN_from').asString;
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.SpecifiedGovernmentRegistration.TypeCode := 'TRADEPARTY_GLN';
 
-    // Вантажоодержувач
+    // * Вантажоодержувач
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Id.SchemeAgencyID := 'ЄДРПОУ';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Id.NodeValue := HeaderDataSet.FieldByName('OKPO_To').asString; // '32135483';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString; // 'ТОВ "Вантажоодержувач_v3" (прод)';
@@ -5693,8 +5695,10 @@ begin
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.CountryID := 'UA';
     if HeaderDataSet.FieldByName('CountrySubDivisionName_To').asString <> '' then
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.CountrySubDivisionName := HeaderDataSet.FieldByName('CountrySubDivisionName_To').asString;
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.SpecifiedGovernmentRegistration.ID := HeaderDataSet.FieldByName('GLN_to').asString;
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.SpecifiedGovernmentRegistration.TypeCode := 'TRADEPARTY_GLN';
 
-    // Перевізник
+    // * Перевізник
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Id.SchemeAgencyID := 'ЄДРПОУ';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Id.NodeValue := HeaderDataSet.FieldByName('OKPO_car').asString; // '32131212';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_car').asString; // 'ТОВ "Перевізник_v3" (прод)';
@@ -5713,9 +5717,22 @@ begin
     if HeaderDataSet.FieldByName('DriverINN').asString <> '' then
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.SpecifiedTaxRegistration.ID := HeaderDataSet.FieldByName('DriverINN').asString; // '3234715572';
     if HeaderDataSet.FieldByName('DriverCertificate').asString <> '' then
-      UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.SpecifiedGovernmentRegistration.ID := HeaderDataSet.FieldByName('DriverCertificate').asString; // 'ВХО320611';
+      with UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.SpecifiedGovernmentRegistration.Add do
+      begin
+        ID := HeaderDataSet.FieldByName('DriverCertificate').asString; // '3234715572';
+      end;
+    with UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.SpecifiedGovernmentRegistration.Add do
+    begin
+      ID := HeaderDataSet.FieldByName('GLN_Driver').asString;
+      TypeCode := 'DRIVER_GLN';
+    end;
+    with UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.SpecifiedGovernmentRegistration.Add do
+    begin
+      ID := HeaderDataSet.FieldByName('GLN_car').asString;
+      TypeCode := 'TRADEPARTY_GLN';
+    end;
 
-    // Замовник
+    // * Замовник
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.ID.SchemeAgencyID := 'ЄДРПОУ';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.ID.NodeValue := HeaderDataSet.FieldByName('OKPO_From').asString; // '32135483';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString; // 'ТОВ "Вантажоодержувач_v3" (прод)';
@@ -5731,6 +5748,8 @@ begin
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.CountrySubDivisionName := HeaderDataSet.FieldByName('CountrySubDivisionName_From').asString;
       // * Ідентифікаційний код відповідальної особи
     //UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.SpecifiedGovernmentRegistration.ID := 'XYZ000012';
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.SpecifiedGovernmentRegistration.ID := HeaderDataSet.FieldByName('GLN_from').asString;
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.SpecifiedGovernmentRegistration.TypeCode := 'TRADEPARTY_GLN';
 
     // Пункт навантаження
     if HeaderDataSet.FieldByName('KATOTTG_Unit').asString <> '' then

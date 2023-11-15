@@ -7,28 +7,28 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 995
-  ExplicitHeight = 578
+  ExplicitWidth = 999
+  ExplicitHeight = 587
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 61
+    Top = 66
     Width = 977
-    Height = 470
+    Height = 465
     TabOrder = 3
-    ExplicitTop = 61
+    ExplicitTop = 66
     ExplicitWidth = 977
-    ExplicitHeight = 470
-    ClientRectBottom = 470
+    ExplicitHeight = 465
+    ClientRectBottom = 465
     ClientRectRight = 977
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 977
-      ExplicitHeight = 470
+      ExplicitHeight = 465
       inherited cxGrid: TcxGrid
         Width = 977
-        Height = 470
+        Height = 465
         ExplicitWidth = 977
-        ExplicitHeight = 470
+        ExplicitHeight = 465
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -320,6 +320,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object CarBrandName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarBrandName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object CarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -1284,7 +1292,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     DockControlHeights = (
       0
       0
-      30
+      35
       0)
     inherited Bar: TdxBar
       ItemLinks = <

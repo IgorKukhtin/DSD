@@ -113,6 +113,7 @@ type
     spUpdate_Partner_KATOTTG: TdsdStoredProc;
     PersonalDriverItemName: TcxGridDBColumn;
     Address_Unit: TcxGridDBColumn;
+    CarBrandName: TcxGridDBColumn;
   private
     { Private declarations }
   public
