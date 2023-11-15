@@ -177,7 +177,7 @@
       object edTaxNumber: TcxTextEdit
         Left = 292
         Top = 30
-        TabOrder = 17
+        TabOrder = 16
         Width = 130
       end
       object cxLabel19: TcxLabel
@@ -238,6 +238,8 @@
     object cxTabSheet2: TcxTabSheet
       Caption = 'Detail'
       ImageIndex = 1
+      ExplicitLeft = -3
+      ExplicitTop = 21
       object cxLabel7: TcxLabel
         Left = 287
         Top = 99
@@ -291,13 +293,13 @@
       object edCodeDB: TcxTextEdit
         Left = 15
         Top = 30
-        TabOrder = 4
+        TabOrder = 3
         Width = 130
       end
       object edMember: TcxTextEdit
         Left = 15
         Top = 74
-        TabOrder = 5
+        TabOrder = 4
         Width = 265
       end
       object cxLabel10: TcxLabel
@@ -308,7 +310,7 @@
       object edWWW: TcxTextEdit
         Left = 15
         Top = 163
-        TabOrder = 7
+        TabOrder = 6
         Width = 265
       end
       object ceDiscountTax: TcxCurrencyEdit
@@ -316,7 +318,7 @@
         Top = 30
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 8
+        TabOrder = 7
         Width = 127
       end
       object Код: TcxLabel
@@ -329,7 +331,7 @@
         Top = 30
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 10
+        TabOrder = 9
         Width = 130
       end
       object cxLabel17: TcxLabel
@@ -358,6 +360,17 @@
         Left = 15
         Top = 56
         Caption = #1050#1086#1085#1090#1072#1085#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
+      end
+      object edStreet_add: TcxTextEdit
+        Left = 15
+        Top = 208
+        TabOrder = 18
+        Width = 265
+      end
+      object cxLabel25: TcxLabel
+        Left = 15
+        Top = 189
+        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
       end
     end
   end
@@ -468,6 +481,14 @@
         Name = 'inStreet'
         Value = Null
         Component = edStreet
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStreet_add'
+        Value = Null
+        Component = edStreet_add
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -694,6 +715,13 @@
         Name = 'Street'
         Value = Null
         Component = edStreet
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Street_add'
+        Value = Null
+        Component = edStreet_add
         DataType = ftString
         MultiSelectSeparator = ','
       end

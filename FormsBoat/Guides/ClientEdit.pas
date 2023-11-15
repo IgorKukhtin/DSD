@@ -97,6 +97,8 @@ type
     Main: TcxTabSheet;
     Detail: TcxTabSheet;
     cxLabel4: TcxLabel;
+    cxLabel25: TcxLabel;
+    edStreet_add: TcxTextEdit;
   private
     { Private declarations }
   public

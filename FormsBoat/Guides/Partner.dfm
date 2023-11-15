@@ -165,6 +165,15 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 80
       end
+      object Street_add: TcxGridDBColumn
+        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'Street_add'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 113
+      end
       object Fax: TcxGridDBColumn
         Caption = #1060#1072#1082#1089
         DataBinding.FieldName = 'Fax'

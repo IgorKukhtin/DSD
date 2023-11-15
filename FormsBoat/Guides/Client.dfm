@@ -2,7 +2,7 @@ object ClientForm: TClientForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Kunden('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080')>'
-  ClientHeight = 376
+  ClientHeight = 373
   ClientWidth = 897
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,11 +20,12 @@ object ClientForm: TClientForm
     Left = 0
     Top = 26
     Width = 897
-    Height = 309
+    Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitHeight = 309
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -150,6 +151,16 @@ object ClientForm: TClientForm
       object Street: TcxGridDBColumn
         Caption = #1059#1083#1080#1094#1072
         DataBinding.FieldName = 'Street'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Street_add: TcxGridDBColumn
+        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'Street_add'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -333,11 +344,12 @@ object ClientForm: TClientForm
   end
   object Panel_btn: TPanel
     Left = 0
-    Top = 335
+    Top = 332
     Width = 897
     Height = 41
     Align = alBottom
     TabOrder = 5
+    ExplicitTop = 335
     object btnInsert: TcxButton
       Left = 485
       Top = 7
