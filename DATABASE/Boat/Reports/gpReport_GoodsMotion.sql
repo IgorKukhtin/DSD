@@ -460,7 +460,7 @@ BEGIN
                             -- из партии
                           , 0 AS GoodsSizeId
                           , ObjectLink_Measure.ObjectId    AS MeasureId
-                          , ObjectLink_GoodsGroup.ObjectId AS GoodsGroupId
+                          , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
                           , ObjectLink_GoodsTag.ObjectId   AS GoodsTagId
                           , ObjectLink_GoodsType.ObjectId  AS GoodsTypeId
                           , ObjectLink_ProdColor.ObjectId  AS ProdColorId
