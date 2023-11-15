@@ -91,6 +91,8 @@ type
     edCity: TcxButtonEdit;
     GuidesCity: TdsdGuides;
     GuidesCountry: TdsdGuides;
+    edStreet_add: TcxTextEdit;
+    cxLabel25: TcxLabel;
   private
     { Private declarations }
   public

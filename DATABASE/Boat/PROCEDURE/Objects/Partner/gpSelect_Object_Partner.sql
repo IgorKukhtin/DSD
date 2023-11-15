@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Fax TVarChar, Phone TVarChar, Mobile TVarChar
-             , IBAN TVarChar, Street TVarChar, Member TVarChar
+             , IBAN TVarChar, Street TVarChar, Street_add TVarChar, Member TVarChar
              , WWW TVarChar, Email TVarChar, CodeDB TVarChar
              , TaxNumber TVarChar
              , Comment TVarChar
