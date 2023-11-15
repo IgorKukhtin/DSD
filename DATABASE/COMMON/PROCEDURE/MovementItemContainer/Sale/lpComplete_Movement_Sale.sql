@@ -571,8 +571,8 @@ END IF;*/
                         ;
      END IF;
 
-     --проверка если договор RealEx = TRUE, тогда "На основании № (возврат)" должен быть заполнен
-     IF COALESCE (vbIsRealEx,FALSE) = TRUE AND COALESCE (vbMovementId_ReturnIn,0) = 0
+     -- проверка если договор RealEx = TRUE, тогда "На основании № (возврат)" должен быть заполнен
+     IF COALESCE (vbIsRealEx,FALSE) = TRUE AND COALESCE (vbMovementId_ReturnIn,0) = 0 AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
          RAISE EXCEPTION 'Ошибка.Не Заполнено значение На основании № (возврат).';
      END IF;
