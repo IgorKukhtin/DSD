@@ -463,7 +463,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            HeaderHint = #1059#1055' '#1057#1090#1072#1090#1100#1103
             Options.Editing = False
             Width = 80
           end
@@ -498,6 +498,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             DataBinding.FieldName = 'ProductCIN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 100
           end
@@ -507,7 +508,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076' '#1083#1086#1076#1082#1080
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 43
           end
@@ -517,14 +518,16 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 78
           end
           object InvNumber_parent: TcxGridDBColumn
-            Caption = #1047#1072#1082#1072#1079
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'InvNumber_parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 109
           end
@@ -534,6 +537,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 110
           end
@@ -592,10 +596,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Width = 1028
     ExplicitWidth = 1028
     inherited deStart: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 44197d
+      Left = 315
+      EditValue = 44927d
+      ExplicitLeft = 315
     end
   end
   object Panel_btn: TPanel [2]

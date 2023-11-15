@@ -8,16 +8,20 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 55
+    Left = 65
     Top = 466
-    ExplicitLeft = 55
+    Width = 80
+    ExplicitLeft = 65
     ExplicitTop = 466
+    ExplicitWidth = 80
   end
   inherited bbCancel: TcxButton
-    Left = 199
+    Left = 192
     Top = 466
-    ExplicitLeft = 199
+    Width = 80
+    ExplicitLeft = 192
     ExplicitTop = 466
+    ExplicitWidth = 80
   end
   object Код: TcxLabel [2]
     Left = 15
@@ -273,8 +277,15 @@
     Top = 44
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 302
     Top = 99
+    inherited FormClose: TdsdFormClose
+      ImageIndex = 52
+    end
+    inherited InsertUpdateGuides: TdsdInsertUpdateGuides
+      ImageIndex = 80
+    end
     object actGetPlanDate: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
