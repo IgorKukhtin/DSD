@@ -1,10 +1,9 @@
  -- Function: gpInsertUpdate_Object_Goods_UKTZED_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_UKTZED_From_Excel (Integer, TVarChar, TVarChar, TDateTime, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_UKTZED_From_Excel (TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods_UKTZED_From_Excel(
-    IN inGoodsName        Integer   ,
+    IN inGoodsName        TVarChar   ,
     IN inCodeUKTZED       TVarChar  , -- 
     IN inCodeUKTZED_new   TVarChar  ,
     IN inDateUKTZED_new   TDateTime ,
@@ -20,13 +19,13 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Goods_UKTZED());
 
      --проверка
-     IF COALESCE (inCodeUKTZED,0) = 0
+     IF COALESCE (inCodeUKTZED,'') = ''
      THEN
          RAISE EXCEPTION 'Ошибка. Код UKTZED не задан для <%>.', inGoodsName;
      END IF;
 
      --проверка
-     IF COALESCE (inCodeUKTZED_new,0) = 0
+     IF COALESCE (inCodeUKTZED_new,'') = ''
      THEN
          RAISE EXCEPTION 'Ошибка. Новый Код UKTZED не задан для <%>.', inGoodsName; 
      END IF;
