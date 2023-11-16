@@ -90,6 +90,9 @@ type
     edInvNumber_OrderClient: TcxTextEdit;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     bbedInvNumber_OrderClient: TdxBarControlContainerItem;
+    cxLabel15: TcxLabel;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
   private
     { Private declarations }
   public

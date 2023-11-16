@@ -1503,16 +1503,28 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_ContractPriceList() RETURNS Int
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsUKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_GoodsUKTZED' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsUKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsUKTZED' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+--Загрузка  GoodsUKTZED2 2 (по коду товара)
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsUKTZED2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_GoodsUKTZED2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsUKTZED2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsUKTZED2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
 --Загрузка GoodsGroupUKTZED
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsGroupUKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_GoodsGroupUKTZED' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsGroupUKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsGroupUKTZED' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+--Загрузка GoodsGroupUKTZED  2 по назв. группы
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsGroupUKTZED2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_GoodsGroupUKTZED2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsGroupUKTZED2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsGroupUKTZED2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
- 13.11.23         * Загрузка  GoodsUKTZED, Загрузка GoodsGroupUKTZED
+ 16.11.23         * Загрузка zc_Enum_ImportType_GoodsUKTZED2
+                             zc_Enum_ImportType_GoodsGroupUKTZED2
+ 13.11.23         * Загрузка GoodsUKTZED, Загрузка GoodsGroupUKTZED
  10.10.23         * Загрузка истории прайсов
  23.08.23         * Загрузка Договоров
  19.07.23         * Загрузка Пересорт  "загрузка авто ОС"

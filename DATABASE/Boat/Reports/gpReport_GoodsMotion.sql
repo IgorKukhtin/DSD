@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, Boolean,TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMotion (
     IN inStartDate        TDateTime ,
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMotion (
     IN inUnitGroupId      Integer   ,
     IN inGoodsId          Integer   ,
     IN inPartionId        Integer   ,
+    IN inMovementId_OrderClient Integer   ,
     IN inisPartNumber     Boolean   ,
     IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
     IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
@@ -148,8 +150,9 @@ BEGIN
                                                                    ON CLO_PartionMovement.ContainerId = Container.Id
                                                                   AND CLO_PartionMovement.DescId      = zc_ContainerLinkObject_PartionMovement()
                                                                   -- если надо развернуть по Заказам клиента
-                                                                  AND inIsOrderClient = TRUE
+                                                                  AND (inIsOrderClient = TRUE OR inMovementId_OrderClient <> 0)
                                      LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = CLO_PartionMovement.ObjectId
+                                WHERE (COALESCE (Object_PartionMovement.ObjectCode, 0) = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
                                )
 
          -- проводки Container_Count

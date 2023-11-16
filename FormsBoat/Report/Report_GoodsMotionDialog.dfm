@@ -4,7 +4,7 @@
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
   ClientHeight = 250
-  ClientWidth = 477
+  ClientWidth = 462
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -65,7 +65,7 @@
     Width = 249
   end
   object edUnitGroup: TcxButtonEdit
-    Left = 11
+    Left = 207
     Top = 79
     Properties.Buttons = <
       item
@@ -74,10 +74,10 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 440
+    Width = 244
   end
   object cxLabel3: TcxLabel
-    Left = 11
+    Left = 207
     Top = 59
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
@@ -178,6 +178,23 @@
     ShowHint = True
     TabOrder = 19
     Width = 117
+  end
+  object cxLabel15: TcxLabel
+    Left = 11
+    Top = 59
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+  end
+  object edOrderClient: TcxButtonEdit
+    Left = 11
+    Top = 79
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 186
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -318,6 +335,23 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 64
     Top = 186
@@ -394,7 +428,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
+    Left = 368
     Top = 56
   end
   object GuidesPartion: TdsdGuides
@@ -456,5 +490,44 @@
       end>
     Left = 312
     Top = 23
+  end
+  object GuidesOrderClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderClient
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_all'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName_Full'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 96
+    Top = 56
   end
 end

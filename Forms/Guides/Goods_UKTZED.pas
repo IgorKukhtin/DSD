@@ -75,6 +75,10 @@ type
     bbStartLoad_UKTZEDnew: TdxBarButton;
     CodeUKTZED_group_new: TcxGridDBColumn;
     CodeUKTZED_Calc_new: TcxGridDBColumn;
+    spGetImportSettingId_2: TdsdStoredProc;
+    actGetImportSetting_UKTZEDnew2: TdsdExecStoredProc;
+    macStartLoad_UKTZEDnew2: TMultiAction;
+    bbStartLoad_UKTZEDnew2: TdxBarButton;
   private
     { Private declarations }
   public

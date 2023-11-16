@@ -51,6 +51,9 @@ type
     cbPartner: TcxCheckBox;
     cbPartNumber: TcxCheckBox;
     cbOrderClient: TcxCheckBox;
+    cxLabel15: TcxLabel;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
   private
     { Private declarations }
   public
