@@ -73,6 +73,8 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     macStartLoad_UKTZEDnew: TMultiAction;
     bbStartLoad_UKTZEDnew: TdxBarButton;
+    CodeUKTZED_group_new: TcxGridDBColumn;
+    CodeUKTZED_Calc_new: TcxGridDBColumn;
   private
     { Private declarations }
   public

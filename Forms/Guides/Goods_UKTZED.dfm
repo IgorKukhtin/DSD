@@ -78,28 +78,20 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Options.Editing = False
         Width = 86
       end
-      object Code: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 35
-      end
-      object CodeUKTZED: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
-        DataBinding.FieldName = 'CodeUKTZED'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
       object CodeUKTZED_calc: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1088#1072#1089#1095#1077#1090')'
         DataBinding.FieldName = 'CodeUKTZED_calc'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 80
+      end
+      object CodeUKTZED: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
+        DataBinding.FieldName = 'CodeUKTZED'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object CodeUKTZED_group: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1075#1088#1091#1087#1087#1072')'
@@ -107,26 +99,50 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 80
       end
-      object CodeUKTZED_new: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
-        DataBinding.FieldName = 'CodeUKTZED_new'
-        FooterAlignmentHorz = taCenter
-        GroupSummaryAlignment = taCenter
+      object CodeUKTZED_Calc_new: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044', '#1085#1086#1074#1099#1081' ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'CodeUKTZED_Calc_new'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 141
+        Options.Editing = False
+        Width = 80
       end
       object DateUKTZED_new: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074'. '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
+        Caption = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074'. '#1059#1050#1058' '#1047#1045#1044', '#1085#1086#1074#1099#1081
         DataBinding.FieldName = 'DateUKTZED_new'
         FooterAlignmentHorz = taCenter
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1076#1083#1103' '#1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
-        Width = 91
+        Width = 80
+      end
+      object CodeUKTZED_new: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044', '#1085#1086#1074#1099#1081
+        DataBinding.FieldName = 'CodeUKTZED_new'
+        FooterAlignmentHorz = taCenter
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CodeUKTZED_group_new: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044', '#1085#1086#1074#1099#1081' ('#1075#1088#1091#1087#1087#1072')'
+        DataBinding.FieldName = 'CodeUKTZED_group_new'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Code: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
