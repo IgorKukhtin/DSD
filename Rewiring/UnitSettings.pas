@@ -59,6 +59,9 @@ type
     class function GetCountThread: integer; static;
     class procedure SetCountThread(const AValue: integer); static;
 
+    class function GetRewiringProcessStep: integer; static;
+    class procedure SetRewiringProcessStep(const AValue: integer); static;
+
   public
     class constructor Create;
     class destructor Destroy;
@@ -83,6 +86,7 @@ type
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
 
     class property CountThread: Integer read GetCountThread write SetCountThread;
+    class property RewiringProcessStep: Integer read GetRewiringProcessStep write SetRewiringProcessStep;
 
   end;
 
@@ -126,6 +130,7 @@ const
   cSettingsSection      = 'Settings';
   cScriptFilesPathParam = 'ScriptFilesPath';
   cCountThreadParam     = 'CountThread';
+  cRewiringProcessStepParam = 'RewiringProcessStep';
 
 function IsService: Boolean;
 var
@@ -493,5 +498,14 @@ begin
   SetIntValue(cSettingsSection, cCountThreadParam, AValue);
 end;
 
+class function TSettings.GetRewiringProcessStep: integer;
+begin
+  Result := GetIntValue(cSettingsSection, cRewiringProcessStepParam, 0);
+end;
+
+class procedure TSettings.SetRewiringProcessStep(const AValue: integer);
+begin
+  SetIntValue(cSettingsSection, cRewiringProcessStepParam, AValue);
+end;
 
 end.

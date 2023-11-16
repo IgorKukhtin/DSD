@@ -171,6 +171,15 @@ const
   cSQLSelect_CheckingHistoryCost =
       'select * from _replica.gpSelect_CheckingHistoryCost(:inMasterUUId, :inSlaveUUId, :inSession);';
 
+  cErrorBranchId =
+    'Для комманды "%s" параметр должен быть Null, not Null, Id филиала или без параметров.';
+
+  cErrorTrueFalse =
+    'Для комманды "%s" параметр должен быть False, True или без параметров.';
+
+  cErrorNoParam =
+    'Для комманды "%s" параметры не предусмотрены.';
+
 const
   WM_THREAD_COUNTER = WM_USER + 1000;
 

@@ -88,7 +88,7 @@ begin
       // Процедура перепроведения
       FZQueryExecute.SQL.Text := cSQL_Slave_SendMovement;
 
-      // Перерасчета цен на слейве
+      // Перепроведение
       FZQueryTable.SQL.Text := cSQL_Slave_RewiringProtocol;
       FZQueryTable.ParamByName('inSession').Value := FSession;
       FZQueryTable.Open;

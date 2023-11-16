@@ -16,7 +16,21 @@ uses
   cxGridCustomView, cxGrid, Datasnap.DBClient, cxCurrencyEdit,
   DateUtils, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, Vcl.Buttons,
   cxGridBandedTableView, cxGridDBBandedTableView, Datasnap.Provider,
-  cxGridDBDataDefinitions;
+  cxGridDBDataDefinitions, dxSkinsCore, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxScrollbarAnnotations;
 
 type
   TMainForm = class(TForm)
@@ -176,6 +190,7 @@ type
     Panel4: TPanel;
     rgStepRewiring: TRadioGroup;
     rgMICSlave: TRadioGroup;
+    TimerRewiringProcess: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnScriptPathClick(Sender: TObject);
@@ -200,6 +215,7 @@ type
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
     procedure TimerCheckingHistoryCostTimer(Sender: TObject);
     procedure rgStepRewiringClick(Sender: TObject);
+    procedure TimerRewiringProcessTimer(Sender: TObject);
   private
     { Private declarations }
 
@@ -210,6 +226,10 @@ type
     FMasterUUId : String;
     FSlaveUUId : String;
     FStyle: TcxStyle;
+    FRewiringProcess: TStringList;
+    FRewiringProcessStep: Integer;
+    FRewiringProcessExpect: Integer;
+    FRewiringProcessBranchId: Integer;
 
     procedure ReadSettings;
     procedure ReadInfo;
@@ -230,6 +250,7 @@ type
   public
     { Public declarations }
     procedure SaveRewiringLog(ALogMessage: string; AShowMessage: Boolean = False);
+    procedure LoadRewiringProcess(AFileName: string);
     function LiadScripts(AFileName : String) : String;
     function CheckDB : boolean;
   end;
@@ -243,7 +264,7 @@ implementation
 
 uses System.Math, System.IOUtils, UnitSettings, UnitConst, ThreaHistoryCostUnit,
      ThreaRewiringUnit, ThreaSendMovementUnit, ThreaFunctionUnit,
-     ThreaCheckingHistoryCostUnit;
+     ThreaCheckingHistoryCostUnit, System.RegularExpressions;
 
 procedure LoadDataToCDS(ADst: TClientDataSet; AZQuery: TZQuery);
   var DataSetProvider: TDataSetProvider;
@@ -292,6 +313,25 @@ begin
   WriteLn(F, DateTimeToStr(Now) + ' : ' + StringReplace(ALogMessage, #13#10, ' ', [rfReplaceAll]));
   CloseFile(F);
   if AShowMessage then ShowMessage(ALogMessage);
+end;
+
+procedure TMainForm.LoadRewiringProcess(AFileName: string);
+var F: TextFile;
+    cFile, S: string;
+begin
+  FRewiringProcess.Clear;
+  cFile := ExtractFilePath(ParamStr(0)) + '\' + AFileName + '.ini';
+
+  if not FileExists(cFile) then Exit;
+
+  AssignFile(F, cFile);
+  Reset(F);
+  while not Eof(F) do
+  begin
+    ReadLn(F, S);
+    if (Trim(S) <> '') and (S[1] <> '#') then FRewiringProcess.Add(S);
+  end;
+  CloseFile(F);
 end;
 
 procedure TMainForm.sbRunCheckingHCClick(Sender: TObject);
@@ -499,6 +539,85 @@ begin
   finally
     HistoryCost_BranchCDS.EnableControls;
     TimerHistoryCost.Enabled := FListProcessing.Count > 0;
+  end;
+end;
+
+procedure TMainForm.TimerRewiringProcessTimer(Sender: TObject);
+  var Res: TArray<string>; J: Integer;
+begin
+  TimerRewiringProcess.Enabled := False;
+  try
+    if edSession.Text = '' then
+    begin
+      SaveRewiringLog('Не получена сессия пользователя.', True);
+      FRewiringProcess.Clear;
+      Close;
+      Exit;
+    end;
+    if FRewiringProcess.Count = 0 then
+    begin
+      Close;
+      Exit;
+    end;
+
+    if FTerminated then Exit;
+
+    if (FListProcessing.Count > 0) or TimerRewiring.Enabled or TimerHistoryCost.Enabled then Exit;
+    Dec(FRewiringProcessExpect);
+    if FRewiringProcessExpect > 0 then Exit;
+
+    FRewiringProcessExpect := 5;
+    TSettings.RewiringProcessStep := FRewiringProcessStep;
+    Inc(FRewiringProcessStep);
+    if FRewiringProcess.Count < FRewiringProcessStep then Exit;
+
+
+    Res := TRegEx.Split(LowerCase(FRewiringProcess.Strings[FRewiringProcessStep]), ' ');
+
+
+    if (Res[0] = LowerCase('BranchId')) then
+    begin
+      if High(Res) = 0 then
+      begin
+        FRewiringProcessBranchId := -2;
+      end else if (High(Res) = 1) then
+      begin
+        if (Res[1] = LowerCase('Null'))then FRewiringProcessBranchId := 0
+        else if TryStrToInt(Res[1], j) then FRewiringProcessBranchId := j;
+      end else if (High(Res) = 2) then FRewiringProcessBranchId := -1;
+    end else if Res[0] = LowerCase('HistoryCost') then
+    begin
+      cxPageProcessing.ActivePage := tsPageProcessingHistoryCost;
+      ReadInfo;
+      if ((High(Res) = 1)) and (Res[1] = LowerCase('True')) then rgMICSlave.ItemIndex := 1
+      else rgMICSlave.ItemIndex := 0;
+
+      if FRewiringProcessBranchId > -2 then
+      begin
+        HistoryCost_BranchCDS.First;
+        while not HistoryCost_BranchCDS.Eof  do
+        begin
+
+          HistoryCost_BranchCDS.Next;
+        end;
+      end;
+
+    end;
+
+
+
+
+
+
+  finally
+    if FTerminated and (FListProcessing.Count = 0) then
+    begin
+      Close;
+    end else if FRewiringProcess.Count <= FRewiringProcessStep then
+    begin
+      TSettings.RewiringProcessStep := -1;
+      //Close;
+    end else  TimerRewiringProcess.Enabled := True;
   end;
 end;
 
@@ -904,12 +1023,11 @@ end;
 procedure TMainForm.btnEqualizationBreakClick(Sender: TObject);
   var I : Integer;
 begin
-  if FListProcessing.Count = 0 then
+  if (FListProcessing.Count = 0) and (FRewiringProcess.Count <= FRewiringProcessStep) then
   begin
     ShowMessage('Нет запущенных процессов.');
     Exit;
   end;
-
 
   if FTerminated then
   begin
@@ -1322,13 +1440,14 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if FListProcessing.Count > 0 then
+  if (FListProcessing.Count > 0) or not FTerminated and (FRewiringProcess.Count > FRewiringProcessStep) then
   begin
     Action := caNone;
   end;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
+  var Res: TArray<string>; I, J : Integer;
 begin
   mmoScriptLog.Lines.Clear;
   mmoScriptLogRewiring.Lines.Clear;
@@ -1338,7 +1457,10 @@ begin
   FListProcessing.OwnsObjects:= False;
   FTerminated := False;
   FStyle := TcxStyle.Create(nil);
-
+  FRewiringProcess := TStringList.Create;
+  FRewiringProcessStep := -1;
+  FRewiringProcessExpect := 5;
+  FRewiringProcessBranchId := -2;
 
   ReadSettings;
 
@@ -1357,30 +1479,103 @@ begin
 
   ReadInfo;
 
-//  if (ParamCount >= 1) and (CompareText(ParamStr(1), 'equalization') = 0) then
-//  begin
-//    FTimerEqualization := True;
-//    FCloseFoeFinish := True;
-//    cxTabSheetDocSettings.TabVisible := False;
-//    cxTabSheetSnapshot.TabVisible := False;
-//
-//    btnEqualizationAll.Enabled := False;
-//    btnEqualizationLoad.Enabled := False;
-//    btnEqualizationSend.Enabled := False;
-//    btnlInfoEqualizationView.Enabled := False;
-//
-//    deDateSnapshot.Enabled := False;
-//    deDateSend.Enabled := False;
-//    deDateEqualization.Enabled := False;
-//
-//    TimerEqualization.Enabled := True;
-//  end;
+  if (ParamCount >= 1) and (CompareText(ParamStr(1), 'rewiring') = 0) then
+  begin
+    SaveRewiringLog('Подгоовка планировщика - Rewiring');
+    cxPageProcessing.ActivePage := tsPageProcessingHistoryCost;
+
+    FTerminated := False;
+    cxTabSheetSettings.TabVisible := False;
+    cxTabSheetCheckingHC.TabVisible := False;
+
+    btnReadInfo.Enabled := False;
+    btnHistoryCost.Enabled := False;
+    btnRewiring.Enabled := False;
+    btnSendDocument.Enabled := False;
+    rgMICSlave.Enabled := False;
+
+    cxGrid1DBTableView1.OptionsData.Editing := False;
+    FisProcessingEmpty := False;
+
+    LoadRewiringProcess('RewiringProcess');
+    FRewiringProcessStep := TSettings.RewiringProcessStep;
+
+    for I := 0 to FRewiringProcess.Count - 1 do
+    begin
+
+      Res := TRegEx.Split(LowerCase(FRewiringProcess.Strings[I]), ' ');
+
+      if (Res[0] <> LowerCase('BranchId')) and
+         (Res[0] <> LowerCase('HistoryCost')) and
+         (Res[0] <> LowerCase('Rewiring')) and
+         (Res[0] <> LowerCase('SendDocument')) then
+      begin
+        SaveRewiringLog('Неизвестная комманда: ' + FRewiringProcess.Strings[I], True);
+        FRewiringProcess.Clear;
+        Break;
+      end else if (High(Res) = 0) and (Res[0] = LowerCase('BranchId')) then
+      begin
+        FRewiringProcessBranchId := -2;
+      end else if (High(Res) > 0) and (Res[0] = LowerCase('BranchId')) then
+      begin
+        if (High(Res) = 1) then
+        begin
+          if (Res[1] <> LowerCase('Null')) and not TryStrToInt(Res[1], j) then
+          begin
+            SaveRewiringLog(Format(cErrorBranchId, [FRewiringProcess.Strings[I]]), True);
+            FRewiringProcess.Clear;
+            Break;
+          end else if (Res[1] = LowerCase('Null')) and (I < FRewiringProcessStep) then FRewiringProcessBranchId := 0
+          else if I < FRewiringProcessStep then FRewiringProcessBranchId := j;
+        end else if (High(Res) = 2) then
+        begin
+          if (Res[1] <> LowerCase('not')) and
+             (Res[2] <> LowerCase('Null')) then
+          begin
+            SaveRewiringLog(Format(cErrorBranchId, [FRewiringProcess.Strings[I]]), True);
+            FRewiringProcess.Clear;
+            Break;
+          end else if I < FRewiringProcessStep then FRewiringProcessBranchId := -1;
+        end else
+        begin
+          SaveRewiringLog(Format(cErrorBranchId, [FRewiringProcess.Strings[I]]), True);
+          FRewiringProcess.Clear;
+          Break;
+        end;
+      end else if (High(Res) > 1) and ((Res[0] = LowerCase('HistoryCost')) or (Res[0] <> LowerCase('Rewiring'))) then
+      begin
+        if (High(Res) = 1) then
+        begin
+          if (Res[1] <> LowerCase('False')) and
+             (Res[1] <> LowerCase('True')) then
+          begin
+            SaveRewiringLog(Format(cErrorTrueFalse, [FRewiringProcess.Strings[I]]), True);
+            FRewiringProcess.Clear;
+            Break;
+          end;
+        end else
+        begin
+          SaveRewiringLog(Format(cErrorTrueFalse, [FRewiringProcess.Strings[I]]), True);
+          FRewiringProcess.Clear;
+          Break;
+        end;
+      end else if (High(Res) > 1) then
+      begin
+        SaveRewiringLog(Format(cErrorNoParam, [FRewiringProcess.Strings[I]]), True);
+        FRewiringProcess.Clear;
+        Break;
+      end;
+    end;
+
+    TimerRewiringProcess.Enabled := True;
+  end;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   WriteSettings;
   SaveRewiringLog('Закрытие программы - BranchService');
+  FreeAndNil(FRewiringProcess);
   FreeAndNil(FListProcessing);
   FStyle.Free;
 end;
