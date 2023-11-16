@@ -1,28 +1,28 @@
 ﻿inherited Report_GoodsMotionForm: TReport_GoodsMotionForm
   Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
   ClientHeight = 341
-  ClientWidth = 1189
+  ClientWidth = 1228
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1205
+  ExplicitWidth = 1244
   ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1189
+    Width = 1228
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1189
     ExplicitHeight = 261
     ClientRectBottom = 261
-    ClientRectRight = 1189
+    ClientRectRight = 1228
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1189
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1189
+        Width = 1228
         Height = 261
         ExplicitWidth = 1189
         ExplicitHeight = 261
@@ -650,7 +650,7 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1189
+    Width = 1228
     Height = 54
     ExplicitWidth = 1189
     ExplicitHeight = 54
@@ -679,12 +679,12 @@
       ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 536
+      Left = 479
       Top = 6
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
     end
     object edGoods: TcxButtonEdit
-      Left = 629
+      Left = 572
       Top = 5
       Properties.Buttons = <
         item
@@ -696,12 +696,12 @@
       Width = 239
     end
     object cxLabel5: TcxLabel
-      Left = 270
+      Left = 251
       Top = 31
       Caption = #1055#1072#1088#1090#1080#1103':'
     end
     object edPartion: TcxButtonEdit
-      Left = 318
+      Left = 294
       Top = 30
       Properties.Buttons = <
         item
@@ -710,15 +710,15 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 210
+      Width = 180
     end
     object cxLabel8: TcxLabel
-      Left = 227
+      Left = 208
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 318
+      Left = 294
       Top = 5
       Properties.Buttons = <
         item
@@ -727,23 +727,23 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 210
+      Width = 180
     end
     object cbPartNumber: TcxCheckBox
-      Left = 874
-      Top = 30
+      Left = 992
+      Top = 32
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' S/N'
       Properties.ReadOnly = False
       TabOrder = 10
       Width = 117
     end
     object Код: TcxLabel
-      Left = 571
+      Left = 514
       Top = 31
       Caption = 'Interne Nr:'
     end
     object ceCode: TcxCurrencyEdit
-      Left = 629
+      Left = 572
       Top = 30
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
@@ -752,26 +752,43 @@
       Width = 90
     end
     object edArticle: TcxTextEdit
-      Left = 778
+      Left = 721
       Top = 30
       Properties.ReadOnly = True
       TabOrder = 13
       Width = 90
     end
     object cxLabel18: TcxLabel
-      Left = 725
+      Left = 668
       Top = 31
       Caption = 'Artikel Nr:'
     end
     object cbPartner: TcxCheckBox
-      Left = 997
-      Top = 30
+      Left = 1115
+      Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       ParentShowHint = False
       ShowHint = True
       TabOrder = 15
       Width = 82
+    end
+    object cxLabel15: TcxLabel
+      Left = 824
+      Top = 10
+      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+    end
+    object edOrderClient: TcxButtonEdit
+      Left = 824
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 162
     end
   end
   object lbSearchArticle: TcxLabel [2]
@@ -796,7 +813,7 @@
     Width = 109
   end
   object cbPartion: TcxCheckBox [4]
-    Left = 874
+    Left = 1115
     Top = 5
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1072#1088#1090#1080#1103' '#8470
@@ -806,7 +823,7 @@
     Width = 83
   end
   object cbOrderClient: TcxCheckBox [5]
-    Left = 997
+    Left = 992
     Top = 5
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470
@@ -1136,6 +1153,23 @@
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_OrderClient'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1422,6 +1456,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartNumber'
         Value = Null
         Component = cbPartNumber
@@ -1619,7 +1661,8 @@
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 368
+    Left = 376
+    Top = 248
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 80
@@ -1640,6 +1683,9 @@
       end
       item
         Component = GuidesGoods
+      end
+      item
+        Component = GuidesOrderClient
       end>
     Left = 168
     Top = 144
@@ -1685,8 +1731,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 648
-    Top = 11
+    Left = 616
+    Top = 83
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
@@ -1774,8 +1820,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 8
+    Left = 424
+    Top = 56
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1845,7 +1891,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
+    Left = 248
     Top = 168
   end
   object FormParams: TdsdFormParams
@@ -1966,5 +2012,43 @@
     PackSize = 1
     Left = 704
     Top = 224
+  end
+  object GuidesOrderClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderClient
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_all'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName_Full'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 880
   end
 end
