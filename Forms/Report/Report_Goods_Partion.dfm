@@ -3,7 +3,7 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1089#1083#1077#1078#1080#1074#1072#1077#1084#1086#1089#1090#1100' '#1087#1072#1088#1090#1080#1081'>'
   ClientHeight = 479
-  ClientWidth = 1176
+  ClientWidth = 993
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,11 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 80
-    Width = 1176
+    Width = 993
     Height = 399
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1344
+    ExplicitWidth = 1521
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -36,516 +36,12 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
           Column = Amount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end
         item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -650,7 +146,7 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
         Width = 60
       end
       object PartionGoodsName_1: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076' 1'
+        Caption = #1055#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076' ('#1087#1077#1088#1077#1084#1077#1097')'
         DataBinding.FieldName = 'PartionGoodsName_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -658,14 +154,14 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
         Width = 150
       end
       object MovementDescName_1: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1076#1086#1082'.'#1087#1072#1088#1090#1080#1080' 1'
+        Caption = #1042#1080#1076' '#1076#1086#1082'.'#1087#1072#1088#1090#1080#1080' ('#1087#1077#1088#1077#1084#1077#1097')'
         DataBinding.FieldName = 'MovementDescName_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
       object InvNumber_1: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' 1'
+        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' ('#1087#1077#1088#1077#1084#1077#1097')'
         DataBinding.FieldName = 'InvNumber_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -673,29 +169,30 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
         Width = 118
       end
       object OperDate_1: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' 1'
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' ('#1087#1077#1088#1077#1084#1077#1097')'
         DataBinding.FieldName = 'OperDate_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object PartionGoodsName_2: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076' 2'
+        Caption = #1055#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076
         DataBinding.FieldName = 'PartionGoodsName_2'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 195
       end
       object MovementDescName_2: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1076#1086#1082'.'#1087#1072#1088#1090#1080#1080' 2'
+        Caption = #1042#1080#1076' '#1076#1086#1082'.'#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
         DataBinding.FieldName = 'MovementDescName_2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 111
       end
       object InvNumber_2: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' 2'
+        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
         DataBinding.FieldName = 'InvNumber_2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -703,7 +200,7 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
         Width = 100
       end
       object OperDate_2: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' 2'
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
         DataBinding.FieldName = 'OperDate_2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -717,11 +214,11 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1176
+    Width = 993
     Height = 54
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1344
+    ExplicitWidth = 1521
     object edGoodsGroup: TcxButtonEdit
       Left = 594
       Top = 3
@@ -824,11 +321,13 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
       Left = 1052
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076'. ***:'
+      Visible = False
     end
     object cxLabel9: TcxLabel
       Left = 1074
       Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' ***:'
+      Visible = False
     end
     object edUnitGroup_by: TcxButtonEdit
       Left = 1169
@@ -840,6 +339,7 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 14
+      Visible = False
       Width = 189
     end
     object edLocation_by: TcxButtonEdit
@@ -852,6 +352,7 @@ object Report_Goods_PartionForm: TReport_Goods_PartionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
+      Visible = False
       Width = 189
     end
   end

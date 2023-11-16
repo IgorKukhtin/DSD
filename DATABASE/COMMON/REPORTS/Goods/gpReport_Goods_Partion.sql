@@ -42,11 +42,13 @@ BEGIN
                         SELECT Object.Id AS GoodsId
                         FROM Object
                         WHERE Object.DescId = zc_Object_Goods()
-                          AND COALESCE (inGoodsGroupId, 0) = 0 AND Object.Id = inGoodsId
+                          AND COALESCE (inGoodsGroupId, 0) = 0 
+                          AND (Object.Id = inGoodsId OR inGoodsId = 0)
                      UNION
                         SELECT Object.Id AS GoodsId
                         FROM Object
-                        WHERE Object.DescId = zc_Object_Asset() AND Object.Id = inGoodsId
+                        WHERE Object.DescId = zc_Object_Asset()
+                          AND (Object.Id = inGoodsId OR inGoodsId = 0)
                           AND COALESCE (inGoodsGroupId, 0) = 0
                         )
 
