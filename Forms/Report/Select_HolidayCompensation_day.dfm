@@ -1,9 +1,9 @@
-object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
+object Select_HolidayCompensation_dayForm: TSelect_HolidayCompensation_dayForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072'> '#1056#1072#1089#1096#1080#1092#1088#1086#1074#1082#1072' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
   ClientHeight = 496
-  ClientWidth = 1042
+  ClientWidth = 570
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,17 +14,19 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 59
-    Width = 1042
-    Height = 437
+    Top = 87
+    Width = 570
+    Height = 409
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 59
+    ExplicitWidth = 1042
+    ExplicitHeight = 437
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -34,68 +36,58 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = AmountCompensation
+          Column = OperDate_amount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = SummaCompensation
+          Column = Holiday
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount
+          Column = Holiday_year
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Day_calendar
+          Column = Holiday_NoZp
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = SummaCompensation_fact
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = SummaCompensation_diff
+          Column = OperDate_year_amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
-          Format = ',0.####'
-          Kind = skSum
-          Column = AmountCompensation
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = SummaCompensation
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = Amount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = Day_calendar
-        end
-        item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = PersonalName
+          Column = OperDate_year
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = SummaCompensation_fact
+          Column = OperDate_amount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = SummaCompensation_diff
+          Column = Holiday
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Holiday_year
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Holiday_NoZp
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = OperDate_year_amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -113,254 +105,103 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
+      object YEAR: TcxGridDBColumn
+        Caption = #1043#1086#1076
+        DataBinding.FieldName = 'YEAR'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
+        Width = 70
       end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object PersonalCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'PersonalCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object PersonalName: TcxGridDBColumn
-        Caption = #1060#1048#1054
-        DataBinding.FieldName = 'PersonalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 169
-      end
-      object PositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
+      object OperDate_year: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'OperDate_year'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 180
       end
-      object PersonalServiceListName: TcxGridDBColumn
-        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085#1072#1103')'
-        DataBinding.FieldName = 'PersonalServiceListName'
+      object OperDate_year_amount: TcxGridDBColumn
+        Caption = #1056#1072#1073'. '#1076#1085#1080' ('#1075#1086#1076')'
+        DataBinding.FieldName = 'OperDate_year_amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 111
+        Width = 70
       end
-      object DateIn: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
-        DataBinding.FieldName = 'DateIn'
+      object isHoliday: TcxGridDBColumn
+        Caption = #1054#1090#1087#1091#1089#1082
+        DataBinding.FieldName = 'isHoliday'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
+        VisibleForCustomization = False
         Width = 60
       end
-      object DateOut: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
-        DataBinding.FieldName = 'DateOut'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 85
-      end
-      object IsDateOut: TcxGridDBColumn
-        Caption = #1059#1074#1086#1083#1077#1085
-        DataBinding.FieldName = 'isDateOut'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object IsMain: TcxGridDBColumn
-        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
-        DataBinding.FieldName = 'isMain'
+      object isHoliday_NoZp: TcxGridDBColumn
+        Caption = #1054#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088'.'#1079#1087
+        DataBinding.FieldName = 'isHoliday_NoZp'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
+        Width = 169
+      end
+      object OperDate: TcxGridDBColumn
+        Caption = #1056#1072#1073'. '#1076#1085#1080
+        DataBinding.FieldName = 'OperDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 100
+      end
+      object isHoliday_year: TcxGridDBColumn
+        Caption = #1054#1090#1087#1091#1089#1082' ('#1075#1086#1076')'
+        DataBinding.FieldName = 'isHoliday_year'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 111
+      end
+      object OperDate_amount: TcxGridDBColumn
+        Caption = #1056#1072#1073'.'#1076#1085#1080
+        DataBinding.FieldName = 'OperDate_amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object IsOfficial: TcxGridDBColumn
-        Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-        DataBinding.FieldName = 'isOfficial'
+      object Holiday: TcxGridDBColumn
+        Caption = #1054#1090#1087#1091#1089#1082
+        DataBinding.FieldName = 'Holiday'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object isNotCompensation: TcxGridDBColumn
-        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089'.'
-        DataBinding.FieldName = 'isNotCompensation'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
-        Options.Editing = False
         Width = 70
       end
-      object Day_vacation: TcxGridDBColumn
-        Caption = #1055#1086#1083#1086#1078#1077#1085' '#1086#1090#1087#1091#1089#1082', '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_vacation'
+      object Holiday_year: TcxGridDBColumn
+        Caption = #1054#1090#1087#1091#1089#1082' ('#1075#1086#1076')'
+        DataBinding.FieldName = 'Holiday_year'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1083#1086#1078#1077#1085#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
-        Options.Editing = False
-        Width = 80
+        Width = 70
       end
-      object Day_holiday: TcxGridDBColumn
-        Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086', '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_holiday'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object Day_holiday_NoZp: TcxGridDBColumn
-        Caption = #1041#1077#1079' '#1089#1086#1093#1088'. '#1079#1087', '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_holiday_NoZp'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1047#1055', '#1076#1085#1077#1081' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
-        Options.Editing = False
-        Width = 80
-      end
-      object Day_Hol_NoZp: TcxGridDBColumn
-        Caption = #1054#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088'. '#1079#1087'., '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_Hol_NoZp'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1090#1087#1091#1089#1082#1085#1099#1093' '#1076#1085#1077#1081' '#1073#1077#1079' '#1089#1086#1093#1088'. '#1079#1087' '#1087#1086' '#1090#1072#1073#1077#1083#1102'- '#1079#1072' '#1087#1077#1088#1080#1086#1076
-        Width = 80
-      end
-      object Day_diff: TcxGridDBColumn
-        Caption = #1053#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086', '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_diff'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object Day_vacation_NoZp: TcxGridDBColumn
-        Caption = #1055#1086#1083#1086#1078#1077#1085' '#1086#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088'. , '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_vacation_NoZp'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1083#1086#1078#1077#1085#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' '#1073#1077#1079' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1079#1087' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
-        Options.Editing = False
-        Width = 80
-      end
-      object Day_diff_NoZp: TcxGridDBColumn
-        Caption = #1053#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1073#1077#1079' '#1089#1086#1093#1088'., '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_diff_NoZp'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1053#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1086#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103', '#1076#1085#1077#1081' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
-        Options.Editing = False
-        Width = 80
-      end
-      object AmountCompensation: TcxGridDBColumn
-        Caption = #1057#1088'. '#1047#1055' '#1079#1072' '#1076#1077#1085#1100
-        DataBinding.FieldName = 'AmountCompensation'
+      object Holiday_NoZp: TcxGridDBColumn
+        Caption = #1054#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088'.'#1079#1087
+        DataBinding.FieldName = 'Holiday_NoZp'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 82
-      end
-      object SummaCompensation: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087#1091#1089#1082
-        DataBinding.FieldName = 'SummaCompensation'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1088#1072#1089#1095#1077#1090')'
-        Options.Editing = False
-        Width = 90
-      end
-      object SummaCompensation_fact: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087#1091#1089#1082' ('#1092#1072#1082#1090')'
-        DataBinding.FieldName = 'SummaCompensation_fact'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082'('#1092#1072#1082#1090')'
-        Options.Editing = False
-        Width = 90
-      end
-      object SummaCompensation_diff: TcxGridDBColumn
-        Caption = #1054#1090#1082#1083'. '#1087#1086' '#1089#1091#1084#1084#1077' '#1082#1086#1084#1087#1077#1085#1089'. '#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090
-        DataBinding.FieldName = 'SummaCompensation_diff'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1090#1082#1083'. '#1087#1086' '#1089#1091#1084#1084#1077' '#1082#1086#1084#1087#1077#1085#1089'. '#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090
-        Options.Editing = False
-        Width = 90
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1047#1055' '#1079#1072' '#1043#1086#1076
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1053#1072#1095#1080#1089#1083#1077#1085#1086' + '#1054#1090#1087#1091#1089#1082#1085#1099#1077' '#1079#1072' '#1043#1086#1076
-        Width = 90
-      end
-      object Day_calendar: TcxGridDBColumn
-        Caption = #1056#1072#1073#1086#1095'. '#1076#1085#1077#1081
-        DataBinding.FieldName = 'Day_calendar'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1072#1083#1077#1085#1076#1072#1088#1085#1099#1077' '#1076#1085#1080' '#1084#1080#1085#1091#1089' '#1076#1085#1080' '#1086#1090#1087#1091#1089#1082#1072' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
-        Width = 90
-      end
-      object Day_calendar_year: TcxGridDBColumn
-        Caption = #1056#1072#1073#1086#1095'. '#1076#1085#1077#1081' ('#1075#1086#1076')'
-        DataBinding.FieldName = 'Day_calendar_year'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1072#1083#1077#1085#1076#1072#1088#1085#1099#1077' '#1076#1085#1080' '#1084#1080#1085#1091#1089' '#1076#1085#1080' '#1086#1090#1087#1091#1089#1082#1072' - '#1079#1072' '#1075#1086#1076
-        Width = 90
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -370,13 +211,14 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1042
-    Height = 33
+    Width = 570
+    Height = 61
     Align = alTop
     TabOrder = 2
+    ExplicitWidth = 971
     object deStart: TcxDateEdit
-      Left = 65
-      Top = 5
+      Left = 73
+      Top = 8
       EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -384,8 +226,8 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Width = 85
     end
     object edPersonal: TcxButtonEdit
-      Left = 529
-      Top = 5
+      Left = 73
+      Top = 35
       Properties.Buttons = <
         item
           Default = True
@@ -396,22 +238,9 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 465
-      Top = 6
+      Left = 9
+      Top = 36
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
-    end
-    object edPosition: TcxButtonEdit
-      Left = 944
-      Top = 5
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 3
-      Visible = False
-      Width = 203
     end
     object cxLabel4: TcxLabel
       Left = 1006
@@ -420,18 +249,18 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Visible = False
     end
     object cxLabel5: TcxLabel
-      Left = 13
-      Top = 6
+      Left = 21
+      Top = 9
       Caption = #1053#1072' '#1076#1072#1090#1091' :'
     end
     object cxLabel2: TcxLabel
-      Left = 741
-      Top = 6
+      Left = 293
+      Top = 36
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100':'
     end
     object edPersonalServiceList: TcxButtonEdit
-      Left = 804
-      Top = 5
+      Left = 356
+      Top = 35
       Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
       ParentShowHint = False
       Properties.Buttons = <
@@ -441,18 +270,18 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         end>
       Properties.ReadOnly = True
       ShowHint = True
-      TabOrder = 7
+      TabOrder = 6
       Width = 205
     end
   end
   object cxLabel1: TcxLabel
-    Left = 160
-    Top = 6
+    Left = 267
+    Top = 9
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit
-    Left = 249
-    Top = 5
+    Left = 356
+    Top = 8
     Properties.Buttons = <
       item
         Default = True
@@ -560,35 +389,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         end
         item
           Visible = True
-          ItemName = 'bbDialogForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenFormZP'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenFormDay'
         end
         item
           Visible = True
@@ -620,8 +421,8 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbOpenFormZP: TdxBarButton
-      Action = actOpenFormZP
+    object bbPrintBy_Goods: TdxBarButton
+      Action = actPrint1
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -631,9 +432,15 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object bbOpenFormDay: TdxBarButton
-      Action = actOpenFormDay
+    object bbPrint3: TdxBarButton
+      Action = actPrint
       Category = 0
+    end
+    object bbIsDay: TdxBarControlContainerItem
+      Caption = 'bbIsDay'
+      Category = 0
+      Hint = 'bbIsDay'
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
@@ -1027,153 +834,9 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actOpenFormDay: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1056#1072#1089#1096#1080#1092#1088#1086#1074#1082#1072' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
-      Hint = #1056#1072#1089#1096#1080#1092#1088#1086#1074#1082#1072' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
-      ImageIndex = 24
-      FormName = 'TSelect_HolidayCompensation_dayForm'
-      FormNameParam.Value = 'TSelect_HolidayCompensation_dayForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inStartDate'
-          Value = 43831d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitId'
-          Value = '0'
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitName'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMemberId'
-          Value = '0'
-          Component = GuidesMember
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMemberName'
-          Value = ''
-          Component = GuidesMember
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListId'
-          Value = '0'
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListName'
-          Value = ''
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenFormZP: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1088#1077#1076#1085#1103#1103' '#1047#1055
-      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1088#1077#1076#1085#1103#1103' '#1047#1055
-      ImageIndex = 26
-      FormName = 'TSelect_HolidayCompensation_zpForm'
-      FormNameParam.Value = 'TSelect_HolidayCompensation_zpForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inStartDate'
-          Value = Null
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitId'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitName'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMemberId'
-          Value = Null
-          Component = GuidesMember
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMemberName'
-          Value = Null
-          Component = GuidesMember
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListId'
-          Value = Null
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListName'
-          Value = Null
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   object spReport: TdsdStoredProc
-    StoredProcName = 'gpReport_HolidayCompensation'
+    StoredProcName = 'gpSelect_HolidayCompensation_day'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1244,8 +907,6 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPosition
-    Key = '0'
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1355,9 +1016,61 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'inIsDay'
+        Name = 'inStartDate'
         Value = Null
-        DataType = ftBoolean
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListName'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1543,7 +1256,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 872
-    Top = 8
+    Left = 480
+    Top = 16
   end
 end

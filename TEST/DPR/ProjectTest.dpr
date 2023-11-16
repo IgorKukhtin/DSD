@@ -1470,7 +1470,9 @@ uses
   ObjectColor in '..\..\Forms\Guides\ObjectColor.pas' {ObjectColorForm: TParentForm},
   ObjectColorEdit in '..\..\Forms\Guides\ObjectColorEdit.pas' {ObjectColorEditForm: TParentForm},
   CarProperty in '..\..\Forms\Guides\CarProperty.pas' {CarPropertyForm: TParentForm},
-  CarPropertyEdit in '..\..\Forms\Guides\CarPropertyEdit.pas' {CarPropertyEditForm: TParentForm};
+  CarPropertyEdit in '..\..\Forms\Guides\CarPropertyEdit.pas' {CarPropertyEditForm: TParentForm},
+  Select_HolidayCompensation_zp in '..\..\Forms\Report\Select_HolidayCompensation_zp.pas' {Select_HolidayCompensation_zpForm: TParentForm},
+  Select_HolidayCompensation_day in '..\..\Forms\Report\Select_HolidayCompensation_day.pas' {Select_HolidayCompensation_dayForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
