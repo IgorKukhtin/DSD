@@ -24,6 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
       IN inCarModelId               Integer,     -- Марка автомобиля
       IN inCarTypeId                Integer,     -- Модель автомобиля
       IN inBodyTypeId               Integer,     -- Тип кузова
+      IN inCarPropertyId            Integer,     -- Тип авто
+      IN inObjectColorId            Integer,     -- Цвет авто
       IN inUnitId                   Integer,     -- Подразделение
       IN inPersonalDriverId         Integer,     -- Сотрудник (водитель)
       IN inFuelMasterId             Integer,     -- Вид топлива (основной)
@@ -78,6 +80,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_CarType(), ioId, inCarTypeId);
    -- сохранили связь с <Тип кузова>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_BodyType(), ioId, inBodyTypeId);
+   -- сохранили связь с <Тип авто>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_CarProperty(), ioId, inCarPropertyId);
+   -- сохранили связь с <цвет>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_ObjectColor(), ioId, inObjectColorId);
 
    -- сохранили связь с <подразделением>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Unit(), ioId, inUnitId);
@@ -119,6 +125,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.11.23         *
  17.07.23         *
  07.12.21         * del inAssetId
  01.11.21         *

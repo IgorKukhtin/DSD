@@ -86,6 +86,22 @@ object CarForm: TCarForm
         Options.Editing = False
         Width = 67
       end
+      object CarPropertyName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarPropertyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object ObjectColorName: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'ObjectColorName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 98
+      end
       object Name: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'Name'

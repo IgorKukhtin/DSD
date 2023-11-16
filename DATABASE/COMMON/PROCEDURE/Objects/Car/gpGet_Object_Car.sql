@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , CarTypeId Integer, CarTypeCode Integer, CarTypeName TVarChar
              , BodyTypeId Integer, BodyTypeCode Integer, BodyTypeName TVarChar
+             , CarPropertyId Integer, CarPropertyCode Integer, CarPropertyName TVarChar
+             , ObjectColorId Integer, ObjectColorCode Integer, ObjectColorName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
              , FuelMasterId Integer, FuelMasterCode Integer, FuelMasterName TVarChar
@@ -63,6 +65,14 @@ BEGIN
            , CAST (0 as Integer)    AS BodyTypeId
            , CAST (0 as Integer)    AS BodyTypeCode
            , CAST ('' as TVarChar)  AS BodyTypeName
+
+           , CAST (0 as Integer)    AS CarPropertyId
+           , CAST (0 as Integer)    AS CarPropertyCode
+           , CAST ('' as TVarChar)  AS CarPropertyName
+           
+           , CAST (0 as Integer)    AS ObjectColorId
+           , CAST (0 as Integer)    AS ObjectColorCode
+           , CAST ('' as TVarChar)  AS ObjectColorName
                     
            , CAST (0 as Integer)    AS UnitId
            , CAST (0 as Integer)    AS UnitCode
@@ -125,7 +135,15 @@ BEGIN
            , Object_BodyType.Id         AS BodyTypeId
            , Object_BodyType.ObjectCode AS BodyTypeCode
            , Object_BodyType.ValueData  AS BodyTypeName
-         
+
+           , Object_CarProperty.Id         AS CarPropertyId
+           , Object_CarProperty.ObjectCode AS CarPropertyCode
+           , Object_CarProperty.ValueData  AS CarPropertyName
+           
+           , Object_ObjectColor.Id         AS ObjectColorId
+           , Object_ObjectColor.ObjectCode AS ObjectColorCode
+           , Object_ObjectColor.ValueData  AS ObjectColorName
+        
            , Object_Unit.Id          AS UnitId
            , Object_Unit.ObjectCode  AS UnitCode
            , Object_Unit.ValueData   AS UnitName
@@ -206,7 +224,17 @@ BEGIN
                                  ON Car_BodyType.ObjectId = Object_Car.Id
                                 AND Car_BodyType.DescId = zc_ObjectLink_Car_BodyType()
             LEFT JOIN Object AS Object_BodyType ON Object_BodyType.Id = Car_BodyType.ChildObjectId
-            
+
+            LEFT JOIN ObjectLink AS Car_CarProperty
+                                 ON Car_CarProperty.ObjectId = Object_Car.Id
+                                AND Car_CarProperty.DescId = zc_ObjectLink_Car_CarProperty()
+            LEFT JOIN Object AS Object_CarProperty ON Object_CarProperty.Id = Car_CarProperty.ChildObjectId
+
+            LEFT JOIN ObjectLink AS Car_ObjectColor
+                                 ON Car_ObjectColor.ObjectId = Object_Car.Id
+                                AND Car_ObjectColor.DescId = zc_ObjectLink_Car_ObjectColor()
+            LEFT JOIN Object AS Object_ObjectColor ON Object_ObjectColor.Id = Car_ObjectColor.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                  ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
@@ -250,6 +278,7 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.11.23         *
  17.07.23         *
  07.12.21         *
  02.11.21         *

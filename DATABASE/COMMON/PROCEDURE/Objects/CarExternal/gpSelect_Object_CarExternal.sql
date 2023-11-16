@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar , CarModelName_full TVarChar
              , CarTypeId Integer, CarTypeCode Integer, CarTypeName TVarChar
+             , CarPropertyId Integer, CarPropertyCode Integer, CarPropertyName TVarChar
+             , ObjectColorId Integer, ObjectColorCode Integer, ObjectColorName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , isErased boolean
              ) AS
@@ -54,6 +56,14 @@ BEGIN
            , Object_CarType.ObjectCode    AS CarTypeCode
            , Object_CarType.ValueData     AS CarTypeName
 
+           , Object_CarProperty.Id         AS CarPropertyId
+           , Object_CarProperty.ObjectCode AS CarPropertyCode
+           , Object_CarProperty.ValueData  AS CarPropertyName
+           
+           , Object_ObjectColor.Id         AS ObjectColorId
+           , Object_ObjectColor.ObjectCode AS ObjectColorCode
+           , Object_ObjectColor.ValueData  AS ObjectColorName
+
            , Object_Juridical.Id          AS JuridicalId
            , Object_Juridical.ObjectCode  AS JuridicalCode
            , Object_Juridical.ValueData   AS JuridicalName           
@@ -87,6 +97,16 @@ BEGIN
                                 AND ObjectLink_CarExternal_Juridical.DescId = zc_ObjectLink_CarExternal_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_CarExternal_Juridical.ChildObjectId            
 
+            LEFT JOIN ObjectLink AS CarExternal_CarProperty
+                                 ON CarExternal_CarProperty.ObjectId = Object_CarExternal.Id
+                                AND CarExternal_CarProperty.DescId = zc_ObjectLink_CarExternal_CarProperty()
+            LEFT JOIN Object AS Object_CarProperty ON Object_CarProperty.Id = CarExternal_CarProperty.ChildObjectId
+
+            LEFT JOIN ObjectLink AS CarExternal_ObjectColor
+                                 ON CarExternal_ObjectColor.ObjectId = Object_CarExternal.Id
+                                AND CarExternal_ObjectColor.DescId = zc_ObjectLink_CarExternal_ObjectColor()
+            LEFT JOIN Object AS Object_ObjectColor ON Object_ObjectColor.Id = CarExternal_ObjectColor.ChildObjectId
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Length
                                   ON ObjectFloat_Length.ObjectId = Object_CarExternal.Id
                                  AND ObjectFloat_Length.DescId = zc_ObjectFloat_CarExternal_Length()
@@ -115,6 +135,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.11.23         *
  17.03.16         *
 */
 

@@ -135,7 +135,9 @@ BEGIN
                                                     , inVIN                     := ''
                                                     , inComment                 := COALESCE(ObjectString_Comment.ValueData, '')
                                                     , inCarModelId              := inCarModelId
-                                                    , inCarTypeId               := ObjectLink_CarType.ChildObjectId ::Integer
+                                                    , inCarTypeId               := ObjectLink_CarType.ChildObjectId      ::Integer
+                                                    , inCarPropertyId           := CarExternal_CarProperty.ChildObjectId ::Integer
+                                                    , inObjectColorId           := CarExternal_ObjectColor.ChildObjectId ::Integer
                                                     , inJuridicalId             := inCarJuridicalId
                                                     , inLength                  := 0
                                                     , inWidth                   := 0
@@ -156,7 +158,16 @@ BEGIN
 
                         LEFT JOIN ObjectLink AS ObjectLink_CarType
                                              ON ObjectLink_CarType.ObjectId = Object.Id
-                                            AND ObjectLink_CarType.DescId = zc_ObjectLink_Car_CarType();
+                                            AND ObjectLink_CarType.DescId = zc_ObjectLink_Car_CarType()
+
+                        LEFT JOIN ObjectLink AS CarExternal_CarProperty
+                                             ON CarExternal_CarProperty.ObjectId = Object.Id
+                                            AND CarExternal_CarProperty.DescId = zc_ObjectLink_CarExternal_CarProperty()
+
+                        LEFT JOIN ObjectLink AS CarExternal_ObjectColor
+                                             ON CarExternal_ObjectColor.ObjectId = Object.Id
+                                            AND CarExternal_ObjectColor.DescId = zc_ObjectLink_CarExternal_ObjectColor()
+                    ;
      END IF;
 
 

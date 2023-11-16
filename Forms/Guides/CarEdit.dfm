@@ -347,16 +347,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 43
-    Width = 273
+    Width = 133
   end
   object cxLabel20: TcxLabel
-    Left = 328
-    Top = 125
+    Left = 468
+    Top = 86
     Caption = #1058#1080#1087' '#1082#1091#1079#1086#1074#1072
   end
   object edBodyType: TcxButtonEdit
-    Left = 328
-    Top = 142
+    Left = 468
+    Top = 103
     Properties.Buttons = <
       item
         Default = True
@@ -364,7 +364,41 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 45
-    Width = 273
+    Width = 133
+  end
+  object edCarProperty: TcxButtonEdit
+    Left = 330
+    Top = 142
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 46
+    Width = 133
+  end
+  object cxLabel21: TcxLabel
+    Left = 330
+    Top = 125
+    Caption = #1058#1080#1087' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+  end
+  object edObjectColor: TcxButtonEdit
+    Left = 468
+    Top = 142
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 48
+    Width = 133
+  end
+  object cxLabel22: TcxLabel
+    Left = 468
+    Top = 125
+    Caption = #1062#1074#1077#1090' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
   end
   object ActionList: TActionList
     Left = 112
@@ -478,6 +512,22 @@
         Name = 'inBodyTypeId'
         Value = Null
         Component = GuidesBodyType
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarPropertyId'
+        Value = Null
+        Component = GuidesCarProperty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectColorId'
+        Value = Null
+        Component = GuidesObjectColor
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -825,6 +875,36 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarPropertyId'
+        Value = Null
+        Component = GuidesCarProperty
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarPropertyName'
+        Value = Null
+        Component = GuidesCarProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectColorId'
+        Value = Null
+        Component = GuidesObjectColor
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectColorName'
+        Value = Null
+        Component = GuidesObjectColor
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Top = 40
@@ -874,8 +954,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 119
-    Top = 119
+    Left = 103
+    Top = 39
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
@@ -1085,8 +1165,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 471
-    Top = 79
+    Left = 511
+    Top = 31
   end
   object GuidesBodyType: TdsdGuides
     KeyField = 'Id'
@@ -1115,7 +1195,67 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 471
-    Top = 118
+    Left = 519
+    Top = 78
+  end
+  object GuidesCarProperty: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCarProperty
+    FormNameParam.Value = 'TCarPropertyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCarPropertyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCarProperty
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCarProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 383
+    Top = 128
+  end
+  object GuidesObjectColor: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edObjectColor
+    FormNameParam.Value = 'TObjectColorForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TObjectColorForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesObjectColor
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesObjectColor
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 535
+    Top = 126
   end
 end

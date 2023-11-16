@@ -97,6 +97,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_BodyType() RETURNS Integer AS $BODY
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Car_BodyType', 'Связь Машины с Тип кузова', zc_Object_Car(), zc_Object_BodyType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_BodyType');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_ObjectColor() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_ObjectColor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Car_ObjectColor', 'Связь Машины с Цвет авто', zc_Object_Car(), zc_Object_ObjectColor() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_ObjectColor');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_CarProperty() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_CarProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Car_CarProperty', 'Связь Машины с Тип авто', zc_Object_Car(), zc_Object_CarProperty() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_CarProperty');
+
 
 --
 CREATE OR REPLACE FUNCTION zc_ObjectLink_CarExternal_CarModel() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_CarModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -110,6 +118,14 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 CREATE OR REPLACE FUNCTION zc_ObjectLink_CarExternal_CarType() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_CarType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_CarExternal_CarType', 'Связь Машины с Модель автомобиля', zc_Object_CarExternal(), zc_Object_CarType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_CarType');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CarExternal_ObjectColor() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_ObjectColor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CarExternal_ObjectColor', 'Связь Машины с Цвет авто', zc_Object_CarExternal(), zc_Object_ObjectColor() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_ObjectColor');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CarExternal_CarProperty() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_CarProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CarExternal_CarProperty', 'Связь Машины с Тип авто', zc_Object_CarExternal(), zc_Object_CarProperty() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_CarProperty');
 
 
 

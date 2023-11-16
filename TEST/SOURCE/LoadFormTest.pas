@@ -4472,6 +4472,16 @@ end;
 
 procedure TLoadFormTest.LoadCarFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectColorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TObjectColorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectColorEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TObjectColorEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarPropertyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarPropertyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarPropertyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarPropertyEditForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBodyTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBodyTypeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBodyTypeEditForm'));
@@ -4481,7 +4491,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarTypeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarTypeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarTypeEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));

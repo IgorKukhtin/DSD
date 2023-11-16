@@ -3,6 +3,7 @@
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar,TVarChar,Integer,Integer,Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_CarExternal(
    INOUT ioId                       Integer, 
@@ -13,6 +14,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_CarExternal(
       IN inComment                  TVarChar  ,    -- Примечание
       IN inCarModelId               Integer, 
       IN inCarTypeId                Integer,     -- Модель автомобиля
+      IN inCarPropertyId            Integer,     -- Тип авто
+      IN inObjectColorId            Integer,     -- Цвет авто
       IN inJuridicalId              Integer,
       IN inLength                   TFloat ,     -- 
       IN inWidth                    TFloat ,     -- 
@@ -49,6 +52,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_CarModel(), ioId, inCarModelId);
    -- сохранили связь с <Модель авто>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_CarType(), ioId, inCarTypeId);
+   -- сохранили связь с <Тип авто>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_CarProperty(), ioId, inCarPropertyId);
+   -- сохранили связь с <цвет>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_ObjectColor(), ioId, inObjectColorId);
    -- сохранили связь с <юр.лицом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_Juridical(), ioId, inJuridicalId);
 
@@ -74,6 +81,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.11.23         *
  09.11.21         *
  17.03.16         *
 */

@@ -88,6 +88,12 @@ type
     cxLabel20: TcxLabel;
     edBodyType: TcxButtonEdit;
     GuidesBodyType: TdsdGuides;
+    edCarProperty: TcxButtonEdit;
+    cxLabel21: TcxLabel;
+    GuidesCarProperty: TdsdGuides;
+    edObjectColor: TcxButtonEdit;
+    cxLabel22: TcxLabel;
+    GuidesObjectColor: TdsdGuides;
   private
     { Private declarations }
   public

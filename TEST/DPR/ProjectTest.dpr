@@ -1466,7 +1466,11 @@ uses
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas',
   ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm},
   Report_Goods_Partion in '..\..\Forms\Report\Report_Goods_Partion.pas' {Report_Goods_PartionForm: TParentForm},
-  Report_Goods_PartionDialog in '..\..\Forms\Report\Report_Goods_PartionDialog.pas' {Report_Goods_PartionDialogForm: TParentForm};
+  Report_Goods_PartionDialog in '..\..\Forms\Report\Report_Goods_PartionDialog.pas' {Report_Goods_PartionDialogForm: TParentForm},
+  ObjectColor in '..\..\Forms\Guides\ObjectColor.pas' {ObjectColorForm: TParentForm},
+  ObjectColorEdit in '..\..\Forms\Guides\ObjectColorEdit.pas' {ObjectColorEditForm: TParentForm},
+  CarProperty in '..\..\Forms\Guides\CarProperty.pas' {CarPropertyForm: TParentForm},
+  CarPropertyEdit in '..\..\Forms\Guides\CarPropertyEdit.pas' {CarPropertyEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

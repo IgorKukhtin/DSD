@@ -86,21 +86,23 @@ BEGIN
                  IF COALESCE (outCarId,0) = 0 
                     THEN 
                         -- не нашли Сохраняем в авто(сторонние)
-                        outCarId := lpInsertUpdate_Object_CarExternal (ioId	         := 0
-                                                                     , inCode        := lfGet_ObjectCode(0, zc_Object_CarExternal())
-                                                                     , inName        := inCar
+                        outCarId := lpInsertUpdate_Object_CarExternal (ioId	           := 0
+                                                                     , inCode          := lfGet_ObjectCode(0, zc_Object_CarExternal())
+                                                                     , inName          := inCar
                                                                      , inRegistrationCertificate := '' ::TVarChar
-                                                    , inVIN                     := ''
-                                                                     , inComment     := '' ::TVarChar
-                                                                     , inCarModelId  := 0
-                                                                     , inCarTypeId   := 0
-                                                                     , inJuridicalId := 0
-                                                    , inLength                  := 0
-                                                    , inWidth                   := 0
-                                                    , inHeight                  := 0
-                                                    , inWeight                  := 0
-                                                    , inYear                    := 0
-                                                                     , inUserId      := vbUserId
+                                                                     , inVIN                     := ''
+                                                                     , inComment       := '' ::TVarChar
+                                                                     , inCarModelId    := 0
+                                                                     , inCarTypeId     := 0
+                                                                     , inCarPropertyId := 0
+                                                                     , inObjectColorId := 0
+                                                                     , inJuridicalId   := 0
+                                                                     , inLength        := 0
+                                                                     , inWidth         := 0
+                                                                     , inHeight        := 0
+                                                                     , inWeight        := 0
+                                                                     , inYear          := 0
+                                                                     , inUserId        := vbUserId
                                                                        );
                         -- сохранили протокол
                         PERFORM lpInsert_ObjectProtocol (outCarId, vbUserId);

@@ -1453,6 +1453,10 @@ type
     N256: TMenuItem;
     actReport_Goods_Partion: TdsdOpenForm;
     miReport_Goods_Partion: TMenuItem;
+    actCarProperty: TdsdOpenForm;
+    actObjectColor: TdsdOpenForm;
+    miObjectColor: TMenuItem;
+    miCarProperty: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

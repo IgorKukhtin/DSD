@@ -84,6 +84,8 @@ type
     CarTypeName: TcxGridDBColumn;
     BodyTypeName: TcxGridDBColumn;
     EngineNum: TcxGridDBColumn;
+    CarPropertyName: TcxGridDBColumn;
+    ObjectColorName: TcxGridDBColumn;
   private
     { Private declarations }
   public
