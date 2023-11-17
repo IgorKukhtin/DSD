@@ -401,10 +401,10 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
+      StoredProc = spGetImportSettingId_2
       StoredProcList = <
         item
-          StoredProc = spGetImportSettingId
+          StoredProc = spGetImportSettingId_2
         end>
       Caption = 'actGetImportSetting_UKTZEDnew'
     end

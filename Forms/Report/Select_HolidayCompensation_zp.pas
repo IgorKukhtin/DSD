@@ -1,4 +1,4 @@
-unit Report_HolidayCompensation;
+unit Select_HolidayCompensation_zp;
 
 interface
 
@@ -23,10 +23,11 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox,
+  cxImageComboBox;
 
 type
-  TReport_HolidayCompensationForm = class(TParentForm)
+  TSelect_HolidayCompensation_zpForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -43,22 +44,20 @@ type
     bbToExcel: TdxBarButton;
     DBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    Day_vacation: TcxGridDBColumn;
     PositionGuides: TdsdGuides;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
     GuidesMember: TdsdGuides;
     PositionName: TcxGridDBColumn;
-    Day_holiday: TcxGridDBColumn;
-    bbOpenFormZP: TdxBarButton;
+    bbPrintBy_Goods: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     FormParams: TdsdFormParams;
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
     actIsDetail: TdsdDataSetRefresh;
     actPrint: TdsdPrintAction;
-    bbOpenFormDay: TdxBarButton;
+    bbPrint3: TdxBarButton;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     edPersonal: TcxButtonEdit;
@@ -66,24 +65,20 @@ type
     edPosition: TcxButtonEdit;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
-    PersonalCode: TcxGridDBColumn;
-    Day_diff: TcxGridDBColumn;
+    MemberCode: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
     cxLabel1: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    BranchName: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    AmountCompensation: TcxGridDBColumn;
-    SummaCompensation: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    Day_calendar: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    bbIsDay: TdxBarControlContainerItem;
+    OperDate: TcxGridDBColumn;
+    SummService: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
     cxLabel2: TcxLabel;
     edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
-    Day_calendar_year: TcxGridDBColumn;
-    actOpenFormZP: TdsdOpenForm;
-    actOpenFormDay: TdsdOpenForm;
+    StatusCode: TcxGridDBColumn;
   private
   public
   end;
@@ -95,6 +90,6 @@ implementation
 
 
 initialization
-  RegisterClass(TReport_HolidayCompensationForm);
+  RegisterClass(TSelect_HolidayCompensation_zpForm);
 
 end.

@@ -31,6 +31,7 @@ type
     procedure InitHelpSystem;
     procedure InitcxEditRepository;
     procedure InitcxView;
+    procedure InitBooleanSetVisible;
     procedure btnHelpClick(Sender: TObject);
     procedure btnLoadUserSettings(Sender: TObject);
     procedure btnSaveUserSettings(Sender: TObject);
@@ -445,6 +446,7 @@ begin
   InitHelpSystem;
   InitcxEditRepository;
   InitcxView;
+  InitBooleanSetVisible;
 end;
 
 procedure TParentForm.InitHelpSystem;
@@ -591,6 +593,14 @@ begin
         TdsdDBViewAddOn(Components[I]).FilterSelectAll := True;
         TdsdDBViewAddOn(Components[I]).FilterLoadFile := True;
       end;
+end;
+
+procedure TParentForm.InitBooleanSetVisible;
+  var I : Integer;
+begin
+  for I := 0 to ComponentCount - 1 do
+    if Components[I] is TBooleanSetVisibleAction then
+      TBooleanSetVisibleAction(Components[I]).SetVisiableAll;
 end;
 
 procedure TParentForm.Loaded;
@@ -825,6 +835,7 @@ initialization
   RegisterClass (TdsdLoadFile_https);
   RegisterClass (TdsdeSputnikContactsMessages);
   RegisterClass (TdsdeSputnikSendSMS);
+  RegisterClass (TBooleanSetVisibleAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

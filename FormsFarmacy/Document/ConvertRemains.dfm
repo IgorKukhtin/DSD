@@ -41,7 +41,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
               Column = GoodsName
             end
             item
-              Format = ',0.##;-,0.##; '
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = Summa
             end
@@ -54,7 +54,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
               Kind = skSum
             end
             item
-              Format = ',0.####;-,0.####; '
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
               Column = Amount
             end
@@ -134,8 +134,8 @@ inherited ConvertRemainsForm: TConvertRemainsForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

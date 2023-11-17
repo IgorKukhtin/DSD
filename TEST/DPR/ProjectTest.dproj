@@ -5138,6 +5138,14 @@
 				<Form>CarPropertyEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Select_HolidayCompensation_zp.pas">
+				<Form>Select_HolidayCompensation_zpForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Select_HolidayCompensation_day.pas">
+				<Form>Select_HolidayCompensation_dayForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
