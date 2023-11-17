@@ -266,14 +266,15 @@ BEGIN
                                 AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Asset_Car.ObjectId 
 
-       WHERE Object_Car.Id = inId;
+       WHERE Object_Car.Id = inId
+       LIMIT 1
+      ;
       
    END IF;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
