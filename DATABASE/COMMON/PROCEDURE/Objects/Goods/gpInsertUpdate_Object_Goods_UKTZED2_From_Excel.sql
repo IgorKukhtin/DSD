@@ -24,9 +24,15 @@ BEGIN
      THEN
          RETURN;
      END IF;
+     --проверка
+     IF COALESCE (inCodeUKTZED_new,'') = ''
+     THEN
+         RETURN;
+     END IF;
+
 
      --проверка
-     IF COALESCE (inCodeUKTZED_new,0) = 0
+     IF COALESCE (inCodeUKTZED_new,'') = ''
      THEN
          RAISE EXCEPTION 'Ошибка. Новый Код UKTZED не задан для товара с кодом = <%>.', inCode; 
      END IF;
@@ -45,7 +51,7 @@ BEGIN
                 WHERE ObjectString.DescId = zc_ObjectString_Goods_UKTZED_new()
                   AND ObjectString.ObjectId = vbGoodsId 
                   AND COALESCE (ObjectString.ValueData, '') <> ''
-                LIMIT 1) 
+               ) 
      THEN 
          RAISE EXCEPTION 'Ошибка. Для товара c кодом = <%> новый Код UKTZED уже установлен.', inCode; 
      END IF;
@@ -55,6 +61,10 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_UKTZED_new(), vbGoodsId, inDateUKTZED_new);
    
  
+     -- сохранили протокол
+     PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
+
+
    IF vbUserId = 9457 OR vbUserId = 5
    THEN
          RAISE EXCEPTION 'Тест. Ок. <%>', inCode; 
