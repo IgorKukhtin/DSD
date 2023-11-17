@@ -810,6 +810,11 @@ type
     tblObject_ConstCriticalWeight: TFloatField;
     tblObject_PartnerisOrderMin: TBooleanField;
     tblObject_PriceListItemsGoodsKindId: TIntegerField;
+    tblObject_SubjectDoc: TFDTable;
+    IntegerField4: TIntegerField;
+    IntegerField5: TIntegerField;
+    StringField1: TStringField;
+    BooleanField1: TBooleanField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -1205,6 +1210,12 @@ begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_TradeMark';
       CurDictTable.TableName := 'Object_TradeMark';
       DM.conMain.ExecSQL('update Object_TradeMark set isErased = 1');
+    end
+    else
+    if AName = 'SubjectDoc' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_SubjectDoc';
+      CurDictTable.TableName := 'Object_SubjectDoc';
     end;
 
     if GetStoredProc.StoredProcName = '' then
@@ -1963,6 +1974,9 @@ begin
         SetNewProgressTask('Загрузка заданий');
         GetDictionaries('MovementTask');
         GetDictionaries('MovementItemTask');
+
+        SetNewProgressTask('Загрузка причин возврата');
+        GetDictionaries('SubjectDoc');
 
         SyncDataIn := Now();
         DM.tblObject_Const.Edit;

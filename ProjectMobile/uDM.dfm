@@ -1,36 +1,36 @@
 object DM: TDM
   OnCreate = DataModuleCreate
-  Height = 843
-  Width = 1355
-  PixelsPerInch = 120
+  Height = 1012
+  Width = 1626
+  PixelsPerInch = 144
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
-    Left = 50
-    Top = 121
+    Left = 60
+    Top = 145
   end
   object qryMeta: TFDMetaInfoQuery
     Connection = conMain
     MetaInfoKind = mkCatalogs
-    Left = 150
-    Top = 40
+    Left = 180
+    Top = 48
   end
   object qryMeta2: TFDMetaInfoQuery
     Connection = conMain
     MetaInfoKind = mkCatalogs
-    Left = 230
-    Top = 40
+    Left = 276
+    Top = 48
   end
   object conMain: TFDConnection
     Params.Strings = (
       'DriverID=SQLite'
       'LockingMode=Exclusive')
     LoginPrompt = False
-    Left = 50
-    Top = 40
+    Left = 60
+    Top = 48
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'FMX'
-    Left = 340
-    Top = 40
+    Left = 408
+    Top = 48
   end
   object tblObject_Const: TFDTable
     Connection = conMain
@@ -38,8 +38,8 @@ object DM: TDM
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate]
     UpdateOptions.UpdateTableName = 'Object_Const'
     TableName = 'Object_Const'
-    Left = 520
-    Top = 160
+    Left = 624
+    Top = 192
     object tblObject_ConstPaidKindId_First: TIntegerField
       FieldName = 'PaidKindId_First'
     end
@@ -179,8 +179,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Partner'
     TableName = 'Object_Partner'
-    Left = 520
-    Top = 250
+    Left = 624
+    Top = 300
     object tblObject_PartnerId: TIntegerField
       FieldName = 'Id'
     end
@@ -271,8 +271,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Juridical'
     TableName = 'Object_Juridical'
-    Left = 520
-    Top = 410
+    Left = 624
+    Top = 492
     object tblObject_JuridicalId: TIntegerField
       FieldName = 'Id'
     end
@@ -310,8 +310,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Route'
     TableName = 'Object_Route'
-    Left = 660
-    Top = 160
+    Left = 792
+    Top = 192
     object tblObject_RouteId: TIntegerField
       FieldName = 'Id'
     end
@@ -330,8 +330,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsGroup'
     TableName = 'Object_GoodsGroup'
-    Left = 810
-    Top = 160
+    Left = 972
+    Top = 192
     object tblObject_GoodsGroupId: TIntegerField
       FieldName = 'Id'
     end
@@ -350,8 +350,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Goods'
     TableName = 'Object_Goods'
-    Left = 810
-    Top = 250
+    Left = 972
+    Top = 300
     object tblObject_GoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -382,8 +382,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsKind'
     TableName = 'Object_GoodsKind'
-    Left = 810
-    Top = 330
+    Left = 972
+    Top = 396
     object tblObject_GoodsKindId: TIntegerField
       FieldName = 'Id'
     end
@@ -402,8 +402,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Measure'
     TableName = 'Object_Measure'
-    Left = 810
-    Top = 490
+    Left = 972
+    Top = 588
     object tblObject_MeasureId: TIntegerField
       FieldName = 'Id'
     end
@@ -422,8 +422,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsByGoodsKind'
     TableName = 'Object_GoodsByGoodsKind'
-    Left = 810
-    Top = 410
+    Left = 972
+    Top = 492
     object tblObject_GoodsByGoodsKindId: TIntegerField
       FieldName = 'Id'
     end
@@ -447,8 +447,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Contract'
     TableName = 'Object_Contract'
-    Left = 520
-    Top = 330
+    Left = 624
+    Top = 396
     object tblObject_ContractId: TIntegerField
       FieldName = 'Id'
     end
@@ -497,8 +497,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_PriceList'
     TableName = 'Object_PriceList'
-    Left = 660
-    Top = 250
+    Left = 792
+    Top = 300
     object tblObject_PriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -523,8 +523,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_PriceListItems'
     TableName = 'Object_PriceListItems'
-    Left = 660
-    Top = 330
+    Left = 792
+    Top = 396
     object tblObject_PriceListItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -568,8 +568,8 @@ object DM: TDM
   object qryPartner: TFDQuery
     OnCalcFields = qryPartnerCalcFields
     Connection = conMain
-    Left = 50
-    Top = 220
+    Left = 60
+    Top = 264
     object qryPartnerId: TIntegerField
       FieldName = 'Id'
     end
@@ -681,8 +681,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 50
-    Top = 640
+    Left = 60
+    Top = 768
     object qryPriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -700,8 +700,8 @@ object DM: TDM
   object qryGoodsForPriceList: TFDQuery
     OnCalcFields = qryGoodsForPriceListCalcFields
     Connection = conMain
-    Left = 170
-    Top = 640
+    Left = 204
+    Top = 768
     object qryGoodsForPriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -754,8 +754,8 @@ object DM: TDM
     FetchOptions.AssignedValues = [evDetailCascade]
     UpdateOptions.UpdateTableName = 'Movement_OrderExternal'
     TableName = 'Movement_OrderExternal'
-    Left = 1000
-    Top = 150
+    Left = 1200
+    Top = 180
     object tblMovement_OrderExternalId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -820,8 +820,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_OrderExternal'
     TableName = 'MovementItem_OrderExternal'
-    Left = 1000
-    Top = 230
+    Left = 1200
+    Top = 276
     object tblMovementItem_OrderExternalId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -854,8 +854,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_StoreReal'
     TableName = 'Movement_StoreReal'
-    Left = 1000
-    Top = 300
+    Left = 1200
+    Top = 360
     object tblMovement_StoreRealId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -893,8 +893,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_StoreReal'
     TableName = 'MovementItem_StoreReal'
-    Left = 1000
-    Top = 380
+    Left = 1200
+    Top = 456
     object tblMovementItem_StoreRealId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -922,8 +922,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 45
-    Top = 350
+    Left = 54
+    Top = 420
     object qryGoodsItemsGoodsID: TIntegerField
       FieldName = 'GoodsID'
     end
@@ -976,8 +976,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_Visit'
     TableName = 'Movement_Visit'
-    Left = 1200
-    Top = 150
+    Left = 1440
+    Top = 180
     object tblMovement_VisitId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1015,8 +1015,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsListSale'
     TableName = 'Object_GoodsListSale'
-    Left = 660
-    Top = 410
+    Left = 792
+    Top = 492
     object IntegerField1: TIntegerField
       FieldName = 'Id'
     end
@@ -1042,8 +1042,8 @@ object DM: TDM
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 280
-    Top = 280
+    Left = 336
+    Top = 336
     object cdsOrderItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1103,8 +1103,8 @@ object DM: TDM
   object cdsOrderExternal: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 160
-    Top = 280
+    Left = 192
+    Top = 336
     object cdsOrderExternalid: TIntegerField
       FieldName = 'id'
     end
@@ -1192,8 +1192,8 @@ object DM: TDM
     FetchOptions.AssignedValues = [evDetailCascade]
     UpdateOptions.UpdateTableName = 'Movement_RouteMember'
     TableName = 'Movement_RouteMember'
-    Left = 1000
-    Top = 480
+    Left = 1200
+    Top = 576
     object AutoIncField1: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1224,8 +1224,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_Visit'
     TableName = 'MovementItem_Visit'
-    Left = 1200
-    Top = 230
+    Left = 1440
+    Top = 276
     object tblMovementItem_VisitId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1270,8 +1270,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 50
-    Top = 570
+    Left = 60
+    Top = 684
     object qryPhotoGroupsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1299,8 +1299,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 280
-    Top = 570
+    Left = 336
+    Top = 684
     object qryPhotosId: TIntegerField
       FieldName = 'Id'
     end
@@ -1321,8 +1321,8 @@ object DM: TDM
   object cdsStoreReals: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 160
-    Top = 350
+    Left = 192
+    Top = 420
     object cdsStoreRealsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1369,8 +1369,8 @@ object DM: TDM
   object cdsStoreRealItems: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 280
-    Top = 350
+    Left = 336
+    Top = 420
     object cdsStoreRealItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1404,8 +1404,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_Promo'
     TableName = 'Movement_Promo'
-    Left = 520
-    Top = 600
+    Left = 624
+    Top = 720
     object tblMovement_PromoId: TIntegerField
       FieldName = 'Id'
     end
@@ -1437,8 +1437,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_PromoPartner'
     TableName = 'MovementItem_PromoPartner'
-    Left = 660
-    Top = 600
+    Left = 792
+    Top = 720
     object tblMovementItem_PromoPartnerId: TIntegerField
       FieldName = 'Id'
     end
@@ -1456,8 +1456,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_PromoGoods'
     TableName = 'MovementItem_PromoGoods'
-    Left = 810
-    Top = 600
+    Left = 972
+    Top = 720
     object tblMovementItem_PromoGoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1484,8 +1484,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_ReturnIn'
     TableName = 'Movement_ReturnIn'
-    Left = 1200
-    Top = 300
+    Left = 1440
+    Top = 360
     object tblMovement_ReturnInId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1547,8 +1547,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_ReturnIn'
     TableName = 'MovementItem_ReturnIn'
-    Left = 1200
-    Top = 380
+    Left = 1440
+    Top = 456
     object tblMovementItem_ReturnInId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1583,8 +1583,8 @@ object DM: TDM
   object cdsReturnIn: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 160
-    Top = 420
+    Left = 192
+    Top = 504
     object cdsReturnInId: TIntegerField
       FieldName = 'Id'
     end
@@ -1658,8 +1658,8 @@ object DM: TDM
   object cdsReturnInItems: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 280
-    Top = 420
+    Left = 336
+    Top = 504
     object cdsReturnInItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1700,8 +1700,8 @@ object DM: TDM
   end
   object qryPromoPartners: TFDQuery
     Connection = conMain
-    Left = 50
-    Top = 710
+    Left = 60
+    Top = 852
     object qryPromoPartnersPartnerName: TStringField
       FieldName = 'PartnerName'
       Size = 255
@@ -1727,8 +1727,8 @@ object DM: TDM
   object qryPromoGoods: TFDQuery
     OnCalcFields = qryPromoGoodsCalcFields
     Connection = conMain
-    Left = 160
-    Top = 710
+    Left = 192
+    Top = 852
     object qryPromoGoodsGoodsName: TStringField
       FieldName = 'GoodsName'
       Size = 255
@@ -1770,8 +1770,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_Task'
     TableName = 'Movement_Task'
-    Left = 520
-    Top = 680
+    Left = 624
+    Top = 816
     object tblMovement_TaskId: TIntegerField
       FieldName = 'Id'
     end
@@ -1793,8 +1793,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_Task'
     TableName = 'MovementItem_Task'
-    Left = 660
-    Top = 680
+    Left = 792
+    Top = 816
     object tblMovementItem_TaskId: TIntegerField
       FieldName = 'Id'
     end
@@ -1821,15 +1821,15 @@ object DM: TDM
   end
   object qrySelect: TFDQuery
     Connection = conMain
-    Left = 160
-    Top = 220
+    Left = 192
+    Top = 264
   end
   object cdsJuridicalCollation: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'DocType;DocDate;DocNum'
     Params = <>
-    Left = 50
-    Top = 780
+    Left = 60
+    Top = 936
     object cdsJuridicalCollationDocId: TIntegerField
       FieldName = 'DocId'
     end
@@ -1883,8 +1883,8 @@ object DM: TDM
   object cdsTasks: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 160
-    Top = 780
+    Left = 192
+    Top = 936
     object cdsTasksId: TIntegerField
       FieldName = 'Id'
     end
@@ -1927,8 +1927,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 170
-    Top = 570
+    Left = 204
+    Top = 684
     object qryPhotoGroupDocsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1973,8 +1973,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_TradeMark'
     TableName = 'Object_TradeMark'
-    Left = 660
-    Top = 490
+    Left = 792
+    Top = 588
     object tblObject_TradeMarkId: TIntegerField
       FieldName = 'Id'
     end
@@ -1993,8 +1993,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_Cash'
     TableName = 'Movement_Cash'
-    Left = 1200
-    Top = 480
+    Left = 1440
+    Top = 576
     object tblMovement_CashId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -2050,8 +2050,8 @@ object DM: TDM
   object qryCash: TFDQuery
     OnCalcFields = qryCashCalcFields
     Connection = conMain
-    Left = 50
-    Top = 500
+    Left = 60
+    Top = 600
     object qryCashId: TIntegerField
       FieldName = 'Id'
     end
@@ -2118,8 +2118,8 @@ object DM: TDM
   object qryGoodsFullForPriceList: TFDQuery
     OnCalcFields = qryGoodsFullForPriceListCalcFields
     Connection = conMain
-    Left = 320
-    Top = 640
+    Left = 384
+    Top = 768
     object qryGoodsFullForPriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -2214,8 +2214,8 @@ object DM: TDM
   end
   object qJuridicalCollationItems: TFDQuery
     Connection = conMain
-    Left = 310
-    Top = 710
+    Left = 372
+    Top = 852
     object qJuridicalCollationItemsValue: TStringField
       FieldName = 'Value'
       Size = 300
@@ -2231,8 +2231,8 @@ object DM: TDM
   object cdsJuridicalCollationDocItems: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 310
-    Top = 775
+    Left = 372
+    Top = 930
     object cdsJuridicalCollationDocItemsDocId: TIntegerField
       FieldName = 'DocId'
     end
@@ -2278,6 +2278,25 @@ object DM: TDM
     end
     object cdsJuridicalCollationDocItemsAmountText: TStringField
       FieldName = 'AmountText'
+    end
+  end
+  object tblObject_SubjectDoc: TFDTable
+    Connection = conMain
+    TableName = 'Object_SubjectDoc'
+    Left = 624
+    Top = 588
+    object IntegerField4: TIntegerField
+      FieldName = 'Id'
+    end
+    object IntegerField5: TIntegerField
+      FieldName = 'ObjectCode'
+    end
+    object StringField1: TStringField
+      FieldName = 'ValueData'
+      Size = 255
+    end
+    object BooleanField1: TBooleanField
+      FieldName = 'isErased'
     end
   end
 end
