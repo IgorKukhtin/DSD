@@ -30,12 +30,12 @@ inherited ConvertRemainsJournalForm: TConvertRemainsJournalForm
           DataController.Filter.TranslateLike = True
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = colTotalSumm
             end
             item
-              Format = ',0.####'
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
               Column = colTotalCount
             end>
@@ -75,8 +75,8 @@ inherited ConvertRemainsJournalForm: TConvertRemainsJournalForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

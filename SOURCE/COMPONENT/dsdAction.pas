@@ -1880,6 +1880,57 @@ type
     property InfoAfterExecute;
   end;
 
+
+  TdsdComponentItem = class(TCollectionItem)
+  private
+    FComponent: TComponent;
+    procedure SetComponent(const Value: TComponent);
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Component: TComponent read FComponent write SetComponent;
+  end;
+
+  TBooleanSetVisibleAction = class(TdsdCustomAction)
+  private
+    FImageIndexFalse: TImageIndex;
+    FImageIndexTrue: TImageIndex;
+    FValue: Boolean;
+    FHintFalse: String;
+    FHintTrue: String;
+    FCaptionFalse: String;
+    FCaptionTrue: String;
+    FComponents: TCollection;
+    procedure SetImageIndexFalse(const Value: TImageIndex);
+    procedure SetImageIndexTrue(const Value: TImageIndex);
+    procedure SetValue(const Value: Boolean);
+    procedure SetCaptionFalse(const Value: String);
+    procedure SetCaptionTrue(const Value: String);
+    procedure SetHintFalse(const Value: String);
+    procedure SetHintTrue(const Value: String);
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure SetVisiableAll;
+  published
+    property Value: Boolean read FValue write SetValue default True;
+    property Components: TCollection read FComponents write FComponents;
+    property HintTrue: String read FHintTrue write SetHintTrue;
+    property HintFalse: String read FHintFalse write SetHintFalse;
+    property CaptionTrue: String read FCaptionTrue write SetCaptionTrue;
+    property CaptionFalse: String read FCaptionFalse write SetCaptionFalse;
+    property ImageIndexTrue: TImageIndex read FImageIndexTrue
+      write SetImageIndexTrue;
+    property ImageIndexFalse: TImageIndex read FImageIndexFalse
+      write SetImageIndexFalse;
+  end;
+
+
 procedure Register;
 
 implementation
@@ -1956,6 +2007,7 @@ begin
   RegisterActions('DSDLib', [TdsdLoadFile_https], TdsdLoadFile_https);
   RegisterActions('DSDLib', [TdsdeSputnikContactsMessages], TdsdeSputnikContactsMessages);
   RegisterActions('DSDLib', [TdsdeSputnikSendSMS], TdsdeSputnikSendSMS);
+  RegisterActions('DSDLib', [TBooleanSetVisibleAction], TBooleanSetVisibleAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -8939,6 +8991,154 @@ begin
   end else ShowMessage('Ошибка отправки СМС сообщений для контакта: ' + FIdHTTP.ResponseText);
 
 end;
+
+{ TdsdComponentItem }
+
+function TdsdComponentItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if Assigned(FComponent) then
+    Result := FComponent.Name
+  else Result := inherited;
+end;
+
+procedure TdsdComponentItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdSetVisibleParamsItem then
+  begin
+     FComponent := TdsdSetVisibleParamsItem(Source).FComponent;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+procedure TdsdComponentItem.SetComponent(const Value: TComponent);
+begin
+  if Value <> FComponent then
+  begin
+     FComponent := Value;
+  end
+end;
+
+{ TBooleanSetVisibleAction }
+
+constructor TBooleanSetVisibleAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FImageIndexTrue := -1;
+  FImageIndexFalse := -1;
+  FHintFalse := 'Показать колонки';
+  FHintTrue := 'Скрыть колонки';
+  FCaptionFalse := 'Показать колонки';
+  FCaptionTrue := 'Скрыть колонки';
+  FValue := True;
+  FComponents := TCollection.Create(TdsdComponentItem);
+end;
+
+destructor TBooleanSetVisibleAction.Destroy;
+begin
+  FreeAndNil(FComponents);
+  inherited;
+end;
+
+procedure TBooleanSetVisibleAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var
+  i: Integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if (Operation = opRemove) then
+  begin
+    for i := 0 to FComponents.Count - 1 do
+      if TdsdComponentItem(FComponents.Items[i]).Component = AComponent then
+        TdsdComponentItem(FComponents.Items[i]).Component := nil;
+  end;
+end;
+
+procedure TBooleanSetVisibleAction.SetVisiableAll;
+  var I: Integer;
+begin
+  for i := 0 to FComponents.Count - 1 do  if Assigned(TdsdComponentItem(FComponents.Items[i]).Component) then
+  begin
+     if TdsdComponentItem(FComponents.Items[i]).Component is TcxGridColumn then
+     begin
+       TcxGridColumn(TdsdComponentItem(FComponents.Items[i]).Component).Visible := Value;
+       TcxGridColumn(TdsdComponentItem(FComponents.Items[i]).Component).VisibleForCustomization := Value;
+     end else if TdsdComponentItem(FComponents.Items[i]).Component is TdxBarButton then
+     begin
+        if Value then
+          TdxBarButton(TdsdComponentItem(FComponents.Items[i]).Component).Visible := ivAlways
+        else TdxBarButton(TdsdComponentItem(FComponents.Items[i]).Component).Visible := ivNever;
+     end else if IsPublishedProp(TdsdComponentItem(FComponents.Items[i]).Component, 'Visible') then
+     begin
+       SetPropValue(TdsdComponentItem(FComponents.Items[i]).Component, 'Visible', Value)
+     end;
+  end;
+end;
+
+function TBooleanSetVisibleAction.LocalExecute: Boolean;
+begin
+  Value := not Value;
+
+  SetVisiableAll;
+end;
+
+procedure TBooleanSetVisibleAction.SetCaptionFalse(const Value: String);
+begin
+  FCaptionFalse := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanSetVisibleAction.SetCaptionTrue(const Value: String);
+begin
+  FCaptionTrue := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanSetVisibleAction.SetHintFalse(const Value: String);
+begin
+  FHintFalse := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanSetVisibleAction.SetHintTrue(const Value: String);
+begin
+  FHintTrue := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanSetVisibleAction.SetImageIndexFalse(const Value: TImageIndex);
+begin
+  FImageIndexFalse := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanSetVisibleAction.SetImageIndexTrue(const Value: TImageIndex);
+begin
+  FImageIndexTrue := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanSetVisibleAction.SetValue(const Value: Boolean);
+begin
+  FValue := Value;
+  if Value then
+  begin
+    ImageIndex := ImageIndexTrue;
+    Caption := CaptionTrue;
+    Hint := HintTrue;
+  end
+  else
+  begin
+    ImageIndex := ImageIndexFalse;
+    Caption := CaptionFalse;
+    Hint := HintFalse;
+  end;
+end;
+
 
 initialization
 
