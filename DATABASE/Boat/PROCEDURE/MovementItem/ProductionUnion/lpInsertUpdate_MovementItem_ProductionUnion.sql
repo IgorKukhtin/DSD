@@ -124,12 +124,13 @@ BEGIN
                                                     , inColorPatternId    := tmpMI.ColorPatternId
                                                     , inProdColorPatternId:= tmpMI.ProdColorPatternId
                                                     , inProdOptionsId     := tmpMI.ProdOptionsId
-                                                    , inAmount            := (tmpMI.Amount * inAmount)::TFloat
-                                                    , inForCount          := tmpMI.ForCount           ::TFloat
+                                                    , inAmount            := tmpMI.Amount     ::TFloat
+                                                    , inForCount          := tmpMI.ForCount   ::TFloat
                                                     , inUserId            := inUserId
                                                      )
      FROM (
-           WITH 
+           WITH
+           -- пересчет по заказу на произв
            tmpOrderInternal AS (SELECT MovementItem.MovementId AS MovementId_OrderInternal
                                 FROM MovementItemFloat AS MIFloat_MovementId 
                                      INNER JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
@@ -155,47 +156,55 @@ BEGIN
                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                                                      AND MIFloat_MovementId.ValueData      = inMovementId_OrderClient
                      )
+         SELECT MovementItem.ObjectId          AS GoodsId
+              , MILO_ReceiptLevel.ObjectId     AS ReceiptLevelId
+              , MILO_ColorPattern.ObjectId     AS ColorPatternId
+              , MILO_ProdColorPattern.ObjectId AS ProdColorPatternId
+              , MILO_ProdOptions.ObjectId      AS ProdOptionsId
+              , MIFloat_ForCount.ValueData     AS ForCount
+              , MovementItem.Amount            AS Amount
+         FROM tmpMI AS MovementItem
+           LEFT JOIN MovementItemLinkObject AS MILO_ReceiptLevel
+                                            ON MILO_ReceiptLevel.MovementItemId = MovementItem.Id
+                                           AND MILO_ReceiptLevel.DescId          = zc_MILinkObject_ReceiptLevel()
+           LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
+                                            ON MILO_ColorPattern.MovementItemId = MovementItem.Id
+                                           AND MILO_ColorPattern.DescId = zc_MILinkObject_ColorPattern()
+           LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
+                                            ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
+                                           AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
+           LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
+                                            ON MILO_ProdOptions.MovementItemId = MovementItem.Id
+                                           AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
+           LEFT JOIN MovementItemFloat AS MIFloat_ForCount
+                                       ON MIFloat_ForCount.MovementItemId = MovementItem.Id
+                                      AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
+        ) AS tmpMI;
+        
  
-           SELECT MovementItem.ObjectId          AS GoodsId
-                , MILO_ReceiptLevel.ObjectId     AS ReceiptLevelId
-                , MILO_ColorPattern.ObjectId     AS ColorPatternId
-                , MILO_ProdColorPattern.ObjectId AS ProdColorPatternId
-                , MILO_ProdOptions.ObjectId      AS ProdOptionsId
-                , MIFloat_ForCount.ValueData     AS ForCount
-                , MovementItem.Amount            AS Amount
-           FROM tmpMI AS MovementItem
-             LEFT JOIN MovementItemLinkObject AS MILO_ReceiptLevel
-                                              ON MILO_ReceiptLevel.MovementItemId = MovementItem.Id
-                                             AND MILO_ReceiptLevel.DescId          = zc_MILinkObject_ReceiptLevel()
-             LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
-                                              ON MILO_ColorPattern.MovementItemId = MovementItem.Id
-                                             AND MILO_ColorPattern.DescId = zc_MILinkObject_ColorPattern()
-             LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
-                                              ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
-                                             AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
-             LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
-                                              ON MILO_ProdOptions.MovementItemId = MovementItem.Id
-                                             AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
-             LEFT JOIN MovementItemFloat AS MIFloat_ForCount
-                                         ON MIFloat_ForCount.MovementItemId = MovementItem.Id
-                                        AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
-          ) AS tmpMI;
-          
-               
-     
- /*    PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                := 0
-                                                    , inParentId          := ioId
-                                                    , inMovementId        := inMovementId
-                                                    , inObjectId          := tmpReceiptGoodsChild.GoodsId
-                                                    , inReceiptLevelId    := tmpReceiptGoodsChild.ReceiptLevelId
-                                                    , inColorPatternId    := tmpReceiptGoodsChild.ColorPatternId
-                                                    , inProdColorPatternId:= tmpReceiptGoodsChild.ProdColorPatternId
-                                                    , inProdOptionsId     := tmpReceiptGoodsChild.ProdOptionsId
-                                                    , inAmount            := tmpReceiptGoodsChild.Value * inAmount
-                                                    , inForCount          := 1
-                                                    , inUserId            := inUserId
-                                                     )
-     FROM (WITH tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId      AS GoodsId_master
+       -- если данных по заказу нет тогда берем из шаблона 
+       IF NOT EXISTS (SELECT 1
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.ParentId   = ioId
+                        AND MovementItem.isErased   = FALSE) 
+       THEN
+           --
+           PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                := 0
+                                                          , inParentId          := ioId
+                                                          , inMovementId        := inMovementId
+                                                          , inObjectId          := tmpReceiptGoodsChild.GoodsId
+                                                          , inReceiptLevelId    := tmpReceiptGoodsChild.ReceiptLevelId
+                                                          , inColorPatternId    := tmpReceiptGoodsChild.ColorPatternId
+                                                          , inProdColorPatternId:= tmpReceiptGoodsChild.ProdColorPatternId
+                                                          , inProdOptionsId     := tmpReceiptGoodsChild.ProdOptionsId
+                                                          , inAmount            := tmpReceiptGoodsChild.Value * inAmount
+                                                          , inForCount          := 1
+                                                          , inUserId            := inUserId
+                                                           )
+     FROM (WITH
+                tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId      AS GoodsId_master
                                               , ObjectLink_Object.ChildObjectId            AS GoodsId
                                               , ObjectLink_GoodsChild.ChildObjectId        AS GoodsId_child
                                               , ObjectLink_ReceiptLevel.ChildObjectId      AS ReceiptLevelId
@@ -252,12 +261,6 @@ BEGIN
                                               , MILO_ReceiptLevel.ObjectId  AS ReceiptLevelId
                                               , MovementItem.Amount         AS Amount
                                          FROM MovementItem
-                                              /*JOIN MovementItem AS MI_Master
-                                                                ON MI_Master.MovementId = inMovementId_OrderClient
-                                                               AND MI_Master.isErased   = FALSE
-                                                               AND MI_Master.DescId     = zc_MI_Master()
-                                                               AND MI_Master.Id         = MovementItem.ParentId
-                                                               AND MI_Master.ObjectId   = inObjectId*/
                                               LEFT JOIN MovementItemLinkObject AS MILO_ReceiptLevel
                                                                                ON MILO_ReceiptLevel.MovementItemId = MovementItem.Id
                                                                               AND MILO_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
@@ -357,7 +360,7 @@ BEGIN
            FROM tmpProdOptItems
 
           ) AS tmpReceiptGoodsChild
-           ;   */
+         ;   
 
 
 END;
