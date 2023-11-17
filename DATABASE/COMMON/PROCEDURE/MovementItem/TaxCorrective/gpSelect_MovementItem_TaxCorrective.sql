@@ -121,7 +121,7 @@ BEGIN
            , tmpGoods.GoodsCode                     AS GoodsCode
 
            , CASE -- на дату у товара
-                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate_Tax
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData <= vbOperDate_Tax
                        THEN ObjectString_Goods_UKTZED_new.ValueData
                   -- у товара
                   ELSE COALESCE (ObjectString_Goods_UKTZED.ValueData,'')
@@ -228,7 +228,7 @@ BEGIN
            , Object_Goods.ObjectCode                AS GoodsCode
 
            , CASE -- на дату у товара
-                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate_Tax
+                  WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData <= vbOperDate_Tax
                        THEN ObjectString_Goods_UKTZED_new.ValueData
                   -- у товара
                   ELSE COALESCE (ObjectString_Goods_UKTZED.ValueData,'')

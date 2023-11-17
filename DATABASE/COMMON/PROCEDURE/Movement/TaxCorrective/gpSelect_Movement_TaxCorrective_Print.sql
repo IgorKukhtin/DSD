@@ -405,7 +405,7 @@ BEGIN
                         , ObjectString_Goods_RUS.ValueData         AS GoodsName_RUS
 
                         , CASE -- на дату у товара
-                               WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData >= vbOperDate_Tax_Tax
+                               WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData <= vbOperDate_Tax_Tax
                                     THEN ObjectString_Goods_UKTZED_new.ValueData
                                -- у товара
                                WHEN ObjectString_Goods_UKTZED.ValueData <> ''
