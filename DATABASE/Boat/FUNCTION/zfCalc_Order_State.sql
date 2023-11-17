@@ -29,7 +29,7 @@ BEGIN
 
                    WHEN inNPP > 0 AND inMovementId_ProductionUnion > 0
                     AND inObjectDescId_ProductionUnion = zc_Object_Goods()
-                   THEN 'В работе (узлы)'
+                   THEN 'Собран (узел)'
 
                    WHEN inNPP > 0 AND inMovementId_OrderInternal > 0
                     AND inObjectDescId_OrderInternal = zc_Object_Goods()
