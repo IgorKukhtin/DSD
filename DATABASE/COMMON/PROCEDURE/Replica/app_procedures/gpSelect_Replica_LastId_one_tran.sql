@@ -29,7 +29,7 @@ $BODY$
     DECLARE vb_Query_start TDateTime;
     DECLARE vb_Count       Integer;
     DECLARE vb_Step_add    Integer;
-    DECLARE vbId_End_start Integer;
+    DECLARE vbId_End_start Bigint;
 BEGIN
 
     -- !!!

@@ -28,7 +28,32 @@ BEGIN
           , tmpColumn AS (SELECT * FROM _replica.gpSelect_Replica_Column(inId_start,inId_end))
        SELECT 10 AS Part
             , case when a.operation ILIKE 'update'
-                      then ' when ' || _replica.zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || a.upd_cols || '-' || a.pk_keys) || ' THEN '
+                      then ' when ' || _replica.zfStr_CHR_39 ('UPDATE-container-{Amount}-Id' )
+                       || ' THEN '
+--                     ||  _replica.zfStr_CHR_39 ('UPDATE ' || a.table_name || ' SET ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
+                       ||  _replica.zfStr_CHR_39 ('UPDATE Container SET ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
+--                     ||  _replica.zfStr_CHR_39 ('UPDATE Container SET Amount = ')
+                       || '|| COALESCE (table_update_data.Amount, 0.0) ||'
+
+                       || _replica.zfStr_CHR_39 (' where '
+
+                       || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 1)  || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 1)|| ' AS Text)'
+    
+                       || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2) <> ''
+                          THEN '||'  || _replica.zfStr_CHR_39 (' AND '
+                            || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2) || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2)|| ' AS Text)'
+                          ELSE '' END
+                       || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3) <> ''
+                          THEN '||'  || _replica.zfStr_CHR_39 (' AND '
+                            || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3) || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3)|| ' AS Text)'
+                          ELSE '' END
+                       || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4) <> ''
+                          THEN '||'  || _replica.zfStr_CHR_39 (' AND '
+                            || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4)|| ' AS Text)'
+                          ELSE '' END
+
+
+                       || ' when ' || _replica.zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || a.upd_cols || '-' || a.pk_keys) || ' THEN '
                        ||  _replica.zfStr_CHR_39 ('update ' || a.table_name || ' SET ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
                        || '|| COALESCE (replace (CAST('
                        ||          CASE WHEN tmpTable1.COLUMN_TYPENAME ILIKE 'TVarChar'

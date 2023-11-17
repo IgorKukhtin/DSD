@@ -53,11 +53,11 @@ BEGIN
 
   IF _replica.zc_isReplica_two() = TRUE
   THEN
-      INSERT INTO _replica.table_update_data_two (schema_name, table_name, pk_keys, pk_values, upd_cols, operation, transaction_id, user_name)
-           VALUES (TG_TABLE_SCHEMA, TG_TABLE_NAME, 'Id', current_row.Id, _cols, TG_OP, txid_current(), session_user);
+      INSERT INTO _replica.table_update_data_two (schema_name, table_name, pk_keys, pk_values, upd_cols, operation, transaction_id, user_name, amount)
+           VALUES (TG_TABLE_SCHEMA, TG_TABLE_NAME, 'Id', current_row.Id, _cols, TG_OP, txid_current(), session_user, current_row.amount);
   ELSE
-      INSERT INTO _replica.table_update_data (schema_name, table_name, pk_keys, pk_values, upd_cols, operation, transaction_id, user_name)  
-           VALUES (TG_TABLE_SCHEMA, TG_TABLE_NAME, 'Id', current_row.Id, _cols, TG_OP, txid_current(), session_user);  
+      INSERT INTO _replica.table_update_data (schema_name, table_name, pk_keys, pk_values, upd_cols, operation, transaction_id, user_name, amount)
+           VALUES (TG_TABLE_SCHEMA, TG_TABLE_NAME, 'Id', current_row.Id, _cols, TG_OP, txid_current(), session_user, current_row.amount);
   END IF;
 
   -- уведомление клиенту
@@ -65,6 +65,7 @@ BEGIN
 
   RETURN current_row;
 
+END;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
