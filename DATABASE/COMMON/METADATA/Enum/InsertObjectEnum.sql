@@ -9592,7 +9592,7 @@ BEGIN
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
                                                        inName          := 'Загрузить код UKTZED из файла (по коду товара)', 
-                                                       inProcedureName := 'gpInsertUpdate_Object_Goods_UKTZED2_From_Excel', 
+                                                       inProcedureName := 'gpInsertUpdate_Object_Goods_UKTZED_byCode_Load', 
                                                        inSession       := lfGet_User_Session (vbUserId));
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_GoodsUKTZED2');
@@ -9721,7 +9721,7 @@ BEGIN
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
                                                        inName          := 'Загрузить код UKTZED из файла для группы (Назв.группы)', 
-                                                       inProcedureName := 'gpInsertUpdate_Object_GoodsGroup_UKTZED2_From_Excel', 
+                                                       inProcedureName := 'gpInsertUpdate_Object_GoodsGroup_UKTZED_byName_Load', 
                                                        inSession       := lfGet_User_Session (vbUserId));
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_GoodsGroupUKTZED2');

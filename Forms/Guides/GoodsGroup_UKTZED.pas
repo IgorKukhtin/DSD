@@ -78,10 +78,10 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     macStartLoad_UKTZEDnew: TMultiAction;
     bbStartLoad_UKTZEDnew: TdxBarButton;
-    spGetImportSettingId_2: TdsdStoredProc;
-    actGetImportSetting_UKTZEDnew2: TdsdExecStoredProc;
-    macStartLoad_UKTZEDnew2: TMultiAction;
-    bbStartLoad_UKTZEDnew2: TdxBarButton;
+    spGetImportSettingId_byName: TdsdStoredProc;
+    actGetImportSetting_UKTZEDnewByName: TdsdExecStoredProc;
+    macStartLoad_UKTZEDnewByName: TMultiAction;
+    bbStartLoad_UKTZEDnewByName: TdxBarButton;
   private
     { Private declarations }
   public

@@ -400,7 +400,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad_UKTZEDnew2'
+          ItemName = 'bbStartLoad_UKTZEDnewByCode'
         end
         item
           Visible = True
@@ -458,8 +458,8 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       Action = macStartLoad_UKTZEDnew
       Category = 0
     end
-    object bbStartLoad_UKTZEDnew2: TdxBarButton
-      Action = macStartLoad_UKTZEDnew2
+    object bbStartLoad_UKTZEDnewByCode: TdxBarButton
+      Action = macStartLoad_UKTZEDnewByCode
       Category = 0
     end
   end
@@ -467,14 +467,14 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
     Images = dmMain.ImageList
     Left = 208
     Top = 288
-    object actGetImportSetting_UKTZEDnew2: TdsdExecStoredProc
+    object actGetImportSetting_UKTZEDnewByCode: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId_2
+      StoredProc = spGetImportSettingId_byCode
       StoredProcList = <
         item
-          StoredProc = spGetImportSettingId_2
+          StoredProc = spGetImportSettingId_byCode
         end>
       Caption = 'actGetImportSetting_UKTZEDnew'
     end
@@ -546,12 +546,12 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
-    object macStartLoad_UKTZEDnew2: TMultiAction
+    object macStartLoad_UKTZEDnewByCode: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
         item
-          Action = actGetImportSetting_UKTZEDnew2
+          Action = actGetImportSetting_UKTZEDnewByCode
         end
         item
           Action = actDoLoad
@@ -830,7 +830,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
     Left = 512
     Top = 144
   end
-  object spGetImportSettingId_2: TdsdStoredProc
+  object spGetImportSettingId_byCode: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
     DataSets = <
       item
