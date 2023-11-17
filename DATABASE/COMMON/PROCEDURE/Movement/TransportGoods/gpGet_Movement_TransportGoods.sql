@@ -29,7 +29,6 @@ RETURNS TABLE (Id Integer, IdBarCode TVarChar
              , TotalCountBox TFloat
              , TotalWeightBox TFloat
              , BarCode TVarChar
-             , ModelName TVarChar, BrandName TVarChar
               )
 AS
 $BODY$
@@ -274,9 +273,6 @@ BEGIN
            , 0  :: TFloat   AS TotalCountBox
            , 0  :: TFloat   AS TotalWeightBox
            , (zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Transport.Id) || '0')  :: TVarChar AS BarCode -- ш/к путевого листа
-           
-           , COALESCE (Object_CarModel.ValueData,'') ::TVarChar  AS ModelName
-           , COALESCE (Object_CarType.ValueData,'') ::TVarChar   AS BrandName
 
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberMark
@@ -441,4 +437,4 @@ ALTER FUNCTION gpGet_Movement_TransportGoods (Integer, Integer, TDateTime, TVarC
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_TransportGoods22 (ioId:= 149691, inInvNumber:= '1', inOperDate:= '01.10.2013 3:00:00',............, inSession:= '2')
--- select * from gpGet_Movement_TransportGoods(inMovementId := 24561040 , inMovementId_Sale := 24559843 , inOperDate := ('17.02.2023')::TDateTime ,  inSession := '9457');
+--select * from gpGet_Movement_TransportGoods(inMovementId := 24561040 , inMovementId_Sale := 24559843 , inOperDate := ('17.02.2023')::TDateTime ,  inSession := '9457');

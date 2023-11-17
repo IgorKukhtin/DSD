@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime
              , InvNumberPartner_Sale TVarChar, OperDatePartner_Sale TDateTime
              , RouteName TVarChar
-             , CarName TVarChar, CarModelName TVarChar, CarBrandName TVarChar, CarTrailerName TVarChar
+             , CarName TVarChar, CarBrandName TVarChar, CarModelName TVarChar, CarColorName TVarChar, CarTypeName TVarChar
+             , CarTrailerName TVarChar, CarTrailerBrandName TVarChar, CarTrailerModelName TVarChar, CarTrailerColorName TVarChar, CarTrailerTypeName TVarChar
              , PersonalDriverName TVarChar
              , CarJuridicalName TVarChar
              , MemberName1 TVarChar
@@ -104,9 +105,18 @@ BEGIN
 
            , Object_Route.ValueData          AS RouteName
            , Object_Car.ValueData            AS CarName
-           , COALESCE (Object_CarModel.ValueData,'') ::TVarChar AS CarModelName
-           , COALESCE (Object_CarType.ValueData, '')  ::TVarChar AS CarBrandName
-           , Object_CarTrailer.ValueData     AS CarTrailerName
+           , Object_CarModel.ValueData       AS CarBrandName
+           , Object_CarType.ValueData        AS CarModelName
+           , Object_CarObjectColor.ValueData AS CarColorName
+           , Object_CarProperty.ValueData    AS CarTypeName
+           
+           , Object_CarTrailer.ValueData            AS CarTrailerName
+           , Object_CarTrailerModel.ValueData       AS CarTrailerBrandName
+           , Object_CarTrailerType.ValueData        AS CarTrailerModelName
+           , Object_CarTrailerObjectColor.ValueData AS CarTrailerColorName
+           , Object_CarTrailerProperty.ValueData    AS CarTrailerTypeName
+            
+
            , Object_PersonalDriver.ValueData AS PersonalDriverName
            , COALESCE (OH_JuridicalDetails_car.FullName, CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() 
                                                               THEN OH_JuridicalDetails_From.FullName 
@@ -252,28 +262,61 @@ BEGIN
                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
 
+
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel                                            -- авто 
                                  ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
-                                AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-            LEFT JOIN ObjectLink AS ObjectLink_CarExternal_CarModel                                    -- авто стороннее
-                                 ON ObjectLink_CarExternal_CarModel.ObjectId = Object_Car.Id             
-                                AND ObjectLink_CarExternal_CarModel.DescId = zc_ObjectLink_CarExternal_CarModel()
-
-            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = COALESCE(ObjectLink_Car_CarModel.ChildObjectId, ObjectLink_CarExternal_CarModel.ChildObjectId) 
+                                AND ObjectLink_Car_CarModel.DescId in (zc_ObjectLink_Car_CarModel(), zc_ObjectLink_CarExternal_CarModel())
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
                                  ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_CarType.DescId IN (zc_ObjectLink_Car_CarType(), zc_ObjectLink_CarExternal_CarType())
             LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_ObjectColor
+                                 ON ObjectLink_Car_ObjectColor.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_ObjectColor.DescId IN (zc_ObjectLink_Car_ObjectColor(), zc_ObjectLink_CarExternal_ObjectColor())
+            LEFT JOIN Object AS Object_CarObjectColor ON Object_CarObjectColor.Id = ObjectLink_Car_ObjectColor.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarProperty
+                                 ON ObjectLink_Car_CarProperty.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarProperty.DescId IN (zc_ObjectLink_Car_CarProperty(), zc_ObjectLink_CarExternal_CarProperty())
+            LEFT JOIN Object AS Object_CarProperty ON Object_CarProperty.Id = ObjectLink_Car_CarProperty.ChildObjectId
+
+
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
                                          ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
                                         AND MovementLinkObject_CarTrailer.DescId = zc_MovementLinkObject_CarTrailer()
             LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MovementLinkObject_CarTrailer.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_CarTrailer_CarModel                                            -- авто 
+                                 ON ObjectLink_CarTrailer_CarModel.ObjectId = Object_CarTrailer.Id
+                                AND ObjectLink_CarTrailer_CarModel.DescId in (zc_ObjectLink_Car_CarModel(), zc_ObjectLink_CarExternal_CarModel())
+            LEFT JOIN Object AS Object_CarTrailerModel ON Object_CarTrailerModel.Id = ObjectLink_CarTrailer_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarTrailerType
+                                 ON ObjectLink_Car_CarTrailerType.ObjectId = Object_CarTrailer.Id
+                                AND ObjectLink_Car_CarTrailerType.DescId IN (zc_ObjectLink_Car_CarType(), zc_ObjectLink_CarExternal_CarType())
+            LEFT JOIN Object AS Object_CarTrailerType ON Object_CarTrailerType.Id = ObjectLink_Car_CarTrailerType.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_CarTrailer_ObjectColor
+                                 ON ObjectLink_CarTrailer_ObjectColor.ObjectId = Object_CarTrailer.Id
+                                AND ObjectLink_CarTrailer_ObjectColor.DescId IN (zc_ObjectLink_Car_ObjectColor(), zc_ObjectLink_CarExternal_ObjectColor())
+            LEFT JOIN Object AS Object_CarTrailerObjectColor ON Object_CarTrailerObjectColor.Id = ObjectLink_CarTrailer_ObjectColor.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_CarTrailer_CarProperty
+                                 ON ObjectLink_CarTrailer_CarProperty.ObjectId = Object_CarTrailer.Id
+                                AND ObjectLink_CarTrailer_CarProperty.DescId IN (zc_ObjectLink_Car_CarProperty(), zc_ObjectLink_CarExternal_CarProperty())
+            LEFT JOIN Object AS Object_CarTrailerProperty ON Object_CarTrailerProperty.Id = ObjectLink_CarTrailer_CarProperty.ChildObjectId
+
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id

@@ -114,6 +114,12 @@ type
     PersonalDriverItemName: TcxGridDBColumn;
     Address_Unit: TcxGridDBColumn;
     CarBrandName: TcxGridDBColumn;
+    CarColorName: TcxGridDBColumn;
+    CarTypeName: TcxGridDBColumn;
+    CarTrailerModelName: TcxGridDBColumn;
+    CarTrailerBrandName: TcxGridDBColumn;
+    CarTrailerColorName: TcxGridDBColumn;
+    CarTrailerTypeName: TcxGridDBColumn;
   private
     { Private declarations }
   public

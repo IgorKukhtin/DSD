@@ -314,21 +314,6 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 80
           end
-          object CarModelName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-            DataBinding.FieldName = 'CarModelName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object CarBrandName: TcxGridDBColumn
-            Caption = #1052#1086#1076#1077#1083#1100' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-            DataBinding.FieldName = 'CarBrandName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 83
-          end
           object CarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
@@ -336,12 +321,76 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object CarModelName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object CarBrandName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarBrandName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object CarColorName: TcxGridDBColumn
+            Caption = #1062#1074#1077#1090' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarColorName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object CarTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarTypeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
           object CarTrailerName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1087#1088#1080#1094#1077#1087')'
             DataBinding.FieldName = 'CarTrailerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
+          end
+          object CarTrailerModelName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' '#1087#1088#1080#1094#1077#1087#1072
+            DataBinding.FieldName = 'CarTrailerModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object CarTrailerBrandName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'a '#1087#1088#1080#1094#1077#1087#1072
+            DataBinding.FieldName = 'CarTrailerBrandName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object CarTrailerColorName: TcxGridDBColumn
+            Caption = #1062#1074#1077#1090' '#1087#1088#1080#1094#1077#1087#1072
+            DataBinding.FieldName = 'CarTrailerColorName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object CarTrailerTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1087#1088#1080#1094#1077#1087#1072
+            DataBinding.FieldName = 'CarTrailerTypeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object PersonalDriverItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1074#1086#1076#1080#1090#1077#1083#1100')'

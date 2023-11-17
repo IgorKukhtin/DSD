@@ -5841,11 +5841,24 @@ begin
           ContentCode := 'BRAND';
           Content := HeaderDataSet.FieldByName('CarBrandName').asString;
         end;
-      with ApplicableNote.Add do
-      begin
-        ContentCode := 'MODEL';
-        Content := HeaderDataSet.FieldByName('CarModelName').asString;
-      end;
+      if HeaderDataSet.FieldByName('CarModelName').asString <> '' then
+        with ApplicableNote.Add do
+        begin
+          ContentCode := 'MODEL';
+          Content := HeaderDataSet.FieldByName('CarModelName').asString;
+        end;
+      if HeaderDataSet.FieldByName('CarColorName').asString <> '' then
+        with ApplicableNote.Add do
+        begin
+          ContentCode := 'COLOR';
+          Content := HeaderDataSet.FieldByName('CarColorName').asString;
+        end;
+      if HeaderDataSet.FieldByName('CarTypeName').asString <> '' then
+        with ApplicableNote.Add do
+        begin
+          ContentCode := 'TYPE';
+          Content := HeaderDataSet.FieldByName('CarTypeName').asString;
+        end;
     end;
     // Автомобіль (прицеп)
     if HeaderDataSet.FieldByName('CarTrailerName').asString <> '' then
@@ -5861,10 +5874,23 @@ begin
             ContentCode := 'BRAND';
             Content := HeaderDataSet.FieldByName('CarTrailerBrandName').asString;
           end;
+        if HeaderDataSet.FieldByName('CarTrailerModelName').asString <> '' then
+          with ApplicableNote.Add do
+          begin
+            ContentCode := 'MODEL';
+            Content := HeaderDataSet.FieldByName('CarTrailerModelName').asString;
+          end;
+      if HeaderDataSet.FieldByName('CarTrailerColorName').asString <> '' then
         with ApplicableNote.Add do
         begin
-          ContentCode := 'MODEL';
-          Content := HeaderDataSet.FieldByName('CarTrailerModelName').asString;
+          ContentCode := 'COLOR';
+          Content := HeaderDataSet.FieldByName('CarTrailerColorName').asString;
+        end;
+      if HeaderDataSet.FieldByName('CarTrailerTypeName').asString <> '' then
+        with ApplicableNote.Add do
+        begin
+          ContentCode := 'TYPE';
+          Content := HeaderDataSet.FieldByName('CarTrailerTypeName').asString;
         end;
       end;
     end;
