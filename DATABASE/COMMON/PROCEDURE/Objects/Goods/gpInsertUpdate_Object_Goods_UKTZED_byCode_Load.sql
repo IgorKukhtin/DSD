@@ -1,9 +1,9 @@
- -- Function: gpInsertUpdate_Object_Goods_UKTZED_From_Excel()
+ -- Function: gpInsertUpdate_Object_Goods_UKTZED_byCode_Load()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_UKTZED2_From_Excel (Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_UKTZED_byCode_Load (Integer, TVarChar, TDateTime, TVarChar);
 
-
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods_UKTZED2_From_Excel(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods_UKTZED_byCode_Load(
     IN inCode             Integer   , -- 
     IN inCodeUKTZED_new   TVarChar  ,
     IN inDateUKTZED_new   TDateTime ,

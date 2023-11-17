@@ -41,9 +41,9 @@ BEGIN
             , COALESCE(Object_Goods_Main.NameUkr, 
                        Object_Goods_Main.Name, 
                        MIString_GoodsName.ValueData)                AS GoodsName
-            , MovementItem.Amount
+            , Round(MovementItem.Amount, 3)::TFloat
 
-            , MIFloat_PriceWithVAT.ValueData                        AS PriceWithVAT
+            , Round(MIFloat_PriceWithVAT.ValueData, 2)::TFloat                       AS PriceWithVAT
             , Round(MIFloat_PriceWithVAT.ValueData * MovementItem.Amount, 2)::TFloat AS Summa
             , MIFloat_VAT.ValueData                                 AS VAT
 
@@ -99,4 +99,5 @@ $BODY$
 
 --реяр
 -- 
-SELECT * FROM gpSelect_MovementItem_ConvertRemains_Print (inMovementId:= 33817411, inSession:= '3')
+
+select * from gpSelect_MovementItem_ConvertRemains_Print(inMovementId := 34042631 ,  inSession := '3');

@@ -1,8 +1,10 @@
- -- Function: gpInsertUpdate_Object_GoodsGroup_UKTZED2_From_Excel()
+ -- Function: gpInsertUpdate_Object_GoodsGroup_UKTZED_byName_Load()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup_UKTZED2_From_Excel (TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup_UKTZED_byName_Load (TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup_UKTZED2_From_Excel(
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup_UKTZED_byName_Load(
     IN inGoodsGroupName   TVarChar   ,
     IN inParentName       TVarChar  , --
     IN inCodeUKTZED_new   TVarChar  ,
@@ -117,4 +119,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_GoodsGroup_UKTZED2_From_Excel( 'круг' ::TVarChar, 'сырье оболочка':: TVarChar, '5555xcsxcsc'::TVarChar,'15.11.2023' ::TDateTime, '9457'::TVarChar)
+-- select * from gpInsertUpdate_Object_GoodsGroup_UKTZED_byName_Load( 'круг' ::TVarChar, 'сырье оболочка':: TVarChar, '5555xcsxcsc'::TVarChar,'15.11.2023' ::TDateTime, '9457'::TVarChar)
