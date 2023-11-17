@@ -1788,48 +1788,48 @@
     TabOrder = 9
     object btnInsert: TcxButton
       Left = 26
-      Top = 6
-      Width = 101
+      Top = 7
+      Width = 90
       Height = 25
       Action = actInsert
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 139
+      Left = 122
       Top = 6
-      Width = 101
+      Width = 90
       Height = 25
       Action = actUpdate
       TabOrder = 1
     end
     object btnComplete: TcxButton
-      Left = 280
+      Left = 510
       Top = 6
-      Width = 174
+      Width = 180
       Height = 25
       Action = actUpdate2
       TabOrder = 2
     end
-    object btnUnComplete: TcxButton
-      Left = 466
+    object btnShowAllOptItems: TcxButton
+      Left = 696
       Top = 6
-      Width = 145
+      Width = 130
       Height = 25
       Action = actShowAllOptItems
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 648
+      Left = 374
       Top = 6
-      Width = 155
+      Width = 130
       Height = 25
       Action = actUpdate_OrderClient
       TabOrder = 4
     end
     object btnFormClose: TcxButton
-      Left = 1004
+      Left = 832
       Top = 6
-      Width = 153
+      Width = 130
       Height = 25
       Action = actFormClose
       ParentShowHint = False
@@ -1837,7 +1837,7 @@
       TabOrder = 5
     end
     object cxButton1: TcxButton
-      Left = 815
+      Left = 218
       Top = 6
       Width = 150
       Height = 25
@@ -2358,8 +2358,8 @@
     object actUpdate2: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' / '#1060#1086#1090#1086
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' / '#1060#1086#1090#1086
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' / '#1060#1086#1090#1086
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' / '#1060#1086#1090#1086
       ImageIndex = 29
       FormName = 'TProductDocumentPhotoEditForm'
       FormNameParam.Value = 'TProductDocumentPhotoEditForm'

@@ -150,7 +150,7 @@ type
     Amount_ch2: TcxGridDBColumn;
     IsErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    cxTopSplitter: TcxSplitter;
+    cxSplitterBottom: TcxSplitter;
     Artikel_ch2: TcxGridDBColumn;
     InvNumber_OrderPartner_Full_ch2: TcxGridDBColumn;
     spInsert_MI_Send: TdsdStoredProc;
@@ -272,13 +272,13 @@ type
     actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnInsertUpdateMovement: TcxButton;
-    btntAdd_limit: TcxButton;
+    btnUpdate: TcxButton;
     btnCompleteMovement: TcxButton;
     btnUnCompleteMovement: TcxButton;
     btnSetErased: TcxButton;
     btnShowAll: TcxButton;
     btnInsertAction: TcxButton;
-    btnUpdateAction: TcxButton;
+    btnInsertRecordPartion: TcxButton;
     btnCompleteMovement_andSave: TcxButton;
     btnFormClose: TcxButton;
     actCompleteMovement_andSave: TChangeGuidesStatus;
@@ -289,6 +289,8 @@ type
     bbsPartion: TdxBarSubItem;
     bbsReserv: TdxBarSubItem;
     bbsPrint: TdxBarSubItem;
+    actSetVisible_Grid: TBooleanSetVisibleAction;
+    cxButton1: TcxButton;
   private
   public
   end;

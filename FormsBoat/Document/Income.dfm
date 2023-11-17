@@ -1089,7 +1089,6 @@ object IncomeForm: TIncomeForm
         Height = 60
         Align = alBottom
         TabOrder = 1
-        Visible = False
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
@@ -1269,7 +1268,7 @@ object IncomeForm: TIncomeForm
           GridView = cxGridDBTableViewChild
         end
       end
-      object cxTopSplitter: TcxSplitter
+      object cxSplitterBottom: TcxSplitter
         Left = 0
         Top = 231
         Width = 1372
@@ -1277,7 +1276,7 @@ object IncomeForm: TIncomeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        Visible = False
+        ExplicitTop = 225
       end
     end
     object cxTabSheetCost: TcxTabSheet
@@ -1568,7 +1567,7 @@ object IncomeForm: TIncomeForm
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
-      Width = 163
+      Width = 155
       Height = 25
       Action = actInsertUpdateMovement
       ParentShowHint = False
@@ -1648,7 +1647,7 @@ object IncomeForm: TIncomeForm
     object btnCompleteMovement_andSave: TcxButton
       Left = 24
       Top = 37
-      Width = 163
+      Width = 155
       Height = 25
       Action = actCompleteMovement_andSave
       ParentShowHint = False
@@ -1664,6 +1663,16 @@ object IncomeForm: TIncomeForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 9
+    end
+    object cxButton1: TcxButton
+      Left = 871
+      Top = 6
+      Width = 153
+      Height = 25
+      Action = actSetVisible_Grid
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 10
     end
   end
   object FormParams: TdsdFormParams
@@ -2238,6 +2247,11 @@ object IncomeForm: TIncomeForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = actSetVisible_Grid
+        Properties.Strings = (
+          'Value')
+      end
       item
         Component = cbPrice
         Properties.Strings = (
@@ -3810,6 +3824,23 @@ object IncomeForm: TIncomeForm
           StoredProc = spGet_Id_Nul
         end>
       Caption = 'actGet_Id_Nul'
+    end
+    object actSetVisible_Grid: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxSplitterBottom
+        end
+        item
+          Component = cxGridChild
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1056#1077#1079#1077#1088#1074
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1077#1079#1077#1088#1074
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1056#1077#1079#1077#1088#1074
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1077#1079#1077#1088#1074
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
     end
   end
   object MasterDS: TDataSource

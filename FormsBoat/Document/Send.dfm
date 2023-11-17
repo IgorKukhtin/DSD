@@ -784,7 +784,6 @@ object SendForm: TSendForm
         Height = 124
         Align = alBottom
         TabOrder = 1
-        Visible = False
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
@@ -991,7 +990,7 @@ object SendForm: TSendForm
           GridView = cxGridDBTableViewChild
         end
       end
-      object cxTopSplitter: TcxSplitter
+      object cxSplitterBottom: TcxSplitter
         Left = 0
         Top = 141
         Width = 1053
@@ -999,6 +998,7 @@ object SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 135
       end
     end
   end
@@ -1012,27 +1012,27 @@ object SendForm: TSendForm
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 4
-      Width = 163
+      Width = 155
       Height = 25
       Action = actInsertUpdateMovement
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
     end
-    object btntAdd_limit: TcxButton
-      Left = 200
-      Top = 35
-      Width = 178
+    object btnUpdate: TcxButton
+      Left = 352
+      Top = 4
+      Width = 125
       Height = 25
-      Action = macInsert_MI_Send
+      Action = macUpdate
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1
     end
     object btnCompleteMovement: TcxButton
-      Left = 559
-      Top = 6
-      Width = 150
+      Left = 503
+      Top = 4
+      Width = 145
       Height = 25
       Action = actCompleteMovement
       ParentShowHint = False
@@ -1040,9 +1040,9 @@ object SendForm: TSendForm
       TabOrder = 2
     end
     object btnUnCompleteMovement: TcxButton
-      Left = 559
-      Top = 37
-      Width = 150
+      Left = 503
+      Top = 35
+      Width = 145
       Height = 25
       Action = actUnCompleteMovement
       ParentShowHint = False
@@ -1050,9 +1050,9 @@ object SendForm: TSendForm
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 398
-      Top = 4
-      Width = 139
+      Left = 352
+      Top = 35
+      Width = 125
       Height = 25
       Action = actSetErased
       ParentShowHint = False
@@ -1060,8 +1060,8 @@ object SendForm: TSendForm
       TabOrder = 4
     end
     object btnShowAll: TcxButton
-      Left = 729
-      Top = 6
+      Left = 664
+      Top = 4
       Width = 153
       Height = 25
       Action = actShowAll
@@ -1072,19 +1072,19 @@ object SendForm: TSendForm
     object btnInsertAction: TcxButton
       Left = 200
       Top = 4
-      Width = 178
+      Width = 125
       Height = 25
       Action = mactAdd
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
     end
-    object btnUpdateAction: TcxButton
-      Left = 398
+    object btnInsertRecordPartion: TcxButton
+      Left = 200
       Top = 35
-      Width = 139
+      Width = 125
       Height = 25
-      Action = actSetErasedChild
+      Action = macInsertRecordPartion
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
@@ -1092,7 +1092,7 @@ object SendForm: TSendForm
     object btnCompleteMovement_andSave: TcxButton
       Left = 24
       Top = 35
-      Width = 163
+      Width = 155
       Height = 25
       Action = actCompleteMovement_andSave
       ParentShowHint = False
@@ -1100,14 +1100,24 @@ object SendForm: TSendForm
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 729
-      Top = 37
+      Left = 664
+      Top = 35
       Width = 153
       Height = 25
       Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 9
+    end
+    object cxButton1: TcxButton
+      Left = 828
+      Top = 4
+      Width = 153
+      Height = 25
+      Action = actSetVisible_Grid
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 10
     end
   end
   object FormParams: TdsdFormParams
@@ -1978,7 +1988,7 @@ object SendForm: TSendForm
           StoredProc = spErasedMIchild
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1993,8 +2003,8 @@ object SendForm: TSendForm
         item
           StoredProc = spErasedMIMaster
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2009,8 +2019,8 @@ object SendForm: TSendForm
         item
           StoredProc = spUnErasedMIchild
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -3089,7 +3099,7 @@ object SendForm: TSendForm
         item
           Action = actRefresh
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 1
       WithoutNext = True
@@ -3175,7 +3185,7 @@ object SendForm: TSendForm
         item
           Action = actRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 0
       ShortCut = 113
@@ -3533,6 +3543,23 @@ object SendForm: TSendForm
       ImageIndex = 86
       Status = mtComplete
       Guides = StatusGuides
+    end
+    object actSetVisible_Grid: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxSplitterBottom
+        end
+        item
+          Component = cxGridChild
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1056#1077#1079#1077#1088#1074
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1077#1079#1077#1088#1074
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1056#1077#1079#1077#1088#1074
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1077#1079#1077#1088#1074
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
     end
   end
   object MasterDS: TDataSource

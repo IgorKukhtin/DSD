@@ -1361,6 +1361,8 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
+            ExplicitLeft = -2
+            ExplicitTop = 18
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1755,7 +1757,7 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 1
           end
         end
-        object cxSplitter1: TcxSplitter
+        object cxSplitterlLeft: TcxSplitter
           Left = 521
           Top = 1
           Width = 8
@@ -3523,7 +3525,7 @@ object OrderClientForm: TOrderClientForm
     Left = 344
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 132
   end
   object Panel_btn: TPanel
@@ -3533,10 +3535,11 @@ object OrderClientForm: TOrderClientForm
     Height = 64
     Align = alBottom
     TabOrder = 17
+    ExplicitTop = 573
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
-      Width = 163
+      Width = 155
       Height = 25
       Action = actInsertUpdateMovement
       ParentShowHint = False
@@ -3544,8 +3547,8 @@ object OrderClientForm: TOrderClientForm
       TabOrder = 0
     end
     object btntAdd_limit: TcxButton
-      Left = 223
-      Top = 35
+      Left = 364
+      Top = 37
       Width = 105
       Height = 25
       Action = SetErased
@@ -3574,7 +3577,7 @@ object OrderClientForm: TOrderClientForm
       TabOrder = 3
     end
     object btnShowAll: TcxButton
-      Left = 681
+      Left = 655
       Top = 6
       Width = 153
       Height = 25
@@ -3584,8 +3587,8 @@ object OrderClientForm: TOrderClientForm
       TabOrder = 4
     end
     object btnInsertAction: TcxButton
-      Left = 223
-      Top = 5
+      Left = 364
+      Top = 6
       Width = 105
       Height = 25
       Action = InsertRecordGoods
@@ -3596,7 +3599,7 @@ object OrderClientForm: TOrderClientForm
     object btnCompleteMovement_andSave: TcxButton
       Left = 24
       Top = 37
-      Width = 163
+      Width = 155
       Height = 25
       Action = actCompleteMovement_andSave
       ParentShowHint = False
@@ -3604,7 +3607,7 @@ object OrderClientForm: TOrderClientForm
       TabOrder = 6
     end
     object btnFormClose: TcxButton
-      Left = 681
+      Left = 655
       Top = 35
       Width = 153
       Height = 25
@@ -3612,6 +3615,26 @@ object OrderClientForm: TOrderClientForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
+    end
+    object btnChangeNPP: TcxButton
+      Left = 194
+      Top = 6
+      Width = 159
+      Height = 25
+      Action = macChangeNPP
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
+    end
+    object cxButton1: TcxButton
+      Left = 820
+      Top = 6
+      Width = 174
+      Height = 25
+      Action = actSetVisible_Grid
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 9
     end
   end
   object FormParams: TdsdFormParams
@@ -4127,8 +4150,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 219
-    Top = 135
+    Left = 59
+    Top = 263
     object macChangeSumm: TMultiAction
       Category = 'NPP'
       MoveParams = <>
@@ -5287,6 +5310,23 @@ object OrderClientForm: TOrderClientForm
       ImageIndex = 86
       Status = mtComplete
       Guides = StatusGuides
+    end
+    object actSetVisible_Grid: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxSplitterlLeft
+        end
+        item
+          Component = PanelProdColorItems
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
     end
   end
   object MasterDS: TDataSource

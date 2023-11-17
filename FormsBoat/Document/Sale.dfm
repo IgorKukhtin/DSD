@@ -614,14 +614,12 @@ object SaleForm: TSaleForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 254
     ClientRectBottom = 196
     ClientRectRight = 1152
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 230
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -630,7 +628,6 @@ object SaleForm: TSaleForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitHeight = 230
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -638,7 +635,6 @@ object SaleForm: TSaleForm
           Height = 170
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 228
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -987,13 +983,10 @@ object SaleForm: TSaleForm
     Height = 69
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -220
-    ExplicitTop = 388
-    ExplicitWidth = 1372
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
-      Width = 163
+      Width = 155
       Height = 25
       Action = actInsertUpdateMovement
       ParentShowHint = False
@@ -1073,7 +1066,7 @@ object SaleForm: TSaleForm
     object btnCompleteMovement_andSave: TcxButton
       Left = 24
       Top = 37
-      Width = 163
+      Width = 155
       Height = 25
       Action = actCompleteMovement_andSave
       ParentShowHint = False

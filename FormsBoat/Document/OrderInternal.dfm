@@ -1125,6 +1125,7 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Child
+          ExplicitTop = 322
         end
         object Panel_btn: TPanel
           Left = 1
@@ -1136,7 +1137,7 @@ object OrderInternalForm: TOrderInternalForm
           object btnInsertUpdateMovement: TcxButton
             Left = 12
             Top = 6
-            Width = 163
+            Width = 155
             Height = 25
             Action = actInsertUpdateMovement
             ParentShowHint = False
@@ -1144,7 +1145,7 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 0
           end
           object btnCompleteMovement: TcxButton
-            Left = 739
+            Left = 682
             Top = 6
             Width = 150
             Height = 25
@@ -1154,7 +1155,7 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 1
           end
           object btnUnCompleteMovement: TcxButton
-            Left = 739
+            Left = 682
             Top = 37
             Width = 150
             Height = 25
@@ -1164,9 +1165,9 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 2
           end
           object btnSetErased: TcxButton
-            Left = 385
+            Left = 364
             Top = 37
-            Width = 155
+            Width = 145
             Height = 25
             Action = actSetErased
             ParentShowHint = False
@@ -1174,9 +1175,9 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 3
           end
           object btnShowAll: TcxButton
-            Left = 897
+            Left = 895
             Top = 6
-            Width = 176
+            Width = 135
             Height = 25
             Action = actShowAll
             ParentShowHint = False
@@ -1186,7 +1187,7 @@ object OrderInternalForm: TOrderInternalForm
           object btnInsertAction: TcxButton
             Left = 199
             Top = 6
-            Width = 178
+            Width = 145
             Height = 25
             Action = actInsertRecordGoods
             ParentShowHint = False
@@ -1196,7 +1197,7 @@ object OrderInternalForm: TOrderInternalForm
           object btnCompleteMovement_andSave: TcxButton
             Left = 12
             Top = 37
-            Width = 163
+            Width = 155
             Height = 25
             Action = actCompleteMovement_andSave
             ParentShowHint = False
@@ -1204,9 +1205,9 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 6
           end
           object btnFormClose: TcxButton
-            Left = 897
+            Left = 895
             Top = 37
-            Width = 176
+            Width = 135
             Height = 25
             Action = actFormClose
             ParentShowHint = False
@@ -1214,9 +1215,9 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 7
           end
           object btnUpdateAction: TcxButton
-            Left = 385
+            Left = 364
             Top = 6
-            Width = 155
+            Width = 145
             Height = 25
             Action = actChoiceForm_OrderClientItem
             ParentShowHint = False
@@ -1226,7 +1227,7 @@ object OrderInternalForm: TOrderInternalForm
           object cxButton1: TcxButton
             Left = 201
             Top = 37
-            Width = 178
+            Width = 145
             Height = 25
             Action = macInsert_MI_byOrderAll
             ParentShowHint = False
@@ -1234,9 +1235,9 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 9
           end
           object cxButton2: TcxButton
-            Left = 560
+            Left = 524
             Top = 6
-            Width = 160
+            Width = 145
             Height = 25
             Action = actInsertRecordBoat
             ParentShowHint = False
@@ -1244,9 +1245,9 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 10
           end
           object cxButton3: TcxButton
-            Left = 560
+            Left = 524
             Top = 36
-            Width = 160
+            Width = 145
             Height = 25
             Action = actChoiceFormOrderClient
             ParentShowHint = False
@@ -1259,9 +1260,6 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2477,14 +2475,14 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectMI_Child
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       ImageIndex = 63
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1101#1083#1077#1084#1077#1085#1090#1099' '#1076#1086#1082'.'
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -3542,7 +3540,7 @@ object OrderInternalForm: TOrderInternalForm
           Action = actRefreshMaster
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1087#1086' '#8470' '#1047#1072#1082#1072#1079#1072
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1087#1086' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
       ImageIndex = 47
     end

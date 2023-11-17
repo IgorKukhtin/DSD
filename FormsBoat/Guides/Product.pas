@@ -235,7 +235,7 @@ type
     btnInsert: TcxButton;
     btnUpdate: TcxButton;
     btnComplete: TcxButton;
-    btnUnComplete: TcxButton;
+    btnShowAllOptItems: TcxButton;
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     cxButton1: TcxButton;

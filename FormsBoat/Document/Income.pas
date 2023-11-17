@@ -176,7 +176,7 @@ type
     InvNumber_OrderClientFull_ch2: TcxGridDBColumn;
     IsErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    cxTopSplitter: TcxSplitter;
+    cxSplitterBottom: TcxSplitter;
     ChildDS: TDataSource;
     ChildCDS: TClientDataSet;
     ChildViewAddOn: TdsdDBViewAddOn;
@@ -314,6 +314,8 @@ type
     actOpenFormsInsertLimit_Goods1: TdsdOpenForm;
     spGet_Id_Nul: TdsdStoredProc;
     actGet_Id_Nul: TdsdExecStoredProc;
+    actSetVisible_Grid: TBooleanSetVisibleAction;
+    cxButton1: TcxButton;
   private
   public
   end;

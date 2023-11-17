@@ -1268,9 +1268,6 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1660,10 +1657,11 @@ object ProductionUnionForm: TProductionUnionForm
     Height = 69
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 537
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 5
-      Width = 163
+      Width = 155
       Height = 25
       Action = actInsertUpdateMovement
       ParentShowHint = False
@@ -1711,9 +1709,9 @@ object ProductionUnionForm: TProductionUnionForm
       TabOrder = 4
     end
     object btnShowAll: TcxButton
-      Left = 761
+      Left = 670
       Top = 5
-      Width = 184
+      Width = 150
       Height = 25
       Action = actShowAll_child
       ParentShowHint = False
@@ -1743,7 +1741,7 @@ object ProductionUnionForm: TProductionUnionForm
     object btnCompleteMovement_andSave: TcxButton
       Left = 24
       Top = 36
-      Width = 163
+      Width = 155
       Height = 25
       Action = actCompleteMovement_andSave
       ParentShowHint = False
@@ -1751,9 +1749,9 @@ object ProductionUnionForm: TProductionUnionForm
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 761
+      Left = 670
       Top = 36
-      Width = 184
+      Width = 150
       Height = 25
       Action = actFormClose
       ParentShowHint = False
@@ -2057,7 +2055,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1079#1077#1083
       Category = 0
       Visible = ivAlways
-      ImageIndex = 85
+      ImageIndex = 7
       ItemLinks = <
         item
           Visible = True
@@ -2119,7 +2117,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1051#1086#1076#1082#1072
       Category = 0
       Visible = ivAlways
-      ImageIndex = 78
+      ImageIndex = 7
       ItemLinks = <
         item
           Visible = True
@@ -2154,7 +2152,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Category = 0
       Visible = ivAlways
-      ImageIndex = 7
+      ImageIndex = 39
       ItemLinks = <
         item
           Visible = True
@@ -3047,14 +3045,14 @@ object ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spSelectMIChild
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082'('#1088#1072#1089#1093#1086#1076')'
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082'('#1088#1072#1089#1093#1086#1076')'
       ImageIndex = 63
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082'('#1088#1072#1089#1093#1086#1076')'
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082'('#1088#1072#1089#1093#1086#1076')'
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082'.'
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end

@@ -228,7 +228,7 @@ type
     Color_fon_ch2: TcxGridDBColumn;
     cxGridProdOptItemsLevel: TcxGridLevel;
     Panel3: TPanel;
-    cxSplitter1: TcxSplitter;
+    cxSplitterlLeft: TcxSplitter;
     cxLabel17: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel18: TcxLabel;
@@ -477,6 +477,9 @@ type
     bbsGoods: TdxBarSubItem;
     bbsProtocol: TdxBarSubItem;
     bbsOpenForm: TdxBarSubItem;
+    btnChangeNPP: TcxButton;
+    actSetVisible_Grid: TBooleanSetVisibleAction;
+    cxButton1: TcxButton;
   private
   public
   end;
