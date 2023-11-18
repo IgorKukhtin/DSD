@@ -314,6 +314,18 @@ type
     btnCompleteMovement_andSave: TcxButton;
     btnFormClose: TcxButton;
     actCompleteMovement_andSave: TChangeGuidesStatus;
+    cbChangeReceipt: TcxCheckBox;
+    spUpdate_MI_Child_byOrder: TdsdStoredProc;
+    spUpdate_MI_Child_byReceipt: TdsdStoredProc;
+    actUpdate_MI_Child_byReceipt: TdsdExecStoredProc;
+    actUpdate_MI_Child_byOrder: TdsdExecStoredProc;
+    bbUpdate_MI_Child_byOrder: TdxBarButton;
+    bbUpdate_MI_Child_byReceipt: TdxBarButton;
+    macUpdate_MI_Child_byOrder_list: TMultiAction;
+    macUpdate_MI_Child_byOrder: TMultiAction;
+    actRefresh_Child: TdsdDataSetRefresh;
+    macUpdate_MI_Child_byReceipt_list: TMultiAction;
+    macUpdate_MI_Child_byReceipt: TMultiAction;
   private
   public
   end;

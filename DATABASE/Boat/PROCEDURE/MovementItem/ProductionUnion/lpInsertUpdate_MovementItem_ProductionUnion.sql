@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ProductionUnion(
     IN inReceiptProdModelId  Integer   , --
     IN inAmount              TFloat    , -- Количество
     IN inComment             TVarChar  ,
+    in inisChange            Boolean   , --заменить значение в шаблоне
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -203,7 +204,7 @@ BEGIN
                                                           , inForCount          := 1
                                                           , inUserId            := inUserId
                                                            )
-     FROM (WITH
+           FROM (WITH
                 tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId      AS GoodsId_master
                                               , ObjectLink_Object.ChildObjectId            AS GoodsId
                                               , ObjectLink_GoodsChild.ChildObjectId        AS GoodsId_child
@@ -362,6 +363,7 @@ BEGIN
           ) AS tmpReceiptGoodsChild
          ;   
 
+     END IF;
 
 END;
 $BODY$

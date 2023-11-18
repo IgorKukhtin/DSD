@@ -62,10 +62,10 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 250
+      Width = 223
     end
     object edTo: TcxButtonEdit
-      Left = 442
+      Left = 417
       Top = 23
       Properties.Buttons = <
         item
@@ -74,7 +74,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 250
+      Width = 225
     end
     object cxLabel3: TcxLabel
       Left = 186
@@ -85,7 +85,7 @@ object ProductionUnionForm: TProductionUnionForm
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 442
+      Left = 415
       Top = 5
       Caption = #1050#1086#1084#1091
     end
@@ -117,23 +117,23 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 170
     end
     object cxLabel16: TcxLabel
-      Left = 700
+      Left = 875
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 700
-      Top = 63
+      Left = 875
+      Top = 62
       TabOrder = 11
       Width = 216
     end
     object cxLabel12: TcxLabel
-      Left = 924
+      Left = 875
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 924
+      Left = 875
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -141,16 +141,16 @@ object ProductionUnionForm: TProductionUnionForm
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 146
+      Width = 111
     end
     object cxLabel13: TcxLabel
-      Left = 924
-      Top = 45
+      Left = 994
+      Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 924
-      Top = 63
+      Left = 994
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -177,15 +177,15 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 17
-      Width = 250
+      Width = 223
     end
     object cxLabel6: TcxLabel
-      Left = 700
+      Left = 650
       Top = 5
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
     end
     object edPartner: TcxButtonEdit
-      Left = 700
+      Left = 650
       Top = 23
       Properties.Buttons = <
         item
@@ -197,23 +197,23 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 216
     end
     object cxLabel7: TcxLabel
-      Left = 442
+      Left = 415
       Top = 45
       Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit
-      Left = 442
+      Left = 415
       Top = 63
       TabOrder = 21
-      Width = 167
+      Width = 153
     end
     object cxLabel8: TcxLabel
-      Left = 624
+      Left = 574
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 624
+      Left = 574
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -222,6 +222,13 @@ object ProductionUnionForm: TProductionUnionForm
       Properties.ReadOnly = True
       TabOrder = 23
       Width = 68
+    end
+    object cbChangeReceipt: TcxCheckBox
+      Left = 650
+      Top = 62
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095'. '#1074' '#1096#1072#1073#1083#1086#1085#1077' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 24
+      Width = 209
     end
   end
   object cxPageControl: TcxPageControl
@@ -1657,7 +1664,6 @@ object ProductionUnionForm: TProductionUnionForm
     Height = 69
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 537
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 5
@@ -2321,6 +2327,14 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_MI_Child_byOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_Child_byReceipt'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator'
         end
         item
@@ -2374,6 +2388,16 @@ object ProductionUnionForm: TProductionUnionForm
           ItemName = 'bbPrintCalc'
         end>
     end
+    object bbUpdate_MI_Child_byOrder: TdxBarButton
+      Action = macUpdate_MI_Child_byOrder
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
+      Category = 0
+    end
+    object bbUpdate_MI_Child_byReceipt: TdxBarButton
+      Action = macUpdate_MI_Child_byReceipt
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2425,6 +2449,20 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 0
+    end
+    object actRefresh_Child: TdsdDataSetRefresh
+      Category = 'Child'
+      MoveParams = <>
+      StoredProc = spSelectMIChild
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'Child'
@@ -3055,6 +3093,40 @@ object ProductionUnionForm: TProductionUnionForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actUpdate_MI_Child_byOrder: TdsdExecStoredProc
+      Category = 'Child'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Child_byOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Child_byOrder
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
+      ImageIndex = 47
+    end
+    object actUpdate_MI_Child_byReceipt: TdsdExecStoredProc
+      Category = 'Child'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Child_byReceipt
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Child_byReceipt
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      ImageIndex = 48
     end
     object actUpdateChoiceFormBoat: TOpenChoiceForm
       Category = 'Boat'
@@ -4064,6 +4136,60 @@ object ProductionUnionForm: TProductionUnionForm
       Status = mtComplete
       Guides = StatusGuides
     end
+    object macUpdate_MI_Child_byOrder_list: TMultiAction
+      Category = 'Child'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_MI_Child_byOrder
+        end>
+      View = cxGridDBTableViewMaster
+      Caption = 'macUpdate_MI_Child_byOrder_list'
+      ImageIndex = 47
+    end
+    object macUpdate_MI_Child_byOrder: TMultiAction
+      Category = 'Child'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_MI_Child_byOrder_list
+        end
+        item
+          Action = actRefresh_Child
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'?'
+      InfoAfterExecute = #1055#1077#1088#1077#1089#1095#1077#1090' '#1074#1099#1087#1086#1083#1085#1077#1085
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
+      ImageIndex = 47
+    end
+    object macUpdate_MI_Child_byReceipt_list: TMultiAction
+      Category = 'Child'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_MI_Child_byReceipt
+        end>
+      View = cxGridDBTableViewMaster
+      Caption = 'macUpdate_MI_Child_byReceipt_list'
+      ImageIndex = 48
+    end
+    object macUpdate_MI_Child_byReceipt: TMultiAction
+      Category = 'Child'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_MI_Child_byReceipt_list
+        end
+        item
+          Action = actRefresh_Child
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091'?'
+      InfoAfterExecute = #1055#1077#1088#1077#1089#1095#1077#1090' '#1074#1099#1087#1086#1083#1085#1077#1085
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      ImageIndex = 48
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4176,10 +4302,18 @@ object ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangeReceipt'
+        Value = Null
+        Component = cbChangeReceipt
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 78
-    Top = 391
+    Left = 102
+    Top = 327
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4579,8 +4713,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 124
-    Top = 80
+    Left = 52
+    Top = 48
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -5489,5 +5623,104 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     Left = 767
     Top = 9
+  end
+  object spUpdate_MI_Child_byOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionUnion_Child_byOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 958
+    Top = 271
+  end
+  object spUpdate_MI_Child_byReceipt: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionUnion_Child_byReceipt'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptProdModelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 966
+    Top = 319
   end
 end
