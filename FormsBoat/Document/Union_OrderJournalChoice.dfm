@@ -1,30 +1,30 @@
 inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1099#1073#1086#1088' '#1076#1083#1103' '#1089#1095#1077#1090#1072'>'
-  ClientHeight = 356
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' ...>'
+  ClientHeight = 355
   ClientWidth = 1028
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1044
-  ExplicitHeight = 395
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 87
     Width = 1028
-    Height = 269
+    Height = 227
     TabOrder = 3
     ExplicitTop = 87
     ExplicitWidth = 1028
     ExplicitHeight = 269
-    ClientRectBottom = 269
+    ClientRectBottom = 227
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
       ExplicitHeight = 269
       inherited cxGrid: TcxGrid
         Width = 1028
-        Height = 269
+        Height = 227
         ExplicitWidth = 1028
         ExplicitHeight = 269
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -138,6 +138,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -160,8 +161,9 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 87
           end
           object TaxKindName_Comment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1053#1044#1057
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1053#1044#1057
             DataBinding.FieldName = 'TaxKindName_Comment'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -173,6 +175,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -362,10 +365,12 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     ExplicitWidth = 1028
     ExplicitHeight = 61
     inherited deStart: TcxDateEdit
-      EditValue = 44197d
+      Left = 109
+      EditValue = 44927d
+      ExplicitLeft = 109
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
     end
     object cxLabel6: TcxLabel
       Left = 430
@@ -403,6 +408,41 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+    end
+  end
+  object Panel_btn: TPanel [2]
+    Left = 0
+    Top = 314
+    Width = 1028
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitWidth = 894
+    object btnFormClose: TcxButton
+      Left = 442
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object cxButton1: TcxButton
+      Left = 295
+      Top = 6
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 1
+    end
+    object btnUpdate: TcxButton
+      Left = 590
+      Top = 6
+      Width = 139
+      Height = 25
+      Action = actShowErased
+      TabOrder = 2
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -512,6 +552,27 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
     end
     object actChoiceMoneyPlace: TOpenChoiceForm [18]
       Category = 'Update'
@@ -948,7 +1009,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       ImageIndex = 43
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -1114,10 +1175,16 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = MasterDS
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -1185,7 +1252,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           ItemName = 'bbExecuteDialog'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1238,6 +1304,10 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -1248,7 +1318,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       ShortCut = 16465
     end
     object bbb: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbExecuteDialog: TdxBarButton
@@ -1439,7 +1509,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       item
         Column = colInvNumber
       end>
-    ActionNumber1 = dsdChoiceGuides
+    ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 496
     Top = 216

@@ -23,7 +23,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel;
+  Vcl.ExtCtrls, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TReceiptProdModelForm = class(TParentForm)
@@ -90,7 +91,7 @@ type
     isErased_ch1: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
-    cxRightSplitter: TcxSplitter;
+    cxSplitterRight: TcxSplitter;
     GoodsCDS: TClientDataSet;
     GoodsDS: TDataSource;
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
@@ -213,6 +214,19 @@ type
     actProtocolPattern: TdsdOpenForm;
     bbProtocolGoods: TdxBarButton;
     bbProtocolPattern: TdxBarButton;
+    actFormClose: TdsdFormClose;
+    actSetVisible_ProdColorItems: TBooleanSetVisibleAction;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnChoiceFormGoods: TcxButton;
+    btnSetErasedGoods: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnInsertAction: TcxButton;
+    btnUpdate: TcxButton;
+    btnFormClose: TcxButton;
+    btnSetErased: TcxButton;
+    cxButton1: TcxButton;
+    bbChoiceFormGoods: TdxBarButton;
   private
     { Private declarations }
   public

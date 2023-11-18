@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TUnion_OrderJournalChoiceForm = class(TAncestorJournalForm)
@@ -58,7 +59,7 @@ type
     actChoiceMoneyPlace: TOpenChoiceForm;
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     bbb: TdxBarButton;
     bbExecuteDialog: TdxBarButton;
     VATPercent: TcxGridDBColumn;
@@ -68,6 +69,11 @@ type
     edSearchInvNumber: TcxTextEdit;
     lbSearchCode: TcxLabel;
     FieldFilter_Article: TdsdFieldFilter;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnFormClose: TcxButton;
+    cxButton1: TcxButton;
+    btnUpdate: TcxButton;
   private
     { Private declarations }
   public

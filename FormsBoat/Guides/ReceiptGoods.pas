@@ -23,7 +23,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel, dsdGuides, cxMaskEdit;
+  Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel, dsdGuides, cxMaskEdit,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TReceiptGoodsForm = class(TParentForm)
@@ -71,7 +72,6 @@ type
     cxGridDBTableViewCh1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
-    cxRightSplitter: TcxSplitter;
     Child1CDS: TClientDataSet;
     Child1DS: TDataSource;
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
@@ -121,7 +121,7 @@ type
     Child2DS: TDataSource;
     dsdDBViewAddOnCh2: TdsdDBViewAddOn;
     spSelect_child1: TdsdStoredProc;
-    Panel2: TPanel;
+    PanelProdColorPattern: TPanel;
     cxGridCh2: TcxGrid;
     cxGridDBTableViewCh2: TcxGridDBTableView;
     NPP_calc_ch2: TcxGridDBColumn;
@@ -140,7 +140,7 @@ type
     Comment_ch2: TcxGridDBColumn;
     isErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
+    cxSplitterRight: TcxSplitter;
     Panel4: TPanel;
     spInsertUpdate_Child2: TdsdStoredProc;
     ProdColorPatternName_ch2: TcxGridDBColumn;
@@ -236,7 +236,7 @@ type
     actProtocol2: TdsdOpenForm;
     bbProtocol1: TdxBarButton;
     bbProtocol2: TdxBarButton;
-    actUpdateProdColPattetnGoods: TdsdInsertUpdateAction;
+    actUpdate_all: TdsdInsertUpdateAction;
     bbUpdateProdColPattetnGoods: TdxBarButton;
     actSendInsertForm: TOpenChoiceForm;
     actInsertUpDate_Child_bySend: TdsdExecStoredProc;
@@ -257,6 +257,21 @@ type
     Value_child_ch1: TcxGridDBColumn;
     ArticleVergl: TcxGridDBColumn;
     ArticleVergl_ch1: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    actSetVisible_ProdColorItems: TBooleanSetVisibleAction;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnChoiceFormGoods_1: TcxButton;
+    btnSetErasedGoods: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnShowAll: TcxButton;
+    btnInsertAction: TcxButton;
+    btnUpdate: TcxButton;
+    btnFormClose: TcxButton;
+    btnSetErased: TcxButton;
+    cxButton1: TcxButton;
+    bbChoiceFormGoods_1: TdxBarButton;
+    btnUpdate_all: TcxButton;
   private
     { Private declarations }
   public

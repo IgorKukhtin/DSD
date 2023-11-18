@@ -8,20 +8,20 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 65
-    Top = 466
-    Width = 80
-    ExplicitLeft = 65
-    ExplicitTop = 466
-    ExplicitWidth = 80
+    Left = 156
+    Top = 465
+    Width = 86
+    ExplicitLeft = 156
+    ExplicitTop = 465
+    ExplicitWidth = 86
   end
   inherited bbCancel: TcxButton
-    Left = 192
-    Top = 466
-    Width = 80
-    ExplicitLeft = 192
-    ExplicitTop = 466
-    ExplicitWidth = 80
+    Left = 249
+    Top = 465
+    Width = 86
+    ExplicitLeft = 249
+    ExplicitTop = 465
+    ExplicitWidth = 86
   end
   object Код: TcxLabel [2]
     Left = 15
@@ -268,24 +268,28 @@
     TabOrder = 33
     Width = 100
   end
+  object btnGoodsChoiceForm: TcxButton [34]
+    Left = 15
+    Top = 465
+    Width = 134
+    Height = 25
+    Action = actObjectChoiceForm
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 34
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
     Top = 324
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 327
-    Top = 44
+    Left = 263
+    Top = 52
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
     Left = 302
     Top = 99
-    inherited FormClose: TdsdFormClose
-      ImageIndex = 52
-    end
-    inherited InsertUpdateGuides: TdsdInsertUpdateGuides
-      ImageIndex = 80
-    end
     object actGetPlanDate: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -300,6 +304,94 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actObjectChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Lieferanten / Kunden'
+      ImageIndex = 7
+      FormName = 'TUnion_ClientPartnerForm'
+      FormNameParam.Value = 'TUnion_ClientPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'DayCalendar'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'DayCalendar'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKind_Value'
+          Value = Null
+          Component = edVATPercent
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = GuidesTaxKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = GuidesTaxKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited FormParams: TdsdFormParams

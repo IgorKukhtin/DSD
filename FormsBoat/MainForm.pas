@@ -8,7 +8,18 @@ uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   DataModul, dxSkinsCore, dxSkinsDefaultPainters,
   cxLocalization, Vcl.Menus, cxPropertiesStore, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
-  Vcl.Controls, cxLabel, frxBarcode, dxSkinsdxBarPainter;
+  Vcl.Controls, cxLabel, frxBarcode, dxSkinsdxBarPainter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -93,7 +104,7 @@ type
     actReport_Send: TdsdOpenForm;
     miReport_Send: TMenuItem;
     actReport_Loss: TdsdOpenForm;
-    miReport_MovementLoss: TMenuItem;
+    miReport_Loss: TMenuItem;
     actReport_Balance: TdsdOpenForm;
     actReport_ProfitLoss: TdsdOpenForm;
     actReport_Cash: TdsdOpenForm;
@@ -111,11 +122,11 @@ type
     miLine84: TMenuItem;
     actReport_Remains_curr: TdsdOpenForm;
     miLine51: TMenuItem;
-    miReport_Remains_curr_prod: TMenuItem;
+    miReport_Remains_curr_: TMenuItem;
     miReport_GoodsCode: TMenuItem;
     actReport_Account: TdsdOpenForm;
     miReport_ProductionOLAP: TMenuItem;
-    miLine61: TMenuItem;
+    miLine61_: TMenuItem;
     actReport_MotionByClient: TdsdOpenForm;
     miReport_MotionByPartner: TMenuItem;
     miProduction: TMenuItem;
@@ -126,7 +137,7 @@ type
     miReport_Unit: TMenuItem;
     miLine12: TMenuItem;
     miLine41: TMenuItem;
-    miLine71: TMenuItem;
+    miLine72_: TMenuItem;
     actReport_Sale: TdsdOpenForm;
     miReport_Sale: TMenuItem;
     N1: TMenuItem;
@@ -137,15 +148,15 @@ type
     miCashJournal: TMenuItem;
     N4: TMenuItem;
     miReport_Sale_Analysis: TMenuItem;
-    N6: TMenuItem;
+    miLine73_: TMenuItem;
     actReport_ProfitLossPeriod: TdsdOpenForm;
     miReport_ProfitLossPeriod: TMenuItem;
-    N7: TMenuItem;
+    miLine71_: TMenuItem;
     miImportType: TMenuItem;
     miImportSettings: TMenuItem;
     N10: TMenuItem;
     actReport_Remains_onDate: TdsdOpenForm;
-    actReport_Remains_onDate_prod: TMenuItem;
+    miReport_Remains_onDate_: TMenuItem;
     actBankAccountJournal: TdsdOpenForm;
     miLine11: TMenuItem;
     actOrderClient: TdsdOpenForm;
@@ -153,7 +164,7 @@ type
     actOrderProduction: TdsdOpenForm;
     miOrderPartner: TMenuItem;
     miOrderClient: TMenuItem;
-    miOrderProduction: TMenuItem;
+    miOrderInternal: TMenuItem;
     actProductionUnion: TdsdOpenForm;
     miProductionUnion: TMenuItem;
     actReport_ProductionOLAP: TdsdOpenForm;
@@ -207,29 +218,29 @@ type
     actColorPattern: TdsdOpenForm;
     miColorPattern: TMenuItem;
     actReceiptLevel: TdsdOpenForm;
-    N8: TMenuItem;
-    N9: TMenuItem;
+    miReceiptLevel: TMenuItem;
+    miLine23_: TMenuItem;
     actReceiptService: TdsdOpenForm;
     miReceiptService: TMenuItem;
     actTranslateMessage: TdsdOpenForm;
     miTranslateMessage: TMenuItem;
     actInvoiceJournal: TdsdOpenForm;
-    N11: TMenuItem;
+    miInvoiceJournal: TMenuItem;
     N12: TMenuItem;
     actTaxKindEdit: TdsdOpenForm;
     miTaxKindEdit: TMenuItem;
     N13: TMenuItem;
     actIncomeCost: TdsdOpenForm;
-    N14: TMenuItem;
+    miIncomeCost: TMenuItem;
     actReport_Goods: TdsdOpenForm;
-    N15: TMenuItem;
+    miReport_Goods: TMenuItem;
     actReport_OrderClient: TdsdOpenForm;
     miReport_OrderClient: TMenuItem;
     actDocTag: TdsdOpenForm;
     N16: TMenuItem;
     N17: TMenuItem;
     actProductionPersonal: TdsdOpenForm;
-    N18: TMenuItem;
+    miProductionPersonal: TMenuItem;
     actReport_ProductionPersonal: TdsdOpenForm;
     miReport_ProductionPersonal: TMenuItem;
     N19: TMenuItem;
@@ -241,7 +252,7 @@ type
     miPriceListJournal: TMenuItem;
     N21: TMenuItem;
     actReport_GoodsMotion: TdsdOpenForm;
-    ьшReport_GoodsMotion: TMenuItem;
+    miReport_GoodsMotion: TMenuItem;
     spGet_Object_Form_HelpFile: TdsdStoredProc;
     actHelp: TShellExecuteAction;
     actGet_Object_Form_HelpFile: TdsdExecStoredProc;
@@ -275,7 +286,22 @@ type
     actReport_Client: TdsdOpenForm;
     miReport_Client: TMenuItem;
     N22: TMenuItem;
+    btnIncome: TcxButton;
+    btnSend: TcxButton;
+    btnOrderPartner: TcxButton;
+    btnProduct: TcxButton;
+    btnOrderInternal: TcxButton;
+    btnProductionUnion: TcxButton;
+    btnSale: TcxButton;
+    btnExit: TcxButton;
+    btnInvoiceJournal: TcxButton;
+    btnBankAccountJournal: TcxButton;
+    btnProdOptions: TcxButton;
+    btnReceiptProdModel: TcxButton;
+    btnReceiptGoods: TcxButton;
+    actExit_btn: TAction;
     procedure FormCreate(Sender: TObject);
+    procedure actExit_btnExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -288,6 +314,15 @@ var
 implementation
 uses Dialogs, Forms, SysUtils, IdGlobal, UnilWin;
 {$R *.dfm}
+
+procedure TMainForm.actExit_btnExecute(Sender: TObject);
+begin
+  inherited;
+
+  if MessageDlg('Программа будет закрыта.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+  then exit
+  else Close;
+end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin

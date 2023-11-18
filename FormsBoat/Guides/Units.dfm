@@ -1,7 +1,7 @@
 object UnitForm: TUnitForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1082#1083#1072#1076#1099'/'#1059#1095#1072#1089#1090#1082#1080' '#1089#1073#1086#1088#1082#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1082#1083#1072#1076' / '#1059#1095#1072#1089#1090#1082#1080' '#1089#1073#1086#1088#1082#1080'>'
   ClientHeight = 376
   ClientWidth = 894
   Color = clBtnFace
@@ -49,6 +49,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object Name: TcxGridDBColumn
@@ -57,22 +58,27 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 197
       end
       object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 100
       end
       object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'Phone'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 100
       end
       object JuridicalName: TcxGridDBColumn
@@ -82,6 +88,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 165
       end
       object ParentName: TcxGridDBColumn
@@ -90,6 +97,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 165
       end
       object ChildName: TcxGridDBColumn
@@ -99,6 +107,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 165
       end
       object AccountDirectionName: TcxGridDBColumn
@@ -119,15 +128,6 @@ object UnitForm: TUnitForm
         HeaderHint = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         Options.Editing = False
         Width = 128
-      end
-      object Erased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 78
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -153,7 +153,18 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 207
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -168,7 +179,7 @@ object UnitForm: TUnitForm
     Align = alBottom
     TabOrder = 5
     object btnInsert: TcxButton
-      Left = 344
+      Left = 80
       Top = 7
       Width = 100
       Height = 25
@@ -176,7 +187,7 @@ object UnitForm: TUnitForm
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 470
+      Left = 206
       Top = 6
       Width = 100
       Height = 25
@@ -184,15 +195,15 @@ object UnitForm: TUnitForm
       TabOrder = 1
     end
     object btnChoiceGuides: TcxButton
-      Left = 67
-      Top = 7
+      Left = 475
+      Top = 6
       Width = 90
       Height = 25
       Action = actChoiceGuides
       TabOrder = 2
     end
     object btnSetErased: TcxButton
-      Left = 593
+      Left = 329
       Top = 6
       Width = 100
       Height = 25
@@ -200,8 +211,8 @@ object UnitForm: TUnitForm
       TabOrder = 3
     end
     object btnFormClose: TcxButton
-      Left = 185
-      Top = 7
+      Left = 593
+      Top = 6
       Width = 90
       Height = 25
       Action = actFormClose

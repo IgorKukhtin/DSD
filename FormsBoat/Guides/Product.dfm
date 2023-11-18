@@ -19,24 +19,29 @@
   PixelsPerInch = 96
   TextHeight = 13
   object PanelMaster: TPanel
-    Left = 0
+    Left = 8
     Top = 26
-    Width = 1188
-    Height = 209
-    Align = alTop
+    Width = 1180
+    Height = 199
+    Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 0
+    ExplicitWidth = 1188
+    ExplicitHeight = 209
     object cxGrid: TcxGrid
       Left = 0
       Top = 50
-      Width = 1188
-      Height = 159
+      Width = 1180
+      Height = 149
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 1188
+      ExplicitHeight = 159
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -936,21 +941,23 @@
     object Panel3: TPanel
       Left = 0
       Top = 33
-      Width = 1188
+      Width = 1180
       Height = 17
       Align = alTop
       Caption = 'Boat'
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 1188
     end
     object Panel4: TPanel
       Left = 0
       Top = 0
-      Width = 1188
+      Width = 1180
       Height = 33
       Align = alTop
       TabOrder = 2
+      ExplicitWidth = 1188
       object lbSearchName: TcxLabel
         Left = 5
         Top = 7
@@ -995,840 +1002,862 @@
       end
     end
   end
-  object PanelProdOptItems: TPanel
-    Left = 529
-    Top = 240
-    Width = 659
-    Height = 157
-    Align = alClient
-    BevelEdges = [beLeft]
-    BevelOuter = bvNone
-    TabOrder = 1
-    object cxGridProdOptItems: TcxGrid
-      Left = 0
-      Top = 17
-      Width = 659
-      Height = 140
-      Align = alClient
-      PopupMenu = PopupMenuOption
-      TabOrder = 0
-      LookAndFeel.NativeStyle = True
-      LookAndFeel.SkinName = 'UserSkin'
-      object cxGridDBTableViewProdOptItems: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = ProdOptItemsDS
-        DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_ch2
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Sale_summ_ch2
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = SaleWVAT_summ_ch2
-          end
-          item
-            Format = ',0.'
-            Kind = skSum
-            Column = Amount_ch2
-          end>
-        DataController.Summary.FooterSummaryItems = <
-          item
-            Format = 'C'#1090#1088#1086#1082': ,0'
-            Kind = skCount
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_ch2
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Sale_summ_ch2
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = SaleWVAT_summ_ch2
-          end
-          item
-            Format = ',0.'
-            Kind = skSum
-            Column = Amount_ch2
-          end>
-        DataController.Summary.SummaryGroups = <>
-        Images = dmMain.SortImageList
-        OptionsCustomize.ColumnHiding = True
-        OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsView.CellAutoHeight = True
-        OptionsView.Footer = True
-        OptionsView.GroupByBox = False
-        OptionsView.GroupSummaryLayout = gslAlignWithColumns
-        OptionsView.HeaderAutoHeight = True
-        OptionsView.HeaderHeight = 40
-        OptionsView.Indicator = True
-        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object isEnabled_ch2: TcxGridDBColumn
-          Caption = 'Yes/no'
-          DataBinding.FieldName = 'isEnabled'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 55
-        end
-        object NPP_ch2: TcxGridDBColumn
-          Caption = #8470' '#1087'/'#1087
-          DataBinding.FieldName = 'NPP'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 40
-        end
-        object DiscountTax_ch2: TcxGridDBColumn
-          Caption = '% '#1089#1082#1080#1076#1082#1080
-          DataBinding.FieldName = 'DiscountTax'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 55
-        end
-        object MaterialOptionsName_ch2: TcxGridDBColumn
-          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
-          DataBinding.FieldName = 'MaterialOptionsName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormMaterialOptions
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 100
-        end
-        object ProdOptPatternName_ch2: TcxGridDBColumn
-          Caption = #1069#1083#1077#1084#1077#1085#1090
-          DataBinding.FieldName = 'ProdOptPatternName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormProdOptPattern
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Options.Editing = False
-          Width = 152
-        end
-        object Code_ch2: TcxGridDBColumn
-          Caption = #1050#1086#1076
-          DataBinding.FieldName = 'Code'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.##;-,0.##; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 43
-        end
-        object ProdOptionsName_ch2: TcxGridDBColumn
-          Caption = #1054#1087#1094#1080#1103
-          DataBinding.FieldName = 'ProdOptionsName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormProdOptions_Object
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 80
-        end
-        object Color_ProdColor_ch2: TcxGridDBColumn
-          Caption = '***'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1074#1077#1090
-          Options.Editing = False
-          Width = 45
-        end
-        object ProdColorName_ch2: TcxGridDBColumn
-          Caption = 'Farbe'
-          DataBinding.FieldName = 'ProdColorName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormProdColor_goods
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 100
-        end
-        object Comment_ch2: TcxGridDBColumn
-          Caption = '***Material/farbe'
-          DataBinding.FieldName = 'Comment'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormProdOptions_сomment
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Width = 110
-        end
-        object CommentOpt_ch2: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1086#1087#1094#1080#1103')'
-          DataBinding.FieldName = 'CommentOpt'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Width = 110
-        end
-        object GoodsGroupNameFull_ch2: TcxGridDBColumn
-          Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-          DataBinding.FieldName = 'GoodsGroupNameFull'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 150
-        end
-        object Amount_ch2: TcxGridDBColumn
-          Caption = 'Amount Opt.'
-          DataBinding.FieldName = 'Amount'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
-          Width = 54
-        end
-        object GoodsGroupName_ch2: TcxGridDBColumn
-          Caption = #1043#1088#1091#1087#1087#1072
-          DataBinding.FieldName = 'GoodsGroupName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 172
-        end
-        object GoodsCode_ch2: TcxGridDBColumn
-          Caption = 'Interne Nr'
-          DataBinding.FieldName = 'GoodsCode'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
-          Options.Editing = False
-          Width = 55
-        end
-        object Article_ch2: TcxGridDBColumn
-          Caption = 'Artikel Nr'
-          DataBinding.FieldName = 'Article'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormGoods_optitems
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 55
-        end
-        object GoodsName_ch2: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-          DataBinding.FieldName = 'GoodsName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormGoods_optitems
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 120
-        end
-        object MeasureName_ch2: TcxGridDBColumn
-          Caption = #1045#1076'. '#1080#1079#1084'.'
-          DataBinding.FieldName = 'MeasureName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
-        object PartNumber_ch2: TcxGridDBColumn
-          Caption = #8470' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076'.'
-          DataBinding.FieldName = 'PartNumber'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
-          Width = 80
-        end
-        object AmountBasis_ch2: TcxGridDBColumn
-          Caption = 'Value'
-          DataBinding.FieldName = 'AmountBasis'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_ch2: TcxGridDBColumn
-          Caption = 'Netto EK'
-          DataBinding.FieldName = 'EKPrice'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 50
-        end
-        object EKPrice_summ_ch2: TcxGridDBColumn
-          Caption = 'Total EK'
-          DataBinding.FieldName = 'EKPrice_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
-        object SalePrice_ch2: TcxGridDBColumn
-          Caption = 'Ladenpreis'
-          DataBinding.FieldName = 'SalePrice'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
-          Options.Editing = False
-          Width = 70
-        end
-        object SalePriceWVAT_ch2: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
-          DataBinding.FieldName = 'SalePriceWVAT'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
-          Options.Editing = False
-          Width = 70
-        end
-        object Sale_summ_ch2: TcxGridDBColumn
-          Caption = 'Total LP'
-          DataBinding.FieldName = 'Sale_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
-        object SaleWVAT_summ_ch2: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
-          DataBinding.FieldName = 'SaleWVAT_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
-          Options.Editing = False
-          Width = 80
-        end
-        object InsertDate_ch2: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-          DataBinding.FieldName = 'InsertDate'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
-        object InsertName_ch2: TcxGridDBColumn
-          Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-          DataBinding.FieldName = 'InsertName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 70
-        end
-        object IsErased_ch2: TcxGridDBColumn
-          Caption = #1059#1076#1072#1083#1077#1085
-          DataBinding.FieldName = 'isErased'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 78
-        end
-        object Color_fon_ch2: TcxGridDBColumn
-          DataBinding.FieldName = 'Color_fon'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          VisibleForCustomization = False
-          Width = 55
-        end
-        object Color_ProdColorValue_Ch2: TcxGridDBColumn
-          DataBinding.FieldName = 'Color_ProdColorValue'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          VisibleForCustomization = False
-          Width = 55
-        end
-      end
-      object cxGridLevel1: TcxGridLevel
-        GridView = cxGridDBTableViewProdOptItems
-      end
-    end
-    object Panel1: TPanel
-      Left = 0
-      Top = 0
-      Width = 659
-      Height = 17
-      Align = alTop
-      Caption = #1054#1087#1094#1080#1080
-      Color = clAqua
-      ParentBackground = False
-      TabOrder = 1
-    end
-  end
-  object PanelProdColorItems: TPanel
+  object PanelChildItems: TPanel
     Left = 0
-    Top = 240
-    Width = 521
-    Height = 157
-    Align = alLeft
-    BevelEdges = [beLeft]
-    BevelOuter = bvNone
+    Top = 230
+    Width = 1188
+    Height = 141
+    Align = alBottom
     TabOrder = 2
-    object cxGridProdColorItems: TcxGrid
-      Left = 0
-      Top = 17
+    ExplicitTop = 294
+    object PanelProdColorItems: TPanel
+      Left = 1
+      Top = 1
       Width = 521
-      Height = 140
-      Align = alClient
-      PopupMenu = PopupMenuColor
+      Height = 139
+      Align = alLeft
+      BevelEdges = [beLeft]
+      BevelOuter = bvNone
       TabOrder = 0
-      LookAndFeel.NativeStyle = True
-      LookAndFeel.SkinName = 'UserSkin'
-      object cxGridDBTableViewProdColorItems: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = ProdColorItemsDS
-        DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_ch1
-          end>
-        DataController.Summary.FooterSummaryItems = <
-          item
-            Format = 'C'#1090#1088#1086#1082': ,0'
-            Kind = skCount
+      ExplicitHeight = 39
+      object cxGridProdColorItems: TcxGrid
+        Left = 0
+        Top = 17
+        Width = 521
+        Height = 122
+        Align = alClient
+        PopupMenu = PopupMenuColor
+        TabOrder = 0
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = 'UserSkin'
+        ExplicitHeight = 22
+        object cxGridDBTableViewProdColorItems: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ProdColorItemsDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EKPrice_summ_ch1
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EKPrice_summ_ch1
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isEnabled_ch1: TcxGridDBColumn
+            Caption = 'Yes/no'
+            DataBinding.FieldName = 'isEnabled'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_ch1
-          end>
-        DataController.Summary.SummaryGroups = <>
-        Images = dmMain.SortImageList
-        OptionsCustomize.ColumnHiding = True
-        OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Inserting = False
-        OptionsView.CellAutoHeight = True
-        OptionsView.Footer = True
-        OptionsView.GroupByBox = False
-        OptionsView.GroupSummaryLayout = gslAlignWithColumns
-        OptionsView.HeaderAutoHeight = True
-        OptionsView.HeaderHeight = 40
-        OptionsView.Indicator = True
-        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object isEnabled_ch1: TcxGridDBColumn
-          Caption = 'Yes/no'
-          DataBinding.FieldName = 'isEnabled'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 45
+          object NPP_ch1: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'NPP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object Code_ch1: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 43
+          end
+          object ProdColorGroupName_ch1: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+            DataBinding.FieldName = 'ProdColorGroupName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormProdColorGroup
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ProdColorPatternName_ch1: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ProdColorPatternName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormProdColorPattern
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object isDiff_ch1: TcxGridDBColumn
+            Caption = 'Diff'
+            DataBinding.FieldName = 'isDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1041#1072#1079#1086#1074#1086#1081' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1080' Yes/no'
+            Options.Editing = False
+            Width = 50
+          end
+          object ProdColorName_ch1: TcxGridDBColumn
+            Caption = 'Farbe'
+            DataBinding.FieldName = 'ProdColorName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object IsProdOptions_ch1: TcxGridDBColumn
+            Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1082' '#1054#1087#1094#1080#1102
+            DataBinding.FieldName = 'IsProdOptions'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1082' '#1054#1087#1094#1080#1102
+            Options.Editing = False
+            Width = 62
+          end
+          object GoodsGroupNameFull_ch1: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object GoodsGroupName_ch1: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 172
+          end
+          object GoodsCode_ch1: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'GoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+            Options.Editing = False
+            Width = 55
+          end
+          object Article_ch1: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormGoods
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsName_ch1: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormGoods
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            Options.Editing = False
+            Width = 110
+          end
+          object MeasureName_ch1: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object EKPrice_ch1: TcxGridDBColumn
+            Caption = 'Netto EK'
+            DataBinding.FieldName = 'EKPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_ch1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1089#1073#1086#1088#1082#1077
+            Options.Editing = False
+            Width = 55
+          end
+          object EKPrice_summ_ch1: TcxGridDBColumn
+            Caption = 'Total EK'
+            DataBinding.FieldName = 'EKPrice_summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment_ch1: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 179
+          end
+          object InsertDate_ch1: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InsertName_ch1: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isErased_ch1: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object Color_fon_ch1: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_fon'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
-        object NPP_ch1: TcxGridDBColumn
-          Caption = #8470' '#1087'/'#1087
-          DataBinding.FieldName = 'NPP'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 40
-        end
-        object Code_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1076
-          DataBinding.FieldName = 'Code'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.##;-,0.##; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 43
-        end
-        object ProdColorGroupName_ch1: TcxGridDBColumn
-          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
-          DataBinding.FieldName = 'ProdColorGroupName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormProdColorGroup
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = False
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 100
-        end
-        object ProdColorPatternName_ch1: TcxGridDBColumn
-          Caption = #1069#1083#1077#1084#1077#1085#1090
-          DataBinding.FieldName = 'ProdColorPatternName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormProdColorPattern
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Options.Editing = False
-          Width = 150
-        end
-        object isDiff_ch1: TcxGridDBColumn
-          Caption = 'Diff'
-          DataBinding.FieldName = 'isDiff'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1041#1072#1079#1086#1074#1086#1081' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1080' Yes/no'
-          Options.Editing = False
-          Width = 50
-        end
-        object ProdColorName_ch1: TcxGridDBColumn
-          Caption = 'Farbe'
-          DataBinding.FieldName = 'ProdColorName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 80
-        end
-        object IsProdOptions_ch1: TcxGridDBColumn
-          Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1082' '#1054#1087#1094#1080#1102
-          DataBinding.FieldName = 'IsProdOptions'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1082' '#1054#1087#1094#1080#1102
-          Options.Editing = False
-          Width = 62
-        end
-        object GoodsGroupNameFull_ch1: TcxGridDBColumn
-          Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-          DataBinding.FieldName = 'GoodsGroupNameFull'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 150
-        end
-        object GoodsGroupName_ch1: TcxGridDBColumn
-          Caption = #1043#1088#1091#1087#1087#1072
-          DataBinding.FieldName = 'GoodsGroupName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 172
-        end
-        object GoodsCode_ch1: TcxGridDBColumn
-          Caption = 'Interne Nr'
-          DataBinding.FieldName = 'GoodsCode'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
-          Options.Editing = False
-          Width = 55
-        end
-        object Article_ch1: TcxGridDBColumn
-          Caption = 'Artikel Nr'
-          DataBinding.FieldName = 'Article'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormGoods
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 70
-        end
-        object GoodsName_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-          DataBinding.FieldName = 'GoodsName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormGoods
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-          Options.Editing = False
-          Width = 110
-        end
-        object MeasureName_ch1: TcxGridDBColumn
-          Caption = #1045#1076'. '#1080#1079#1084'.'
-          DataBinding.FieldName = 'MeasureName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
-        object EKPrice_ch1: TcxGridDBColumn
-          Caption = 'Netto EK'
-          DataBinding.FieldName = 'EKPrice'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 50
-        end
-        object Amount_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1083'-'#1074#1086
-          DataBinding.FieldName = 'Amount'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1089#1073#1086#1088#1082#1077
-          Options.Editing = False
-          Width = 55
-        end
-        object EKPrice_summ_ch1: TcxGridDBColumn
-          Caption = 'Total EK'
-          DataBinding.FieldName = 'EKPrice_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
-        object Comment_ch1: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-          DataBinding.FieldName = 'Comment'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Options.Editing = False
-          Width = 179
-        end
-        object InsertDate_ch1: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-          DataBinding.FieldName = 'InsertDate'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
-        object InsertName_ch1: TcxGridDBColumn
-          Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-          DataBinding.FieldName = 'InsertName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 70
-        end
-        object isErased_ch1: TcxGridDBColumn
-          Caption = #1059#1076#1072#1083#1077#1085
-          DataBinding.FieldName = 'isErased'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 78
-        end
-        object Color_fon_ch1: TcxGridDBColumn
-          DataBinding.FieldName = 'Color_fon'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          VisibleForCustomization = False
-          Width = 55
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableViewProdColorItems
         end
       end
-      object cxGridLevel2: TcxGridLevel
-        GridView = cxGridDBTableViewProdColorItems
+      object Panel2: TPanel
+        Left = 0
+        Top = 0
+        Width = 521
+        Height = 17
+        Align = alTop
+        Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+        Color = clLime
+        ParentBackground = False
+        TabOrder = 1
       end
     end
-    object Panel2: TPanel
-      Left = 0
-      Top = 0
-      Width = 521
-      Height = 17
-      Align = alTop
-      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
-      Color = clLime
-      ParentBackground = False
+    object PanelProdOptItems: TPanel
+      Left = 522
+      Top = 1
+      Width = 665
+      Height = 139
+      Align = alClient
+      BevelEdges = [beLeft]
+      BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 1180
+      ExplicitHeight = 39
+      object cxGridProdOptItems: TcxGrid
+        Left = 0
+        Top = 17
+        Width = 665
+        Height = 122
+        Align = alClient
+        PopupMenu = PopupMenuOption
+        TabOrder = 0
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = 'UserSkin'
+        ExplicitWidth = 1180
+        ExplicitHeight = 22
+        object cxGridDBTableViewProdOptItems: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ProdOptItemsDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EKPrice_summ_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sale_summ_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleWVAT_summ_ch2
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = Amount_ch2
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EKPrice_summ_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sale_summ_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleWVAT_summ_ch2
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = Amount_ch2
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isEnabled_ch2: TcxGridDBColumn
+            Caption = 'Yes/no'
+            DataBinding.FieldName = 'isEnabled'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object NPP_ch2: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'NPP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object DiscountTax_ch2: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'DiscountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object MaterialOptionsName_ch2: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+            DataBinding.FieldName = 'MaterialOptionsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormMaterialOptions
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object ProdOptPatternName_ch2: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ProdOptPatternName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormProdOptPattern
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 152
+          end
+          object Code_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 43
+          end
+          object ProdOptionsName_ch2: TcxGridDBColumn
+            Caption = #1054#1087#1094#1080#1103
+            DataBinding.FieldName = 'ProdOptionsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormProdOptions_Object
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Color_ProdColor_ch2: TcxGridDBColumn
+            Caption = '***'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1074#1077#1090
+            Options.Editing = False
+            Width = 45
+          end
+          object ProdColorName_ch2: TcxGridDBColumn
+            Caption = 'Farbe'
+            DataBinding.FieldName = 'ProdColorName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormProdColor_goods
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object Comment_ch2: TcxGridDBColumn
+            Caption = '***Material/farbe'
+            DataBinding.FieldName = 'Comment'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormProdOptions_сomment
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 110
+          end
+          object CommentOpt_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1086#1087#1094#1080#1103')'
+            DataBinding.FieldName = 'CommentOpt'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 110
+          end
+          object GoodsGroupNameFull_ch2: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object Amount_ch2: TcxGridDBColumn
+            Caption = 'Amount Opt.'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
+            Width = 54
+          end
+          object GoodsGroupName_ch2: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 172
+          end
+          object GoodsCode_ch2: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'GoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+            Options.Editing = False
+            Width = 55
+          end
+          object Article_ch2: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormGoods_optitems
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object GoodsName_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormGoods_optitems
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object MeasureName_ch2: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PartNumber_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076'.'
+            DataBinding.FieldName = 'PartNumber'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
+            Width = 80
+          end
+          object AmountBasis_ch2: TcxGridDBColumn
+            Caption = 'Value'
+            DataBinding.FieldName = 'AmountBasis'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object EKPrice_ch2: TcxGridDBColumn
+            Caption = 'Netto EK'
+            DataBinding.FieldName = 'EKPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+            Width = 50
+          end
+          object EKPrice_summ_ch2: TcxGridDBColumn
+            Caption = 'Total EK'
+            DataBinding.FieldName = 'EKPrice_summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object SalePrice_ch2: TcxGridDBColumn
+            Caption = 'Ladenpreis'
+            DataBinding.FieldName = 'SalePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object SalePriceWVAT_ch2: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+            DataBinding.FieldName = 'SalePriceWVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object Sale_summ_ch2: TcxGridDBColumn
+            Caption = 'Total LP'
+            DataBinding.FieldName = 'Sale_summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object SaleWVAT_summ_ch2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SaleWVAT_summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+            Options.Editing = False
+            Width = 80
+          end
+          object InsertDate_ch2: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InsertName_ch2: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object IsErased_ch2: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object Color_fon_ch2: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_fon'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_ProdColorValue_Ch2: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_ProdColorValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableViewProdOptItems
+        end
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 665
+        Height = 17
+        Align = alTop
+        Caption = #1054#1087#1094#1080#1080
+        Color = clAqua
+        ParentBackground = False
+        TabOrder = 1
+        ExplicitLeft = 6
+        ExplicitTop = -6
+      end
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 235
+    Top = 225
     Width = 1188
     Height = 5
-    AlignSplitter = salTop
-    Control = PanelMaster
+    AlignSplitter = salBottom
+    Control = PanelChildItems
+    ExplicitTop = 226
   end
   object cxRightSplitter: TcxSplitter
-    Left = 521
-    Top = 240
+    Left = 0
+    Top = 26
     Width = 8
-    Height = 157
+    Height = 199
     Control = PanelProdColorItems
+    ExplicitTop = 240
+    ExplicitHeight = 131
   end
   object Panel_btn: TPanel
     Left = 0
-    Top = 397
+    Top = 371
     Width = 1188
-    Height = 38
+    Height = 64
     Align = alBottom
-    TabOrder = 9
+    TabOrder = 4
+    ExplicitLeft = -8
+    ExplicitTop = 382
     object btnInsert: TcxButton
-      Left = 26
-      Top = 7
+      Left = 81
+      Top = 4
       Width = 90
       Height = 25
       Action = actInsert
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 122
-      Top = 6
+      Left = 182
+      Top = 4
       Width = 90
       Height = 25
       Action = actUpdate
       TabOrder = 1
     end
     object btnComplete: TcxButton
-      Left = 510
-      Top = 6
+      Left = 301
+      Top = 34
       Width = 180
       Height = 25
       Action = actUpdate2
       TabOrder = 2
     end
     object btnShowAllOptItems: TcxButton
-      Left = 696
-      Top = 6
-      Width = 130
+      Left = 507
+      Top = 34
+      Width = 174
       Height = 25
       Action = actShowAllOptItems
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 374
-      Top = 6
-      Width = 130
+      Left = 301
+      Top = 4
+      Width = 180
       Height = 25
       Action = actUpdate_OrderClient
       TabOrder = 4
     end
     object btnFormClose: TcxButton
-      Left = 832
-      Top = 6
+      Left = 1050
+      Top = 7
       Width = 130
       Height = 25
       Action = actFormClose
@@ -1837,12 +1866,32 @@
       TabOrder = 5
     end
     object cxButton1: TcxButton
-      Left = 218
-      Top = 6
-      Width = 150
+      Left = 81
+      Top = 34
+      Width = 191
       Height = 25
       Action = macChangeNPP
       TabOrder = 6
+    end
+    object cxButton2: TcxButton
+      Left = 711
+      Top = 7
+      Width = 174
+      Height = 25
+      Action = actSetVisible_ProdColorItems
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+    end
+    object cxButton3: TcxButton
+      Left = 507
+      Top = 6
+      Width = 174
+      Height = 25
+      Action = actSetVisible_ProdOptItems
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
     end
   end
   object DataSource: TDataSource
@@ -2616,8 +2665,8 @@
           ComponentItem = 'ReceiptProdModelName'
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1042#1099#1073#1086#1088' '#1079#1085#1072#1095#1077#1085#1080#1103
+      Hint = #1042#1099#1073#1086#1088' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1080#1079' '#1089#1087#1080#1089#1082#1072
       ImageIndex = 7
       DataSource = DataSource
     end
@@ -3458,14 +3507,14 @@
         item
           StoredProc = spSelect_ProdOptItems
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
+      HintTrue = #1042#1099#1073#1088#1072#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
+      HintFalse = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
+      CaptionTrue = #1042#1099#1073#1088#1072#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
+      CaptionFalse = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -3952,6 +4001,40 @@
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
+    object actSetVisible_ProdColorItems: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxRightSplitter
+        end
+        item
+          Component = PanelProdColorItems
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
+    end
+    object actSetVisible_ProdOptItems: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxTopSplitter
+        end
+        item
+          Component = PanelChildItems
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1054#1087#1094#1080#1080
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1054#1087#1094#1080#1080
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1054#1087#1094#1080#1080
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1054#1087#1094#1080#1080
+      ImageIndexTrue = 31
+      ImageIndexFalse = 32
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product'
@@ -4087,7 +4170,7 @@
   object ProdOptItemsDS: TDataSource
     DataSet = ProdOptItemsCDS
     Left = 672
-    Top = 360
+    Top = 336
   end
   object dsdDBViewAddOnProdOptItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4123,7 +4206,7 @@
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 728
-    Top = 344
+    Top = 296
   end
   object ProdColorItemsCDS: TClientDataSet
     Aggregates = <>

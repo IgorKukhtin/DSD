@@ -247,6 +247,10 @@ type
     edSearchInvNumber_OrderClient: TcxTextEdit;
     edSearchClientName: TcxTextEdit;
     cxLabel1: TcxLabel;
+    actSetVisible_ProdColorItems: TBooleanSetVisibleAction;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    actSetVisible_ProdOptItems: TBooleanSetVisibleAction;
   private
     { Private declarations }
   public

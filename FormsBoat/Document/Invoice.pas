@@ -65,6 +65,8 @@ type
     cxLabel44: TcxLabel;
     edTaxKind: TcxButtonEdit;
     GuidesTaxKind: TdsdGuides;
+    btnGoodsChoiceForm: TcxButton;
+    actObjectChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
