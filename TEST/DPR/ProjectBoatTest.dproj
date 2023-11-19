@@ -879,10 +879,6 @@
 				<Form>LossForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\ProductionUnion.pas">
-				<Form>ProductionUnionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\ProductionUnionJournal.pas">
 				<Form>ProductionUnionJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1264,6 +1260,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ClientEdit.pas">
 				<Form>ClientEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\ProductionUnion.pas">
+				<Form>ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

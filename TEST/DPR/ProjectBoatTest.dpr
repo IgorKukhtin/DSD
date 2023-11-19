@@ -264,7 +264,6 @@ uses
   Send in '..\..\FormsBoat\Document\Send.pas' {SendForm: TParentForm},
   LossJournal in '..\..\FormsBoat\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   Loss in '..\..\FormsBoat\Document\Loss.pas' {LossForm: TParentForm},
-  ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
   ProductionUnionJournal in '..\..\FormsBoat\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm},
   ProductionPersonalJournal in '..\..\FormsBoat\Document\ProductionPersonalJournal.pas' {ProductionPersonalJournalForm: TParentForm},
   ProductionPersonal in '..\..\FormsBoat\Document\ProductionPersonal.pas' {ProductionPersonalForm: TParentForm},
@@ -366,7 +365,8 @@ uses
   GoodsGroup_List in '..\..\FormsBoat\Guides\GoodsGroup_List.pas' {GoodsGroup_ListForm: TParentForm},
   Report_Client in '..\..\FormsBoat\Report\Report_Client.pas' {Report_ClientForm: TParentForm},
   Report_ClientDialog in '..\..\FormsBoat\Report\Report_ClientDialog.pas' {Report_ClientDialogForm: TParentForm},
-  ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm};
+  ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
+  ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
