@@ -785,7 +785,7 @@ type
     Image23: TImage;
     tiJuridicalCollationItems: TTabItem;
     lwJuridicalCollationItems: TListView;
-    BindSourceDB1: TBindSourceDB;
+    bsJuridicalCollationItems: TBindSourceDB;
     eJuridicals: TEdit;
     ePartners: TEdit;
     bSelectPartners: TButton;
@@ -845,6 +845,15 @@ type
     LinkListControlToField7: TLinkListControlToField;
     LinkListControlToField6: TLinkListControlToField;
     LinkListControlToField1: TLinkListControlToField;
+    tiSubjectDoc: TTabItem;
+    Panel60: TPanel;
+    btCloseSubjectDoc: TButton;
+    bSaveSubjectDoc: TButton;
+    iwSubjectDoc: TListView;
+    eSubjectDoc: TEdit;
+    bsSubDataSource: TBindSourceDB;
+    LinkListControlToField21: TLinkListControlToField;
+    bClearSubjectDoc: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1077,6 +1086,12 @@ type
     procedure bSyncReturnInClick(Sender: TObject);
     procedure LocationSensor1LocationChanged(Sender: TObject; const OldLocation,
       NewLocation: TLocationCoord2D);
+    procedure tiSubjectDocClick(Sender: TObject);
+    procedure Button57Click(Sender: TObject);
+    procedure bSaveSubjectDocClick(Sender: TObject);
+    procedure eSubjectDocClick(Sender: TObject);
+    procedure btCloseSubjectDocClick(Sender: TObject);
+    procedure bClearSubjectDocClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1133,6 +1148,9 @@ type
     FCashAmountValue: Double;
 
     FPhotoPath: boolean;
+
+    FReturnInSubjectDocId: Integer;
+    FReturnInSubjectDocName: String;
 
     FPaidKindChangedO: boolean;
     FPaidKindChangedR: boolean;
@@ -2708,7 +2726,7 @@ begin
     else
       PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
 
-    if DM.SaveReturnIn(deReturnDate.Date, PaidKindId, eReturnComment.Text,
+    if DM.SaveReturnIn(deReturnDate.Date, PaidKindId, eReturnComment.Text, FReturnInSubjectDocId, FReturnInSubjectDocName,
       FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, AResult = mrNone, ErrMes) then
     begin
       if FEditDocuments then
@@ -3057,6 +3075,11 @@ begin
 
   deReturnDate.Date := DM.cdsReturnInOperDate.AsDateTime;
   eReturnComment.Text := DM.cdsReturnInComment.AsString;
+  FReturnInSubjectDocId := DM.cdsReturnInSubjectDocId.AsInteger;
+  if FReturnInSubjectDocId <> 0 then
+    eSubjectDoc.Text := DM.cdsReturnInSubjectDocName.AsString
+  else eSubjectDoc.Text := 'Без причины';
+  FReturnInSubjectDocName := eSubjectDoc.Text;
   FCanEditDocument := not DM.cdsReturnInisSync.AsBoolean;
 
   RecalculateReturnInTotalPriceAndWeight;
@@ -3076,6 +3099,7 @@ begin
   eReturnComment.ReadOnly := not FCanEditDocument;
   deReturnDate.ReadOnly := not FCanEditDocument;
   swPaidKindR.Enabled := FCanEditDocument;
+  eSubjectDoc.Enabled := FCanEditDocument;
 
   lwReturnInItems.ScrollViewPos := 0;
   SwitchToForm(tiReturnIn, nil);
@@ -3431,6 +3455,13 @@ begin
   lAmount.Text := '0';
 end;
 
+procedure TfrmMain.bClearSubjectDocClick(Sender: TObject);
+begin
+  FReturnInSubjectDocId := 0;
+  FReturnInSubjectDocName := 'Без причины';
+  ReturnPriorForm;
+end;
+
 // присвоение количества товаров
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 var
@@ -3675,6 +3706,11 @@ begin
     ShowTasks(true);
 end;
 
+procedure TfrmMain.btCloseSubjectDocClick(Sender: TObject);
+begin
+  ReturnPriorForm;
+end;
+
 procedure TfrmMain.bTotalCashClick(Sender: TObject);
 var
   TotalAmount: Currency;
@@ -3722,6 +3758,11 @@ end;
 procedure TfrmMain.bUpdateProgramClick(Sender: TObject);
 begin
   DM.UpdateProgram(mrYes);
+end;
+
+procedure TfrmMain.Button57Click(Sender: TObject);
+begin
+  ReturnPriorForm;
 end;
 
 // отображения ТТ которые необходимо посетить в выбранные день недели
@@ -4549,6 +4590,14 @@ begin
     SaveStoreReal(mrNone);
 end;
 
+procedure TfrmMain.bSaveSubjectDocClick(Sender: TObject);
+begin
+  FReturnInSubjectDocId := DM.qrySubjectDocId.AsInteger;
+  if FReturnInSubjectDocId = 0 then FReturnInSubjectDocName := 'Без причины'
+  else FReturnInSubjectDocName := DM.qrySubjectDocValueData.AsString;
+  ReturnPriorForm;
+end;
+
 // сохранение отметки про выполнение задания
 procedure TfrmMain.bSaveTaskClick(Sender: TObject);
 begin
@@ -4625,7 +4674,7 @@ begin
   else
     PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
 
-  if DM.SaveReturnIn(deReturnDate.Date, PaidKindId, eReturnComment.Text,
+  if DM.SaveReturnIn(deReturnDate.Date, PaidKindId, eReturnComment.Text, FReturnInSubjectDocId, FReturnInSubjectDocName,
     FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, True, ErrMes, True) then
   begin
     if FEditDocuments then
@@ -4731,6 +4780,11 @@ begin
   bSetPartnerCoordinate.Visible := false;
   lNoMap.Visible := true;
   lNoMap.Text := 'Не удалось загрузить карту с расположением ТТ';
+end;
+
+procedure TfrmMain.tiSubjectDocClick(Sender: TObject);
+begin
+
 end;
 
 // таймер сохранения маршрута контрагента - сохраняет текущие координаты какждые 5 минут
@@ -5048,7 +5102,7 @@ begin
   end;
 
   { настройка панели возврата }
-  if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiGoodsItems) or (tcMain.ActiveTab = tiCamera)  then
+  if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiGoodsItems) or (tcMain.ActiveTab = tiSubjectDoc) or (tcMain.ActiveTab = tiCamera)  then
     pBack.Visible := false
   else
   begin
@@ -5434,6 +5488,15 @@ begin
   SwitchToForm(tiNewPartner, nil);
 end;
 
+procedure TfrmMain.eSubjectDocClick(Sender: TObject);
+begin
+  DM.GenerateReturnInSubjectDoc;
+
+  if FReturnInSubjectDocId <> 0 then DM.qrySubjectDoc.Locate('Id', FReturnInSubjectDocId, []);
+
+  SwitchToForm(tiSubjectDoc, Nil);
+end;
+
 // переход на форму отображения списка ТТ, которые необходимо посетить в указаный день
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
@@ -5759,6 +5822,7 @@ begin
   TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.cdsReturnInStatus.AsString;
   TListItemText(CurItem.Objects.FindDrawable('Price')).Text := DM.cdsReturnInPrice.AsString;
   TListItemText(CurItem.Objects.FindDrawable('Weight')).Text := DM.cdsReturnInWeight.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('SubjectDocName')).Text := DM.cdsReturnInSubjectDocName.AsString;
 
   ChangeStatusIcon(CurItem);
   DeleteButtonHide(CurItem);
@@ -5801,6 +5865,7 @@ begin
       TListItemText(NewItem.Objects.FindDrawable('Weight')).Text := DM.cdsReturnInWeight.AsString;
       TListItemText(NewItem.Objects.FindDrawable('Status')).Text := DM.cdsReturnInStatus.AsString;
       TListItemText(NewItem.Objects.FindDrawable('StatusId')).Text := DM.cdsReturnInStatusId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('SubjectDocName')).Text := DM.cdsReturnInSubjectDocName.AsString;
       TListItemText(NewItem.Objects.FindDrawable('isSync')).Text := DM.cdsReturnInisSync.AsString;
 
       // установить иконку кнопки удаления
@@ -6275,6 +6340,8 @@ begin
 
   for i := 0 to FCheckedGooodsItems.Count - 1 do
     DM.AddedGoodsToReturnIn(FCheckedGooodsItems[i]);
+
+  if FReturnInSubjectDocName <> eSubjectDoc.Text then eSubjectDoc.Text := FReturnInSubjectDocName;
 
   RecalculateReturnInTotalPriceAndWeight;
 

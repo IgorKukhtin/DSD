@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , isPromo Boolean
              , CommentSendId Integer, CommentSendCode Integer, CommentSendName TVarChar
              , TechnicalRediscountID Integer, TechnicalRediscountInvNumber TVarChar, TechnicalRediscountOperDate TDateTime
+             , PriceInDiff TFloat
               )
 AS
 $BODY$
@@ -243,6 +244,8 @@ BEGIN
                                       , MovementTR.ID                                          AS TechnicalRediscountID
                                       , MovementTR.InvNumber                                   AS TechnicalRediscountInvNumber
                                       , MovementTR.OperDate                                    AS TechnicalRediscountOperDate
+                                      , (MIFloat_JuridicalPriceTwo.valuedata - 
+                                         MIFloat_JuridicalPriceTwo.valuedata)  ::TFloat        AS PriceInDiff 
                                       
                                    FROM MovementItem AS MovementItem_Send
                                        -- цена подразделений записанная при автоматическом распределении 
@@ -265,6 +268,12 @@ BEGIN
                                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueTo
                                                                          ON MIFloat_ValueTo.MovementItemId = MovementItem_Send.ID
                                                                         AND MIFloat_ValueTo.DescId = zc_MIFloat_ValueTo()
+                                       LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                                                   ON MIFloat_JuridicalPrice.MovementItemId = MovementItem_Send.Id
+                                                                  AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()                                                                 
+                                       LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceTwo
+                                                                   ON MIFloat_JuridicalPriceTwo.MovementItemId = MovementItem_Send.Id
+                                                                  AND MIFloat_JuridicalPriceTwo.DescId = zc_MIFloat_JuridicalPriceTwo()
 
                                        LEFT OUTER JOIN tmpMIContainerAll AS MIContainer_Count
                                                                          ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
@@ -313,6 +322,8 @@ BEGIN
                                           , MovementTR.ID   
                                           , MovementTR.InvNumber
                                           , MovementTR.OperDate 
+                                          , MIFloat_JuridicalPriceTwo.ValueData
+                                          , MIFloat_JuridicalPriceTwo.ValueData
                                 )
 
           , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId
@@ -442,6 +453,8 @@ BEGIN
                                            
                                           , tmpRemains.Amount                         AS AmountRemains
                                           , tmpRemains.MinExpirationDate
+                                          , MovementItem_Send.PriceInDiff             AS PriceInDiff
+
                                      FROM tmpRemains
                                           FULL JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId)
 
@@ -507,6 +520,7 @@ BEGIN
               , MovementItem_Send.TechnicalRediscountID                             AS TechnicalRediscountID
               , MovementItem_Send.TechnicalRediscountInvNumber                      AS TechnicalRediscountInvNumber
               , MovementItem_Send.TechnicalRediscountOperDate                       AS TechnicalRediscountOperDate
+              , MovementItem_Send.PriceInDiff                                       AS PriceInDiff
 
             FROM tmpMovementItem_Send AS MovementItem_Send 
 
@@ -575,6 +589,9 @@ BEGIN
               , MovementTR.ID                                          AS TechnicalRediscountID
               , MovementTR.InvNumber                                   AS TechnicalRediscountInvNumber
               , MovementTR.OperDate                                    AS TechnicalRediscountOperDate
+              
+              , (MIFloat_JuridicalPriceTwo.ValueData - 
+                 MIFloat_JuridicalPriceTwo.ValueData)  ::TFloat        AS PriceInDiff 
          FROM MovementItem   
              -- цена подразделений записанная при автоматическом распределении 
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
@@ -602,6 +619,12 @@ BEGIN
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueTo
                                                ON MIFloat_ValueTo.MovementItemId = MovementItem.Id
                                               AND MIFloat_ValueTo.DescId = zc_MIFloat_ValueTo()
+             LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                         ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()                                                                 
+             LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceTwo
+                                         ON MIFloat_JuridicalPriceTwo.MovementItemId = MovementItem.Id
+                                        AND MIFloat_JuridicalPriceTwo.DescId = zc_MIFloat_JuridicalPriceTwo()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
                                               ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
@@ -991,6 +1014,8 @@ BEGIN
            , MovementItem_Send.TechnicalRediscountID                             AS TechnicalRediscountID
            , MovementItem_Send.TechnicalRediscountInvNumber                      AS TechnicalRediscountInvNumber
            , MovementItem_Send.TechnicalRediscountOperDate                       AS TechnicalRediscountOperDate
+           
+           , MovementItem_Send.PriceInDiff                                       AS PriceInDiff
        FROM tmpMovementItem_Send AS MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
@@ -1082,4 +1107,4 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 -- 
 
 
-select * from gpSelect_MovementItem_Send(inMovementId := 32815662 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_Send(inMovementId := 34046257 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

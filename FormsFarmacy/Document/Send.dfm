@@ -540,6 +540,17 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 84
           end
+          object PriceInDiff: TcxGridDBColumn
+            Caption = #1044#1077#1083#1100#1090#1072' '#1084#1077#1078#1076#1091' '#1086#1090#1083#1086#1078#1077#1085' '#1080' '#1087#1088#1086#1074#1077#1076#1077#1085
+            DataBinding.FieldName = 'PriceInDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -1120,8 +1131,8 @@ inherited SendForm: TSendForm
     Width = 214
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 259
-    Top = 432
+    Left = 267
+    Top = 416
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40

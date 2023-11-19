@@ -1299,7 +1299,7 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 336
+    Left = 376
     Top = 684
     object qryPhotosId: TIntegerField
       FieldName = 'Id'
@@ -1482,6 +1482,7 @@ object DM: TDM
   end
   object tblMovement_ReturnIn: TFDTable
     Connection = conMain
+    ResourceOptions.AssignedValues = [rvEscapeExpand]
     UpdateOptions.UpdateTableName = 'Movement_ReturnIn'
     TableName = 'Movement_ReturnIn'
     Left = 1440
@@ -1539,6 +1540,9 @@ object DM: TDM
       FieldName = 'Comment'
       Size = 255
     end
+    object tblMovement_ReturnInSubjectDocId: TIntegerField
+      FieldName = 'SubjectDocId'
+    end
     object tblMovement_ReturnInisSync: TBooleanField
       FieldName = 'isSync'
     end
@@ -1575,6 +1579,9 @@ object DM: TDM
     end
     object tblMovementItem_ReturnInChangePercent: TFloatField
       FieldName = 'ChangePercent'
+    end
+    object tblMovementItem_ReturnInSubjectDocId: TIntegerField
+      FieldName = 'SubjectDocId'
     end
     object tblMovementItem_ReturnInisRecalcPrice: TBooleanField
       FieldName = 'isRecalcPrice'
@@ -1654,6 +1661,13 @@ object DM: TDM
       FieldName = 'PartnerFullName'
       Size = 1000
     end
+    object cdsReturnInSubjectDocId: TIntegerField
+      FieldName = 'SubjectDocId'
+    end
+    object cdsReturnInSubjectDocName: TStringField
+      FieldName = 'SubjectDocName'
+      Size = 255
+    end
   end
   object cdsReturnInItems: TClientDataSet
     Aggregates = <>
@@ -1696,6 +1710,13 @@ object DM: TDM
     end
     object cdsReturnInItemsRecalcPriceName: TStringField
       FieldName = 'RecalcPriceName'
+    end
+    object cdsReturnInItemsSubjectDocId: TIntegerField
+      FieldName = 'SubjectDocId'
+    end
+    object cdsReturnInItemsSubjectDocName: TStringField
+      FieldName = 'SubjectDocName'
+      Size = 255
     end
   end
   object qryPromoPartners: TFDQuery
@@ -2297,6 +2318,23 @@ object DM: TDM
     end
     object BooleanField1: TBooleanField
       FieldName = 'isErased'
+    end
+  end
+  object qrySubjectDoc: TFDQuery
+    Connection = conMain
+    SQL.Strings = (
+      'select ID '
+      '     , VALUEDATA  '
+      'from OBJECT_SUBJECTDOC os'
+      'where os.ISERASED = 0')
+    Left = 200
+    Top = 604
+    object qrySubjectDocId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qrySubjectDocValueData: TStringField
+      FieldName = 'ValueData'
+      Size = 255
     end
   end
 end

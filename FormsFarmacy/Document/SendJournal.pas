@@ -135,6 +135,7 @@ type
     actPrinlFilter: TdsdPrintAction;
     spSelectPrintFilter: TdsdStoredProc;
     bbPrinlFilter: TdxBarButton;
+    TotalDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

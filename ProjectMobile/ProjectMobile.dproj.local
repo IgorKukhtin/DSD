@@ -23,6 +23,6 @@
     <Transaction>1899.12.30 00:00:00.000.074,C:\Work\Temp\ProjectMobile\ProjectMobile.dproj=C:\Users\Oleg\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
-		<NoProfile Android="2bd070279805" Android64=""/>
+		<NoProfile Android="" Android64=""/>
 	</ActiveMobileDevice>
 </BorlandProject>
