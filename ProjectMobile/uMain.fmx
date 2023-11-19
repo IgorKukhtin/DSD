@@ -810,11 +810,13 @@ object frmMain: TfrmMain
       Size.Height = 508.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 11
+      TabIndex = 10
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
       Sizes = (
+        332s
+        508s
         332s
         508s
         332s
@@ -4491,7 +4493,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -4607,7 +4609,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -5517,6 +5519,17 @@ object frmMain: TfrmMain
                   Appearance.Width = 20.000000000000000000
                   Appearance.Height = 20.000000000000000000
                   Appearance.Visible = False
+                end
+                item
+                  AppearanceObjectName = 'SubjectDocName'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Font.Size = 11.000000000000000000
+                  Appearance.TextAlign = Leading
+                  Appearance.TextVertAlign = Trailing
+                  Appearance.Width = 150.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.PlaceOffset.X = 150.000000000000000000
+                  Appearance.PlaceOffset.Y = 40.000000000000000000
                 end>
               ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
                 item
@@ -7239,7 +7252,7 @@ object frmMain: TfrmMain
           object lReturnInPrice: TLabel
             StyledSettings = [Family, Style, FontColor]
             Position.X = 10.000000000000000000
-            Position.Y = 5.000000000000000000
+            Position.Y = 4.000000000000000000
             Size.Width = 80.000000000000000000
             Size.Height = 23.000000000000000000
             Size.PlatformDefault = False
@@ -7348,6 +7361,24 @@ object frmMain: TfrmMain
               Size.Height = 35.000000000000000000
               Size.PlatformDefault = False
             end
+          end
+          object eSubjectDoc: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            TabOrder = 8
+            ReturnKeyType = Done
+            ReadOnly = True
+            TextSettings.Font.Size = 11.000000000000000000
+            Position.X = 94.000000000000000000
+            Position.Y = 2.000000000000000000
+            Margins.Top = 2.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Margins.Bottom = 2.000000000000000000
+            Size.Width = 131.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            StyledSettings = [Family, Style, FontColor]
+            KillFocusByReturn = True
+            OnClick = eSubjectDocClick
           end
         end
         object pSaveReturnIn: TPanel
@@ -11429,7 +11460,7 @@ object frmMain: TfrmMain
           Size.Height = 468.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 1
+          TabIndex = 2
           TabOrder = 2
           TabPosition = PlatformDefault
           Sizes = (
@@ -11549,7 +11580,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = True
+            IsSelected = False
             Size.Width = 66.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -11676,7 +11707,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = False
+            IsSelected = True
             Size.Width = 66.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -11777,6 +11808,17 @@ object frmMain: TfrmMain
                   AppearanceObjectName = 'Id'
                   AppearanceClassName = 'TTextObjectAppearance'
                   Appearance.Visible = False
+                end
+                item
+                  AppearanceObjectName = 'SubjectDocName'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Font.Size = 11.000000000000000000
+                  Appearance.TextAlign = Leading
+                  Appearance.TextVertAlign = Trailing
+                  Appearance.Width = 150.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.PlaceOffset.X = 150.000000000000000000
+                  Appearance.PlaceOffset.Y = 40.000000000000000000
                 end>
               ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
                 item
@@ -12360,6 +12402,97 @@ object frmMain: TfrmMain
             TextSettings.HorzAlign = Trailing
             Text = #1054#1073#1097#1080#1081' '#1074#1077#1089' : 99999.99'
           end
+        end
+      end
+      object tiSubjectDoc: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'tiSubjectDoc'
+        OnClick = tiSubjectDocClick
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object Panel60: TPanel
+          Align = Bottom
+          Position.Y = 448.000000000000000000
+          Size.Width = 332.000000000000000000
+          Size.Height = 60.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object btCloseSubjectDoc: TButton
+            Anchors = [akTop, akRight]
+            StyledSettings = [Family, Style, FontColor]
+            Position.X = 224.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Width = 94.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'CancelStyle'
+            TabOrder = 0
+            Text = #1054#1090#1084#1077#1085#1072
+            OnClick = btCloseSubjectDocClick
+          end
+          object bSaveSubjectDoc: TButton
+            StyledSettings = [Family, Style, FontColor]
+            Position.X = 9.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Width = 94.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'EnterStyle'
+            TabOrder = 2
+            Text = #1042#1099#1073#1088#1072#1090#1100
+            OnClick = bSaveSubjectDocClick
+          end
+          object bClearSubjectDoc: TButton
+            StyledSettings = [Family, Style, FontColor]
+            Position.X = 115.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Width = 94.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'CompleteButtonStyle'
+            TabOrder = 1
+            Text = #1054#1095#1080#1089#1090#1080#1090#1100
+            OnClick = bClearSubjectDocClick
+          end
+        end
+        object iwSubjectDoc: TListView
+          ItemAppearanceClassName = 'TDynamicAppearance'
+          ItemEditAppearanceClassName = 'TDynamicAppearance'
+          HeaderAppearanceClassName = 'TListHeaderObjects'
+          FooterAppearanceClassName = 'TListHeaderObjects'
+          Align = Client
+          Size.Width = 332.000000000000000000
+          Size.Height = 448.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          ItemAppearance.ItemHeight = 25
+          ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+            item
+              AppearanceObjectName = 'Name'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.Font.StyleExt = {00070000000000000004000000}
+              Appearance.TextAlign = Leading
+              Appearance.Width = 300.000000000000000000
+              Appearance.Height = 25.000000000000000000
+            end>
+          ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+            item
+              AppearanceObjectName = 'Text1'
+              AppearanceClassName = 'TTextObjectAppearance'
+            end>
+          ItemAppearanceObjects.HeaderObjects.Text.Visible = False
+          ItemAppearanceObjects.FooterObjects.Text.Visible = False
+          CanSwipeDelete = False
+          SearchVisible = True
         end
       end
     end
@@ -21957,6 +22090,10 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'Weight'
           ControlMemberName = 'Weight'
+        end
+        item
+          SourceMemberName = 'SubjectDocName'
+          ControlMemberName = 'SubjectDocName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -22410,6 +22547,18 @@ object frmMain: TfrmMain
       FieldName = 'ValueData'
       Control = lwPriceList
       FillExpressions = <>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+    object LinkListControlToField21: TLinkListControlToField
+      Category = 'Quick Bindings'
+      DataSource = bsSubDataSource
+      Control = iwSubjectDoc
+      FillExpressions = <
+        item
+          SourceMemberName = 'ValueData'
+          ControlMemberName = 'Name'
+        end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
@@ -23665,13 +23814,13 @@ object frmMain: TfrmMain
   object WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding
     Language = lnRussian
     Version = '1.0.3.0'
-    Left = 232
-    Top = 90
+    Left = 96
+    Top = 162
   end
   object WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding
     Version = '1.0.2.0'
-    Left = 232
-    Top = 130
+    Left = 240
+    Top = 162
   end
   object bshotoGroupDocs: TBindSourceDB
     DataSet = DM.qryPhotoGroupDocs
@@ -23691,11 +23840,11 @@ object frmMain: TfrmMain
     Left = 152
     Top = 272
   end
-  object BindSourceDB1: TBindSourceDB
+  object bsJuridicalCollationItems: TBindSourceDB
     DataSet = DM.qJuridicalCollationItems
     ScopeMappings = <>
-    Left = 116
-    Top = 220
+    Left = 28
+    Top = 212
   end
   object bsJuridicalCollation: TBindSourceDB
     DataSet = DM.cdsJuridicalCollation
@@ -23710,5 +23859,11 @@ object frmMain: TfrmMain
     OnLocationChanged = LocationSensor1LocationChanged
     Left = 280
     Top = 205
+  end
+  object bsSubDataSource: TBindSourceDB
+    DataSet = DM.qrySubjectDoc
+    ScopeMappings = <>
+    Left = 96
+    Top = 212
   end
 end

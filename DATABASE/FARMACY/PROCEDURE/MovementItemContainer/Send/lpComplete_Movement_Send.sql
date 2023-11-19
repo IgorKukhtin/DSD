@@ -1339,14 +1339,84 @@ end if;*/
     THEN
       RAISE EXCEPTION 'Ошибка проведения перемещения. Повторите проведение если повториться обратитесь к системному администратору.';
     END IF;
+    
+    
 
      IF vbIsDeferred = FALSE
      THEN
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPriceTwo(), MIC.MovementItemId, Sum(MIC.Amount * MIFloat_PriceWithVAT.ValueData) / Sum(MIC.Amount))
+        FROM MovementItemContainer AS MIC
+
+             INNER JOIN ContainerLinkObject AS CLI_MI
+                                            ON CLI_MI.containerid = MIC.ContainerId
+                                           AND CLI_MI.descid     = zc_ContainerLinkObject_PartionMovementItem()
+             INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+             -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                         ON MIFloat_MovementItem.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                        
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                         ON MIFloat_PriceWithVAT.MovementItemId = COALESCE(MIFloat_MovementItem.ValueData :: Integer, Object_PartionMovementItem.ObjectCode)                                 
+                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceTwo
+                                         ON MIFloat_JuridicalPriceTwo.MovementItemId = MIC.MovementItemId
+                                        AND MIFloat_JuridicalPriceTwo.DescId = zc_MIFloat_JuridicalPriceTwo()
+
+        WHERE MIC.MovementId = inMovementId 
+          AND MIC.DescId = zc_MIContainer_Count()
+          AND MIC.isActive = False
+          AND COALESCE (MIFloat_JuridicalPriceTwo.MovementItemId, 0) = 0
+        GROUP BY MIC.MovementItemId, MIFloat_JuridicalPriceTwo.MovementItemId
+        HAVING Sum(MIC.Amount) <> 0;   
+        
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiff()
+                                            , inMovementId
+                                            , Sum((MIFloat_JuridicalPriceTwo.ValueData - MIFloat_JuridicalPriceTwo.ValueData)::TFloat)::TFloat)
+        FROM MovementItem
+
+              LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                          ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
+                                         AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                                         
+              LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceTwo
+                                          ON MIFloat_JuridicalPriceTwo.MovementItemId = MovementItem.Id
+                                         AND MIFloat_JuridicalPriceTwo.DescId = zc_MIFloat_JuridicalPriceTwo()
+                                                                          
+        WHERE MovementItem.MovementID = inMovementId
+        GROUP BY MovementItem.MovementID
+        HAVING Sum((MIFloat_JuridicalPriceTwo.ValueData - MIFloat_JuridicalPriceTwo.ValueData)::TFloat)::TFloat <> 0;   
+          
          -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
          PERFORM lpComplete_Movement (inMovementId := inMovementId
                                     , inDescId     := zc_Movement_Send()
                                     , inUserId     := inUserId
                                      );
+                                     
+     ELSE
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), MIC.MovementItemId, Sum(MIC.Amount * MIFloat_PriceWithVAT.ValueData) / Sum(MIC.Amount))
+        FROM MovementItemContainer AS MIC
+
+             INNER JOIN ContainerLinkObject AS CLI_MI
+                                            ON CLI_MI.containerid = MIC.ContainerId
+                                           AND CLI_MI.descid     = zc_ContainerLinkObject_PartionMovementItem()
+             INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+             -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                         ON MIFloat_MovementItem.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                        
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                         ON MIFloat_PriceWithVAT.MovementItemId = COALESCE(MIFloat_MovementItem.ValueData :: Integer, Object_PartionMovementItem.ObjectCode)                                 
+                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+        WHERE MIC.MovementId = inMovementId 
+          AND MIC.DescId = zc_MIContainer_Count()
+          AND MIC.isActive = False
+        GROUP BY MIC.MovementItemId
+        HAVING Sum(MIC.Amount) <> 0;     
      END IF;
 
      -- Добавили в ТП
@@ -1380,4 +1450,4 @@ $BODY$
 -- select * from gpUpdate_Movement_Send_Deferred(inMovementId := 15529825 , inisDeferred := 'True' ,  inSession := '3');-- SELECT * FROM lpComplete_Movement_Send (inMovementId:= 14931454, inUserId:= 3)
 -- select * from gpUpdate_Status_Send(inMovementId := 19877942  , inStatusCode := 2 ,  inSession := '3');
 
-select * from gpUpdate_Movement_Send_Deferred(inMovementId := 25917762 , inisDeferred := 'True' ,  inSession := '3');
+-- select * from gpUpdate_Movement_Send_Deferred(inMovementId := 25917762 , inisDeferred := 'True' ,  inSession := '3');

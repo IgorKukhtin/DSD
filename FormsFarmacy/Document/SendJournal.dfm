@@ -3,8 +3,8 @@ inherited SendJournalForm: TSendJournalForm
   ClientHeight = 535
   ClientWidth = 968
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 986
-  ExplicitHeight = 582
+  ExplicitWidth = 990
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -535,6 +535,16 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
+          end
+          object TotalDiff: TcxGridDBColumn
+            Caption = #1044#1077#1083#1100#1090#1072' '#1084#1077#1078#1076#1091' '#1086#1090#1083#1086#1078#1077#1085' '#1080' '#1087#1088#1086#1074#1077#1076#1077#1085
+            DataBinding.FieldName = 'TotalDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
           end
         end
       end
@@ -1182,6 +1192,7 @@ inherited SendJournalForm: TSendJournalForm
       FileNameParam.Value = ''
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
+      FilterParam = <>
       Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1089#1087#1080#1089#1082#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
     end
     object actExecDataForTTN: TdsdExecStoredProc

@@ -815,6 +815,15 @@ type
     IntegerField5: TIntegerField;
     StringField1: TStringField;
     BooleanField1: TBooleanField;
+    tblMovement_ReturnInSubjectDocId: TIntegerField;
+    tblMovementItem_ReturnInSubjectDocId: TIntegerField;
+    cdsReturnInItemsSubjectDocId: TIntegerField;
+    cdsReturnInItemsSubjectDocName: TStringField;
+    cdsReturnInSubjectDocId: TIntegerField;
+    cdsReturnInSubjectDocName: TStringField;
+    qrySubjectDoc: TFDQuery;
+    qrySubjectDocId: TIntegerField;
+    qrySubjectDocValueData: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -882,7 +891,7 @@ type
     procedure LoadOrderExtrenalItems(AId: integer);
     procedure GenerateOrderExtrenalItemsList;
 
-    function SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
+    function SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string; SubjectDocId : Integer; SubjectDocName : String;
       TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string; NowSync: Boolean = False) : boolean;
     procedure NewReturnIn;
     procedure LoadReturnIn;
@@ -891,6 +900,7 @@ type
     procedure DefaultReturnInItems;
     procedure LoadReturnInItems(AId: integer);
     procedure GenerateReturnInItemsList;
+    procedure GenerateReturnInSubjectDoc;
     procedure SyncReturnIn(AMovementId: Integer);
 
     procedure SavePhotoGroup(AGroupName: string);
@@ -4781,7 +4791,7 @@ begin
 end;
 
 { сохранение возвратов в БД }
-function TDM.SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
+function TDM.SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string; SubjectDocId : Integer; SubjectDocName : String;
   TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string;
   NowSync: Boolean = False) : boolean;
 var
@@ -4835,6 +4845,7 @@ begin
       tblMovement_ReturnInInvNumber.AsString := NewInvNumber;
       tblMovement_ReturnInOperDate.AsDateTime := OperDate;
       tblMovement_ReturnInComment.AsString := Comment;
+      tblMovement_ReturnInSubjectDocId.AsInteger := SubjectDocId;
       if Complete then
         tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
       else
@@ -4867,6 +4878,7 @@ begin
 
         tblMovement_ReturnInOperDate.AsDateTime := OperDate;
         tblMovement_ReturnInComment.AsString := Comment;
+        tblMovement_ReturnInSubjectDocId.AsInteger := SubjectDocId;
         if Complete then
           tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
         else
@@ -4915,6 +4927,7 @@ begin
             tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
             tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
             tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
+            tblMovementItem_ReturnInSubjectDocId.AsInteger := FieldbyName('SubjectDocId').AsInteger;
             tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
 
             tblMovementItem_ReturnIn.Post;
@@ -4972,6 +4985,9 @@ begin
 
       cdsReturnInOperDate.AsDateTime := OperDate;
       cdsReturnInPaidKindId.AsInteger := PaidKindId;
+      cdsReturnInComment.AsString := Comment;
+      cdsReturnInSubjectDocId.AsInteger := SubjectDocId;
+      cdsReturnInSubjectDocName.AsString := SubjectDocName;
       cdsReturnInComment.AsString := Comment;
       cdsReturnInName.AsString := 'Возврат №' + CurInvNumber + ' от ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', TotalPrice);
@@ -5094,19 +5110,22 @@ begin
 //or
     qryReturnIn.SQL.Text :=
        ' SELECT  '
-     + '         ID '
-     + '       , InvNumber '
-     + '       , OperDate '
-     + '       , PaidKindId '
-     + '       , TotalCountKg '
-     + '       , TotalSummPVAT '
-     + '       , isSync '
-     + '       , StatusId '
-     + '       , Comment '
+     + '         Movement_ReturnIn.ID '
+     + '       , Movement_ReturnIn.InvNumber '
+     + '       , Movement_ReturnIn.OperDate '
+     + '       , Movement_ReturnIn.PaidKindId '
+     + '       , Movement_ReturnIn.TotalCountKg '
+     + '       , Movement_ReturnIn.TotalSummPVAT '
+     + '       , Movement_ReturnIn.isSync '
+     + '       , Movement_ReturnIn.StatusId '
+     + '       , Movement_ReturnIn.SubjectDocId '
+     + '       , Movement_ReturnIn.Comment '
+     + '       , OBJECT_SUBJECTDOC.ValueData AS SubjectDocName '
      + ' FROM  Movement_ReturnIn '
-     + ' WHERE PartnerId = ' + qryPartnerId.AsString
-     + '   AND ContractId = ' + qryPartnerContractId.AsString
-     + ' ORDER BY OperDate desc ';
+     + '       LEFT JOIN OBJECT_SUBJECTDOC ON OBJECT_SUBJECTDOC.Id = Movement_ReturnIn.SubjectDocId '
+     + ' WHERE Movement_ReturnIn.PartnerId = ' + qryPartnerId.AsString
+     + '   AND Movement_ReturnIn.ContractId = ' + qryPartnerContractId.AsString
+     + ' ORDER BY Movement_ReturnIn.OperDate desc ';
 
     qryReturnIn.Open;
 
@@ -5117,6 +5136,11 @@ begin
       cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
+
+      cdsReturnInSubjectDocId.AsVariant := qryReturnIn.FieldByName('SubjectDocId').AsVariant;
+      if cdsReturnInSubjectDocId.AsInteger = 0 then cdsReturnInSubjectDocName.AsString := 'Без причины'
+      else cdsReturnInSubjectDocName.AsString := qryReturnIn.FieldByName('SubjectDocName').AsString;
+
       cdsReturnInName.AsString := 'Возврат №' + qryReturnIn.FieldByName('INVNUMBER').AsString + ' от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
       cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
@@ -5192,6 +5216,7 @@ begin
      + '       , Movement_ReturnIn.OperDate '
      + '       , Movement_ReturnIn.PaidKindId '
      + '       , Movement_ReturnIn.Comment '
+     + '       , Movement_ReturnIn.SubjectDocId '
      + '       , Movement_ReturnIn.TotalCountKg '
      + '       , Movement_ReturnIn.TotalSummPVAT '
      + '       , Movement_ReturnIn.isSync '
@@ -5205,6 +5230,7 @@ begin
      + '       , Object_Partner.ContractId '
      + '       , Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData AS ContractName '
      + '       , Object_Contract.ChangePercent '
+     + '       , OBJECT_SUBJECTDOC.ValueData AS SubjectDocName '
      + ' FROM  Movement_ReturnIn '
      + '       JOIN Object_Partner         ON Object_Partner.ID           = Movement_ReturnIn.PartnerId '
      + '                                  AND Object_Partner.ContractId   = Movement_ReturnIn.ContractId '
@@ -5212,6 +5238,7 @@ begin
      + '                                  AND Object_Juridical.ContractId = Object_Partner.ContractId '
      + '       LEFT JOIN Object_PriceList  ON Object_PriceList.ID         = IFNULL(Object_Partner.PriceListId_ret, :DefaultPriceList) '
      + '       LEFT JOIN Object_Contract   ON Object_Contract.ID          = Object_Partner.ContractId '
+     + '       LEFT JOIN OBJECT_SUBJECTDOC ON OBJECT_SUBJECTDOC.Id        = Movement_ReturnIn.SubjectDocId '
      + ' WHERE DATE(Movement_ReturnIn.OperDate) BETWEEN :STARTDATE AND :ENDDATE '
      + ' GROUP BY Movement_ReturnIn.ID, Movement_ReturnIn.PartnerId, Movement_ReturnIn.ContractId  '
      + ' ORDER BY PartnerName, Object_Partner.Address, Object_Partner.ContractId asc, Movement_ReturnIn.OperDate desc ';
@@ -5229,6 +5256,9 @@ begin
       cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
+      cdsReturnInSubjectDocId.AsVariant := qryReturnIn.FieldByName('SubjectDocId').AsVariant;
+      if cdsReturnInSubjectDocId.AsInteger = 0 then cdsReturnInSubjectDocName.AsString := 'Без причины'
+      else cdsReturnInSubjectDocName.AsString := qryReturnIn.FieldByName('SubjectDocName').AsString;
       cdsReturnInName.AsString := 'Возврат №' + qryReturnIn.FieldByName('INVNUMBER').AsString + ' от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
       cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
@@ -5507,6 +5537,24 @@ begin
     DataSetCache.Add('ReturnInItemsList', Params, qryGoodsItems);
   end;
 
+  Params.Free;
+end;
+
+{ начитка справочника причина возврата }
+procedure TDM.GenerateReturnInSubjectDoc;
+var
+  Params: TParams;
+begin
+  Params := TParams.Create(nil);
+  Params.CreateParam(cdsReturnInSubjectDocId.DataType, 'SUBJECTDOC', ptInput).Value := 0;
+
+  if DataSetCache.Find('SubjectDoc', Params) = nil then
+  begin
+    qrySubjectDoc.Open;
+
+    DataSetCache.Add('SubjectDoc', Params, qrySubjectDoc);
+
+  end;
   Params.Free;
 end;
 
@@ -6309,6 +6357,7 @@ begin
           '    inUnitId:= ' + IntToStr(FieldByName('UNITID').AsInteger) + ', ' +
           '    inContractId:= ' + IntToStr(FieldByName('CONTRACTID').AsInteger) + ', ' +
           '    inComment:= ''' + AdaptQuotMark(FieldByName('COMMENT').AsString) + ''', ' +
+          '    inSubjectDocId:= ' + IntToStr(FieldByName('SubjectDocId').AsInteger) + ', ' +
           '    inSession:= vbSession); ';
 
         // Загружаем возвращаемые товары
@@ -6330,6 +6379,7 @@ begin
             '    inAmount:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_ReturnIn.FieldByName('AMOUNT').AsFloat), ',', '.') + ', ' +
             '    inPrice:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_ReturnIn.FieldByName('PRICE').AsFloat), ',', '.') + ', ' +
             '    inChangePercent:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_ReturnIn.FieldByName('CHANGEPERCENT').AsFloat), ',', '.') + ', ' +
+            '    inSubjectDocId:= ' + IntToStr(DM.tblMovementItem_ReturnIn.FieldByName('SubjectDocId').AsInteger) + ', ' +
             '    inSession:= vbSession); ';
 
           Inc(ItemsCount);

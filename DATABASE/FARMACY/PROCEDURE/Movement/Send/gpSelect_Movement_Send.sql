@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ConfirmedText TVarChar
              , isBanFiscalSale Boolean
              , isSendLoss Boolean, isSendLossFrom Boolean
+             , TotalDiff TFloat
               )
 
 AS
@@ -180,6 +181,7 @@ BEGIN
            , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
            , COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)         ::Boolean AS isSendLoss           
            , COALESCE (MovementBoolean_SendLossFrom.ValueData, FALSE)     ::Boolean AS isSendLossFrom        
+           , MovementFloat_TotalDiff.ValueData                                      AS TotalDiff
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -213,6 +215,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+                                   
+            LEFT JOIN MovementFloat AS MovementFloat_TotalDiff
+                                    ON MovementFloat_TotalDiff.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalDiff.DescId = zc_MovementFloat_TotalDiff()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

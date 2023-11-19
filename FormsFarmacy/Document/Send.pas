@@ -229,6 +229,7 @@ type
     dxBarButton16: TdxBarButton;
     actReport_GoodsRemainsSend: TdsdOpenForm;
     bbReport_GoodsRemainsSend: TdxBarButton;
+    PriceInDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public
