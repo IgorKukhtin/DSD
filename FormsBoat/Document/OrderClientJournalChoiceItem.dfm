@@ -156,6 +156,11 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = FromName
+        end
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = ObjectName_ch3
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -314,6 +319,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       object ModelName: TcxGridDBColumn
         Caption = #1052#1086#1076#1077#1083#1100
         DataBinding.FieldName = 'ModelName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -391,7 +397,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 300
+        Width = 200
       end
       object DescName_ch3: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -680,7 +686,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False

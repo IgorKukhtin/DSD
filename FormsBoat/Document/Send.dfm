@@ -821,6 +821,11 @@ object SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalOperPrice_ch2
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = InvNumber_partion_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1059,7 +1064,7 @@ object SendForm: TSendForm
       TabOrder = 4
     end
     object btnShowAll: TcxButton
-      Left = 664
+      Left = 674
       Top = 4
       Width = 153
       Height = 25
@@ -1099,8 +1104,8 @@ object SendForm: TSendForm
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 664
-      Top = 35
+      Left = 851
+      Top = 4
       Width = 153
       Height = 25
       Action = actFormClose
@@ -1109,8 +1114,8 @@ object SendForm: TSendForm
       TabOrder = 9
     end
     object cxButton1: TcxButton
-      Left = 828
-      Top = 4
+      Left = 674
+      Top = 35
       Width = 153
       Height = 25
       Action = actSetVisible_Grid
@@ -1213,6 +1218,10 @@ object SendForm: TSendForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsView'
         end
         item
@@ -1298,9 +1307,7 @@ object SendForm: TSendForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '   '
       Category = 0
-      Hint = '   '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -3855,8 +3862,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 34
-    Top = 360
+    Left = 58
+    Top = 320
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null

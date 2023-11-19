@@ -1,27 +1,23 @@
 ﻿inherited InvoiceForm: TInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
-  ClientHeight = 503
+  ClientHeight = 537
   ClientWidth = 344
   AddOnFormData.isSingle = False
   ExplicitWidth = 350
-  ExplicitHeight = 532
+  ExplicitHeight = 566
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 156
+    Left = 235
     Top = 465
-    Width = 86
-    ExplicitLeft = 156
+    ExplicitLeft = 235
     ExplicitTop = 465
-    ExplicitWidth = 86
   end
   inherited bbCancel: TcxButton
-    Left = 249
-    Top = 465
-    Width = 86
-    ExplicitLeft = 249
-    ExplicitTop = 465
-    ExplicitWidth = 86
+    Left = 235
+    Top = 496
+    ExplicitLeft = 235
+    ExplicitTop = 496
   end
   object Код: TcxLabel [2]
     Left = 15
@@ -236,7 +232,7 @@
   end
   object cxLabel4: TcxLabel [30]
     Left = 15
-    Top = 301
+    Top = 302
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object ceParent: TcxButtonEdit [31]
@@ -271,12 +267,22 @@
   object btnGoodsChoiceForm: TcxButton [34]
     Left = 15
     Top = 465
-    Width = 134
+    Width = 196
     Height = 25
     Action = actObjectChoiceForm
     ParentShowHint = False
     ShowHint = True
     TabOrder = 34
+  end
+  object cxButton1: TcxButton [35]
+    Left = 15
+    Top = 496
+    Width = 196
+    Height = 25
+    Action = actGuidesParentChoiceForm
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 35
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
@@ -287,7 +293,6 @@
     Top = 52
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 302
     Top = 99
     object actGetPlanDate: TdsdDataSetRefresh
@@ -309,7 +314,8 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'Lieferanten / Kunden'
+      Caption = #1042#1099#1073#1088#1072#1090#1100' Lieferanten / Kunden'
+      Hint = #1042#1099#1073#1088#1072#1090#1100' Lieferanten / Kunden'
       ImageIndex = 7
       FormName = 'TUnion_ClientPartnerForm'
       FormNameParam.Value = 'TUnion_ClientPartnerForm'
@@ -387,6 +393,135 @@
           Name = 'TaxKindName'
           Value = Null
           Component = GuidesTaxKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGuidesParentChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+      ImageIndex = 7
+      FormName = 'TUnion_OrderJournalChoiceForm'
+      FormNameParam.Value = 'TUnion_OrderJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = GuidesParent
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = ''
+          Component = GuidesParent
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterObjectId'
+          Value = Null
+          Component = GuidesObject
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterObjectName'
+          Value = Null
+          Component = GuidesObject
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSumm_debet'
+          Value = Null
+          Component = ceAmountIn
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSumm_credit'
+          Value = Null
+          Component = ceAmountOut
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = GuidesObject
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = GuidesObject
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = GuidesTaxKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = GuidesTaxKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','

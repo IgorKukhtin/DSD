@@ -93,7 +93,7 @@ uses
     bbInsertRecordGoods: TdxBarButton;
     bbPrintSticker: TdxBarButton;
     bbMIContainerCost: TdxBarButton;
-    Panel1: TPanel;
+    Panel_all: TPanel;
     cxGrid_Master: TcxGrid;
     cxGrid_MasterDBTableView: TcxGridDBTableView;
     GoodsGroupNameFull: TcxGridDBColumn;
@@ -133,13 +133,13 @@ uses
     cxGridLevel3: TcxGridLevel;
     spInsert_MI_byOrderClient: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    SetErasedChild: TdsdUpdateErased;
+    actSetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     getMovementForm: TdsdStoredProc;
     actOpenOrderClientForm: TdsdOpenForm;
     bbOpenOrderClientForm: TdxBarButton;
-    macErasedMI_Master_list: TMultiAction;
-    macErasedMI_Master: TMultiAction;
+    mactErasedMI_Master_list: TMultiAction;
+    mactErasedMI_Master: TMultiAction;
     bbErasedMI_Master: TdxBarButton;
     AmountSend_ch3: TcxGridDBColumn;
     actChoiceForm_OrderClientItem: TOpenChoiceForm;
@@ -185,9 +185,9 @@ uses
     spUnErasedMIDetail: TdsdStoredProc;
     bbSetErasedDetail: TdxBarButton;
     bbSetUnErasedDetail: TdxBarButton;
-    cxTopSplitter: TcxSplitter;
-    cxSplitter2: TcxSplitter;
-    SetUnErasedChild: TdsdUpdateErased;
+    cxSplitter_Bottom_Detail: TcxSplitter;
+    cxSplitter_Bottom_Child: TcxSplitter;
+    actSetUnErasedChild: TdsdUpdateErased;
     spErasedMIChild: TdsdStoredProc;
     spUnErasedMIChild: TdsdStoredProc;
     bbSetUnErasedChild: TdxBarButton;
@@ -214,7 +214,7 @@ uses
     actUpdateDetailDS_All: TdsdUpdateDataSet;
     spErasedMIDetailAll: TdsdStoredProc;
     actSetErasedDetail_All: TdsdUpdateErased;
-    SetUnErasedDetail_All: TdsdUpdateErased;
+    actSetUnErasedDetail_All: TdsdUpdateErased;
     spUnErasedMIDetail_All: TdsdStoredProc;
     bbSetErasedDetail_All: TdxBarButton;
     bbSetUnErasedDetail_All: TdxBarButton;
@@ -259,30 +259,34 @@ uses
     actDeleteMovement: TChangeGuidesStatus;
     spInsert_MI_byOrderAll: TdsdStoredProc;
     actInsert_MI_byOrderAll: TdsdExecStoredProc;
-    macInsert_MI_byOrderAll: TMultiAction;
+    mactInsert_MI_byOrderAll: TMultiAction;
     actChoiceForm_OrderClient: TOpenChoiceForm;
     actRefreshMaster: TdsdDataSetRefresh;
     bbInsert_MI_byOrder: TdxBarButton;
     bbsView: TdxBarSubItem;
     bbsDoc: TdxBarSubItem;
     actFormClose: TdsdFormClose;
-    actCompleteMovement_andSave: TChangeGuidesStatus;
     Panel_btn: TPanel;
     btnInsertUpdateMovement: TcxButton;
     btnCompleteMovement: TcxButton;
     btnUnCompleteMovement: TcxButton;
     btnSetErased: TcxButton;
     btnShowAll: TcxButton;
-    btnInsertAction: TcxButton;
+    btnInsertRecordGoods: TcxButton;
     btnCompleteMovement_andSave: TcxButton;
     btnFormClose: TcxButton;
     bbsOpenForm: TdxBarSubItem;
     bbsPrint: TdxBarSubItem;
-    btnUpdateAction: TcxButton;
-    cxButton1: TcxButton;
+    btnChoiceForm_OrderClientItem: TcxButton;
+    btnInsert_MI_byOrderAll: TcxButton;
     cxButton2: TcxButton;
     cxButton3: TcxButton;
     ForCount_ch3: TcxGridDBColumn;
+    actSetVisible_Grid_Detail: TBooleanSetVisibleAction;
+    mactCompleteMovement_andSave: TMultiAction;
+    cxButton4: TcxButton;
+    actSetVisible_Grid_Child: TBooleanSetVisibleAction;
+    cxButton5: TcxButton;
 
   private
   public

@@ -679,8 +679,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 4
-      ExplicitTop = 1
     end
   end
   object PanelGoods: TPanel
@@ -1386,7 +1384,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 130
   end
   object Panel_btn: TPanel
@@ -1396,9 +1394,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Height = 64
     Align = alBottom
     TabOrder = 12
-    ExplicitLeft = -51
-    ExplicitTop = 494
-    ExplicitWidth = 1272
     object btnInsert: TcxButton
       Left = 17
       Top = 4
@@ -1430,7 +1425,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 2
     end
     object btnChoiceGuides: TcxButton
-      Left = 754
+      Left = 743
       Top = 4
       Width = 153
       Height = 25
@@ -1460,8 +1455,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 5
     end
     object btnFormClose: TcxButton
-      Left = 754
-      Top = 35
+      Left = 924
+      Top = 4
       Width = 153
       Height = 25
       Action = actFormClose
@@ -1503,6 +1498,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = actSetVisible_ProdColorItems
+        Properties.Strings = (
+          'Value')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -2063,7 +2063,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1072#1073#1083#1086#1085
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2233,7 +2233,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           StoredProc = spUnErasedGoods
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'

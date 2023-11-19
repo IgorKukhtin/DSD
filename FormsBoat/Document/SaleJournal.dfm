@@ -85,7 +85,6 @@ object SaleJournalForm: TSaleJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -243,12 +242,12 @@ object SaleJournalForm: TSaleJournalForm
         Width = 70
       end
       object FromName: TcxGridDBColumn
-        Caption = #1054#1090' '#1082#1086#1075#1086
+        Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090' '#1082#1086#1075#1086
-        Width = 91
+        Width = 151
       end
       object ToName: TcxGridDBColumn
         Caption = 'Kunden'
@@ -256,7 +255,14 @@ object SaleJournalForm: TSaleJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1084#1091
-        Width = 91
+        Width = 167
+      end
+      object VATPercent: TcxGridDBColumn
+        Caption = '% '#1053#1044#1057
+        DataBinding.FieldName = 'VATPercent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 42
       end
       object TaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
@@ -267,8 +273,9 @@ object SaleJournalForm: TSaleJournalForm
         Width = 70
       end
       object TaxKindName_info: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1053#1044#1057' (info)'
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName_info'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -324,13 +331,6 @@ object SaleJournalForm: TSaleJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
-      end
-      object VATPercent: TcxGridDBColumn
-        Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercent'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 42
       end
       object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -646,7 +646,6 @@ object SaleJournalForm: TSaleJournalForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -964,8 +963,8 @@ object SaleJournalForm: TSaleJournalForm
         item
           StoredProc = spMovementSetErased
         end>
-      Caption = #1057#1090#1072#1090#1091#1089#1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 52
       Status = mtDelete
       DataSource = DataSource

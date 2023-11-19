@@ -27,6 +27,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     Width = 90
     Height = 25
     Action = actInsertUpdate
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 6
   end
   object cxButtonCancel: TcxButton
@@ -37,6 +39,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 10
   end
   object edGoodsName: TcxButtonEdit
@@ -334,7 +338,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-      Hint = #1042#1099#1073#1086#1088' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 7
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'

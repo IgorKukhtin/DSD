@@ -127,6 +127,11 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = GoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -373,7 +378,6 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 457
     object btnFormClose: TcxButton
       Left = 442
       Top = 7

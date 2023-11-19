@@ -176,7 +176,7 @@ type
     InvNumber_OrderClientFull_ch2: TcxGridDBColumn;
     IsErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    cxSplitterBottom: TcxSplitter;
+    cxSplitter_Bottom: TcxSplitter;
     ChildDS: TDataSource;
     ChildCDS: TClientDataSet;
     ChildViewAddOn: TdsdDBViewAddOn;
@@ -239,16 +239,16 @@ type
     spSelectPrintStickerOne: TdsdStoredProc;
     bbPrintStickerOne: TdxBarButton;
     ExecuteDialogPrint: TExecuteDialog;
-    macPrintStiker: TMultiAction;
-    macPrintStikerOne: TMultiAction;
+    mactPrintStiker: TMultiAction;
+    mactPrintStikerOne: TMultiAction;
     cbPrice: TcxCheckBox;
     Panel1: TPanel;
     actAdd_limit: TdsdInsertUpdateAction;
     mactAdd_limit: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
     bbAdd_limit: TdxBarButton;
-    macInsertAction: TMultiAction;
-    macUpdateAction: TMultiAction;
+    mactInsertAction: TMultiAction;
+    mactUpdateAction: TMultiAction;
     cxLabel8: TcxLabel;
     ceTotalSummMVAT: TcxCurrencyEdit;
     cxLabel23: TcxLabel;
@@ -257,7 +257,7 @@ type
     ceSumm3: TcxCurrencyEdit;
     cxLabel25: TcxLabel;
     ceTotalSumm: TcxCurrencyEdit;
-    macInsertMask: TMultiAction;
+    mactInsertMask: TMultiAction;
     actInsertMaskAction: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
     spUnErasedMIchild: TdsdStoredProc;
@@ -301,13 +301,12 @@ type
     btnInsertAction: TcxButton;
     btnUpdateAction: TcxButton;
     btnCompleteMovement_andSave: TcxButton;
-    actCompleteMovement_andSave: TChangeGuidesStatus;
     actSaveMovement: TChangeGuidesStatus;
     actFormClose: TdsdFormClose;
     btnFormClose: TcxButton;
     actInsertGoods1: TdsdInsertUpdateAction;
     actInsertAddLimit_Goods1_NO: TdsdInsertUpdateAction;
-    macInsertAddLimit_Goods1: TMultiAction;
+    mactInsertAddLimit_Goods1: TMultiAction;
     bbInsertAddLimit_Goods1: TdxBarButton;
     bbInsertAddLimit_Goods2: TdxBarButton;
     actOpenFormInsertGoods1: TdsdOpenForm;
@@ -316,6 +315,7 @@ type
     actGet_Id_Nul: TdsdExecStoredProc;
     actSetVisible_Grid: TBooleanSetVisibleAction;
     cxButton1: TcxButton;
+    mactCompleteMovement_andSave: TMultiAction;
   private
   public
   end;

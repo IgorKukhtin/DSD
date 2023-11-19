@@ -55,9 +55,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel6: TcxLabel
-      Left = 430
-      Top = 7
-      Caption = ' Kunden:'
+      Left = 429
+      Top = 6
+      Caption = 'Kunden:'
     end
     object edClient: TcxButtonEdit
       Left = 478
@@ -356,6 +356,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       object VATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -496,12 +499,15 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 457
     object btnUpdate: TcxButton
       Left = 543
       Top = 7
       Width = 90
       Height = 25
       Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 0
     end
     object btnComplete: TcxButton
@@ -510,6 +516,8 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Width = 90
       Height = 25
       Action = actChoiceGuides
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 1
     end
     object btnFormClose: TcxButton
@@ -521,6 +529,16 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 2
+    end
+    object btnClientChoiceForm: TcxButton
+      Left = 101
+      Top = 7
+      Width = 150
+      Height = 25
+      Action = actClientChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
     end
   end
   object DataSource: TDataSource
@@ -679,17 +697,16 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbMovementProtocol: TdxBarButton
-      Action = MovementProtocolOpenForm
+      Action = actMovementProtocolOpenForm
       Category = 0
     end
     object bbPrint: TdxBarButton
@@ -755,7 +772,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object ExecuteDialog: TExecuteDialog
+    object actExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
@@ -800,7 +817,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -857,7 +874,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object MovementProtocolOpenForm: TdsdOpenForm
+    object actMovementProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1390,6 +1407,37 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       ImageIndex = 52
+    end
+    object actClientChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 7
+      FormName = 'TClientForm'
+      FormNameParam.Value = 'TClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesClient
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuidesClient
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object spSelect: TdsdStoredProc

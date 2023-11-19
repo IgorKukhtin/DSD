@@ -561,9 +561,10 @@ object IncomeForm: TIncomeForm
         Left = 0
         Top = 0
         Width = 1372
-        Height = 231
+        Height = 184
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 231
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1084,9 +1085,9 @@ object IncomeForm: TIncomeForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 239
+        Top = 192
         Width = 1372
-        Height = 60
+        Height = 107
         Align = alBottom
         TabOrder = 1
         LookAndFeel.Kind = lfStandard
@@ -1116,6 +1117,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_ch2
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1268,15 +1274,15 @@ object IncomeForm: TIncomeForm
           GridView = cxGridDBTableViewChild
         end
       end
-      object cxSplitterBottom: TcxSplitter
+      object cxSplitter_Bottom: TcxSplitter
         Left = 0
-        Top = 231
+        Top = 184
         Width = 1372
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 225
+        ExplicitTop = 178
       end
     end
     object cxTabSheetCost: TcxTabSheet
@@ -1629,7 +1635,7 @@ object IncomeForm: TIncomeForm
       Top = 5
       Width = 105
       Height = 25
-      Action = macInsertAction
+      Action = mactInsertAction
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
@@ -1639,24 +1645,24 @@ object IncomeForm: TIncomeForm
       Top = 6
       Width = 105
       Height = 25
-      Action = macUpdateAction
+      Action = mactUpdateAction
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
     end
     object btnCompleteMovement_andSave: TcxButton
       Left = 24
-      Top = 37
+      Top = 35
       Width = 155
       Height = 25
-      Action = actCompleteMovement_andSave
+      Action = mactCompleteMovement_andSave
       ParentShowHint = False
       ShowHint = True
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 681
-      Top = 35
+      Left = 1065
+      Top = 6
       Width = 153
       Height = 25
       Action = actFormClose
@@ -1877,7 +1883,6 @@ object IncomeForm: TIncomeForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -1899,7 +1904,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbPrintStiker: TdxBarButton
-      Action = macPrintStiker
+      Action = mactPrintStiker
       Category = 0
     end
     object bbGridToExel: TdxBarButton
@@ -1954,7 +1959,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbInsertAction: TdxBarButton
-      Action = macInsertAction
+      Action = mactInsertAction
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
@@ -2012,7 +2017,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbUpdateAction: TdxBarButton
-      Action = macUpdateAction
+      Action = mactUpdateAction
       Category = 0
     end
     object bbUpdateActionMovement: TdxBarButton
@@ -2020,7 +2025,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbPrintStickerOne: TdxBarButton
-      Action = macPrintStikerOne
+      Action = mactPrintStikerOne
       Category = 0
     end
     object bbAdd_limit: TdxBarButton
@@ -2028,7 +2033,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbInsertMask: TdxBarButton
-      Action = macInsertMask
+      Action = mactInsertMask
       Category = 0
       ImageIndex = 54
     end
@@ -2234,7 +2239,7 @@ object IncomeForm: TIncomeForm
         end>
     end
     object bbInsertAddLimit_Goods1: TdxBarButton
-      Action = macInsertAddLimit_Goods1
+      Action = mactInsertAddLimit_Goods1
       Category = 0
     end
     object bbInsertAddLimit_Goods2: TdxBarButton
@@ -2260,7 +2265,13 @@ object IncomeForm: TIncomeForm
       item
         Component = cxGridChild
         Properties.Strings = (
-          'Height')
+          'Height'
+          'Top')
+      end
+      item
+        Component = cxSplitter_Bottom
+        Properties.Strings = (
+          'Top')
       end
       item
         Component = Owner
@@ -2326,7 +2337,7 @@ object IncomeForm: TIncomeForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object macInsertAddLimit_Goods1: TMultiAction
+    object mactInsertAddLimit_Goods1: TMultiAction
       Category = 'Goods'
       MoveParams = <>
       ActionList = <
@@ -2382,7 +2393,7 @@ object IncomeForm: TIncomeForm
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -2607,32 +2618,6 @@ object IncomeForm: TIncomeForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 14
-      Status = mtComplete
-      Guides = StatusGuides
-    end
-    object actCompleteMovement_andSave: TChangeGuidesStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertUpdateMovement
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spSelectMIChild
-        end
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spChangeStatus
-        end>
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 86
       Status = mtComplete
       Guides = StatusGuides
     end
@@ -3053,7 +3038,7 @@ object IncomeForm: TIncomeForm
       DataSource = MasterDS
       IdFieldName = 'Id'
     end
-    object macInsertAction: TMultiAction
+    object mactInsertAction: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3067,7 +3052,7 @@ object IncomeForm: TIncomeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
       ImageIndex = 0
     end
-    object macInsertMask: TMultiAction
+    object mactInsertMask: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3171,7 +3156,7 @@ object IncomeForm: TIncomeForm
       DataSource = MasterDS
       IdFieldName = 'Id'
     end
-    object macUpdateAction: TMultiAction
+    object mactUpdateAction: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3616,7 +3601,7 @@ object IncomeForm: TIncomeForm
       ImageIndex = 7
       DataSource = MasterDS
     end
-    object macPrintStikerOne: TMultiAction
+    object mactPrintStikerOne: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3665,7 +3650,7 @@ object IncomeForm: TIncomeForm
       ImageIndex = 0
       WithoutNext = True
     end
-    object macPrintStiker: TMultiAction
+    object mactPrintStiker: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3830,7 +3815,7 @@ object IncomeForm: TIncomeForm
       Value = False
       Components = <
         item
-          Component = cxSplitterBottom
+          Component = cxSplitter_Bottom
         end
         item
           Component = cxGridChild
@@ -3841,6 +3826,21 @@ object IncomeForm: TIncomeForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1077#1079#1077#1088#1074
       ImageIndexTrue = 25
       ImageIndexFalse = 26
+    end
+    object mactCompleteMovement_andSave: TMultiAction
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMovement
+        end
+        item
+          Action = actRefresh
+        end
+        item
+          Action = actCompleteMovement
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      ImageIndex = 86
     end
   end
   object MasterDS: TDataSource

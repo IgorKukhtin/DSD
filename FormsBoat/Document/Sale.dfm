@@ -80,7 +80,7 @@ object SaleForm: TSaleForm
       Left = 407
       Top = 5
       Hint = #1054#1090' '#1082#1086#1075#1086
-      Caption = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
       ParentShowHint = False
       ShowHint = True
     end
@@ -192,7 +192,7 @@ object SaleForm: TSaleForm
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 544
-      Top = 68
+      Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -533,7 +533,7 @@ object SaleForm: TSaleForm
       ShowHint = True
     end
     object edDiscountNextTax: TcxCurrencyEdit
-      Left = 279
+      Left = 281
       Top = 129
       Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
       ParentShowHint = False
@@ -1074,8 +1074,8 @@ object SaleForm: TSaleForm
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 681
-      Top = 35
+      Left = 859
+      Top = 6
       Width = 153
       Height = 25
       Action = actFormClose
@@ -1253,7 +1253,6 @@ object SaleForm: TSaleForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -2535,8 +2534,8 @@ object SaleForm: TSaleForm
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 768
-    Top = 103
+    Left = 816
+    Top = 127
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2609,8 +2608,8 @@ object SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 8
+    Left = 680
+    Top = 40
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2708,8 +2707,8 @@ object SaleForm: TSaleForm
     Top = 263
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 734
-    Top = 87
+    Left = 702
+    Top = 135
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Sale'

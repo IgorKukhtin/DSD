@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TInvoiceJournalChoiceForm = class(TAncestorJournalForm)
@@ -50,19 +51,27 @@ type
     ExecuteDialog: TExecuteDialog;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
-    macUpdateContract: TMultiAction;
+    mactUpdateContract: TMultiAction;
     actUpdateContract: TdsdDataSetRefresh;
     actChoiceContract: TOpenChoiceForm;
     actChoiceMoneyPlace: TOpenChoiceForm;
     actUpdateMoneyPlace: TdsdDataSetRefresh;
-    macUpdateMoneyPlace: TMultiAction;
+    mactUpdateMoneyPlace: TMultiAction;
     actChoiceGuides: TdsdChoiceGuides;
     bbb: TdxBarButton;
     bbExecuteDialog: TdxBarButton;
     VATPercent: TcxGridDBColumn;
-    GuidesClient: TdsdGuides;
+    GuidesObject: TdsdGuides;
     cxLabel6: TcxLabel;
     edClient: TcxButtonEdit;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnFormClose: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetNull_GuidesClient: TcxButton;
+    actClientPartnerChoiceForm: TOpenChoiceForm;
+    btnClientPartnerChoiceForm: TcxButton;
+    actSetNull_GuidesClient: TdsdSetDefaultParams;
   private
     { Private declarations }
   public

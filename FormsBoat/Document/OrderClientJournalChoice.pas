@@ -60,7 +60,7 @@ type
     TotalSumm: TcxGridDBColumn;
     TotalSummVAT: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -69,7 +69,7 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     InvNumberPartner: TcxGridDBColumn;
-    MovementProtocolOpenForm: TdsdOpenForm;
+    actMovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrintOld: TdsdStoredProc;
     bbPrint: TdxBarButton;
@@ -80,7 +80,7 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     Comment: TcxGridDBColumn;
-    ExecuteDialog: TExecuteDialog;
+    actExecuteDialog: TExecuteDialog;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
@@ -115,6 +115,8 @@ type
     cxLabel3: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
+    btnClientChoiceForm: TcxButton;
+    actClientChoiceForm: TOpenChoiceForm;
   private
   public
   end;

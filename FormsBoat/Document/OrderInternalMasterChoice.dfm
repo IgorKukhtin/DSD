@@ -115,6 +115,11 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = GoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -363,7 +368,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Width = 894
     Height = 41
     Align = alBottom
-    TabOrder = 5
+    TabOrder = 4
     object btnUpdate: TcxButton
       Left = 574
       Top = 7

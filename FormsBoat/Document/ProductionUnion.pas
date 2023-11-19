@@ -63,7 +63,7 @@ type
     HeaderSaver: THeaderSaver;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
-    GridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
@@ -85,7 +85,7 @@ type
     ceStatus: TcxButtonEdit;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementItemProtocolOpenForm: TdsdOpenForm;
+    actMovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -95,7 +95,7 @@ type
     bbPrintCalc: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
     actUpdateChildDS: TdsdUpdateDataSet;
-    MovementItemChildProtocolOpenForm: TdsdOpenForm;
+    actMovementItemChildProtocolOpenForm: TdsdOpenForm;
     cxLabel12: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel13: TcxLabel;
@@ -105,17 +105,16 @@ type
     ChildViewAddOn: TdsdDBViewAddOn;
     spSelectMIChild: TdsdStoredProc;
     spErasedMIchild: TdsdStoredProc;
-    SetErasedChild: TdsdUpdateErased;
+    actSetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     GuidesFrom: TdsdGuides;
     spUnErasedMIchild: TdsdStoredProc;
     spInsertUpdateMIChild: TdsdStoredProc;
-    SetUnErasedChild: TdsdUpdateErased;
+    actSetUnErasedChild: TdsdUpdateErased;
     bbSetUnErasedChild: TdxBarButton;
     cxPageControl: TcxPageControl;
     cxTabSheetMain: TcxTabSheet;
-    Panel2: TPanel;
-    cxGridChild: TcxGrid;
+    cxGrid_Child: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
     NPP_ch1: TcxGridDBColumn;
     DescName_ch1: TcxGridDBColumn;
@@ -138,7 +137,7 @@ type
     cxLabel5: TcxLabel;
     ceParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
-    Panel3: TPanel;
+    Panel_all: TPanel;
     cxGrid: TcxGrid;
     cxGridDBTableViewMaster: TcxGridDBTableView;
     ObjectCode: TcxGridDBColumn;
@@ -181,7 +180,7 @@ type
     Comment_ch4: TcxGridDBColumn;
     isErased_ch4: TcxGridDBColumn;
     cxGridLevel_Det: TcxGridLevel;
-    cxSplitter2: TcxSplitter;
+    cxSplitter_Bottom_Detail: TcxSplitter;
     spInsertUpdateMIDetail: TdsdStoredProc;
     spUnErasedMIDetail: TdsdStoredProc;
     spErasedMIDetail: TdsdStoredProc;
@@ -242,8 +241,8 @@ type
     bbSetErasedDetail_All: TdxBarButton;
     bbSetUnErasedDetail_All: TdxBarButton;
     actProductionUnionMasterChoiceForm: TOpenChoiceForm;
-    MIDetailAllProtocolOpenForm: TdsdOpenForm;
-    MIDetailProtocolOpenForm: TdsdOpenForm;
+    actMIDetailAllProtocolOpenForm: TdsdOpenForm;
+    actMIDetailProtocolOpenForm: TdsdOpenForm;
     bbMIDetailAllProtocolOpenForm: TdxBarButton;
     bbMIDetailProtocolOpenForm: TdxBarButton;
     Hours_plan_ch4: TcxGridDBColumn;
@@ -266,10 +265,10 @@ type
     bbactGoods_ReceiptServiceChoiceForm_Child: TdxBarButton;
     bbChoiceFormReceiptService: TdxBarButton;
     bbReceiptServiceChoiceForm_DetAll: TdxBarButton;
-    macErasedMI_Master_list: TMultiAction;
-    macErasedMI_Master: TMultiAction;
+    mactErasedMI_Master_list: TMultiAction;
+    mactErasedMI_Master: TMultiAction;
     bbErasedMI_Master: TdxBarButton;
-    cxSplitter3: TcxSplitter;
+    cxSplitter_Bottom_Child: TcxSplitter;
     Ord: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     actOpenOrderClientForm: TdsdOpenForm;
@@ -277,7 +276,7 @@ type
     spInsertUpdate_bySend: TdsdStoredProc;
     actSendInsertForm: TOpenChoiceForm;
     actInsertUpdate_bySend: TdsdExecStoredProc;
-    macInsertUpdate_bySend: TMultiAction;
+    mactInsertUpdate_bySend: TMultiAction;
     actRefreshMI_Master: TdsdDataSetRefresh;
     bbInsertUpdate_bySend: TdxBarButton;
     actReport_Goods_master: TdsdOpenForm;
@@ -293,7 +292,7 @@ type
     edVATPercent: TcxCurrencyEdit;
     actInsertRecordReceiptGoods: TInsertRecord;
     actUpdateChoiceFormReceiptGoods: TOpenChoiceForm;
-    macInsertRecordReceiptGoods: TMultiAction;
+    mactInsertRecordReceiptGoods: TMultiAction;
     bbInsertRecordReceiptGoods: TdxBarButton;
     bbUpdateChoiceFormReceiptGoods: TdxBarButton;
     actOrderClientChoiceForm: TOpenChoiceForm;
@@ -313,7 +312,6 @@ type
     btnUpdateAction: TcxButton;
     btnCompleteMovement_andSave: TcxButton;
     btnFormClose: TcxButton;
-    actCompleteMovement_andSave: TChangeGuidesStatus;
     cbChangeReceipt: TcxCheckBox;
     spUpdate_MI_Child_byOrder: TdsdStoredProc;
     spUpdate_MI_Child_byReceipt: TdsdStoredProc;
@@ -321,11 +319,16 @@ type
     actUpdate_MI_Child_byOrder: TdsdExecStoredProc;
     bbUpdate_MI_Child_byOrder: TdxBarButton;
     bbUpdate_MI_Child_byReceipt: TdxBarButton;
-    macUpdate_MI_Child_byOrder_list: TMultiAction;
-    macUpdate_MI_Child_byOrder: TMultiAction;
+    mactUpdate_MI_Child_byOrder_list: TMultiAction;
+    mactUpdate_MI_Child_byOrder: TMultiAction;
     actRefresh_Child: TdsdDataSetRefresh;
-    macUpdate_MI_Child_byReceipt_list: TMultiAction;
-    macUpdate_MI_Child_byReceipt: TMultiAction;
+    mactUpdate_MI_Child_byReceipt_list: TMultiAction;
+    mactUpdate_MI_Child_byReceipt: TMultiAction;
+    mactCompleteMovement_andSave: TMultiAction;
+    actSetVisible_Grid_Detail: TBooleanSetVisibleAction;
+    actSetVisible_Grid_Child: TBooleanSetVisibleAction;
+    cxButton4: TcxButton;
+    cxButton5: TcxButton;
   private
   public
   end;

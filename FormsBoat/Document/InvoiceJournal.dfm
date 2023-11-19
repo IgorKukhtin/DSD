@@ -149,6 +149,11 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = ',0.00##'
               Kind = skSum
               Column = AmountIn_NotVAT
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ObjectName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -371,6 +376,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
             Visible = False
             Options.Editing = False
             Width = 60
@@ -636,7 +644,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       TabOrder = 2
     end
     object btnUnComplete: TcxButton
-      Left = 460
+      Left = 459
       Top = 7
       Width = 150
       Height = 25
@@ -644,7 +652,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 616
+      Left = 615
       Top = 7
       Width = 150
       Height = 25
@@ -811,6 +819,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      ImageIndex = 77
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 76
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      ImageIndex = 52
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

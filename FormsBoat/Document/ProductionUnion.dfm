@@ -246,21 +246,32 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      object Panel2: TPanel
+      object Panel_all: TPanel
         Left = 0
-        Top = 145
+        Top = 0
         Width = 1084
-        Height = 240
+        Height = 385
         Align = alClient
-        Caption = 'Panel2'
+        Caption = 'Panel_all'
         TabOrder = 0
-        object cxGridChild: TcxGrid
+        object cxSplitter_Bottom_Child: TcxSplitter
           Left = 1
-          Top = 124
+          Top = 261
+          Width = 1082
+          Height = 8
+          HotZoneClassName = 'TcxMediaPlayer8Style'
+          AlignSplitter = salBottom
+          Control = cxGrid_Child
+          ExplicitLeft = -15
+          ExplicitTop = 266
+        end
+        object cxGrid_Child: TcxGrid
+          Left = 1
+          Top = 269
           Width = 1082
           Height = 115
           Align = alBottom
-          TabOrder = 0
+          TabOrder = 1
           LookAndFeel.Kind = lfStandard
           LookAndFeel.NativeStyle = False
           LookAndFeel.SkinName = ''
@@ -599,11 +610,12 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
-          Top = 1
+          Top = 146
           Width = 1082
           Height = 115
-          Align = alClient
-          TabOrder = 1
+          Align = alBottom
+          TabOrder = 2
+          ExplicitTop = 154
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -873,29 +885,22 @@ object ProductionUnionForm: TProductionUnionForm
             GridView = cxGridDBTableView_Det
           end
         end
-        object cxSplitter2: TcxSplitter
+        object cxSplitter_Bottom_Detail: TcxSplitter
           Left = 1
-          Top = 116
+          Top = 138
           Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
-          Control = cxGridChild
+          Control = cxGrid_Detail
+          ExplicitLeft = 0
+          ExplicitTop = 140
         end
-      end
-      object Panel3: TPanel
-        Left = 0
-        Top = 0
-        Width = 1084
-        Height = 137
-        Align = alTop
-        Caption = 'Panel3'
-        TabOrder = 1
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
           Width = 1082
-          Height = 135
+          Height = 137
           Align = alClient
           TabOrder = 0
           object cxGridDBTableViewMaster: TcxGridDBTableView
@@ -1262,15 +1267,6 @@ object ProductionUnionForm: TProductionUnionForm
           end
         end
       end
-      object cxSplitter3: TcxSplitter
-        Left = 0
-        Top = 137
-        Width = 1084
-        Height = 8
-        HotZoneClassName = 'TcxMediaPlayer8Style'
-        AlignSplitter = salTop
-        Control = Panel3
-      end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
@@ -1411,6 +1407,11 @@ object ProductionUnionForm: TProductionUnionForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_ch54
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ReceiptServiceName_ch5
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1715,7 +1716,7 @@ object ProductionUnionForm: TProductionUnionForm
       TabOrder = 4
     end
     object btnShowAll: TcxButton
-      Left = 670
+      Left = 836
       Top = 5
       Width = 150
       Height = 25
@@ -1739,7 +1740,7 @@ object ProductionUnionForm: TProductionUnionForm
       Top = 36
       Width = 147
       Height = 25
-      Action = macInsertRecordReceiptGoods
+      Action = mactInsertRecordReceiptGoods
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
@@ -1749,13 +1750,13 @@ object ProductionUnionForm: TProductionUnionForm
       Top = 36
       Width = 155
       Height = 25
-      Action = actCompleteMovement_andSave
+      Action = mactCompleteMovement_andSave
       ParentShowHint = False
       ShowHint = True
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 670
+      Left = 836
       Top = 36
       Width = 150
       Height = 25
@@ -1763,6 +1764,26 @@ object ProductionUnionForm: TProductionUnionForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 9
+    end
+    object cxButton4: TcxButton
+      Left = 683
+      Top = 5
+      Width = 132
+      Height = 25
+      Action = actSetVisible_Grid_Child
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 10
+    end
+    object cxButton5: TcxButton
+      Left = 683
+      Top = 36
+      Width = 132
+      Height = 25
+      Action = actSetVisible_Grid_Detail
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 11
     end
   end
   object FormParams: TdsdFormParams
@@ -1851,6 +1872,10 @@ object ProductionUnionForm: TProductionUnionForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsView'
         end
         item
@@ -1929,9 +1954,7 @@ object ProductionUnionForm: TProductionUnionForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '   '
       Category = 0
-      Hint = '   '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -1956,7 +1979,7 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 0
     end
     object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbSetErased: TdxBarButton
@@ -1972,7 +1995,7 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 0
     end
     object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+      Action = actMovementItemProtocolOpenForm
       Category = 0
     end
     object bbPrintCalc: TdxBarButton
@@ -1987,12 +2010,12 @@ object ProductionUnionForm: TProductionUnionForm
       ImageIndex = 20
     end
     object bbSetErasedChild: TdxBarButton
-      Action = SetErasedChild
+      Action = actSetErasedChild
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
     end
     object bbSetUnErasedChild: TdxBarButton
-      Action = SetUnErasedChild
+      Action = actSetUnErasedChild
       Category = 0
     end
     object bbInsertRecordChild: TdxBarButton
@@ -2000,7 +2023,7 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 0
     end
     object bbChildProtocol: TdxBarButton
-      Action = MovementItemChildProtocolOpenForm
+      Action = actMovementItemChildProtocolOpenForm
       Category = 0
     end
     object bbUpdate_MI_Child: TdxBarButton
@@ -2050,11 +2073,11 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 0
     end
     object bbMIDetailAllProtocolOpenForm: TdxBarButton
-      Action = MIDetailAllProtocolOpenForm
+      Action = actMIDetailAllProtocolOpenForm
       Category = 0
     end
     object bbMIDetailProtocolOpenForm: TdxBarButton
-      Action = MIDetailProtocolOpenForm
+      Action = actMIDetailProtocolOpenForm
       Category = 0
     end
     object bbsUzel: TdxBarSubItem
@@ -2257,7 +2280,7 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 0
     end
     object bbErasedMI_Master: TdxBarButton
-      Action = macErasedMI_Master
+      Action = mactErasedMI_Master
       Category = 0
     end
     object bbOpenOrderClientForm: TdxBarButton
@@ -2265,7 +2288,7 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 0
     end
     object bbInsertUpdate_bySend: TdxBarButton
-      Action = macInsertUpdate_bySend
+      Action = mactInsertUpdate_bySend
       Category = 0
     end
     object bbReport_Goods_master: TdxBarButton
@@ -2277,7 +2300,7 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 0
     end
     object bbInsertRecordReceiptGoods: TdxBarButton
-      Action = macInsertRecordReceiptGoods
+      Action = mactInsertRecordReceiptGoods
       Category = 0
     end
     object bbUpdateChoiceFormReceiptGoods: TdxBarButton
@@ -2389,18 +2412,55 @@ object ProductionUnionForm: TProductionUnionForm
         end>
     end
     object bbUpdate_MI_Child_byOrder: TdxBarButton
-      Action = macUpdate_MI_Child_byOrder
+      Action = mactUpdate_MI_Child_byOrder
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       Category = 0
     end
     object bbUpdate_MI_Child_byReceipt: TdxBarButton
-      Action = macUpdate_MI_Child_byReceipt
+      Action = mactUpdate_MI_Child_byReceipt
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
       Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = actSetVisible_Grid_Child
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = actSetVisible_Grid_Detail
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cxGrid_Child
+        Properties.Strings = (
+          'Height'
+          'Top')
+      end
+      item
+        Component = cxGrid_Detail
+        Properties.Strings = (
+          'Height'
+          'Top')
+      end
+      item
+        Component = cxSplitter_Bottom_Child
+        Properties.Strings = (
+          'Top')
+      end
+      item
+        Component = cxSplitter_Bottom_Detail
+        Properties.Strings = (
+          'Top')
+      end
+      item
+        Component = Panel_btn
+        Properties.Strings = (
+          'Top')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -2662,10 +2722,10 @@ object ProductionUnionForm: TProductionUnionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
-      Grid = cxGridChild
+      Grid = cxGrid_Child
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -2854,7 +2914,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    object SetErasedChild: TdsdUpdateErased
+    object actSetErasedChild: TdsdUpdateErased
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2870,7 +2930,7 @@ object ProductionUnionForm: TProductionUnionForm
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
-    object SetUnErasedChild: TdsdUpdateErased
+    object actSetUnErasedChild: TdsdUpdateErased
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2996,7 +3056,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
-    object MovementItemChildProtocolOpenForm: TdsdOpenForm
+    object actMovementItemChildProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -3027,7 +3087,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
+    object actMovementItemProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -3639,7 +3699,7 @@ object ProductionUnionForm: TProductionUnionForm
       isSetErased = False
       DataSource = DetailDS_All
     end
-    object MIDetailAllProtocolOpenForm: TdsdOpenForm
+    object actMIDetailAllProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -3671,7 +3731,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
-    object MIDetailProtocolOpenForm: TdsdOpenForm
+    object actMIDetailProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -3702,13 +3762,13 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
-    object macErasedMI_Master: TMultiAction
+    object mactErasedMI_Master: TMultiAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       ActionList = <
         item
-          Action = macErasedMI_Master_list
+          Action = mactErasedMI_Master_list
         end
         item
           Action = actRefresh
@@ -3719,7 +3779,7 @@ object ProductionUnionForm: TProductionUnionForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object macErasedMI_Master_list: TMultiAction
+    object mactErasedMI_Master_list: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3727,7 +3787,7 @@ object ProductionUnionForm: TProductionUnionForm
           Action = actSetErased
         end>
       View = cxGridDBTableViewMaster
-      Caption = 'macErasedMI_Master_list'
+      Caption = 'mactErasedMI_Master_list'
     end
     object actOpenOrderClientForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -3759,7 +3819,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
-    object macInsertUpdate_bySend: TMultiAction
+    object mactInsertUpdate_bySend: TMultiAction
       Category = 'GoodsNode'
       MoveParams = <>
       ActionList = <
@@ -3964,7 +4024,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
-    object macInsertRecordReceiptGoods: TMultiAction
+    object mactInsertRecordReceiptGoods: TMultiAction
       Category = 'GoodsNode'
       MoveParams = <>
       ActionList = <
@@ -4110,33 +4170,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
-    object actCompleteMovement_andSave: TChangeGuidesStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertUpdateMovement
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spSelectMIChild
-        end
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spChangeStatus
-        end>
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 86
-      Status = mtComplete
-      Guides = StatusGuides
-    end
-    object macUpdate_MI_Child_byOrder_list: TMultiAction
+    object mactUpdate_MI_Child_byOrder_list: TMultiAction
       Category = 'Child'
       MoveParams = <>
       ActionList = <
@@ -4144,15 +4178,15 @@ object ProductionUnionForm: TProductionUnionForm
           Action = actUpdate_MI_Child_byOrder
         end>
       View = cxGridDBTableViewMaster
-      Caption = 'macUpdate_MI_Child_byOrder_list'
+      Caption = 'mactUpdate_MI_Child_byOrder_list'
       ImageIndex = 47
     end
-    object macUpdate_MI_Child_byOrder: TMultiAction
+    object mactUpdate_MI_Child_byOrder: TMultiAction
       Category = 'Child'
       MoveParams = <>
       ActionList = <
         item
-          Action = macUpdate_MI_Child_byOrder_list
+          Action = mactUpdate_MI_Child_byOrder_list
         end
         item
           Action = actRefresh_Child
@@ -4163,7 +4197,7 @@ object ProductionUnionForm: TProductionUnionForm
       Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1079#1072#1082#1072#1079#1091' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 47
     end
-    object macUpdate_MI_Child_byReceipt_list: TMultiAction
+    object mactUpdate_MI_Child_byReceipt_list: TMultiAction
       Category = 'Child'
       MoveParams = <>
       ActionList = <
@@ -4171,15 +4205,15 @@ object ProductionUnionForm: TProductionUnionForm
           Action = actUpdate_MI_Child_byReceipt
         end>
       View = cxGridDBTableViewMaster
-      Caption = 'macUpdate_MI_Child_byReceipt_list'
+      Caption = 'mactUpdate_MI_Child_byReceipt_list'
       ImageIndex = 48
     end
-    object macUpdate_MI_Child_byReceipt: TMultiAction
+    object mactUpdate_MI_Child_byReceipt: TMultiAction
       Category = 'Child'
       MoveParams = <>
       ActionList = <
         item
-          Action = macUpdate_MI_Child_byReceipt_list
+          Action = mactUpdate_MI_Child_byReceipt_list
         end
         item
           Action = actRefresh_Child
@@ -4189,6 +4223,55 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
       Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
       ImageIndex = 48
+    end
+    object mactCompleteMovement_andSave: TMultiAction
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMovement
+        end
+        item
+          Action = actRefresh
+        end
+        item
+          Action = actCompleteMovement
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      ImageIndex = 86
+    end
+    object actSetVisible_Grid_Detail: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxSplitter_Bottom_Detail
+        end
+        item
+          Component = cxGrid_Detail
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1056#1072#1073#1086#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1073#1086#1090#1099
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1056#1072#1073#1086#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1073#1086#1090#1099
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
+    end
+    object actSetVisible_Grid_Child: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxSplitter_Bottom_Child
+        end
+        item
+          Component = cxGrid_Child
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1057#1073#1086#1088#1082#1091
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1073#1086#1088#1082#1091
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1057#1073#1086#1088#1082#1091
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1073#1086#1088#1082#1091
+      ImageIndexTrue = 31
+      ImageIndexFalse = 32
     end
   end
   object MasterDS: TDataSource
@@ -4609,7 +4692,7 @@ object ProductionUnionForm: TProductionUnionForm
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 494
-    Top = 250
+    Top = 242
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -4725,7 +4808,7 @@ object ProductionUnionForm: TProductionUnionForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 732
+    Left = 708
     Top = 254
   end
   object spSelectPrint: TdsdStoredProc

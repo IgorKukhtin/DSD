@@ -485,7 +485,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     end
     object btnComplete: TcxButton
       Left = 262
-      Top = 7
+      Top = 6
       Width = 150
       Height = 25
       Action = actComplete
@@ -686,17 +686,14 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object bbComplete: TdxBarButton
       Action = actComplete
       Category = 0
-      ImageIndex = 77
     end
     object bbUnComplete: TdxBarButton
       Action = actUnComplete
       Category = 0
-      ImageIndex = 76
     end
     object bbDelete: TdxBarButton
       Action = actSetErased
       Category = 0
-      ImageIndex = 52
     end
     object bbStatic: TdxBarStatic
       Caption = '     '
@@ -956,7 +953,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       DataSource = DataSource
     end
@@ -970,7 +967,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
+      ImageIndex = 76
       Status = mtUncomplete
       DataSource = DataSource
     end
@@ -984,7 +981,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       DataSource = DataSource
     end

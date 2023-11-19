@@ -72,8 +72,11 @@ type
     actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnFormClose: TcxButton;
-    cxButton1: TcxButton;
-    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    actSetNull_GuidesClient: TdsdSetDefaultParams;
+    actClientPartnerChoiceForm: TOpenChoiceForm;
+    btnSetNull_GuidesClient: TcxButton;
+    btnClientPartnerChoiceForm: TcxButton;
   private
     { Private declarations }
   public

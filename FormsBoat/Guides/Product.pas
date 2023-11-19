@@ -84,20 +84,20 @@ type
     cxGridProdColorItems: TcxGrid;
     cxGridDBTableViewProdColorItems: TcxGridDBTableView;
     cxGridLevel2: TcxGridLevel;
-    cxTopSplitter: TcxSplitter;
-    cxRightSplitter: TcxSplitter;
+    cxSplitter_Bottom: TcxSplitter;
+    cxSplitter_Left: TcxSplitter;
     ProdColorItemsCDS: TClientDataSet;
     ProdColorItemsDS: TDataSource;
     dsdDBViewAddOnProdColorItems: TdsdDBViewAddOn;
     spSelect_ProdColorItems: TdsdStoredProc;
     spSelect_ProdOptItems: TdsdStoredProc;
-    InsertRecordProdColorItems: TInsertRecord;
+    actInsertRecordProdColorItems: TInsertRecord;
     bbInsertRecordProdColorItems: TdxBarButton;
     actUpdateDataSetProdColorItems: TdsdUpdateDataSet;
     spInsertUpdateProdColorItems: TdsdStoredProc;
     actUpdateDataSetProdOptItems: TdsdUpdateDataSet;
     spInsertUpdateProdOptItems: TdsdStoredProc;
-    InsertRecordProdOptItems: TInsertRecord;
+    actInsertRecordProdOptItems: TInsertRecord;
     bbInsertRecordProdOptItems: TdxBarButton;
     spErasedColor: TdsdStoredProc;
     spUnErasedColor: TdsdStoredProc;
@@ -234,11 +234,11 @@ type
     Panel_btn: TPanel;
     btnInsert: TcxButton;
     btnUpdate: TcxButton;
-    btnComplete: TcxButton;
+    btnUpdate2: TcxButton;
     btnShowAllOptItems: TcxButton;
-    btnSetErased: TcxButton;
+    btnUpdate_OrderClient: TcxButton;
     btnFormClose: TcxButton;
-    cxButton1: TcxButton;
+    btnChangeNPP: TcxButton;
     bbsPrint: TdxBarSubItem;
     bbsProtocol: TdxBarSubItem;
     FieldFilter_Name: TdsdFieldFilter;
@@ -248,8 +248,8 @@ type
     edSearchClientName: TcxTextEdit;
     cxLabel1: TcxLabel;
     actSetVisible_ProdColorItems: TBooleanSetVisibleAction;
-    cxButton2: TcxButton;
-    cxButton3: TcxButton;
+    btnSetVisible_ProdColorItems: TcxButton;
+    btnSetVisible_ProdOptItems: TcxButton;
     actSetVisible_ProdOptItems: TBooleanSetVisibleAction;
   private
     { Private declarations }

@@ -11,18 +11,18 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1028
-    Height = 299
+    Height = 258
     TabOrder = 3
     ExplicitWidth = 1028
     ExplicitHeight = 299
-    ClientRectBottom = 299
+    ClientRectBottom = 258
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
       ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 1028
-        Height = 299
+        Height = 258
         ExplicitWidth = 1028
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -71,6 +71,11 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
               Format = ',0.00##'
               Kind = skSum
               Column = AmountOut
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ObjectName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -82,6 +87,22 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 76
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 77
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 52
+                Value = 3
+              end>
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 69
@@ -161,6 +182,9 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -334,15 +358,61 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       Caption = 'Lieferanten / Kunden:'
     end
     object edClient: TcxButtonEdit
-      Left = 539
+      Left = 545
       Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 230
+    end
+  end
+  object Panel_btn: TPanel [2]
+    Left = 0
+    Top = 315
+    Width = 1028
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitTop = 321
+    object btnFormClose: TcxButton
+      Left = 685
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      TabOrder = 0
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 553
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 1
+    end
+    object btnSetNull_GuidesClient: TcxButton
+      Left = 79
+      Top = 6
+      Width = 190
+      Height = 25
+      Action = actSetNull_GuidesClient
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object btnClientPartnerChoiceForm: TcxButton
+      Left = 291
+      Top = 6
+      Width = 190
+      Height = 25
+      Action = actClientPartnerChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -371,7 +441,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   inherited ActionList: TActionList
     Left = 167
     Top = 66
-    object macUpdateMoneyPlace: TMultiAction [3]
+    object mactUpdateMoneyPlace: TMultiAction [3]
       Category = 'Update'
       MoveParams = <>
       ActionList = <
@@ -456,6 +526,27 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
     end
     object actChoiceMoneyPlace: TOpenChoiceForm [18]
       Category = 'Update'
@@ -702,7 +793,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         end>
       isShowModal = True
     end
-    object macUpdateContract: TMultiAction
+    object mactUpdateContract: TMultiAction
       Category = 'Update'
       MoveParams = <>
       ActionList = <
@@ -809,10 +900,69 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = MasterDS
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
+    end
+    object actClientPartnerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
+      ImageIndex = 7
+      FormName = 'TUnion_ClientPartnerForm'
+      FormNameParam.Value = 'TUnion_ClientPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actSetNull_GuidesClient: TdsdSetDefaultParams
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1057#1095#1077#1090#1072
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1057#1095#1077#1090#1072
+      ImageIndex = 24
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = GuidesObject
+          Param.ComponentItem = 'Id'
+          Param.MultiSelectSeparator = ','
+          Value = 0
+        end
+        item
+          Param.Value = Null
+          Param.Component = GuidesObject
+          Param.ComponentItem = 'TextValue'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = ''
+        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -845,7 +995,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       item
         Name = 'inClientId'
         Value = Null
-        Component = GuidesClient
+        Component = GuidesObject
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -862,7 +1012,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Top = 131
   end
   inherited BarManager: TdxBarManager
-    Left = 200
+    Left = 208
     Top = 67
     DockControlHeights = (
       0
@@ -880,7 +1030,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           ItemName = 'bbExecuteDialog'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -925,6 +1074,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -951,6 +1104,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       item
       end>
   end
+  inherited PopupMenu: TPopupMenu
+    Left = 112
+    Top = 128
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
@@ -960,7 +1117,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         Component = edClient
       end
       item
-        Component = GuidesClient
+        Component = GuidesObject
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -1003,7 +1160,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       item
         Name = 'MasterClientId'
         Value = Null
-        Component = GuidesClient
+        Component = GuidesObject
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1011,7 +1168,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       item
         Name = 'MasterClientName'
         Value = Null
-        Component = GuidesClient
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1087,7 +1244,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Left = 631
     Top = 232
   end
-  object GuidesClient: TdsdGuides
+  object GuidesObject: TdsdGuides
     KeyField = 'Id'
     LookupControl = edClient
     FormNameParam.Value = 'TUnion_ClientPartnerForm'
@@ -1099,14 +1256,14 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesClient
+        Component = GuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesClient
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

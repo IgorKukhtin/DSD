@@ -215,13 +215,13 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      object Panel1: TPanel
+      object Panel_all: TPanel
         Left = 0
         Top = 0
         Width = 1088
         Height = 511
         Align = alClient
-        Caption = 'Panel1'
+        Caption = 'Panel_all'
         TabOrder = 0
         object cxGrid_Master: TcxGrid
           Left = 1
@@ -230,6 +230,8 @@ object OrderInternalForm: TOrderInternalForm
           Height = 206
           Align = alClient
           TabOrder = 1
+          ExplicitLeft = 2
+          ExplicitTop = 3
           object cxGrid_MasterDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -855,7 +857,7 @@ object OrderInternalForm: TOrderInternalForm
             GridView = cxGridDBTableView_child
           end
         end
-        object cxTopSplitter: TcxSplitter
+        object cxSplitter_Bottom_Detail: TcxSplitter
           Left = 1
           Top = 207
           Width = 1086
@@ -863,6 +865,7 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
+          ExplicitTop = 213
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
@@ -1117,7 +1120,7 @@ object OrderInternalForm: TOrderInternalForm
             GridView = cxGridDBTableView_Det
           end
         end
-        object cxSplitter2: TcxSplitter
+        object cxSplitter_Bottom_Child: TcxSplitter
           Left = 1
           Top = 316
           Width = 1086
@@ -1134,6 +1137,8 @@ object OrderInternalForm: TOrderInternalForm
           Height = 69
           Align = alBottom
           TabOrder = 5
+          ExplicitLeft = 2
+          ExplicitTop = 447
           object btnInsertUpdateMovement: TcxButton
             Left = 12
             Top = 6
@@ -1145,7 +1150,7 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 0
           end
           object btnCompleteMovement: TcxButton
-            Left = 682
+            Left = 647
             Top = 6
             Width = 150
             Height = 25
@@ -1155,7 +1160,7 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 1
           end
           object btnUnCompleteMovement: TcxButton
-            Left = 682
+            Left = 647
             Top = 37
             Width = 150
             Height = 25
@@ -1165,7 +1170,7 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 2
           end
           object btnSetErased: TcxButton
-            Left = 364
+            Left = 337
             Top = 37
             Width = 145
             Height = 25
@@ -1175,7 +1180,7 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 3
           end
           object btnShowAll: TcxButton
-            Left = 895
+            Left = 941
             Top = 6
             Width = 135
             Height = 25
@@ -1184,8 +1189,8 @@ object OrderInternalForm: TOrderInternalForm
             ShowHint = True
             TabOrder = 4
           end
-          object btnInsertAction: TcxButton
-            Left = 199
+          object btnInsertRecordGoods: TcxButton
+            Left = 183
             Top = 6
             Width = 145
             Height = 25
@@ -1199,13 +1204,13 @@ object OrderInternalForm: TOrderInternalForm
             Top = 37
             Width = 155
             Height = 25
-            Action = actCompleteMovement_andSave
+            Action = mactCompleteMovement_andSave
             ParentShowHint = False
             ShowHint = True
             TabOrder = 6
           end
           object btnFormClose: TcxButton
-            Left = 895
+            Left = 941
             Top = 37
             Width = 135
             Height = 25
@@ -1214,8 +1219,8 @@ object OrderInternalForm: TOrderInternalForm
             ShowHint = True
             TabOrder = 7
           end
-          object btnUpdateAction: TcxButton
-            Left = 364
+          object btnChoiceForm_OrderClientItem: TcxButton
+            Left = 337
             Top = 6
             Width = 145
             Height = 25
@@ -1224,18 +1229,18 @@ object OrderInternalForm: TOrderInternalForm
             ShowHint = True
             TabOrder = 8
           end
-          object cxButton1: TcxButton
-            Left = 201
+          object btnInsert_MI_byOrderAll: TcxButton
+            Left = 183
             Top = 37
             Width = 145
             Height = 25
-            Action = macInsert_MI_byOrderAll
+            Action = mactInsert_MI_byOrderAll
             ParentShowHint = False
             ShowHint = True
             TabOrder = 9
           end
           object cxButton2: TcxButton
-            Left = 524
+            Left = 492
             Top = 6
             Width = 145
             Height = 25
@@ -1245,7 +1250,7 @@ object OrderInternalForm: TOrderInternalForm
             TabOrder = 10
           end
           object cxButton3: TcxButton
-            Left = 524
+            Left = 492
             Top = 36
             Width = 145
             Height = 25
@@ -1253,6 +1258,26 @@ object OrderInternalForm: TOrderInternalForm
             ParentShowHint = False
             ShowHint = True
             TabOrder = 11
+          end
+          object cxButton4: TcxButton
+            Left = 803
+            Top = 6
+            Width = 132
+            Height = 25
+            Action = actSetVisible_Grid_Child
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 12
+          end
+          object cxButton5: TcxButton
+            Left = 803
+            Top = 37
+            Width = 132
+            Height = 25
+            Action = actSetVisible_Grid_Detail
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 13
           end
         end
       end
@@ -1386,6 +1411,11 @@ object OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_ch54
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skSum
+              Column = ReceiptServiceName_ch5
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1839,7 +1869,6 @@ object OrderInternalForm: TOrderInternalForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -1913,16 +1942,16 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbErasedMI_Master: TdxBarButton
-      Action = macErasedMI_Master
+      Action = mactErasedMI_Master
       Category = 0
       ImageIndex = 52
     end
     object bbSetErasedChild: TdxBarButton
-      Action = SetErasedChild
+      Action = actSetErasedChild
       Category = 0
     end
     object bbSetUnErasedChild: TdxBarButton
-      Action = SetUnErasedChild
+      Action = actSetUnErasedChild
       Category = 0
     end
     object bbb: TdxBarButton
@@ -1970,7 +1999,7 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbSetUnErasedDetail_All: TdxBarButton
-      Action = SetUnErasedDetail_All
+      Action = actSetUnErasedDetail_All
       Category = 0
     end
     object bbMIDetailProtocolOpenForm: TdxBarButton
@@ -2226,7 +2255,7 @@ object OrderInternalForm: TOrderInternalForm
       ShowCaption = False
     end
     object bbInsert_MI_byOrder: TdxBarButton
-      Action = macInsert_MI_byOrderAll
+      Action = mactInsert_MI_byOrderAll
       Category = 0
     end
     object bbsView: TdxBarSubItem
@@ -2297,12 +2326,49 @@ object OrderInternalForm: TOrderInternalForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = actSetVisible_Grid_Child
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = actSetVisible_Grid_Detail
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cxGrid_Child
+        Properties.Strings = (
+          'Height'
+          'Top')
+      end
+      item
+        Component = cxGrid_Detail
+        Properties.Strings = (
+          'Height'
+          'Top')
+      end
+      item
+        Component = cxSplitter_Bottom_Child
+        Properties.Strings = (
+          'Top')
+      end
+      item
+        Component = cxSplitter_Bottom_Detail
+        Properties.Strings = (
+          'Top')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = Panel_btn
+        Properties.Strings = (
+          'Top')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -2476,12 +2542,12 @@ object OrderInternalForm: TOrderInternalForm
           StoredProc = spSelectMI_Child
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1101#1083#1077#1084#1077#1085#1090#1099' '#1076#1086#1082'.'
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099
       ImageIndexTrue = 62
       ImageIndexFalse = 63
@@ -2538,7 +2604,7 @@ object OrderInternalForm: TOrderInternalForm
       Caption = 'actUpdateDetailDS_All'
       DataSource = DetailDS_All
     end
-    object SetUnErasedDetail_All: TdsdUpdateErased
+    object actSetUnErasedDetail_All: TdsdUpdateErased
       Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
@@ -2633,7 +2699,7 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object SetErasedChild: TdsdUpdateErased
+    object actSetErasedChild: TdsdUpdateErased
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2973,7 +3039,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
-    object macErasedMI_Master_list: TMultiAction
+    object mactErasedMI_Master_list: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2981,15 +3047,15 @@ object OrderInternalForm: TOrderInternalForm
           Action = actSetErased
         end>
       View = cxGrid_MasterDBTableView
-      Caption = 'macErasedMI_Master_list'
+      Caption = 'mactErasedMI_Master_list'
     end
-    object macErasedMI_Master: TMultiAction
+    object mactErasedMI_Master: TMultiAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       ActionList = <
         item
-          Action = macErasedMI_Master_list
+          Action = mactErasedMI_Master_list
         end
         item
           Action = actRefresh
@@ -3242,7 +3308,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = True
     end
-    object SetUnErasedChild: TdsdUpdateErased
+    object actSetUnErasedChild: TdsdUpdateErased
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -3526,7 +3592,7 @@ object OrderInternalForm: TOrderInternalForm
       Caption = 'actInsert_MI_byOrderAll'
       ImageIndex = 47
     end
-    object macInsert_MI_byOrderAll: TMultiAction
+    object mactInsert_MI_byOrderAll: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3586,28 +3652,54 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
-    object actCompleteMovement_andSave: TChangeGuidesStatus
-      Category = 'DSDLib'
+    object mactCompleteMovement_andSave: TMultiAction
       MoveParams = <>
-      StoredProc = spInsertUpdateMovement
-      StoredProcList = <
+      ActionList = <
         item
-          StoredProc = spInsertUpdateMovement
+          Action = actInsertUpdateMovement
         end
         item
-          StoredProc = spSelectMI
+          Action = actRefresh
         end
         item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spChangeStatus
+          Action = actCompleteMovement
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 86
-      Status = mtComplete
-      Guides = StatusGuides
+    end
+    object actSetVisible_Grid_Detail: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxSplitter_Bottom_Detail
+        end
+        item
+          Component = cxGrid_Detail
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1056#1072#1073#1086#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1073#1086#1090#1099
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1056#1072#1073#1086#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1073#1086#1090#1099
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
+    end
+    object actSetVisible_Grid_Child: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = cxSplitter_Bottom_Child
+        end
+        item
+          Component = cxGrid_Child
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1057#1073#1086#1088#1082#1091
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1073#1086#1088#1082#1091
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1057#1073#1086#1088#1082#1091
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1073#1086#1088#1082#1091
+      ImageIndexTrue = 31
+      ImageIndexFalse = 32
     end
   end
   object MasterDS: TDataSource

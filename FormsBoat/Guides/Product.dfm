@@ -19,29 +19,24 @@
   PixelsPerInch = 96
   TextHeight = 13
   object PanelMaster: TPanel
-    Left = 8
+    Left = 0
     Top = 26
-    Width = 1180
+    Width = 1188
     Height = 199
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 0
-    ExplicitWidth = 1188
-    ExplicitHeight = 209
     object cxGrid: TcxGrid
       Left = 0
       Top = 50
-      Width = 1180
+      Width = 1188
       Height = 149
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 1188
-      ExplicitHeight = 159
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -298,6 +293,11 @@
             Format = ',0.####'
             Kind = skSum
             Column = SummDiscount3
+          end
+          item
+            Format = 'C'#1090#1088#1086#1082': ,0'
+            Kind = skCount
+            Column = ClientName
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -941,23 +941,21 @@
     object Panel3: TPanel
       Left = 0
       Top = 33
-      Width = 1180
+      Width = 1188
       Height = 17
       Align = alTop
       Caption = 'Boat'
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1188
     end
     object Panel4: TPanel
       Left = 0
       Top = 0
-      Width = 1180
+      Width = 1188
       Height = 33
       Align = alTop
       TabOrder = 2
-      ExplicitWidth = 1188
       object lbSearchName: TcxLabel
         Left = 5
         Top = 7
@@ -1009,7 +1007,14 @@
     Height = 141
     Align = alBottom
     TabOrder = 2
-    ExplicitTop = 294
+    object cxSplitter_Left: TcxSplitter
+      Left = 522
+      Top = 1
+      Width = 8
+      Height = 139
+      Control = PanelProdColorItems
+      ExplicitLeft = 528
+    end
     object PanelProdColorItems: TPanel
       Left = 1
       Top = 1
@@ -1019,7 +1024,6 @@
       BevelEdges = [beLeft]
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 39
       object cxGridProdColorItems: TcxGrid
         Left = 0
         Top = 17
@@ -1030,7 +1034,6 @@
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
-        ExplicitHeight = 22
         object cxGridDBTableViewProdColorItems: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProdColorItemsDS
@@ -1050,6 +1053,11 @@
               Format = ',0.00##'
               Kind = skSum
               Column = EKPrice_summ_ch1
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ProdColorPatternName_ch1
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1325,31 +1333,28 @@
         Color = clLime
         ParentBackground = False
         TabOrder = 1
+        ExplicitLeft = 2
       end
     end
     object PanelProdOptItems: TPanel
-      Left = 522
+      Left = 530
       Top = 1
-      Width = 665
+      Width = 657
       Height = 139
       Align = alClient
       BevelEdges = [beLeft]
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 1180
-      ExplicitHeight = 39
       object cxGridProdOptItems: TcxGrid
         Left = 0
         Top = 17
-        Width = 665
+        Width = 657
         Height = 122
         Align = alClient
         PopupMenu = PopupMenuOption
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
-        ExplicitWidth = 1180
-        ExplicitHeight = 22
         object cxGridDBTableViewProdOptItems: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProdOptItemsDS
@@ -1399,6 +1404,11 @@
               Format = ',0.'
               Kind = skSum
               Column = Amount_ch2
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ProdOptionsName_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1776,35 +1786,25 @@
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 665
+        Width = 657
         Height = 17
         Align = alTop
         Caption = #1054#1087#1094#1080#1080
         Color = clAqua
         ParentBackground = False
         TabOrder = 1
-        ExplicitLeft = 6
-        ExplicitTop = -6
+        ExplicitLeft = -2
       end
     end
   end
-  object cxTopSplitter: TcxSplitter
+  object cxSplitter_Bottom: TcxSplitter
     Left = 0
     Top = 225
     Width = 1188
     Height = 5
     AlignSplitter = salBottom
     Control = PanelChildItems
-    ExplicitTop = 226
-  end
-  object cxRightSplitter: TcxSplitter
-    Left = 0
-    Top = 26
-    Width = 8
-    Height = 199
-    Control = PanelProdColorItems
-    ExplicitTop = 240
-    ExplicitHeight = 131
+    ExplicitTop = 231
   end
   object Panel_btn: TPanel
     Left = 0
@@ -1813,51 +1813,61 @@
     Height = 64
     Align = alBottom
     TabOrder = 4
-    ExplicitLeft = -8
-    ExplicitTop = 382
+    ExplicitLeft = 1
+    ExplicitTop = 376
     object btnInsert: TcxButton
       Left = 81
-      Top = 4
+      Top = 5
       Width = 90
       Height = 25
       Action = actInsert
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 0
     end
     object btnUpdate: TcxButton
       Left = 182
-      Top = 4
+      Top = 5
       Width = 90
       Height = 25
       Action = actUpdate
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 1
     end
-    object btnComplete: TcxButton
+    object btnUpdate2: TcxButton
       Left = 301
-      Top = 34
+      Top = 35
       Width = 180
       Height = 25
       Action = actUpdate2
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 2
     end
     object btnShowAllOptItems: TcxButton
       Left = 507
-      Top = 34
+      Top = 35
       Width = 174
       Height = 25
       Action = actShowAllOptItems
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 3
     end
-    object btnSetErased: TcxButton
+    object btnUpdate_OrderClient: TcxButton
       Left = 301
-      Top = 4
+      Top = 5
       Width = 180
       Height = 25
       Action = actUpdate_OrderClient
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 4
     end
     object btnFormClose: TcxButton
-      Left = 1050
-      Top = 7
+      Left = 930
+      Top = 5
       Width = 130
       Height = 25
       Action = actFormClose
@@ -1865,17 +1875,19 @@
       ShowHint = True
       TabOrder = 5
     end
-    object cxButton1: TcxButton
+    object btnChangeNPP: TcxButton
       Left = 81
-      Top = 34
+      Top = 35
       Width = 191
       Height = 25
       Action = macChangeNPP
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 6
     end
-    object cxButton2: TcxButton
+    object btnSetVisible_ProdColorItems: TcxButton
       Left = 711
-      Top = 7
+      Top = 5
       Width = 174
       Height = 25
       Action = actSetVisible_ProdColorItems
@@ -1883,9 +1895,9 @@
       ShowHint = True
       TabOrder = 7
     end
-    object cxButton3: TcxButton
+    object btnSetVisible_ProdOptItems: TcxButton
       Left = 507
-      Top = 6
+      Top = 5
       Width = 174
       Height = 25
       Action = actSetVisible_ProdOptItems
@@ -1908,6 +1920,42 @@
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = actSetVisible_ProdColorItems
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = actSetVisible_ProdOptItems
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cxSplitter_Bottom
+        Properties.Strings = (
+          'Top')
+      end
+      item
+        Component = cxSplitter_Left
+        Properties.Strings = (
+          'Left')
+      end
+      item
+        Component = PanelChildItems
+        Properties.Strings = (
+          'Height'
+          'Top')
+      end
+      item
+        Component = PanelProdColorItems
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = Panel_btn
+        Properties.Strings = (
+          'Top')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -1917,8 +1965,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 256
-    Top = 80
+    Left = 72
+    Top = 88
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -2119,9 +2167,7 @@
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -2138,11 +2184,11 @@
       Category = 0
     end
     object bbInsertRecordProdColorItems: TdxBarButton
-      Action = InsertRecordProdColorItems
+      Action = actInsertRecordProdColorItems
       Category = 0
     end
     object bbInsertRecordProdOptItems: TdxBarButton
-      Action = InsertRecordProdOptItems
+      Action = actInsertRecordProdOptItems
       Category = 0
     end
     object bbSetErasedColor: TdxBarButton
@@ -2804,7 +2850,7 @@
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
-    object InsertRecordProdOptItems: TInsertRecord
+    object actInsertRecordProdOptItems: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2815,7 +2861,7 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
-    object InsertRecordProdColorItems: TInsertRecord
+    object actInsertRecordProdColorItems: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3508,11 +3554,11 @@
           StoredProc = spSelect_ProdOptItems
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080' '#1076#1083#1103' '#1074#1099#1073#1086#1088#1072
       ImageIndex = 63
       Value = False
-      HintTrue = #1042#1099#1073#1088#1072#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
-      HintFalse = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1042#1099#1073#1088#1072#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080' '#1076#1083#1103' '#1074#1099#1073#1086#1088#1072
       CaptionTrue = #1042#1099#1073#1088#1072#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
       CaptionFalse = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1086#1087#1094#1080#1080
       ImageIndexTrue = 62
@@ -4006,7 +4052,7 @@
       Value = False
       Components = <
         item
-          Component = cxRightSplitter
+          Component = cxSplitter_Left
         end
         item
           Component = PanelProdColorItems
@@ -4023,7 +4069,7 @@
       Value = False
       Components = <
         item
-          Component = cxTopSplitter
+          Component = cxSplitter_Bottom
         end
         item
           Component = PanelChildItems
@@ -4769,7 +4815,7 @@
     Left = 440
     Top = 208
     object MenuItem2: TMenuItem
-      Action = InsertRecordProdColorItems
+      Action = actInsertRecordProdColorItems
     end
     object MenuItem3: TMenuItem
       Action = actSetErasedColor
@@ -4783,7 +4829,7 @@
     Left = 496
     Top = 208
     object MenuItem1: TMenuItem
-      Action = InsertRecordProdOptItems
+      Action = actInsertRecordProdOptItems
     end
     object MenuItem5: TMenuItem
       Action = actSetErasedOpt

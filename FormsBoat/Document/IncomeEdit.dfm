@@ -22,6 +22,8 @@ object IncomeEditForm: TIncomeEditForm
     Width = 90
     Height = 25
     Action = actUpdate_summ_after
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 9
   end
   object cxButton2: TcxButton
@@ -32,6 +34,8 @@ object IncomeEditForm: TIncomeEditForm
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 10
   end
   object cxLabel18: TcxLabel

@@ -1031,7 +1031,6 @@
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitTop = 290
   end
   object PanelProdColorPattern: TPanel
     Left = 583
@@ -1490,7 +1489,6 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = -2
     end
   end
   object cxSplitterRight: TcxSplitter
@@ -1507,7 +1505,7 @@
     Width = 1272
     Height = 33
     Align = alTop
-    TabOrder = 8
+    TabOrder = 7
     object lbSearchArticle: TcxLabel
       Left = 22
       Top = 6
@@ -1593,7 +1591,6 @@
     Height = 64
     Align = alBottom
     TabOrder = 10
-    ExplicitTop = 499
     object btnInsert: TcxButton
       Left = 17
       Top = 4
@@ -1718,6 +1715,11 @@
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = actSetVisible_ProdColorItems
+        Properties.Strings = (
+          'Value')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -2390,7 +2392,7 @@
           StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1072#1073#1083#1086#1085
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2546,7 +2548,7 @@
           StoredProc = spUnErasedGoods
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'

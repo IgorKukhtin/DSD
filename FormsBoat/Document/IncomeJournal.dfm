@@ -366,6 +366,7 @@ object IncomeJournalForm: TIncomeJournalForm
       object TaxKindName_info: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName_info'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

@@ -142,16 +142,16 @@ object OrderClientForm: TOrderClientForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = CompleteMovement
+          Action = actCompleteMovement
           Kind = bkGlyph
         end
         item
-          Action = UnCompleteMovement
+          Action = actUnCompleteMovement
           Default = True
           Kind = bkGlyph
         end
         item
-          Action = DeleteMovement
+          Action = actDeleteMovement
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
@@ -1029,7 +1029,7 @@ object OrderClientForm: TOrderClientForm
           end
         end
       end
-      object cxTopSplitter: TcxSplitter
+      object cxSplitter_Bottom: TcxSplitter
         Left = 0
         Top = 166
         Width = 1349
@@ -1361,8 +1361,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitLeft = -2
-            ExplicitTop = 18
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1757,7 +1755,7 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 1
           end
         end
-        object cxSplitterlLeft: TcxSplitter
+        object cxSplitter_Left: TcxSplitter
           Left = 521
           Top = 1
           Width = 8
@@ -2971,6 +2969,11 @@ object OrderClientForm: TOrderClientForm
               Format = ',0.00##'
               Kind = skSum
               Column = Amount_rem
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colInvNumber
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -3525,7 +3528,7 @@ object OrderClientForm: TOrderClientForm
     Left = 344
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 12
     Width = 132
   end
   object Panel_btn: TPanel
@@ -3535,7 +3538,6 @@ object OrderClientForm: TOrderClientForm
     Height = 64
     Align = alBottom
     TabOrder = 17
-    ExplicitTop = 573
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
@@ -3551,7 +3553,7 @@ object OrderClientForm: TOrderClientForm
       Top = 37
       Width = 105
       Height = 25
-      Action = SetErased
+      Action = actSetErased
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1
@@ -3561,7 +3563,7 @@ object OrderClientForm: TOrderClientForm
       Top = 6
       Width = 150
       Height = 25
-      Action = CompleteMovement
+      Action = actCompleteMovement
       ParentShowHint = False
       ShowHint = True
       TabOrder = 2
@@ -3571,7 +3573,7 @@ object OrderClientForm: TOrderClientForm
       Top = 35
       Width = 150
       Height = 25
-      Action = UnCompleteMovement
+      Action = actUnCompleteMovement
       ParentShowHint = False
       ShowHint = True
       TabOrder = 3
@@ -3591,7 +3593,7 @@ object OrderClientForm: TOrderClientForm
       Top = 6
       Width = 105
       Height = 25
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
@@ -3601,14 +3603,14 @@ object OrderClientForm: TOrderClientForm
       Top = 37
       Width = 155
       Height = 25
-      Action = actCompleteMovement_andSave
+      Action = mactCompleteMovement_andSave
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
     end
     object btnFormClose: TcxButton
-      Left = 655
-      Top = 35
+      Left = 1016
+      Top = 6
       Width = 153
       Height = 25
       Action = actFormClose
@@ -3621,7 +3623,7 @@ object OrderClientForm: TOrderClientForm
       Top = 6
       Width = 159
       Height = 25
-      Action = macChangeNPP
+      Action = mactChangeNPP
       ParentShowHint = False
       ShowHint = True
       TabOrder = 8
@@ -3803,7 +3805,6 @@ object OrderClientForm: TOrderClientForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -3829,15 +3830,15 @@ object OrderClientForm: TOrderClientForm
       Category = 0
     end
     object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbErased: TdxBarButton
-      Action = SetErased
+      Action = actSetErased
       Category = 0
     end
     object bbUnErased: TdxBarButton
-      Action = SetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -3845,7 +3846,7 @@ object OrderClientForm: TOrderClientForm
       Category = 0
     end
     object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+      Action = actMovementItemProtocolOpenForm
       Category = 0
     end
     object bbCalcAmountPartner: TdxBarControlContainerItem
@@ -3895,7 +3896,7 @@ object OrderClientForm: TOrderClientForm
       Category = 0
     end
     object bbInsertRecordGoods: TdxBarButton
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
@@ -3945,7 +3946,7 @@ object OrderClientForm: TOrderClientForm
       Category = 0
     end
     object bbInsertRecordInfo: TdxBarButton
-      Action = InsertRecordInfo
+      Action = actInsertRecordInfo
       Category = 0
     end
     object bbProtocolInfoOpen: TdxBarButton
@@ -3965,11 +3966,11 @@ object OrderClientForm: TOrderClientForm
       Category = 0
     end
     object bbChangeNPP: TdxBarButton
-      Action = macChangeNPP
+      Action = mactChangeNPP
       Category = 0
     end
     object bbChangeSumm: TdxBarButton
-      Action = macChangeSumm
+      Action = mactChangeSumm
       Category = 0
     end
     object bbPrint_Invoice: TdxBarButton
@@ -4152,7 +4153,7 @@ object OrderClientForm: TOrderClientForm
     Images = dmMain.ImageList
     Left = 59
     Top = 263
-    object macChangeSumm: TMultiAction
+    object mactChangeSumm: TMultiAction
       Category = 'NPP'
       MoveParams = <>
       ActionList = <
@@ -4323,9 +4324,9 @@ object OrderClientForm: TOrderClientForm
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1089#1086#1076#1077#1088#1078#1080#1084#1086#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
@@ -4461,7 +4462,7 @@ object OrderClientForm: TOrderClientForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -4470,7 +4471,7 @@ object OrderClientForm: TOrderClientForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object SetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -4486,7 +4487,7 @@ object OrderClientForm: TOrderClientForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object SetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -4503,7 +4504,7 @@ object OrderClientForm: TOrderClientForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object UnCompleteMovement: TChangeGuidesStatus
+    object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -4521,7 +4522,7 @@ object OrderClientForm: TOrderClientForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
-    object CompleteMovement: TChangeGuidesStatus
+    object actCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -4539,7 +4540,7 @@ object OrderClientForm: TOrderClientForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object DeleteMovement: TChangeGuidesStatus
+    object actDeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -4627,7 +4628,7 @@ object OrderClientForm: TOrderClientForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
+    object actMovementItemProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -4736,7 +4737,7 @@ object OrderClientForm: TOrderClientForm
         end>
       isShowModal = True
     end
-    object InsertRecordGoods: TInsertRecord
+    object actInsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -4951,7 +4952,7 @@ object OrderClientForm: TOrderClientForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object InsertRecordInfo: TInsertRecord
+    object actInsertRecordInfo: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheet2
       MoveParams = <>
@@ -5166,7 +5167,7 @@ object OrderClientForm: TOrderClientForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object macChangeNPP: TMultiAction
+    object mactChangeNPP: TMultiAction
       Category = 'NPP'
       MoveParams = <>
       ActionList = <
@@ -5286,37 +5287,12 @@ object OrderClientForm: TOrderClientForm
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
-    object actCompleteMovement_andSave: TChangeGuidesStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertUpdateMovement
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-        end
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spChangeStatus
-        end>
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 86
-      Status = mtComplete
-      Guides = StatusGuides
-    end
     object actSetVisible_Grid: TBooleanSetVisibleAction
       MoveParams = <>
       Value = False
       Components = <
         item
-          Component = cxSplitterlLeft
+          Component = cxSplitter_Left
         end
         item
           Component = PanelProdColorItems
@@ -5327,6 +5303,21 @@ object OrderClientForm: TOrderClientForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       ImageIndexTrue = 25
       ImageIndexFalse = 26
+    end
+    object mactCompleteMovement_andSave: TMultiAction
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMovement
+        end
+        item
+          Action = actRefresh
+        end
+        item
+          Action = actCompleteMovement
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
+      ImageIndex = 86
     end
   end
   object MasterDS: TDataSource
@@ -6065,7 +6056,7 @@ object OrderClientForm: TOrderClientForm
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 422
-    Top = 234
+    Top = 210
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -6108,8 +6099,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 470
-    Top = 240
+    Left = 478
+    Top = 208
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderClient_SetUnErased'

@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TIncomeJournalChoiceForm = class(TAncestorJournalForm)
@@ -37,9 +37,14 @@ type
     TotalSummVAT: TcxGridDBColumn;
     TotalSummMVAT: TcxGridDBColumn;
     TotalSummPVAT: TcxGridDBColumn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
     Comment: TcxGridDBColumn;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnFormClose: TcxButton;
+    cxButton1: TcxButton;
+    btnUpdate: TcxButton;
   private
     { Private declarations }
   public

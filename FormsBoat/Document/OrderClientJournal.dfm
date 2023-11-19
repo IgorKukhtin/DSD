@@ -612,6 +612,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
       object VATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 42
@@ -735,7 +738,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       TabOrder = 2
     end
     object btnUnComplete: TcxButton
-      Left = 460
+      Left = 459
       Top = 7
       Width = 150
       Height = 25
@@ -743,7 +746,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 616
+      Left = 615
       Top = 7
       Width = 150
       Height = 25
@@ -963,7 +966,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -2645,8 +2647,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 386
-    Top = 392
+    Left = 394
+    Top = 272
   end
   object spUpdate_NPP_Minus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderClient_NPP_Plus'
@@ -2678,8 +2680,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 474
-    Top = 384
+    Left = 450
+    Top = 304
   end
   object spSelectPrint_Invoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'

@@ -69,13 +69,13 @@ type
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
-    GridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    SetErased: TdsdUpdateErased;
-    SetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
@@ -85,14 +85,14 @@ type
     spUnErasedMIMaster: TdsdStoredProc;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
-    UnCompleteMovement: TChangeGuidesStatus;
-    CompleteMovement: TChangeGuidesStatus;
-    DeleteMovement: TChangeGuidesStatus;
+    actUnCompleteMovement: TChangeGuidesStatus;
+    actCompleteMovement: TChangeGuidesStatus;
+    actDeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
     GuidesFrom: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementItemProtocolOpenForm: TdsdOpenForm;
+    actMovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -111,7 +111,7 @@ type
     bbactSetErasedCost: TdxBarButton;
     actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
-    InsertRecordGoods: TInsertRecord;
+    actInsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
@@ -170,7 +170,7 @@ type
     spSelect_ProdOptItems: TdsdStoredProc;
     spUnErasedOpt: TdsdStoredProc;
     spInsertUpdateProdOptItems: TdsdStoredProc;
-    cxTopSplitter: TcxSplitter;
+    cxSplitter_Bottom: TcxSplitter;
     Panel4: TPanel;
     PanelProdColorItems: TPanel;
     cxGridProdColorItems: TcxGrid;
@@ -228,7 +228,7 @@ type
     Color_fon_ch2: TcxGridDBColumn;
     cxGridProdOptItemsLevel: TcxGridLevel;
     Panel3: TPanel;
-    cxSplitterlLeft: TcxSplitter;
+    cxSplitter_Left: TcxSplitter;
     cxLabel17: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel18: TcxLabel;
@@ -272,7 +272,7 @@ type
     spSelectMovement_Info: TdsdStoredProc;
     spUpdateMovementInfo: TdsdStoredProc;
     CodeInfo: TcxGridDBColumn;
-    InsertRecordInfo: TInsertRecord;
+    actInsertRecordInfo: TInsertRecord;
     actUpdateDataSetInfoDS: TdsdUpdateDataSet;
     bbInsertRecordInfo: TdxBarButton;
     actRefreshInfo: TdsdDataSetRefresh;
@@ -396,7 +396,7 @@ type
     ReceiptGoodsCode_ch3: TcxGridDBColumn;
     ReceiptGoodsName_ch3: TcxGridDBColumn;
     actChangePercentDialog: TExecuteDialog;
-    macChangeNPP: TMultiAction;
+    mactChangeNPP: TMultiAction;
     actUpdateMovement_NPP: TdsdExecStoredProc;
     spUpdateMovement_NPP: TdsdStoredProc;
     bbChangeNPP: TdxBarButton;
@@ -410,7 +410,7 @@ type
     NPP_ch3: TcxGridDBColumn;
     actChangeSummDialog: TExecuteDialog;
     actUpdateMovement_Summ: TdsdExecStoredProc;
-    macChangeSumm: TMultiAction;
+    mactChangeSumm: TMultiAction;
     spUpdateMovement_Summ: TdsdStoredProc;
     bbChangeSumm: TdxBarButton;
     cxLabel31: TcxLabel;
@@ -460,7 +460,6 @@ type
     bbProtocol3: TdxBarButton;
     bbProtoco_Invoice: TdxBarButton;
     actFormClose: TdsdFormClose;
-    actCompleteMovement_andSave: TChangeGuidesStatus;
     Panel_btn: TPanel;
     btnInsertUpdateMovement: TcxButton;
     btntAdd_limit: TcxButton;
@@ -480,6 +479,7 @@ type
     btnChangeNPP: TcxButton;
     actSetVisible_Grid: TBooleanSetVisibleAction;
     cxButton1: TcxButton;
+    mactCompleteMovement_andSave: TMultiAction;
   private
   public
   end;

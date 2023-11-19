@@ -16,17 +16,17 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     TabOrder = 3
     ExplicitTop = 87
     ExplicitWidth = 1028
-    ExplicitHeight = 269
+    ExplicitHeight = 227
     ClientRectBottom = 227
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 269
+      ExplicitHeight = 227
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 227
         ExplicitWidth = 1028
-        ExplicitHeight = 269
+        ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -69,6 +69,11 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             item
               Format = ',0.00##'
               Kind = skSum
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ObjectName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -214,7 +219,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             DataBinding.FieldName = 'VATPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -277,37 +282,41 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 33
           end
           object InfoMoneyGroupName: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1043#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             Options.Editing = False
             Width = 70
           end
           object InfoMoneyDestinationName: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             Options.Editing = False
             Width = 70
           end
           object InfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             Options.Editing = False
             Width = 83
           end
           object InfoMoneyName_all: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103
             Options.Editing = False
             Width = 80
           end
@@ -417,10 +426,9 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 894
     object btnFormClose: TcxButton
-      Left = 442
-      Top = 7
+      Left = 679
+      Top = 6
       Width = 90
       Height = 25
       Action = actFormClose
@@ -428,21 +436,33 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       ShowHint = True
       TabOrder = 0
     end
-    object cxButton1: TcxButton
-      Left = 295
-      Top = 6
+    object btnChoiceGuides: TcxButton
+      Left = 532
+      Top = 5
       Width = 90
       Height = 25
       Action = actChoiceGuides
       TabOrder = 1
     end
-    object btnUpdate: TcxButton
-      Left = 590
+    object btnSetNull_GuidesClient: TcxButton
+      Left = 79
       Top = 6
-      Width = 139
+      Width = 190
       Height = 25
-      Action = actShowErased
+      Action = actSetNull_GuidesClient
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 2
+    end
+    object btnClientPartnerChoiceForm: TcxButton
+      Left = 291
+      Top = 6
+      Width = 190
+      Height = 25
+      Action = actClientPartnerChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1186,6 +1206,59 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Caption = #1054#1090#1084#1077#1085#1072
       ImageIndex = 52
     end
+    object actSetNull_GuidesClient: TdsdSetDefaultParams
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1047#1072#1082#1072#1079#1099'...'
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1047#1072#1082#1072#1079#1099'...'
+      ImageIndex = 24
+      DefaultParams = <
+        item
+          Param.Value = ''
+          Param.Component = GuidesObject
+          Param.ComponentItem = 'Id'
+          Param.MultiSelectSeparator = ','
+          Value = 0
+        end
+        item
+          Param.Value = ''
+          Param.Component = GuidesObject
+          Param.ComponentItem = 'TextValue'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = ''
+        end>
+    end
+    object actClientPartnerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
+      ImageIndex = 7
+      FormName = 'TUnion_ClientPartnerForm'
+      FormNameParam.Value = 'TUnion_ClientPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 96
@@ -1498,8 +1571,8 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 624
-    Top = 3
+    Left = 616
+    Top = 19
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchInvNumber

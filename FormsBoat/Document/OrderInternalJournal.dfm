@@ -78,7 +78,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     object cxLabel3: TcxLabel
       Left = 710
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -127,6 +127,11 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = GoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

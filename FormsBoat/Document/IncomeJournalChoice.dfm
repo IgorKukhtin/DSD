@@ -3,7 +3,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   ClientHeight = 535
   ClientWidth = 765
   AddOnFormData.isSingle = True
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 781
   ExplicitHeight = 574
@@ -11,18 +11,18 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 765
-    Height = 478
+    Height = 437
     TabOrder = 3
     ExplicitWidth = 765
     ExplicitHeight = 478
-    ClientRectBottom = 478
+    ClientRectBottom = 437
     ClientRectRight = 765
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 765
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 765
-        Height = 478
+        Height = 437
         ExplicitWidth = 765
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -322,10 +322,47 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Width = 765
     ExplicitWidth = 765
     inherited deStart: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
+    end
+  end
+  object Panel_btn: TPanel [2]
+    Left = 0
+    Top = 494
+    Width = 765
+    Height = 41
+    Align = alBottom
+    TabOrder = 6
+    ExplicitLeft = -129
+    ExplicitTop = 451
+    ExplicitWidth = 894
+    object btnFormClose: TcxButton
+      Left = 290
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object cxButton1: TcxButton
+      Left = 167
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 1
+    end
+    object btnUpdate: TcxButton
+      Left = 462
+      Top = 7
+      Width = 139
+      Height = 25
+      Action = actShowErased
+      TabOrder = 2
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -384,7 +421,19 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
+    end
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -435,10 +484,16 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = MasterDS
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -535,6 +590,10 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+    end
     inherited bbComplete: TdxBarButton
       Visible = ivNever
     end
@@ -545,18 +604,18 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       Visible = ivNever
     end
     object bbSelect: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end>
     Left = 320
