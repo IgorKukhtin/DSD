@@ -55,15 +55,23 @@ BEGIN
            , '' :: TVarChar           AS CityName
            , 0                        AS CountryId
            , '' :: TVarChar           AS CountryName
-           , 0                        AS TaxKindId
-           , '' :: TVarChar           AS TaxKindName
-           , 0                        AS PaidKindId
-           , '' :: TVarChar           AS PaidKindName
-           , 0                        AS InfoMoneyId
-           , '' :: TVarChar           AS InfoMoneyName
+
+           , Object_TaxKind.Id         AS TaxKindId
+           , Object_TaxKind.ValueData  AS TaxKindName
+           , Object_PaidKind.Id        AS PaidKindId
+           , Object_PaidKind.ValueData AS PaidKindName
+
+           , Object_InfoMoney_View.InfoMoneyId       AS InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName
+
            , 0 ::TFloat               AS DiscountTax
            , 0 ::TFloat               AS DayCalendar
            , 0 ::TFloat               AS DayBank
+
+        FROM Object_InfoMoney_View
+             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
+             LEFT JOIN Object AS Object_TaxKind  ON Object_TaxKind.Id = zc_TaxKind_Basis()
+        WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_10101()
        ;
    ELSE
        RETURN QUERY

@@ -44,7 +44,9 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyDestinationId
           , Object_InfoMoney_View.InfoMoneyDestinationCode
           , Object_InfoMoney_View.InfoMoneyDestinationName
-          , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+
+          , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS TaxKind_Value
+
           , Object_PaidKind.Id              AS PaidKindId
           , Object_PaidKind.ValueData       AS PaidKindName
           , Object_TaxKind.Id               AS TaxKindId

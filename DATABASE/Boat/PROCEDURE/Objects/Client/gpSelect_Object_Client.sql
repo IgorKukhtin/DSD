@@ -65,8 +65,9 @@ BEGIN
            , Object_TaxKind.Id                   AS TaxKindId
            , Object_TaxKind.ValueData            AS TaxKindName 
            , ObjectString_TaxKind_Info.ValueData AS TaxKindName_Info
-           , ObjectFloat_TaxKind_Value.ValueData ::TFloat AS TaxKind_Value
-           , CASE WHEN COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) <> 0 THEN TRUE ELSE FALSE END ::Boolean AS PriceWithVAT
+           , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS TaxKind_Value
+
+           , FALSE::Boolean AS PriceWithVAT
 
            , Object_PaidKind.Id              AS PaidKindId
            , Object_PaidKind.ValueData       AS PaidKindName

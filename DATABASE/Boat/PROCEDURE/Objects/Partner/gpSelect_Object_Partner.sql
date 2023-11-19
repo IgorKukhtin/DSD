@@ -65,7 +65,7 @@ BEGIN
            , Object_TaxKind.Id                   AS TaxKindId
            , Object_TaxKind.ValueData            AS TaxKindName
            , ObjectString_TaxKind_Info.ValueData AS TaxKindName_Info
-           , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+           , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS TaxKind_Value
 
            , Object_PaidKind.Id              AS PaidKindId
            , Object_PaidKind.ValueData       AS PaidKindName

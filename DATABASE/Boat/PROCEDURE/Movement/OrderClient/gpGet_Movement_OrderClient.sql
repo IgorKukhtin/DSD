@@ -194,9 +194,9 @@ BEGIN
             --
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
             --
-          , MovementFloat_VATPercent.ValueData        AS VATPercent
-          , MovementFloat_DiscountTax.ValueData       AS DiscountTax
-          , MovementFloat_DiscountNextTax.ValueData   AS DiscountNextTax
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)         :: TFloat AS VATPercent
+          , COALESCE (MovementFloat_DiscountTax.ValueData, 0)        :: TFloat AS DiscountTax
+          , COALESCE (MovementFloat_DiscountNextTax.ValueData, 0)    :: TFloat AS DiscountNextTax
             -- Cумма откорректированной скидки, без НДС
           , COALESCE (MovementFloat_SummTax.ValueData, 0)  :: TFLoat AS SummTax
             -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС

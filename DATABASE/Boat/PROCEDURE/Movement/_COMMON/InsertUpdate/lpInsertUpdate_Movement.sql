@@ -46,12 +46,12 @@ BEGIN
 
         -- Проверка
         IF vbStatusId <> zc_Enum_Status_UnComplete() THEN
-           RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
+           RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
         END IF; 
         
         -- Проверка
         IF vbStatusId = zc_Enum_Status_Complete() THEN
-           RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
+           RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
         END IF;
 
         -- если такой элемент не был найден
