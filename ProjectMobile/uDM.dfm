@@ -1718,6 +1718,10 @@ object DM: TDM
       FieldName = 'SubjectDocName'
       Size = 255
     end
+    object cdsReturnInItemsCurrencyName: TStringField
+      FieldName = 'CurrencyName'
+      Size = 10
+    end
   end
   object qryPromoPartners: TFDQuery
     Connection = conMain
