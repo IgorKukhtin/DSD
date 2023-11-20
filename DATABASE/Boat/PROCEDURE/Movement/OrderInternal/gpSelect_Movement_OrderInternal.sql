@@ -15,13 +15,13 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , TotalCount TFloat
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime 
+             , UpdateName TVarChar, UpdateDate TDateTime
                --
              , MovementItemId Integer
              , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar, GoodsName_all TVarChar, ItemName_goods TVarChar, Comment_goods TVarChar
              , Amount TFloat
              , UnitId Integer
-             , UnitName TVarChar 
+             , UnitName TVarChar
              , Comment_mi TVarChar
              , MovementId_OrderClient Integer
              , InvNumberFull_OrderClient TVarChar
@@ -38,11 +38,15 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -59,11 +63,11 @@ BEGIN
                                                               AND Movement_OrderInternal.OperDate BETWEEN inStartDate AND inEndDate
                                                               AND Movement_OrderInternal.DescId = zc_Movement_OrderInternal()
                                      )
-        
+
         , tmpMI_Master AS (SELECT MovementItem.Id
                                 , MovementItem.MovementId
                                 , MovementItem.ObjectId       AS GoodsId
-                                , MovementItem.Amount         
+                                , MovementItem.Amount
                                 , MovementItem.isErased
                                 , MIString_Comment.ValueData  AS Comment
                                 , Object_Insert.ValueData     AS InsertName
@@ -114,7 +118,7 @@ BEGIN
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
 
-               -- строки 
+               -- строки
              , MovementItem.Id                      AS MovementItemId
              , MovementItem.GoodsId                 AS GoodsId
              , Object_Goods.ObjectCode              AS GoodsCode
@@ -130,8 +134,8 @@ BEGIN
 
              , Movement_OrderClient.Id              AS MovementId_OrderClient
              , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
-             , Object_From.Id                       AS FromId 
-             , Object_From.ValueData                AS FromName 
+             , Object_From.Id                       AS FromId
+             , Object_From.ValueData                AS FromName
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)  AS ProductName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN
 
@@ -164,9 +168,9 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MLO_Update
                                           ON MLO_Update.MovementId = Movement_OrderInternal.Id
                                          AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
-             
-             --- 
+             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+
+             ---
              LEFT JOIN tmpMI_Master AS MovementItem ON MovementItem.MovementId = Movement_OrderInternal.Id
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
              LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
@@ -189,7 +193,7 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                           ON MovementLinkObject_Product.MovementId = MovementItem.MovementId_OrderClient
                                          AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
-             LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId  
+             LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
 
              LEFT JOIN ObjectString AS ObjectString_CIN
                                     ON ObjectString_CIN.ObjectId = Object_Product.Id

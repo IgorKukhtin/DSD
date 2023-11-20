@@ -42,15 +42,15 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
-
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -93,11 +93,11 @@ BEGIN
                                     LEFT JOIN MovementString AS MovementString_InvNumberPack
                                                              ON MovementString_InvNumberPack.MovementId = Movement_Income.Id
                                                             AND MovementString_InvNumberPack.DescId = zc_MovementString_InvNumberPack()
-                                    LEFT JOIN MovementString AS MovementString_InvNumberInvoice 
+                                    LEFT JOIN MovementString AS MovementString_InvNumberInvoice
                                                              ON MovementString_InvNumberInvoice.MovementId = Movement_Income.Id
                                                             AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
-                                    LEFT JOIN MovementDate AS MovementDate_OperDatePartner    
+                                    LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                            ON MovementDate_OperDatePartner.MovementId = Movement_Income.Id
                                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                               )
@@ -139,7 +139,7 @@ BEGIN
 
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
-             , Object_From.ValueData                      AS FromName  
+             , Object_From.ValueData                      AS FromName
              , Object_TaxKind.ValueData                   AS TaxKindName
              , ObjectString_TaxKind_Info.ValueData        AS TaxKindName_info
              , Object_To.Id                               AS ToId
@@ -235,15 +235,15 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MLO_Update
                                           ON MLO_Update.MovementId = Movement_Income.Id
                                          AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
-            
+             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+
              LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                   ON ObjectLink_TaxKind.ObjectId = Object_From.Id
                                  AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
              LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
              LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
-                                    ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id 
+                                    ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id
                                    AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
             ;
 

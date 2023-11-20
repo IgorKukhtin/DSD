@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
@@ -32,11 +31,15 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -102,23 +105,23 @@ BEGIN
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Send.StatusId
              LEFT JOIN Object AS Object_From   ON Object_From.Id   = Movement_Send.FromId
              LEFT JOIN Object AS Object_To     ON Object_To.Id     = Movement_Send.ToId
-     
+
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement_Send.Id
                                     AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-     
+
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId = Movement_Send.Id
                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-     
+
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement_Send.Id
                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
-     
+
              LEFT JOIN MovementString AS MovementString_InvNumberInvoice
                                       ON MovementString_InvNumberInvoice.MovementId = Movement_Send.Id
                                      AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
-     
+
              LEFT JOIN MovementDate AS MovementDate_Insert
                                     ON MovementDate_Insert.MovementId = Movement_Send.Id
                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -126,7 +129,7 @@ BEGIN
                                           ON MLO_Insert.MovementId = Movement_Send.Id
                                          AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
-     
+
              LEFT JOIN MovementDate AS MovementDate_Update
                                     ON MovementDate_Update.MovementId = Movement_Send.Id
                                    AND MovementDate_Update.DescId = zc_MovementDate_Update()
@@ -138,22 +141,22 @@ BEGIN
             -- Parent - если указан
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_Send.ParentId
             LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
-    
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From_parent
                                          ON MovementLinkObject_From_parent.MovementId = Movement_Parent.Id
                                         AND MovementLinkObject_From_parent.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From_parent ON Object_From_parent.Id = MovementLinkObject_From_parent.ObjectId
-    
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product_parent
                                          ON MovementLinkObject_Product_parent.MovementId = Movement_Parent.Id
                                         AND MovementLinkObject_Product_parent.DescId = zc_MovementLinkObject_Product()
             LEFT JOIN Object AS Object_Product_parent ON Object_Product_parent.Id = MovementLinkObject_Product_parent.ObjectId
-    
+
             LEFT JOIN ObjectLink AS ObjectLink_Model_parent
                                  ON ObjectLink_Model_parent.ObjectId = Object_Product_parent.Id
                                 AND ObjectLink_Model_parent.DescId = zc_ObjectLink_Product_Model()
             LEFT JOIN Object AS Object_Model_parent ON Object_Model_parent.Id = ObjectLink_Model_parent.ChildObjectId
-    
+
            ;
 
 END;

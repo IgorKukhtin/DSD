@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
@@ -36,11 +35,15 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ProductionUnion());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId

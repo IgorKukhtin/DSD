@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , VATPercent TFloat
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime 
+             , UpdateName TVarChar, UpdateDate TDateTime
              , Value_TaxKind TFloat, TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
              )
 
@@ -30,12 +30,15 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
-
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -50,7 +53,7 @@ BEGIN
                                  , MovementLinkObject_To.ObjectId             AS ToId
                                  , MovementLinkObject_From.ObjectId           AS FromId
                             FROM tmpStatus
-                                 INNER JOIN Movement AS Movement_Sale 
+                                 INNER JOIN Movement AS Movement_Sale
                                                      ON Movement_Sale.StatusId = tmpStatus.StatusId
                                                     AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND Movement_Sale.DescId = zc_Movement_Sale()
@@ -81,7 +84,7 @@ BEGIN
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
-  
+
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
              , Object_From.ValueData                      AS FromName
@@ -143,7 +146,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Insert
                                      ON MLO_Insert.MovementId = Movement_Sale.Id
                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
         LEFT JOIN MovementDate AS MovementDate_Update
                                ON MovementDate_Update.MovementId = Movement_Sale.Id
@@ -151,7 +154,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Update
                                      ON MLO_Update.MovementId = Movement_Sale.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
         LEFT JOIN MovementString AS MovementString_Comment_parent
                                  ON MovementString_Comment_parent.MovementId = Movement_Parent.Id
@@ -162,10 +165,10 @@ BEGIN
                              ON ObjectLink_TaxKind.ObjectId = Object_To.Id
                             AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
-                            
+
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                              ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                             AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
+                              ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                             AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
                                ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
                               AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()

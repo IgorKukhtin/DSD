@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , BasisPrice_load TFloat
                -- load Сумма транспорт с сайта
              , TransportSumm_load TFloat
-              
+
              , SummTax TFloat
              , SummReal TFloat
              , TotalSumm_calc TFloat
@@ -59,12 +59,15 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderClient());
-
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -108,7 +111,7 @@ BEGIN
                                         , MovementLinkMovement_Invoice.MovementChildId AS MovementId_Invoice
 
                                         , Movement_OrderClient.NPP
-                                        , ROW_NUMBER() OVER (ORDER BY CASE WHEN Movement_OrderClient.NPP > 0 AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased() THEN 0 ELSE 1 END 
+                                        , ROW_NUMBER() OVER (ORDER BY CASE WHEN Movement_OrderClient.NPP > 0 AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased() THEN 0 ELSE 1 END
                                                                     , ObjectDate_DateBegin.ValueData
                                                                     , Movement_OrderClient.NPP
                                                                     , Movement_OrderClient.OperDate
@@ -248,9 +251,9 @@ BEGIN
              , MIFloat_BasisPrice_load.ValueData           AS BasisPrice_load
                -- load Сумма транспорт с сайта
              , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
-             
+
                -- Cумма откорректированной скидки, без НДС
-             , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax 
+             , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax
                -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
              , MovementFloat_SummReal.ValueData ::TFloat AS SummReal
                -- ИТОГО расчетная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
@@ -284,7 +287,7 @@ BEGIN
              , Object_ReceiptProdModel.ValueData            AS ReceiptProdModelName
 
              , Object_Brand.Id                              AS BrandId
-             , Object_Brand.ValueData                       AS BrandName 
+             , Object_Brand.ValueData                       AS BrandName
              , Object_Model.Id                              AS ModelId
              , Object_Model.ValueData                       AS ModelName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
@@ -295,7 +298,7 @@ BEGIN
              , Movement_Invoice.Id                          AS MovementId_Invoice
              , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
              , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice
-             
+
              , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
              , Object_TaxKind.ValueData                     AS TaxKindName
              , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
@@ -366,7 +369,7 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_SummReal
                                      ON MovementFloat_SummReal.MovementId = Movement_OrderClient.Id
                                     AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
- 
+
              LEFT JOIN MovementFloat AS MovementFloat_SummTax
                                      ON MovementFloat_SummTax.MovementId = Movement_OrderClient.Id
                                     AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
@@ -431,7 +434,7 @@ BEGIN
 
              LEFT JOIN ObjectLink AS ObjectLink_Model
                                   ON ObjectLink_Model.ObjectId = Object_Product.Id
-                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
+                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
              LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
 
              LEFT JOIN ObjectDate AS ObjectDate_DateSale
@@ -454,8 +457,8 @@ BEGIN
              LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
+                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
              LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
                                     ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
                                    AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()

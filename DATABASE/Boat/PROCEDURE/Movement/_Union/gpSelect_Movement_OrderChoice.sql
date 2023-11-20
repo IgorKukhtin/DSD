@@ -47,6 +47,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -246,7 +251,7 @@ BEGIN
                                    AND ObjectString_TaxKind_Info.DescId   = zc_ObjectString_TaxKind_Info()
              LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                     ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                   AND ObjectString_TaxKind_Comment.DescId   = zc_ObjectString_TaxKind_Comment()   
+                                   AND ObjectString_TaxKind_Comment.DescId   = zc_ObjectString_TaxKind_Comment()
 
         WHERE Movement.ObjectId = inObjectId OR COALESCE (inObjectId, 0) = 0
        ;
