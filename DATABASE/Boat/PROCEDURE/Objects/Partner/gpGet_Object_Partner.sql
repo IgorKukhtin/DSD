@@ -25,9 +25,15 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 AS
 $BODY$
 BEGIN
-
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Partner());
+
+  -- проверка
+  IF inId > 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inId AND Object.DescId = zc_Object_Partner())
+  THEN
+      RAISE EXCEPTION 'Ошибка.Выбран <%>.Для этого действия неообходимо выбрать Поставщика.', (SELECT ObjectDesc.ItemName FROM Object JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId WHERE Object.Id = inId);
+  END IF;
+
 
   IF COALESCE (inId, 0) = 0
    THEN
