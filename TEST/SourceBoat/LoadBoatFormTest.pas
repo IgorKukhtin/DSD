@@ -1022,10 +1022,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_ClientPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_ClientPartnerForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;

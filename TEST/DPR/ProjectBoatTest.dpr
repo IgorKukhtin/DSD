@@ -53,11 +53,11 @@ uses
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
   AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
   AncestorDialog in '..\..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
-  AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
-  AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
+  AncestorDocument in '..\..\FormsBoat\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
+  AncestorDocumentMC in '..\..\FormsBoat\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
   AncestorEditDialog in '..\..\FormsBoat\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
-  AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
-  AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
+  AncestorEnum in '..\..\FormsBoat\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
+  AncestorGuides in '..\..\FormsBoat\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   AncestorJournal in '..\..\FormsBoat\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
@@ -215,7 +215,6 @@ uses
   CurrencyEdit in '..\..\FormsBoat\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
   MoneyPlace_Object in '..\..\FormsBoat\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   BankAccountJournal in '..\..\FormsBoat\Document\BankAccountJournal.pas' {BankAccountJournalForm: TParentForm},
-  BankAccountMovement in '..\..\FormsBoat\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
   InvoiceJournalChoice in '..\..\FormsBoat\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm},
   Income in '..\..\FormsBoat\Document\Income.pas' {IncomeForm: TParentForm},
   IncomeJournal in '..\..\FormsBoat\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
@@ -366,7 +365,8 @@ uses
   Report_Client in '..\..\FormsBoat\Report\Report_Client.pas' {Report_ClientForm: TParentForm},
   Report_ClientDialog in '..\..\FormsBoat\Report\Report_ClientDialog.pas' {Report_ClientDialogForm: TParentForm},
   ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
-  ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm};
+  ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
+  BankAccountMovement in '..\..\FormsBoat\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

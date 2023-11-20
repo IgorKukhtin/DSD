@@ -167,11 +167,11 @@
 				<Form>AncestorDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDocument.pas">
 				<Form>AncestorDocumentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas">
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDocumentMC.pas">
 				<Form>AncestorDocumentMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -179,11 +179,11 @@
 				<Form>AncestorEditDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorEnum.pas">
 				<Form>AncestorEnumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorGuides.pas">
 				<Form>AncestorGuidesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -693,10 +693,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\BankAccountJournal.pas">
 				<Form>BankAccountJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\BankAccountMovement.pas">
-				<Form>BankAccountMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\InvoiceJournalChoice.pas">
@@ -1264,6 +1260,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\ProductionUnion.pas">
 				<Form>ProductionUnionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\BankAccountMovement.pas">
+				<Form>BankAccountMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
