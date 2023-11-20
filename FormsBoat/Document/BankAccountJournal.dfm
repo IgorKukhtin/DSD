@@ -12,18 +12,18 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1094
     Height = 258
     TabOrder = 3
-    ExplicitWidth = 835
-    ExplicitHeight = 299
+    ExplicitWidth = 1094
+    ExplicitHeight = 258
     ClientRectBottom = 258
     ClientRectRight = 1094
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 835
-      ExplicitHeight = 299
+      ExplicitWidth = 1094
+      ExplicitHeight = 258
       inherited cxGrid: TcxGrid
         Width = 1094
         Height = 258
-        ExplicitWidth = 835
-        ExplicitHeight = 299
+        ExplicitWidth = 1094
+        ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -398,13 +398,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited Panel: TPanel
     Width = 1094
-    ExplicitWidth = 835
-    inherited deStart: TcxDateEdit
-      EditValue = 44927d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 44927d
-    end
+    ExplicitWidth = 1094
   end
   object Panel_btn: TPanel [2]
     Left = 0
@@ -413,8 +407,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -193
-    ExplicitWidth = 1028
     object btnInsert: TcxButton
       Left = 42
       Top = 7
@@ -1088,12 +1080,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1047#1072#1082#1088#1099#1090#1100
-      ImageIndex = 87
     end
   end
   inherited MasterDS: TDataSource

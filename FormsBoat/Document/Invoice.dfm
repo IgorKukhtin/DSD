@@ -1,23 +1,23 @@
 ﻿inherited InvoiceForm: TInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 537
-  ClientWidth = 344
+  ClientWidth = 399
   AddOnFormData.isSingle = False
-  ExplicitWidth = 350
+  ExplicitWidth = 405
   ExplicitHeight = 566
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 235
-    Top = 465
-    ExplicitLeft = 235
-    ExplicitTop = 465
+    Left = 105
+    Top = 505
+    ExplicitLeft = 105
+    ExplicitTop = 505
   end
   inherited bbCancel: TcxButton
-    Left = 235
-    Top = 496
-    ExplicitLeft = 235
-    ExplicitTop = 496
+    Left = 208
+    Top = 504
+    ExplicitLeft = 208
+    ExplicitTop = 504
   end
   object Код: TcxLabel [2]
     Left = 15
@@ -25,12 +25,12 @@
     Caption = 'Interne Nr'
   end
   object cxLabel1: TcxLabel [3]
-    Left = 123
+    Left = 150
     Top = 5
     Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object ceOperDate: TcxDateEdit [4]
-    Left = 123
+    Left = 150
     Top = 25
     EditValue = 44230d
     Properties.SaveTime = False
@@ -44,7 +44,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 4
-    Width = 100
+    Width = 84
   end
   object cxLabel7: TcxLabel [6]
     Left = 15
@@ -52,15 +52,15 @@
     Caption = 'Debet'
   end
   object ceAmountOut: TcxCurrencyEdit [7]
-    Left = 123
+    Left = 111
     Top = 128
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 5
-    Width = 100
+    Width = 84
   end
   object cxLabel3: TcxLabel [8]
-    Left = 123
+    Left = 111
     Top = 108
     Caption = 'Kredit'
   end
@@ -79,7 +79,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 209
+    Width = 376
   end
   object cxLabel5: TcxLabel [11]
     Left = 15
@@ -97,7 +97,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 320
+    Width = 375
   end
   object cxLabel10: TcxLabel [13]
     Left = 15
@@ -108,7 +108,7 @@
     Left = 15
     Top = 425
     TabOrder = 9
-    Width = 320
+    Width = 375
   end
   object cxLabel9: TcxLabel [15]
     Left = 151
@@ -147,7 +147,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 18
-    Width = 320
+    Width = 375
   end
   object cxLabel14: TcxLabel [19]
     Left = 15
@@ -170,22 +170,22 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 320
+    Width = 375
   end
   object cxLabel17: TcxLabel [22]
-    Left = 234
+    Left = 284
     Top = 5
     Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1087#1083#1072#1085')'
   end
   object cePlanDate: TcxDateEdit [23]
-    Left = 234
+    Left = 284
     Top = 25
     EditValue = 42005d
     Properties.AssignedValues.DisplayFormat = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 23
-    Width = 100
+    Width = 96
   end
   object cxLabel18: TcxLabel [24]
     Left = 15
@@ -202,33 +202,33 @@
     Width = 155
   end
   object cxLabel19: TcxLabel [26]
-    Left = 179
+    Left = 208
     Top = 54
     Caption = 'Quittung Nr'
   end
   object edReceiptNumber: TcxTextEdit [27]
-    Left = 179
+    Left = 208
     Top = 74
     Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
     TabOrder = 27
-    Width = 155
+    Width = 182
   end
   object cxLabel2: TcxLabel [28]
-    Left = 235
+    Left = 211
     Top = 108
     Caption = '% '#1053#1044#1057
   end
   object edVATPercent: TcxCurrencyEdit [29]
-    Left = 235
+    Left = 211
     Top = 128
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
     TabOrder = 29
-    Width = 100
+    Width = 55
   end
   object cxLabel4: TcxLabel [30]
     Left = 15
@@ -245,16 +245,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 31
-    Width = 320
+    Width = 375
   end
   object cxLabel44: TcxLabel [32]
-    Left = 235
-    Top = 155
+    Left = 273
+    Top = 108
     Caption = #1042#1080#1076' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit [33]
-    Left = 235
-    Top = 175
+    Left = 273
+    Top = 128
     Properties.Buttons = <
       item
         Default = True
@@ -262,22 +262,22 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 33
-    Width = 100
+    Width = 117
   end
   object btnGoodsChoiceForm: TcxButton [34]
     Left = 15
     Top = 465
-    Width = 196
+    Width = 180
     Height = 25
     Action = actObjectChoiceForm
     ParentShowHint = False
     ShowHint = True
     TabOrder = 34
   end
-  object cxButton1: TcxButton [35]
-    Left = 15
-    Top = 496
-    Width = 196
+  object btnGuidesParentChoiceForm: TcxButton [35]
+    Left = 208
+    Top = 465
+    Width = 180
     Height = 25
     Action = actGuidesParentChoiceForm
     ParentShowHint = False
@@ -289,12 +289,12 @@
     Top = 324
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 263
-    Top = 52
+    Left = 183
+    Top = 188
   end
   inherited ActionList: TActionList
-    Left = 302
-    Top = 99
+    Left = 237
+    Top = 171
     object actGetPlanDate: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -709,8 +709,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 279
-    Top = 152
+    Left = 327
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice'
@@ -1208,7 +1207,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
+    Left = 184
     Top = 40
   end
   object GuidesParent: TdsdGuides

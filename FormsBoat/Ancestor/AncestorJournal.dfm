@@ -146,7 +146,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end>
       isShowModal = False
     end
-    object MovementProtocolOpenForm: TdsdOpenForm [1]
+    object actMovementProtocolOpenForm: TdsdOpenForm [1]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -344,7 +344,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      ImageIndex = 12
+      ImageIndex = 77
     end
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -360,7 +360,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      ImageIndex = 12
+      ImageIndex = 77
     end
     object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -376,7 +376,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      ImageIndex = 11
+      ImageIndex = 76
     end
     object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
@@ -392,7 +392,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      ImageIndex = 13
+      ImageIndex = 52
     end
     object mactSimpleReCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -481,6 +481,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
           StoredProc = spMovementSetErased
         end>
       Caption = 'spErased'
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -594,6 +600,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end>
     end
     inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
       ShowCaption = False
     end
     object bbInsert: TdxBarButton
@@ -629,7 +637,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Category = 0
     end
     object bbMovementProtocol: TdxBarButton
-      Action = MovementProtocolOpenForm
+      Action = actMovementProtocolOpenForm
       Category = 0
     end
   end

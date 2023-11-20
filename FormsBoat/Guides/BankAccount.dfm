@@ -3,7 +3,7 @@ object BankAccountForm: TBankAccountForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'>'
   ClientHeight = 376
-  ClientWidth = 493
+  ClientWidth = 844
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object BankAccountForm: TBankAccountForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 493
-    Height = 350
+    Width = 844
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 493
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,7 +42,6 @@ object BankAccountForm: TBankAccountForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -72,6 +73,7 @@ object BankAccountForm: TBankAccountForm
       object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -89,20 +91,18 @@ object BankAccountForm: TBankAccountForm
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 157
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 150
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -117,6 +117,59 @@ object BankAccountForm: TBankAccountForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 335
+    Width = 844
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitLeft = -188
+    ExplicitTop = 332
+    ExplicitWidth = 897
+    object btnInsert: TcxButton
+      Left = 301
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 407
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 44
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 2
+    end
+    object btnSetErased: TcxButton
+      Left = 513
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actSetErased
+      TabOrder = 3
+    end
+    object btnFormClose: TcxButton
+      Left = 162
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
     end
   end
   object DataSource: TDataSource
@@ -269,9 +322,7 @@ object BankAccountForm: TBankAccountForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -420,9 +471,9 @@ object BankAccountForm: TBankAccountForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -482,6 +533,12 @@ object BankAccountForm: TBankAccountForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

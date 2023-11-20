@@ -603,12 +603,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   inherited Panel: TPanel
     Width = 1028
     ExplicitWidth = 1028
-    inherited deStart: TcxDateEdit
-      EditValue = 44927d
-    end
     inherited deEnd: TcxDateEdit
       Left = 315
-      EditValue = 44927d
       ExplicitLeft = 315
     end
   end
@@ -820,17 +816,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actComplete: TdsdChangeMovementStatus
-      ImageIndex = 77
-    end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 76
-    end
-    inherited actSetErased: TdsdChangeMovementStatus
-      ImageIndex = 52
-    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1019,12 +1004,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1047#1072#1082#1088#1099#1090#1100
-      ImageIndex = 87
     end
   end
   inherited MasterDS: TDataSource

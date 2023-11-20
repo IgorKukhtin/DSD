@@ -499,9 +499,8 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 457
-    object btnUpdate: TcxButton
-      Left = 543
+    object btnFormClose: TcxButton
+      Left = 607
       Top = 7
       Width = 90
       Height = 25
@@ -510,8 +509,8 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       ShowHint = True
       TabOrder = 0
     end
-    object btnComplete: TcxButton
-      Left = 387
+    object btnChoiceGuides: TcxButton
+      Left = 493
       Top = 7
       Width = 90
       Height = 25
@@ -520,22 +519,22 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       ShowHint = True
       TabOrder = 1
     end
-    object btnFormClose: TcxButton
-      Left = 753
+    object btnClientChoiceForm: TcxButton
+      Left = 277
       Top = 7
-      Width = 153
+      Width = 180
       Height = 25
-      Action = actShowErased
+      Action = actClientChoiceForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 2
     end
-    object btnClientChoiceForm: TcxButton
-      Left = 101
+    object btnSetNull_GuidesClient: TcxButton
+      Left = 79
       Top = 7
-      Width = 150
+      Width = 180
       Height = 25
-      Action = actClientChoiceForm
+      Action = actSetNull_GuidesClient
       ParentShowHint = False
       ShowHint = True
       TabOrder = 3
@@ -1438,6 +1437,28 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actSetNull_GuidesClient: TdsdSetDefaultParams
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1047#1072#1082#1072#1079#1099
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1047#1072#1082#1072#1079#1099' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 24
+      DefaultParams = <
+        item
+          Param.Value = ''
+          Param.Component = GuidesClient
+          Param.ComponentItem = 'Id'
+          Param.MultiSelectSeparator = ','
+          Value = 0
+        end
+        item
+          Param.Value = ''
+          Param.Component = GuidesClient
+          Param.ComponentItem = 'TextValue'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = ''
+        end>
     end
   end
   object spSelect: TdsdStoredProc

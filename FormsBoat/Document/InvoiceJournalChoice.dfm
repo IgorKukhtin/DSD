@@ -14,17 +14,17 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Height = 258
     TabOrder = 3
     ExplicitWidth = 1028
-    ExplicitHeight = 299
+    ExplicitHeight = 258
     ClientRectBottom = 258
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 299
+      ExplicitHeight = 258
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 258
         ExplicitWidth = 1028
-        ExplicitHeight = 299
+        ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -87,22 +87,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
-            Properties.Items = <
-              item
-                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 76
-                Value = 1
-              end
-              item
-                Description = #1055#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 77
-                Value = 2
-              end
-              item
-                Description = #1059#1076#1072#1083#1077#1085
-                ImageIndex = 52
-                Value = 3
-              end>
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 69
@@ -346,12 +330,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   inherited Panel: TPanel
     Width = 1028
     ExplicitWidth = 1028
-    inherited deStart: TcxDateEdit
-      EditValue = 44927d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 44927d
-    end
     object cxLabel6: TcxLabel
       Left = 430
       Top = 7
@@ -377,7 +355,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 321
     object btnFormClose: TcxButton
       Left = 685
       Top = 7
@@ -905,12 +882,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       ImageIndex = 80
       DataSource = MasterDS
     end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
-    end
     object actClientPartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1073,10 +1044,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      Caption = ''
-      Hint = ''
     end
     object bbPrint: TdxBarButton
       Action = actPrint

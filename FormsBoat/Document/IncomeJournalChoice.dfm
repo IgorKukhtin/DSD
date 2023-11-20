@@ -1,30 +1,31 @@
 inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 535
+  ClientHeight = 498
   ClientWidth = 765
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitTop = 7
   ExplicitWidth = 781
-  ExplicitHeight = 574
+  ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 765
-    Height = 437
+    Height = 400
     TabOrder = 3
     ExplicitWidth = 765
-    ExplicitHeight = 478
-    ClientRectBottom = 437
+    ExplicitHeight = 437
+    ClientRectBottom = 400
     ClientRectRight = 765
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 765
-      ExplicitHeight = 478
+      ExplicitHeight = 437
       inherited cxGrid: TcxGrid
         Width = 765
-        Height = 437
+        Height = 400
         ExplicitWidth = 765
-        ExplicitHeight = 478
+        ExplicitHeight = 437
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -321,23 +322,15 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   inherited Panel: TPanel
     Width = 765
     ExplicitWidth = 765
-    inherited deStart: TcxDateEdit
-      EditValue = 44927d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 44927d
-    end
   end
   object Panel_btn: TPanel [2]
     Left = 0
-    Top = 494
+    Top = 457
     Width = 765
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -129
-    ExplicitTop = 451
-    ExplicitWidth = 894
+    ExplicitTop = 494
     object btnFormClose: TcxButton
       Left = 290
       Top = 7
@@ -348,7 +341,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       ShowHint = True
       TabOrder = 0
     end
-    object cxButton1: TcxButton
+    object btnChoiceGuides: TcxButton
       Left = 167
       Top = 7
       Width = 90
@@ -356,7 +349,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       Action = actChoiceGuides
       TabOrder = 1
     end
-    object btnUpdate: TcxButton
+    object btnShowErased: TcxButton
       Left = 462
       Top = 7
       Width = 139
@@ -389,28 +382,6 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       Enabled = False
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
     end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
@@ -488,12 +459,6 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 80
       DataSource = MasterDS
-    end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -589,10 +554,6 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      Caption = ''
-      Hint = ''
     end
     inherited bbComplete: TdxBarButton
       Visible = ivNever

@@ -79,7 +79,8 @@ type
     miReComplete: TMenuItem;
     mactReCompleteList: TMultiAction;
     bbMovementProtocol: TdxBarButton;
-    MovementProtocolOpenForm: TdsdOpenForm;
+    actMovementProtocolOpenForm: TdsdOpenForm;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public

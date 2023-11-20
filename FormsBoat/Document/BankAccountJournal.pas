@@ -71,7 +71,6 @@ type
     InfoMoneyGroupName_Invoice: TcxGridDBColumn;
     InfoMoneyDestinationName_Invoice: TcxGridDBColumn;
     InfoMoneyName_all_Invoice: TcxGridDBColumn;
-    actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnInsert: TcxButton;
     btnUpdate: TcxButton;

@@ -64,7 +64,6 @@ type
     GuidesObject: TdsdGuides;
     cxLabel6: TcxLabel;
     edClient: TcxButtonEdit;
-    actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnFormClose: TcxButton;
     btnChoiceGuides: TcxButton;

@@ -51,6 +51,10 @@ type
     cxLabel4: TcxLabel;
     GuidesParent: TdsdGuides;
     edParent: TcxButtonEdit;
+    actGuidesInvoiceChoiceForm: TOpenChoiceForm;
+    bbGuidesInvoiceChoiceForm: TcxButton;
+    actGuidesParentChoiceForm: TOpenChoiceForm;
+    bbGuidesParentChoiceForm: TcxButton;
   private
     { Private declarations }
   public

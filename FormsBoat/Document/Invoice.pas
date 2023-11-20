@@ -67,7 +67,7 @@ type
     GuidesTaxKind: TdsdGuides;
     btnGoodsChoiceForm: TcxButton;
     actObjectChoiceForm: TOpenChoiceForm;
-    cxButton1: TcxButton;
+    btnGuidesParentChoiceForm: TcxButton;
     actGuidesParentChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }

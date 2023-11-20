@@ -351,6 +351,7 @@ object ClientForm: TClientForm
     Height = 41
     Align = alBottom
     TabOrder = 5
+    ExplicitTop = 338
     object btnInsert: TcxButton
       Left = 485
       Top = 7

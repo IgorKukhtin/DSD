@@ -40,11 +40,10 @@ type
     actChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
     Comment: TcxGridDBColumn;
-    actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnFormClose: TcxButton;
-    cxButton1: TcxButton;
-    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnShowErased: TcxButton;
   private
     { Private declarations }
   public

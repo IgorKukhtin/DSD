@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
   TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
@@ -29,6 +30,9 @@ type
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
+    Panel_btn: TPanel;
+    btnFormClose: TcxButton;
+    btnChoiceGuides: TcxButton;
   private
     { Private declarations }
   public

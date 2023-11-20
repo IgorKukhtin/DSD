@@ -68,7 +68,6 @@ type
     actOpenIncomeCostByInvoice: TdsdOpenForm;
     bbOpenIncomeCostByInvoice: TdxBarButton;
     bb: TdxBarButton;
-    actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnInsert: TcxButton;
     btnUpdate: TcxButton;

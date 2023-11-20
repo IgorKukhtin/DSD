@@ -74,9 +74,9 @@ type
     bbSetUnErased: TdxBarButton;
     actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
-    btnUpdate: TcxButton;
-    btnComplete: TcxButton;
     btnFormClose: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnShowErased: TcxButton;
     TaxKindName: TcxGridDBColumn;
   private
     { Private declarations }

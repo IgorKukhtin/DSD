@@ -373,14 +373,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     Height = 61
     ExplicitWidth = 1028
     ExplicitHeight = 61
-    inherited deStart: TcxDateEdit
-      Left = 109
-      EditValue = 44927d
-      ExplicitLeft = 109
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 44927d
-    end
     object cxLabel6: TcxLabel
       Left = 430
       Top = 7
@@ -428,7 +420,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     TabOrder = 6
     object btnFormClose: TcxButton
       Left = 679
-      Top = 6
+      Top = 7
       Width = 90
       Height = 25
       Action = actFormClose
@@ -437,8 +429,8 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       TabOrder = 0
     end
     object btnChoiceGuides: TcxButton
-      Left = 532
-      Top = 5
+      Left = 548
+      Top = 7
       Width = 90
       Height = 25
       Action = actChoiceGuides
@@ -446,7 +438,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     end
     object btnSetNull_GuidesClient: TcxButton
       Left = 79
-      Top = 6
+      Top = 7
       Width = 190
       Height = 25
       Action = actSetNull_GuidesClient
@@ -456,7 +448,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     end
     object btnClientPartnerChoiceForm: TcxButton
       Left = 291
-      Top = 6
+      Top = 7
       Width = 190
       Height = 25
       Action = actClientPartnerChoiceForm
@@ -1200,12 +1192,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       ImageIndex = 80
       DataSource = MasterDS
     end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
-    end
     object actSetNull_GuidesClient: TdsdSetDefaultParams
       MoveParams = <>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1047#1072#1082#1072#1079#1099'...'
@@ -1376,10 +1362,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      Caption = ''
-      Hint = ''
     end
     object bbPrint: TdxBarButton
       Action = actPrint

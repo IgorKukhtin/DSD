@@ -108,15 +108,16 @@ type
     ModelName: TcxGridDBColumn;
     actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
-    btnUpdate: TcxButton;
-    btnComplete: TcxButton;
     btnFormClose: TcxButton;
+    btnChoiceGuides: TcxButton;
     bbsPrint: TdxBarSubItem;
     cxLabel3: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
     btnClientChoiceForm: TcxButton;
     actClientChoiceForm: TOpenChoiceForm;
+    actSetNull_GuidesClient: TdsdSetDefaultParams;
+    btnSetNull_GuidesClient: TcxButton;
   private
   public
   end;

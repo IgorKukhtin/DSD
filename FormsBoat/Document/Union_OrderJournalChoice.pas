@@ -69,7 +69,6 @@ type
     edSearchInvNumber: TcxTextEdit;
     lbSearchCode: TcxLabel;
     FieldFilter_Article: TdsdFieldFilter;
-    actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnFormClose: TcxButton;
     btnChoiceGuides: TcxButton;

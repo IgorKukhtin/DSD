@@ -1,20 +1,26 @@
 inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
-  ClientWidth = 419
-  ExplicitWidth = 435
-  ExplicitHeight = 347
+  ClientHeight = 480
+  ClientWidth = 669
+  ExplicitWidth = 685
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 419
-    ExplicitWidth = 419
-    ClientRectRight = 419
+    Width = 669
+    Height = 413
+    ExplicitWidth = 669
+    ExplicitHeight = 413
+    ClientRectBottom = 413
+    ClientRectRight = 669
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 419
-      ExplicitHeight = 282
+      ExplicitWidth = 669
+      ExplicitHeight = 413
       inherited cxGrid: TcxGrid
-        Width = 419
-        ExplicitWidth = 419
+        Width = 669
+        Height = 413
+        ExplicitWidth = 669
+        ExplicitHeight = 413
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -28,11 +34,10 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 33
+            Width = 70
           end
           object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -40,7 +45,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 225
+            Width = 400
           end
           object ItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -61,6 +66,30 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           end
         end
       end
+    end
+  end
+  object Panel_btn: TPanel [1]
+    Left = 0
+    Top = 439
+    Width = 669
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    object btnFormClose: TcxButton
+      Left = 381
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      TabOrder = 0
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 203
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 1
     end
   end
   inherited MasterDS: TDataSource
@@ -110,9 +139,6 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
   end
 end

@@ -174,7 +174,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    object btnUpdate: TcxButton
+    object btnFormClose: TcxButton
       Left = 423
       Top = 7
       Width = 90
@@ -182,7 +182,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Action = actFormClose
       TabOrder = 0
     end
-    object btnComplete: TcxButton
+    object btnChoiceGuides: TcxButton
       Left = 267
       Top = 7
       Width = 90
@@ -190,7 +190,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Action = actChoiceGuides
       TabOrder = 1
     end
-    object btnFormClose: TcxButton
+    object btnShowErased: TcxButton
       Left = 616
       Top = 7
       Width = 153
@@ -285,7 +285,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem1'
+          ItemName = 'dxBarSubItem2'
         end
         item
           Visible = True
@@ -293,7 +293,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem2'
+          ItemName = 'dxBarSubItem1'
         end
         item
           Visible = True
@@ -321,16 +321,15 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True
@@ -351,9 +350,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -370,7 +367,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Category = 0
     end
     object dxBarSubItem1: TdxBarSubItem
-      Caption = 'Lieferanten '
+      Caption = 'Kunden'
       Category = 0
       Visible = ivAlways
       Detachable = True
@@ -385,7 +382,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         end>
     end
     object dxBarSubItem2: TdxBarSubItem
-      Caption = 'Kunden'
+      Caption = 'Lieferanten'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -409,12 +406,10 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     object bbInsert_Partner: TdxBarButton
       Action = actInsert_Partner
       Category = 0
-      ShortCut = 8237
     end
     object bbUpdate_partner: TdxBarButton
       Action = actUpdate_partner
       Category = 0
-      ShortCut = 8307
     end
     object bbSetErased: TdxBarButton
       Action = actSetErased
@@ -621,7 +616,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TClientEditForm'
       FormNameParam.Value = 'TClientEditForm'
@@ -643,7 +637,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
       ImageIndex = 1
       FormName = 'TClientEditForm'
       FormNameParam.Value = 'TClientEditForm'
@@ -691,7 +684,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
       ImageIndex = 1
       FormName = 'TPartnerEditForm'
       FormNameParam.Value = 'TPartnerEditForm'
