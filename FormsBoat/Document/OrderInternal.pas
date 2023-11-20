@@ -287,6 +287,13 @@ uses
     cxButton4: TcxButton;
     actSetVisible_Grid_Child: TBooleanSetVisibleAction;
     cxButton5: TcxButton;
+    spUpdate_MI_Child_byOrder: TdsdStoredProc;
+    actUpdate_MI_Child_byOrder: TdsdExecStoredProc;
+    mactUpdate_MI_Child_byOrder_list: TMultiAction;
+    mactUpdate_MI_Child_byOrder: TMultiAction;
+    bbUpdate_MI_Child_byOrder: TdxBarButton;
+    cbChangeReceipt: TcxCheckBox;
+    actRefreshChild: TdsdDataSetRefresh;
 
   private
   public

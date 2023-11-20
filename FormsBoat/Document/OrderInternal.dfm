@@ -26,6 +26,7 @@ object OrderInternalForm: TOrderInternalForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -1
     object edInvNumber: TcxTextEdit
       Left = 14
       Top = 23
@@ -129,15 +130,15 @@ object OrderInternalForm: TOrderInternalForm
       Left = 273
       Top = 23
       TabOrder = 11
-      Width = 491
+      Width = 288
     end
     object cxLabel17: TcxLabel
-      Left = 773
+      Left = 787
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 773
+      Left = 787
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -145,7 +146,7 @@ object OrderInternalForm: TOrderInternalForm
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 146
+      Width = 132
     end
     object cxLabel18: TcxLabel
       Left = 928
@@ -199,6 +200,13 @@ object OrderInternalForm: TOrderInternalForm
       TabOrder = 19
       Width = 448
     end
+    object cbChangeReceipt: TcxCheckBox
+      Left = 572
+      Top = 23
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095'. '#1074' '#1096#1072#1073#1083#1086#1085#1077' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 20
+      Width = 206
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -230,8 +238,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 206
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 2
-          ExplicitTop = 3
           object cxGrid_MasterDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -755,7 +761,7 @@ object OrderInternalForm: TOrderInternalForm
               Caption = #1050#1086#1083'-'#1074#1086
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
+              Properties.DecimalPlaces = 8
               Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -865,7 +871,6 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
-          ExplicitTop = 213
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
@@ -1128,7 +1133,6 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Child
-          ExplicitTop = 322
         end
         object Panel_btn: TPanel
           Left = 1
@@ -1137,8 +1141,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 69
           Align = alBottom
           TabOrder = 5
-          ExplicitLeft = 2
-          ExplicitTop = 447
           object btnInsertUpdateMovement: TcxButton
             Left = 12
             Top = 6
@@ -2297,6 +2299,14 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_MI_Child_byOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemGoodsSep1'
+        end
+        item
+          Visible = True
           ItemName = 'bbErasedMI_Master'
         end>
     end
@@ -2321,6 +2331,10 @@ object OrderInternalForm: TOrderInternalForm
           Visible = True
           ItemName = 'bbPrintSticker'
         end>
+    end
+    object bbUpdate_MI_Child_byOrder: TdxBarButton
+      Action = mactUpdate_MI_Child_byOrder
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2490,6 +2504,19 @@ object OrderInternalForm: TOrderInternalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshChild: TdsdDataSetRefresh
+      Category = 'Child'
+      MoveParams = <>
+      StoredProc = spSelectMI_Child
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI_Child
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       RefreshOnTabSetChanges = False
     end
     object actSetErasedDetail: TdsdUpdateErased
@@ -3701,6 +3728,49 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndexTrue = 31
       ImageIndexFalse = 32
     end
+    object actUpdate_MI_Child_byOrder: TdsdExecStoredProc
+      Category = 'Child'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Child_byOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Child_byOrder
+        end
+        item
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      ImageIndex = 47
+    end
+    object mactUpdate_MI_Child_byOrder_list: TMultiAction
+      Category = 'Child'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_MI_Child_byOrder
+        end>
+      View = cxGrid_MasterDBTableView
+      Caption = 'mactUpdate_MI_Child_byOrder_list'
+      ImageIndex = 47
+    end
+    object mactUpdate_MI_Child_byOrder: TMultiAction
+      Category = 'Child'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdate_MI_Child_byOrder_list
+        end
+        item
+          Action = actRefreshChild
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091' '#1080#1079' '#1079#1072#1082#1072#1079#1072'?'
+      InfoAfterExecute = #1055#1077#1088#1077#1089#1095#1077#1090' '#1074#1099#1087#1086#1083#1085#1077#1085
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 47
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4489,8 +4559,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 440
+    Left = 512
+    Top = 400
   end
   object GuidesProduct: TdsdGuides
     KeyField = 'Id'
@@ -4854,8 +4924,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 606
-    Top = 383
+    Left = 598
+    Top = 359
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased_Child'
@@ -5185,7 +5255,7 @@ object OrderInternalForm: TOrderInternalForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -5208,11 +5278,19 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inForCount'
+        Name = 'ioForCount'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'ForCount'
         DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangeReceipt'
+        Value = Null
+        Component = cbChangeReceipt
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -5251,5 +5329,46 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 702
     Top = 431
+  end
+  object spUpdate_MI_Child_byOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternal_Child_byOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 718
+    Top = 351
   end
 end

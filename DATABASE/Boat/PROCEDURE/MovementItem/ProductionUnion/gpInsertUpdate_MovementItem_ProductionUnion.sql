@@ -1,8 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_ProductionUnion()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProductionUnion(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -11,7 +11,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProductionUnion(
     IN inObjectId               Integer   , -- Лодка/ Комплектующие
     IN inReceiptProdModelId     Integer   , --
     IN inAmount                 TFloat    , -- Количество
-    IN inisChangeReceipt        Boolean   , 
     IN inComment                TVarChar  , --
     IN inSession                TVarChar    -- сессия пользователя
 )
