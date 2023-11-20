@@ -18,13 +18,15 @@ object ClientForm: TClientForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 897
-    Height = 306
+    Height = 273
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 306
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -351,7 +353,6 @@ object ClientForm: TClientForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitTop = 338
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -393,6 +394,36 @@ object ClientForm: TClientForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 897
+    Height = 33
+    Align = alTop
+    TabOrder = 6
+    ExplicitTop = -14
+    object lbSearchName: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = 'Kunden: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 72
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -940,5 +971,18 @@ object ClientForm: TClientForm
     PackSize = 1
     Left = 432
     Top = 128
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 640
+    Top = 112
   end
 end

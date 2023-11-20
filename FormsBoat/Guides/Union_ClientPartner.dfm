@@ -3,7 +3,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Lieferanten / Kunden>'
   ClientHeight = 397
-  ClientWidth = 853
+  ClientWidth = 1065
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,16 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 853
-    Height = 330
+    Top = 59
+    Width = 1065
+    Height = 297
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitWidth = 853
+    ExplicitHeight = 330
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -170,10 +173,11 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   object Panel_btn: TPanel
     Left = 0
     Top = 356
-    Width = 853
+    Width = 1065
     Height = 41
     Align = alBottom
     TabOrder = 5
+    ExplicitWidth = 853
     object btnFormClose: TcxButton
       Left = 423
       Top = 7
@@ -199,6 +203,38 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 2
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 1065
+    Height = 33
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = -8
+    ExplicitTop = -14
+    ExplicitWidth = 853
+    object lbSearchName: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = 'Lieferanten / Kunden: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 160
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -822,8 +858,8 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 128
+    Left = 352
+    Top = 104
   end
   object spErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Partner'
@@ -848,5 +884,18 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     PackSize = 1
     Left = 432
     Top = 80
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 640
+    Top = 112
   end
 end

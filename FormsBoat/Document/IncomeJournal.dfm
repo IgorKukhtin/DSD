@@ -53,7 +53,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
-    object edInvNumber: TcxTextEdit
+    object edSearchInvNumber: TcxTextEdit
       Left = 549
       Top = 5
       TabOrder = 4
@@ -74,7 +74,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edFromName: TcxTextEdit
+    object edSearchFromName: TcxTextEdit
       Left = 784
       Top = 5
       TabOrder = 6
@@ -105,7 +105,6 @@ object IncomeJournalForm: TIncomeJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 51
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -2035,7 +2034,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Top = 160
   end
   object FieldFilter_Article: TdsdFieldFilter
-    TextEdit = edInvNumber
+    TextEdit = edSearchInvNumber
     DataSet = ClientDataSet
     Column = InvNumber
     ColumnList = <
@@ -2044,7 +2043,7 @@ object IncomeJournalForm: TIncomeJournalForm
       end
       item
         Column = FromName
-        TextEdit = edFromName
+        TextEdit = edSearchFromName
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

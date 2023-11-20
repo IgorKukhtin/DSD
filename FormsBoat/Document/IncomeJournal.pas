@@ -130,9 +130,9 @@ type
     btnSetErased: TcxButton;
     actFormClose: TdsdFormClose;
     btnFormClose: TcxButton;
-    edInvNumber: TcxTextEdit;
+    edSearchInvNumber: TcxTextEdit;
     lbSearchArticle: TcxLabel;
-    edFromName: TcxTextEdit;
+    edSearchFromName: TcxTextEdit;
     cxLabel3: TcxLabel;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
