@@ -236,8 +236,8 @@
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object ceParent: TcxButtonEdit [31]
-    Left = 15
-    Top = 321
+    Left = 16
+    Top = 325
     Properties.Buttons = <
       item
         Default = True
@@ -396,6 +396,36 @@
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = GuidesProduct
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = GuidesProduct
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_order'
+          Value = Null
+          Component = GuidesParent
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_order'
+          Value = Null
+          Component = GuidesParent
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -522,6 +552,21 @@
           Name = 'PaidKindName'
           Value = Null
           Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = GuidesProduct
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = GuidesProduct
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1009,6 +1054,36 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductId'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_order'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_order'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 107
     Top = 165
@@ -1331,6 +1406,21 @@
         Name = 'PaidKindName'
         Value = Null
         Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductId'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName'
+        Value = Null
+        Component = GuidesProduct
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

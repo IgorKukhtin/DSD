@@ -26,9 +26,8 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitWidth = 853
-    ExplicitHeight = 330
+    ExplicitLeft = -112
+    ExplicitTop = -13
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -176,8 +175,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Width = 1065
     Height = 41
     Align = alBottom
-    TabOrder = 5
-    ExplicitWidth = 853
+    TabOrder = 4
     object btnFormClose: TcxButton
       Left = 423
       Top = 7
@@ -212,9 +210,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitLeft = -8
-    ExplicitTop = -14
-    ExplicitWidth = 853
     object lbSearchName: TcxLabel
       Left = 10
       Top = 6
@@ -567,6 +562,28 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'TaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_order'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_order'
+          Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
         end>
