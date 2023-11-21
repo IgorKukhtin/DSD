@@ -14,7 +14,7 @@ $BODY$
 DECLARE
   vbCodeUKTZED TVarChar;
 BEGIN
-     vbCodeUKTZED:= (SELECT CASE WHEN ObjectDate_GoodsGroup_UKTZED_new.ValueData >= inOperDate AND ObjectString_GoodsGroup_UKTZED_new.ValueData <> ''
+     vbCodeUKTZED:= (SELECT CASE WHEN ObjectDate_GoodsGroup_UKTZED_new.ValueData <= inOperDate AND ObjectString_GoodsGroup_UKTZED_new.ValueData <> ''
                                  THEN ObjectString_GoodsGroup_UKTZED_new.ValueData
 
                                  WHEN ObjectString_GoodsGroup_UKTZED.ValueData <> ''

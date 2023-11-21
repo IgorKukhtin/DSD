@@ -68,7 +68,10 @@ BEGIN
                                         -- это все ContractId
                                       , COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
                                         -- это "главный" ContractId
-                                      , CASE WHEN Object.ValueData ILIKE '%физобмен%' AND COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) <> View_Contract_ContractKey.ContractId_Key 
+                                      , CASE WHEN (Object.ValueData ILIKE '%физобмен%' 
+                                                OR Object.ValueData ILIKE '%обмін%'
+                                                OR Object.ValueData ILIKE '%обмiн%')
+                                              AND COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) <> View_Contract_ContractKey.ContractId_Key 
                                                   -- !!!замена!!!
                                                   THEN View_Contract_ContractKey.ContractId
                                                   ELSE View_Contract_ContractKey.ContractId_Key
@@ -378,6 +381,8 @@ BEGIN
                 --, COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) :: Boolean AS isOrderMin
                   , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
                            OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
+                           OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмін%'
+                           OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмiн%')
                            OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
                            OR COALESCE (ObjectFloat_SummOrderMin.ValueData, 0) > 0
                               THEN TRUE

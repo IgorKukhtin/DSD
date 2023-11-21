@@ -333,6 +333,8 @@ BEGIN
               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MLO.ObjectId
          WHERE tmpAmountDoc.AmountStart > 0 AND NOT (tmpAmountDoc.Amount BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
            AND COALESCE (Object_Contract.ValueData, '') NOT ILIKE '%ξαμεν%'
+           AND COALESCE (Object_Contract.ValueData, '') NOT ILIKE '%ξαμ³ν%'
+           AND COALESCE (Object_Contract.ValueData, '') NOT ILIKE '%ξαμiν%'
          LIMIT 1
          ;
          --

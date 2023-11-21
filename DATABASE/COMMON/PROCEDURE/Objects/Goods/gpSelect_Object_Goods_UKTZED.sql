@@ -184,6 +184,7 @@ BEGIN
                                     ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
              LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+             LEFT JOIN tmpuktzed_new ON tmpuktzed_new.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
              LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED_new
                                     ON ObjectString_Goods_UKTZED_new.ObjectId = Object_Goods.Id
