@@ -262,8 +262,6 @@ object ProductionUnionForm: TProductionUnionForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Child
-          ExplicitLeft = -15
-          ExplicitTop = 266
         end
         object cxGrid_Child: TcxGrid
           Left = 1
@@ -471,7 +469,7 @@ object ProductionUnionForm: TProductionUnionForm
               Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 2
+              Properties.DecimalPlaces = 8
               Properties.DisplayFormat = ',0.########;-,0.########; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -615,7 +613,6 @@ object ProductionUnionForm: TProductionUnionForm
           Height = 115
           Align = alBottom
           TabOrder = 2
-          ExplicitTop = 154
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -893,8 +890,6 @@ object ProductionUnionForm: TProductionUnionForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
-          ExplicitLeft = 0
-          ExplicitTop = 140
         end
         object cxGrid: TcxGrid
           Left = 1
@@ -2418,7 +2413,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbUpdate_MI_Child_byReceipt: TdxBarButton
       Action = mactUpdate_MI_Child_byReceipt
-      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
       Category = 0
     end
   end
@@ -4220,8 +4214,8 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091'?'
       InfoAfterExecute = #1055#1077#1088#1077#1089#1095#1077#1090' '#1074#1099#1087#1086#1083#1085#1077#1085
-      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
-      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091
       ImageIndex = 48
     end
     object mactCompleteMovement_andSave: TMultiAction
@@ -4383,14 +4377,6 @@ object ProductionUnionForm: TProductionUnionForm
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisChangeReceipt'
-        Value = Null
-        Component = cbChangeReceipt
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -5094,16 +5080,24 @@ object ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inForCount'
+        Name = 'ioForCount'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'ForCount'
         DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangeReceipt'
+        Value = Null
+        Component = cbChangeReceipt
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -5405,8 +5399,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 128
-    Top = 511
+    Left = 120
+    Top = 535
   end
   object spSelectMI_DetailAll: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionUnion_Detail'
@@ -5630,7 +5624,7 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 734
+    Left = 702
     Top = 335
   end
   object spInsertUpdate_bySend: TdsdStoredProc

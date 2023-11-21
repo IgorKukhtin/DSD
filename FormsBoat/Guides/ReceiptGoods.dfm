@@ -545,8 +545,8 @@
       TabOrder = 1
     end
     object clReceiptGoods: TcxLabel
-      Left = 171
-      Top = 23
+      Left = 107
+      Top = 63
       Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
       Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074':'
       ParentShowHint = False
@@ -1505,7 +1505,7 @@
     Width = 1272
     Height = 33
     Align = alTop
-    TabOrder = 7
+    TabOrder = 6
     object lbSearchArticle: TcxLabel
       Left = 22
       Top = 6

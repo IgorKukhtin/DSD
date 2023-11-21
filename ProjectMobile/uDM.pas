@@ -824,6 +824,7 @@ type
     qrySubjectDoc: TFDQuery;
     qrySubjectDocId: TIntegerField;
     qrySubjectDocValueData: TStringField;
+    cdsReturnInItemsCurrencyName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -4929,6 +4930,7 @@ begin
             tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
             tblMovementItem_ReturnInSubjectDocId.AsInteger := FieldbyName('SubjectDocId').AsInteger;
             tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
+            tblMovementItem_ReturnInSubjectDocId.AsInteger := FieldbyName('SubjectDocId').AsInteger;
 
             tblMovementItem_ReturnIn.Post;
             {??? Возможно есть лучший способ получения значения Id новой записи }
@@ -4946,6 +4948,7 @@ begin
               tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
               tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
               tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
+              tblMovementItem_ReturnInSubjectDocId.AsInteger := FieldbyName('SubjectDocId').AsInteger;
 
               tblMovementItem_ReturnIn.Post;
 
@@ -5338,9 +5341,19 @@ begin
   cdsReturnInItemsCount.AsString := ArrValue[9];            // количество по умолчанию
   if Length(ArrValue) >= 11
   then
-      cdsReturnInItemsRecalcPriceName.AsString := ArrValue[10] // цены пересчитаны или нет
+  begin
+    cdsReturnInItemsRecalcPriceName.AsString := ArrValue[10]; // цены пересчитаны или нет
+    cdsReturnInItemsSubjectDocId.AsString := ArrValue[11];      // Причина возврата
+    if cdsReturnInItemsSubjectDocId.AsInteger = 0 then cdsReturnInItemsSubjectDocName.AsString := 'Без причины'
+    else cdsReturnInItemsSubjectDocName.AsString := ArrValue[12];    // Причина возврата название
+  end
   else
-      cdsReturnInItemsRecalcPriceName.AsString := '-';
+  begin
+    cdsReturnInItemsRecalcPriceName.AsString := '-';
+    cdsReturnInItemsSubjectDocId.AsString := '0';      // Причина возврата
+    cdsReturnInItemsSubjectDocName.AsString := 'Без причины'
+  end;
+  cdsReturnInItemsCurrencyName.AsString := 'грн.';
 
 // ShowMessage(IntToStr(Length(ArrValue)));
 
@@ -5378,7 +5391,7 @@ begin
      + '       ''-1;'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
      + '       IFNULL(COALESCE(Object_PriceListItems.ReturnPrice, Object_PriceListItems_two.ReturnPrice), 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
-     + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0;-'' '
+     + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0;-;0;-'' '
      + ' FROM  Object_GoodsListSale  '
      + '       JOIN Object_Goods               ON Object_GoodsListSale.GoodsId      = Object_Goods.Id '
      + '       LEFT JOIN Object_GoodsKind      ON Object_GoodsKind.Id               = Object_GoodsListSale.GoodsKindId '
@@ -5449,10 +5462,12 @@ begin
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
      + '       IFNULL(MovementItem_ReturnIn.Price, IFNULL(COALESCE(Object_PriceListItems.ReturnPrice, Object_PriceListItems_two.ReturnPrice), 0)) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_ReturnIn.Amount || '';'' || '
-     + '       CASE WHEN MovementItem_ReturnIn.isRecalcPrice THEN ''Пересчитано'' ELSE ''-'' END '
+     + '       CASE WHEN MovementItem_ReturnIn.isRecalcPrice THEN ''Пересчитано'' ELSE ''-'' END || '';'' || '
+     + '       IFNULL(MovementItem_ReturnIn.SubjectDocId, 0)  || '';'' || IFNULL(Object_SubjectDoc.ValueData, ''-'') '
      + ' FROM  MovementItem_ReturnIn  '
      + '       JOIN Object_Goods               ON Object_Goods.Id                   = MovementItem_ReturnIn.GoodsId '
      + '       LEFT JOIN Object_GoodsKind      ON Object_GoodsKind.Id               = MovementItem_ReturnIn.GoodsKindId '
+     + '       LEFT JOIN Object_SubjectDoc     ON Object_SubjectDoc.Id              = MovementItem_ReturnIn.SubjectDocId '
      + '       LEFT JOIN Object_Measure        ON Object_Measure.Id                 = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark      ON Object_TradeMark.Id               = Object_Goods.TradeMarkId '
      + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '

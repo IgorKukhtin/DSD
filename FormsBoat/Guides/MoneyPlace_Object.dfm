@@ -92,6 +92,48 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       TabOrder = 1
     end
   end
+  inherited ActionList: TActionList
+    inherited actChoiceGuides: TdsdChoiceGuides
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_order'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_order'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_invoice'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_invoice'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+    end
+  end
   inherited MasterDS: TDataSource
     Top = 80
   end

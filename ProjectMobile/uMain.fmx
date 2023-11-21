@@ -810,7 +810,7 @@ object frmMain: TfrmMain
       Size.Height = 508.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 10
+      TabIndex = 14
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
@@ -4493,7 +4493,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -7126,7 +7126,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -7229,6 +7229,27 @@ object frmMain: TfrmMain
               Appearance.Height = 25.000000000000000000
               Appearance.PlaceOffset.X = 74.000000000000000000
               Appearance.PlaceOffset.Y = 55.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'SubjectDocName'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.Font.StyleExt = {04070000000000000004000000}
+              Appearance.TextAlign = Leading
+              Appearance.Width = 150.000000000000000000
+              Appearance.Height = 20.000000000000000000
+              Appearance.PlaceOffset.Y = 40.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'CurrencyName'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.TextVertAlign = Leading
+              Appearance.Width = 20.000000000000000000
+              Appearance.Height = 20.000000000000000000
+              Appearance.PlaceOffset.X = 45.000000000000000000
+              Appearance.PlaceOffset.Y = 60.000000000000000000
             end>
           ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
             item
@@ -22382,6 +22403,14 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'RecalcPriceName'
           ControlMemberName = 'RecalcPriceName'
+        end
+        item
+          SourceMemberName = 'SubjectDocName'
+          ControlMemberName = 'SubjectDocName'
+        end
+        item
+          SourceMemberName = 'CurrencyName'
+          ControlMemberName = 'CurrencyName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>

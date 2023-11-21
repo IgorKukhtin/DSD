@@ -2985,9 +2985,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_UnitDeferred() RETURNS Int
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CashSettings_UnitDeferred', 'Запрет отмены отложен в перемещениях по аптеке', zc_Object_CashSettings(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UnitDeferred');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SubjectDoc_Reason() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SubjectDoc_Reason'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SubjectDoc_Reason', 'Причина возврата / перемещения', zc_Object_SubjectDoc(), zc_Object_Reason() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SubjectDoc_Reason');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.11.23                                                                                      * zc_ObjectLink_SubjectDoc_Reason
  20.10.23                                                                                      * zc_ObjectLink_CashSettings_UnitDeferred
  11.08.23         * zc_ObjectLink_Asset_PartionModel
  13.06.23                                                                                      * zc_ObjectLink_CashSettings_UnitComplInvent

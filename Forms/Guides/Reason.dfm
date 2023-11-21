@@ -60,6 +60,15 @@ object ReasonForm: TReasonForm
         Options.Editing = False
         Width = 146
       end
+      object Short: TcxGridDBColumn
+        Caption = #1057#1086#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Short'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        Options.Editing = False
+        Width = 85
+      end
       object ReturnKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
         DataBinding.FieldName = 'ReturnKindName'

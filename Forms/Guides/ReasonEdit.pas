@@ -52,6 +52,8 @@ type
     cxLabel6: TcxLabel;
     edReturnDescKind: TcxButtonEdit;
     GuidesReturnDescKind: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edShort: TcxTextEdit;
   private
     { Private declarations }
   public

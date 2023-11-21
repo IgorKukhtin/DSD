@@ -66,6 +66,7 @@ type
     PeriodDays: TcxGridDBColumn;
     PeriodTax: TcxGridDBColumn;
     ReturnDescKindName: TcxGridDBColumn;
+    Short: TcxGridDBColumn;
   private
     { Private declarations }
   public

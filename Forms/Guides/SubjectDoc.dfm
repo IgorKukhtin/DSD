@@ -3,7 +3,7 @@ object SubjectDocForm: TSubjectDocForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1089#1085#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103'>'
   ClientHeight = 376
-  ClientWidth = 390
+  ClientWidth = 497
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object SubjectDocForm: TSubjectDocForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
+    Width = 497
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -51,7 +51,7 @@ object SubjectDocForm: TSubjectDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 54
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -59,7 +59,7 @@ object SubjectDocForm: TSubjectDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 243
+        Width = 196
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -70,6 +70,24 @@ object SubjectDocForm: TSubjectDocForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object Short: TcxGridDBColumn
+        Caption = #1057#1086#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Short'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        Options.Editing = False
+        Width = 97
+      end
+      object ReasonName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' / '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#9
+        DataBinding.FieldName = 'ReasonName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' / '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#9
+        Options.Editing = False
+        Width = 120
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -321,6 +339,28 @@ object SubjectDocForm: TSubjectDocForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReasonId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReasonId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReasonName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReasonName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -452,6 +492,7 @@ object SubjectDocForm: TSubjectDocForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -462,6 +503,8 @@ object SubjectDocForm: TSubjectDocForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end

@@ -1149,6 +1149,8 @@ type
 
     FPhotoPath: boolean;
 
+    FSubjectDocItem: String;
+
     FReturnInSubjectDocId: Integer;
     FReturnInSubjectDocName: String;
 
@@ -2428,6 +2430,19 @@ begin
     lMeasure.Text := DM.cdsReturnInItemsMeasure.AsString;
 
     ppEnterAmount.IsOpen := true;
+  end
+  else
+  // вызов причин возврата
+  if (ItemObject.Name = 'SubjectDocName') and FCanEditDocument then
+  begin
+
+    FSubjectDocItem := 'ReturnInItem';
+
+    DM.GenerateReturnInSubjectDoc;
+
+    if DM.cdsReturnInItemsSubjectDocId.AsInteger <> 0 then DM.qrySubjectDoc.Locate('Id', DM.cdsReturnInItemsSubjectDocId.AsInteger, []);
+
+    SwitchToForm(tiSubjectDoc, Nil);
   end;
 end;
 
@@ -3457,8 +3472,18 @@ end;
 
 procedure TfrmMain.bClearSubjectDocClick(Sender: TObject);
 begin
-  FReturnInSubjectDocId := 0;
-  FReturnInSubjectDocName := 'Без причины';
+  if FSubjectDocItem = 'ReturnIn' then
+  begin
+    FReturnInSubjectDocId := 0;
+    FReturnInSubjectDocName := 'Без причины';
+  end else if FSubjectDocItem = 'ReturnInItem' then
+  begin
+    DM.cdsReturnInItems.Edit;
+    DM.cdsReturnInItemsSubjectDocId.AsInteger := 0;
+    DM.cdsReturnInItemsSubjectDocName.AsString := 'Без причины';
+    DM.cdsReturnInItems.Post;
+  end;
+
   ReturnPriorForm;
 end;
 
@@ -4592,9 +4617,20 @@ end;
 
 procedure TfrmMain.bSaveSubjectDocClick(Sender: TObject);
 begin
-  FReturnInSubjectDocId := DM.qrySubjectDocId.AsInteger;
-  if FReturnInSubjectDocId = 0 then FReturnInSubjectDocName := 'Без причины'
-  else FReturnInSubjectDocName := DM.qrySubjectDocValueData.AsString;
+  if FSubjectDocItem = 'ReturnIn' then
+  begin
+    FReturnInSubjectDocId := DM.qrySubjectDocId.AsInteger;
+    if FReturnInSubjectDocId = 0 then FReturnInSubjectDocName := 'Без причины'
+    else FReturnInSubjectDocName := DM.qrySubjectDocValueData.AsString;
+  end else if FSubjectDocItem = 'ReturnInItem' then
+  begin
+    DM.cdsReturnInItems.Edit;
+    DM.cdsReturnInItemsSubjectDocId.AsInteger := DM.qrySubjectDocId.AsInteger;
+    if DM.cdsReturnInItemsSubjectDocId.AsInteger = 0 then DM.cdsReturnInItemsSubjectDocName.AsString := 'Без причины'
+    else DM.cdsReturnInItemsSubjectDocName.AsString := DM.qrySubjectDocValueData.AsString;
+    DM.cdsReturnInItems.Post;
+  end;
+
   ReturnPriorForm;
 end;
 
@@ -5490,6 +5526,8 @@ end;
 
 procedure TfrmMain.eSubjectDocClick(Sender: TObject);
 begin
+  FSubjectDocItem := 'ReturnIn';
+
   DM.GenerateReturnInSubjectDoc;
 
   if FReturnInSubjectDocId <> 0 then DM.qrySubjectDoc.Locate('Id', FReturnInSubjectDocId, []);

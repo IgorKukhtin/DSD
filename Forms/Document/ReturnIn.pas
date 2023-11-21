@@ -258,11 +258,8 @@ type
     DBViewAddOnDetail: TdsdDBViewAddOn;
     spInsertUpdateMIDetail: TdsdStoredProc;
     spInsertMaskMIDetail: TdsdStoredProc;
-    cxLabel27: TcxLabel;
-    edReason: TcxButtonEdit;
     cxLabel28: TcxLabel;
     edReturnKind: TcxButtonEdit;
-    GuidesReason: TdsdGuides;
     GuidesReturnKind: TdsdGuides;
     actReasonOpenForm: TOpenChoiceForm;
     actReturnKindOpenForm: TOpenChoiceForm;
@@ -321,6 +318,8 @@ type
     actSendJournalChoiceMasc: TOpenChoiceForm;
     mactUpdateMaskSend: TMultiAction;
     bbUpdateMaskSend: TdxBarButton;
+    actSubjectDocChoiceForm: TOpenChoiceForm;
+    SubjectDocName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -18,7 +18,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TSubjectDocEditForm = class(TParentForm)
@@ -37,6 +38,11 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel7: TcxLabel;
+    edShort: TcxTextEdit;
+    edReason: TcxButtonEdit;
+    GuidesReason: TdsdGuides;
+    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public

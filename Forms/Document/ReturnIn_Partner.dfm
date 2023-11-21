@@ -408,6 +408,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 91
           end
+          object SubjectDocName: TcxGridDBColumn
+            Caption = #1054#1089#1085'. '#1076#1083#1103' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'SubjectDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
     end
