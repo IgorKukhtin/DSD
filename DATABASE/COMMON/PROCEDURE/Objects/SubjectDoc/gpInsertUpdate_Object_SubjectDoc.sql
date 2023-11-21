@@ -1,11 +1,14 @@
 -- Function: gpInsertUpdate_Object_SubjectDoc()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SubjectDoc(Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SubjectDoc(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SubjectDoc(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SubjectDoc(
  INOUT ioId             Integer   ,     -- ключ объекта <Регионы> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название объекта 
+    IN inShort          TVarChar  ,     -- Сокращенное название
+    IN inReasonId       Integer   ,     -- Причина возврата / перемещения
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -29,7 +32,14 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_SubjectDoc(), vbCode_calc, inName);
+
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SubjectDoc_Short(), ioId, inShort);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_SubjectDoc_Reason(), ioId, inReasonId);
    
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -40,6 +50,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.11.23         *
  06.02.20         *
 */
 

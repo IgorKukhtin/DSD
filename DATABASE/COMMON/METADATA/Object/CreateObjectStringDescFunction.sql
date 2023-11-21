@@ -964,11 +964,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Reason_Comment() RETURNS Integer AS $
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Reason_Comment', zc_Object_Reason(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Comment');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Reason_Short() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Short'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Reason_Short', zc_Object_Reason(), 'Сокращенное название' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Short');
-
-
 CREATE OR REPLACE FUNCTION zc_ObjectString_MobilePack_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MobilePack_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MobilePack_Comment', zc_Object_MobilePack(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MobilePack_Comment');
@@ -1597,6 +1592,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_SubjectDoc_Short() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
   SELECT zc_Object_SubjectDoc(), 'zc_ObjectString_SubjectDoc_Short', 'Сокращенное название' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SubjectDoc_Short');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SubjectDoc_Reason() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectLink_SubjectDoc_Reason'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
+  SELECT zc_Object_SubjectDoc(), 'zc_ObjectLink_SubjectDoc_Reason', 'Причина возврата / перемещения' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectLink_SubjectDoc_Reason');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_Reason_Short() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Short'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
   SELECT zc_Object_Reason(), 'zc_ObjectString_Reason_Short', 'Сокращенное название' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Short');
@@ -1604,7 +1604,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
- 21.11.23         * zc_ObjectString_Reason_Short
+ 21.11.23         * zc_ObjectLink_SubjectDoc_Reason
  20.11.23                                                                                                         * zc_ObjectString_SubjectDoc_Short, zc_ObjectString_Reason_Short
  09.11.23         * zc_ObjectString_Goods_UKTZED_new
  17.07.23         * zc_ObjectString_Car_EngineNum

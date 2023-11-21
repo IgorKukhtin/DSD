@@ -6,7 +6,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_SubjectDoc(
     IN inId          Integer,       -- ключ объекта <Регионы>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Short TVarChar
+             , ReasonId Integer, ReasonName TVarChar
+             ) AS
 $BODY$
 BEGIN
 
@@ -20,16 +22,29 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_SubjectDoc()) AS Code
            , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased;
+           , CAST ('' as TVarChar)  AS Short
+           , CAST (0 as Integer)    AS ReasonId
+           , CAST ('' as TVarChar)  AS ReasonName
+           ;
    ELSE
        RETURN QUERY 
        SELECT 
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
-           , Object.ValueData  AS Name
-           , Object.isErased   AS isErased
-       FROM Object
-       WHERE Object.Id = inId;
+             Object_SubjectDoc.Id         AS Id
+           , Object_SubjectDoc.ObjectCode AS Code
+           , Object_SubjectDoc.ValueData  AS Name
+           , ObjectString_Short.ValueData ::TVarChar AS Short
+           , Object_Reason.Id             AS ReasonId
+           , Object_Reason.ValueData      AS ReasonName
+       FROM Object AS Object_SubjectDoc
+           LEFT JOIN ObjectString AS ObjectString_Short
+                                  ON ObjectString_Short.ObjectId = Object_SubjectDoc.Id 
+                                 AND ObjectString_Short.DescId = zc_ObjectString_SubjectDoc_Short() 
+
+           LEFT JOIN ObjectLink AS ObjectLink_Reason
+                                ON ObjectLink_Reason.ObjectId = Object_SubjectDoc.Id 
+                               AND ObjectLink_Reason.DescId = zc_ObjectLink_SubjectDoc_Reason()
+           LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = ObjectLink_Reason.ChildObjectId
+       WHERE Object_SubjectDoc.Id = inId;
    END IF; 
   
 END;
@@ -40,6 +55,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.11.23         *
  06.02.20         *
 
 */

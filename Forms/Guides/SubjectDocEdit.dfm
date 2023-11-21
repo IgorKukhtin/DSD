@@ -2,7 +2,7 @@ object SubjectDocEditForm: TSubjectDocEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100
-  ClientHeight = 139
+  ClientHeight = 247
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object SubjectDocEditForm: TSubjectDocEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object SubjectDocEditForm: TSubjectDocEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 100
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -58,6 +58,34 @@ object SubjectDocEditForm: TSubjectDocEditForm
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
+  end
+  object cxLabel7: TcxLabel
+    Left = 10
+    Top = 98
+    Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+  end
+  object edShort: TcxTextEdit
+    Left = 10
+    Top = 117
+    TabOrder = 7
+    Width = 273
+  end
+  object edReason: TcxButtonEdit
+    Left = 10
+    Top = 167
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 273
+  end
+  object cxLabel11: TcxLabel
+    Left = 10
+    Top = 148
+    Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' / '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
   end
   object ActionList: TActionList
     Left = 152
@@ -118,10 +146,26 @@ object SubjectDocEditForm: TSubjectDocEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShort'
+        Value = Null
+        Component = edShort
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReasonId'
+        Value = Null
+        Component = GuidesReason
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 56
+    Left = 256
+    Top = 48
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -159,6 +203,28 @@ object SubjectDocEditForm: TSubjectDocEditForm
         Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Short'
+        Value = Null
+        Component = edShort
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReasonId'
+        Value = Null
+        Component = GuidesReason
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReasonName'
+        Value = Null
+        Component = GuidesReason
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -177,10 +243,37 @@ object SubjectDocEditForm: TSubjectDocEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 160
-    Top = 104
+    Top = 200
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 32
-    Top = 56
+    Left = 264
+    Top = 104
+  end
+  object GuidesReason: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReason
+    FormNameParam.Value = 'TReasonForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReasonForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesReason
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesReason
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+    Top = 151
   end
 end

@@ -149,7 +149,7 @@ object ReasonEditForm: TReasonEditForm
     Width = 273
   end
   object cxLabel7: TcxLabel
-    Left = 116
+    Left = 112
     Top = 8
     Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
   end
@@ -443,8 +443,8 @@ object ReasonEditForm: TReasonEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 136
+    Left = 96
+    Top = 112
   end
   object GuidesReturnDescKind: TdsdGuides
     KeyField = 'Id'
