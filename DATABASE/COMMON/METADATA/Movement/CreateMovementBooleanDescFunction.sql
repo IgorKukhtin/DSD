@@ -131,6 +131,10 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_ChangePriceUser() RETURNS integer 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_ChangePriceUser', 'Ручная скидка в цене (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ChangePriceUser');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_UKTZ_new() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_UKTZ_new'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_UKTZ_new', 'Новый УКТЗ'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_UKTZ_new');
+
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Аптека
 
