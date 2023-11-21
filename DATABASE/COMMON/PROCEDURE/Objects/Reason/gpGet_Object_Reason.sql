@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Reason(
     IN inId          Integer,       -- ключ объекта <Виды бонусов>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Short TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
              , ReturnDescKindId Integer, ReturnDescKindName TVarChar
              , PeriodDays TFloat, PeriodTax TFloat
@@ -27,7 +27,8 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Reason()) AS Code
-           , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS Name 
+           , CASt ('' AS TVarChar)  AS Short
            
            , CAST (0 as Integer)    AS ReturnKindId
            , CAST ('' as TVarChar)  AS ReturnKindName           
@@ -47,7 +48,8 @@ BEGIN
        SELECT 
              Object_Reason.Id         AS Id
            , Object_Reason.ObjectCode AS Code
-           , Object_Reason.ValueData  AS NAME
+           , Object_Reason.ValueData  AS NAME 
+           , ObjectString_Short.ValueData ::TVarChar AS Short
           
            , Object_ReturnKind.Id        AS ReturnKindId
            , Object_ReturnKind.ValueData AS ReturnKindName            
@@ -87,6 +89,10 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_Reason.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Reason_Comment()
 
+          LEFT JOIN ObjectString AS ObjectString_Short
+                                 ON ObjectString_Short.ObjectId = Object_Reason.Id 
+                                AND ObjectString_Short.DescId = zc_ObjectString_Reason_Short()
+
           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodDays
                                 ON ObjectFloat_PeriodDays.ObjectId = Object_Reason.Id
                                AND ObjectFloat_PeriodDays.DescId = zc_ObjectFloat_Reason_PeriodDays()
@@ -104,6 +110,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.11.23         *
  17.06.21         *
 */
 

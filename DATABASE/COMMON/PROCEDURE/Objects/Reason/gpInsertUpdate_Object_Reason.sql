@@ -3,12 +3,14 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, Boolean, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer, Integer, TVarChar, TVarChar, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Reason(
  INOUT ioId	             Integer,       -- ключ объекта <>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
+    IN inShort               TVarChar,      -- Сокращенное название
     IN inReturnKindId        Integer,       -- Тип возврата
     IN inReturnDescKindId    Integer,       -- причина возврата
     IN inPeriodDays          TFloat,        -- Период в дн. от "Срок годности"
@@ -67,6 +69,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Reason_ReturnIn(), ioId, inisReturnIn);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Reason_SendOnPrice(), ioId, inisSendOnPrice);
+      -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Reason_Short(), ioId, inShort);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Reason_Comment(), ioId, inComment);
 
@@ -85,6 +89,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.11.23         * 
  01.07.21         *
  17.06.21         *
 */

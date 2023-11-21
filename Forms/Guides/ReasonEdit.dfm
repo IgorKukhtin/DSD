@@ -53,11 +53,11 @@ object ReasonEditForm: TReasonEditForm
   end
   object edCode: TcxCurrencyEdit
     Left = 10
-    Top = 30
+    Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 96
   end
   object cxLabel11: TcxLabel
     Left = 10
@@ -77,7 +77,7 @@ object ReasonEditForm: TReasonEditForm
     Width = 273
   end
   object cbisReturnIn: TcxCheckBox
-    Left = 15
+    Left = 8
     Top = 200
     Caption = #1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' '#1076#1083#1103' '#1042#1086#1079#1074#1088#1072#1090#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
     TabOrder = 8
@@ -148,6 +148,17 @@ object ReasonEditForm: TReasonEditForm
     TabOrder = 17
     Width = 273
   end
+  object cxLabel7: TcxLabel
+    Left = 116
+    Top = 8
+    Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+  end
+  object edShort: TcxTextEdit
+    Left = 116
+    Top = 25
+    TabOrder = 19
+    Width = 167
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -209,6 +220,14 @@ object ReasonEditForm: TReasonEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inShort'
+        Value = Null
+        Component = edShort
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReturnKindId'
         Value = Null
         Component = GuidesReturnKind
@@ -265,8 +284,8 @@ object ReasonEditForm: TReasonEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 56
+    Left = 112
+    Top = 8
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -276,8 +295,8 @@ object ReasonEditForm: TReasonEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 8
+    Left = 48
+    Top = 64
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Reason'
@@ -369,6 +388,13 @@ object ReasonEditForm: TReasonEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Short'
+        Value = Null
+        Component = edShort
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -417,8 +443,8 @@ object ReasonEditForm: TReasonEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 104
+    Left = 56
+    Top = 136
   end
   object GuidesReturnDescKind: TdsdGuides
     KeyField = 'Id'
