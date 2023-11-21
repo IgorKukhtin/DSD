@@ -4,6 +4,8 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -233
+  ExplicitTop = -22
   ExplicitWidth = 1126
   ExplicitHeight = 549
   PixelsPerInch = 96
@@ -511,6 +513,15 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#8470' '#1087'/'#1087' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object isUKTZ_new: TcxGridDBColumn
+            Caption = #1053#1086#1074#1099#1081' '#1059#1050#1058#1047
+            DataBinding.FieldName = 'isUKTZ_new'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1085#1091#1076#1080#1090#1077#1083#1100#1085#1086' '#1087#1086#1076#1082#1083#1102#1095#1077#1085' '#1085#1086#1074#1099#1081' '#1059#1050#1058#1047' '#1076#1083#1103' '#1089#1090#1072#1088#1086#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
             Options.Editing = False
             Width = 70
           end

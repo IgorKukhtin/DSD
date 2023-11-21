@@ -159,6 +159,7 @@ type
     macUpdateBranch: TMultiAction;
     bbUpdateBranch: TdxBarButton;
     OperDatePartner_Master: TcxGridDBColumn;
+    isUKTZ_new: TcxGridDBColumn;
   private
     { Private declarations }
   public

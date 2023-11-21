@@ -147,6 +147,7 @@ type
     actUpdate_Branch: TdsdExecStoredProc;
     macUpdateBranch: TMultiAction;
     bbUpdateBranch: TdxBarButton;
+    isUKTZ_new: TcxGridDBColumn;
   private
     { Private declarations }
   public
