@@ -26,7 +26,6 @@ object SubjectDocForm: TSubjectDocForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 390
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -338,6 +337,28 @@ object SubjectDocForm: TSubjectDocForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReasonId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReasonId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReasonName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReasonName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

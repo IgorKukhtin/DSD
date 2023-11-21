@@ -260,6 +260,7 @@ type
     mactUpdateMaskSend: TMultiAction;
     bbUpdateMaskSale: TdxBarButton;
     bbUpdateMaskSend: TdxBarButton;
+    SubjectDocName: TcxGridDBColumn;
   private
     { Private declarations }
   public

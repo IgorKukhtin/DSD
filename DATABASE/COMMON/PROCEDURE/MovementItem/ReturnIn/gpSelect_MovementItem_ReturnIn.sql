@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , MovementPromo TVarChar, PricePromo TFloat
              , AmountChild TFloat, AmountChildDiff TFloat
              , Value5 Integer, Value10 Integer
+             , SubjectDocName TVarChar
              , isErased Boolean
              )
 AS
@@ -365,6 +366,19 @@ BEGIN
                     GROUP BY MovementItem.ParentId
                    )
 
+   , tmpMIDetail AS (SELECT MovementItem.ParentId  AS MI_ParentId
+                         , STRING_AGG (DISTINCT Object_SubjectDoc.ValueData, ', ') AS SubjectDocName
+                     FROM MovementItem 
+                          LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                           ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                          AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                          LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId     = zc_MI_Detail()
+                       AND MovementItem.isErased   = FALSE
+                     GROUP BY MovementItem.ParentId
+                    )
+
      -- StickerProperty -  кількість діб  + кількість діб - второй срок
    , tmpStickerProperty AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId              AS GoodsId
                                  , ObjectLink_StickerProperty_GoodsKind.ChildObjectId  AS GoodsKindId
@@ -465,6 +479,7 @@ BEGIN
            , tmpStickerProperty.Value5  :: Integer AS Value5
            , tmpStickerProperty.Value10 :: Integer AS Value10
 
+           , '' ::TVarChar              AS SubjectDocName 
            , FALSE                      AS isErased
 
        FROM tmpGoods
@@ -590,7 +605,9 @@ BEGIN
            , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
 
            , tmpStickerProperty.Value5  :: Integer AS Value5
-           , tmpStickerProperty.Value10 :: Integer AS Value10
+           , tmpStickerProperty.Value10 :: Integer AS Value10 
+           
+           , tmpMIDetail.SubjectDocName ::TVarChar
 
            , tmpResult.isErased                AS isErased
 
@@ -638,6 +655,7 @@ BEGIN
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpResult.MovementId_Promo
  
             LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = tmpResult.MovementItemId
+            LEFT JOIN tmpMIDetail ON tmpMIDetail.MI_ParentId = tmpResult.MovementItemId
 
             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpResult.GoodsId
                                         AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId
@@ -866,6 +884,19 @@ BEGIN
                     GROUP BY MovementItem.ParentId
                    )
 
+   , tmpMIDetail AS (SELECT MovementItem.ParentId  AS MI_ParentId
+                          , STRING_AGG (DISTINCT Object_SubjectDoc.ValueData, ', ') AS SubjectDocName
+                      FROM MovementItem 
+                           LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                            ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                           AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                           LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Detail()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                     )
+                     
        -- StickerProperty -  кількість діб  + кількість діб - второй срок
      , tmpStickerProperty AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId              AS GoodsId
                                    , ObjectLink_StickerProperty_GoodsKind.ChildObjectId  AS GoodsKindId
@@ -1021,6 +1052,7 @@ BEGIN
            , tmpStickerProperty.Value5  :: Integer AS Value5
            , tmpStickerProperty.Value10 :: Integer AS Value10
 
+           , tmpMIDetail.SubjectDocName ::TVarChar AS SubjectDocName
            , tmpResult.isErased                AS isErased
 
        FROM tmpResult
@@ -1066,6 +1098,7 @@ BEGIN
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpResult.MovementId_Promo
 
             LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = tmpResult.MovementItemId
+            LEFT JOIN tmpMIDetail ON tmpMIDetail.MI_ParentId = tmpResult.MovementItemId
 
             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpResult.GoodsId
                                         AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId                              

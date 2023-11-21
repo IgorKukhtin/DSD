@@ -1,28 +1,29 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
-  ClientHeight = 648
+  ClientHeight = 645
   ClientWidth = 1304
+  ExplicitLeft = -104
   ExplicitWidth = 1320
-  ExplicitHeight = 687
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 195
     Width = 1304
-    Height = 453
+    Height = 450
     ExplicitTop = 195
     ExplicitWidth = 1304
-    ExplicitHeight = 453
-    ClientRectBottom = 453
+    ExplicitHeight = 450
+    ClientRectBottom = 450
     ClientRectRight = 1304
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1304
-      ExplicitHeight = 429
+      ExplicitHeight = 426
       inherited cxGrid: TcxGrid
         Width = 1304
-        Height = 291
+        Height = 288
         ExplicitWidth = 1304
-        ExplicitHeight = 291
+        ExplicitHeight = 288
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -438,11 +439,20 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 78
           end
+          object SubjectDocName: TcxGridDBColumn
+            Caption = #1054#1089#1085'. '#1076#1083#1103' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'SubjectDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Options.Editing = False
+            Width = 136
+          end
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 299
+        Top = 296
         Width = 1304
         Height = 130
         Align = alBottom
@@ -775,7 +785,7 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 291
+        Top = 288
         Width = 1304
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -790,7 +800,7 @@ inherited ReturnInForm: TReturnInForm
         Left = 0
         Top = 0
         Width = 1304
-        Height = 429
+        Height = 426
         Align = alClient
         TabOrder = 0
         object lDBTableView: TcxGridDBTableView
@@ -1147,7 +1157,7 @@ inherited ReturnInForm: TReturnInForm
         Left = 0
         Top = 0
         Width = 1304
-        Height = 291
+        Height = 288
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -1319,6 +1329,31 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object SubjectDocCode_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1089#1085'.'#1076#1083#1103' '#1074#1086#1079#1074'.'
+            DataBinding.FieldName = 'SubjectDocCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 92
+          end
+          object SubjectDocName_ch2: TcxGridDBColumn
+            Caption = #1054#1089#1085'.'#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'SubjectDocName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actSubjectDocChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Width = 124
+          end
           object ReasonCode_ch2: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1082#1086#1076')'
             DataBinding.FieldName = 'ReasonCode'
@@ -1326,7 +1361,8 @@ inherited ReturnInForm: TReturnInForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 105
+            Options.Editing = False
+            Width = 87
           end
           object ReasonName_ch2: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
@@ -1341,7 +1377,8 @@ inherited ReturnInForm: TReturnInForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 166
+            Options.Editing = False
+            Width = 124
           end
           object ReturnKindName_ch2: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
@@ -1354,6 +1391,7 @@ inherited ReturnInForm: TReturnInForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1412,7 +1450,7 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxGrid2: TcxGrid
         Left = 0
-        Top = 299
+        Top = 296
         Width = 1304
         Height = 130
         Align = alBottom
@@ -1745,7 +1783,7 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 291
+        Top = 288
         Width = 1304
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -2071,26 +2109,9 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 40
       Width = 128
     end
-    object cxLabel27: TcxLabel
-      Left = 867
-      Top = 127
-      Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
-    end
-    object edReason: TcxButtonEdit
-      Left = 867
-      Top = 145
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 42
-      Width = 245
-    end
     object cxLabel28: TcxLabel
       Left = 1115
-      Top = 127
+      Top = 130
       Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
       Visible = False
     end
@@ -2103,7 +2124,7 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 44
+      TabOrder = 42
       Visible = False
       Width = 144
     end
@@ -2121,7 +2142,7 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 46
+      TabOrder = 44
       Width = 137
     end
     object cxLabel30: TcxLabel
@@ -2139,7 +2160,7 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 48
+      TabOrder = 46
       Width = 381
     end
     object cbisWeighing_inf: TcxCheckBox
@@ -2150,7 +2171,7 @@ inherited ReturnInForm: TReturnInForm
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
-      TabOrder = 49
+      TabOrder = 47
       Width = 100
     end
     object edParPartnerValue: TcxCurrencyEdit
@@ -2160,7 +2181,7 @@ inherited ReturnInForm: TReturnInForm
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = False
-      TabOrder = 50
+      TabOrder = 48
       Width = 68
     end
     object cxLabel32: TcxLabel
@@ -3497,6 +3518,55 @@ inherited ReturnInForm: TReturnInForm
       InfoAfterExecute = 
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
+    end
+    object actSubjectDocChoiceForm: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actSubjectDocChoice'
+      FormName = 'TSubjectDocForm'
+      FormNameParam.Value = 'TSubjectDocForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'SubjectDocId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'SubjectDocCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'SubjectDocName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReasonId'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'ReasonId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReasonName'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'ReasonName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -5611,15 +5681,11 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'ReasonId'
         Value = Null
-        Component = GuidesReason
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ReasonName'
         Value = Null
-        Component = GuidesReason
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -7013,8 +7079,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 944
-    Top = 128
+    Left = 784
+    Top = 64
   end
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
@@ -7268,8 +7334,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 388
-    Top = 96
+    Left = 332
+    Top = 72
   end
   object GuidesParentChoice: TdsdGuides
     KeyField = 'Id'
@@ -7431,8 +7497,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 536
-    Top = 424
+    Left = 352
+    Top = 480
   end
   object DetailCDS: TClientDataSet
     Aggregates = <>
@@ -7883,26 +7949,26 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReasonId_top'
+        Name = 'inSubjectDocId_top'
         Value = ''
-        Component = GuidesReason
+        Component = GuidesSubjectDoc
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReasonId'
+        Name = 'inSubjectDocId'
         Value = Null
         Component = DetailCDS_Reason
-        ComponentItem = 'ReasonId'
+        ComponentItem = 'SubjectDocId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReasonCode'
+        Name = 'inSubjectDocCode'
         Value = Null
         Component = DetailCDS_Reason
-        ComponentItem = 'ReasonCode'
+        ComponentItem = 'SubjectDocCode'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7916,8 +7982,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 904
-    Top = 568
+    Left = 984
+    Top = 536
   end
   object spInsertMaskMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn_Detail'
@@ -7955,30 +8021,20 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReasonId_top'
+        Name = 'inSubjectDocId_top'
         Value = ''
-        Component = GuidesReason
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReturnKindId_top'
-        Value = ''
-        Component = GuidesReturnKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReasonId'
+        Name = 'inSubjectDocId'
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReturnKindId'
-        Value = 0
+        Name = 'inSubjectDocCode'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7993,56 +8049,9 @@ inherited ReturnInForm: TReturnInForm
     Left = 904
     Top = 520
   end
-  object GuidesReason: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edReason
-    FormNameParam.Value = 'TReasonForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TReasonForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesReason
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesReason
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReturnKindId'
-        Value = Null
-        Component = GuidesReturnKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReturnKindName'
-        Value = Null
-        Component = GuidesReturnKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 1000
-    Top = 136
-  end
   object GuidesReturnKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edReturnKind
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TReturnKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -8066,8 +8075,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1168
-    Top = 136
+    Left = 1200
+    Top = 128
   end
   object DetailCDS_Reason: TClientDataSet
     Aggregates = <>
@@ -8387,8 +8396,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 796
-    Top = 104
+    Left = 988
+    Top = 80
   end
   object GuidesSubjectDoc: TdsdGuides
     KeyField = 'Id'
@@ -8488,7 +8497,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 100
-    Top = 136
+    Top = 112
   end
   object spUpdateMask: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_ReturnIn_isMask'

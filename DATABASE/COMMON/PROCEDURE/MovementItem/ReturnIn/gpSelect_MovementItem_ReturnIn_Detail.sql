@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar
+             , SubjectDocId Integer, SubjectDocCode Integer, SubjectDocName TVarChar
              , ReasonId Integer, ReasonCode Integer, ReasonName  TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
              , Value5 Integer, Value10 Integer
@@ -34,7 +35,6 @@ BEGIN
                              AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                            );
      
-                         
 
      -- Результат
      RETURN QUERY
@@ -54,6 +54,10 @@ BEGIN
                                   , MovementItem.ParentId
                                   , MovementItem.ObjectId          AS GoodsId
                                   , MovementItem.Amount
+                                  , Object_SubjectDoc.Id           AS SubjectDocId
+                                  , Object_SubjectDoc.ObjectCode   AS SubjectDocCode
+                                  , Object_SubjectDoc.ValueData    AS SubjectDocName
+                                  
                                   , Object_Reason.Id               AS ReasonId
                                   , Object_Reason.ObjectCode       AS ReasonCode
                                   , Object_Reason.ValueData        AS ReasonName
@@ -64,6 +68,11 @@ BEGIN
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId     = zc_MI_Detail()
                                                    AND MovementItem.isErased   = tmpIsErased.isErased
+                                  LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                                   ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                                  AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                                  LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
+
                                   LEFT JOIN MovementItemLinkObject AS MILO_Reason
                                                                    ON MILO_Reason.MovementItemId = MovementItem.Id
                                                                   AND MILO_Reason.DescId = zc_MILinkObject_Reason()
@@ -87,6 +96,9 @@ BEGIN
                             , tmpMI_Master.GoodsId
                             , tmpMI_Master.GoodsKindId
                             , COALESCE (tmpMI_Detail.Amount, tmpMI_Master.Amount) :: TFloat AS Amount
+                            , tmpMI_Detail.SubjectDocId    ::Integer 
+                            , tmpMI_Detail.SubjectDocCode  ::Integer
+                            , tmpMI_Detail.SubjectDocName  ::TVarChar
                             , tmpMI_Detail.ReasonId   ::Integer
                             , tmpMI_Detail.ReasonCode ::Integer
                             , tmpMI_Detail.ReasonName ::TVarChar
@@ -102,6 +114,9 @@ BEGIN
                             , tmpMI_Master.GoodsId
                             , tmpMI_Master.GoodsKindId
                             , tmpDiff.Amount :: TFloat AS Amount
+                            , 0   ::Integer  AS SubjectDocId 
+                            , 0   ::Integer  AS SubjectDocCode
+                            , ''  ::TVarChar AS SubjectDocName
                             , 0   ::Integer  AS ReasonId
                             , 0   ::Integer  AS ReasonCode
                             , ''  ::TVarChar AS ReasonName
@@ -160,10 +175,14 @@ BEGIN
            , tmpAll.Amount :: TFloat AS Amount
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
+
+           , tmpAll.SubjectDocId    ::Integer
+           , tmpAll.SubjectDocCode  ::Integer
+           , tmpAll.SubjectDocName  ::TVarChar
  
-           , tmpAll.ReasonId   ::Integer
-           , tmpAll.ReasonCode ::Integer
-           , tmpAll.ReasonName ::TVarChar
+           , Object_Reason.Id               AS ReasonId
+           , Object_Reason.ObjectCode       AS ReasonCode
+           , Object_Reason.ValueData        AS ReasonName
            , tmpAll.ReturnKindId   ::Integer
            , tmpAll.ReturnKindName ::TVarChar
 
@@ -210,6 +229,11 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_PeriodTax
                                   ON ObjectFloat_PeriodTax.ObjectId = tmpAll.ReasonId
                                  AND ObjectFloat_PeriodTax.DescId = zc_ObjectFloat_Reason_PeriodTax()
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Reason
+                                 ON ObjectLink_Reason.ObjectId = tmpAll.SubjectDocId
+                                AND ObjectLink_Reason.DescId = zc_ObjectLink_SubjectDoc_Reason()
+            LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = ObjectLink_Reason.ChildObjectId
       ;
 
 END;
