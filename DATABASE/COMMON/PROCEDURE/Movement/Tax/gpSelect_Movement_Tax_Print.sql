@@ -784,6 +784,10 @@ order by 4*/
     , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDate_Tax_Tax) AS CodeUKTZED
                        FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                       )
+      -- на дату
+    , tmpUKTZED_new AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, CURRENT_DATE + INTERVAL '3 MONTH') AS CodeUKTZED
+                        FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
+                       )
       --
     , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
@@ -875,6 +879,15 @@ order by 4*/
 
            , CASE WHEN Movement.OperDate < '01.01.2017'
                        THEN ''
+
+                  -- !!!!
+                  WHEN MovementBoolean_isUKTZ_new.ValueData = TRUE AND ObjectString_Goods_UKTZED_new.ValueData <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED_new.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED_new.ValueData FROM 1 FOR 4) END
+
+                  -- !!!!
+                  WHEN MovementBoolean_isUKTZ_new.ValueData = TRUE AND tmpUKTZED_new.CodeUKTZED                <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED_new.CodeUKTZED ELSE SUBSTRING (tmpUKTZED_new.CodeUKTZED FROM 1 FOR 4) END
+                  
 
                   -- на дату у товара
                   WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData <= vbOperDate_Tax_Tax
@@ -1043,7 +1056,13 @@ order by 4*/
                     AS NUMERIC (16, 2))  / 100 * vbVATPercent 
                    AS NUMERIC (16, 6)) AS SummVAT
        FROM tmpMI
-            LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isUKTZ_new
+                                      ON MovementBoolean_isUKTZ_new.MovementId = tmpMI.MovementId
+                                     AND MovementBoolean_isUKTZ_new.DescId     = zc_MovementBoolean_UKTZ_new()
+
+            LEFT JOIN tmpUKTZED     ON tmpUKTZED.GoodsGroupId     = tmpMI.GoodsGroupId
+            LEFT JOIN tmpUKTZED_new ON tmpUKTZED_new.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpTaxImport ON tmpTaxImport.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpDKPP ON tmpDKPP.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpTaxAction ON tmpTaxAction.GoodsGroupId = tmpMI.GoodsGroupId

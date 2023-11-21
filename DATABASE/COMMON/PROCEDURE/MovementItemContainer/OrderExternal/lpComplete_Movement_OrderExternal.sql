@@ -87,6 +87,8 @@ BEGIN
 
           , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
                    OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
+                   OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмін%'
+                   OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмiн%'
                    OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
                    --OR COALESCE (vbCriticalWeight, 0) = 0
                    --OR COALESCE (ObjectFloat_SummOrderMin.ValueData, 0) = 0

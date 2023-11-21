@@ -32,6 +32,7 @@ $BODY$
     DECLARE vbMovementId_tax Integer;
     DECLARE vbOperDate_Tax TDateTime;
     DECLARE vbOperDate_Tax_Tax TDateTime;
+    DECLARE vbOperDate_Tax_Tax_Tax TDateTime;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -132,8 +133,13 @@ BEGIN
 
           , Movement_Tax.OperDate AS OperDate_Tax_Tax
 
+          , CASE WHEN MovementBoolean_isUKTZ_new.ValueData = TRUE
+                      THEN CURRENT_DATE + INTERVAL '3 MONTH'
+                 ELSE Movement_Tax.OperDate
+            END AS OperDate_Tax_Tax_Tax
+
             INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin, vbIsLongUKTZED, vbDocumentTaxKindId_tax, vbDocumentTaxKindId
-               , vbMovementId_tax, vbOperDate_Tax, vbOperDate_Tax_Tax
+               , vbMovementId_tax, vbOperDate_Tax, vbOperDate_Tax_Tax, vbOperDate_Tax_Tax_Tax
 
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
                             THEN inMovementId
@@ -166,6 +172,10 @@ BEGIN
                                          ON MovementLinkMovement_Child.MovementId = tmpMovement.MovementId_TaxCorrective
                                         AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
           LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Child.MovementChildId
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_isUKTZ_new
+                                    ON MovementBoolean_isUKTZ_new.MovementId = Movement_Tax.Id
+                                   AND MovementBoolean_isUKTZ_new.DescId     = zc_MovementBoolean_UKTZ_new()
 
           LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind_tax
                                        ON MLO_DocumentTaxKind_tax.MovementId = MovementLinkMovement_Child.MovementChildId
@@ -405,7 +415,7 @@ BEGIN
                         , ObjectString_Goods_RUS.ValueData         AS GoodsName_RUS
 
                         , CASE -- на дату у товара
-                               WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData <= vbOperDate_Tax_Tax
+                               WHEN ObjectString_Goods_UKTZED_new.ValueData <> '' AND ObjectDate_Goods_UKTZED_new.ValueData <= vbOperDate_Tax_Tax_Tax
                                     THEN ObjectString_Goods_UKTZED_new.ValueData
                                -- у товара
                                WHEN ObjectString_Goods_UKTZED.ValueData <> ''
@@ -464,9 +474,10 @@ BEGIN
                                              --AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (Object_GoodsKind.Id,0)
                    )
 
-    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDate_Tax_Tax) AS CodeUKTZED
+    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED_onDate (tmp.GoodsGroupId, vbOperDate_Tax_Tax_Tax) AS CodeUKTZED
                        FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                       )
+
     , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpTaxAction AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxAction (tmp.GoodsGroupId) AS TaxAction FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)

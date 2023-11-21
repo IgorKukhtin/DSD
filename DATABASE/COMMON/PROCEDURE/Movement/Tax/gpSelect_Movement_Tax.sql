@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , ReestrKindId Integer, ReestrKindName TVarChar
              , isDisableNPP Boolean
              , isAuto Boolean
+             , isUKTZ_new Boolean
               )
 AS
 $BODY$
@@ -162,9 +163,8 @@ BEGIN
            , Object_ReestrKind.ValueData              AS ReestrKindName
            
            , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean AS isDisableNPP
-           , COALESCE (MovementBoolean_isAuto.ValueData, False)          :: Boolean AS isAuto
-           
-           
+           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE)          :: Boolean AS isAuto
+           , COALESCE (MovementBoolean_isUKTZ_new.ValueData, FALSE)      :: Boolean AS isUKTZ_new
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_Branch.ObjectId           AS BranchId
@@ -251,6 +251,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isUKTZ_new
+                                      ON MovementBoolean_isUKTZ_new.MovementId = Movement.Id
+                                     AND MovementBoolean_isUKTZ_new.DescId = zc_MovementBoolean_UKTZ_new()
 
 	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
@@ -372,7 +375,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

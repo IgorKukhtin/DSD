@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , UnitName_Collation TVarChar
              , BranchName_Collation TVarChar
              , isNPP_calc Boolean, DateisNPP_calc TDateTime
+             , isUKTZ_new Boolean
               )
 AS
 $BODY$
@@ -188,6 +189,8 @@ BEGIN
 
            , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
            , COALESCE (MovementDate_NPP_calc.ValueData, Null) :: TDateTime  AS DateisNPP_calc
+
+           , COALESCE (MovementBoolean_isUKTZ_new.ValueData, FALSE)      :: Boolean AS isUKTZ_new
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_Branch.ObjectId           AS BranchId
@@ -395,6 +398,10 @@ BEGIN
                                         AND MovementLinkObject_Partner_Child.DescId     = zc_MovementLinkObject_Partner()
 
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_Partner_Child.ObjectId)
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isUKTZ_new
+                                      ON MovementBoolean_isUKTZ_new.MovementId = Movement_DocumentChild.Id
+                                     AND MovementBoolean_isUKTZ_new.DescId     = zc_MovementBoolean_UKTZ_new()
 
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Child
