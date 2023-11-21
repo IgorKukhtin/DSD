@@ -64,11 +64,12 @@ BEGIN
      AND vbBranchId <> 8377   -- филиал Кр.Рог
    --AND vbBranchId <> 301310 -- филиал Запорожье
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав выбрать подразделение <%>.%Можно выбрать %>'
+         RAISE EXCEPTION 'Ошибка.Для <%> нет прав выбрать подразделение <%>.%Можно выбрать %>'
+                 , lfGet_Object_ValueData_sh (inUserId)
                  , lfGet_Object_ValueData_sh (inToId)
                  , CHR (13)
                  , (SELECT STRING_AGG (tmp.Value, ' или ') FROM (SELECT '<' || lfGet_Object_ValueData_sh (OL.ObjectId) || '>' AS Value FROM ObjectLink AS OL WHERE OL.ChildObjectId = vbBranchId AND OL.DescId = zc_ObjectLink_Unit_Branch() ORDER BY OL.ObjectId) AS tmp)
-                 ;
+                  ;
      END IF;
 
 
