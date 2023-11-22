@@ -57,7 +57,7 @@ RETURNS TABLE (Id              Integer
              , UpdateName TVarChar, UpdateDate TDateTime
 
              , MovementId_parent Integer
-             , InvNumber_parent TVarChar
+             , InvNumberFull_parent TVarChar, InvNumber_parent TVarChar
              , DescName_parent TVarChar
 
              , Color_Pay Integer
@@ -222,7 +222,8 @@ BEGIN
                        , MovementDate_Update.ValueData              AS UpdateDate
 
                        , Movement_Parent.Id                         AS MovementId_parent
-                       , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+                       , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
+                       , Movement_Parent.InvNumber                  AS InvNumber_parent
                        , MovementDesc_Parent.ItemName               AS DescName_parent
 
                        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
@@ -395,6 +396,7 @@ BEGIN
       , tmpData.UpdateDate
 
       , tmpData.MovementId_parent
+      , tmpData.InvNumberFull_parent
       , tmpData.InvNumber_parent
       , tmpData.DescName_parent
 

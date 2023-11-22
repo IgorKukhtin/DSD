@@ -75,6 +75,14 @@ type
     btnUnComplete: TcxButton;
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
+    cxLabel4: TcxLabel;
+    edSearchInvNumber_OrderClient: TcxTextEdit;
+    edSearchInvNumber_Invoice: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edSearchObjectName: TcxTextEdit;
+    lbSearchArticle: TcxLabel;
+    FieldFilter_Article: TdsdFieldFilter;
+    actChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

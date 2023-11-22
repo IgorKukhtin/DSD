@@ -491,7 +491,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Width = 131
     end
     object cxLabel4: TcxLabel
-      Left = 443
+      Left = 445
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
       ParentFont = False
