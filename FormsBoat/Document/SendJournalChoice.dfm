@@ -26,7 +26,6 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 817
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -57,6 +56,27 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object cxLabel3: TcxLabel
+      Left = 429
+      Top = 6
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber_OrderClient: TcxTextEdit
+      Left = 507
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -67,8 +87,6 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 817
-    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -269,7 +287,26 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 297
+        Width = 264
+      end
+      object InvNumberFull_parent: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'InvNumberFull_parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object InvNumber_parent: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumber_parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1087#1086#1080#1089#1082')'
+        Options.Editing = False
+        Width = 70
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -323,8 +360,6 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -156
-    ExplicitWidth = 973
     object btnInsert: TcxButton
       Left = 42
       Top = 7
@@ -1296,7 +1331,7 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
         end>
       Caption = #1042#1099#1073#1088#1072#1090#1100
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actFormClose: TdsdFormClose
@@ -1578,5 +1613,18 @@ object SendJournalChoiceForm: TSendJournalChoiceForm
     PackSize = 1
     Left = 615
     Top = 256
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber_OrderClient
+    DataSet = ClientDataSet
+    Column = InvNumber_parent
+    ColumnList = <
+      item
+        Column = InvNumber_parent
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 648
+    Top = 144
   end
 end

@@ -76,9 +76,9 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
       Width = 131
     end
     object cxLabel3: TcxLabel
-      Left = 710
+      Left = 712
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079':'
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -88,7 +88,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 785
+      Left = 789
       Top = 5
       TabOrder = 7
       DesignSize = (

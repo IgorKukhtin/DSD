@@ -1,29 +1,31 @@
 inherited BankAccountJournalForm: TBankAccountJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 356
-  ClientWidth = 1094
+  ClientWidth = 1213
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1110
+  ExplicitWidth = 1229
   ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1094
-    Height = 258
+    Top = 56
+    Width = 1213
+    Height = 259
     TabOrder = 3
+    ExplicitTop = 56
     ExplicitWidth = 1094
-    ExplicitHeight = 258
-    ClientRectBottom = 258
-    ClientRectRight = 1094
+    ExplicitHeight = 259
+    ClientRectBottom = 259
+    ClientRectRight = 1213
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1094
-      ExplicitHeight = 258
+      ExplicitHeight = 259
       inherited cxGrid: TcxGrid
-        Width = 1094
-        Height = 258
+        Width = 1213
+        Height = 259
         ExplicitWidth = 1094
-        ExplicitHeight = 258
+        ExplicitHeight = 259
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -88,9 +90,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
-          object InvNumberParent: TcxGridDBColumn [2]
+          object InvNumberPartner: TcxGridDBColumn [2]
             Caption = 'External Nr'
-            DataBinding.FieldName = 'InvNumberParent'
+            DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -272,6 +274,51 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
             Width = 70
           end
+          object InvNumber_Invoice: TcxGridDBColumn
+            Caption = '***Interne Nr ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1087#1086#1080#1089#1082')'
+            Width = 70
+          end
+          object InvNumberFull_parent: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumber_parent: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'InvNumber_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1087#1086#1080#1089#1082')'
+            Options.Editing = False
+            Width = 70
+          end
+          object DescName_parent: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DescName_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072')'
+            Options.Editing = False
+            Width = 70
+          end
           object PaidKindName_Invoice: TcxGridDBColumn
             Caption = '***'#1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName_Invoice'
@@ -397,16 +444,82 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1094
+    Width = 1213
+    Height = 30
     ExplicitWidth = 1094
+    ExplicitHeight = 30
+    object lbSearchArticle: TcxLabel
+      Left = 663
+      Top = 4
+      Caption = #8470' '#1089#1095#1077#1090#1072': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber_Invoice: TcxTextEdit
+      Left = 733
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        118
+        21)
+      Width = 118
+    end
+    object cxLabel3: TcxLabel
+      Left = 859
+      Top = 4
+      Caption = 'Lieferanten / Kunden: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchMoneyPlaceName: TcxTextEdit
+      Left = 1009
+      Top = 5
+      TabOrder = 7
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
+    object cxLabel4: TcxLabel
+      Left = 443
+      Top = 4
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber_OrderClient: TcxTextEdit
+      Left = 526
+      Top = 5
+      TabOrder = 9
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
   end
   object Panel_btn: TPanel [2]
     Left = 0
     Top = 315
-    Width = 1094
+    Width = 1213
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitWidth = 1094
     object btnInsert: TcxButton
       Left = 42
       Top = 7
@@ -452,7 +565,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Top = 6
       Width = 153
       Height = 25
-      Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
@@ -1081,6 +1193,38 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       isShowModal = False
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -1465,5 +1609,26 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 896
     Top = 217
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchInvNumber_OrderClient
+    DataSet = MasterCDS
+    Column = InvNumber_parent
+    ColumnList = <
+      item
+        Column = InvNumber_parent
+      end
+      item
+        Column = InvNumber_Invoice
+        TextEdit = edSearchInvNumber_Invoice
+      end
+      item
+        Column = MoneyPlaceName
+        TextEdit = edSearchMoneyPlaceName
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 984
+    Top = 128
   end
 end

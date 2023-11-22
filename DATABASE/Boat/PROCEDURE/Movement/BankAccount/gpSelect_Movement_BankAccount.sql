@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
-             , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
+             , MovementId_parent Integer, InvNumberFull_parent TVarChar, InvNumber_parent TVarChar, DescName_parent TVarChar
              , Amount_Invoice TFloat
              , Amount_diff TFloat
              , isDiff Boolean
@@ -173,6 +174,12 @@ BEGIN
 
            , Movement_Invoice.Id AS MovementId_Invoice
            , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
+           , Movement_Invoice.InvNumber        AS InvNumber_Invoice 
+           --parent для Invoice
+           , Movement_Parent.Id             ::Integer  AS MovementId_parent
+           , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
+           , Movement_Parent.InvNumber                 AS InvNumber_parent
+           , MovementDesc_Parent.ItemName              AS DescName_parent
 
              -- Сумма по Счету - только в последнем платеже
            , CASE WHEN tmpInvoice_Params.Amount > 0 AND MLM_Invoice.Ord = 1
@@ -224,6 +231,11 @@ BEGIN
             -- итого ВСЕ оплаты
             LEFT JOIN tmpInvoice_sum ON tmpInvoice_sum.MovementId_Invoice = Movement_Invoice.Id
 
+             --Parent для Movement_Invoice - Документ Заказ или ПРиход
+            LEFT JOIN Movement AS Movement_Parent
+                               ON Movement_Parent.Id = Movement_Invoice.ParentId
+                              AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+            LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
             -- данные BankAccount
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id

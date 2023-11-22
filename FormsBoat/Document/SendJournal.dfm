@@ -56,6 +56,27 @@ object SendJournalForm: TSendJournalForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object cxLabel3: TcxLabel
+      Left = 446
+      Top = 4
+      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber_OrderClient: TcxTextEdit
+      Left = 527
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        131
+        21)
+      Width = 131
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -249,12 +270,22 @@ object SendJournalForm: TSendJournalForm
         HeaderHint = #1050#1086#1084#1091
         Width = 155
       end
-      object InvNumber_parent: TcxGridDBColumn
+      object InvNumberFull_parent: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-        DataBinding.FieldName = 'InvNumber_parent'
+        DataBinding.FieldName = 'InvNumberFull_parent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object InvNumber_parent: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumber_parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1087#1086#1080#1089#1082')'
         Options.Editing = False
         Width = 70
       end
@@ -1399,7 +1430,7 @@ object SendJournalForm: TSendJournalForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
@@ -1681,5 +1712,18 @@ object SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 615
     Top = 256
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edInvNumber_OrderClient
+    DataSet = ClientDataSet
+    Column = InvNumber_parent
+    ColumnList = <
+      item
+        Column = InvNumber_parent
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 688
+    Top = 168
   end
 end

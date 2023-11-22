@@ -34,7 +34,7 @@ type
     MoneyPlaceName: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
     AmountOut: TcxGridDBColumn;
-    InvNumberParent: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
     actInsertProfitLossService: TdsdInsertUpdateAction;
     bbAddBonus: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
@@ -78,6 +78,14 @@ type
     btnUnComplete: TcxButton;
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
+    lbSearchArticle: TcxLabel;
+    edSearchInvNumber_Invoice: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edSearchMoneyPlaceName: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edSearchInvNumber_OrderClient: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    actChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

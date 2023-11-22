@@ -64,7 +64,7 @@ BEGIN
                                     AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = inMoneyPlaceId
             LEFT JOIN Movement AS Movement_Parent
-                           ON Movement_Parent.Id = inMovementId_parent
+                               ON Movement_Parent.Id = inMovementId_parent
             LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
       ;
      ELSE
