@@ -42,6 +42,9 @@ $BODY$
     DECLARE vbMovementSaleId Integer;
     DECLARE vbMovementDescId Integer;
     
+    DECLARE vbUserSign TVarChar;
+    DECLARE vbUserSeal TVarChar;
+    DECLARE vbUserKey  TVarChar;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -50,6 +53,23 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
      
+     -- определяется
+     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE '24447183_3524907224_SS181220125402.ZS2' /*'Ключ - Неграш О.В..ZS2'*/                                       END AS UserSign
+          , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE '24447183_S181220141414.ZS2' /*'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/   END AS UserSeal
+          , CASE WHEN ObjectString_UserKey.ValueData  <> '' THEN ObjectString_UserKey.ValueData  ELSE '24447183_C181220141414.ZS2' /*'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/ END AS UserKey
+            INTO vbUserSign, vbUserSeal, vbUserKey
+     FROM Object AS Object_User
+          LEFT JOIN ObjectString AS ObjectString_UserSign
+                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                                AND ObjectString_UserSign.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserSeal
+                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                                AND ObjectString_UserSeal.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserKey 
+                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+                                AND ObjectString_UserKey.ObjectId = Object_User.Id
+     WHERE Object_User.Id = vbUserId;
+
      vbMovementSaleId := COALESCE((SELECT MovementId FROM MovementLinkMovement  
                                    WHERE MovementChildId = inMovementId 
                                      AND DescId = zc_MovementLinkMovement_TransportGoods()), 0);
@@ -328,7 +348,7 @@ BEGIN
 
            , COALESCE(ObjectString_Unit_KATOTTG_Unit.ValueData, '') :: TVarChar  AS KATOTTG_Unit
            
-           , '' :: TVarChar AS UserSign
+           , vbUserSign AS UserSign
            
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id

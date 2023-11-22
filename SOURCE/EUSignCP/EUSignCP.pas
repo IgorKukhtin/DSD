@@ -196,6 +196,16 @@ const
   EU_SETTINGS_ID_OCSP_ACCESS_INFO_MODE			= $100;
   EU_SETTINGS_ID_OCSP_ACCESS_INFO				= $200;
 
+  EU_SIGN_TYPE_PARAMETER	  			= 'SignType';
+  EU_SIGN_TYPE_LENGTH	    				= 4;
+
+	EU_SIGN_TYPE_UNKNOWN            = 0;			// Не визначено
+	EU_SIGN_TYPE_CADES_BES          = 1;			// CAdES-BES
+	EU_SIGN_TYPE_CADES_T            = 4;			// CAdES-T
+	EU_SIGN_TYPE_CADES_C            = 8;			// CAdES-C
+	EU_SIGN_TYPE_CADES_X_LONG       = 16; 		// CAdES-X Long
+
+
 { ------------------------------------------------------------------------------ }
 
 type

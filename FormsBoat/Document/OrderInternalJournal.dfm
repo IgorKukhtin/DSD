@@ -291,6 +291,16 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Options.Editing = False
         Width = 100
       end
+      object InvNumber_OrderClient: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumber_OrderClient'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1087#1086#1080#1089#1082')'
+        Options.Editing = False
+        Width = 100
+      end
       object ProductName: TcxGridDBColumn
         Caption = 'Boat'
         DataBinding.FieldName = 'ProductName'
@@ -1545,7 +1555,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Column = InvNumber
       end
       item
-        Column = InvNumberFull_OrderClient
+        Column = InvNumber_OrderClient
         TextEdit = edInvNumber_OrderClient
       end>
     ActionNumber1 = actChoiceGuides

@@ -1032,6 +1032,9 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         end
         item
           Action = actSendETTN
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053'?'
       InfoAfterExecute = #1042#1110#1087#1086#1083#1085#1077#1085#1086
@@ -1086,6 +1089,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       UpdateUuid = spUpdate_Uuid
       UpdateKATOTTG = spUpdate_Partner_KATOTTG
       UpdateError = spUpdate_CommentError
+      EDINActions = edinSendSingETTN
     end
     object actExecSelect_eTTN_Send: TdsdExecStoredProc
       Category = 'Send_ETTN'
