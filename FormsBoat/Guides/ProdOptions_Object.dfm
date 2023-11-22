@@ -3,7 +3,7 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1054#1087#1094#1080#1080'>'
   ClientHeight = 376
-  ClientWidth = 785
+  ClientWidth = 730
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 785
-    Height = 350
+    Width = 730
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 785
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -435,6 +437,59 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
     Properties.ReadOnly = True
     TabOrder = 4
     Width = 245
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 335
+    Width = 730
+    Height = 41
+    Align = alBottom
+    TabOrder = 7
+    ExplicitLeft = 8
+    ExplicitTop = 341
+    ExplicitWidth = 785
+    object btnInsert: TcxButton
+      Left = 339
+      Top = 6
+      Width = 99
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 465
+      Top = 6
+      Width = 99
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 40
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actChoiceGuides
+      TabOrder = 2
+    end
+    object btnSetErased: TcxButton
+      Left = 590
+      Top = 7
+      Width = 99
+      Height = 25
+      Action = actSetErased
+      TabOrder = 3
+    end
+    object btnFormClose: TcxButton
+      Left = 158
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -883,9 +938,9 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object actGridToExcel: TdsdGridToExcel
@@ -1150,6 +1205,12 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

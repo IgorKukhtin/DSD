@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxLabel;
+  cxLabel, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
   TProdOptions_ObjectForm = class(TParentForm)
@@ -86,8 +86,13 @@ type
     actChoiceFormProdColorPattern: TOpenChoiceForm;
     NPP: TcxGridDBColumn;
     NPP_pcp: TcxGridDBColumn;
-    actInsertMask: TdsdInsertUpdateAction;
-    bbInsertMask: TdxBarButton;
+    actFormClose: TdsdFormClose;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
   private
     { Private declarations }
   public
