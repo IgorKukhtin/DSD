@@ -48,7 +48,7 @@ type
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function Execute(Sender: TComponent; Params: TdsdParams): boolean;
+    function Execute(Sender: TComponent; Params: TdsdParams; isNotExecuteDialog : Boolean = False): boolean;
     procedure CloseAction(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
     property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
@@ -357,7 +357,7 @@ begin
   inherited;
 end;
 
-function TParentForm.Execute(Sender: TComponent; Params: TdsdParams): boolean;
+function TParentForm.Execute(Sender: TComponent; Params: TdsdParams; isNotExecuteDialog : Boolean = False): boolean;
 begin
   try
     // то перечитывать ли ее каждый раз определяет флаг
@@ -366,7 +366,7 @@ begin
     if Assigned(AddOnFormData.Params) then
        AddOnFormData.Params.Params.AssignParams(Params);
     // Если надо вызываем заполнение диалогом
-    if Assigned(AddOnFormData.ExecuteDialogAction) and AddOnFormData.ExecuteDialogAction.OpenBeforeShow then begin
+    if Assigned(AddOnFormData.ExecuteDialogAction) and AddOnFormData.ExecuteDialogAction.OpenBeforeShow and not isNotExecuteDialog then begin
        AddOnFormData.ExecuteDialogAction.RefreshAllow := false; // Что бы не было двух перечитываний.
        result := AddOnFormData.ExecuteDialogAction.Execute;
     end;

@@ -402,6 +402,7 @@ type
     FFormName: string;
     FisShowModal: Boolean;
     FisReturnGuiParams: Boolean;
+    FisNotExecuteDialog: Boolean;
     FFormNameParam: TdsdParam;
     procedure SetFormName(const Value: string);
     function GetFormName: string;
@@ -416,6 +417,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property isReturnGuiParams: Boolean read FisReturnGuiParams write FisReturnGuiParams default False;
+    property isNotExecuteDialog: Boolean read FisNotExecuteDialog write FisNotExecuteDialog default False;
   published
     property Caption;
     property Hint;
@@ -442,6 +444,7 @@ type
     property GuiParams;
     property isShowModal;
     property isReturnGuiParams;
+    property isNotExecuteDialog;
   end;
 
   // Откываем форму для выбора значения из справочника
@@ -2244,6 +2247,7 @@ begin
   FFormNameParam.DataType := ftString;
   FFormNameParam.Value := '';
   isReturnGuiParams := False;
+  FisNotExecuteDialog := False;
 end;
 
 destructor TdsdCustomOpenForm.Destroy;
@@ -2303,7 +2307,7 @@ function TdsdCustomOpenForm.ShowForm: TForm;
 begin
   result := TdsdFormStorageFactory.GetStorage.Load(FormName);
   BeforeExecute(result);
-  if TParentForm(result).Execute(Self, FParams) then
+  if TParentForm(result).Execute(Self, FParams, FisNotExecuteDialog) then
   begin
     if result.WindowState = wsMinimized then
       result.WindowState := wsNormal;
