@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , Comment_mi TVarChar
              , MovementId_OrderClient Integer
              , InvNumberFull_OrderClient TVarChar
+             , InvNumber_OrderClient TVarChar
              , FromId Integer , FromName TVarChar
              , ProductName TVarChar
              , CIN TVarChar
@@ -133,7 +134,8 @@ BEGIN
              , MovementItem.Comment ::TVarChar      AS Comment_mi
 
              , Movement_OrderClient.Id              AS MovementId_OrderClient
-             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient 
+             , Movement_OrderClient.InvNumber  AS InvNumber_OrderClient
              , Object_From.Id                       AS FromId
              , Object_From.ValueData                AS FromName
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)  AS ProductName
