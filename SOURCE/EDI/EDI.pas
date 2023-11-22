@@ -223,7 +223,7 @@ type
   end;
 
 
-  TEDINActionsType = (edinSendETTN, edinSignConsignor, edinSignCarrier);
+  TEDINActionsType = (edinSendETTN, edinSignConsignor, edinSignCarrier, edinSendSingETTN);
 
   TdsdEDINAction = class(TdsdCustomAction)
   private
@@ -258,6 +258,7 @@ type
 
     function DoSendETTN: Boolean;
     function DoSignDcuETTN: Boolean;
+    function DoSendSingETTN: Boolean;
     function LocalExecute: Boolean; override;
     function ShowError(AError : String): Boolean;
   public
@@ -5912,6 +5913,7 @@ var
   apath: String;
   CPInterface: PEUSignCP;
   CertOwnerInfo : TEUCertOwnerInfo;
+  Param : DWORD;
   nError : integer;
 begin
 
@@ -5954,6 +5956,9 @@ begin
 
     CPInterface.SetUIMode(false);
 
+    Param := EU_SIGN_TYPE_CADES_X_LONG;
+    CPInterface.SetRuntimeParameter(PAnsiChar(EU_SIGN_TYPE_PARAMETER), @Param, sizeof(Param));
+
     try
       CPInterface.ResetPrivateKey;
     except
@@ -5970,6 +5975,7 @@ begin
            then FileName := AnsiString(UserSign)
            else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign)
       else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + '24447183_2992217209_SU211210105333.ZS2');
+
       // проверка
       if not FileExists(String(FileName)) then ShowError('Файл не найден : <'+String(FileName)+'>');
 
@@ -6288,7 +6294,7 @@ begin
     Params := '?gln=' + AGLN;
 
     case FEDINActions of
-      edinSignConsignor : Params := Params + '&role_code=CZ';
+      edinSignConsignor, edinSendSingETTN : Params := Params + '&role_code=CZ';
       edinSignCarrier  : Params := Params + '&role_code=CA';
     else ShowError('Не описана роль пдписи eTTN.');
     end;
@@ -6364,7 +6370,7 @@ begin
      ShowError('ТТН не отправлена. Подпись невозиожна.');
 
     case FEDINActions of
-      edinSignConsignor : GLN_Sign := HeaderDataSet.FieldByName('GLN_from').asString;
+      edinSignConsignor, edinSendSingETTN : GLN_Sign := HeaderDataSet.FieldByName('GLN_from').asString;
       edinSignCarrier  : GLN_Sign := HeaderDataSet.FieldByName('GLN_car').asString;
     else ShowError('Не описана роль пдписи eTTN.');
     end;
@@ -6396,12 +6402,29 @@ begin
 
 end;
 
+function TdsdEDINAction.DoSendSingETTN: Boolean;
+  var cXML : String;
+begin
+  Result := DoSendETTN;
+  if Result then
+  begin
+    if (FResultParam.Value <> HeaderDataSet.FieldByName('UuId').AsString) then
+    begin
+      HeaderDataSet.Edit;
+      HeaderDataSet.FieldByName('UuId').AsString := FResultParam.Value;
+      HeaderDataSet.Post;
+    end;
+    Result := DoSignDcuETTN;
+  end;
+end;
+
 function TdsdEDINAction.LocalExecute: Boolean;
 begin
 
   case FEDINActions of
     edinSendETTN : Result := DoSendETTN;
     edinSignConsignor, edinSignCarrier  : Result := DoSignDcuETTN;
+    edinSendSingETTN : Result := DoSendSingETTN;
 
   else ShowError('Не описано метод обработки типа документов.');
   end;
