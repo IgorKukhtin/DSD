@@ -85,7 +85,6 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -184,6 +183,16 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
+        Options.Editing = False
+        Width = 200
+      end
+      object InvNumber_OrderClient: TcxGridDBColumn
+        Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumber_OrderClient'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090') ('#1087#1086#1080#1089#1082')'
         Options.Editing = False
         Width = 200
       end
@@ -1590,10 +1599,10 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edInvNumber_OrderClient
     DataSet = ClientDataSet
-    Column = InvNumberFull_OrderClient
+    Column = InvNumber_OrderClient
     ColumnList = <
       item
-        Column = InvNumberFull_OrderClient
+        Column = InvNumber_OrderClient
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
