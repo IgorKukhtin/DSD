@@ -27,7 +27,6 @@ type
   TPaidKindForm = class(TAncestorEnumForm)
     Name: TcxGridDBColumn;
     Code: TcxGridDBColumn;
-    actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnChoiceGuides: TcxButton;
     btnFormClose: TcxButton;

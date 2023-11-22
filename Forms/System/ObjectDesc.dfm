@@ -1,18 +1,18 @@
 inherited ObjectDescForm: TObjectDescForm
   Caption = #1058#1080#1087#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
-  ClientWidth = 533
-  ExplicitWidth = 549
-  ExplicitHeight = 346
+  ClientWidth = 546
+  ExplicitWidth = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 533
-    ClientRectRight = 533
+    Width = 546
+    ExplicitWidth = 546
+    ClientRectRight = 546
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
+      ExplicitWidth = 546
       inherited cxGrid: TcxGrid
-        Width = 533
+        Width = 546
+        ExplicitWidth = 546
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -22,7 +22,6 @@ inherited ObjectDescForm: TObjectDescForm
           object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            Visible = False
             Width = 30
           end
           object Name: TcxGridDBColumn
@@ -37,16 +36,18 @@ inherited ObjectDescForm: TObjectDescForm
     end
   end
   inherited ActionList: TActionList
-    inherited ChoiceGuides: TdsdChoiceGuides
+    inherited actChoiceGuides: TdsdChoiceGuides
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString

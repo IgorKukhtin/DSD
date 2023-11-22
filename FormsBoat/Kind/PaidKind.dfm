@@ -2,20 +2,19 @@ inherited PaidKindForm: TPaidKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1086#1088#1084#1099' '#1086#1087#1083#1072#1090'>'
   ClientWidth = 350
   ExplicitWidth = 366
-  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 350
-    ExplicitWidth = 336
+    ExplicitWidth = 350
     ClientRectRight = 350
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 336
-      ExplicitHeight = 282
+      ExplicitWidth = 350
       inherited cxGrid: TcxGrid
         Width = 350
         Height = 241
-        ExplicitWidth = 336
+        ExplicitWidth = 350
+        ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -48,14 +47,12 @@ inherited PaidKindForm: TPaidKindForm
         Height = 41
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 335
-        ExplicitWidth = 633
         object btnChoiceGuides: TcxButton
           Left = 51
           Top = 8
           Width = 90
           Height = 25
-          Action = ChoiceGuides
+          Action = actChoiceGuides
           TabOrder = 0
         end
         object btnFormClose: TcxButton
@@ -82,7 +79,7 @@ inherited PaidKindForm: TPaidKindForm
   inherited ActionList: TActionList
     Left = 103
     Top = 167
-    inherited ChoiceGuides: TdsdChoiceGuides
+    inherited actChoiceGuides: TdsdChoiceGuides
       Params = <
         item
           Name = 'Key'
@@ -106,14 +103,6 @@ inherited PaidKindForm: TPaidKindForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1054#1050
-      ImageIndex = 80
-    end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -166,9 +155,6 @@ inherited PaidKindForm: TPaidKindForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

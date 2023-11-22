@@ -485,8 +485,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   inherited MasterDS: TDataSource

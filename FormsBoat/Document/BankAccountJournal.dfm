@@ -449,7 +449,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     object btnFormClose: TcxButton
       Left = 809
-      Top = 7
+      Top = 6
       Width = 153
       Height = 25
       Action = actFormClose
