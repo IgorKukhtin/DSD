@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdateMobile_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_ReturnIn (TVarChar, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_ReturnIn (TVarChar, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_ReturnIn (TVarChar, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_ReturnIn(
     IN inGUID          TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_ReturnIn(
     IN inAmount        TFloat    , -- Количество
     IN inPrice         TFloat    , -- Цена
     IN inChangePercent TFloat    , -- (-)% Скидки (+)% Наценки
+    IN inSubjectDocId  Integer   , -- Основание для перемещения
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -120,6 +122,55 @@ BEGIN
                                                          , inIsCheckPrice       := TRUE
                                                          , inUserId             := vbUserId
                                                           );
+                                                          
+                -- сохранили <Элемент документа детали если надо>
+                IF EXISTS(SELECT MovementItem.Id
+                          FROM MovementItem
+                         
+                               LEFT JOIN MovementItem AS MI_Detail ON MI_Detail.MovementId = vbMovementId
+                                                                  AND MI_Detail.DescId     = zc_MI_Detail()
+                                                                  AND MI_Detail.ParentId   = MovementItem.Id
+
+                               LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                                ON MILO_SubjectDoc.MovementItemId = MI_Detail.Id
+                                                               AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                                                                 
+                          WHERE MovementItem.MovementId = vbMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.Id         = vbId
+                            AND (COALESCE(inSubjectDocId, 0) <> COALESCE (MILO_SubjectDoc.ObjectId, 0)))
+                THEN
+                   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_SubjectDoc()    
+                         , lpInsertUpdate_MovementItem (MI_Detail.Id, zc_MI_Detail(), MovementItem.ObjectId, vbMovementId, MovementItem.Amount, MovementItem.Id)
+                         , COALESCE(inSubjectDocId, 0))
+                   FROM MovementItem
+                   
+                        LEFT JOIN MovementItem AS MI_Detail ON MI_Detail.MovementId = vbMovementId
+                                                           AND MI_Detail.DescId     = zc_MI_Detail()
+                                                           AND MI_Detail.ParentId   = MovementItem.Id
+
+                        LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                         ON MILO_SubjectDoc.MovementItemId = MI_Detail.Id
+                                                        AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                                                           
+                   WHERE MovementItem.MovementId = vbMovementId
+                     AND MovementItem.DescId     = zc_MI_Master()
+                     AND MovementItem.Id   = vbId
+                     AND (COALESCE(inSubjectDocId, 0) <> COALESCE (MILO_SubjectDoc.ObjectId, 0));
+                     
+                   -- сохранили протокол
+                   PERFORM lpInsert_MovementItemProtocol (MI_Detail.Id, vbUserId, TRUE)
+                   FROM MovementItem
+                           
+                         LEFT JOIN MovementItem AS MI_Detail ON MI_Detail.MovementId = vbMovementId
+                                                            AND MI_Detail.DescId     = zc_MI_Detail()
+                                                            AND MI_Detail.ParentId   = MovementItem.Id
+
+                   WHERE MovementItem.MovementId = vbMovementId
+                     AND MovementItem.DescId     = zc_MI_Master()
+                     AND MovementItem.Id         = vbId;
+                     
+                END IF;
      
                 -- сохранили свойство <Глобальный уникальный идентификатор>
                 PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
@@ -129,6 +180,8 @@ BEGIN
 
       -- сохранили свойство <Дата/время сохранения с мобильного устройства>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
+      
+      RAISE EXCEPTION 'Прошло.';
 
       RETURN vbId;
 END;
@@ -137,18 +190,19 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.   Шаблий О.В.
+ 22.11.23                                                                       *
  22.03.17                                                        *
 */
 
 -- тест
-/* SELECT * FROM gpInsertUpdateMobile_MovementItem_ReturnIn (inGUID:= '{A2F91EC1-9A34-4A77-A145-5A3290DFDD70}'
-                                                        , inMovementGUID:= '{D2399D25-513D-4F68-A1ED-FCD21C63A0B7}'
+/* SELECT * FROM gpInsertUpdateMobile_MovementItem_ReturnIn (inGUID:= '{A2F91EC1-9A34-4A77-A145-5A3290DFDD71}'
+                                                        , inMovementGUID:= '{5842A59B-C8B8-4C27-B02B-CA51EE449C91}'
                                                         , inGoodsId:= 8213
                                                         , inGoodsKindId:= 8348
                                                         , inAmount:= 3
                                                         , inPrice:= 45.89 
                                                         , inChangePercent:= -5.0  
+                                                        , inSubjectDocId:= 11
                                                         , inSession:= zfCalc_UserAdmin()
-                                                         );
-*/
+                                                         );*/

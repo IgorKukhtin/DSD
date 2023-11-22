@@ -29,13 +29,30 @@ BEGIN
       THEN
          RETURN QUERY 
          SELECT 
-                Object.Id         AS Id 
-              , Object.ObjectCode AS Code
-              , Object.ValueData  AS Name
-              , Object.isErased   AS isErased
+                Object_SubjectDoc.Id         AS Id 
+              , Object_SubjectDoc.ObjectCode AS Code
+              , (COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData) ||
+                 CASE WHEN COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData, '') <> '' 
+                      THEN ' ' || COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData, '')
+                      ELSE '' END) :: TVarChar   AS Name
+              , Object_SubjectDoc.isErased   AS isErased
               , TRUE AS isSync
-         FROM Object
-         WHERE Object.DescId = zc_Object_SubjectDoc();
+         FROM Object AS Object_SubjectDoc
+
+              LEFT JOIN ObjectString AS ObjectString_Subject_Short
+                                     ON ObjectString_Subject_Short.ObjectId = Object_SubjectDoc.Id 
+                                    AND ObjectString_Subject_Short.DescId = zc_ObjectString_SubjectDoc_Short() 
+
+              LEFT JOIN ObjectLink AS ObjectLink_Reason
+                                   ON ObjectLink_Reason.ObjectId = Object_SubjectDoc.Id 
+                                  AND ObjectLink_Reason.DescId = zc_ObjectLink_SubjectDoc_Reason()
+              LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = ObjectLink_Reason.ChildObjectId
+
+              LEFT JOIN ObjectString AS ObjectString_Reason_Short
+                                     ON ObjectString_Reason_Short.ObjectId = Object_Reason.Id 
+                                    AND ObjectString_Reason_Short.DescId = zc_ObjectString_Reason_Short()
+
+         WHERE Object_SubjectDoc.DescId = zc_Object_SubjectDoc();
       END IF;
   
 END;$BODY$
@@ -47,9 +64,11 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 22.11.23                                                       * 
  17.11.23                                                       * 
 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelectMobile_Object_SubjectDoc(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpSelectMobile_Object_SubjectDoc(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())

@@ -1037,7 +1037,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053'?'
-      InfoAfterExecute = #1042#1110#1087#1086#1083#1085#1077#1085#1086
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053
       ImageIndex = 85
