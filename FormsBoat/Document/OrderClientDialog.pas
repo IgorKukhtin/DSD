@@ -36,6 +36,20 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     spGet: TdsdStoredProc;
+    edInvNumber: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cxLabel2: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cxLabel3: TcxLabel;
+    cxLabel1: TcxLabel;
+    edStateText: TcxTextEdit;
+    edCIN: TcxTextEdit;
+    cxLabel13: TcxLabel;
+    cxLabel6: TcxLabel;
+    edModelName: TcxTextEdit;
+    edFrom: TcxTextEdit;
+    edNPP_2_text: TcxLabel;
+    edNPP_2: TcxTextEdit;
   private
     { Private declarations }
   public

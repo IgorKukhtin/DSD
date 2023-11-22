@@ -1876,6 +1876,62 @@ object OrderClientJournalForm: TOrderClientJournalForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StateText'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StateText'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CIN'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NPP_2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'NPP_2'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True

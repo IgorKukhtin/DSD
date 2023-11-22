@@ -113,8 +113,8 @@ object OrderClientForm: TOrderClientForm
       Caption = 'External Nr'
     end
     object edInvNumberPartner: TcxTextEdit
-      Left = 85
-      Top = 23
+      Left = 87
+      Top = 28
       TabOrder = 4
       Width = 81
     end
@@ -238,7 +238,7 @@ object OrderClientForm: TOrderClientForm
     end
     object edCIN: TcxTextEdit
       Left = 1091
-      Top = 13
+      Top = 18
       TabOrder = 25
       Visible = False
       Width = 40
