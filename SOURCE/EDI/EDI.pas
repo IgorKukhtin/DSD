@@ -5970,11 +5970,9 @@ begin
 
     try
       // 1.Установка ключей
-      if UserSign <> ''
-      then if ExtractFilePath(UserSign) <> ''
-           then FileName := AnsiString(UserSign)
-           else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign)
-      else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + '24447183_2992217209_SU211210105333.ZS2');
+      if ExtractFilePath(UserSign) <> ''
+      then FileName := AnsiString(UserSign)
+      else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign);
 
       // проверка
       if not FileExists(String(FileName)) then ShowError('Файл не найден : <'+String(FileName)+'>');
@@ -6385,15 +6383,39 @@ begin
     Result := GetDocETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
     //Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
 
-    // Подпись файла
-    if Result then Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
+    // Подпись файла 1
+    if Result and (HeaderDataSet.FieldByName('UserSign').asString <> '') then
+    begin
+      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
 
-    // Отправка подписанного файла eTTN
-    if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
-    //Result := SignDcuETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+      // Отправка подписанного файла eTTN
+      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
+    end;
+
+    // Подпись файла 2
+    if Result and (HeaderDataSet.FieldByName('UserSeal').asString <> '') then
+    begin
+      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSeal').asString);
+
+      // Отправка подписанного файла eTTN
+      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
+    end;
+
+    // Подпись файла 3
+    if Result and (HeaderDataSet.FieldByName('UserKey').asString <> '') then
+    begin
+      if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+      if Result then Result := SignData(HeaderDataSet.FieldByName('UserKey').asString);
+
+      // Отправка подписанного файла eTTN
+      if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
+    end;
 
     // Запишем в базу чей ключ и дату
     if Result and Assigned(FUpdateSign) then FUpdateSign.Execute;
+
   finally
     // удалим временные файлы
     if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value) then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value);

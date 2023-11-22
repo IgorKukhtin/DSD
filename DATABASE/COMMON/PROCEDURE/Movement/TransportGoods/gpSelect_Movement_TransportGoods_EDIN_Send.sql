@@ -679,6 +679,8 @@ BEGIN
                  ELSE 'μ³ζμ³ρόκε' END::TVarChar                                         AS DeliveryInstructionsName
                  
           , vbUserSign AS UserSign
+          , vbUserSeal AS UserSeal
+          , vbUserKey  AS UserKey
           
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
