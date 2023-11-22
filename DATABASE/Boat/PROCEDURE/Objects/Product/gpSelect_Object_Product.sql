@@ -23,6 +23,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , ClientId Integer, ClientCode Integer, ClientName TVarChar
              , MovementId_OrderClient Integer
              , OperDate_OrderClient  TDateTime
+             , InvNumberFull_OrderClient TVarChar
              , InvNumber_OrderClient TVarChar
              , StatusCode_OrderClient Integer
              , StatusName_OrderClient TVarChar
@@ -829,7 +830,8 @@ BEGIN
          , tmpOrderClient.FromName          AS ClientName
          , tmpOrderClient.MovementId        AS MovementId_OrderClient
          , tmpOrderClient.OperDate          AS OperDate_OrderClient
-         , zfCalc_InvNumber_isErased ('', tmpOrderClient.InvNumber, tmpOrderClient.OperDate, tmpOrderClient.StatusId) AS InvNumber_OrderClient
+         , zfCalc_InvNumber_isErased ('', tmpOrderClient.InvNumber, tmpOrderClient.OperDate, tmpOrderClient.StatusId) AS InvNumberFull_OrderClient
+         , tmpOrderClient.InvNumber         AS InvNumber_OrderClient
          , tmpOrderClient.StatusCode        AS StatusCode_OrderClient
          , tmpOrderClient.StatusName        AS StatusName_OrderClient
          , tmpOrderClient.InfoMoneyId       AS InfoMoneyId_Client
