@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_ProductionUnion()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ProductionUnion(Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ProductionUnion(
@@ -11,7 +12,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ProductionUnion(
     IN inReceiptProdModelId  Integer   , --
     IN inAmount              TFloat    , -- Количество
     IN inComment             TVarChar  ,
-    in inisChange            Boolean   , --заменить значение в шаблоне
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer

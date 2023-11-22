@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
 )
 RETURNS RECORD
 AS
-$BODY$
+$BODY$ 
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbReceiptProdModelId Integer;   
