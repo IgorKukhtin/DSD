@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+  ExternalLoad, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer,
+  cxTextEdit, cxLabel;
 
 type
   TCountryForm = class(TParentForm)
@@ -77,6 +78,12 @@ type
     btnChoiceGuides: TcxButton;
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
+    cxLabel1: TcxLabel;
+    edSearchShortName: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -19,15 +19,15 @@ object CountryForm: TCountryForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 694
-    Height = 315
+    Height = 282
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 542
-    ExplicitHeight = 350
+    ExplicitTop = 26
+    ExplicitHeight = 315
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -111,9 +111,6 @@ object CountryForm: TCountryForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitLeft = -160
-    ExplicitTop = 335
-    ExplicitWidth = 702
     object btnInsert: TcxButton
       Left = 341
       Top = 8
@@ -155,6 +152,58 @@ object CountryForm: TCountryForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 694
+    Height = 33
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = -8
+    ExplicitTop = -14
+    object lbSearchName: TcxLabel
+      Left = 2
+      Top = 6
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 77
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+    object cxLabel1: TcxLabel
+      Left = 250
+      Top = 6
+      Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchShortName: TcxTextEdit
+      Left = 406
+      Top = 7
+      TabOrder = 3
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -764,5 +813,22 @@ object CountryForm: TCountryForm
     PackSize = 1
     Left = 464
     Top = 152
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end
+      item
+        Column = ShortName
+        TextEdit = edSearchShortName
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 592
+    Top = 104
   end
 end
