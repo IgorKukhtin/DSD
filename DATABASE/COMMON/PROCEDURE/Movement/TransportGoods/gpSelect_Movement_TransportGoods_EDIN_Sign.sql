@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer
              , GLN_car TVarChar, GLN_from TVarChar, GLN_Unloading TVarChar, GLN_to TVarChar, GLN_Driver TVarChar
              , KATOTTG_Unloading TVarChar, KATOTTG_Unit TVarChar
              
-             , UserSign TVarChar
+             , UserSign TVarChar, UserSeal TVarChar, UserKey TVarChar
 
               )
 AS
@@ -349,6 +349,8 @@ BEGIN
            , COALESCE(ObjectString_Unit_KATOTTG_Unit.ValueData, '') :: TVarChar  AS KATOTTG_Unit
            
            , vbUserSign AS UserSign
+           , vbUserSeal AS UserSeal
+           , vbUserKey  AS UserKey
            
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
