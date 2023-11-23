@@ -7657,7 +7657,7 @@ begin
   begin
      if TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component is TcxGridColumn then
      begin
-       TcxGridColumn(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component).Editing := TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.Value;
+       TcxGridColumn(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component).Options.Editing := TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.Value;
      end else if IsPublishedProp(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component, 'Enabled') then
      begin
         if TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.DataType = ftBoolean then

@@ -509,6 +509,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 59
           end
+          object PartionGoods: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end

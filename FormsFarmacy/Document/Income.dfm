@@ -1,28 +1,28 @@
 ﻿inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
-  ClientWidth = 1083
+  ClientWidth = 1079
   ExplicitWidth = 1101
-  ExplicitHeight = 563
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 196
-    Width = 1083
-    Height = 320
-    ExplicitTop = 196
-    ExplicitWidth = 1083
-    ExplicitHeight = 320
-    ClientRectBottom = 320
-    ClientRectRight = 1083
+    Top = 201
+    Width = 1079
+    Height = 315
+    ExplicitTop = 201
+    ExplicitWidth = 1079
+    ExplicitHeight = 315
+    ClientRectBottom = 315
+    ClientRectRight = 1079
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1083
-      ExplicitHeight = 296
+      ExplicitWidth = 1079
+      ExplicitHeight = 291
       inherited cxGrid: TcxGrid
-        Width = 1083
-        Height = 296
-        ExplicitWidth = 1083
-        ExplicitHeight = 296
+        Width = 1079
+        Height = 291
+        ExplicitWidth = 1079
+        ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -733,10 +733,10 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1083
+    Width = 1079
     Height = 169
     TabOrder = 3
-    ExplicitWidth = 1083
+    ExplicitWidth = 1079
     ExplicitHeight = 169
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1147,6 +1147,7 @@
     Left = 375
     Top = 455
     inherited actRefresh: TdsdDataSetRefresh
+      AfterAction = actSetEnabledAction
       StoredProcList = <
         item
           StoredProc = spGet
@@ -1187,9 +1188,10 @@
           StoredProc = spInsertUpdateMIMaster
         end
         item
-          StoredProc = spGetTotalSumm
+          StoredProc = spUpdate_AmountManual
         end
         item
+          StoredProc = spGetTotalSumm
         end>
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus [9]
@@ -2068,6 +2070,69 @@
         end>
       Caption = 'actPUSHMessage'
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
+    end
+    object actSetEnabledAction: TdsdSetEnabledAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetEnabledAction'
+      SetEnabledParams = <
+        item
+          Component = AmountManual
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isEditAmountManual'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -2124,7 +2189,7 @@
     DockControlHeights = (
       0
       0
-      27
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2251,6 +2316,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateisDeferredNo'
         end
         item
@@ -2286,6 +2359,10 @@
           ItemName = 'bbUpdate_ExpirationDate'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = '  '
+      Hint = '  '
+    end
     object bbPrint_Bill: TdxBarButton [5]
       Action = actPrintSticker
       Category = 0
@@ -2305,8 +2382,8 @@
       ImageIndex = 18
     end
     inherited bbStatic: TdxBarStatic
-      Caption = '                                    '
-      Hint = '                                    '
+      Caption = '                            '
+      Hint = '                            '
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -2382,6 +2459,10 @@
     end
     object dxBarButton5: TdxBarButton
       Action = actPretensionJournalIncome
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -2721,6 +2802,12 @@
         Name = 'ReturnOutId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEditAmountManual'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 416
@@ -2993,6 +3080,14 @@
         Name = 'isConduct'
         Value = Null
         Component = cbisConduct
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEditAmountManual'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isEditAmountManual'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -3869,8 +3964,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1028
-    Top = 176
+    Left = 1012
+    Top = 240
   end
   object spUpdateMovementIncome_OrderExt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_OrderExternal'
@@ -4514,5 +4609,71 @@
     PackSize = 1
     Left = 850
     Top = 280
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TIncomeForm;zc_Object_ImportSetting_Income'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1008
+    Top = 416
+  end
+  object spUpdate_AmountManual: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_SetAmountManual'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountManual'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 440
   end
 end

@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, ExternalLoad;
 
 type
   TIncomeForm = class(TAncestorDocumentForm)
@@ -206,6 +206,13 @@ type
     spPUSHInfo: TdsdStoredProc;
     actPUSHMessage: TdsdShowPUSHMessage;
     Color_MarginPercent: TcxGridDBColumn;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    spUpdate_AmountManual: TdsdStoredProc;
+    actSetEnabledAction: TdsdSetEnabledAction;
   private
     { Private declarations }
   public

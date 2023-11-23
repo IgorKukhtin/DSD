@@ -2,27 +2,27 @@ inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 526
   ClientWidth = 1001
-  ExplicitWidth = 1017
-  ExplicitHeight = 565
+  ExplicitWidth = 1023
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 148
+    Top = 154
     Width = 1001
-    Height = 378
-    ExplicitTop = 148
+    Height = 372
+    ExplicitTop = 154
     ExplicitWidth = 1001
-    ExplicitHeight = 378
-    ClientRectBottom = 378
+    ExplicitHeight = 372
+    ClientRectBottom = 372
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
-      ExplicitHeight = 354
+      ExplicitHeight = 348
       inherited cxGrid: TcxGrid
         Width = 1001
-        Height = 354
+        Height = 348
         ExplicitWidth = 1001
-        ExplicitHeight = 354
+        ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -995,6 +995,55 @@ inherited ReturnOutForm: TReturnOutForm
           ValueParam.MultiSelectSeparator = ','
         end>
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1052,7 +1101,7 @@ inherited ReturnOutForm: TReturnOutForm
     DockControlHeights = (
       0
       0
-      26
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1159,6 +1208,14 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1220,6 +1277,10 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object bbPrintOptima: TdxBarButton
       Action = actPrintOptima
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -2399,5 +2460,37 @@ inherited ReturnOutForm: TReturnOutForm
     PackSize = 1
     Left = 880
     Top = 219
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TReturnOutForm;zc_Object_ImportSetting_ReturnOut'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 352
   end
 end

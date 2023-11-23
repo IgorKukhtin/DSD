@@ -63,6 +63,7 @@ type
     CodeUKTZED: TcxGridDBColumn;
     FormDispensingName: TcxGridDBColumn;
     Measure: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

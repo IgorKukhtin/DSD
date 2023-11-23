@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OrderKindId Integer, OrderKindName TVarChar
              , Comment TVarChar, isUseNDSKind Boolean
              , isConduct Boolean, DateConduct TDateTime
+             , isEditAmountManual Boolean
               )
 AS
 $BODY$
@@ -83,6 +84,7 @@ BEGIN
              , false                                            AS isUseNDSKind  
              , false                                            AS isConduct 
              , NULL ::TDateTime                                 AS DateConduct
+             , vbUserId IN (3, 59591, 183242, 4183126)          AS isEditAmountManual
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -174,6 +176,7 @@ BEGIN
           , COALESCE (MovementBoolean_Conduct.ValueData, FALSE)               AS isConduct
           , MovementDate_Conduct.ValueData                                    AS DateConduct
 
+          , vbUserId IN (3, 59591, 183242, 4183126)                           AS isEditAmountManual
         FROM Movement_Income
              LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
              LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
