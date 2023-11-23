@@ -565,7 +565,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           end
           object Amount_LakFrom: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1087#1086#1089#1083#1077' '#1083#1072#1082'-'#1080#1103
-            DataBinding.FieldName = 'Amount_LakFrom'
+            DataBinding.FieldName = 'CountReal_LakFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

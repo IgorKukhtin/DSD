@@ -31,11 +31,15 @@ BEGIN
    -- проверка прав уникальности дл€ свойства <Ќаименование>
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_SubjectDoc(), inName);
    IF EXISTS (SELECT Object.ValueData 
-              FROM Object 
+              FROM Object
+                   LEFT JOIN ObjectLink AS ObjectLink_Reason
+                                        ON ObjectLink_Reason.ObjectId = Object.Id 
+                                       AND ObjectLink_Reason.DescId = zc_ObjectLink_SubjectDoc_Reason()
               WHERE Object.DescId = zc_Object_SubjectDoc() 
                 AND TRIM (Object.ValueData) = TRIM (inName)
                 AND Object.Id <> COALESCE(ioId, 0) 
                 AND ((Object.ObjectCode < 1001 AND vbCode_calc < 1001) OR (Object.ObjectCode > 1001 AND vbCode_calc > 1000)) 
+                AND COALESCE (inReasonId,0) = COALESCE (ObjectLink_Reason.ChildObjectId,0)
               )
    THEN
       RAISE EXCEPTION '«начение "%" не уникально', inName;
