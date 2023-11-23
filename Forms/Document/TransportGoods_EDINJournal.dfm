@@ -1089,7 +1089,6 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       UpdateUuid = spUpdate_Uuid
       UpdateKATOTTG = spUpdate_Partner_KATOTTG
       UpdateError = spUpdate_CommentError
-      EDINActions = edinSendSingETTN
     end
     object actExecSelect_eTTN_Send: TdsdExecStoredProc
       Category = 'Send_ETTN'

@@ -132,7 +132,7 @@ BEGIN
 
        WHERE MovementItem.DescId = zc_MI_Master()
          AND MovementItem.MovementId = inMovementId
-         AND (MovementItem.isErased = FALSE AND MovementItem.Amount > 0 AND COALESCE(MIString_Comment.ValueData , '') = ''  OR inIsErased = TRUE)
+         AND (MovementItem.isErased = FALSE AND MovementItem.Amount > 0 /*AND COALESCE(MIString_Comment.ValueData , '') = ''*/  OR inIsErased = TRUE)
        ORDER BY MIFloat_Number.ValueData
        ;
 

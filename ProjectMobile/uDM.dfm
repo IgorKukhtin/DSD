@@ -2307,6 +2307,7 @@ object DM: TDM
   end
   object tblObject_SubjectDoc: TFDTable
     Connection = conMain
+    ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'Object_SubjectDoc'
     Left = 624
     Top = 588
@@ -2320,6 +2321,14 @@ object DM: TDM
       FieldName = 'ValueData'
       Size = 255
     end
+    object tblObject_SubjectDocBaseName: TStringField
+      FieldName = 'BaseName'
+      Size = 255
+    end
+    object tblObject_SubjectDocCauseName: TStringField
+      FieldName = 'CauseName'
+      Size = 255
+    end
     object BooleanField1: TBooleanField
       FieldName = 'isErased'
     end
@@ -2329,6 +2338,8 @@ object DM: TDM
     SQL.Strings = (
       'select ID '
       '     , VALUEDATA  '
+      '     , BaseName  '
+      '     , CauseName  '
       'from OBJECT_SUBJECTDOC os'
       'where os.ISERASED = 0')
     Left = 200
@@ -2338,6 +2349,14 @@ object DM: TDM
     end
     object qrySubjectDocValueData: TStringField
       FieldName = 'ValueData'
+      Size = 255
+    end
+    object qrySubjectDocBaseName: TStringField
+      FieldName = 'BaseName'
+      Size = 255
+    end
+    object qrySubjectDocCauseName: TStringField
+      FieldName = 'CauseName'
       Size = 255
     end
   end

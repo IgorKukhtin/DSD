@@ -1,6 +1,6 @@
 -- Function: gpSelectMobile_Object_SubjectDoc()
 
-DROP FUNCTION IF EXISTS gpSelectMobile_Object_SubjectDoc(TVarChar);
+DROP FUNCTION IF EXISTS gpSelectMobile_Object_SubjectDoc(TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelectMobile_Object_SubjectDoc(
     IN inSyncDateIn  TDateTime, -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_SubjectDoc(
 RETURNS TABLE (Id         Integer
              , ObjectCode Integer  -- Код
              , ValueData  TVarChar -- Название
+             , BaseName   TVarChar -- Основание
+             , CauseName  TVarChar -- Причина
              , isErased   boolean  -- Удаленный ли элемент
              , isSync     Boolean  -- Синхронизируется (да/нет)
              ) 
@@ -31,12 +33,11 @@ BEGIN
          SELECT 
                 Object_SubjectDoc.Id         AS Id 
               , Object_SubjectDoc.ObjectCode AS Code
-              , (COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData) ||
-                 CASE WHEN COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData, '') <> '' 
-                      THEN ' ' || COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData, '')
-                      ELSE '' END) :: TVarChar   AS Name
-              , Object_SubjectDoc.isErased   AS isErased
-              , TRUE AS isSync
+              , COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData) :: TVarChar   AS Name
+              , Object_SubjectDoc.ValueData                                                                           AS BaseName
+              , COALESCE(NULLIF(ObjectString_Reason_Short.valuedata, ''), Object_Reason.ValueData, '') :: TVarChar    AS CauseName
+              , NOT Object_SubjectDoc.isErased AS isErased
+              , TRUE   AS isSync
          FROM Object AS Object_SubjectDoc
 
               LEFT JOIN ObjectString AS ObjectString_Subject_Short
@@ -52,7 +53,9 @@ BEGIN
                                      ON ObjectString_Reason_Short.ObjectId = Object_Reason.Id 
                                     AND ObjectString_Reason_Short.DescId = zc_ObjectString_Reason_Short()
 
-         WHERE Object_SubjectDoc.DescId = zc_Object_SubjectDoc();
+         WHERE Object_SubjectDoc.DescId = zc_Object_SubjectDoc()
+           AND Object_SubjectDoc.isErased = TRUE
+           AND Object_SubjectDoc.ObjectCode > 1000;
       END IF;
   
 END;$BODY$
@@ -70,5 +73,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- 
-SELECT * FROM gpSelectMobile_Object_SubjectDoc(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_SubjectDoc(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())

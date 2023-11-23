@@ -854,6 +854,7 @@ type
     bsSubDataSource: TBindSourceDB;
     LinkListControlToField21: TLinkListControlToField;
     bClearSubjectDoc: TButton;
+    bSubjectDoc: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1092,6 +1093,7 @@ type
     procedure eSubjectDocClick(Sender: TObject);
     procedure btCloseSubjectDocClick(Sender: TObject);
     procedure bClearSubjectDocClick(Sender: TObject);
+    procedure bSubjectDocClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1258,6 +1260,9 @@ type
     procedure ShowBigMap;
 
     function fOptimizeDB : Boolean;
+
+    property ReturnInSubjectDocId: Integer read FReturnInSubjectDocId;
+    property ReturnInSubjectDocName: String read FReturnInSubjectDocName;
 
   end;
 
@@ -3118,6 +3123,8 @@ begin
 
   lwReturnInItems.ScrollViewPos := 0;
   SwitchToForm(tiReturnIn, nil);
+
+  if FReturnInSubjectDocId = 0 then eSubjectDocClick(Nil);
 end;
 
 { создание новых или редактирование ранее введенных "оплат" }
@@ -3359,6 +3366,12 @@ end;
 // переход на форму выбора товаров для возврата
 procedure TfrmMain.bAddReturnInItemClick(Sender: TObject);
 begin
+  if FReturnInSubjectDocId = 0 then
+  begin
+    ShowMessage('Не заполнена причина возврата.'#13#10#13#10'Добвлять товар запрещено.');
+    Exit;
+  end;
+
   DM.GenerateReturnInItemsList;
 
   lPromoPrice.Visible := false;
@@ -3474,13 +3487,15 @@ procedure TfrmMain.bClearSubjectDocClick(Sender: TObject);
 begin
   if FSubjectDocItem = 'ReturnIn' then
   begin
-    FReturnInSubjectDocId := 0;
-    FReturnInSubjectDocName := 'Без причины';
+    ShowMessage('Очищать причину возврата в документе возврат покупателя запрещено.');
+    Exit;
+//    FReturnInSubjectDocId := 0;
+//    FReturnInSubjectDocName := 'Без причины';
   end else if FSubjectDocItem = 'ReturnInItem' then
   begin
     DM.cdsReturnInItems.Edit;
-    DM.cdsReturnInItemsSubjectDocId.AsInteger := 0;
-    DM.cdsReturnInItemsSubjectDocName.AsString := 'Без причины';
+    DM.cdsReturnInItemsSubjectDocId.AsInteger := FReturnInSubjectDocId;
+    DM.cdsReturnInItemsSubjectDocName.AsString := FReturnInSubjectDocName; //'Без причины';
     DM.cdsReturnInItems.Post;
   end;
 
@@ -4673,6 +4688,13 @@ begin
 
   TDialogService.MessageDialog(Mes, TMsgDlgType.mtWarning,
     [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SetPartnerCoordinates);
+end;
+
+procedure TfrmMain.bSubjectDocClick(Sender: TObject);
+begin
+  DM.GenerateReturnInSubjectDoc;
+
+  SwitchToForm(tiSubjectDoc, Nil);
 end;
 
 // переход на форму синхронизации

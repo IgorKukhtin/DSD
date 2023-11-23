@@ -825,6 +825,10 @@ type
     qrySubjectDocId: TIntegerField;
     qrySubjectDocValueData: TStringField;
     cdsReturnInItemsCurrencyName: TStringField;
+    tblObject_SubjectDocBaseName: TStringField;
+    qrySubjectDocBaseName: TStringField;
+    tblObject_SubjectDocCauseName: TStringField;
+    qrySubjectDocCauseName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -5353,6 +5357,12 @@ begin
     cdsReturnInItemsSubjectDocId.AsString := '0';      // Причина возврата
     cdsReturnInItemsSubjectDocName.AsString := 'Без причины'
   end;
+  if DM.cdsReturnInItemsSubjectDocId.AsInteger = 0 then
+  begin
+    DM.cdsReturnInItemsSubjectDocId.AsInteger := frmMain.ReturnInSubjectDocId;
+    DM.cdsReturnInItemsSubjectDocName.AsString := frmMain.ReturnInSubjectDocName;
+  end;
+
   cdsReturnInItemsCurrencyName.AsString := 'грн.';
 
 // ShowMessage(IntToStr(Length(ArrValue)));

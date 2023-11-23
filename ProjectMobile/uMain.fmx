@@ -810,7 +810,7 @@ object frmMain: TfrmMain
       Size.Height = 508.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 14
+      TabIndex = 2
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
@@ -3000,7 +3000,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -3025,7 +3025,7 @@ object frmMain: TfrmMain
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPriceListStyle1'
-            TabOrder = 2
+            TabOrder = 3
             Text = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
             OnClick = bPriceListClick
           end
@@ -3037,7 +3037,7 @@ object frmMain: TfrmMain
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bRouteStyle1'
-            TabOrder = 3
+            TabOrder = 4
             Text = #1052#1072#1088#1096#1088#1091#1090#1099
             OnClick = bRouteClick
           end
@@ -3049,7 +3049,7 @@ object frmMain: TfrmMain
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPartnersStyle1'
-            TabOrder = 4
+            TabOrder = 5
             Text = #1058#1086#1088#1075#1086#1074#1099#1077' '#1090#1086#1095#1082#1080
             OnClick = bPartnersClick
           end
@@ -3076,6 +3076,18 @@ object frmMain: TfrmMain
             TabOrder = 0
             Text = #1040#1082#1094#1080#1086#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
             OnClick = bPromoGoodsClick
+          end
+          object bSubjectDoc: TButton
+            Align = Top
+            Margins.Bottom = 1.000000000000000000
+            Position.Y = 307.000000000000000000
+            Size.Width = 332.000000000000000000
+            Size.Height = 60.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'bPriceListStyle1'
+            TabOrder = 2
+            Text = #1055#1088#1080#1095#1080#1085#1099' '#1074#1086#1079#1074#1088#1072#1090#1072
+            OnClick = bSubjectDocClick
           end
         end
       end
@@ -4625,7 +4637,7 @@ object frmMain: TfrmMain
           Size.Height = 508.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 1
+          TabIndex = 4
           TabOrder = 2
           TabPosition = PlatformDefault
           OnChange = tcPartnerInfoChange
@@ -5105,7 +5117,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style]
-            IsSelected = True
+            IsSelected = False
             Size.Width = 41.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -5424,7 +5436,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = False
+            IsSelected = True
             Size.Width = 41.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -7126,7 +7138,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -12494,7 +12506,7 @@ object frmMain: TfrmMain
           Size.Height = 448.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
-          ItemAppearance.ItemHeight = 25
+          ItemAppearance.ItemHeight = 42
           ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
             item
               AppearanceObjectName = 'Name'
@@ -12502,8 +12514,26 @@ object frmMain: TfrmMain
               Appearance.Font.Size = 11.000000000000000000
               Appearance.Font.StyleExt = {00070000000000000004000000}
               Appearance.TextAlign = Leading
-              Appearance.Width = 300.000000000000000000
-              Appearance.Height = 25.000000000000000000
+              Appearance.Width = 200.000000000000000000
+              Appearance.Height = 20.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'BaseName'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Width = 350.000000000000000000
+              Appearance.Height = 20.000000000000000000
+              Appearance.PlaceOffset.Y = 20.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'CauseName'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Width = 145.000000000000000000
+              Appearance.Height = 20.000000000000000000
+              Appearance.PlaceOffset.X = 205.000000000000000000
             end>
           ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
             item
@@ -21980,8 +22010,8 @@ object frmMain: TfrmMain
   object blMain: TBindingsList
     Methods = <>
     OutputConverters = <>
-    Left = 160
-    Top = 361
+    Left = 152
+    Top = 329
     object LinkListControlToField2: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsPartner
@@ -22587,6 +22617,14 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'ValueData'
           ControlMemberName = 'Name'
+        end
+        item
+          SourceMemberName = 'BaseName'
+          ControlMemberName = 'BaseName'
+        end
+        item
+          SourceMemberName = 'CauseName'
+          ControlMemberName = 'CauseName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
