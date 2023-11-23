@@ -368,7 +368,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Width = 894
     Height = 41
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 3
     object btnUpdate: TcxButton
       Left = 574
       Top = 7
@@ -397,9 +397,9 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     end
   end
   object cxLabel4: TcxLabel
-    Left = 17
-    Top = 29
-    Caption = #8470' '#1079#1072#1082#1072#1079#1072' :'
+    Left = 11
+    Top = 28
+    Caption = #8470' '#1079#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072':'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
@@ -409,8 +409,8 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Style.IsFontAssigned = True
   end
   object edInvNumber_OrderClient: TcxTextEdit
-    Left = 96
-    Top = 29
+    Left = 139
+    Top = 28
     TabOrder = 8
     DesignSize = (
       123
