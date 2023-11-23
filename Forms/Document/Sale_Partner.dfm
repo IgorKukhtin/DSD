@@ -2562,6 +2562,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1192
       Top = 144
     end
@@ -2894,7 +2895,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      Visible = True
     end
     inherited dxBarStatic: TdxBarStatic
       Caption = '    '
@@ -3856,6 +3856,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Control = edReestrKind
+      end
+      item
+        Control = edReturnIn
       end>
     Left = 232
     Top = 193

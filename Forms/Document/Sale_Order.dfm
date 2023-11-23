@@ -2712,6 +2712,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1208
       Top = 168
     end
@@ -3080,7 +3081,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      Visible = True
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale
@@ -4107,6 +4107,9 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Control = edReestrKind
+      end
+      item
+        Control = edReturnIn
       end>
     Left = 232
     Top = 193

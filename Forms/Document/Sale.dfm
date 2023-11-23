@@ -4438,6 +4438,7 @@ inherited SaleForm: TSaleForm
         Control = edReestrKind
       end
       item
+        Control = edReturnIn
       end>
     Left = 232
     Top = 193
@@ -6202,8 +6203,8 @@ inherited SaleForm: TSaleForm
         Control = edInvNumberTransport
       end>
     GetStoredProc = spGet
-    Left = 256
-    Top = 273
+    Left = 248
+    Top = 313
   end
   object spSelectPrintReturnInDay: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_PrintDay'
