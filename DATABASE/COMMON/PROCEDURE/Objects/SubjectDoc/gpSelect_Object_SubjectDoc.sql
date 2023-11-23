@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_SubjectDoc()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_SubjectDoc(TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_SubjectDoc(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_SubjectDoc(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_SubjectDoc(
+    IN inShowAll     Boolean  ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Short TVarChar
@@ -41,7 +43,9 @@ $BODY$BEGIN
                              ON ObjectLink_Reason.ObjectId = Object_SubjectDoc.Id 
                             AND ObjectLink_Reason.DescId = zc_ObjectLink_SubjectDoc_Reason()
         LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = ObjectLink_Reason.ChildObjectId
-   WHERE Object_SubjectDoc.DescId = zc_Object_SubjectDoc();
+   WHERE Object_SubjectDoc.DescId = zc_Object_SubjectDoc()
+    AND (Object_SubjectDoc.isErased = FALSE OR inShowAll = TRUE)
+    ;
   
 END;$BODY$
 
@@ -58,4 +62,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_SubjectDoc('2')
+-- SELECT * FROM gpSelect_Object_SubjectDoc(FALSE, '2')

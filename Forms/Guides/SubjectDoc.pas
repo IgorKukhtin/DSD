@@ -69,6 +69,8 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     mactStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

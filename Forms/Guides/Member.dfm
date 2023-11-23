@@ -28,7 +28,8 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
+    ExplicitLeft = 256
+    ExplicitTop = 194
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -71,6 +72,7 @@ object MemberForm: TMemberForm
       end
       object GLN: TcxGridDBColumn
         DataBinding.FieldName = 'GLN'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
