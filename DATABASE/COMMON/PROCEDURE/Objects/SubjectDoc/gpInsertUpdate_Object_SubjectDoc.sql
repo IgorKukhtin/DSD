@@ -29,7 +29,18 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_SubjectDoc());
    
    -- проверка прав уникальности дл€ свойства <Ќаименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_SubjectDoc(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_SubjectDoc(), inName);
+   IF EXISTS (SELECT Object.ValueData 
+              FROM Object 
+              WHERE Object.DescId = zc_Object_SubjectDoc() 
+                AND TRIM (Object.ValueData) = TRIM (inName)
+                AND Object.Id <> COALESCE(ioId, 0) 
+                AND ((Object.ObjectCode < 1001 AND vbCode_calc < 1001) OR (Object.ObjectCode > 1001 AND vbCode_calc > 1000)) 
+              )
+   THEN
+      RAISE EXCEPTION '«начение "%" не уникально', inName;
+   END IF; 
+
    -- проверка прав уникальности дл€ свойства < од>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_SubjectDoc(), vbCode_calc);
 

@@ -1517,11 +1517,16 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsGroupUKTZED2() RETURNS Intege
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsGroupUKTZED2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsGroupUKTZED2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
+ --Загрузка  Основания для перемещения
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_SubjectDoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_SubjectDoc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SubjectDoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_SubjectDoc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 
+ 23.11.23         * Загрузка  Основания для перемещения 
  16.11.23         * Загрузка zc_Enum_ImportType_GoodsUKTZED2
                              zc_Enum_ImportType_GoodsGroupUKTZED2
  13.11.23         * Загрузка GoodsUKTZED, Загрузка GoodsGroupUKTZED
