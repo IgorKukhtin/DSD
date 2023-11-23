@@ -71,9 +71,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Width = 226
     end
     object cxLabel3: TcxLabel
-      Left = 751
+      Left = 771
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue

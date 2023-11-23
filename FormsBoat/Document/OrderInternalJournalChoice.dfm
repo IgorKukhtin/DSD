@@ -55,9 +55,9 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object lbSearchArticle: TcxLabel
-      Left = 474
+      Left = 406
       Top = 4
-      Caption = #8470' '#1076#1086#1082'.: '
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -67,7 +67,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Style.IsFontAssigned = True
     end
     object edInvNumber: TcxTextEdit
-      Left = 533
+      Left = 475
       Top = 5
       TabOrder = 5
       DesignSize = (
@@ -76,9 +76,9 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Width = 131
     end
     object cxLabel3: TcxLabel
-      Left = 687
+      Left = 623
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      Caption = #8470' '#1079#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -88,7 +88,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 763
+      Left = 751
       Top = 5
       TabOrder = 7
       DesignSize = (

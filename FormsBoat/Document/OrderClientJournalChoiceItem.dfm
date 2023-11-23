@@ -71,9 +71,9 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       Width = 226
     end
     object lbSearchArticle: TcxLabel
-      Left = 11
+      Left = 12
       Top = 33
-      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr:'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -83,7 +83,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       Style.IsFontAssigned = True
     end
     object edSearchArticle: TcxTextEdit
-      Left = 139
+      Left = 128
       Top = 32
       TabOrder = 7
       DesignSize = (
@@ -92,9 +92,9 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       Width = 125
     end
     object lbSearchCode: TcxLabel
-      Left = 276
+      Left = 292
       Top = 33
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -105,7 +105,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     end
     object edSearchInvNumber: TcxTextEdit
       Left = 361
-      Top = 34
+      Top = 32
       TabOrder = 9
       DesignSize = (
         115
@@ -113,7 +113,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       Width = 115
     end
     object lbSearchName: TcxLabel
-      Left = 485
+      Left = 487
       Top = 33
       Caption = #1059#1079#1077#1083' : '
       ParentFont = False
