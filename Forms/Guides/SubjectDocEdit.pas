@@ -43,6 +43,10 @@ type
     edReason: TcxButtonEdit;
     GuidesReason: TdsdGuides;
     cxLabel11: TcxLabel;
+    cxLabel3: TcxLabel;
+    edMovementDesc: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edComment: TcxTextEdit;
   private
     { Private declarations }
   public

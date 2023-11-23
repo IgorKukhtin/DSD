@@ -60,6 +60,8 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     Short: TcxGridDBColumn;
     ReasonName: TcxGridDBColumn;
+    MovementDesc: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

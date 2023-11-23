@@ -1600,9 +1600,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_SubjectDoc_MovementDesc() RETURNS Int
 INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
   SELECT zc_Object_SubjectDoc(), 'zc_ObjectString_SubjectDoc_MovementDesc', 'Вид документа' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SubjectDoc_MovementDesc');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_SubjectDoc_MovementDesc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SubjectDoc_MovementDesc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectString_SubjectDoc_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SubjectDoc_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
-  SELECT zc_Object_SubjectDoc(), 'zc_ObjectString_SubjectDoc_MovementDesc', 'Вид документа' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SubjectDoc_MovementDesc');
+  SELECT zc_Object_SubjectDoc(), 'zc_ObjectString_SubjectDoc_Comment', 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SubjectDoc_Comment');
 
 
                

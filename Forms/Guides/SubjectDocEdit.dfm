@@ -2,7 +2,7 @@ object SubjectDocEditForm: TSubjectDocEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100
-  ClientHeight = 247
+  ClientHeight = 339
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object SubjectDocEditForm: TSubjectDocEditForm
     Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 210
+    Left = 33
+    Top = 304
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object SubjectDocEditForm: TSubjectDocEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 210
+    Left = 177
+    Top = 304
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -72,7 +72,7 @@ object SubjectDocEditForm: TSubjectDocEditForm
   end
   object edReason: TcxButtonEdit
     Left = 10
-    Top = 167
+    Top = 164
     Properties.Buttons = <
       item
         Default = True
@@ -84,8 +84,30 @@ object SubjectDocEditForm: TSubjectDocEditForm
   end
   object cxLabel11: TcxLabel
     Left = 10
-    Top = 148
+    Top = 144
     Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' / '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 190
+    Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  end
+  object edMovementDesc: TcxTextEdit
+    Left = 10
+    Top = 209
+    TabOrder = 11
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 236
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edComment: TcxTextEdit
+    Left = 10
+    Top = 255
+    TabOrder = 13
+    Width = 273
   end
   object ActionList: TActionList
     Left = 152
@@ -162,6 +184,22 @@ object SubjectDocEditForm: TSubjectDocEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDesc'
+        Value = Null
+        Component = edMovementDesc
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -225,6 +263,20 @@ object SubjectDocEditForm: TSubjectDocEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementDesc'
+        Value = Null
+        Component = edMovementDesc
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -242,12 +294,12 @@ object SubjectDocEditForm: TSubjectDocEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 200
+    Left = 152
+    Top = 270
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 264
-    Top = 104
+    Left = 184
+    Top = 112
   end
   object GuidesReason: TdsdGuides
     KeyField = 'Id'

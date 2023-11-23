@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_SubjectDoc(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Short TVarChar
              , ReasonId Integer, ReasonName TVarChar
+             , MovementDesc TVarChar
+             , Comment TVarChar
              ) AS
 $BODY$
 BEGIN
@@ -24,7 +26,9 @@ BEGIN
            , CAST ('' as TVarChar)  AS Name
            , CAST ('' as TVarChar)  AS Short
            , CAST (0 as Integer)    AS ReasonId
-           , CAST ('' as TVarChar)  AS ReasonName
+           , CAST ('' as TVarChar)  AS ReasonName 
+           , CAST ('' as TVarChar)  AS MovementDesc
+           , CAST ('' as TVarChar)  AS Comment
            ;
    ELSE
        RETURN QUERY 
@@ -35,10 +39,18 @@ BEGIN
            , ObjectString_Short.ValueData ::TVarChar AS Short
            , Object_Reason.Id             AS ReasonId
            , Object_Reason.ValueData      AS ReasonName
+           , ObjectString_MovementDesc.ValueData ::TVarChar AS MovementDesc
+           , ObjectString_Comment.ValueData      ::TVarChar AS Comment
        FROM Object AS Object_SubjectDoc
            LEFT JOIN ObjectString AS ObjectString_Short
                                   ON ObjectString_Short.ObjectId = Object_SubjectDoc.Id 
                                  AND ObjectString_Short.DescId = zc_ObjectString_SubjectDoc_Short() 
+           LEFT JOIN ObjectString AS ObjectString_MovementDesc
+                                  ON ObjectString_MovementDesc.ObjectId = Object_SubjectDoc.Id 
+                                 AND ObjectString_MovementDesc.DescId = zc_ObjectString_SubjectDoc_MovementDesc()
+           LEFT JOIN ObjectString AS ObjectString_Comment
+                                  ON ObjectString_Comment.ObjectId = Object_SubjectDoc.Id 
+                                 AND ObjectString_Comment.DescId = zc_ObjectString_SubjectDoc_Comment()
 
            LEFT JOIN ObjectLink AS ObjectLink_Reason
                                 ON ObjectLink_Reason.ObjectId = Object_SubjectDoc.Id 

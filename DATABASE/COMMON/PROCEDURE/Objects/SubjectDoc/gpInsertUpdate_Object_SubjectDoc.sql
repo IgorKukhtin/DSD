@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_SubjectDoc()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SubjectDoc(Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SubjectDoc(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SubjectDoc(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SubjectDoc(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SubjectDoc(
  INOUT ioId             Integer   ,     -- ключ объекта <Регионы> 
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SubjectDoc(
     IN inName           TVarChar  ,     -- Название объекта 
     IN inShort          TVarChar  ,     -- Сокращенное название
     IN inReasonId       Integer   ,     -- Причина возврата / перемещения
+    IN inMovementDesc   TVarChar  , 
+    IN inComment        TVarChar  ,
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -36,6 +39,11 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SubjectDoc_Short(), ioId, inShort);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SubjectDoc_MovementDesc(), ioId, inMovementDesc);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SubjectDoc_Comment(), ioId, inComment);
+
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_SubjectDoc_Reason(), ioId, inReasonId);
    
