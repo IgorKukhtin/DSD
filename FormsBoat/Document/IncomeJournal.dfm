@@ -63,9 +63,9 @@ object IncomeJournalForm: TIncomeJournalForm
       Width = 131
     end
     object lbSearchArticle: TcxLabel
-      Left = 490
+      Left = 467
       Top = 4
-      Caption = #8470' '#1076#1086#1082'.: '
+      Caption = #8470' '#1087#1088#1080#1093#1086#1076': '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue

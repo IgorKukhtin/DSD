@@ -5,6 +5,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -134
   ExplicitWidth = 1044
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -331,8 +332,8 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Width = 1028
     ExplicitWidth = 1028
     object cxLabel6: TcxLabel
-      Left = 430
-      Top = 7
+      Left = 434
+      Top = 6
       Caption = 'Lieferanten / Kunden:'
     end
     object edClient: TcxButtonEdit

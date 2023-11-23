@@ -618,7 +618,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ExplicitLeft = 315
     end
     object cxLabel4: TcxLabel
-      Left = 630
+      Left = 631
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
@@ -669,7 +669,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 110
     end
     object lbSearchArticle: TcxLabel
-      Left = 423
+      Left = 422
       Top = 4
       Caption = #8470' '#1089#1095#1077#1090': '
       ParentFont = False
