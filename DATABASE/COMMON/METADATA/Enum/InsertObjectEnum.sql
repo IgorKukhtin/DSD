@@ -9982,13 +9982,13 @@ DO $$
     DECLARE vbImportSetting_SubjectDoc Integer;
     DECLARE vbId Integer;
 BEGIN
-    vbKey := 'TGoodsGroupForm;zc_Object_ImportSetting_SubjectDoc';
+    vbKey := 'TSubjectDocForm;zc_Object_ImportSetting_SubjectDoc';
 
     -- Добавляем ключ дефолта
     SELECT Id INTO vbDefaultKeyId FROM DefaultKeys WHERE Key = vbKey; 
 
     IF COALESCE(vbDefaultKeyId, 0) = 0 THEN 
-        INSERT INTO DefaultKeys(Key, KeyData) VALUES(vbKey, '{"FormClassName":"TGoodsGroupForm","DescName":"zc_Object_ImportSettings_SubjectDoc"}') RETURNING Id INTO vbDefaultKeyId;
+        INSERT INTO DefaultKeys(Key, KeyData) VALUES(vbKey, '{"FormClassName":"TSubjectDocForm","DescName":"zc_Object_ImportSettings_SubjectDoc"}') RETURNING Id INTO vbDefaultKeyId;
     END IF;
     SELECT ID INTO vbId
     FROM DefaultValue 
