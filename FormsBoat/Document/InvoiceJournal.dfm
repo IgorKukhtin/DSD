@@ -618,9 +618,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ExplicitLeft = 315
     end
     object cxLabel4: TcxLabel
-      Left = 437
+      Left = 630
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -630,7 +630,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Style.IsFontAssigned = True
     end
     object edSearchInvNumber_OrderClient: TcxTextEdit
-      Left = 518
+      Left = 699
       Top = 5
       TabOrder = 5
       DesignSize = (
@@ -639,7 +639,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 110
     end
     object edSearchInvNumber_Invoice: TcxTextEdit
-      Left = 703
+      Left = 487
       Top = 5
       TabOrder = 6
       DesignSize = (
@@ -669,9 +669,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 110
     end
     object lbSearchArticle: TcxLabel
-      Left = 635
+      Left = 423
       Top = 4
-      Caption = #8470' '#1089#1095#1077#1090#1072': '
+      Caption = #8470' '#1089#1095#1077#1090': '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
