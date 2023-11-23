@@ -7,18 +7,19 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 59
     Width = 669
-    Height = 413
+    Height = 380
     ExplicitWidth = 669
     ExplicitHeight = 413
-    ClientRectBottom = 413
+    ClientRectBottom = 380
     ClientRectRight = 669
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 669
       ExplicitHeight = 413
       inherited cxGrid: TcxGrid
         Width = 669
-        Height = 413
+        Height = 380
         ExplicitWidth = 669
         ExplicitHeight = 413
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -90,6 +91,37 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       Height = 25
       Action = actChoiceGuides
       TabOrder = 1
+    end
+  end
+  object Panel2: TPanel [2]
+    Left = 0
+    Top = 0
+    Width = 669
+    Height = 33
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = 8
+    ExplicitTop = -6
+    object lbSearchName: TcxLabel
+      Left = 6
+      Top = 6
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 80
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   inherited ActionList: TActionList
@@ -182,5 +214,18 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           ItemName = 'dxBarStatic'
         end>
     end
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 416
+    Top = 112
   end
 end

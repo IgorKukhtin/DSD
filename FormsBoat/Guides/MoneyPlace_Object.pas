@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+  Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel;
 
 type
   TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
@@ -33,6 +33,10 @@ type
     Panel_btn: TPanel;
     btnFormClose: TcxButton;
     btnChoiceGuides: TcxButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public
