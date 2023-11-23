@@ -4,6 +4,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -14,17 +15,17 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Height = 259
     TabOrder = 3
     ExplicitTop = 56
-    ExplicitWidth = 1094
+    ExplicitWidth = 1213
     ExplicitHeight = 259
     ClientRectBottom = 259
     ClientRectRight = 1213
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1094
+      ExplicitWidth = 1213
       ExplicitHeight = 259
       inherited cxGrid: TcxGrid
         Width = 1213
         Height = 259
-        ExplicitWidth = 1094
+        ExplicitWidth = 1213
         ExplicitHeight = 259
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -446,12 +447,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited Panel: TPanel
     Width = 1213
     Height = 30
-    ExplicitWidth = 1094
+    ExplicitWidth = 1213
     ExplicitHeight = 30
     object lbSearchArticle: TcxLabel
-      Left = 663
+      Left = 668
       Top = 4
-      Caption = #8470' '#1089#1095#1077#1090#1072': '
+      Caption = #8470' '#1089#1095#1077#1090': '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -491,9 +492,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Width = 131
     end
     object cxLabel4: TcxLabel
-      Left = 445
+      Left = 456
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -519,7 +520,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1094
     object btnInsert: TcxButton
       Left = 42
       Top = 7
