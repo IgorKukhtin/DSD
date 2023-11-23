@@ -1,4 +1,4 @@
-inherited AncestorEnumForm: TAncestorEnumForm
+inherited AncestorEnum_boatForm: TAncestorEnum_boatForm
   ActiveControl = cxGrid
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = actChoiceGuides
@@ -6,8 +6,6 @@ inherited AncestorEnumForm: TAncestorEnumForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.GoToNextCellOnEnter = False
@@ -21,7 +19,7 @@ inherited AncestorEnumForm: TAncestorEnumForm
     end
   end
   inherited ActionList: TActionList
-    object actChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides [2]
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -44,12 +42,6 @@ inherited AncestorEnumForm: TAncestorEnumForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 80
       DataSource = MasterDS
-    end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
     end
   end
   inherited BarManager: TdxBarManager

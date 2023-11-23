@@ -1,10 +1,10 @@
-unit AncestorDocumentMC;
+unit AncestorDocumentMC_boat;
 
 interface
 
 uses
   DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, dsdAddOn, dsdGuides, dsdDB,
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TAncestorDocumentMCForm = class(TAncestorDBGridForm)
+  TAncestorDocumentMC_boatForm = class(TAncestorDBGrid_boatForm)
     FormParams: TdsdFormParams;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;

@@ -1,15 +1,8 @@
-inherited AncestorEditDialogForm: TAncestorEditDialogForm
+inherited AncestorEditDialog_boatForm: TAncestorEditDialog_boatForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Width = 90
     Action = actInsertUpdateGuides
-    ExplicitWidth = 90
-  end
-  inherited bbCancel: TcxButton
-    Width = 90
-    Action = actFormClose
-    ExplicitWidth = 90
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 147
@@ -19,7 +12,6 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
     Top = 208
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Top = 207
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
@@ -28,13 +20,7 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
           StoredProc = spGet
         end>
     end
-    object actFormClose: TdsdFormClose
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      ImageIndex = 52
-    end
-    object actInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdateGuides: TdsdInsertUpdateGuides [1]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False

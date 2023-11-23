@@ -1,10 +1,10 @@
-unit AncestorJournal;
+unit AncestorJournal_boat;
 
 interface
 
 uses
   DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdAddOn, dxBarExtItems,
   dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
@@ -26,7 +26,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TAncestorJournalForm = class(TAncestorDBGridForm)
+  TAncestorJournal_boatForm = class(TAncestorDBGrid_boatForm)
     Panel: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -80,7 +80,6 @@ type
     mactReCompleteList: TMultiAction;
     bbMovementProtocol: TdxBarButton;
     actMovementProtocolOpenForm: TdsdOpenForm;
-    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public

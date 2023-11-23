@@ -1,4 +1,4 @@
-inherited AncestorJournalForm: TAncestorJournalForm
+inherited AncestorJournal_boatForm: TAncestorJournal_boatForm
   ClientHeight = 675
   ClientWidth = 850
   AddOnFormData.isSingle = False
@@ -195,7 +195,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object actInsert: TdsdInsertUpdateAction
+    object actInsert: TdsdInsertUpdateAction [5]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -229,7 +229,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actInsertMask: TdsdInsertUpdateAction
+    object actInsertMask: TdsdInsertUpdateAction [6]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
@@ -250,7 +250,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actUpdate: TdsdInsertUpdateAction
+    object actUpdate: TdsdInsertUpdateAction [7]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -288,7 +288,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actComplete: TdsdChangeMovementStatus
+    object actComplete: TdsdChangeMovementStatus [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementComplete
@@ -302,7 +302,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Status = mtComplete
       DataSource = MasterDS
     end
-    object actUnComplete: TdsdChangeMovementStatus
+    object actUnComplete: TdsdChangeMovementStatus [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementUnComplete
@@ -316,7 +316,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Status = mtUncomplete
       DataSource = MasterDS
     end
-    object actSetErased: TdsdChangeMovementStatus
+    object actSetErased: TdsdChangeMovementStatus [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementSetErased
@@ -330,7 +330,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Status = mtDelete
       DataSource = MasterDS
     end
-    object mactReCompleteList: TMultiAction
+    object mactReCompleteList: TMultiAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -346,7 +346,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 77
     end
-    object mactCompleteList: TMultiAction
+    object mactCompleteList: TMultiAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -362,7 +362,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 77
     end
-    object mactUnCompleteList: TMultiAction
+    object mactUnCompleteList: TMultiAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -378,7 +378,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 76
     end
-    object mactSetErasedList: TMultiAction
+    object mactSetErasedList: TMultiAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -394,7 +394,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 52
     end
-    object mactSimpleReCompleteList: TMultiAction
+    object mactSimpleReCompleteList: TMultiAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -405,7 +405,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object mactSimpleCompleteList: TMultiAction
+    object mactSimpleCompleteList: TMultiAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -416,7 +416,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object mactSimpleUncompleteList: TMultiAction
+    object mactSimpleUncompleteList: TMultiAction [17]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -427,7 +427,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object mactSimpleErasedList: TMultiAction
+    object mactSimpleErasedList: TMultiAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -438,7 +438,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object spReCompete: TdsdExecStoredProc
+    object spReCompete: TdsdExecStoredProc [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -449,7 +449,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end>
       Caption = 'spReCompete'
     end
-    object spCompete: TdsdExecStoredProc
+    object spCompete: TdsdExecStoredProc [20]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -460,7 +460,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end>
       Caption = 'spCompete'
     end
-    object spUncomplete: TdsdExecStoredProc
+    object spUncomplete: TdsdExecStoredProc [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -471,7 +471,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end>
       Caption = 'spUncomplete'
     end
-    object spErased: TdsdExecStoredProc
+    object spErased: TdsdExecStoredProc [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -482,9 +482,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end>
       Caption = 'spErased'
     end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
+    inherited actFormClose: TdsdFormClose
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end

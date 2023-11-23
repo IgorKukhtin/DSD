@@ -1,4 +1,4 @@
-inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
+inherited AncestorDocumentMC_boatForm: TAncestorDocumentMC_boatForm
   ClientHeight = 674
   ClientWidth = 935
   AddOnFormData.isSingle = False
@@ -261,7 +261,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
     end
-    object actMISetErased: TdsdUpdateErased
+    object actMISetErased: TdsdUpdateErased [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIMaster
@@ -277,7 +277,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actMISetUnErased: TdsdUpdateErased
+    object actMISetUnErased: TdsdUpdateErased [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIMaster
@@ -293,7 +293,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object actInsertUpdateMovement: TdsdExecStoredProc
+    object actInsertUpdateMovement: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -307,7 +307,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object actShowErased: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -326,7 +326,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object actShowAll: TBooleanStoredProcAction
+    object actShowAll: TBooleanStoredProcAction [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -345,7 +345,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actUpdateMainDS: TdsdUpdateDataSet
+    object actUpdateMainDS: TdsdUpdateDataSet [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -357,7 +357,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
     end
-    object actPrint: TdsdPrintAction
+    object actPrint: TdsdPrintAction [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -375,13 +375,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
-    end
-    object actAddMask: TdsdExecStoredProc
+    object actAddMask: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -397,7 +391,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
-    object actInsertRecordChild: TInsertRecord
+    object actInsertRecordChild: TInsertRecord [10]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -409,7 +403,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ShortCut = 45
       ImageIndex = 0
     end
-    object actMIChildSetErased: TdsdUpdateErased
+    object actMIChildSetErased: TdsdUpdateErased [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIChild
@@ -425,7 +419,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       DataSource = ChildDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actMIChildSetUnErased: TdsdUpdateErased
+    object actMIChildSetUnErased: TdsdUpdateErased [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIChild
@@ -441,7 +435,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       isSetErased = False
       DataSource = ChildDS
     end
-    object actMIContainer: TdsdOpenForm
+    object actMIContainer: TdsdOpenForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -462,7 +456,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = False
     end
-    object actMIMasterProtocol: TdsdOpenForm
+    object actMIMasterProtocol: TdsdOpenForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
@@ -483,7 +477,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = False
     end
-    object actMIChildProtocol: TdsdOpenForm
+    object actMIChildProtocol: TdsdOpenForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1088#1072#1089#1093#1086#1076')>'
@@ -504,7 +498,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = False
     end
-    object actGoodsChoiceMaster: TOpenChoiceForm
+    object actGoodsChoiceMaster: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -538,7 +532,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = True
     end
-    object actGoodsChoiceChild: TOpenChoiceForm
+    object actGoodsChoiceChild: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -572,7 +566,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = True
     end
-    object actUnCompleteMovement: TChangeGuidesStatus
+    object actUnCompleteMovement: TChangeGuidesStatus [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -587,7 +581,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
-    object actCompleteMovement: TChangeGuidesStatus
+    object actCompleteMovement: TChangeGuidesStatus [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -602,7 +596,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object actDeleteMovement: TChangeGuidesStatus
+    object actDeleteMovement: TChangeGuidesStatus [20]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus

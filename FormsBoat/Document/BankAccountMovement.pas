@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEditDialog, cxGraphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEditDialog_boat, cxGraphics,
   cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dsdDB, dsdAction,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
   cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
@@ -22,7 +22,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TBankAccountMovementForm = class(TAncestorEditDialogForm)
+  TBankAccountMovementForm = class(TAncestorEditDialog_boatForm)
     Код: TcxLabel;
     cxLabel1: TcxLabel;
     ceOperDate: TcxDateEdit;

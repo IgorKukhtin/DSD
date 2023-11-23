@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
@@ -24,7 +24,7 @@ uses
   dxSkinXmas2008Blue, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
 
 type
-  TPaidKindForm = class(TAncestorEnumForm)
+  TPaidKindForm = class(TAncestorEnum_boatForm)
     Name: TcxGridDBColumn;
     Code: TcxGridDBColumn;
     Panel_btn: TPanel;

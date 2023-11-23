@@ -1,17 +1,13 @@
-unit ObjectDesc;
+unit AncestorDialog_boat;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum_boat, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter,
-  cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdAddOn, dxBarExtItems,
-  dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
-  cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxPC, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
+  cxPropertiesStore, dsdAddOn, cxGraphics, cxLookAndFeels,
+  cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, dsdDB, dxSkinsCore,
+  dxSkinsDefaultPainters, DataModul, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
   dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
   dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
   dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
@@ -21,12 +17,15 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  {$IFDEF VER330} Actions, {$ENDIF} cxClasses;
 
 type
-  TObjectDescForm = class(TAncestorEnum_boatForm)
-    Name: TcxGridDBColumn;
-    Code: TcxGridDBColumn;
+  TAncestorDialog_boatForm = class(TAncestorBaseForm)
+    bbOk: TcxButton;
+    bbCancel: TcxButton;
+    FormParams: TdsdFormParams;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public
@@ -36,8 +35,5 @@ type
 implementation
 
 {$R *.dfm}
-
-initialization
-  RegisterClass(TObjectDescForm);
 
 end.

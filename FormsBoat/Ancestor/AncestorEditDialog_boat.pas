@@ -1,10 +1,10 @@
-unit AncestorEditDialog;
+unit AncestorEditDialog_boat;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, cxGraphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog_boat, cxGraphics,
   cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dsdDB, Vcl.ActnList,
   dsdAction, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
@@ -20,10 +20,9 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TAncestorEditDialogForm = class(TAncestorDialogForm)
+  TAncestorEditDialog_boatForm = class(TAncestorDialog_boatForm)
     spInsertUpdate: TdsdStoredProc;
     spGet: TdsdStoredProc;
-    actFormClose: TdsdFormClose;
     actInsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }

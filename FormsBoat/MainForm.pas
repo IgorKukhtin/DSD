@@ -300,6 +300,7 @@ type
     btnReceiptProdModel: TcxButton;
     btnReceiptGoods: TcxButton;
     actExit_btn: TAction;
+    actSale_noDialog: TdsdOpenForm;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private

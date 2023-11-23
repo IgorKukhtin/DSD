@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
@@ -25,7 +25,7 @@ uses
   cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls, cxCurrencyEdit;
 
 type
-  TPartionGoodsChoiceForm = class(TAncestorEnumForm)
+  TPartionGoodsChoiceForm = class(TAncestorEnum_boatForm)
     OperDate: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;

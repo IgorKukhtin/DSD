@@ -1,10 +1,10 @@
-unit AncestorEnum;
+unit AncestorEnum_boat;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdAddOn, dxBarExtItems,
   dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
@@ -24,10 +24,9 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TAncestorEnumForm = class(TAncestorDBGridForm)
+  TAncestorEnum_boatForm = class(TAncestorDBGrid_boatForm)
     actChoiceGuides: TdsdChoiceGuides;
     bbChoice: TdxBarButton;
-    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public

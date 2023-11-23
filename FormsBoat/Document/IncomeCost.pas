@@ -3,7 +3,7 @@ unit IncomeCost;
 interface
 
 uses
-   AncestorEditDialog, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
+   AncestorEditDialog_boat, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
   Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
@@ -21,7 +21,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TIncomeCostForm = class(TAncestorEditDialogForm)
+  TIncomeCostForm = class(TAncestorEditDialog_boatForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     ceOperDate: TcxDateEdit;

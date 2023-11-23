@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorJournal, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorJournal_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   cxImageComboBox, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, Vcl.Menus,
@@ -28,7 +28,7 @@ uses
   Vcl.StdCtrls, cxButtons;
 
 type
-  TUnion_OrderJournalChoiceForm = class(TAncestorJournalForm)
+  TUnion_OrderJournalChoiceForm = class(TAncestorJournal_boatForm)
     ProductName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;

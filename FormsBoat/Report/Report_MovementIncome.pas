@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorReport, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorReport_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, dxBarBuiltInMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB,
   cxDBData, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, dsdAddOn,
@@ -28,7 +28,7 @@ uses
   dsdInternetAction;
 
 type
-  TReport_MovementIncomeForm = class(TAncestorReportForm)
+  TReport_MovementIncomeForm = class(TAncestorReport_boatForm)
     cxLabel3: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;

@@ -1,13 +1,9 @@
-inherited AncestorGuidesForm: TAncestorGuidesForm
+inherited AncestorGuides_boatForm: TAncestorGuides_boatForm
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -20,7 +16,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
     end
   end
   inherited ActionList: TActionList
-    object actInsert: TInsertUpdateChoiceAction
+    object actInsert: TInsertUpdateChoiceAction [2]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -41,7 +37,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actUpdate: TdsdInsertUpdateAction
+    object actUpdate: TdsdInsertUpdateAction [3]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -66,7 +62,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object dsdSetUnErased: TdsdUpdateErased [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -82,7 +78,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object dsdSetErased: TdsdUpdateErased
+    object dsdSetErased: TdsdUpdateErased [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -97,7 +93,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object dsdChoiceGuides: TdsdChoiceGuides [6]
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -116,12 +112,12 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = MasterDS
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object ProtocolOpenForm: TdsdOpenForm [7]
       Category = #1055#1088#1086#1090#1086#1082#1086#1083
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -162,6 +158,10 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -177,7 +177,6 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
           ItemName = 'bbUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -187,10 +186,13 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -204,8 +206,17 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+      ShowCaption = False
     end
     object bbInsert: TdxBarButton
       Action = actInsert

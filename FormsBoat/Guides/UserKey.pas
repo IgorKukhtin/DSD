@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
@@ -13,7 +13,7 @@ uses
   cxGrid, cxPC;
 
 type
-  TUserKeyForm = class(TAncestorEnumForm)
+  TUserKeyForm = class(TAncestorEnum_boatForm)
     colDescName: TcxGridDBColumn;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;

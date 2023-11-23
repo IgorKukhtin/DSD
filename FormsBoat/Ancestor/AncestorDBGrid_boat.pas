@@ -1,17 +1,16 @@
-unit MovementDescForms;
+unit AncestorDBGrid_boat;
 
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid_boat, cxGraphics, cxControls,
+  DataModul, Winapi.Windows, AncestorData, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
-  Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
-  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit, DataModul, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, dxSkinBlack, dxSkinBlue,
+  Vcl.Menus, dsdAddOn, dsdAction, cxGridLevel, cxClasses, cxGridCustomView,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
+  Vcl.Controls, dxBarExtItems, dxBar, dsdDB, Datasnap.DBClient, System.Classes,
+  Vcl.ActnList, cxPropertiesStore, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinsdxBarPainter, dxSkinscxPCPainter, dxSkinBlack, dxSkinBlue,
   dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
   dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
   dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
@@ -24,13 +23,19 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TMovementDescDataForm = class(TAncestorDBGrid_boatForm)
-    colDocumentName: TcxGridDBColumn;
-    colFormName: TcxGridDBColumn;
-    colDocumentDesc: TcxGridDBColumn;
-    actOpenMovementForm: TOpenChoiceForm;
-    InsertUpdateForm: TdsdStoredProc;
-    actInsertUpdateForm: TdsdUpdateDataSet;
+  TAncestorDBGrid_boatForm = class(TAncestorDataForm)
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridLevel: TcxGridLevel;
+    DBViewAddOn: TdsdDBViewAddOn;
+    actGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
+    PageControl: TcxPageControl;
+    tsMain: TcxTabSheet;
+    PopupMenu: TPopupMenu;
+    Excel1: TMenuItem;
+    N1: TMenuItem;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public
@@ -40,9 +45,5 @@ type
 implementation
 
 {$R *.dfm}
-
-initialization
-
-  RegisterClass(TMovementDescDataForm);
 
 end.

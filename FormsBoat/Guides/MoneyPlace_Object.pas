@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
@@ -25,7 +25,7 @@ uses
   Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel;
 
 type
-  TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
+  TMoneyPlace_ObjectForm = class(TAncestorEnum_boatForm)
     ItemName: TcxGridDBColumn;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;

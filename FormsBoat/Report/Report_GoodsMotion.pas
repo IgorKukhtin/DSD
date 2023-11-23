@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorReport, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorReport_boat, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, cxContainer, Vcl.ComCtrls,
@@ -27,7 +27,7 @@ uses
   cxBlobEdit;
 
 type
-  TReport_GoodsMotionForm = class(TAncestorReportForm)
+  TReport_GoodsMotionForm = class(TAncestorReport_boatForm)
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;

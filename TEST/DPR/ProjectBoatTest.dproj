@@ -159,36 +159,40 @@
 				<Form>AncestorDataForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorDBGrid.pas">
-				<Form>AncestorDBGridForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDBGrid_boat.pas">
+				<Form>AncestorDBGrid_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorDialog.pas">
-				<Form>AncestorDialogForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDialog_boat.pas">
+				<Form>AncestorDialog_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDocument.pas">
-				<Form>AncestorDocumentForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDocument_boat.pas">
+				<Form>AncestorDocument_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDocumentMC.pas">
-				<Form>AncestorDocumentMCForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorDocumentMC_boat.pas">
+				<Form>AncestorDocumentMC_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorEditDialog.pas">
-				<Form>AncestorEditDialogForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorEditDialog_boat.pas">
+				<Form>AncestorEditDialog_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorEnum.pas">
-				<Form>AncestorEnumForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorEnum_boat.pas">
+				<Form>AncestorEnum_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorGuides.pas">
-				<Form>AncestorGuidesForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorGuides_boat.pas">
+				<Form>AncestorGuides_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorJournal.pas">
-				<Form>AncestorJournalForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorJournal_boat.pas">
+				<Form>AncestorJournal_boatForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Ancestor\AncestorReport_boat.pas">
+				<Form>AncestorReport_boatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
@@ -224,10 +228,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\Protocol.pas">
 				<Form>ProtocolForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
-				<Form>AncestorReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>

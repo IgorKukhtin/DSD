@@ -1,4 +1,4 @@
-inherited AncestorDocumentForm: TAncestorDocumentForm
+inherited AncestorDocument_boatForm: TAncestorDocument_boatForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
   ClientHeight = 416
   ClientWidth = 829
@@ -124,7 +124,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
     end
-    object actMISetErased: TdsdUpdateErased
+    object actMISetErased: TdsdUpdateErased [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIMaster
@@ -143,7 +143,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actMISetUnErased: TdsdUpdateErased
+    object actMISetUnErased: TdsdUpdateErased [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIMaster
@@ -162,7 +162,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object actInsertUpdateMovement: TdsdExecStoredProc
+    object actInsertUpdateMovement: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -176,7 +176,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object actShowErased: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -195,7 +195,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object actShowAll: TBooleanStoredProcAction
+    object actShowAll: TBooleanStoredProcAction [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -214,7 +214,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actUpdateMainDS: TdsdUpdateDataSet
+    object actUpdateMainDS: TdsdUpdateDataSet [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -229,7 +229,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
     end
-    object actPrint: TdsdPrintAction
+    object actPrint: TdsdPrintAction [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -247,7 +247,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUnCompleteMovement: TChangeGuidesStatus
+    object actUnCompleteMovement: TChangeGuidesStatus [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -260,7 +260,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
-    object actCompleteMovement: TChangeGuidesStatus
+    object actCompleteMovement: TChangeGuidesStatus [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -273,7 +273,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object actDeleteMovement: TChangeGuidesStatus
+    object actDeleteMovement: TChangeGuidesStatus [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -286,7 +286,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Status = mtDelete
       Guides = StatusGuides
     end
-    object actMovementItemContainer: TdsdOpenForm
+    object actMovementItemContainer: TdsdOpenForm [12]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -307,7 +307,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         end>
       isShowModal = False
     end
-    object actMovementItemProtocolOpenForm: TdsdOpenForm
+    object actMovementItemProtocolOpenForm: TdsdOpenForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -337,13 +337,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         end>
       isShowModal = False
     end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
-    end
-    object actAddMask: TdsdExecStoredProc
+    object actAddMask: TdsdExecStoredProc [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
