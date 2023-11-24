@@ -1914,7 +1914,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
       Visible = ivAlways
-      ImageIndex = 76
+      ImageIndex = 85
       ItemLinks = <
         item
           Visible = True
