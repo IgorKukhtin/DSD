@@ -1661,7 +1661,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'InvNumber_Full'
         Value = ''
         Component = GuidesInvoice
         ComponentItem = 'TextValue'

@@ -639,7 +639,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 110
     end
     object edSearchInvNumber_Invoice: TcxTextEdit
-      Left = 487
+      Left = 510
       Top = 5
       TabOrder = 6
       DesignSize = (
@@ -669,7 +669,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 110
     end
     object lbSearchArticle: TcxLabel
-      Left = 422
+      Left = 446
       Top = 4
       Caption = #8470' '#1089#1095#1077#1090': '
       ParentFont = False
@@ -733,6 +733,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Top = 7
       Width = 153
       Height = 25
+      Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5

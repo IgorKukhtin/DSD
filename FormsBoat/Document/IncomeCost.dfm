@@ -4,7 +4,7 @@
   ClientWidth = 322
   AddOnFormData.isSingle = False
   ExplicitWidth = 328
-  ExplicitHeight = 293
+  ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -130,11 +130,9 @@
   inherited ActionList: TActionList
     Left = 247
     Top = 65
-    inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
+    inherited actInsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
-    end
-    inherited FormClose: TdsdFormClose [2]
     end
   end
   inherited FormParams: TdsdFormParams
