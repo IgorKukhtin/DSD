@@ -4,8 +4,6 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -233
-  ExplicitTop = -22
   ExplicitWidth = 1126
   ExplicitHeight = 549
   PixelsPerInch = 96
@@ -635,8 +633,8 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 31
-    Top = 202
+    Left = 23
+    Top = 194
     object MedocListAction: TMedocAction [0]
       Category = 'TaxLib'
       MoveParams = <>
@@ -661,7 +659,20 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1077#1076#1086#1082' - '#1053#1077#1090'"'
       ImageIndex = 72
     end
-    object actInsert_isAutoPrepay: TdsdExecStoredProc [3]
+    object actUpdate_IsUKTZ_new: TdsdExecStoredProc [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsUKTZ_new
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsUKTZ_new
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1086#1074#1099#1081' '#1059#1050#1058#1047' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1086#1074#1099#1081' '#1059#1050#1058#1047' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 77
+    end
+    object actInsert_isAutoPrepay: TdsdExecStoredProc [4]
       Category = 'Prepay'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -674,7 +685,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
       ImageIndex = 56
     end
-    object actChecked: TdsdExecStoredProc [5]
+    object actChecked: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -687,7 +698,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actElectron: TdsdExecStoredProc [6]
+    object actElectron: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -700,7 +711,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
-    object actDocument: TdsdExecStoredProc [7]
+    object actDocument: TdsdExecStoredProc [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -722,7 +733,7 @@ inherited TaxJournalForm: TTaxJournalForm
           StoredProc = spGetInfo
         end>
     end
-    object actInsertMaskMulti: TMultiAction [10]
+    object actInsertMaskMulti: TMultiAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -735,7 +746,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
-    object actMovementCheck: TdsdOpenForm [12]
+    object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -1720,39 +1731,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbChecked'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbElectron'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMedocFalse'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateINN'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateBranch'
+          ItemName = 'bbChange'
         end
         item
           Visible = True
@@ -1926,6 +1905,52 @@ inherited TaxJournalForm: TTaxJournalForm
     object bbUpdateBranch: TdxBarButton
       Action = macUpdateBranch
       Category = 0
+    end
+    object bbUpdate_IsUKTZ_new: TdxBarButton
+      Action = actUpdate_IsUKTZ_new
+      Category = 0
+    end
+    object bbChange: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 76
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'bbElectron'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMedocFalse'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_IsUKTZ_new'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateBranch'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateINN'
+        end>
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2372,8 +2397,8 @@ inherited TaxJournalForm: TTaxJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 160
+    Left = 904
+    Top = 272
   end
   object spMedoc_False: TdsdStoredProc
     StoredProcName = 'gpUpdate_IsMedoc_False'
@@ -2565,8 +2590,8 @@ inherited TaxJournalForm: TTaxJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 160
+    Left = 528
+    Top = 176
   end
   object spUpdate_INN: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_INN'
@@ -2599,8 +2624,8 @@ inherited TaxJournalForm: TTaxJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 722
-    Top = 272
+    Left = 994
+    Top = 200
   end
   object spInsert_isAutoPrepay: TdsdStoredProc
     StoredProcName = 'gpInsert_Movement_Tax_isAutoPrepay'
@@ -2651,5 +2676,31 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 905
     Top = 192
+  end
+  object spUpdate_IsUKTZ_new: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Tax_UKTZ_new'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsUKTZ_new'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUKTZ_new'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1000
+    Top = 296
   end
 end

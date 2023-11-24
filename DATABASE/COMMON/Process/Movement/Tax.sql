@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Tax_IsRegistered() RE
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Tax_IsMedoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Tax_IsMedoc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Insert_Movement_TaxPrepay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Insert_Movement_TaxPrepay' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Tax_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Tax_Branch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_Tax_UKTZ_new() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_Tax_UKTZ_new' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 
 -- строки
@@ -57,7 +58,13 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Movement_Tax_B
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 6
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - изменение Филиала'
-                                  , inEnumName:= 'zc_Enum_Process_Update_Movement_Tax_Branch');
+                                  , inEnumName:= 'zc_Enum_Process_Update_Movement_Tax_Branch');  
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_Tax_UKTZ_new()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 7
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - изменение новый UKTZ'
+                                  , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_Tax_UKTZ_new');
 ---
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_Tax()

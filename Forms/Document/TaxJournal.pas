@@ -160,6 +160,11 @@ type
     bbUpdateBranch: TdxBarButton;
     OperDatePartner_Master: TcxGridDBColumn;
     isUKTZ_new: TcxGridDBColumn;
+    spUpdate_IsUKTZ_new: TdsdStoredProc;
+    actUpdate_IsUKTZ_new: TdsdExecStoredProc;
+    bbUpdate_IsUKTZ_new: TdxBarButton;
+    bbChange: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public
