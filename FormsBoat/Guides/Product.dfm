@@ -943,6 +943,20 @@
           VisibleForCustomization = False
           Width = 70
         end
+        object InvNumber_Invoice: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1082'. Invoice'
+          DataBinding.FieldName = 'InvNumber_Invoice'
+          Visible = False
+          Options.Editing = False
+          Width = 80
+        end
+        object OperDate_Invoice: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1076#1086#1082'. Invoice'
+          DataBinding.FieldName = 'OperDate_Invoice'
+          Visible = False
+          Options.Editing = False
+          Width = 70
+        end
       end
       object cxGridLevel: TcxGridLevel
         GridView = cxGridDBTableView
@@ -979,7 +993,7 @@
         Style.IsFontAssigned = True
       end
       object edSearchInvNumber_OrderClient: TcxTextEdit
-        Left = 115
+        Left = 111
         Top = 6
         TabOrder = 1
         DesignSize = (
@@ -988,7 +1002,7 @@
         Width = 151
       end
       object edSearchClientName: TcxTextEdit
-        Left = 391
+        Left = 532
         Top = 6
         TabOrder = 2
         DesignSize = (
@@ -997,7 +1011,7 @@
         Width = 162
       end
       object cxLabel1: TcxLabel
-        Left = 330
+        Left = 473
         Top = 7
         Caption = 'Kunden: '
         ParentFont = False
@@ -1007,6 +1021,27 @@
         Style.Font.Name = 'Tahoma'
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
+      end
+      object cxLabel4: TcxLabel
+        Left = 278
+        Top = 7
+        Caption = #8470' '#1089#1095#1077#1090':'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edSearchInvNumber_Invoice: TcxTextEdit
+        Left = 340
+        Top = 6
+        TabOrder = 5
+        DesignSize = (
+          120
+          21)
+        Width = 120
       end
     end
   end
@@ -2392,8 +2427,8 @@
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 8
-    Top = 96
+    Left = 64
+    Top = 120
     object actRefreshMaster: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -4899,8 +4934,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1016
-    Top = 160
+    Left = 1048
+    Top = 152
   end
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>
@@ -5055,6 +5090,10 @@
       item
         Column = ClientName
         TextEdit = edSearchClientName
+      end
+      item
+        Column = InvNumber_Invoice
+        TextEdit = edSearchInvNumber_Invoice
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

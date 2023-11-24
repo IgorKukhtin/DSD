@@ -46,7 +46,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , ModelId Integer, ModelName TVarChar
              , CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
-             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , Value_TaxKind TFloat, TaxKindName TVarChar, TaxKindName_info TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -296,7 +296,8 @@ BEGIN
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Movement_Invoice.Id                          AS MovementId_Invoice
-             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
+             , Movement_Invoice.InvNumber                   AS InvNumber_Invoice
              , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice
 
              , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind

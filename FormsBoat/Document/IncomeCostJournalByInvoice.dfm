@@ -97,7 +97,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 678
+      Left = 679
       Top = 6
       Properties.Buttons = <
         item
@@ -1667,6 +1667,36 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectId'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 168
     Top = 65531
@@ -1674,6 +1704,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
   object GuidesObject: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnion_ClientPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1728,6 +1759,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

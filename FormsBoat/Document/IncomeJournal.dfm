@@ -54,18 +54,18 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object edSearchInvNumber: TcxTextEdit
-      Left = 549
+      Left = 496
       Top = 5
       TabOrder = 4
       DesignSize = (
-        131
+        120
         21)
-      Width = 131
+      Width = 120
     end
     object lbSearchArticle: TcxLabel
-      Left = 467
+      Left = 419
       Top = 4
-      Caption = #8470' '#1087#1088#1080#1093#1086#1076': '
+      Caption = #8470' '#1087#1088#1080#1093#1086#1076':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -75,17 +75,17 @@ object IncomeJournalForm: TIncomeJournalForm
       Style.IsFontAssigned = True
     end
     object edSearchFromName: TcxTextEdit
-      Left = 784
+      Left = 908
       Top = 5
       TabOrder = 6
       DesignSize = (
-        131
+        120
         21)
-      Width = 131
+      Width = 120
     end
     object cxLabel3: TcxLabel
-      Left = 698
-      Top = 7
+      Left = 822
+      Top = 5
       Caption = 'Lieferanten: '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -94,6 +94,27 @@ object IncomeJournalForm: TIncomeJournalForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+    end
+    object cxLabel4: TcxLabel
+      Left = 626
+      Top = 4
+      Caption = #8470' '#1089#1095#1077#1090':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber_Invoice: TcxTextEdit
+      Left = 687
+      Top = 5
+      TabOrder = 9
+      DesignSize = (
+        120
+        21)
+      Width = 120
     end
   end
   object cxGrid: TcxGrid
@@ -2044,6 +2065,10 @@ object IncomeJournalForm: TIncomeJournalForm
       item
         Column = FromName
         TextEdit = edSearchFromName
+      end
+      item
+        Column = InvNumberInvoice
+        TextEdit = edSearchInvNumber_Invoice
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

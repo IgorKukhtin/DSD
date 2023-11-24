@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+  Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer, cxTextEdit,
+  cxLabel;
 
 type
   TPLZForm = class(TParentForm)
@@ -73,6 +74,11 @@ type
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     actFormClose: TdsdFormClose;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
+    NameSearch: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -21,7 +21,8 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+  DataModul, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer,
+  cxTextEdit, cxLabel;
 
 type
   TPLZ_CityForm = class(TParentForm)
@@ -52,6 +53,10 @@ type
     Panel_btn: TPanel;
     btnChoiceGuides: TcxButton;
     btnFormClose: TcxButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchCity: TcxTextEdit;
+    FieldFilter_City: TdsdFieldFilter;
   private
     { Private declarations }
   public

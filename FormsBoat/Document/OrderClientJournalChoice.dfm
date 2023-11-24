@@ -3,7 +3,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 492
-  ClientWidth = 1034
+  ClientWidth = 1055
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,47 +20,47 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1034
+    Width = 1055
     Height = 31
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 90
       Top = 5
       EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 85
+      Width = 80
     end
     object deEnd: TcxDateEdit
-      Left = 310
+      Left = 291
       Top = 5
       EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 85
+      Width = 80
     end
     object cxLabel1: TcxLabel
-      Left = 10
+      Left = 0
       Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel2: TcxLabel
-      Left = 200
+      Left = 180
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel6: TcxLabel
-      Left = 429
+      Left = 782
       Top = 6
       Caption = 'Kunden:'
     end
     object edClient: TcxButtonEdit
-      Left = 478
+      Left = 826
       Top = 5
       Properties.Buttons = <
         item
@@ -68,10 +68,10 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 226
+      Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 771
+      Left = 388
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
@@ -83,24 +83,46 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 840
+      Left = 455
       Top = 5
       TabOrder = 7
       DesignSize = (
-        131
+        120
         21)
-      Width = 131
+      Width = 120
+    end
+    object cxLabel4: TcxLabel
+      Left = 581
+      Top = 4
+      Caption = #8470' '#1089#1095#1077#1090':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber_Invoice: TcxTextEdit
+      Left = 642
+      Top = 5
+      TabOrder = 9
+      DesignSize = (
+        120
+        21)
+      Width = 120
     end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1034
+    Width = 1055
     Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1034
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -450,9 +472,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Options.Editing = False
         Width = 200
       end
-      object InvNumber_Invoice: TcxGridDBColumn
+      object InvNumberFull_Invoice: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. Invoice'
-        DataBinding.FieldName = 'InvNumber_Invoice'
+        DataBinding.FieldName = 'InvNumberFull_Invoice'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -464,6 +486,15 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
+      end
+      object InvNumber_Invoice: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. Invoice ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumber_Invoice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object Comment_Invoice: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
@@ -495,10 +526,11 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   object Panel_btn: TPanel
     Left = 0
     Top = 451
-    Width = 1034
+    Width = 1055
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitWidth = 1034
     object btnFormClose: TcxButton
       Left = 607
       Top = 7
@@ -1750,6 +1782,10 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     ColumnList = <
       item
         Column = InvNumber
+      end
+      item
+        Column = InvNumber_Invoice
+        TextEdit = edSearchInvNumber_Invoice
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

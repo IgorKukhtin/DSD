@@ -19,15 +19,15 @@ object PLZForm: TPLZForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 702
-    Height = 315
+    Height = 282
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 660
-    ExplicitHeight = 350
+    ExplicitTop = 26
+    ExplicitHeight = 315
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -121,6 +121,13 @@ object PLZForm: TPLZForm
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
+      object NameSearch: TcxGridDBColumn
+        Caption = 'PLZ / City'
+        DataBinding.FieldName = 'NameSearch'
+        Visible = False
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -133,7 +140,6 @@ object PLZForm: TPLZForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitTop = 347
     object btnInsert: TcxButton
       Left = 341
       Top = 8
@@ -178,6 +184,37 @@ object PLZForm: TPLZForm
       TabOrder = 4
     end
   end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 702
+    Height = 33
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = 8
+    ExplicitTop = -14
+    object lbSearchName: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = 'PLZ / City: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 84
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+  end
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 56
@@ -201,8 +238,8 @@ object PLZForm: TPLZForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 64
+    Left = 104
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -221,8 +258,8 @@ object PLZForm: TPLZForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 64
+    Left = 40
+    Top = 120
     DockControlHeights = (
       0
       0
@@ -477,6 +514,13 @@ object PLZForm: TPLZForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'CountryId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CountryId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'CountryName'
           Value = Null
           Component = MasterCDS
@@ -664,5 +708,18 @@ object PLZForm: TPLZForm
     PackSize = 1
     Left = 496
     Top = 136
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = NameSearch
+    ColumnList = <
+      item
+        Column = NameSearch
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 608
+    Top = 112
   end
 end

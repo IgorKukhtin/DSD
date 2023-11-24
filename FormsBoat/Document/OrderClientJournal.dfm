@@ -75,6 +75,27 @@ object OrderClientJournalForm: TOrderClientJournalForm
         21)
       Width = 131
     end
+    object cxLabel4: TcxLabel
+      Left = 678
+      Top = 5
+      Caption = #8470' '#1089#1095#1077#1090':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber_Invoice: TcxTextEdit
+      Left = 743
+      Top = 5
+      TabOrder = 7
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -426,9 +447,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Options.Editing = False
         Width = 80
       end
-      object InvNumber_Invoice: TcxGridDBColumn
+      object InvNumberFull_Invoice: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. Invoice'
-        DataBinding.FieldName = 'InvNumber_Invoice'
+        DataBinding.FieldName = 'InvNumberFull_Invoice'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -439,6 +460,15 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
+      end
+      object InvNumber_Invoice: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. Invoice ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumber_Invoice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object DiscountTax: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080
@@ -2767,10 +2797,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
     ColumnList = <
       item
         Column = InvNumber
+      end
+      item
+        Column = InvNumber_Invoice
+        TextEdit = edSearchInvNumber_Invoice
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 608
-    Top = 144
+    Left = 744
+    Top = 72
   end
 end

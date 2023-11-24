@@ -251,6 +251,10 @@ type
     btnSetVisible_ProdColorItems: TcxButton;
     btnSetVisible_ProdOptItems: TcxButton;
     actSetVisible_ProdOptItems: TBooleanSetVisibleAction;
+    cxLabel4: TcxLabel;
+    edSearchInvNumber_Invoice: TcxTextEdit;
+    InvNumber_Invoice: TcxGridDBColumn;
+    OperDate_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

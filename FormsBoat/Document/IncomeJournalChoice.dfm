@@ -1,31 +1,30 @@
 inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 498
-  ClientWidth = 765
+  ClientWidth = 999
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitTop = 7
-  ExplicitWidth = 781
+  ExplicitWidth = 1015
   ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 765
+    Width = 999
     Height = 400
     TabOrder = 3
     ExplicitWidth = 765
-    ExplicitHeight = 437
+    ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 765
+    ClientRectRight = 999
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 765
-      ExplicitHeight = 437
+      ExplicitHeight = 400
       inherited cxGrid: TcxGrid
-        Width = 765
+        Width = 999
         Height = 400
         ExplicitWidth = 765
-        ExplicitHeight = 437
+        ExplicitHeight = 400
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -320,17 +319,100 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 765
+    Width = 999
     ExplicitWidth = 765
+    inherited deStart: TcxDateEdit
+      Left = 96
+      ExplicitLeft = 96
+      ExplicitWidth = 81
+      Width = 81
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 295
+      ExplicitLeft = 295
+      ExplicitWidth = 80
+      Width = 80
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 3
+      ExplicitLeft = 3
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 184
+      ExplicitLeft = 184
+    end
+    object lbSearchArticle: TcxLabel
+      Left = 400
+      Top = 4
+      Caption = #8470' '#1087#1088#1080#1093#1086#1076':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber: TcxTextEdit
+      Left = 477
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object cxLabel4: TcxLabel
+      Left = 603
+      Top = 4
+      Caption = #8470' '#1089#1095#1077#1090':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber_Invoice: TcxTextEdit
+      Left = 663
+      Top = 5
+      TabOrder = 7
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object cxLabel3: TcxLabel
+      Left = 789
+      Top = 5
+      Caption = 'Lieferanten: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchFromName: TcxTextEdit
+      Left = 874
+      Top = 5
+      TabOrder = 9
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
   end
   object Panel_btn: TPanel [2]
     Left = 0
     Top = 457
-    Width = 765
+    Width = 999
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 494
+    ExplicitWidth = 765
     object btnFormClose: TcxButton
       Left = 290
       Top = 7
@@ -708,5 +790,26 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     Left = 408
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchInvNumber
+    DataSet = MasterCDS
+    Column = colInvNumber
+    ColumnList = <
+      item
+        Column = colInvNumber
+      end
+      item
+        Column = InvNumberInvoice
+        TextEdit = edSearchInvNumber_Invoice
+      end
+      item
+        Column = FromName
+        TextEdit = edSearchFromName
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 784
+    Top = 144
   end
 end

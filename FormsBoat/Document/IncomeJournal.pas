@@ -136,6 +136,8 @@ type
     cxLabel3: TcxLabel;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    cxLabel4: TcxLabel;
+    edSearchInvNumber_Invoice: TcxTextEdit;
   private
   public
   end;

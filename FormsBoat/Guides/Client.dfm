@@ -25,8 +25,8 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 306
+    ExplicitLeft = -96
+    ExplicitTop = 139
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -352,7 +352,7 @@ object ClientForm: TClientForm
     Width = 897
     Height = 41
     Align = alBottom
-    TabOrder = 5
+    TabOrder = 4
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -403,7 +403,6 @@ object ClientForm: TClientForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitTop = -14
     object lbSearchName: TcxLabel
       Left = 10
       Top = 6

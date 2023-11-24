@@ -1,30 +1,29 @@
 inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 356
-  ClientWidth = 1028
+  ClientWidth = 1141
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -134
-  ExplicitWidth = 1044
+  ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1028
+    Width = 1141
     Height = 258
     TabOrder = 3
-    ExplicitWidth = 1028
+    ExplicitWidth = 1141
     ExplicitHeight = 258
     ClientRectBottom = 258
-    ClientRectRight = 1028
+    ClientRectRight = 1141
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1028
+      ExplicitWidth = 1141
       ExplicitHeight = 258
       inherited cxGrid: TcxGrid
-        Width = 1028
+        Width = 1141
         Height = 258
-        ExplicitWidth = 1028
+        ExplicitWidth = 1141
         ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -297,8 +296,18 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Width = 78
           end
           object InvNumber_parent: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
             DataBinding.FieldName = 'InvNumber_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 109
+          end
+          object InvNumberFull_parent: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
@@ -329,15 +338,15 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 1028
-    ExplicitWidth = 1028
+    Width = 1141
+    ExplicitWidth = 1141
     object cxLabel6: TcxLabel
-      Left = 434
+      Left = 834
       Top = 6
       Caption = 'Lieferanten / Kunden:'
     end
     object edClient: TcxButtonEdit
-      Left = 545
+      Left = 945
       Top = 5
       Properties.Buttons = <
         item
@@ -346,13 +355,55 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 230
+      Width = 197
+    end
+    object cxLabel4: TcxLabel
+      Left = 426
+      Top = 4
+      Caption = #8470' '#1089#1095#1077#1090':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchInvNumber_Invoice: TcxTextEdit
+      Left = 487
+      Top = 5
+      TabOrder = 7
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object cxLabel3: TcxLabel
+      Left = 616
+      Top = 4
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edInvNumber_OrderClient: TcxTextEdit
+      Left = 686
+      Top = 5
+      TabOrder = 9
+      DesignSize = (
+        131
+        21)
+      Width = 131
     end
   end
   object Panel_btn: TPanel [2]
     Left = 0
     Top = 315
-    Width = 1028
+    Width = 1141
     Height = 41
     Align = alBottom
     TabOrder = 6
@@ -383,7 +434,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       TabOrder = 2
     end
     object btnClientPartnerChoiceForm: TcxButton
-      Left = 291
+      Left = 295
       Top = 6
       Width = 190
       Height = 25
@@ -877,6 +928,21 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           ComponentItem = 'InvNumber_parent'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1238,5 +1304,22 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       end>
     Left = 624
     Top = 3
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchInvNumber_Invoice
+    DataSet = MasterCDS
+    Column = colInvNumber
+    ColumnList = <
+      item
+        Column = colInvNumber
+      end
+      item
+        Column = InvNumber_parent
+        TextEdit = edInvNumber_OrderClient
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 976
+    Top = 48
   end
 end

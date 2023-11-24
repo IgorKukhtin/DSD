@@ -26,8 +26,6 @@ object CountryForm: TCountryForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 315
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -110,7 +108,7 @@ object CountryForm: TCountryForm
     Width = 694
     Height = 41
     Align = alBottom
-    TabOrder = 5
+    TabOrder = 4
     object btnInsert: TcxButton
       Left = 341
       Top = 8
@@ -161,8 +159,6 @@ object CountryForm: TCountryForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitLeft = -8
-    ExplicitTop = -14
     object lbSearchName: TcxLabel
       Left = 2
       Top = 6
@@ -249,8 +245,8 @@ object CountryForm: TCountryForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 64
+    Left = 40
+    Top = 96
     DockControlHeights = (
       0
       0

@@ -153,6 +153,9 @@ type
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    cxLabel4: TcxLabel;
+    edSearchInvNumber_Invoice: TcxTextEdit;
+    InvNumber_Invoice: TcxGridDBColumn;
   private
   public
   end;

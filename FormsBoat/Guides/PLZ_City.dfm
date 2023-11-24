@@ -19,14 +19,14 @@ object PLZ_CityForm: TPLZ_CityForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 563
-    Height = 309
+    Height = 276
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 612
-    ExplicitHeight = 350
+    ExplicitTop = 26
+    ExplicitHeight = 309
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -72,8 +72,6 @@ object PLZ_CityForm: TPLZ_CityForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitLeft = -21
-    ExplicitWidth = 633
     object btnChoiceGuides: TcxButton
       Left = 195
       Top = 7
@@ -91,6 +89,37 @@ object PLZ_CityForm: TPLZ_CityForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 563
+    Height = 33
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = 8
+    ExplicitTop = -6
+    object lbSearchName: TcxLabel
+      Left = 36
+      Top = 6
+      Caption = 'City: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCity: TcxTextEdit
+      Left = 71
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -266,6 +295,14 @@ object PLZ_CityForm: TPLZ_CityForm
           ComponentItem = 'City'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CountryName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CountryName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -351,5 +388,18 @@ object PLZ_CityForm: TPLZ_CityForm
     PropertiesCellList = <>
     Left = 304
     Top = 152
+  end
+  object FieldFilter_City: TdsdFieldFilter
+    TextEdit = edSearchCity
+    DataSet = MasterCDS
+    Column = City
+    ColumnList = <
+      item
+        Column = City
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 432
+    Top = 168
   end
 end

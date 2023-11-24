@@ -118,6 +118,9 @@ type
     actClientChoiceForm: TOpenChoiceForm;
     actSetNull_GuidesClient: TdsdSetDefaultParams;
     btnSetNull_GuidesClient: TcxButton;
+    cxLabel4: TcxLabel;
+    edSearchInvNumber_Invoice: TcxTextEdit;
+    InvNumber_Invoice: TcxGridDBColumn;
   private
   public
   end;

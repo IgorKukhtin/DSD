@@ -4,7 +4,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -450,7 +449,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     ExplicitWidth = 1213
     ExplicitHeight = 30
     object lbSearchArticle: TcxLabel
-      Left = 668
+      Left = 664
       Top = 4
       Caption = #8470' '#1089#1095#1077#1090': '
       ParentFont = False

@@ -44,6 +44,13 @@ type
     btnFormClose: TcxButton;
     btnChoiceGuides: TcxButton;
     btnShowErased: TcxButton;
+    lbSearchArticle: TcxLabel;
+    edSearchInvNumber: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edSearchInvNumber_Invoice: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edSearchFromName: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
     { Private declarations }
   public
