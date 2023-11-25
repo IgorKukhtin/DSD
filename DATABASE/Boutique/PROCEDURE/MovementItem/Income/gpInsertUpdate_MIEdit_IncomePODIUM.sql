@@ -144,10 +144,11 @@ BEGIN
          IF COALESCE (vbLabelId, 0) = 0
          THEN
              -- Создание
-             vbLabelId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Label (ioId     := 0
-                                                                           , ioCode   := 0
-                                                                           , inName   := inLabelName
-                                                                           , inSession:= vbUserId :: TVarChar
+             vbLabelId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Label (ioId      := 0
+                                                                           , ioCode    := 0
+                                                                           , inName    := inLabelName
+                                                                           , inName_UKR:= ''
+                                                                           , inSession := vbUserId :: TVarChar
                                                                              ) AS tmp);
          END IF;
      END IF;

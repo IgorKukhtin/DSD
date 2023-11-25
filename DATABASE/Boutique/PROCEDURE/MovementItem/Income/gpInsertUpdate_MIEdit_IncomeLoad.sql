@@ -138,6 +138,7 @@ BEGIN
              vbLabelId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Label (ioId     := 0
                                                                            , ioCode   := 0
                                                                            , inName   := inLabelName
+                                                                           , inName_UKR:= ''
                                                                            , inSession:= inSession
                                                                              ) AS tmp);
          END IF;
