@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TBankAccountJournalByInvoiceForm = class(TAncestorJournal_boatForm)
@@ -69,6 +70,10 @@ type
     cxLabel6: TcxLabel;
     edInvoice: TcxButtonEdit;
     GuidesInvoice: TdsdGuides;
+    Panel_btn: TPanel;
+    btnFormClose: TcxButton;
+    btnSetNull_GuidesClient: TcxButton;
+    actGuidesInvoiceChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
