@@ -564,6 +564,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Top = 6
       Width = 153
       Height = 25
+      Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5

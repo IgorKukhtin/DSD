@@ -70,9 +70,9 @@ BEGIN
                                     , MovementLinkObject_PaidKind.ObjectId      AS PaidKindId
                                FROM tmpStatus
                                     INNER JOIN Movement AS Movement_Income
-                                                       ON Movement_Income.StatusId = tmpStatus.StatusId
-                                                      AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
-                                                      AND Movement_Income.DescId = zc_Movement_Income()
+                                                        ON Movement_Income.StatusId = tmpStatus.StatusId
+                                                       AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
+                                                       AND Movement_Income.DescId = zc_Movement_Income()
 
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                  ON MovementLinkObject_To.MovementId = Movement_Income.Id
