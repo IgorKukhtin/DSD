@@ -1,28 +1,28 @@
 inherited InvoiceJournalForm: TInvoiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
-  ClientHeight = 356
+  ClientHeight = 397
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1122
-  ExplicitHeight = 395
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1106
-    Height = 258
+    Height = 263
     TabOrder = 3
     ExplicitWidth = 1106
-    ExplicitHeight = 258
-    ClientRectBottom = 258
+    ExplicitHeight = 263
+    ClientRectBottom = 263
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1106
-      ExplicitHeight = 258
+      ExplicitHeight = 263
       inherited cxGrid: TcxGrid
         Width = 1106
-        Height = 258
+        Height = 263
         ExplicitWidth = 1106
-        ExplicitHeight = 258
+        ExplicitHeight = 263
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -683,9 +683,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   end
   object Panel_btn: TPanel [2]
     Left = 0
-    Top = 315
+    Top = 320
     Width = 1106
-    Height = 41
+    Height = 77
     Align = alBottom
     TabOrder = 6
     object btnInsert: TcxButton
@@ -738,6 +738,23 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ShowHint = True
       TabOrder = 5
     end
+    object cxButton1: TcxButton
+      Left = 303
+      Top = 44
+      Width = 220
+      Height = 25
+      Action = actOpenBankAccountJournalByInvoice
+      Caption = #1046#1091#1088#1085#1072#1083' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
+      TabOrder = 6
+    end
+    object cxButton2: TcxButton
+      Left = 545
+      Top = 44
+      Width = 220
+      Height = 25
+      Action = actOpenIncomeByInvoice
+      TabOrder = 7
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -761,7 +778,63 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       end>
   end
   inherited ActionList: TActionList
-    object actOpenIncomeCostByInvoice: TdsdOpenForm [0]
+    object actOpenIncomeByInvoice: TdsdOpenForm [0]
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      ImageIndex = 24
+      FormName = 'TIncomeJournalByInvoiceForm'
+      FormNameParam.Value = 'TIncomeJournalByInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenIncomeCostByInvoice: TdsdOpenForm [1]
       Category = 'OpenForm'
       MoveParams = <>
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'('#1079#1072#1090#1088#1072#1090#1099')>'
@@ -1241,6 +1314,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenIncomeByInvoice'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1324,6 +1401,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object bb: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bbOpenIncomeByInvoice: TdxBarButton
+      Action = actOpenIncomeByInvoice
+      Caption = #1046#1091#1088#1085#1072#1083' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Category = 0
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

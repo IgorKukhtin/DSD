@@ -383,6 +383,10 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalByInvoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalByInvoiceForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeItemForm');
 

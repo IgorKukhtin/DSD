@@ -83,6 +83,10 @@ type
     lbSearchArticle: TcxLabel;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    actOpenIncomeByInvoice: TdsdOpenForm;
+    bbOpenIncomeByInvoice: TdxBarButton;
   private
     { Private declarations }
   public

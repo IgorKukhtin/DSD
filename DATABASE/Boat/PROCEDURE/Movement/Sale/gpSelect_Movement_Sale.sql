@@ -100,7 +100,9 @@ BEGIN
              , MovementDate_Insert.ValueData        AS InsertDate
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
-
+                                                                                                                                                                                                                   LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
+                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
              , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
              , Object_TaxKind.Id                            AS TaxKindId
              , Object_TaxKind.ValueData                     AS TaxKindName
@@ -116,9 +118,7 @@ BEGIN
                                 ON MovementFloat_TotalCount.MovementId = Movement_Sale.Id
                                AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-        LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
-                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                 ON MovementFloat_TotalSummPVAT.MovementId = Movement_Sale.Id

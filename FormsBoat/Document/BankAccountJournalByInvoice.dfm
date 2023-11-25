@@ -10,18 +10,18 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 819
-    Height = 299
+    Height = 260
     TabOrder = 3
     ExplicitWidth = 819
     ExplicitHeight = 299
-    ClientRectBottom = 299
+    ClientRectBottom = 260
     ClientRectRight = 819
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 819
       ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 819
-        Height = 299
+        Height = 260
         ExplicitWidth = 819
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -500,6 +500,33 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
         end>
       TabOrder = 5
       Width = 236
+    end
+  end
+  object Panel_btn: TPanel [2]
+    Left = 0
+    Top = 317
+    Width = 819
+    Height = 39
+    Align = alBottom
+    TabOrder = 6
+    ExplicitTop = 316
+    object btnFormClose: TcxButton
+      Left = 525
+      Top = 8
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      TabOrder = 0
+    end
+    object btnSetNull_GuidesClient: TcxButton
+      Left = 79
+      Top = 8
+      Width = 190
+      Height = 21
+      Action = actGuidesInvoiceChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1070,6 +1097,38 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       ImageIndex = 43
     end
+    object actGuidesInvoiceChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+      ImageIndex = 7
+      FormName = 'TInvoiceJournalChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesInvoice
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = ''
+          Component = GuidesInvoice
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -1492,7 +1551,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'InvNumber_Full'
         Value = ''
         Component = GuidesInvoice
         ComponentItem = 'TextValue'

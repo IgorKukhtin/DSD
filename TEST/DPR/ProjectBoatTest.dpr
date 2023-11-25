@@ -366,7 +366,8 @@ uses
   Report_ClientDialog in '..\..\FormsBoat\Report\Report_ClientDialog.pas' {Report_ClientDialogForm: TParentForm},
   ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
   ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
-  BankAccountMovement in '..\..\FormsBoat\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm};
+  BankAccountMovement in '..\..\FormsBoat\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
+  IncomeJournalByInvoice in '..\..\FormsBoat\Document\IncomeJournalByInvoice.pas' {IncomeJournalByInvoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

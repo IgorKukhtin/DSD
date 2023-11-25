@@ -146,7 +146,8 @@ BEGIN
                                                                 ON MLM_Invoice.MovementChildId = tmp.MovementId_Invoice
                                                                AND MLM_Invoice.DescId          = zc_MovementLinkMovement_Invoice()
                                 INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MLM_Invoice.MovementId
-                                                                           AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()
+                                                                           AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()  
+                                                                           AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                            GROUP BY tmp.MovementId_Invoice

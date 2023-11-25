@@ -407,6 +407,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 321
     object btnFormClose: TcxButton
       Left = 685
       Top = 7
