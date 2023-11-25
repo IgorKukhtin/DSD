@@ -227,6 +227,36 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Не найдена <Ведомость начисления зарплаты>.';
          END IF;
+
+         --
+         IF inUserId <> 14599 -- Коротченко Т.Н.
+        --AND inUserId = 5
+        --AND 1=0
+        AND NOT EXISTS (SELECT 1
+                        FROM MovementDate
+                             INNER JOIN Movement ON Movement.Id       = MovementDate.MovementId
+                                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                AND Movement.DescId   = zc_Movement_PersonalService()
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.ObjectId   = inMoneyPlaceId
+                                                    AND MovementItem.isErased   = FALSE
+                             INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                           ON MLO_PersonalServiceList.MovementId = MovementDate.MovementId
+                                                          AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                          AND MLO_PersonalServiceList.ObjectId   = vbPersonalServiceListId
+                        WHERE MovementDate.ValueData = inServiceDate
+                          AND MovementDate.DescId    = zc_MIDate_ServiceDate()
+                       )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ведомость начислений <%> за <%> % <%>.'
+                           , lfGet_Object_ValueData_sh (vbPersonalServiceListId)
+                           , zfCalc_MonthYearName (inServiceDate)
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh (inMoneyPlaceId)
+                            ;
+         END IF;
+
          -- сохранили связь с <Ведомости начисления>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), ioId, vbPersonalServiceListId);
      ELSE
