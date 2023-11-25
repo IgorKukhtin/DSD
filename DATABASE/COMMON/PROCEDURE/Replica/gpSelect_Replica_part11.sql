@@ -28,7 +28,7 @@ BEGIN
           , tmpColumn AS (SELECT * FROM _replica.gpSelect_Replica_Column(inId_start,inId_end))
        SELECT 10 AS Part
             , case when a.operation ILIKE 'update'
-                      then ' when ' || _replica.zfStr_CHR_39 ('UPDATE-container-{Amount}-Id' )
+                      then ' when ' || _replica.zfStr_CHR_39 ('UPDATE-container-{Amount}-Id' || CASE WHEN a.table_name ILIKE 'container' AND a.upd_cols ILIKE '{Amount}' THEN '' ELSE '==not==' END)
                        || ' THEN '
 --                     ||  _replica.zfStr_CHR_39 ('UPDATE ' || a.table_name || ' SET ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
                        ||  _replica.zfStr_CHR_39 ('UPDATE Container SET ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
