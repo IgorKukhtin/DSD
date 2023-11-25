@@ -347,7 +347,9 @@ uses
   GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
-  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas';
+  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
+  EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

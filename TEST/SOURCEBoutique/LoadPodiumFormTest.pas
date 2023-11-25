@@ -502,7 +502,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLabelEditForm');
 end;
 
-     procedure TLoadFormTest.LoadLanguageFormTest;
+procedure TLoadFormTest.LoadLanguageFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLanguageForm');
