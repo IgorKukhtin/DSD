@@ -156,6 +156,7 @@ BEGIN
                    , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
                    , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
                    , MIString_PartionGoods.ValueData    AS PartionGoods
+                   , MIString_PartNumber.ValueData      AS PartNumber
                    , MILinkObject_Asset.ObjectId        AS AssetId
                    , MILinkObject_Asset_two.ObjectId    AS AssetId_two
                    , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
@@ -180,6 +181,9 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                   LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                               AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -204,6 +208,7 @@ BEGIN
                      , MILinkObject_GoodsKind.ObjectId
                      , MIDate_PartionGoods.ValueData
                      , MIString_PartionGoods.ValueData
+                     , MIString_PartNumber.ValueData
                      , MILinkObject_Asset.ObjectId
                      , MILinkObject_Asset_two.ObjectId
                      , MILinkObject_PartionGoods.ObjectId
@@ -213,6 +218,7 @@ BEGIN
                    , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
                    , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
                    , MIString_PartionGoods.ValueData    AS PartionGoods
+                   , MIString_PartNumber.ValueData      AS PartNumber
                    , MILinkObject_Asset.ObjectId        AS AssetId
                    , MILinkObject_Asset_two.ObjectId    AS AssetId_two
                    , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
@@ -237,6 +243,9 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                   LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                               AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -284,6 +293,7 @@ BEGIN
                   ELSE CASE WHEN Object_Asset_two.ValueData <> '' THEN '1)' ELSE '' END || COALESCE (Object_Asset.ValueData, '')
                     || CASE WHEN Object_Asset_two.ValueData <> '' THEN CHR (13) || '2)' ||Object_Asset_two.ValueData ELSE '' END
              END :: TVarChar AS PartionGoods
+           , tmpMI.PartNumber :: TVarChar AS PartNumber
 
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -351,6 +361,7 @@ BEGIN
               , Object_GoodsKind.ValueData
               , tmpMI.PartionGoodsDate
               , tmpMI.PartionGoods
+              , tmpMI.PartNumber
         ;
 
 
