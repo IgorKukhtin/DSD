@@ -53,11 +53,40 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
      
+
      -- определяется
-     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE '24447183_3524907224_SS181220125402.ZS2' /*'Ключ - Неграш О.В..ZS2'*/                                       END AS UserSign
-          , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE '24447183_S181220141414.ZS2' /*'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/   END AS UserSeal
-          , CASE WHEN ObjectString_UserKey.ValueData  <> '' THEN ObjectString_UserKey.ValueData  ELSE '24447183_C181220141414.ZS2' /*'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/ END AS UserKey
+     SELECT -- UserSign
+            CASE WHEN vbUserId <> 5
+                      THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\НАГОРНОВА Т.С\24447183_2992217209_SU211210105333.ZS2'
+                 WHEN vbUserId = 5 AND 1=1
+                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\НАГОРНОВА Т.С\24447183_2992217209_SU211210105333.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\НАГОРНОВА Т.С\24447183_2992217209_SU211210105333.ZS2'
+                 WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData
+                 ELSE '24447183_2992217209_SU211210105333.ZS2'
+            END AS UserSign
+
+            -- UserSeal
+          , CASE WHEN vbUserId <> 5
+                      THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN vbUserId = 5 AND 1=1
+                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData
+                 ELSE '24447183_U221220114928.ZS2'
+            END AS UserSeal
+
+            -- UserKey
+          , CASE WHEN vbUserId <> 5
+                      THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN vbUserId = 5 AND 1=1
+                    --THEN 'g:\Спільні диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                      THEN 'g:\Общие диски\keys\Эл_Ключи_ТОВ_АЛАН\ПЕЧАТЬ\24447183_U221220114928.ZS2'
+                 WHEN ObjectString_UserKey.ValueData <> '' THEN ObjectString_UserKey.ValueData
+                 ELSE '24447183_U221220114928.ZS2'
+            END AS UserKey
+
             INTO vbUserSign, vbUserSeal, vbUserKey
+
      FROM Object AS Object_User
           LEFT JOIN ObjectString AS ObjectString_UserSign
                                  ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
@@ -560,7 +589,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  07.05.23                                                       *
 */
+
 -- тест
-
-
-select * from gpSelect_Movement_TransportGoods_EDIN_Sign(inMovementId := 22086098 ,  inSession := '14610');
+-- SELECT * FROM gpSelect_Movement_TransportGoods_EDIN_Sign(inMovementId := 22086098 ,  inSession := '14610');

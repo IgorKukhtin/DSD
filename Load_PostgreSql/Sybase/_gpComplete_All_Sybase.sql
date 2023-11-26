@@ -13,7 +13,10 @@ $BODY$
   DECLARE vbMovementDescId Integer;
   DECLARE vbStatusId Integer;
   DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
 
      -- нашли
      SELECT DescId, StatusId, OperDate INTO vbMovementDescId, vbStatusId, vbOperDate FROM Movement WHERE Id = inMovementId;
@@ -346,7 +349,54 @@ BEGIN
      END IF;
 
 
-END;$BODY$
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT zc_Enum_Process_Auto_PrimeCost() :: Integer
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum' in query) = 1)         AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id =  vbMovementDescId)
+
+               -- ProtocolData
+             , inMovementId :: TVarChar
+        || ' ' || COALESCE ((SELECT Object.ValueData FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()), '')
+     || ' => ' || COALESCE ((SELECT Object.ValueData FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To()), '')
+              ;
+
+-- SELECT OperDate AS T_start, Time5 AS T_end, Time1 AS diff, Value1 AS ProcessCount, Value2 AS ProcessVAC, ProcName, ProtocolData FROM ResourseProtocol WHERE OperDate >= '26.11.2023' AND UserId = zc_Enum_Process_Auto_PrimeCost() :: Integer ORDER BY OperDate
+
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
