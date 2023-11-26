@@ -55,7 +55,6 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
-    dsdChoiceGuides1: TdsdChoiceGuides;
   private
     { Private declarations }
   public

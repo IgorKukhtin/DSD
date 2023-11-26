@@ -411,7 +411,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   end
   inherited ActionList: TActionList
     Left = 95
-    inherited ChoiceGuides: TdsdChoiceGuides
+    inherited actChoiceGuides: TdsdChoiceGuides
       Params = <
         item
           Name = 'Key'
@@ -629,31 +629,6 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         end>
       isShowModal = False
     end
-    object dsdChoiceGuides1: TdsdChoiceGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
-      DataSource = MasterDS
-    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -751,9 +726,6 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
@@ -895,7 +867,6 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Column = GoodsName
         TextEdit = edSearchName
       end>
-    ActionNumber1 = dsdChoiceGuides1
     CheckBoxList = <>
     Left = 576
     Top = 200

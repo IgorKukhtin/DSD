@@ -739,18 +739,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       TabOrder = 5
     end
     object cxButton1: TcxButton
-      Left = 303
+      Left = 42
       Top = 44
-      Width = 220
+      Width = 218
       Height = 25
       Action = actOpenBankAccountJournalByInvoice
-      Caption = #1046#1091#1088#1085#1072#1083' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
       TabOrder = 6
     end
     object cxButton2: TcxButton
-      Left = 545
+      Left = 303
       Top = 44
-      Width = 220
+      Width = 306
       Height = 25
       Action = actOpenIncomeByInvoice
       TabOrder = 7
@@ -781,7 +780,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object actOpenIncomeByInvoice: TdsdOpenForm [0]
       Category = 'OpenForm'
       MoveParams = <>
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1086' '#1089#1095#1077#1090#1091' - <'#1055#1088#1080#1093#1086#1076' / '#1059#1089#1083#1091#1075#1080'>'
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 24
       FormName = 'TIncomeJournalByInvoiceForm'
@@ -1116,7 +1115,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object actOpenBankAccountJournalByInvoice: TdsdOpenForm
       Category = 'OpenForm'
       MoveParams = <>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1086' '#1089#1095#1077#1090#1091' - <'#1054#1087#1083#1072#1090#1099'>'
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
       ImageIndex = 25
       FormName = 'TBankAccountJournalByInvoiceForm'
