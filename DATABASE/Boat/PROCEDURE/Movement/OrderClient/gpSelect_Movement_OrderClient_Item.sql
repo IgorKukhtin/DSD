@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_OrderClientChoice()
+-- Function: gpSelect_Movement_OrderClient_Item()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient_Item (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient_Item (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
@@ -50,15 +50,17 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
 
 AS
 $BODY$
-   DECLARE vbObjectId Integer;
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderClient());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
 
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId

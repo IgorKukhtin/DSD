@@ -46,7 +46,6 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
      vbUserId:= lpGetUserBySession (inSession);
 
-
      -- !!!Временно замена!!!
      IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
 
