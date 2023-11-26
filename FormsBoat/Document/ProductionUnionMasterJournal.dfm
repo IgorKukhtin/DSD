@@ -55,7 +55,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel3: TcxLabel
-      Left = 447
+      Left = 444
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072':'
       ParentFont = False
@@ -152,14 +152,14 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 70
       end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 80
       end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
@@ -167,7 +167,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090' '#1082#1086#1075#1086
-        Width = 91
+        Width = 155
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
@@ -192,7 +192,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090') ('#1087#1086#1080#1089#1082')'
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 200
       end
@@ -300,27 +300,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
-        Options.Editing = False
-        Width = 109
-      end
-      object FromName_parent: TcxGridDBColumn
-        Caption = 'Kunden'
-        DataBinding.FieldName = 'FromName_parent'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
-        Options.Editing = False
-        Width = 109
-      end
-      object ProductName_parent: TcxGridDBColumn
-        Caption = #1051#1086#1076#1082#1072
-        DataBinding.FieldName = 'ProductName_parent'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 109
       end
@@ -330,7 +310,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 110
       end
