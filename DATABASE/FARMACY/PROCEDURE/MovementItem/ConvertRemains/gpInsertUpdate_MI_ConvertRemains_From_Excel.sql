@@ -71,7 +71,7 @@ BEGIN
   BEGIN  
     vbAmount := REPLACE(REPLACE(inAmount, ' ', ''), ',', '.')::TFloat;
   EXCEPTION WHEN others THEN 
-    inAmount := 0;
+    vbAmount := 0;
   END;
 
   -- парсим НДС

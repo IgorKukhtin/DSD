@@ -148,7 +148,7 @@ object DiscountExternalSupplierForm: TDiscountExternalSupplierForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -15
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -480,7 +480,7 @@ object DiscountExternalSupplierForm: TDiscountExternalSupplierForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'DiscountExternalName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

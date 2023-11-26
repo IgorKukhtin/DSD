@@ -1,31 +1,29 @@
 inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 631
-  ClientWidth = 783
+  ClientWidth = 877
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
-  ExplicitWidth = 799
-  ExplicitHeight = 670
+  ExplicitWidth = 899
+  ExplicitHeight = 687
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 119
-    Width = 783
-    Height = 512
-    ExplicitTop = 119
-    ExplicitWidth = 783
-    ExplicitHeight = 549
-    ClientRectBottom = 512
-    ClientRectRight = 783
+    Top = 125
+    Width = 877
+    Height = 506
+    ExplicitTop = 125
+    ExplicitWidth = 876
+    ExplicitHeight = 506
+    ClientRectBottom = 506
+    ClientRectRight = 877
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 64
-      ExplicitTop = 48
-      ExplicitWidth = 783
-      ExplicitHeight = 543
+      ExplicitWidth = 876
+      ExplicitHeight = 482
       inherited cxGrid: TcxGrid
-        Width = 783
-        Height = 336
-        ExplicitWidth = 783
-        ExplicitHeight = 305
+        Width = 877
+        Height = 330
+        ExplicitWidth = 876
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -177,12 +175,13 @@ inherited LossForm: TLossForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 344
-        Width = 783
+        Top = 338
+        Width = 877
         Height = 144
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 876
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -295,22 +294,21 @@ inherited LossForm: TLossForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 336
-        Width = 783
+        Top = 330
+        Width = 877
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitLeft = -3
-        ExplicitTop = 362
+        ExplicitWidth = 876
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 783
+    Width = 877
     Height = 93
     TabOrder = 3
-    ExplicitWidth = 783
+    ExplicitWidth = 876
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -697,6 +695,69 @@ inherited LossForm: TLossForm
       ImageIndex = 79
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1084'"?'
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actInsertUpdate_TotalSumm
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
+    end
+    object actInsertUpdate_TotalSumm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_TotalSumm
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_TotalSumm
+        end>
+      Caption = 'actInsertUpdate_TotalSumm'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -754,7 +815,7 @@ inherited LossForm: TLossForm
     DockControlHeights = (
       0
       0
-      26
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -865,8 +926,20 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = '    '
+      Hint = '    '
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -897,6 +970,10 @@ inherited LossForm: TLossForm
     end
     object dxBarButton5: TdxBarButton
       Action = actUpdate_ConfirmedMarketing
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -1816,5 +1893,54 @@ inherited LossForm: TLossForm
     Params = <>
     Left = 80
     Top = 544
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TLossForm;zc_Object_ImportSetting_Loss'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 240
+  end
+  object spInsertUpdate_TotalSumm: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementFloat_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 392
   end
 end

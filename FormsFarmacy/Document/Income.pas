@@ -213,6 +213,8 @@ type
     bbStartLoad: TdxBarButton;
     spUpdate_AmountManual: TdsdStoredProc;
     actSetEnabledAction: TdsdSetEnabledAction;
+    spInsertUpdate_TotalSumm: TdsdStoredProc;
+    actInsertUpdate_TotalSumm: TdsdExecStoredProc;
   private
     { Private declarations }
   public

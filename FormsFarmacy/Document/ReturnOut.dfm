@@ -995,55 +995,6 @@ inherited ReturnOutForm: TReturnOutForm
           ValueParam.MultiSelectSeparator = ','
         end>
     end
-    object actDoLoad: TExecuteImportSettingsAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ImportSettingsId.Value = '0'
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingId'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-    end
-    object actGetImportSetting: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingId
-        end>
-      Caption = 'actGetImportSetting'
-      Hint = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072
-    end
-    object macStartLoad: TMultiAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSetting
-        end
-        item
-          Action = actDoLoad
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
-      ImageIndex = 41
-      WithoutNext = True
-    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1208,10 +1159,6 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1280,8 +1227,11 @@ inherited ReturnOutForm: TReturnOutForm
       Category = 0
     end
     object bbStartLoad: TdxBarButton
-      Action = macStartLoad
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
       Category = 0
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1092#1072#1081#1083#1072
+      Visible = ivAlways
+      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

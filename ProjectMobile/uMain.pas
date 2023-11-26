@@ -2437,7 +2437,7 @@ begin
     ppEnterAmount.IsOpen := true;
   end
   else
-  // вызов причин возврата
+  // вызов основания возврата
   if (ItemObject.Name = 'SubjectDocName') and FCanEditDocument then
   begin
 
@@ -3098,7 +3098,7 @@ begin
   FReturnInSubjectDocId := DM.cdsReturnInSubjectDocId.AsInteger;
   if FReturnInSubjectDocId <> 0 then
     eSubjectDoc.Text := DM.cdsReturnInSubjectDocName.AsString
-  else eSubjectDoc.Text := 'Без причины';
+  else eSubjectDoc.Text := 'Без основания';
   FReturnInSubjectDocName := eSubjectDoc.Text;
   FCanEditDocument := not DM.cdsReturnInisSync.AsBoolean;
 
@@ -3368,7 +3368,7 @@ procedure TfrmMain.bAddReturnInItemClick(Sender: TObject);
 begin
   if FReturnInSubjectDocId = 0 then
   begin
-    ShowMessage('Не заполнена причина возврата.'#13#10#13#10'Добвлять товар запрещено.');
+    ShowMessage('Не заполнена основание возврата.'#13#10#13#10'Добвлять товар запрещено.');
     Exit;
   end;
 
@@ -3487,15 +3487,15 @@ procedure TfrmMain.bClearSubjectDocClick(Sender: TObject);
 begin
   if FSubjectDocItem = 'ReturnIn' then
   begin
-    ShowMessage('Очищать причину возврата в документе возврат покупателя запрещено.');
+    ShowMessage('Необходимо выбрать Основание возврата.');
     Exit;
 //    FReturnInSubjectDocId := 0;
-//    FReturnInSubjectDocName := 'Без причины';
+//    FReturnInSubjectDocName := 'Без основания';
   end else if FSubjectDocItem = 'ReturnInItem' then
   begin
     DM.cdsReturnInItems.Edit;
     DM.cdsReturnInItemsSubjectDocId.AsInteger := FReturnInSubjectDocId;
-    DM.cdsReturnInItemsSubjectDocName.AsString := FReturnInSubjectDocName; //'Без причины';
+    DM.cdsReturnInItemsSubjectDocName.AsString := FReturnInSubjectDocName; //'Без основания';
     DM.cdsReturnInItems.Post;
   end;
 
@@ -4635,13 +4635,13 @@ begin
   if FSubjectDocItem = 'ReturnIn' then
   begin
     FReturnInSubjectDocId := DM.qrySubjectDocId.AsInteger;
-    if FReturnInSubjectDocId = 0 then FReturnInSubjectDocName := 'Без причины'
+    if FReturnInSubjectDocId = 0 then FReturnInSubjectDocName := 'Без основания'
     else FReturnInSubjectDocName := DM.qrySubjectDocValueData.AsString;
   end else if FSubjectDocItem = 'ReturnInItem' then
   begin
     DM.cdsReturnInItems.Edit;
     DM.cdsReturnInItemsSubjectDocId.AsInteger := DM.qrySubjectDocId.AsInteger;
-    if DM.cdsReturnInItemsSubjectDocId.AsInteger = 0 then DM.cdsReturnInItemsSubjectDocName.AsString := 'Без причины'
+    if DM.cdsReturnInItemsSubjectDocId.AsInteger = 0 then DM.cdsReturnInItemsSubjectDocName.AsString := 'Без основания'
     else DM.cdsReturnInItemsSubjectDocName.AsString := DM.qrySubjectDocValueData.AsString;
     DM.cdsReturnInItems.Post;
   end;
