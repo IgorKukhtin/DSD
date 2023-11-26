@@ -30,12 +30,15 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderPartner());
-
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -53,7 +56,7 @@ BEGIN
                                          , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
                                          , MovementLinkMovement_Invoice.MovementChildId AS MovementId_Invoice
                                     FROM tmpStatus
-                                         INNER JOIN Movement AS Movement_OrderPartner 
+                                         INNER JOIN Movement AS Movement_OrderPartner
                                                              ON Movement_OrderPartner.StatusId = tmpStatus.StatusId
                                                             AND Movement_OrderPartner.OperDate BETWEEN inStartDate AND inEndDate
                                                             AND Movement_OrderPartner.DescId = zc_Movement_OrderPartner()
@@ -101,14 +104,14 @@ BEGIN
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
-  
+
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
              , Object_From.ValueData                      AS FromName
              , Object_To.Id                               AS ToId
              , Object_To.ObjectCode                       AS ToCode
              , Object_To.ValueData                        AS ToName
-             , Object_PaidKind.Id                         AS PaidKindId      
+             , Object_PaidKind.Id                         AS PaidKindId
              , Object_PaidKind.ValueData                  AS PaidKindName
 
              , MovementString_Comment.ValueData :: TVarChar AS Comment
@@ -175,7 +178,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Insert
                                      ON MLO_Insert.MovementId = Movement_OrderPartner.Id
                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
         LEFT JOIN MovementDate AS MovementDate_Update
                                ON MovementDate_Update.MovementId = Movement_OrderPartner.Id
@@ -183,7 +186,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Update
                                      ON MLO_Update.MovementId = Movement_OrderPartner.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
        ;
 
 END;

@@ -43,6 +43,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
      -- Результат
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
@@ -146,7 +150,7 @@ BEGIN
                                                                 ON MLM_Invoice.MovementChildId = tmp.MovementId_Invoice
                                                                AND MLM_Invoice.DescId          = zc_MovementLinkMovement_Invoice()
                                 INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MLM_Invoice.MovementId
-                                                                           AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()  
+                                                                           AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()
                                                                            AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -175,7 +179,7 @@ BEGIN
 
            , Movement_Invoice.Id AS MovementId_Invoice
            , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
-           , Movement_Invoice.InvNumber        AS InvNumber_Invoice 
+           , Movement_Invoice.InvNumber        AS InvNumber_Invoice
            --parent для Invoice
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent

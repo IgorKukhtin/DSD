@@ -23,11 +23,15 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ProductionPersonal());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -45,7 +49,7 @@ BEGIN
                                                                  ON Movement_ProductionPersonal.StatusId = tmpStatus.StatusId
                                                                 AND Movement_ProductionPersonal.OperDate BETWEEN inStartDate AND inEndDate
                                                                 AND Movement_ProductionPersonal.DescId = zc_Movement_ProductionPersonal()
-           
+
                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                                           ON MovementLinkObject_Unit.MovementId = Movement_ProductionPersonal.Id
                                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()

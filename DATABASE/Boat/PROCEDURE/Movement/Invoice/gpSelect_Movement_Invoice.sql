@@ -69,8 +69,12 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbProductId Integer;
 BEGIN
-
+     -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
 
      -- Результат
      RETURN QUERY
@@ -421,7 +425,7 @@ BEGIN
 
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                              AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()   
+                              AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
 
 ;
 
