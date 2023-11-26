@@ -136,7 +136,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Top = 170
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.#### '#1043#1056#1053
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 15
     Width = 120
   end
@@ -145,7 +145,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Top = 170
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.#### EUR'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 27
     Width = 100
   end

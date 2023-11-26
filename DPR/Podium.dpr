@@ -96,7 +96,9 @@ uses
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
   UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
-  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
+  EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.res}
 
