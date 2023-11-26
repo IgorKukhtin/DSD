@@ -1990,7 +1990,7 @@ begin
         GetDictionaries('MovementTask');
         GetDictionaries('MovementItemTask');
 
-        SetNewProgressTask('Загрузка причин возврата');
+        SetNewProgressTask('Загрузка оснований возврата');
         GetDictionaries('SubjectDoc');
 
         SyncDataIn := Now();
@@ -5145,7 +5145,7 @@ begin
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
 
       cdsReturnInSubjectDocId.AsVariant := qryReturnIn.FieldByName('SubjectDocId').AsVariant;
-      if cdsReturnInSubjectDocId.AsInteger = 0 then cdsReturnInSubjectDocName.AsString := 'Без причины'
+      if cdsReturnInSubjectDocId.AsInteger = 0 then cdsReturnInSubjectDocName.AsString := 'Без основания'
       else cdsReturnInSubjectDocName.AsString := qryReturnIn.FieldByName('SubjectDocName').AsString;
 
       cdsReturnInName.AsString := 'Возврат №' + qryReturnIn.FieldByName('INVNUMBER').AsString + ' от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
@@ -5264,7 +5264,7 @@ begin
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
       cdsReturnInSubjectDocId.AsVariant := qryReturnIn.FieldByName('SubjectDocId').AsVariant;
-      if cdsReturnInSubjectDocId.AsInteger = 0 then cdsReturnInSubjectDocName.AsString := 'Без причины'
+      if cdsReturnInSubjectDocId.AsInteger = 0 then cdsReturnInSubjectDocName.AsString := 'Без основания'
       else cdsReturnInSubjectDocName.AsString := qryReturnIn.FieldByName('SubjectDocName').AsString;
       cdsReturnInName.AsString := 'Возврат №' + qryReturnIn.FieldByName('INVNUMBER').AsString + ' от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
@@ -5347,15 +5347,15 @@ begin
   then
   begin
     cdsReturnInItemsRecalcPriceName.AsString := ArrValue[10]; // цены пересчитаны или нет
-    cdsReturnInItemsSubjectDocId.AsString := ArrValue[11];      // Причина возврата
-    if cdsReturnInItemsSubjectDocId.AsInteger = 0 then cdsReturnInItemsSubjectDocName.AsString := 'Без причины'
-    else cdsReturnInItemsSubjectDocName.AsString := ArrValue[12];    // Причина возврата название
+    cdsReturnInItemsSubjectDocId.AsString := ArrValue[11];      // Основание возврата
+    if cdsReturnInItemsSubjectDocId.AsInteger = 0 then cdsReturnInItemsSubjectDocName.AsString := 'Без основания'
+    else cdsReturnInItemsSubjectDocName.AsString := ArrValue[12];    // Основание возврата название
   end
   else
   begin
     cdsReturnInItemsRecalcPriceName.AsString := '-';
-    cdsReturnInItemsSubjectDocId.AsString := '0';      // Причина возврата
-    cdsReturnInItemsSubjectDocName.AsString := 'Без причины'
+    cdsReturnInItemsSubjectDocId.AsString := '0';      // Основание возврата
+    cdsReturnInItemsSubjectDocName.AsString := 'Без основания'
   end;
   if DM.cdsReturnInItemsSubjectDocId.AsInteger = 0 then
   begin
@@ -5565,7 +5565,7 @@ begin
   Params.Free;
 end;
 
-{ начитка справочника причина возврата }
+{ начитка справочника основания возврата }
 procedure TDM.GenerateReturnInSubjectDoc;
 var
   Params: TParams;

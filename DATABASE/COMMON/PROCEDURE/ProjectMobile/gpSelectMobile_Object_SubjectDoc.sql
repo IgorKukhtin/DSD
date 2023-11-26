@@ -36,7 +36,7 @@ BEGIN
               , COALESCE(NULLIF(ObjectString_Subject_Short.valuedata, ''), Object_SubjectDoc.ValueData) :: TVarChar   AS Name
               , Object_SubjectDoc.ValueData                                                                           AS BaseName
               , COALESCE(NULLIF(ObjectString_Reason_Short.valuedata, ''), Object_Reason.ValueData, '') :: TVarChar    AS CauseName
-              , NOT Object_SubjectDoc.isErased AS isErased
+              , COALESCE (ObjectString_Subject_Short.valuedata, '') = '' AS isErased
               , TRUE   AS isSync
          FROM Object AS Object_SubjectDoc
 
@@ -54,8 +54,7 @@ BEGIN
                                     AND ObjectString_Reason_Short.DescId = zc_ObjectString_Reason_Short()
 
          WHERE Object_SubjectDoc.DescId = zc_Object_SubjectDoc()
-           AND Object_SubjectDoc.isErased = TRUE
-           AND Object_SubjectDoc.ObjectCode > 1000;
+         ;
       END IF;
   
 END;$BODY$
@@ -73,4 +72,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_SubjectDoc(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpSelectMobile_Object_SubjectDoc(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())

@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter;
+  cxSplitter, ExternalLoad;
 
 type
   TLossForm = class(TAncestorDocumentForm)
@@ -94,6 +94,13 @@ type
     spSelect_MI_Child: TdsdStoredProc;
     DetailDS: TDataSource;
     DetailDCS: TClientDataSet;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    spInsertUpdate_TotalSumm: TdsdStoredProc;
+    actInsertUpdate_TotalSumm: TdsdExecStoredProc;
   private
     { Private declarations }
   public

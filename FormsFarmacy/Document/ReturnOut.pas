@@ -116,9 +116,6 @@ type
     MorionCode: TcxGridDBColumn;
     actSetVisibleAction: TdsdSetVisibleAction;
     spGetImportSettingId: TdsdStoredProc;
-    actDoLoad: TExecuteImportSettingsAction;
-    actGetImportSetting: TdsdExecStoredProc;
-    macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
   private
     { Private declarations }

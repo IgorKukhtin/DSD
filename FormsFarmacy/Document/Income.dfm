@@ -2110,6 +2110,9 @@
           Action = actDoLoad
         end
         item
+          Action = actInsertUpdate_TotalSumm
+        end
+        item
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072'?'
@@ -2132,6 +2135,17 @@
           ValueParam.DataType = ftBoolean
           ValueParam.MultiSelectSeparator = ','
         end>
+    end
+    object actInsertUpdate_TotalSumm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_TotalSumm
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_TotalSumm
+        end>
+      Caption = 'actInsertUpdate_TotalSumm'
     end
   end
   inherited MasterDS: TDataSource
@@ -4675,5 +4689,22 @@
     PackSize = 1
     Left = 200
     Top = 440
+  end
+  object spInsertUpdate_TotalSumm: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementFloat_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 464
   end
 end

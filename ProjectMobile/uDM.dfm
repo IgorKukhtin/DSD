@@ -2341,7 +2341,8 @@ object DM: TDM
       '     , BaseName  '
       '     , CauseName  '
       'from OBJECT_SUBJECTDOC os'
-      'where os.ISERASED = 0')
+      'where os.ISERASED = 0'
+      'order by VALUEDATA')
     Left = 200
     Top = 604
     object qrySubjectDocId: TIntegerField
