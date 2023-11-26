@@ -74,6 +74,15 @@ BEGIN
                                                , inCurrencyValueEUR, 1)
                           - zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, 1)
                            ;
+
+     -- если есть EUR, меняем inAmountDiscount, т.к. Кросс-курс
+     /*ELSEIF inAmountEUR > 0 AND inAmountDiscount = 0 -- inAmountGRN = 0 AND 1=0
+     THEN
+        inAmountDiscount:= zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1)
+                         -  inAmountToPay_GRN
+                           ;
+        RAISE EXCEPTION 'Ошибка.    <%>  <%>', inAmountDiscount, inAmountDiscount;*/
+
      END IF;
 
 
