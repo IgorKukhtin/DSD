@@ -399,9 +399,9 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Width = 115
     end
     object lbSearchCode: TcxLabel
-      Left = 10
+      Left = 26
       Top = 32
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072' : '
+      Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
