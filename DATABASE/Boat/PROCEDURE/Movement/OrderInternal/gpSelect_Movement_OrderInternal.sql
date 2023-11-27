@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , FromId Integer , FromName TVarChar
              , ProductName TVarChar
              , CIN TVarChar
+             , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , InsertName_mi TVarChar
              , InsertDate_mi TDateTime
              )
@@ -140,6 +141,9 @@ BEGIN
              , Object_From.ValueData                AS FromName
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)  AS ProductName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN
+             , Object_Model.Id                      AS ModelId
+             , Object_Model.ValueData               AS ModelName
+             , (Object_Brand.ValueData || '-' || Object_Model.ValueData) ::TVarChar AS ModelName_full
 
              , MovementItem.InsertName AS InsertName_mi
              , MovementItem.InsertDate AS InsertDate_mi
@@ -199,7 +203,17 @@ BEGIN
 
              LEFT JOIN ObjectString AS ObjectString_CIN
                                     ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                   AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+                                   AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN() 
+
+             LEFT JOIN ObjectLink AS ObjectLink_Model
+                                  ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
+             LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Brand
+                                  ON ObjectLink_Brand.ObjectId = Object_Product.Id
+                                 AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
+             LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+
        ;
 
 END;

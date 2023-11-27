@@ -21,7 +21,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     Left = 0
     Top = 0
     Width = 912
-    Height = 31
+    Height = 61
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
@@ -55,8 +55,8 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel3: TcxLabel
-      Left = 444
-      Top = 4
+      Left = 200
+      Top = 34
       Caption = #8470' '#1079#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -67,24 +67,68 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 576
-      Top = 5
+      Left = 327
+      Top = 33
       TabOrder = 5
       DesignSize = (
-        131
+        110
         21)
-      Width = 131
+      Width = 110
+    end
+    object lbSearchArticle: TcxLabel
+      Left = 13
+      Top = 34
+      Caption = 'Artikel Nr: '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchArticle: TcxTextEdit
+      Left = 84
+      Top = 33
+      TabOrder = 7
+      DesignSize = (
+        110
+        21)
+      Width = 110
+    end
+    object cxLabel4: TcxLabel
+      Left = 445
+      Top = 34
+      Caption = #1059#1079#1077#1083': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchGoodsName: TcxTextEdit
+      Left = 489
+      Top = 33
+      TabOrder = 9
+      DesignSize = (
+        110
+        21)
+      Width = 110
     end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 87
     Width = 912
-    Height = 394
+    Height = 364
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 57
+    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -224,6 +268,15 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
         HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 100
+      end
+      object ModelName_full: TcxGridDBColumn
+        Caption = '***Model'
+        DataBinding.FieldName = 'ModelName_full'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
+        Options.Editing = False
+        Width = 80
       end
       object ItemName_goods: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -509,8 +562,8 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
-    Top = 125
+    Left = 24
+    Top = 109
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -529,8 +582,8 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 125
+    Left = 64
+    Top = 93
     DockControlHeights = (
       0
       0
@@ -704,8 +757,8 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
-    Top = 125
+    Left = 96
+    Top = 93
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1375,8 +1428,8 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 112
-    Top = 125
+    Left = 136
+    Top = 101
     object N3: TMenuItem
       Action = actInsert
     end
@@ -1480,8 +1533,7 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 376
-    Top = 8
+    Left = 352
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1583,10 +1635,18 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
     ColumnList = <
       item
         Column = InvNumber_OrderClient
+      end
+      item
+        Column = Article
+        TextEdit = edSearchArticle
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchGoodsName
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 624
-    Top = 160
+    Left = 688
+    Top = 88
   end
 end

@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , FromId_OrderClient Integer , FromName_OrderClient TVarChar
              , ProductName_OrderClient TVarChar
              , CIN_OrderClient TVarChar
+             , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , InsertName_mi TVarChar
              , InsertDate_mi TDateTime
              )
@@ -169,6 +170,10 @@ BEGIN
              , zfCalc_ValueData_isErased (Object_Product_OrderClient.ValueData, Object_Product_OrderClient.isErased)  AS ProductName_OrderClient
              , zfCalc_ValueData_isErased (ObjectString_CIN_OrderClient.ValueData,Object_Product_OrderClient.isErased) AS CIN_OrderClient
 
+             , Object_Model.Id                 AS ModelId
+             , Object_Model.ValueData          AS ModelName
+             , (Object_Brand.ValueData || '-' || Object_Model.ValueData) ::TVarChar AS ModelName_full
+
              , MovementItem.InsertName AS InsertName_mi
              , MovementItem.InsertDate AS InsertDate_mi
         FROM Movement_ProductionUnion
@@ -248,6 +253,15 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_CIN_OrderClient
                                ON ObjectString_CIN_OrderClient.ObjectId = Object_Product_OrderClient.Id
                               AND ObjectString_CIN_OrderClient.DescId = zc_ObjectString_Product_CIN()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Model
+                             ON ObjectLink_Model.ObjectId = Object_Product_OrderClient.Id
+                            AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
+        LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Brand
+                             ON ObjectLink_Brand.ObjectId = Object_Product_OrderClient.Id
+                            AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
+        LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
        ;
 

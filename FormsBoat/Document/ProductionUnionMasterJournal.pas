@@ -112,6 +112,10 @@ type
     edInvNumber_OrderClient: TcxTextEdit;
     actChoiceGuides: TdsdChoiceGuides;
     FieldFilter_Article: TdsdFieldFilter;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edSearchGoodsName: TcxTextEdit;
   private
   public
   end;
