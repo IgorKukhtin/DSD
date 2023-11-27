@@ -14,9 +14,18 @@ $BODY$
 BEGIN
 
      -- проверка
-     IF (SELECT ObjectFloat.ValueData ::Integer FROM ObjectFloat WHERE ObjectFloat.ObjectId = inId AND ObjectFloat.DescId = zc_ObjectFloat_ObjectCode_Basis()) = ioBasisCode
+     IF COALESCE ((SELECT ObjectFloat.ValueData ::Integer FROM ObjectFloat WHERE ObjectFloat.ObjectId = inId AND ObjectFloat.DescId = zc_ObjectFloat_ObjectCode_Basis()), 0) = COALESCE (ioBasisCode, 0)
      THEN
          RETURN;
+     END IF;
+
+
+     IF vbUserId = 343013 -- Нагорная Я.Г.
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение BasisCode с <%> на <%>'
+          , (SELECT ObjectFloat.ValueData ::Integer FROM ObjectFloat WHERE ObjectFloat.ObjectId = inId AND ObjectFloat.DescId = zc_ObjectFloat_ObjectCode_Basis())
+          , ioBasisCode
+           ;
      END IF;
 
      -- проверка прав пользователя на вызов процедуры
@@ -28,7 +37,7 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (inId, vbUserId, FALSE);
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
