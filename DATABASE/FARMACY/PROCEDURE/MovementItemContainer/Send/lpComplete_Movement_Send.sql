@@ -1345,7 +1345,7 @@ end if;*/
      IF vbIsDeferred = FALSE
      THEN
 
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPriceTwo(), MIC.MovementItemId, Sum(MIC.Amount * MIFloat_PriceWithVAT.ValueData) / Sum(MIC.Amount))
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPriceTwo(), MIC.MovementItemId, COALESCE(Sum(MIC.Amount * MIFloat_PriceWithVAT.ValueData) / Sum(MIC.Amount), 0))
         FROM MovementItemContainer AS MIC
 
              INNER JOIN ContainerLinkObject AS CLI_MI
@@ -1396,7 +1396,7 @@ end if;*/
                                      );
                                      
      ELSE
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), MIC.MovementItemId, Sum(MIC.Amount * MIFloat_PriceWithVAT.ValueData) / Sum(MIC.Amount))
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), MIC.MovementItemId, COALESCE(Sum(MIC.Amount * MIFloat_PriceWithVAT.ValueData) / Sum(MIC.Amount), 0))
         FROM MovementItemContainer AS MIC
 
              INNER JOIN ContainerLinkObject AS CLI_MI

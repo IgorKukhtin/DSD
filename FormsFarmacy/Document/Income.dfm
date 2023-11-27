@@ -1,27 +1,27 @@
 ﻿inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
-  ClientWidth = 1079
-  ExplicitWidth = 1101
+  ClientWidth = 1088
+  ExplicitWidth = 1110
   ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 201
-    Width = 1079
+    Width = 1088
     Height = 315
     ExplicitTop = 201
-    ExplicitWidth = 1079
+    ExplicitWidth = 1088
     ExplicitHeight = 315
     ClientRectBottom = 315
-    ClientRectRight = 1079
+    ClientRectRight = 1088
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1079
+      ExplicitWidth = 1088
       ExplicitHeight = 291
       inherited cxGrid: TcxGrid
-        Width = 1079
+        Width = 1088
         Height = 291
-        ExplicitWidth = 1079
+        ExplicitWidth = 1088
         ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -733,10 +733,10 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1079
+    Width = 1088
     Height = 169
     TabOrder = 3
-    ExplicitWidth = 1079
+    ExplicitWidth = 1088
     ExplicitHeight = 169
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2147,6 +2147,22 @@
         end>
       Caption = 'actInsertUpdate_TotalSumm'
     end
+    object actUpdate_MovementItem_Income_SetEqualAmount: TdsdExecStoredProc
+      Category = 'AmountManual'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MovementItem_Income_SetEqualAmount
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MovementItem_Income_SetEqualAmount
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086'> = <'#1082#1086#1083'-'#1074#1086'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086'> = <'#1082#1086#1083'-'#1074#1086'>'
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -2294,6 +2310,14 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MovementItem_Income_SetEqualAmount'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2396,8 +2420,8 @@
       ImageIndex = 18
     end
     inherited bbStatic: TdxBarStatic
-      Caption = '                            '
-      Hint = '                            '
+      Caption = '                    '
+      Hint = '                    '
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -2477,6 +2501,10 @@
     end
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
+      Category = 0
+    end
+    object bbUpdate_MovementItem_Income_SetEqualAmount: TdxBarButton
+      Action = actUpdate_MovementItem_Income_SetEqualAmount
       Category = 0
     end
   end
@@ -4706,5 +4734,22 @@
     PackSize = 1
     Left = 304
     Top = 464
+  end
+  object spUpdate_MovementItem_Income_SetEqualAmount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_SetEqualAmount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 456
   end
 end

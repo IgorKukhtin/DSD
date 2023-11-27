@@ -12,17 +12,17 @@ inherited LossForm: TLossForm
     Width = 877
     Height = 506
     ExplicitTop = 125
-    ExplicitWidth = 876
+    ExplicitWidth = 877
     ExplicitHeight = 506
     ClientRectBottom = 506
     ClientRectRight = 877
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 876
+      ExplicitWidth = 877
       ExplicitHeight = 482
       inherited cxGrid: TcxGrid
         Width = 877
         Height = 330
-        ExplicitWidth = 876
+        ExplicitWidth = 877
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -181,7 +181,6 @@ inherited LossForm: TLossForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 876
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -300,7 +299,6 @@ inherited LossForm: TLossForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 876
       end
     end
   end
@@ -308,7 +306,7 @@ inherited LossForm: TLossForm
     Width = 877
     Height = 93
     TabOrder = 3
-    ExplicitWidth = 876
+    ExplicitWidth = 877
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -420,6 +418,7 @@ inherited LossForm: TLossForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      AfterAction = actSetEnabledAction
       StoredProcList = <
         item
           StoredProc = spGet
@@ -758,6 +757,20 @@ inherited LossForm: TLossForm
         end>
       Caption = 'actInsertUpdate_TotalSumm'
     end
+    object actSetEnabledAction: TdsdSetEnabledAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetEnabledAction'
+      SetEnabledParams = <
+        item
+          Component = PriceIn
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isEditPriceIn'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1055,6 +1068,12 @@ inherited LossForm: TLossForm
         Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEditPriceIn'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 456
@@ -1197,9 +1216,11 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isEditPriceIn'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = FormParams
+        ComponentItem = 'isEditPriceIn'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -1479,12 +1500,12 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceIn'
+        Name = 'ioPriceIn'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceIn'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
