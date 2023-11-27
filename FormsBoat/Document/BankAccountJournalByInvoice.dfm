@@ -9,21 +9,23 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 59
     Width = 983
-    Height = 260
+    Height = 258
     TabOrder = 3
-    ExplicitWidth = 819
-    ExplicitHeight = 260
-    ClientRectBottom = 260
+    ExplicitTop = 89
+    ExplicitWidth = 983
+    ExplicitHeight = 228
+    ClientRectBottom = 258
     ClientRectRight = 983
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 819
-      ExplicitHeight = 260
+      ExplicitWidth = 983
+      ExplicitHeight = 228
       inherited cxGrid: TcxGrid
         Width = 983
-        Height = 260
-        ExplicitWidth = 819
-        ExplicitHeight = 260
+        Height = 258
+        ExplicitWidth = 983
+        ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -306,6 +308,22 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
             Width = 120
           end
+          object InvNumber_Invoice: TcxGridDBColumn
+            Caption = '***Interne Nr (Search)'
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1087#1086#1080#1089#1082')'
+            Width = 120
+          end
           object PaidKindName_Invoice: TcxGridDBColumn
             Caption = '***'#1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName_Invoice'
@@ -384,6 +402,35 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Options.Editing = False
             Width = 78
           end
+          object InvNumberFull_parent: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 109
+          end
+          object InvNumber_parent: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'InvNumber_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1087#1086#1080#1089#1082')'
+            Options.Editing = False
+            Width = 109
+          end
+          object DescName_parent: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DescName_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 110
+          end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
@@ -454,7 +501,9 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
   end
   inherited Panel: TPanel
     Width = 983
-    ExplicitWidth = 819
+    Height = 33
+    ExplicitWidth = 983
+    ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 885
       Top = 0
@@ -543,7 +592,6 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
     Height = 39
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 819
     object btnFormClose: TcxButton
       Left = 525
       Top = 8
@@ -1186,7 +1234,8 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 131
+    Left = 72
+    Top = 179
   end
   inherited BarManager: TdxBarManager
     Left = 128
@@ -1306,6 +1355,9 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
       Action = macUpdateMoneyPlace
       Category = 0
     end
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Top = 184
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1695,8 +1747,8 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 507
-    Top = 5
+    Left = 467
+    Top = 65533
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
