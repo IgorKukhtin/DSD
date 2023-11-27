@@ -176,9 +176,9 @@ BEGIN
            , CASE WHEN tmpInvoice_Params.Amount < 0 AND tmpMovement.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
 
              -- —умма по —чету - только в последнем платеже
-           , CASE WHEN tmpInvoice_Params.Amount > 0 AND MLM_Invoice.Ord = 1
+           , CASE WHEN tmpInvoice_Params.Amount > 0 AND tmpMovement.Ord = 1
                        THEN  1 * tmpInvoice_Params.Amount
-                  WHEN tmpInvoice_Params.Amount < 0 AND MLM_Invoice.Ord = 1
+                  WHEN tmpInvoice_Params.Amount < 0 AND tmpMovement.Ord = 1
                        THEN  1 * tmpInvoice_Params.Amount
                   ELSE 0
              END :: TFloat AS Amount_Invoice
