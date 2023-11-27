@@ -1,29 +1,29 @@
 inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
   Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 356
-  ClientWidth = 819
+  ClientWidth = 983
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 835
+  ExplicitWidth = 999
   ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 819
+    Width = 983
     Height = 260
     TabOrder = 3
     ExplicitWidth = 819
-    ExplicitHeight = 299
+    ExplicitHeight = 260
     ClientRectBottom = 260
-    ClientRectRight = 819
+    ClientRectRight = 983
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 819
-      ExplicitHeight = 299
+      ExplicitHeight = 260
       inherited cxGrid: TcxGrid
-        Width = 819
+        Width = 983
         Height = 260
         ExplicitWidth = 819
-        ExplicitHeight = 299
+        ExplicitHeight = 260
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -453,37 +453,37 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 819
+    Width = 983
     ExplicitWidth = 819
     inherited deStart: TcxDateEdit
-      Left = 685
+      Left = 885
       Top = 0
       EditValue = 43101d
       Visible = False
-      ExplicitLeft = 685
+      ExplicitLeft = 885
       ExplicitTop = 0
     end
     inherited deEnd: TcxDateEdit
-      Left = 710
+      Left = 898
       Top = 6
       EditValue = 43101d
       Visible = False
-      ExplicitLeft = 710
+      ExplicitLeft = 898
       ExplicitTop = 6
     end
     inherited cxLabel1: TcxLabel
-      Left = 588
-      Top = 1
+      Left = 885
+      Top = 8
       Visible = False
-      ExplicitLeft = 588
-      ExplicitTop = 1
+      ExplicitLeft = 885
+      ExplicitTop = 8
     end
     inherited cxLabel2: TcxLabel
-      Left = 600
-      Top = 7
+      Left = 832
+      Top = 1
       Visible = False
-      ExplicitLeft = 600
-      ExplicitTop = 7
+      ExplicitLeft = 832
+      ExplicitTop = 1
     end
     object cxLabel6: TcxLabel
       Left = 14
@@ -501,15 +501,49 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
       TabOrder = 5
       Width = 236
     end
+    object cxLabel3: TcxLabel
+      Left = 294
+      Top = 7
+      Caption = 'Lieferanten/ Kunden:'
+    end
+    object ceObject: TcxButtonEdit
+      Left = 400
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 244
+    end
+    object cxLabel5: TcxLabel
+      Left = 651
+      Top = 8
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 713
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 226
+    end
   end
   object Panel_btn: TPanel [2]
     Left = 0
     Top = 317
-    Width = 819
+    Width = 983
     Height = 39
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 316
+    ExplicitWidth = 819
     object btnFormClose: TcxButton
       Left = 525
       Top = 8
@@ -1334,6 +1368,24 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -1557,8 +1609,121 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectId'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 168
     Top = 65531
+  end
+  object GuidesObject: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceObject
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TUnion_ClientPartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnion_ClientPartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'DayCalendar'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DayCalendar'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKind_Value'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 507
+    Top = 5
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 807
+    Top = 2
   end
 end
