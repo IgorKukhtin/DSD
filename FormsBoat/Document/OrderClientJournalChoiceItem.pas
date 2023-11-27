@@ -114,6 +114,10 @@ type
     btnUpdate: TcxButton;
     btnFormClose: TcxButton;
     bbsPrint: TdxBarSubItem;
+    actSetNull_GuidesClient: TdsdSetDefaultParams;
+    actClientChoiceForm: TOpenChoiceForm;
+    btnSetNull_GuidesClient: TcxButton;
+    btnClientChoiceForm: TcxButton;
   private
   public
   end;

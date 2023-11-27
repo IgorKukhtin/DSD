@@ -122,7 +122,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1034
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -530,7 +529,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1034
     object btnFormClose: TcxButton
       Left = 607
       Top = 7
@@ -1772,7 +1770,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 568
+    Left = 896
     Top = 3
   end
   object FieldFilter_Article: TdsdFieldFilter

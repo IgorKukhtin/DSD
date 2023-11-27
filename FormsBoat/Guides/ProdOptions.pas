@@ -97,6 +97,10 @@ type
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     actFormClose: TdsdFormClose;
+    actSetNull_GuidesModel: TdsdSetDefaultParams;
+    btnSetNull_GuidesClient: TcxButton;
+    btnClientChoiceForm: TcxButton;
+    actModelChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
