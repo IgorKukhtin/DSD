@@ -38,6 +38,9 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbIsInsert Boolean;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbPersonalId_find Integer;
+   DECLARE vbUnitId_find Integer;
+   DECLARE vbPositionId_find Integer;
    DECLARE vbCurrencyPartnerId Integer;
 BEGIN
      -- расчет - 1-ое число месяца
@@ -227,6 +230,29 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Не найдена <Ведомость начисления зарплаты>.';
          END IF;
+         
+         -- проверка
+         SELECT lfSelect.PersonalId, lfSelect.UnitId, lfSelect.PositionId
+                 INTO vbPersonalId_find, vbUnitId_find, vbPositionId_find
+         FROM lfSelect_Object_Member_findPersonal (inUserId :: TVarChar) AS lfSelect
+         WHERE lfSelect.PersonalId = inMoneyPlaceId;
+         
+         -- проверка
+         IF COALESCE (vbPersonalId_find, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя выбрать сотрудника <%> %с должностью <%>.%Можно выбрать только основное место работы.', lfGet_Object_ValueData_sh (inMoneyPlaceId), CHR (13), lfGet_Object_ValueData_sh (inPositionId), CHR (13);
+         END IF;
+         -- проверка
+         IF COALESCE (vbUnitId_find, 0) <> inUnitId
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для сотрудника <%> %Необходим выбрать подразделение <%>.%Выбрано <%>.', lfGet_Object_ValueData_sh (inMoneyPlaceId), CHR (13), lfGet_Object_ValueData_sh (vbUnitId_find), CHR (13), lfGet_Object_ValueData_sh (inUnitId);
+         END IF;
+         -- проверка
+         IF COALESCE (vbPositionId_find, 0) <> inPositionId
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для сотрудника <%> %необходим выбрать должность <%>.%Выбрано <%>.', lfGet_Object_ValueData_sh (inMoneyPlaceId), CHR (13), lfGet_Object_ValueData_sh (vbPositionId_find), CHR (13), lfGet_Object_ValueData_sh (inPositionId);
+         END IF;
+
 
          --
          IF inUserId <> 14599 -- Коротченко Т.Н.
