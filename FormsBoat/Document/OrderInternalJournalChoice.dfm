@@ -223,6 +223,15 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         Options.Editing = False
         Width = 100
       end
+      object ModelName_full: TcxGridDBColumn
+        Caption = 'Model'
+        DataBinding.FieldName = 'ModelName_full'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
+        Options.Editing = False
+        Width = 80
+      end
       object ItemName_goods: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'ItemName_goods'

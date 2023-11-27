@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1087#1094#1080#1080'>'
-  ClientHeight = 376
-  ClientWidth = 785
+  ClientHeight = 411
+  ClientWidth = 854
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 785
-    Height = 309
+    Width = 854
+    Height = 346
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 350
+    ExplicitWidth = 785
+    ExplicitHeight = 309
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -465,35 +466,35 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Width = 245
   end
   object Panel_btn: TPanel
     Left = 0
-    Top = 335
-    Width = 785
-    Height = 41
+    Top = 372
+    Width = 854
+    Height = 39
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 341
+    ExplicitTop = 371
     object btnInsert: TcxButton
-      Left = 395
+      Left = 546
       Top = 6
-      Width = 100
+      Width = 90
       Height = 26
       Action = actInsert
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 521
-      Top = 7
-      Width = 100
+      Left = 650
+      Top = 6
+      Width = 90
       Height = 25
       Action = actUpdate
       TabOrder = 1
     end
     object btnChoiceGuides: TcxButton
-      Left = 41
+      Left = 9
       Top = 6
       Width = 90
       Height = 25
@@ -501,22 +502,42 @@
       TabOrder = 2
     end
     object btnSetErased: TcxButton
-      Left = 646
-      Top = 7
-      Width = 100
+      Left = 752
+      Top = 6
+      Width = 90
       Height = 25
       Action = actSetErased
       TabOrder = 3
     end
     object btnFormClose: TcxButton
-      Left = 159
-      Top = 7
+      Left = 111
+      Top = 6
       Width = 90
       Height = 25
       Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+    end
+    object btnSetNull_GuidesClient: TcxButton
+      Left = 233
+      Top = 6
+      Width = 146
+      Height = 25
+      Action = actSetNull_GuidesModel
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object btnClientChoiceForm: TcxButton
+      Left = 390
+      Top = 6
+      Width = 117
+      Height = 25
+      Action = actModelChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
     end
   end
   object DataSource: TDataSource
@@ -1088,6 +1109,37 @@
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actModelChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1052#1086#1076#1077#1083#1100
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1052#1086#1076#1077#1083#1100
+      ImageIndex = 7
+      FormName = 'TProdModelForm'
+      FormNameParam.Value = 'TProdModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesProdModel
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelName_full'
+          Value = ''
+          Component = GuidesProdModel
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actChoiceFormModel: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1457,6 +1509,28 @@
       PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       ImageIndex = 52
+    end
+    object actSetNull_GuidesModel: TdsdSetDefaultParams
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1052#1086#1076#1077#1083#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1052#1086#1076#1077#1083#1080
+      ImageIndex = 24
+      DefaultParams = <
+        item
+          Param.Value = ''
+          Param.Component = GuidesProdModel
+          Param.ComponentItem = 'Id'
+          Param.MultiSelectSeparator = ','
+          Value = 0
+        end
+        item
+          Param.Value = ''
+          Param.Component = GuidesProdModel
+          Param.ComponentItem = 'TextValue'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = ''
+        end>
     end
   end
   object spSelect: TdsdStoredProc

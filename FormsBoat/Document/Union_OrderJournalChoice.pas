@@ -76,6 +76,10 @@ type
     actClientPartnerChoiceForm: TOpenChoiceForm;
     btnSetNull_GuidesClient: TcxButton;
     btnClientPartnerChoiceForm: TcxButton;
+    lbSearchArticle: TcxLabel;
+    edSearchInvNumber_Invoice: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edSearchObjectName: TcxTextEdit;
   private
     { Private declarations }
   public

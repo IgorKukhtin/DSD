@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumber
              , ProductCIN TVarChar
 
              , Comment TVarChar
-             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
 
@@ -145,7 +145,8 @@ BEGIN
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Movement_Invoice.Id                      AS MovementId_Invoice
-             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
+             , Movement_Invoice.InvNumber               AS InvNumber_Invoice
              , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
 
              , Object_InfoMoney_View.InfoMoneyId

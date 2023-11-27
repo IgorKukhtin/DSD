@@ -3,7 +3,7 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1054#1087#1094#1080#1080'>'
   ClientHeight = 376
-  ClientWidth = 730
+  ClientWidth = 967
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,13 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 730
+    Width = 967
     Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 785
-    ExplicitHeight = 350
+    ExplicitWidth = 730
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -435,30 +434,28 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Width = 245
   end
   object Panel_btn: TPanel
     Left = 0
     Top = 335
-    Width = 730
+    Width = 967
     Height = 41
     Align = alBottom
     TabOrder = 7
-    ExplicitLeft = 8
-    ExplicitTop = 341
-    ExplicitWidth = 785
+    ExplicitWidth = 730
     object btnInsert: TcxButton
-      Left = 339
-      Top = 6
+      Left = 623
+      Top = 7
       Width = 99
       Height = 25
       Action = actInsert
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 465
-      Top = 6
+      Left = 739
+      Top = 7
       Width = 99
       Height = 25
       Action = actUpdate
@@ -473,7 +470,7 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
       TabOrder = 2
     end
     object btnSetErased: TcxButton
-      Left = 590
+      Left = 857
       Top = 7
       Width = 99
       Height = 25
@@ -481,7 +478,7 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
       TabOrder = 3
     end
     object btnFormClose: TcxButton
-      Left = 158
+      Left = 150
       Top = 7
       Width = 90
       Height = 25
@@ -489,6 +486,26 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+    end
+    object btnSetNull_GuidesClient: TcxButton
+      Left = 289
+      Top = 7
+      Width = 146
+      Height = 25
+      Action = actSetNull_GuidesModel
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+    object btnClientChoiceForm: TcxButton
+      Left = 446
+      Top = 7
+      Width = 117
+      Height = 25
+      Action = actModelChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
     end
   end
   object DataSource: TDataSource
@@ -1211,6 +1228,59 @@ object ProdOptions_ObjectForm: TProdOptions_ObjectForm
       PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       ImageIndex = 52
+    end
+    object actSetNull_GuidesModel: TdsdSetDefaultParams
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1052#1086#1076#1077#1083#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1052#1086#1076#1077#1083#1080
+      ImageIndex = 24
+      DefaultParams = <
+        item
+          Param.Value = ''
+          Param.Component = GuidesProdModel
+          Param.ComponentItem = 'Id'
+          Param.MultiSelectSeparator = ','
+          Value = 0
+        end
+        item
+          Param.Value = ''
+          Param.Component = GuidesProdModel
+          Param.ComponentItem = 'TextValue'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = ''
+        end>
+    end
+    object actModelChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1052#1086#1076#1077#1083#1100
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1052#1086#1076#1077#1083#1100
+      ImageIndex = 7
+      FormName = 'TProdModelForm'
+      FormNameParam.Value = 'TProdModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesProdModel
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelName_full'
+          Value = ''
+          Component = GuidesProdModel
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object spSelect: TdsdStoredProc

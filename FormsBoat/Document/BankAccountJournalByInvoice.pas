@@ -74,6 +74,12 @@ type
     btnFormClose: TcxButton;
     btnSetNull_GuidesClient: TcxButton;
     actGuidesInvoiceChoiceForm: TOpenChoiceForm;
+    cxLabel3: TcxLabel;
+    ceObject: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesObject: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public

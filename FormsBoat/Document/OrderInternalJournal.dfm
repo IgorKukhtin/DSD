@@ -322,6 +322,16 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Options.Editing = False
         Width = 100
       end
+      object ModelName_full: TcxGridDBColumn
+        Caption = 'Model'
+        DataBinding.FieldName = 'ModelName_full'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1101#1083#1077#1084#1077#1085#1090')'
+        Options.Editing = False
+        Width = 80
+      end
       object TotalCount: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
