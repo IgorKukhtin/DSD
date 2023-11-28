@@ -60,6 +60,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CityToName TVarChar
              , Address_Unit TVarChar
 
+             , isWeCar Boolean
+
 
               )
 AS
@@ -236,6 +238,16 @@ BEGIN
            , COALESCE (ObjectString_Unit_AddressEDIN_Unit.ValueData, 
                        ObjectString_Unit_Address_from.ValueData, 
                        OH_JuridicalDetails_From.JuridicalAddress)                        AS Address_Unit
+                       
+           , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_GLNCode_To.ValueData
+                                    , inGLNCodeCorporate_partner := ObjectString_GLNCodeCorporate_To.ValueData
+                                    , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate_To.ValueData
+                                    , inGLNCodeCorporate_main    := ObjectString_Juridical_GLNCode_From.ValueData
+                                     ) = 
+             COALESCE (ObjectString_Juridical_GLNCode_Car.ValueData , 
+             CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() 
+                  THEN COALESCE(ObjectString_Juridical_GLNCode_From.ValueData)  
+                  ELSE COALESCE(ObjectString_Juridical_GLNCode_To.ValueData)  END)  AS isWeCar
 
 
        FROM tmpStatus

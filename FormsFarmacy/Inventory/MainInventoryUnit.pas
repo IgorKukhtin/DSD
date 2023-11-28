@@ -20,7 +20,21 @@ uses
   cxImageComboBox, cxNavigator, dxDateRanges, Data.Bind.Components,
   Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction,
   AncestorBase, cxPropertiesStore, dsdAddOn, dxBarBuiltInMenu, cxDateUtils,
-  Vcl.StdActns, Vcl.Buttons, cxButtons, dsdGuides;
+  Vcl.StdActns, Vcl.Buttons, cxButtons, dsdGuides, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinValentine,
+  dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxScrollbarAnnotations;
 
 type
   TMainInventoryForm = class(TAncestorBaseForm)
@@ -834,6 +848,13 @@ begin
   DataSet.Cancel;
   Action := daAbort;
 
+  if Abs(AmountUser) > 10000 then
+  begin
+    ShowMessage('Ошибка количество <' + FormatCurr(',0.0', AmountUser) + '> превышает допустимое.'#13#10+
+      'Проверьте столбец количество - возможно вы внесли значения ш/к вместо количества по товару');
+    Exit;
+  end;
+
   if AmountUser <> AmountUserOld then
   begin
 
@@ -996,6 +1017,13 @@ begin
   Amount := DataSet.FieldByName('Amount').AsCurrency;
   DataSet.Cancel;
   Action := daAbort;
+
+  if Abs(Amount) > 10000 then
+  begin
+    ShowMessage('Ошибка количество <' + FormatCurr(',0.0', Amount) + '> превышает допустимое.'#13#10+
+      'Проверьте столбец количество - возможно вы внесли значения ш/к вместо количества по товару');
+    Exit;
+  end;
 
   if AmountOld <> Amount then
   begin

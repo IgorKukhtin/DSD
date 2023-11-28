@@ -3,31 +3,31 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1085#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1088#1072#1073#1086#1090#1072' '#1089'  e-'#1058#1058 +
     #1053'>'
   ClientHeight = 531
-  ClientWidth = 977
+  ClientWidth = 1076
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 999
+  ExplicitWidth = 1098
   ExplicitHeight = 587
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 66
-    Width = 977
+    Width = 1076
     Height = 465
     TabOrder = 3
     ExplicitTop = 66
-    ExplicitWidth = 977
+    ExplicitWidth = 1071
     ExplicitHeight = 465
     ClientRectBottom = 465
-    ClientRectRight = 977
+    ClientRectRight = 1076
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 977
+      ExplicitWidth = 1071
       ExplicitHeight = 465
       inherited cxGrid: TcxGrid
-        Width = 977
+        Width = 1076
         Height = 465
-        ExplicitWidth = 977
+        ExplicitWidth = 1071
         ExplicitHeight = 465
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -720,13 +720,21 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 181
           end
+          object isWeCar: TcxGridDBColumn
+            Caption = #1043#1088#1091#1079#1086#1086#1090#1087#1088'. = '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isWeCar'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 977
-    ExplicitWidth = 977
+    Width = 1076
+    ExplicitWidth = 1071
     inherited deStart: TcxDateEdit
       EditValue = 44927d
     end
@@ -1292,6 +1300,77 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         end>
       Caption = 'actExecSelect_eTTN_Sign'
     end
+    object mactSendSingETTN: TMultiAction
+      Category = 'Send_ETTN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_DefaultEDIN
+        end
+        item
+          Action = actExecSelect_eTTN_Send
+        end
+        item
+          Action = actSendSignETTN
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1080' '#1087#1086#1076#1087#1080#1089#1072#1090#1100' e-'#1058#1058#1053'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1080' '#1087#1086#1076#1087#1080#1089#1072#1090#1100' e-'#1058#1058#1053
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1080' '#1087#1086#1076#1087#1080#1089#1072#1090#1100' e-'#1058#1058#1053
+      ImageIndex = 85
+    end
+    object actSendSignETTN: TdsdEDINAction
+      Category = 'Send_ETTN'
+      MoveParams = <>
+      Caption = 'actSendSignETTN'
+      Host.Value = ''
+      Host.Component = FormParams
+      Host.ComponentItem = 'HostEDIN'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Login.Value = ''
+      Login.Component = FormParams
+      Login.ComponentItem = 'UserNameEDIN'
+      Login.DataType = ftString
+      Login.MultiSelectSeparator = ','
+      Password.Value = ''
+      Password.Component = FormParams
+      Password.ComponentItem = 'PasswordEDIN'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Token.Value = ''
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      Result.Value = '2'
+      Result.Component = FormParams
+      Result.ComponentItem = 'Uuid'
+      Result.DataType = ftString
+      Result.MultiSelectSeparator = ','
+      Error.Value = Null
+      Error.Component = FormParams
+      Error.ComponentItem = 'CommentError'
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
+      KeyFileName.Value = Null
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = Null
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+      UpdateUuid = spUpdate_Uuid
+      UpdateKATOTTG = spUpdate_Partner_KATOTTG
+      UpdateError = spUpdate_CommentError
+      EDINActions = edinSendSingETTN
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1432,6 +1511,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbSendSingETTN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bsSignETTN'
         end>
     end
@@ -1498,6 +1585,11 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     object bbSignCarrierETTN: TdxBarButton
       Action = mactSignCarrierETTN
       Category = 0
+    end
+    object bbSendSingETTN: TdxBarButton
+      Action = mactSendSingETTN
+      Category = 0
+      PaintStyle = psCaptionGlyph
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1687,8 +1779,8 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 807
-    Top = 8
+    Left = 719
+    Top = 80
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -1711,8 +1803,8 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 48
+    Left = 904
+    Top = 72
   end
   object spGetReporNameTTN: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'

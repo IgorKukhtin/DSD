@@ -53,6 +53,7 @@ inherited MainInventoryForm: TMainInventoryForm
           LookAndFeel.ScrollbarMode = sbmClassic
           object cxGridChildDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
+            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.DataSource = MasterDS
             DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <>
@@ -94,6 +95,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildIsSend: TcxGridDBColumn
               Caption = #1054#1090#1087#1088'.'
               DataBinding.FieldName = 'IsSend'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 40
@@ -101,6 +103,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildisLast: TcxGridDBColumn
               Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081
               DataBinding.FieldName = 'isLast'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCheckBoxProperties'
               Properties.DisplayChecked = '1'
               Properties.DisplayUnchecked = '0'
@@ -113,6 +116,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildNum: TcxGridDBColumn
               Caption = #8470' '#1087'.'#1087'.'
               DataBinding.FieldName = 'Num'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 39
@@ -120,6 +124,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildGoodsCode: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'GoodsCode'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 54
@@ -127,6 +132,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildGoodsName: TcxGridDBColumn
               Caption = #1058#1086#1074#1072#1088
               DataBinding.FieldName = 'GoodsName'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 199
@@ -134,6 +140,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object chAmountGoods: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1080#1085#1074#1077#1085#1090'.'
               DataBinding.FieldName = 'AmountGoods'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -144,6 +151,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildAmount: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1072#1085'.'
               DataBinding.FieldName = 'Amount'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -154,6 +162,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildUserName: TcxGridDBColumn
               Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
               DataBinding.FieldName = 'UserName'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 121
@@ -161,6 +170,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ChildDate_Insert: TcxGridDBColumn
               Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
               DataBinding.FieldName = 'Date_Insert'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 143
@@ -346,8 +356,11 @@ inherited MainInventoryForm: TMainInventoryForm
           Align = alClient
           TabOrder = 1
           LookAndFeel.ScrollbarMode = sbmClassic
+          ExplicitLeft = 1
+          ExplicitTop = 58
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
+            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.DataSource = ManualDS
             DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <>
@@ -388,6 +401,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ManualGoodsCode: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'GoodsCode'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 92
@@ -395,6 +409,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ManualcxGoodsName: TcxGridDBColumn
               Caption = #1058#1086#1074#1072#1088
               DataBinding.FieldName = 'GoodsName'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 444
@@ -402,6 +417,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ManualPrice: TcxGridDBColumn
               Caption = #1062#1077#1085#1072
               DataBinding.FieldName = 'Price'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00;-,0.00; ;'
               HeaderAlignmentHorz = taCenter
@@ -410,6 +426,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ManualRemains: TcxGridDBColumn
               Caption = #1054#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'Remains'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -420,6 +437,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object ManualAmount: TcxGridDBColumn
               Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
               DataBinding.FieldName = 'Amount'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -502,6 +520,7 @@ inherited MainInventoryForm: TMainInventoryForm
           LookAndFeel.ScrollbarMode = sbmClassic
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
+            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.DataSource = InfoDS
             DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <>
@@ -591,6 +610,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoGoodsCode: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'GoodsCode'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 44
@@ -598,6 +618,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoGoodsName: TcxGridDBColumn
               Caption = #1058#1086#1074#1072#1088
               DataBinding.FieldName = 'GoodsName'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 219
@@ -605,6 +626,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoisCheck: TcxGridDBColumn
               Caption = #1063#1077#1082
               DataBinding.FieldName = 'isCheck'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCheckBoxProperties'
               Properties.DisplayChecked = '1'
               Properties.DisplayUnchecked = '0'
@@ -617,6 +639,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoExpirationDate: TcxGridDBColumn
               Caption = #1052#1080#1085'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
               DataBinding.FieldName = 'ExpirationDate'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 67
@@ -624,6 +647,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoRemainsCurr: TcxGridDBColumn
               Caption = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'RemainsCurr'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
@@ -634,6 +658,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoRemains: TcxGridDBColumn
               Caption = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'Remains'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -645,6 +670,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoPrice: TcxGridDBColumn
               Caption = #1062#1077#1085#1072
               DataBinding.FieldName = 'Price'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00;-,0.00; ;'
               HeaderAlignmentHorz = taCenter
@@ -654,6 +680,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoRemains_Summ: TcxGridDBColumn
               Caption = 'C'#1091#1084#1084#1072' '#1088#1072#1089#1095'. '#1086#1089#1090'.'
               DataBinding.FieldName = 'Remains_Summ'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00;-,0.00; ;'
               HeaderAlignmentHorz = taCenter
@@ -663,6 +690,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoAmount: TcxGridDBColumn
               Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'Amount'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -673,6 +701,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoSumm: TcxGridDBColumn
               Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1086#1089#1090'.'
               DataBinding.FieldName = 'Summ'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00;-,0.00; ;'
               HeaderAlignmentHorz = taCenter
@@ -682,6 +711,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoAmountUser: TcxGridDBColumn
               Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082' ('#1090#1077#1082'. '#1087#1086#1083#1100#1079'.)'
               DataBinding.FieldName = 'AmountUser'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -694,6 +724,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoCountUser: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1100#1079'.'
               DataBinding.FieldName = 'CountUser'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 0
               Properties.DisplayFormat = ',0;-,0; ;'
@@ -704,6 +735,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoDeficit: TcxGridDBColumn
               Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
               DataBinding.FieldName = 'Deficit'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; '
@@ -714,6 +746,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoDeficitSumm: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
               DataBinding.FieldName = 'DeficitSumm'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00;-,0.00; ;'
               HeaderAlignmentHorz = taCenter
@@ -723,6 +756,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoProficit: TcxGridDBColumn
               Caption = #1048#1079#1083#1080#1096#1077#1082
               DataBinding.FieldName = 'Proficit'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; '
@@ -733,6 +767,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoProficitSumm: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
               DataBinding.FieldName = 'ProficitSumm'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00;-,0.00; ;'
               HeaderAlignmentHorz = taCenter
@@ -742,6 +777,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoDiff: TcxGridDBColumn
               Caption = #1056#1072#1079#1085#1080#1094#1072
               DataBinding.FieldName = 'Diff'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
@@ -752,6 +788,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoDiffSumm: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099
               DataBinding.FieldName = 'DiffSumm'
+              DataBinding.IsNullValueType = True
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.00;-,0.00; ;'
               HeaderAlignmentHorz = taCenter
@@ -761,6 +798,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoMIComment: TcxGridDBColumn
               Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
               DataBinding.FieldName = 'MIComment'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Styles.Content = dmMain.cxHeaderL1Style
               Styles.Header = dmMain.cxHeaderStyle
@@ -769,6 +807,7 @@ inherited MainInventoryForm: TMainInventoryForm
             object InfoisAuto: TcxGridDBColumn
               Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
               DataBinding.FieldName = 'isAuto'
+              DataBinding.IsNullValueType = True
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 60
