@@ -1671,6 +1671,24 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             Options.Editing = False
             Width = 100
           end
+          object ContainerId_min: TcxGridDBColumn
+            Caption = 'ContainerId (min)'
+            DataBinding.FieldName = 'ContainerId_min'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object ContainerId_max: TcxGridDBColumn
+            Caption = 'ContainerId (max)'
+            DataBinding.FieldName = 'ContainerId_max'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
         end
       end
       object ExportXmlGrid: TcxGrid

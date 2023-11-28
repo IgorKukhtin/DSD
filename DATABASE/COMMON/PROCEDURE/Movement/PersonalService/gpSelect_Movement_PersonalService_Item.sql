@@ -89,7 +89,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isErased Boolean
              , isAuto_mi Boolean
              , isBankOut Boolean
-             , BankOutDate TDateTime
+             , BankOutDate TDateTime 
+             , ContainerId_min Integer
+             , ContainerId_max Integer
               )
 AS
 $BODY$
@@ -443,7 +445,10 @@ BEGIN
                                       , tmpContainer_pay.PositionLevelId
                                       , tmpContainer_pay.UnitId
                                       , tmpContainer_pay.PersonalServiceListId
-                                      , tmpContainer_pay.ServiceDate
+                                      , tmpContainer_pay.ServiceDate 
+                                      --
+                                      , MIN (tmpContainer_pay.ContainerId) AS ContainerId_min
+                                      , MAX (tmpContainer_pay.ContainerId) AS ContainerId_max
                                  FROM tmpContainer_pay
                                       INNER JOIN MovementItemContainer AS MIContainer
                                                                        ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
@@ -703,6 +708,9 @@ BEGIN
             , COALESCE (MIBoolean_isAuto.ValueData, FALSE)      :: Boolean   AS isAuto_mi
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate           
+
+            , tmpMIContainer_pay.ContainerId_min   ::Integer
+            , tmpMIContainer_pay.ContainerId_max   ::Integer
 
        FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
