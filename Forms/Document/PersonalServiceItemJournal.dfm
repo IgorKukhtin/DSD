@@ -23,8 +23,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 563
-        ExplicitLeft = 56
-        ExplicitTop = -6
         ExplicitWidth = 1221
         ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -449,6 +447,16 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummAvanceRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_rem
+            end
+            item
+              Format = ',0.####'
+              Position = spFooter
+              Column = AmountCash_rem
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -722,6 +730,11 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummAvanceRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_rem
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -941,6 +954,16 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             DataBinding.FieldName = 'AmountCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountCash_rem: TcxGridDBColumn
+            Caption = #1054#1089#1090'.'#1082' '#1074#1099#1076#1072#1095#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
