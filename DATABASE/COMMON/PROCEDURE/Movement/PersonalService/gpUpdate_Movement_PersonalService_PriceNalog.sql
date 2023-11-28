@@ -36,12 +36,14 @@ BEGIN
      FROM (WITH
            tmpMI AS (SELECT tmp.* 
                           , ROW_NUMBER() OVER (PARTITION BY tmp.MemberId_Personal ORDER BY tmp.MemberId_Personal, tmp.isMain DESC, tmp.SummService DESC) AS Ord
+                          , SUM (tmp.SummService) OVER(PARTITION BY tmp.MemberId_Personal) AS SummService_calc   -- сумма начислений по коду сотрудника в графе "Начисление" суммарно 
                      FROM gpSelect_MovementItem_PersonalService(inMovementId, FALSE, FALSE, inSession) AS tmp
                      )
 
          , tmpPersonal AS (SELECT tmpMI.Id 
                                 , tmpMI.PersonalId
-                                , tmpMI.SummNalog
+                                , tmpMI.SummNalog 
+                                , tmpMI.SummService_calc
                                 --, tmpMI.SummMinus
                                 , (CASE WHEN ObjectDate_DateIn.ValueData >= vbDateStart AND ObjectDate_DateIn.ValueData <= vbDateEnd
                                              THEN ObjectDate_DateIn.ValueData
@@ -62,8 +64,8 @@ BEGIN
                            )
            SELECT tmpPersonal.*
                 , (DATE_PART ('DAY', tmpPersonal.DateEnd :: TIMESTAMP - tmpPersonal.DateStart :: TIMESTAMP) + 1) ::TFloat AS DayPriceNalog
-                , CASE WHEN tmpPersonal.SummNalog <> 0
-                       THEN 0
+                , CASE WHEN COALESCE (tmpPersonal.SummService_calc,0) < 3400 THEN 0
+                       WHEN tmpPersonal.SummNalog <> 0 THEN 0
                        ELSE CASE WHEN vbDayMonth <> 0
                                  THEN (inPriceNalog / vbDayMonth ) * (DATE_PART ('DAY', tmpPersonal.DateEnd :: TIMESTAMP - tmpPersonal.DateStart :: TIMESTAMP) + 1)
                                  ELSE 0
