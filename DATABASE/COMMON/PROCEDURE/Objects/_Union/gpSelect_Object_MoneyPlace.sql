@@ -79,6 +79,7 @@ BEGIN
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
      WHERE Object_BankAccount_View.JuridicalId IN (zc_Juridical_Basis()
                                                  , 15505 -- ִ׃Ê־ ׂ־ֲ 
+                                                 , 15512 -- ²נםא-1 װ³נלא ׂ־ֲ
                                                   )
        AND Object_BankAccount_View.isErased = FALSE
     /*UNION ALL

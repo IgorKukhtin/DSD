@@ -84,6 +84,15 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Options.Editing = False
             Width = 55
           end
+          object PaidKindName_contract: TcxGridDBColumn
+            Caption = #1060#1054' ('#1076#1086#1075#1086#1074#1086#1088')'
+            DataBinding.FieldName = 'PaidKindName_contract'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1076#1086#1075#1086#1074#1086#1088')'
+            Options.Editing = False
+            Width = 70
+          end
           object PrepareDayCount: TcxGridDBColumn
             Caption = #1044#1085'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'PrepareDayCount'

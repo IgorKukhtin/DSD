@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, GLNCode TVarChar
              , Address TVarChar, GPSN TFloat, GPSE TFloat
-             , PaidKindId Integer, PaidKindName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar, PaidKindId_contract Integer, PaidKindName_contract TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar  
              , isNotTareReturning Boolean
@@ -101,8 +101,12 @@ BEGIN
        , ObjectString_Address.ValueData AS Address
        , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
        , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE
-       , Object_PaidKind.Id            AS PaidKindId
-       , Object_PaidKind.ValueData     AS PaidKindName
+
+       , Object_PaidKind.Id                  AS PaidKindId
+       , Object_PaidKind.ValueData           AS PaidKindName
+       , Object_PaidKind_contract.Id         AS PaidKindId_contract
+       , Object_PaidKind_contract.ValueData  AS PaidKindName_contract
+
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
        , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
@@ -250,7 +254,8 @@ BEGIN
         LEFT JOIN tmpObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
         LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, Object_Contract_View.InfoMoneyId)
-        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, Object_Contract_View.PaidKindId)
+        LEFT JOIN Object AS Object_PaidKind          ON Object_PaidKind.Id          = COALESCE (Container_Partner_View.PaidKindId, Object_Contract_View.PaidKindId)
+        LEFT JOIN Object AS Object_PaidKind_contract ON Object_PaidKind_contract.Id = Object_Contract_View.PaidKindId
 
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
@@ -495,8 +500,12 @@ BEGIN
        , ObjectString_Address.ValueData  AS Address
        , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
        , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE
-       , Object_PaidKind.Id            AS PaidKindId
-       , Object_PaidKind.ValueData     AS PaidKindName
+
+       , Object_PaidKind.Id                  AS PaidKindId
+       , Object_PaidKind.ValueData           AS PaidKindName
+       , Object_PaidKind_contract.Id         AS PaidKindId_contract
+       , Object_PaidKind_contract.ValueData  AS PaidKindName_contract
+
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
        , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
@@ -644,7 +653,8 @@ BEGIN
         LEFT JOIN tmpObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
         LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, Object_Contract_View.InfoMoneyId)
-        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, Object_Contract_View.PaidKindId)
+        LEFT JOIN Object AS Object_PaidKind          ON Object_PaidKind.Id          = COALESCE (Container_Partner_View.PaidKindId, Object_Contract_View.PaidKindId)
+        LEFT JOIN Object AS Object_PaidKind_contract ON Object_PaidKind_contract.Id = Object_Contract_View.PaidKindId
 
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
@@ -764,8 +774,12 @@ BEGIN
        , ObjectString_Address.ValueData  AS Address
        , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
        , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE
-       , NULL :: Integer AS PaidKindId
+
+       , NULL :: Integer  AS PaidKindId
        , NULL :: TVarChar AS PaidKindName
+       , NULL :: Integer  AS PaidKindId_contract
+       , NULL :: TVarChar AS PaidKindName_contract
+
        , NULL :: Integer ContractStateKindCode
        , NULL :: TVarChar AS ContractComment 
        , FALSE:: Boolean  AS isNotTareReturning

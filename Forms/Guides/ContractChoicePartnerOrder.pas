@@ -73,6 +73,7 @@ type
     bbProtocolOpenFormContract: TdxBarButton;
     bbProtocolOpenFormPartner: TdxBarButton;
     ProtocolOpenFormPartner: TdsdOpenForm;
+    PaidKindName_contract: TcxGridDBColumn;
   private
     { Private declarations }
   public

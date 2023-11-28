@@ -388,6 +388,7 @@ BEGIN
      WHERE Object_BankAccount_View.JuridicalId IN (zc_Juridical_Basis()
                                                  , 15505 -- ִ׃Ê־ ׂ־ֲ 
                                                  , 9926679  -- "ֲÊ" ּ²ׂ ֳ׀׃ֿ" ׂ־ֲ
+                                                 , 15512 -- ²נםא-1 װ³נלא ׂ־ֲ
                                                   )
      --AND vbIsConstraint = FALSE
 
