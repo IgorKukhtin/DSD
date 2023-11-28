@@ -105,6 +105,8 @@ type
     spSelect_ExportCSV: TdsdStoredProc;
     mactExportCSV: TMultiAction;
     bbExportCSV: TdxBarButton;
+    ContainerId_max: TcxGridDBColumn;
+    ContainerId_min: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , RetailFund TFloat, RetailFundUsed TFloat, RetailFundResidue TFloat, SummaFund TFloat, SummaFundAvailable TFloat
              , CommentMarketing TVarChar, ConfirmedMarketing Boolean
+             , isEditPriceIn Boolean
               )
 AS
 $BODY$
@@ -47,6 +48,7 @@ BEGIN
              , CAST (0 AS TFloat)                               AS SummaFundAvailable
              , CAST ('' AS TVarChar) 		                    AS CommentMarketing
              , False                		                    AS ConfirmedMarketing
+             , vbUserId IN (3, 59591, 183242, 4183126)          AS isEditPriceIn
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -78,6 +80,7 @@ BEGIN
              COALESCE(MovementFloat_SummaFund.ValueData, 0) END::TFloat         AS SummaFundAvailable
            , COALESCE (MovementString_CommentMarketing.ValueData,'')      :: TVarChar AS CommentMarketing
            , COALESCE (MovementBoolean_ConfirmedMarketing.ValueData,False):: Boolean  AS ConfirmedMarketing
+           , vbUserId IN (3, 59591, 183242, 4183126)          AS isEditPriceIn
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

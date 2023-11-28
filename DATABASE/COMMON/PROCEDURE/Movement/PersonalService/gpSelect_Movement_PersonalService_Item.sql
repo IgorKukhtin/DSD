@@ -55,7 +55,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FineSubjectId Integer, FineSubjectName TVarChar
              , UnitFineSubjectId Integer, UnitFineSubjectName TVarChar
              --, StaffListSummKindName TVarChar
-             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
+             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, AmountCash_rem TFloat, SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummAvCardSecond TFloat, SummAvCardSecondRecalc TFloat
              , SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
@@ -89,7 +89,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isErased Boolean
              , isAuto_mi Boolean
              , isBankOut Boolean
-             , BankOutDate TDateTime
+             , BankOutDate TDateTime 
+             , ContainerId_min Integer
+             , ContainerId_max Integer
               )
 AS
 $BODY$
@@ -242,6 +244,8 @@ BEGIN
 
         , tmpMovement AS (SELECT Movement.Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+                               , MovementDate_ServiceDate.ValueData              AS ServiceDate
+                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
                           FROM tmpStatus
                                INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -249,6 +253,10 @@ BEGIN
                                                             ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                                            AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                                LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
+
+                               LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                                      ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                     AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                           WHERE inIsServiceDate = FALSE
                             -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
                             -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
@@ -258,6 +266,8 @@ BEGIN
                          UNION ALL
                           SELECT MovementDate_ServiceDate.MovementId             AS Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+                               , MovementDate_ServiceDate.ValueData              AS ServiceDate
+                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
                           FROM MovementDate AS MovementDate_ServiceDate
                                JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalService()
                                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
@@ -376,6 +386,92 @@ BEGIN
                        FROM tmpMIChild_all
                        GROUP BY tmpMIChild_all.ParentId
                       )
+
+            -- выплата аванса
+          , tmpContainer_pay AS (SELECT DISTINCT
+                                        CLO_ServiceDate.ContainerId
+                                      , CLO_Personal.ObjectId                    AS PersonalId
+                                      , ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                      , CLO_Position.ObjectId                    AS PositionId
+                                      , ObjectLink_Personal_PositionLevel.ChildObjectId AS PositionLevelId
+                                      , CLO_Unit.ObjectId                        AS UnitId 
+                                      , tmp.PersonalServiceListId
+                                      , tmp.ServiceDateId
+                                      , tmp.ServiceDate
+                                 FROM (SELECT DISTINCT tmpMovement.PersonalServiceListId
+                                                     , tmpMovement.ServiceDateId, tmpMovement.ServiceDate
+                                       FROM tmpMovement) AS tmp
+                                      
+                                      INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                     ON CLO_ServiceDate.ObjectId    = tmp.ServiceDateId
+                                                                    AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                                    
+                                      INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                     ON CLO_PersonalServiceList.ObjectId = tmp.PersonalServiceListId
+                                                                    AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
+                                                                    AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                                                              
+                                      INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                     ON CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                                                    AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                                      INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                            ON ObjectLink_Personal_Member.ObjectId = CLO_Personal.ObjectId
+                                                           AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                           ON ObjectLink_Personal_PositionLevel.ObjectId = CLO_Personal.ObjectId
+                                                          AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
+                                      LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                                    ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                                                   AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                                      LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                    ON CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                                                                   AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                )
+
+        , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_all
+                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                        -- аванс по ведомости
+                                      , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                   AND Object.ValueData ILIKE '%АВАНС%'
+
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_avance_ps
+
+                                      , tmpContainer_pay.MemberId
+                                      , tmpContainer_pay.PositionId
+                                      , tmpContainer_pay.PositionLevelId
+                                      , tmpContainer_pay.UnitId
+                                      , tmpContainer_pay.PersonalServiceListId
+                                      , tmpContainer_pay.ServiceDate 
+                                      --
+                                      , MIN (tmpContainer_pay.ContainerId) AS ContainerId_min
+                                      , MAX (tmpContainer_pay.ContainerId) AS ContainerId_max
+                                 FROM tmpContainer_pay
+                                      INNER JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
+                                                                      AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                      AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                      LEFT JOIN MovementItem ON MovementItem.MovementId = MIContainer.MovementId
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                       ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                      LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+                                      LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                 GROUP BY tmpContainer_pay.MemberId
+                                        , tmpContainer_pay.PositionId
+                                        , tmpContainer_pay.PositionLevelId
+                                        , tmpContainer_pay.UnitId 
+                                        , tmpContainer_pay.PersonalServiceListId
+                                        , tmpContainer_pay.ServiceDate
+                                )
+
 
 
        -- Результат
@@ -509,6 +605,7 @@ BEGIN
 
             , tmpAll.Amount :: TFloat           AS Amount
             , MIFloat_SummToPay.ValueData       AS AmountToPay
+             -- К выплате (из кассы)
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
             + (-1) *  CASE WHEN 1=0 AND vbUserId = 5
                                THEN 0
@@ -517,7 +614,21 @@ BEGIN
                              + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                       END 
-              ) :: TFloat AS AmountCash
+              ) :: TFloat AS AmountCash    
+              
+              -- Остаток к выдаче (из кассы) грн
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0)
+            + (-1) *  CASE WHEN 1=0 AND vbUserId = 5
+                               THEN 0
+                          ELSE COALESCE (MIFloat_SummCard.ValueData, 0)
+                             + COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+                             + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+                             + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)
+                             + COALESCE (tmpMIContainer_pay.Amount_avance_all, 0)
+                             + COALESCE (tmpMIContainer_pay.Amount_service, 0)
+                      END
+              ) :: TFloat AS AmountCash_rem
+               
             , MIFloat_SummService.ValueData            AS SummService
 
             , MIFloat_SummCard.ValueData               AS SummCard
@@ -597,6 +708,9 @@ BEGIN
             , COALESCE (MIBoolean_isAuto.ValueData, FALSE)      :: Boolean   AS isAuto_mi
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate           
+
+            , tmpMIContainer_pay.ContainerId_min   ::Integer
+            , tmpMIContainer_pay.ContainerId_max   ::Integer
 
        FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -1037,7 +1151,18 @@ BEGIN
             
             LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
 
-            LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
+            LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId     
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                 ON ObjectLink_Personal_PositionLevel.ObjectId = tmpAll.PersonalId
+                                AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
+            
+            LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
+                                        AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
+                                        AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
+                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
+                                        AND tmpMIContainer_pay.PersonalServiceListId = tmpAll.PersonalServiceListId
+                                        AND tmpMIContainer_pay.ServiceDate = tmpMovement.ServiceDate    
             ;
 
 END;
@@ -1088,3 +1213,6 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
 --select * from gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2022')::TDateTime , inEndDate := ('01.12.2022')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+
+
+--select * from gpSelect_Movement_PersonalService_Item (inStartDate := ('06.09.2023')::TDateTime , inEndDate := ('06.09.2023')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');

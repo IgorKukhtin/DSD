@@ -6437,6 +6437,15 @@ begin
       HeaderDataSet.Post;
     end;
     Result := DoSignDcuETTN;
+    if Result and (HeaderDataSet.FieldByName('GLN_from').asString = HeaderDataSet.FieldByName('GLN_car').asString) then
+    begin
+      try
+        FEDINActions := edinSignCarrier;
+        Result := DoSignDcuETTN;
+      finally
+        FEDINActions := edinSendSingETTN;
+      end;
+    end;
   end;
 end;
 
@@ -6462,4 +6471,4 @@ initialization
 end.
 
 { FIdFTP.Username := 'uatovalanftp'; FIdFTP.Password := 'ftp349067';
-  FIdFTP.Host := 'ruftpex.edi.su'; '/archive' }
+  FIdFTP.Host := 'ruftpex.edi.su'; '/archive' }Gj bnjue

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Loss_From_Excel(
     IN inGoodsCode                TVarChar  ,    -- Код товара
 
     IN inAmount                   TVarChar  ,    -- Количкство
-    IN inPrice                    TVarChar  ,    -- Цена прихода (с НДС)
+    IN inPriceIn                  TVarChar  ,    -- Цена прихода (с НДС)
 
     IN inPriceSale                TVarChar  ,    -- Цена реализации
     
@@ -24,7 +24,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    
    DECLARE vbAmount TFloat;
-   DECLARE vbPrice TFloat;
+   DECLARE vbPriceIn TFloat;
    DECLARE vbPriceSale TFloat;
 
    DECLARE vbIsInsert Boolean;
@@ -62,18 +62,28 @@ BEGIN
   END;
 
   -- парсим цену
-  BEGIN  
-    vbPrice := REPLACE(REPLACE(inPrice, ' ', ''), ',', '.')::TFloat;
-  EXCEPTION WHEN others THEN 
-    vbPrice := 0;
-  END;
+  IF vbUserId IN (3, 59591, 183242, 4183126)
+  THEN
+    BEGIN  
+      vbPriceIn := REPLACE(REPLACE(inPriceIn, ' ', ''), ',', '.')::TFloat;
+    EXCEPTION WHEN others THEN 
+      vbPriceIn := 0;
+    END;
+  ELSE
+    vbPriceIn := 0;
+  END IF;
   
   -- парсим цену
-  BEGIN  
-    vbPriceSale := REPLACE(REPLACE(inPriceSale, ' ', ''), ',', '.')::TFloat;
-  EXCEPTION WHEN others THEN 
+  IF vbUserId IN (3, 59591, 183242, 4183126)
+  THEN
+    BEGIN  
+      vbPriceSale := REPLACE(REPLACE(inPriceSale, ' ', ''), ',', '.')::TFloat;
+    EXCEPTION WHEN others THEN 
+      vbPriceSale := 0;
+    END;
+  ELSE
     vbPriceSale := 0;
-  END;
+  END IF;
   
   SELECT MovementItem.Id
   INTO vbMovementItemId 
@@ -94,6 +104,12 @@ BEGIN
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbMovementItemId, vbPriceSale);  
   END IF;
 
+
+  -- сохранили свойство <Цена прихода (с НДС)>
+  IF COALESCE (vbPriceIn, 0) > 0
+  THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn(), vbMovementItemId, vbPriceIn);  
+  END IF;
 
   -- сохранили протокол
   PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
@@ -117,4 +133,4 @@ $BODY$
 
 -- тест
 
--- select * from gpInsertUpdate_MI_Loss_From_Excel(inMovementId := 34111475 , inGoodsCode := '42645' , inAmount := '1' , inPrice := '' , inPriceSale := '' ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_Loss_From_Excel(inMovementId := 34111475 , inGoodsCode := '42645' , inAmount := '1' , inPriceIn := '358.8' , inPriceSale := '' ,  inSession := '3');

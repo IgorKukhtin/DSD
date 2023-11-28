@@ -215,6 +215,9 @@ type
     actSetEnabledAction: TdsdSetEnabledAction;
     spInsertUpdate_TotalSumm: TdsdStoredProc;
     actInsertUpdate_TotalSumm: TdsdExecStoredProc;
+    bbUpdate_MovementItem_Income_SetEqualAmount: TdxBarButton;
+    spUpdate_MovementItem_Income_SetEqualAmount: TdsdStoredProc;
+    actUpdate_MovementItem_Income_SetEqualAmount: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -120,6 +120,10 @@ type
     CarTrailerBrandName: TcxGridDBColumn;
     CarTrailerColorName: TcxGridDBColumn;
     CarTrailerTypeName: TcxGridDBColumn;
+    isWeCar: TcxGridDBColumn;
+    mactSendSingETTN: TMultiAction;
+    actSendSignETTN: TdsdEDINAction;
+    bbSendSingETTN: TdxBarButton;
   private
     { Private declarations }
   public

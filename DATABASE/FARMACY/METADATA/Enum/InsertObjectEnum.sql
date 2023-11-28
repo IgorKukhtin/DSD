@@ -7110,10 +7110,10 @@ BEGIN
                                                       inConvertFormatInExcel := FALSE ::Boolean,
                                                       inSession           := vbUserId::TVarChar);
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPrice';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPriceIn';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 4, 
-                                                                inName          := 'inPrice', 
+                                                                inName          := 'inPriceIn', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Цена прихода (с НДС)', 
                                                                 inImportTypeId  := vbImportTypeId, 

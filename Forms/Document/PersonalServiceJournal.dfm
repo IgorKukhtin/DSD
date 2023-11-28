@@ -2514,8 +2514,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 752
-    Top = 88
+    Left = 728
+    Top = 152
   end
   object spGet_Export_FileNameZP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Export_FileName'
