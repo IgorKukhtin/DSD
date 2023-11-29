@@ -700,8 +700,6 @@ BEGIN
             , MIFloat_DayWork.ValueData                 ::TFloat AS DayWork
             , MIFloat_DayAudit.ValueData                ::TFloat AS DayAudit
 
-
-
             , MIString_Number.ValueData   ::TVarChar AS Number
             , MIString_Comment.ValueData             AS Comment_mi
             , tmpAll.isErased
@@ -1161,9 +1159,8 @@ BEGIN
                                         AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
                                         AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
                                         AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
-                                        AND tmpMIContainer_pay.PersonalServiceListId = tmpAll.PersonalServiceListId
+                                        AND tmpMIContainer_pay.PersonalServiceListId = tmpMovement.PersonalServiceListId
                                         AND tmpMIContainer_pay.ServiceDate = tmpMovement.ServiceDate 
-                                        and 1=0   
             ;
 
 END;
