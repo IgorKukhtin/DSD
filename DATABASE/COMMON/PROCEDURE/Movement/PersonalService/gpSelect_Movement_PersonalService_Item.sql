@@ -395,7 +395,7 @@ BEGIN
                                       , CLO_Position.ObjectId                    AS PositionId
                                       , ObjectLink_Personal_PositionLevel.ChildObjectId AS PositionLevelId
                                       , CLO_Unit.ObjectId                        AS UnitId 
-                                      , tmp.PersonalServiceListId
+                                      , CLO_PersonalServiceList.ObjectId         AS PersonalServiceListId
                                       , tmp.ServiceDateId
                                       , tmp.ServiceDate
                                  FROM (SELECT DISTINCT tmpMovement.PersonalServiceListId
@@ -1162,7 +1162,8 @@ BEGIN
                                         AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
                                         AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
                                         AND tmpMIContainer_pay.PersonalServiceListId = tmpAll.PersonalServiceListId
-                                        AND tmpMIContainer_pay.ServiceDate = tmpMovement.ServiceDate    
+                                        AND tmpMIContainer_pay.ServiceDate = tmpMovement.ServiceDate 
+                                        and 1=0   
             ;
 
 END;

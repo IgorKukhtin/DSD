@@ -429,18 +429,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = SummAvance
             end
             item
@@ -708,18 +696,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummMedicdayAdd
-            end
-            item
-              Format = ',0.#### '
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
