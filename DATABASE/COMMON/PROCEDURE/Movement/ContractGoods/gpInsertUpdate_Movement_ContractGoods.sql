@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, TDateTime, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
     IN inContractId          Integer   , -- 
     IN inCurrencyId          Integer   , -- Валюта
     IN inDiffPrice           TFloat    ,  -- Разрешенный % отклонение для цены
-    IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления
+    IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления 
+    IN inPriceWithVAT        Boolean    , -- Цена с НДС (да/нет)
     IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -35,7 +37,8 @@ BEGIN
                                                 , inContractId   := inContractId 
                                                 , inCurrencyId   := inCurrencyId
                                                 , inDiffPrice    := inDiffPrice
-                                                , inRoundPrice   := inRoundPrice
+                                                , inRoundPrice   := inRoundPrice 
+                                                , inPriceWithVAT := inPriceWithVAT
                                                 , inComment      := inComment
                                                 , inUserId       := vbUserId
                                                  ) AS tmp;
@@ -47,6 +50,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.11.23         *
  08.11.23         *
  15.09.22         *
  05.07.21         *

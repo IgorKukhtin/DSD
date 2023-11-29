@@ -26,7 +26,8 @@ BEGIN
                                                   , inContractId   := tmp.ContractId
                                                   , inCurrencyId   := tmp.CurrencyId
                                                   , inDiffPrice    := tmp.DiffPrice ::TFloat
-                                                  , inRoundPrice   := tmp.RoundPrice::TFloat
+                                                  , inRoundPrice   := tmp.RoundPrice::TFloat 
+                                                  , inPriceWithVAT := tmp.PriceWithVAT ::Boolean
                                                   , inComment      := '' ::TVarChar
                                                   , inUserId       := vbUserId
                                                    )
@@ -56,6 +57,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+  29.11.23        *
   02.08.22        *
 */
 

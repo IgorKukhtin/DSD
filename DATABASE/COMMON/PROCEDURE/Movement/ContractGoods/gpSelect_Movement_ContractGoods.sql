@@ -40,7 +40,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , PriceListId_curr Integer, PriceListName_curr TVarChar
              
              , DiffPrice TFloat, RoundPrice TFloat
-             
+             , PriceWithVAT Boolean
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -180,6 +180,8 @@ BEGIN
            , MovementFloat_DiffPrice.ValueData  ::TFloat AS DiffPrice
            , MovementFloat_RoundPrice.ValueData ::TFloat AS RoundPrice           
 
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
+
            , MovementString_Comment.ValueData    AS Comment
 
            , Object_Insert.ValueData             AS InsertName
@@ -201,6 +203,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndBegin
                                    ON MovementDate_EndBegin.MovementId = Movement.Id
                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_DiffPrice
                                     ON MovementFloat_DiffPrice.MovementId = Movement.Id

@@ -1,26 +1,27 @@
 inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
-  ClientHeight = 638
-  ClientWidth = 1076
-  ExplicitWidth = 1092
-  ExplicitHeight = 677
+  ClientHeight = 596
+  ClientWidth = 1181
+  ExplicitLeft = 0
+  ExplicitWidth = 1197
+  ExplicitHeight = 635
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 117
-    Width = 1076
-    Height = 521
+    Width = 1181
+    Height = 479
     ExplicitTop = 117
     ExplicitWidth = 1076
     ExplicitHeight = 521
-    ClientRectBottom = 521
-    ClientRectRight = 1076
+    ClientRectBottom = 479
+    ClientRectRight = 1181
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1076
       ExplicitHeight = 497
       inherited cxGrid: TcxGrid
-        Width = 1076
-        Height = 497
+        Width = 1181
+        Height = 455
         ExplicitWidth = 1076
         ExplicitHeight = 497
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -271,11 +272,9 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1076
+    Width = 1181
     Height = 91
     TabOrder = 3
-    ExplicitLeft = 16
-    ExplicitTop = -13
     ExplicitWidth = 1076
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
@@ -314,15 +313,15 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Width = 165
     end
     object cxLabel22: TcxLabel
-      Left = 740
+      Left = 918
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 740
+      Left = 918
       Top = 62
       TabOrder = 7
-      Width = 168
+      Width = 266
     end
     object cxLabel8: TcxLabel
       Left = 918
@@ -338,16 +337,16 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 146
+      Width = 112
     end
     object cxLabel7: TcxLabel
-      Left = 918
-      Top = 45
+      Left = 1038
+      Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 918
-      Top = 63
+      Left = 1038
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -536,6 +535,13 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Properties.ShowTime = False
     TabOrder = 7
     Width = 84
+  end
+  object edPriceWithVAT: TcxCheckBox [4]
+    Left = 740
+    Top = 62
+    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 8
+    Width = 128
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 883
@@ -1457,6 +1463,13 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Component = edRoundPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1528,6 +1541,14 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -1563,6 +1584,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Control = edCurrency
       end
       item
+        Control = edPriceWithVAT
       end
       item
       end
