@@ -13,11 +13,11 @@ DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, Integer, 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inMovementDescId_next Integer   , -- Ключ 
+    IN inMovementDescId_next Integer   , -- Ключ
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата документа
-    IN inIsDocInsert         Boolean   , -- 
-    IN inIsOldPeriod         Boolean   , -- 
+    IN inIsDocInsert         Boolean   , --
+    IN inIsOldPeriod         Boolean   , --
     IN inIP                  TVarChar,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -61,7 +61,7 @@ $BODY$
    DECLARE vbKeyData TVarChar;
 
    DECLARE vbIsUpak_UnComplete Boolean;
-   
+
    DECLARE vbIsDocMany        Boolean;
    DECLARE vbIsCloseInventory Boolean;
 BEGIN
@@ -186,7 +186,7 @@ BEGIN
 
      -- !!!определили параметр!!!
      IF vbMovementDescId = zc_Movement_Inventory()
-     THEN 
+     THEN
          vbIsCloseInventory:= (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
                                FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
                                                                      , inLevel2      := 'Movement'
@@ -570,7 +570,7 @@ BEGIN
      -- поиск
      IF vbMovementDescId = zc_Movement_Sale() AND inIsDocInsert = FALSE
      THEN
-          -- проверка для 
+          -- проверка для
           IF vbIsDocMany = FALSE
              AND 1 < (SELECT COUNT(*) FROM MovementLinkMovement
                                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
@@ -840,7 +840,28 @@ BEGIN
                                                                                     ELSE inOperDate
                                                                                END
                                                   , inInvNumberPartner      := ''
-                                                  , inPriceWithVAT          := PriceWithVAT -- определяются по прайлисту
+                                                  , inPriceWithVAT          := CASE WHEN inBranchCode BETWEEN 301 AND 310
+                                                                                         THEN COALESCE ((SELECT tmp.isPriceWithVAT
+                                                                                                         FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                                                                                                     THEN COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                                                                                                                                  , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                                                                                                                                   )
+                                                                                                                                                                     ELSE NULL
+                                                                                                                                                                END
+                                                                                                                                              , inJuridicalId:= 0
+                                                                                                                                              , inPartnerId  := 0
+                                                                                                                                              , inContractId := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                                                                                                     THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                                                                                                                                     ELSE -1
+                                                                                                                                                                END
+                                                                                                                                              , inGoodsId    := 0
+                                                                                                                                              , inUserId     := vbUserId
+                                                                                                                                               ) AS tmp
+                                                                                                         LIMIT 1)
+                                                                                                      , PriceWithVAT)
+
+                                                                                         ELSE PriceWithVAT -- определяются по прайлисту
+                                                                               END
                                                   , inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId
@@ -1081,7 +1102,7 @@ BEGIN
         -- Распроводим Документ !!!существующий!!!
         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
                                      , inUserId     := vbUserId);
-                                     
+
 
         -- исправили дату
         IF vbMovementDescId = zc_Movement_Sale() AND inOperDatePartner <> (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_begin AND MD.DescId = zc_MovementDate_OperDatePartner())
@@ -1095,7 +1116,7 @@ BEGIN
             UPDATE Movement SET OperDate = inOperDatePartner
             WHERE Movement.Id = (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
               AND Movement.DescId = zc_Movement_Tax();
-   
+
             -- сохранили протокол для налоговой
             PERFORM lpInsert_MovementProtocol ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
                                              , vbUserId
@@ -1129,7 +1150,7 @@ BEGIN
                 WHERE Movement.Id = vbMovementId_begin;
             END IF;
         END IF;
-        
+
 
     END IF;
 
@@ -1321,7 +1342,7 @@ BEGIN
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inPartNumber          := tmp.PartNumber
                                                         , inGoodsKindId         := tmp.GoodsKindId
-                                                        , inAssetId             := NULL  
+                                                        , inAssetId             := NULL
                                                         , inStorageId           := NULL
                                                         , inUserId              := vbUserId
                                                          )
@@ -1475,7 +1496,7 @@ BEGIN
                                                         , inGoodsKindCompleteId := NULL
                                                         , inAssetId             := NULL
                                                         , inUnitId              := NULL
-                                                        , inStorageId           := NULL   
+                                                        , inStorageId           := NULL
                                                         , inPartionModelId      := NULL
                                                         , inUserId              := vbUserId
                                                          )
@@ -1489,7 +1510,7 @@ BEGIN
                        --
                      , tmp.AssetId
                      , tmp.PartionGoodsDate
-                     , tmp.PartionGoods 
+                     , tmp.PartionGoods
                      , tmp.PartNumber
                      , SUM (tmp.Amount)              AS Amount
                      , SUM (tmp.AmountChangePercent) AS AmountChangePercent
@@ -1727,7 +1748,7 @@ BEGIN
                                        THEN ''
                                   ELSE tmpMI.PartionGoods
                              END AS PartionGoods
-                             
+
                            , tmpMI.PartNumber
 
                            , tmpMI.AssetId
@@ -1778,7 +1799,7 @@ BEGIN
                      --, tmp.BoxId
                        , tmp.AssetId
                        , tmp.PartionGoodsDate
-                       , tmp.PartionGoods 
+                       , tmp.PartionGoods
                        , tmp.PartNumber
                        , tmp.ChangePercentAmount
                        , tmp.Price
@@ -1963,15 +1984,15 @@ BEGIN
          FROM Movement
               LEFT JOIN Movement AS Movement_begin ON Movement_begin.Id = vbMovementId_begin
          WHERE Movement.Id = inMovementId;
-    
+
          -- сохранили свойство <Протокол взвешивания>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);
-    
+
          -- сохранили свойство <IP>
          PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inMovementId, inIP);
 
      END IF;
-     
+
 
 -- end if;
 
@@ -2147,7 +2168,7 @@ END IF;
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, vbOperDate_StartBegin);
      -- дописали св-во <Протокол Дата/время завершение>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, CLOCK_TIMESTAMP());
-     
+
 
      -- если двойной документ
      IF inMovementDescId_next > 0
@@ -2234,8 +2255,8 @@ $BODY$
 
 -- update Box
 --
-with tmp1 as 
-(SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId 
+with tmp1 as
+(SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId
      , Movement.Id, InvNumber, OperDate
 
                           FROM Movement
@@ -2250,7 +2271,7 @@ with tmp1 as
                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 WHERE Movement.OperDate between '01.08.2022' and '01.09.2022'
   and Movement.DescID = zc_Movement_Sale()
-) 
+)
 
 , t1 as (
 
@@ -2328,7 +2349,7 @@ and MovementItem.Descid = zc_MI_Master()
 , MILinkObject_GoodsKind as (select * from MovementItemLinkObject where MovementItemId IN (select distinct MovementItemId from t33) )
 
 , t3 as (
-select MovementId, coalesce(MIFloat_BoxCount.ValueData, 0) as BoxCount  
+select MovementId, coalesce(MIFloat_BoxCount.ValueData, 0) as BoxCount
 , MovementItem.goodsId, MovementItem.MovementItemId
 , MILinkObject_GoodsKind.ObjectId as  GoodsKindId
 FROM t33 as MovementItem
@@ -2347,24 +2368,24 @@ FROM t33 as MovementItem
 , t4 as (select t2.ParentId, goodsId, GoodsKindId, sum(BoxCount) as BoxCount FROM t3 join t2 on t2.Id = t3.MovementId where BoxCount <> 0 group by t2.ParentId, goodsId, GoodsKindId)
 
 , t5 as (select t1 .*, t4.BoxCount as BoxCount_new, MIFloat_BoxCount.ValueData as BoxCount_old
-         FROM t1 
-               join t4 on t4.ParentId = t1.MovementId 
-                      and t4.goodsId  = t1.goodsId 
-                      and t4.GoodsKindId = t1.GoodsKindId 
+         FROM t1
+               join t4 on t4.ParentId = t1.MovementId
+                      and t4.goodsId  = t1.goodsId
+                      and t4.GoodsKindId = t1.GoodsKindId
 left JOIN MovementItemFloat AS MIFloat_BoxCount
                                                        ON MIFloat_BoxCount.MovementItemId = t1 .Id
                                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
 -- where OldId <> NewId
 )
 
-select * 
+select *
 -- , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box(), t5.Id, NewId)
   -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_BoxCount(), t5.Id, BoxCount_new)
 from t5
 left join Object on Object.Id = NewId
  where (BoxCount_new <> coalesce (BoxCount_old, 0)
 or NewId <> OldId)
--- and MovementId = 23166802 
+-- and MovementId = 23166802
  -- and MovementId = 23091922
 order by OperDate
 */

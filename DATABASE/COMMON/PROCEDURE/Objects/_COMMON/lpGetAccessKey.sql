@@ -29,8 +29,8 @@ BEGIN
                        , zc_Enum_Process_InsertUpdate_Movement_PersonalAccount()
                         )
       THEN 
-           -- <> Посохова Н.В.
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE UserId <> 2556726 AND RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24)); -- Транспорт Днепр
+           -- <> Посохова Н.В. <> Омельяненко Ю.Б.
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE UserId NOT IN (2556726, 9984496) AND RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24)); -- Транспорт Днепр
       ELSE
       -- Document
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Income()
@@ -60,8 +60,9 @@ BEGIN
                         FROM Object_Process_User_View
                              JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId
                         WHERE Object_Process_User_View.ProcessId = inProcessId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
-                          -- <> Посохова Н.В.
+                          -- <> Посохова Н.В. <> Омельяненко Ю.Б.
                           AND Object_Process_User_View.UserId <> 2556726
+                          AND Object_Process_User_View.UserId <> 9984496
                        );
            IF inUserId IS NULL THEN inUserId:= (SELECT MAX (Object_Process_User_View.UserId)
                                                 FROM Object_Process_User_View

@@ -69,10 +69,18 @@ BEGIN
           , lfSelect.PersonalId                  AS PersonalId
           , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
                       THEN 8411 -- Склад ГП ф.Киев
+
+                 WHEN vbUserId = 10105228  -- Трубін О.С.
+                      THEN 8425 -- Склад ГП ф.Харьков
+
                  ELSE lfSelect.UnitId
             END AS UnitId
           , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
                       THEN 8379 -- филиал Киев
+
+                 WHEN vbUserId = 10105228  -- Трубін О.С.
+                      THEN 8381 -- филиал Харьков
+
                  WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
                       THEN zc_Branch_Basis()
                  ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
