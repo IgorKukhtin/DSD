@@ -624,7 +624,7 @@ BEGIN
                                                                             WHEN Object_PartionGoods.ValueData ILIKE 'уп%' THEN 2
                                                                             ELSE 1
                                                                        END ASC
-                                                                     , COALESCE (ObjectDate_Value.ValueData, zc_DateStart())
+                                                                     , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC
                                                                      , Container.ContainerId DESC
                                                              ) AS AmountSUM
                                  -- !!!Надо отловить ПОСЛЕДНИЙ!!!

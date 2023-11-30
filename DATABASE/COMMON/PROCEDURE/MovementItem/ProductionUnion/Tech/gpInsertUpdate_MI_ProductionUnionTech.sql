@@ -48,6 +48,7 @@ BEGIN
    
    -- !!!Проверка!!!
    IF inCountReal <> 0 AND inFromId <> 2790412  -- ЦЕХ Тушенка
+                       AND inFromId <> 8449     -- Цех сирокопчених ковбас
    THEN
        RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Кол-во шт.факт> для подразделения <%>.', lfGet_Object_ValueData_sh (inFromId);
    END IF;

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION lpGet_MovementItem_ContractGoods(
     IN inGoodsId            Integer   , --
     IN inUserId             Integer     --
 )
-RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, isPriceWithVAT Boolean
              , MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
 
                -- цена расчетная в грн - с учетом курса и округления
@@ -82,6 +82,7 @@ BEGIN
             , tmpData AS (SELECT Movement.Id                                    AS MovementId
                                , Movement.InvNumber                             AS InvNumber
                                , Movement.OperDate                              AS OperDate
+                               , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) AS isPriceWithVAT
                                , MLO_Contract.ObjectId                          AS ContractId
                                , ObjectLink_Contract_Juridical.ChildObjectId    AS JuridicalId
                                , MLO_Currency.ObjectId                          AS CurrencyId
@@ -114,6 +115,9 @@ BEGIN
                                                              ON MLO_Contract.MovementId = Movement.Id
                                                             AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
                                                             AND (MLO_Contract.ObjectId  = inContractId OR COALESCE (inContractId, 0) = 0)
+                               LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                         ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                                        AND MovementBoolean_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
                                LEFT JOIN MovementLinkObject AS MLO_Currency
                                                             ON MLO_Currency.MovementId = Movement.Id
                                                            AND MLO_Currency.DescId     = zc_MovementLinkObject_Currency()
@@ -159,6 +163,7 @@ BEGIN
          SELECT tmpData.MovementId
               , tmpData.InvNumber
               , tmpData.OperDate
+              , tmpData.isPriceWithVAT
               , tmpData.MovementItemId
               , tmpData.GoodsId
               , tmpData.GoodsKindId
