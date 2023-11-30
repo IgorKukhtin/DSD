@@ -836,6 +836,7 @@ initialization
   RegisterClass (TdsdeSputnikContactsMessages);
   RegisterClass (TdsdeSputnikSendSMS);
   RegisterClass (TBooleanSetVisibleAction);
+  RegisterClass (TdsdSetPropValueAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

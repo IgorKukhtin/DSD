@@ -1933,6 +1933,42 @@ type
       write SetImageIndexFalse;
   end;
 
+  TdsdSetPropValueParamsItem = class(TCollectionItem)
+  private
+    FComponent: TComponent;
+    FNameParam: TdsdParam;
+    FValueParam: TdsdParam;
+    procedure SetComponent(const Value: TComponent);
+  protected
+    function GetDisplayName: string; override;
+  public
+    constructor Create(Collection: TCollection); overload; override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Component: TComponent read FComponent write SetComponent;
+    property NameParam: TdsdParam read FNameParam write FNameParam;
+    property ValueParam: TdsdParam read FValueParam write FValueParam;
+  end;
+
+  TdsdSetPropValueAction = class(TdsdCustomAction)
+  private
+
+    FSetPropValueParams: TOwnedCollection;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property SetPropValueParams: TOwnedCollection read FSetPropValueParams write FSetPropValueParams;
+  end;
 
 procedure Register;
 
@@ -2011,6 +2047,7 @@ begin
   RegisterActions('DSDLib', [TdsdeSputnikContactsMessages], TdsdeSputnikContactsMessages);
   RegisterActions('DSDLib', [TdsdeSputnikSendSMS], TdsdeSputnikSendSMS);
   RegisterActions('DSDLib', [TBooleanSetVisibleAction], TBooleanSetVisibleAction);
+  RegisterActions('DSDLib', [TdsdSetPropValueAction], TdsdSetPropValueAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -7584,11 +7621,12 @@ end;
 
 function TdsdSetEnabledParamsItem.GetDisplayName: string;
 begin
-  result := inherited;
-  if FParam.Name <> '' then result := FParam.Name
-  else if Assigned(FParam.Component) then
-    result := FParam.Component.Name + ' ' + FParam.ComponentItem
-  else Result := inherited;;
+  if Assigned(FComponent) then result := FComponent.Name
+  else Result := inherited;
+
+  if Assigned(FParam.Component) then
+    result := Result + ' ' + FParam.Component.Name + ' ' + FParam.ComponentItem
+  else if Assigned(FParam.Component) and (FParam.Value <> '') then result := Result + ' ' + FParam.Value;
 end;
 
 procedure TdsdSetEnabledParamsItem.Assign(Source: TPersistent);
@@ -9143,7 +9181,135 @@ begin
   end;
 end;
 
+{ TdsdSetPropValueParamsItem }
 
+constructor TdsdSetPropValueParamsItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FNameParam := TdsdParam.Create(Nil);
+  FNameParam.DataType := ftString;
+  FNameParam.Value := '';
+  FValueParam := TdsdParam.Create(Nil);
+  FValueParam.DataType := ftString;
+  FValueParam.Value := '';
+end;
+
+destructor TdsdSetPropValueParamsItem.Destroy;
+begin
+  FNameParam.Free;
+  FValueParam.Free;
+  inherited Destroy;
+end;
+
+function TdsdSetPropValueParamsItem.GetDisplayName: string;
+begin
+  if Assigned(FComponent) then result := FComponent.Name
+  else Result := inherited;
+
+  if Assigned(FNameParam.Component) then
+    result := Result + ' ' + FNameParam.Component.Name + ' ' + FNameParam.ComponentItem;
+  if FNameParam.Value <> '' then result := Result + ' ' + FNameParam.Value;
+
+  if Assigned(FValueParam.Component) then
+    result := Result + ' ' + FValueParam.Component.Name + ' ' + FValueParam.ComponentItem
+  else if Assigned(FValueParam.Component) and (FValueParam.Value <> '') then result := Result + ' ' + FValueParam.Value;
+end;
+
+procedure TdsdSetPropValueParamsItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdSetEnabledParamsItem then
+  begin
+     FNameParam.Assign(TdsdSetPropValueParamsItem(Source).NameParam);
+     FValueParam.Assign(TdsdSetPropValueParamsItem(Source).ValueParam);
+     FComponent := TdsdSetEnabledParamsItem(Source).FComponent;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+procedure TdsdSetPropValueParamsItem.SetComponent(const Value: TComponent);
+begin
+  if Value <> FComponent then
+  begin
+     if Assigned(Collection) and Assigned(Value) then
+        Value.FreeNotification(TComponent(Collection.Owner));
+     FComponent := Value;
+  end
+end;
+
+{  TdsdSetPropValueAction  }
+
+constructor TdsdSetPropValueAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FSetPropValueParams := TOwnedCollection.Create(Self, TdsdSetPropValueParamsItem);
+end;
+
+destructor TdsdSetPropValueAction.Destroy;
+begin
+  FreeAndNil(FSetPropValueParams);
+
+  inherited;
+end;
+
+procedure TdsdSetPropValueAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) then
+  begin
+    for i := 0 to FSetPropValueParams.Count - 1 do
+    begin
+       if TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).Component = AComponent then
+            TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).Component := nil;
+       if TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FNameParam.Component = AComponent then
+           TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FNameParam.Component := nil;
+       if TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FValueParam.Component = AComponent then
+           TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FValueParam.Component := nil;
+    end;
+  end;
+end;
+
+function TdsdSetPropValueAction.LocalExecute: Boolean;
+var i, j: integer; PropInfo: PPropInfo; Value: TObject;
+begin
+  inherited;
+  Result := True;
+
+  for i := 0 to FSetPropValueParams.Count - 1 do  if Assigned(TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).Component) and (TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FNameParam.Value <> '') then
+  begin
+    if IsPublishedProp(TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).Component, TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FNameParam.Value) then
+    begin
+      PropInfo := GetPropInfo(TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).Component, TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FNameParam.Value);
+      if Assigned(PropInfo) then
+      begin
+
+        case PropInfo^.PropType^.Kind of
+          tkClass : begin
+                      Value := Nil;
+                      if TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FValueParam.Value <> '' then
+                      begin
+                        for j := 0 to TForm(Owner).ComponentCount - 1 do if TForm(Owner).Components[j].Name = TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FValueParam.Value then
+                        begin
+                          Value := TForm(Owner).Components[j];
+                          Break;
+                        end;
+                      end;
+
+                      SetObjectProp(TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).Component, TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FNameParam.Value, Value);
+                    end
+          else SetPropValue(TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).Component, TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FNameParam.Value, TdsdSetPropValueParamsItem(FSetPropValueParams.Items[i]).FValueParam.Value)
+        end;
+
+      end;
+    end;
+  end;
+
+end;
 initialization
 
   XML := TXMLDocument.Create(nil);

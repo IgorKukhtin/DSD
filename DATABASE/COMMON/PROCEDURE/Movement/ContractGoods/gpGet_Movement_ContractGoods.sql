@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate 
              , JuridicalId Integer, JuridicalName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
              , DiffPrice TFloat, RoundPrice TFloat
+             , PriceWithVAT Boolean
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isMask Boolean --вернуть false
@@ -75,7 +76,7 @@ BEGIN
 
              , CAST (0 AS TFloat) 		 AS DiffPrice
              , CAST (0 AS TFloat) 		 AS RoundPrice
-
+             , CAST (False AS Boolean)                          AS PriceWithVAT
              , CAST ('' AS TVarChar) 		                    AS Comment
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate 
@@ -119,17 +120,23 @@ BEGIN
            , MovementFloat_DiffPrice.ValueData  ::TFloat AS DiffPrice
            , MovementFloat_RoundPrice.ValueData ::TFloat AS RoundPrice
 
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
+
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData                AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , CAST (FALSE AS Boolean)                AS isMask
+           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_DiffPrice
                                     ON MovementFloat_DiffPrice.MovementId = Movement.Id

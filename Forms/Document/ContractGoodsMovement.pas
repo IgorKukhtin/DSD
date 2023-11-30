@@ -99,6 +99,7 @@ type
     cxLabel10: TcxLabel;
     edRoundPrice: TcxCurrencyEdit;
     CountForAmount: TcxGridDBColumn;
+    edPriceWithVAT: TcxCheckBox;
   private
     { Private declarations }
   public

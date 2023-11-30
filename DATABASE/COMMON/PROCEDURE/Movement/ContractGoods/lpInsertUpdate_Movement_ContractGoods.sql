@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, Integer, TFloat, TFloat, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ContractGoods(
     IN inContractId          Integer   , --
     IN inCurrencyId          Integer   , -- Валюта 
     IN inDiffPrice           TFloat    ,  -- Разрешенный % отклонение для цены
-    IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления
+    IN inRoundPrice          TFloat    ,  -- Кол-во знаков для округления   
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -98,6 +100,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiffPrice(), ioId, inDiffPrice);
      -- Кол-во знаков для округления
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_RoundPrice(), ioId, inRoundPrice);
+
+     -- сохранили свойство <Цена с НДС (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -136,6 +141,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.11.23         *
  08.11.23         *
  15.09.22         *
  14.09.22         *
