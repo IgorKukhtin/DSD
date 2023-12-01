@@ -9,7 +9,13 @@ AS
 $BODY$
 BEGIN
 
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (8101714 -- Роль Ирна - все
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+         -- Роль доступ Алан + Ирна
+         OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 8101711)
+     THEN
+         RETURN NULL;
+
+     ELSEIF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (8101714 -- Роль Ирна - все
                                                                                             , 8101715 -- Роль Ирна - производство
                                                                                              ))
         OR EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId = zc_Enum_Process_AccessKey_UserIrna())
@@ -17,11 +23,6 @@ BEGIN
      THEN
           RETURN TRUE;
 
-     ELSEIF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-         -- Роль доступ Алан + Ирна
-         OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 8101711)
-     THEN
-         RETURN NULL;
 
      ELSE 
           RETURN FALSE;
