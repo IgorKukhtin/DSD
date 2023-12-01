@@ -919,8 +919,8 @@ object GoodsForm: TGoodsForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 80
-    Top = 88
+    Left = 64
+    Top = 168
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET

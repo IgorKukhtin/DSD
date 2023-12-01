@@ -329,7 +329,8 @@ BEGIN
       , tmpReceipt AS (-- сборка узлов
                        SELECT DISTINCT
                               tmpGoods.Id AS GoodsId
-                            , ObjectLink_Unit.ChildObjectId AS UnitId
+                            , ObjectLink_Unit.ChildObjectId       AS UnitId
+                            , ObjectLink_UnitChild.ChildObjectId  AS UnitChildId
                               -- какой узел собирается
                             , ObjectLink_ReceiptGoods_Object.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -350,6 +351,11 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                  ON ObjectLink_Unit.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit()
+
+                            LEFT JOIN ObjectLink AS ObjectLink_UnitChild
+                                                 ON ObjectLink_UnitChild.ObjectId = ObjectReceipt.Id
+                                                AND ObjectLink_UnitChild.DescId   = zc_ObjectLink_ReceiptGoods_UnitChild()
+
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                                                  ON ObjectLink_ReceiptGoods_Object.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
@@ -361,7 +367,8 @@ BEGIN
                        -- сборка "виртуальных" узлов
                        SELECT DISTINCT
                               tmpGoods.Id AS GoodsId
-                            , ObjectLink_Unit.ChildObjectId AS UnitId
+                            , ObjectLink_Unit.ChildObjectId       AS UnitId
+                            , ObjectLink_UnitChild.ChildObjectId  AS UnitChildId
                               -- какой узел собирается
                             , ObjectLink_GoodsChild.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -382,6 +389,10 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                  ON ObjectLink_Unit.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit()
+ 
+                            LEFT JOIN ObjectLink AS ObjectLink_UnitChild
+                                                 ON ObjectLink_UnitChild.ObjectId = ObjectReceipt.Id
+                                                AND ObjectLink_UnitChild.DescId   = zc_ObjectLink_ReceiptGoods_UnitChild()
                           --LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                           --                     ON ObjectLink_ReceiptGoods_Object.ObjectId = ObjectReceipt.Id
                           --                    AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
@@ -393,6 +404,7 @@ BEGIN
                        SELECT DISTINCT
                               ObjectLink_GoodsChild.ChildObjectId AS GoodsId
                             , ObjectLink_Unit.ChildObjectId       AS UnitId
+                            , ObjectLink_UnitChild.ChildObjectId  AS UnitChildId
                               -- какой узел собирается
                             , ObjectLink_ReceiptGoods_Object.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -412,7 +424,12 @@ BEGIN
                                                               AND ObjectReceipt.isErased = FALSE
                             LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                  ON ObjectLink_Unit.ObjectId = ObjectReceipt.Id
-                                                AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit()
+                                                AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit() 
+
+                            LEFT JOIN ObjectLink AS ObjectLink_UnitChild
+                                                 ON ObjectLink_UnitChild.ObjectId = ObjectReceipt.Id
+                                                AND ObjectLink_UnitChild.DescId   = zc_ObjectLink_ReceiptGoods_UnitChild()
+
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                                                  ON ObjectLink_ReceiptGoods_Object.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
@@ -424,6 +441,7 @@ BEGIN
                        SELECT DISTINCT
                               tmpGoods.Id AS GoodsId
                             , ObjectLink_Unit.ChildObjectId  AS UnitId
+                            , 0                              AS UnitChildId
                               -- какая модель собирается
                             , ObjectLink_ReceiptProdModel_Model.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -448,10 +466,13 @@ BEGIN
                       )
            -- подразделение сборки
          , tmpUnit_receipt AS (SELECT tmpReceipt.GoodsId
-                                    , STRING_AGG (DISTINCT Object_Unit.ValueData, '; ') AS UnitName_receipt
+                                    , STRING_AGG (DISTINCT Object_Unit.ValueData, '; ')      AS UnitName_receipt
+                                    , STRING_AGG (DISTINCT Object_UnitChild.ValueData, '; ') AS UnitName_child_receipt
                                FROM tmpReceipt
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpReceipt.UnitId
-                               WHERE tmpReceipt.UnitId > 0
+                                   LEFT JOIN Object AS Object_UnitChild ON Object_UnitChild.Id = tmpReceipt.UnitChildId
+                               WHERE tmpReceipt.UnitId > 0 
+                                  OR tmpReceipt.UnitChildId > 0
                                GROUP BY tmpReceipt.GoodsId
                                )
            -- товар сборки
@@ -570,7 +591,8 @@ BEGIN
             , Object_Partner.ValueData           AS PartnerName
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
-            , tmpUnit_receipt.UnitName_receipt   ::TVarChar
+            , tmpUnit_receipt.UnitName_receipt        ::TVarChar
+            , tmpUnit_receipt.UnitName_child_receipt  ::TVarChar
 
             , tmpGoods_receipt.GoodsName_receipt ::TVarChar
           --, SUBSTRING (tmpGoods_receipt.Name_all, 1, 128) :: TVarChar AS GoodsName_receipt
@@ -802,7 +824,7 @@ BEGIN
              LEFT JOIN tmpUnit_receipt  ON tmpUnit_receipt.GoodsId  = Object_Goods.Id
              LEFT JOIN tmpGoods_receipt ON tmpGoods_receipt.GoodsId = Object_Goods.Id
          ORDER BY Object_Goods.Id  desc
-        -- LIMIT 197022
+         LIMIT 10000--197022
             ;
 
 END;
@@ -813,6 +835,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.12.23         * UnitName_child_receipt
  18.05.22         * add inIsLimit_100
  10.04.22         *
  11.11.20         *

@@ -1570,7 +1570,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 186
+      Width = 194
     end
     object cxLabel15: TcxLabel
       Left = 510
@@ -1711,12 +1711,12 @@
     end
   end
   object cxLabel1: TcxLabel
-    Left = 478
+    Left = 760
     Top = 38
     Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060':'
   end
   object edUnitChild: TcxButtonEdit
-    Left = 599
+    Left = 881
     Top = 37
     Properties.Buttons = <
       item
@@ -3765,8 +3765,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 120
+    Left = 104
+    Top = 160
   end
   object spErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ReceiptGoods'
