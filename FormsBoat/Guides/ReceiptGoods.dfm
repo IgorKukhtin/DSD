@@ -27,7 +27,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 59
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -38,7 +37,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 16
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -584,8 +582,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 289
-    ExplicitHeight = 205
     object cxGridCh1: TcxGrid
       Left = 0
       Top = 17
@@ -596,7 +592,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 188
       object cxGridDBTableViewCh1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child1DS
@@ -1044,7 +1039,6 @@
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitTop = 284
   end
   object PanelProdColorPattern: TPanel
     Left = 583
@@ -1054,8 +1048,6 @@
     Align = alRight
     Caption = 'PanelProdColorPattern'
     TabOrder = 4
-    ExplicitTop = 289
-    ExplicitHeight = 205
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
@@ -1066,7 +1058,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 186
       object cxGridDBTableViewCh2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child2DS
@@ -1515,8 +1506,6 @@
     Height = 176
     AlignSplitter = salRight
     Control = PanelProdColorPattern
-    ExplicitTop = 289
-    ExplicitHeight = 205
   end
   object Panel5: TPanel
     Left = 0
@@ -1609,7 +1598,7 @@
     Width = 1272
     Height = 64
     Align = alBottom
-    TabOrder = 10
+    TabOrder = 9
     object btnInsert: TcxButton
       Left = 17
       Top = 4
@@ -4846,6 +4835,7 @@
         Name = 'inUnitChildId'
         Value = ''
         Component = GuidesUnitChild
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
