@@ -4847,10 +4847,6 @@
 				<Form>MemberReportEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalServiceItemJournal.pas">
-				<Form>PersonalServiceItemJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsKindNewEdit.pas">
 				<Form>GoodsKindNewEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5144,6 +5140,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Select_HolidayCompensation_day.pas">
 				<Form>Select_HolidayCompensation_dayForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalServiceItemJournal.pas">
+				<Form>PersonalServiceItemJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

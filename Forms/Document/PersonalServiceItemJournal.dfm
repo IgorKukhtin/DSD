@@ -23,6 +23,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 563
+        ExplicitTop = -6
         ExplicitWidth = 1221
         ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -445,6 +446,51 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Position = spFooter
               Column = AmountCash_rem
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHoursOne_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_avance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_avance_ps
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecond_Avance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -711,6 +757,50 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCash_rem
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCash_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvCardSecondRecalc
+            end
+            item
+              Kind = skSum
+              Column = WorkTimeHoursOne_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_avance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_avance_ps
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAvCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecond_Avance
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -1664,6 +1754,103 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
+          end
+          object AmountCash_pay: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash_pay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvCardSecondRecalc: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. '#1040#1074#1072#1085#1089
+            DataBinding.FieldName = 'SummAvCardSecondRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object WorkTimeHoursOne_child: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' 1 '#1095#1077#1083' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'WorkTimeHoursOne_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummChild: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1071' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'TotalSummChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
+            DataBinding.FieldName = 'SummDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1053#1040#1063#1048#1057#1051#1045#1053#1048#1049' ('#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090')'
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_avance: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            DataBinding.FieldName = 'Amount_avance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object Amount_avance_ps: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1074'. '#1072#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            DataBinding.FieldName = 'Amount_avance_ps'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1087#1083#1072#1090#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1040#1074#1072#1085#1089' ('#1092'2) '#1075#1088#1085
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvCardSecond: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '#1040#1074#1072#1085#1089
+            DataBinding.FieldName = 'SummAvCardSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecond_Avance: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' '#1072#1074#1072#1085#1089' - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecond_Avance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' '#1041#1053' '#1072#1074#1072#1085#1089' - 2'#1092'.'
+            Options.Editing = False
+            Width = 70
           end
         end
       end

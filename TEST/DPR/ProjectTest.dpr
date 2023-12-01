@@ -1393,7 +1393,6 @@ uses
   SectionEdit in '..\..\Forms\Guides\SectionEdit.pas' {SectionEditForm: TParentForm},
   MemberReport in '..\..\Forms\Guides\MemberReport.pas' {MemberReportForm: TParentForm},
   MemberReportEdit in '..\..\Forms\Guides\MemberReportEdit.pas' {MemberReportEditForm: TParentForm},
-  PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm},
   GoodsKindNewEdit in '..\..\Forms\Guides\GoodsKindNewEdit.pas' {GoodsKindNewEditForm: TParentForm},
   GoodsKindNew in '..\..\Forms\Guides\GoodsKindNew.pas' {GoodsKindNewForm: TParentForm},
   GoodsKindNew_Object in '..\..\Forms\Guides\GoodsKindNew_Object.pas' {GoodsKindNew_ObjectForm: TParentForm},
@@ -1472,7 +1471,8 @@ uses
   CarProperty in '..\..\Forms\Guides\CarProperty.pas' {CarPropertyForm: TParentForm},
   CarPropertyEdit in '..\..\Forms\Guides\CarPropertyEdit.pas' {CarPropertyEditForm: TParentForm},
   Select_HolidayCompensation_zp in '..\..\Forms\Report\Select_HolidayCompensation_zp.pas' {Select_HolidayCompensation_zpForm: TParentForm},
-  Select_HolidayCompensation_day in '..\..\Forms\Report\Select_HolidayCompensation_day.pas' {Select_HolidayCompensation_dayForm: TParentForm};
+  Select_HolidayCompensation_day in '..\..\Forms\Report\Select_HolidayCompensation_day.pas' {Select_HolidayCompensation_dayForm: TParentForm},
+  PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
