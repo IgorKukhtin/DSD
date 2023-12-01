@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
              --, MaterialOptionsName TVarChar, ProdColorName_pcp TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar 
+             , UnitChildId Integer, UnitChildName TVarChar
 
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -395,6 +396,8 @@ BEGIN
 
          , Object_Unit.Id                     AS UnitId
          , Object_Unit.ValueData              AS UnitName
+         , Object_UnitChild.Id                AS UnitChildId
+         , Object_UnitChild.ValueData         AS UnitChildName
          
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
@@ -487,6 +490,11 @@ BEGIN
                                ON ObjectLink_Unit.ObjectId = Object_ReceiptGoods.Id
                               AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptGoods_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_UnitChild
+                               ON ObjectLink_UnitChild.ObjectId = Object_ReceiptGoods.Id
+                              AND ObjectLink_UnitChild.DescId = zc_ObjectLink_ReceiptGoods_UnitChild()
+          LEFT JOIN Object AS Object_UnitChild ON Object_UnitChild.Id = ObjectLink_UnitChild.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoods.Id

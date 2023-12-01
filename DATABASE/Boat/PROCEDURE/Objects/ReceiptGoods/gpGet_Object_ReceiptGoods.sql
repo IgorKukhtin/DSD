@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar 
              , UnitId Integer, UnitName TVarChar
+             , UnitChildId Integer, UnitChildName TVarChar
              
 ) AS
 $BODY$
@@ -41,7 +42,8 @@ BEGIN
            , '' :: TVarChar           AS ColorPatternName
            , 0  :: Integer            AS UnitId
            , '' :: TVarChar           AS UnitName
-
+           , 0  :: Integer            AS UnitChildId
+           , '' :: TVarChar           AS UnitChildName
        ;
    ELSE
      RETURN QUERY
@@ -65,6 +67,8 @@ BEGIN
 
          , Object_Unit.Id                     AS UnitId
          , Object_Unit.ValueData              AS UnitName
+         , Object_UnitChild.Id                AS UnitChildId
+         , Object_UnitChild.ValueData         AS UnitChildName
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_ReceiptGoods.Id
@@ -95,7 +99,13 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Unit
                                ON ObjectLink_Unit.ObjectId = Object_ReceiptGoods.Id
                               AND ObjectLink_Unit.DescId = zc_ObjectLink_ReceiptGoods_Unit()
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId   
+
+          LEFT JOIN ObjectLink AS ObjectLink_UnitChild
+                               ON ObjectLink_UnitChild.ObjectId = Object_ReceiptGoods.Id
+                              AND ObjectLink_UnitChild.DescId = zc_ObjectLink_ReceiptGoods_UnitChild()
+          LEFT JOIN Object AS Object_UnitChild ON Object_UnitChild.Id = ObjectLink_UnitChild.ChildObjectId 
+
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
       AND Object_ReceiptGoods.Id = inId
      ;
@@ -109,6 +119,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.12.23         * UnitChild
  22.12.22         * Unit
  11.12.20         *
  01.12.20         *

@@ -371,6 +371,14 @@
           Options.Editing = False
           Width = 87
         end
+        object UnitChildName: TcxGridDBColumn
+          Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1077#1083'-'#1055#1060
+          DataBinding.FieldName = 'UnitChildName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 87
+        end
         object EKPrice_summ: TcxGridDBColumn
           Caption = 'Total EK'
           DataBinding.FieldName = 'EKPrice_summ'
@@ -1505,7 +1513,7 @@
     Width = 1272
     Height = 33
     Align = alTop
-    TabOrder = 6
+    TabOrder = 5
     object lbSearchArticle: TcxLabel
       Left = 22
       Top = 6

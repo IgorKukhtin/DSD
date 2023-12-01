@@ -29,15 +29,8 @@ BEGIN
         SELECT tmpOperDate.operdate
              , MI_SheetWorkTime.Amount
              
-             /*, COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
-             , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
-             , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
-             */
              , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
-             --, COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
-             --, CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END AS WorkTimeKindId
-             --, ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
-             --, MovementLinkObject_Unit.ObjectId AS UnitId
+
              , 1 AS CountPersonal
         FROM tmpOperDate
              JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
@@ -47,27 +40,12 @@ BEGIN
                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
              JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
-             /*LEFT JOIN MovementItemLinkObject AS MIObject_Position
-                                              ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
-                                             AND MIObject_Position.DescId = zc_MILinkObject_Position()
-             LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
-                                              ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
-                                             AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-             LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
-                                              ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
-                                             AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
-             LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
-                                    ON ObjectString_WorkTimeKind_ShortName.ObjectId = CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END
-                                   AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
-             */
+            
              LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                               ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                              AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-             /*LEFT JOIN MovementItemLinkObject AS MIObject_StorageLine
-                                              ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
-                                             AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
-             */
-        WHERE MovementLinkObject_Unit.ObjectId = inUnitId
+        WHERE MovementLinkObject_Unit.ObjectId = inUnitId 
+          AND MI_SheetWorkTime.Amount <> 0
         ) AS tmp
    GROUP BY tmp.OperDate
           , tmp.PersonalGroupId;
@@ -98,7 +76,7 @@ BEGIN
    SELECT 
           Object_PersonalGroup.Id         AS PersonalGroupId
         , Object_PersonalGroup.ValueData  AS PersonalGroupName
-        , tmpMI.OperDate :: TDateTime
+        , COALESCE (tmpMI.OperDate,tmpReport.OperDate)  :: TDateTime AS OperDate
         , SUM (tmpMI.Amount)            ::TFloat  AS AmountHours
         , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) ::TFloat AS CountDay
         , SUM (tmpReport.CountPackage)  ::TFloat AS CountPackage
@@ -107,13 +85,13 @@ BEGIN
 --        , SUM (tmp.CountDay)    ::TFloat AS CountDay
         
    FROM tmpMI
-        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = tmpMI.PersonalGroupId
-
-        LEFT JOIN tmpReport ON COALESCE (tmpReport.PersonalGroupId,0) = COALESCE (tmpMI.PersonalGroupId,0)
+        FULL JOIN tmpReport ON COALESCE (tmpReport.PersonalGroupId,0) = COALESCE (tmpMI.PersonalGroupId,0)
                            AND tmpReport.OperDate = tmpMI.OperDate
+
+        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (tmpMI.PersonalGroupId, tmpReport.PersonalGroupId,0)
    GROUP BY Object_PersonalGroup.Id
           , Object_PersonalGroup.ValueData
-          , tmpMI.OperDate
+          , COALESCE (tmpMI.OperDate,tmpReport.OperDate)
    ;
    RETURN NEXT Cursor1;
 
