@@ -215,7 +215,8 @@ BEGIN
                                             AND MIFloat_ApplicationAward.DescId = zc_MIFloat_ApplicationAward()
 
            WHERE MovementItem.MovementId = inMovementId
-             AND MovementItem.isErased = False) - COALESCE (vbApplicationAward, 0) + COALESCE (inApplicationAward, 0)) > 0
+             AND MovementItem.isErased = False) - COALESCE (vbApplicationAward, 0) + COALESCE (inApplicationAward, 0)) > 0 AND
+         NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
       THEN
         RAISE EXCEPTION 'Сумма по <Моб. приложение> по всем сотрудникам должна быть меньше или равна нолю.';      
       END IF;

@@ -1083,8 +1083,16 @@ BEGIN
           , tmpGoodsSP.PercentPayment                              AS PercentPayment
           , tmpGoodsSP.CountSP::TFloat                             AS CountSP
           , tmpGoodsSP.CountSPMin::TFloat                          AS CountSPMin
-          , tmpGoodsSP.PriceRetSP::TFloat                          AS PriceRetSP
-          , tmpGoodsSP.PaymentSP::TFloat                           AS PaymentSP
+          ,  CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                  THEN CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
+                            THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                            ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END -- Фиксированный % доплаты
+                  ELSE tmpGoodsSP.PriceRetSP END :: TFloat AS PriceRetSP
+          ,  CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                  THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
+                                   THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                                   ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты                                        
+                  ELSE tmpGoodsSP.PaymentSP END :: TFloat AS PaymentSP
           , CASE CashSessionSnapShot.PartionDateKindId
             WHEN zc_Enum_PartionDateKind_Good() THEN vbDay_6 / 30.0 + 1.0
             WHEN zc_Enum_PartionDateKind_Cat_5() THEN vbDay_6 / 30.0 - 1.0
@@ -1415,7 +1423,12 @@ SELECT Id
      , PriceView
      , PriceSite
      , UKTZED
+     , PriceRetSP
+     , PriceSP
+     , PaymentSP
+     , PriceSaleSP 
+
 FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3') 
-where PartionDateKindId IS NOT NULL --PriceView <> PriceSite --and id = 15015521
+--where PartionDateKindId IS NOT NULL --PriceView <> PriceSite --and id = 15015521
 order by GoodsName
        , PartionDateKindName

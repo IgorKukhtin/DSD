@@ -152,7 +152,13 @@ BEGIN
          , tmpGoodsSP.MedicalProgramSPID
          , tmpGoodsSP.PercentPayment
          , tmpGoodsSP.IntenalSPId
-         , tmpGoodsSP.PriceRetSP
+
+
+         ,  CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                 THEN CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
+                           THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                           ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END -- Фиксированный % доплаты
+                 ELSE tmpGoodsSP.PriceRetSP END :: TFloat AS PriceRetSP
 
             --
             -- Цена со скидкой для СП
@@ -187,7 +193,14 @@ BEGIN
                  ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
 
             END :: TFloat AS PriceSP
-         , tmpGoodsSP.PaymentSP
+
+         ,  CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
+                 THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
+                                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                                  ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты
+                                       
+                 ELSE tmpGoodsSP.PaymentSP END :: TFloat AS PaymentSP
+
          , tmpGoodsSP.CountSP
          , tmpGoodsSP.CountSPMin
          , tmpGoodsSP.IdSP
@@ -253,4 +266,4 @@ ALTER FUNCTION gpSelect_MedicalProgramSP_Goods (Integer, Integer, TVarChar, TVar
 
 -- 
 
-select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078224 , inCashSessionId := '{B71CE2FC-A542-4586-BF14-D2EFEA1FCBD8}' ,  inSession := '3');
+select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078210  , inCashSessionId := '{62BAA583-8177-44D0-84BE-91283BBDACD1}' ,  inSession := '3');

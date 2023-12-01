@@ -20919,8 +20919,25 @@ inherited MainCashForm2: TMainCashForm2
           '     , gas.ProgramIdSP'
           '     , CashSessionSnapShot.Price'
           '  , gas.CountSP'
-          '     , gas.PriceRetSP'
-          '    , gas.PaymentSP'
+          '     , CASE WHEN COALESCE (gas.PercentPayment, 0) > 0'
+          
+            '            THEN CASE WHEN CashSessionSnapShot.Price < COALESCE ' +
+            '(gas.PriceRetSP, 0)'
+          '                      THEN CashSessionSnapShot.Price'
+          
+            '                      ELSE COALESCE (gas.PriceRetSP, 0) END -- '#1060 +
+            #1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1076#1086#1087#1083#1072#1090#1099
+          '            ELSE gas.PriceRetSP END AS PriceRetSP'
+          '     , CASE WHEN COALESCE (gas.PercentPayment, 0) > 0'
+          
+            '            THEN ROUND (CASE WHEN CashSessionSnapShot.Price < CO' +
+            'ALESCE (gas.PriceRetSP, 0)'
+          #9'                         THEN CashSessionSnapShot.Price'
+          
+            #9'                         ELSE COALESCE (gas.PriceRetSP, 0) END ' +
+            '* gas.PercentPayment / 100, 2) -- '#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1076#1086#1087#1083#1072#1090#1099'       ' +
+            '                                '
+          '            ELSE gas.PaymentSP END AS PaymentSP'
           #9' --'
           #9' -- '#1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' '#1076#1083#1103' '#1057#1055
           #9' --'#9' '
