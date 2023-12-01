@@ -20,13 +20,14 @@
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 0
-    Top = 59
+    Top = 88
     Width = 1272
     Height = 225
     Align = alTop
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 59
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -37,6 +38,7 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitTop = 16
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -575,23 +577,26 @@
   end
   object PanelGoods: TPanel
     Left = 0
-    Top = 289
+    Top = 318
     Width = 575
-    Height = 205
+    Height = 176
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 289
+    ExplicitHeight = 205
     object cxGridCh1: TcxGrid
       Left = 0
       Top = 17
       Width = 575
-      Height = 188
+      Height = 159
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 188
       object cxGridDBTableViewCh1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child1DS
@@ -1034,30 +1039,34 @@
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 284
+    Top = 313
     Width = 1272
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
+    ExplicitTop = 284
   end
   object PanelProdColorPattern: TPanel
     Left = 583
-    Top = 289
+    Top = 318
     Width = 689
-    Height = 205
+    Height = 176
     Align = alRight
     Caption = 'PanelProdColorPattern'
     TabOrder = 4
+    ExplicitTop = 289
+    ExplicitHeight = 205
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
       Width = 687
-      Height = 186
+      Height = 157
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 186
       object cxGridDBTableViewCh2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child2DS
@@ -1501,23 +1510,25 @@
   end
   object cxSplitterRight: TcxSplitter
     Left = 575
-    Top = 289
+    Top = 318
     Width = 8
-    Height = 205
+    Height = 176
     AlignSplitter = salRight
     Control = PanelProdColorPattern
+    ExplicitTop = 289
+    ExplicitHeight = 205
   end
   object Panel5: TPanel
     Left = 0
     Top = 0
     Width = 1272
-    Height = 33
+    Height = 62
     Align = alTop
     TabOrder = 5
     object lbSearchArticle: TcxLabel
-      Left = 22
-      Top = 6
-      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      Left = 4
+      Top = 36
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr: '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -1527,25 +1538,25 @@
       Style.IsFontAssigned = True
     end
     object edSearchArticle: TcxTextEdit
-      Left = 147
-      Top = 7
+      Left = 111
+      Top = 37
       TabOrder = 1
       DesignSize = (
-        125
+        110
         21)
-      Width = 125
+      Width = 110
     end
     object lbReceiptLevel: TcxLabel
-      Left = 296
-      Top = 8
+      Left = 14
+      Top = 9
       Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
       Caption = 'Level:'
       ParentShowHint = False
       ShowHint = True
     end
     object edReceiptLevel: TcxButtonEdit
-      Left = 332
-      Top = 7
+      Left = 50
+      Top = 8
       Properties.Buttons = <
         item
           Default = True
@@ -1553,15 +1564,15 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 181
+      Width = 171
     end
     object cxLabel4: TcxLabel
-      Left = 935
+      Left = 804
       Top = 8
-      Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+      Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080':'
     end
     object edUnit: TcxButtonEdit
-      Left = 1010
+      Left = 881
       Top = 7
       Properties.Buttons = <
         item
@@ -1573,14 +1584,14 @@
       Width = 186
     end
     object cxLabel15: TcxLabel
-      Left = 617
-      Top = 8
+      Left = 510
+      Top = 9
       Caption = #1057#1073#1086#1088#1082#1072' '#1059#1079#1083#1072' '#1055#1060':'
       ParentShowHint = False
       ShowHint = True
     end
     object edGoodsChild: TcxButtonEdit
-      Left = 711
+      Left = 599
       Top = 7
       Properties.Buttons = <
         item
@@ -1589,7 +1600,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 218
+      Width = 194
     end
   end
   object Panel_btn: TPanel
@@ -1709,6 +1720,23 @@
       ShowHint = True
       TabOrder = 10
     end
+  end
+  object cxLabel1: TcxLabel
+    Left = 478
+    Top = 38
+    Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060':'
+  end
+  object edUnitChild: TcxButtonEdit
+    Left = 599
+    Top = 37
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 194
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1864,6 +1892,10 @@
         item
           Visible = True
           ItemName = 'bbInsertUpdate_Unit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbb'
         end
         item
           Visible = True
@@ -2092,7 +2124,7 @@
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbErasedGoods_child1'
         end>
     end
     object BarSubItemOption: TdxBarSubItem
@@ -2233,13 +2265,18 @@
       Action = macInsertUpDate_Child_bySend
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbErasedGoods_child1: TdxBarButton
       Action = macErasedGoods_child1
       Category = 0
     end
     object bbChoiceFormGoods_1: TdxBarButton
       Action = actChoiceFormGoods_1
       Category = 0
+    end
+    object bbb: TdxBarButton
+      Action = macInsertUpdate_UnitChild
+      Category = 0
+      ImageIndex = 80
     end
   end
   object ActionList: TActionList
@@ -2265,6 +2302,44 @@
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macInsertUpdate_UnitChild: TMultiAction
+      Category = 'Update_all'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdate_UnitChild_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1099#1073#1088#1072#1085#1085#1086#1077' '#1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074'?'
+      InfoAfterExecute = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080'  '#1059#1079#1083#1072' '#1055#1060' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+      ImageIndex = 77
+    end
+    object actInsertUpdate_UnitChild: TdsdExecStoredProc
+      Category = 'Update_all'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsUpd_UnitChild
+      StoredProcList = <
+        item
+          StoredProc = spInsUpd_UnitChild
+        end>
+      Caption = 'actInsertUpdate_UnitChild'
+    end
+    object macInsertUpdate_UnitChild_list: TMultiAction
+      Category = 'Update_all'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_UnitChild
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
     end
     object macInsertUpdate_Unit: TMultiAction
       Category = 'Update_all'
@@ -4573,8 +4648,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 831
-    Top = 83
+    Left = 999
+    Top = 19
   end
   object spInsUpd_Unit: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ReceiptGoods_Unit'
@@ -4598,8 +4673,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1052
-    Top = 65528
+    Left = 892
+    Top = 120
   end
   object GuidesReceiptGoods: TdsdGuides
     KeyField = 'Id'
@@ -4722,7 +4797,60 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 784
-    Top = 65528
+    Left = 688
+    Top = 8
+  end
+  object GuidesUnitChild: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitChild
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitChild
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitChild
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 631
+    Top = 35
+  end
+  object spInsUpd_UnitChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ReceiptGoods_UnitChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitChildId'
+        Value = ''
+        Component = GuidesUnitChild
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 852
+    Top = 104
   end
 end

@@ -253,7 +253,7 @@ type
     Article_group: TcxGridDBColumn;
     macErasedGoods_child1_list: TMultiAction;
     macErasedGoods_child1: TMultiAction;
-    bb: TdxBarButton;
+    bbErasedGoods_child1: TdxBarButton;
     Value_child_ch1: TcxGridDBColumn;
     ArticleVergl: TcxGridDBColumn;
     ArticleVergl_ch1: TcxGridDBColumn;
@@ -272,6 +272,14 @@ type
     cxButton1: TcxButton;
     bbChoiceFormGoods_1: TdxBarButton;
     btnUpdate_all: TcxButton;
+    cxLabel1: TcxLabel;
+    edUnitChild: TcxButtonEdit;
+    GuidesUnitChild: TdsdGuides;
+    spInsUpd_UnitChild: TdsdStoredProc;
+    actInsertUpdate_UnitChild: TdsdExecStoredProc;
+    macInsertUpdate_UnitChild_list: TMultiAction;
+    macInsertUpdate_UnitChild: TMultiAction;
+    bbb: TdxBarButton;
   private
     { Private declarations }
   public
