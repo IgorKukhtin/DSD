@@ -61,14 +61,24 @@ BEGIN
                -- Комплектующие
              , MovementItem.ObjectId                                               AS ObjectId
 
-               -- какой узел был в ReceiptProdModel или какой "Виртуальный" Узел собирается
-             , COALESCE (MILinkObject_Goods_basis.ObjectId, 0)                     AS ObjectId_basis
+               -- какой узел был в ReceiptProdModel - для zc_MI_Child ИЛИ какой "ПФ" Узел собирается - для zc_MI_Detail
+             , CASE WHEN MovementItem.DescId = zc_MI_Child()
+                        -- какой узел был в ReceiptProdModel
+                         THEN COALESCE (MILinkObject_Goods_basis.ObjectId, 0)
+                    WHEN MovementItem.DescId = zc_MI_Detail()
+                         -- какой "ПФ" Узел собирается
+                         THEN COALESCE (MILinkObject_Goods_basis.ObjectId, 0)
+               END AS ObjectId_basis
            --, COALESCE (MILinkObject_Goods_basis.ObjectId, MovementItem.ObjectId) AS ObjectId_basis
 
                -- только для zc_MI_Child
-             , COALESCE (MILinkObject_ReceiptGoods.ObjectId, 0)                    AS ReceiptGoodsId
+             , CASE WHEN MovementItem.DescId = zc_MI_Child()
+                         THEN COALESCE (MILinkObject_ReceiptGoods.ObjectId, 0)
+               END AS ReceiptGoodsId
                -- только для zc_MI_Detail
-             , COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0)                    AS ReceiptLevelId
+             , CASE WHEN MovementItem.DescId = zc_MI_Detail()
+                         THEN COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0)
+               END AS ReceiptLevelId
 
                --
              , MILinkObject_ProdOptions.ObjectId                                   AS ProdOptionsId
