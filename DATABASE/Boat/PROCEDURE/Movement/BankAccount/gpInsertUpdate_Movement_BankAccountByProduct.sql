@@ -2,18 +2,17 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccountByProduct (Integer, TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccountByProduct(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
-    IN inOperDate             TDateTime , -- Дата документа   
+    IN inOperDate             TDateTime , -- Дата документа
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inAmountIn             TFloat    , -- Сумма прихода
-    IN inBankAccountId        Integer   , -- Расчетный счет 	
-    IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
+    IN inBankAccountId        Integer   , -- Расчетный счет
+    IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса
     IN inMovementId_Invoice   Integer   , -- Счет
     IN inMovementId_Parent    Integer   , -- Заказ Клиента
     IN inSession              TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,7 +21,7 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
 
      -- проверка
-     IF COALESCE (inAmountIn, 0) = 0  
+     IF COALESCE (inAmountIn, 0) = 0
      THEN
         RETURN;
      END IF;
@@ -59,7 +58,7 @@ BEGIN
                                                , inComment              := (SELECT tmp.ValueData FROM MovementString AS tmp WHERE tmp.DescId = zc_MovementString_Comment() AND tmp.MovementId = ioId)
                                                , inUserId               := vbUserId
                                                 );
-                                                
+
 
      -- 5.3. проводим Документ
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount())
@@ -75,7 +74,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.06.23         * 
+ 05.06.23         *
 */
 
 -- тест

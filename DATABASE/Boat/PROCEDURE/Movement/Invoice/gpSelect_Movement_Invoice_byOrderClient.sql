@@ -184,4 +184,4 @@ $BODY$
 */
 
 -- тест
---
+-- SELECT * FROM gpSelect_Movement_Invoice_byOrderClient (inMovementId_OrderClient:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

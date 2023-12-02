@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
     IN inStartDate                TDateTime , --
     IN inEndDate                  TDateTime , --

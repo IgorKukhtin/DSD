@@ -62,8 +62,8 @@ BEGIN
                                                       AND Movement.ParentId = tmpMovementParent.MovementId
                                    INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                               )
-      
-        -- Документы BankAccount для счетов 
+
+        -- Документы BankAccount для счетов
       , tmpMovement AS (SELECT Movement.*
                              , MLM_Invoice.MovementChildId AS MovementId_Invoice
                               -- № п/п - только в последнем платеже покажем Сумма по Счету
@@ -71,7 +71,7 @@ BEGIN
                         FROM tmpMovementInvoice
                              INNER JOIN MovementLinkMovement AS MLM_Invoice
                                                              ON MLM_Invoice.MovementChildId = tmpMovementInvoice.Id
-                                                            AND MLM_Invoice.DescId     = zc_MovementLinkMovement_Invoice()                        
+                                                            AND MLM_Invoice.DescId     = zc_MovementLinkMovement_Invoice()
                              JOIN Movement ON Movement.Id = MLM_Invoice.MovementId
                                           AND Movement.DescId = zc_Movement_BankAccount()
                              INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId

@@ -217,8 +217,7 @@ BEGIN
                                            ON MovementLinkObject_From.MovementId = tmpMovement.MovementId_Income
                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
               LEFT JOIN Object AS Object_From   ON Object_From.Id   = MovementLinkObject_From.ObjectId
-
-      ;
+             ;
 
 END;
 $BODY$
@@ -232,4 +231,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_Income_byInvoice (inMovementId_Invoice:= 256, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income_byInvoice (inMovementId_Invoice:= 256, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
