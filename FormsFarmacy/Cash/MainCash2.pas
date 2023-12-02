@@ -906,6 +906,9 @@ type
 
     TrayIconPUSHList: TStringList;
 
+    FCheckCDSRecNo : Integer;
+    FCheckCDSBookmark: TBookmark;
+
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
     procedure SetBanCash(isRefresh: Boolean);
@@ -1072,6 +1075,9 @@ type
     procedure ActiveControlChanged(Sender: TObject) ;
     procedure ShowTrayMessage(AMessage: String);
 
+    procedure CheckCDS_DisableControls;
+    procedure CheckCDS_EnableControls;
+
     property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
   end;
 
@@ -1211,6 +1217,34 @@ begin
     ReleaseMutex(MutexLog);
   end;
 end;
+
+procedure TMainCashForm2.CheckCDS_DisableControls;
+begin
+  CheckCDS.DisableControls;
+  CheckCDS.Filtered := false;
+  FCheckCDSRecNo := CheckCDS.RecNo;
+  FCheckCDSBookmark := CheckCDS.GetBookmark;
+  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
+end;
+
+procedure TMainCashForm2.CheckCDS_EnableControls;
+begin
+  CheckCDS.IndexFieldNames := '';
+  try
+    try
+      if not CheckCDS.IsEmpty and Assigned(FCheckCDSBookmark) then CheckCDS.GotoBookmark(FCheckCDSBookmark)
+      else if (CheckCDS.RecordCount > FCheckCDSRecNo) and (FCheckCDSRecNo >= 0) then CheckCDS.RecNo := FCheckCDSRecNo;
+    except
+      if (CheckCDS.RecordCount > FCheckCDSRecNo) and (FCheckCDSRecNo >= 0) then CheckCDS.RecNo := FCheckCDSRecNo;
+    end;
+    if Assigned(FCheckCDSBookmark) then CheckCDS.FreeBookmark(FCheckCDSBookmark);
+  finally
+    CheckCDS.Filter := 'Amount > 0';
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+  end;
+end;
+
 
 procedure TMainCashForm2.AppMsgHandler(var Msg: TMsg; var Handled: Boolean);
 // только 2 форма
@@ -1912,6 +1946,12 @@ begin
   // очистить рецепт
   ClearReceipt1303;
 
+  CheckCDS.Filter := 'Amount > 0';
+  CheckCDS.Filtered := True;
+
+  RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
+  RemainsCDS.Filtered := True;
+
   while RemainsCDS.ControlsDisabled do RemainsCDS.EnableControls;
   while CheckCDS.ControlsDisabled do CheckCDS.EnableControls;
 end;
@@ -2225,10 +2265,7 @@ begin
         pnlManualDiscount.Visible := True;
         edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
 
-        CheckCDS.DisableControls;
-        CheckCDS.Filtered := false;
-        nRecNo := CheckCDS.RecNo;
-        CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
+        CheckCDS_DisableControls;
         try
 
           CheckCDS.First;
@@ -2258,10 +2295,7 @@ begin
             CheckCDS.Next;
           end;
         finally
-          CheckCDS.IndexFieldNames := '';
-          CheckCDS.RecNo := nRecNo;
-          CheckCDS.Filtered := True;
-          CheckCDS.EnableControls;
+          CheckCDS_EnableControls;
         end;
 
         CalcTotalSumm;
@@ -2271,8 +2305,7 @@ begin
     end;
 
     // ***04.09.18
-    CheckCDS.DisableControls;
-    CheckCDS.Filtered := false;
+    CheckCDS_DisableControls;
     GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
     PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
     NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
@@ -2341,8 +2374,7 @@ begin
       // Вычтем из резерва
       UpdateRemainsFromVIPCheck(True, False);
     finally
-      CheckCDS.Filtered := True;
-      CheckCDS.EnableControls;
+      CheckCDS_EnableControls;
       RemainsCDS.Filtered := True;
       RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
@@ -3351,10 +3383,7 @@ begin
   edLoyaltySMSummaRemainder.Value := 0;
   edLoyaltySMSumma.Value := 0;
 
-  CheckCDS.DisableControls;
-  CheckCDS.Filtered := false;
-  nRecNo := CheckCDS.RecNo;
-  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
+  CheckCDS_DisableControls;
   try
 
     CheckCDS.First;
@@ -3384,10 +3413,7 @@ begin
       CheckCDS.Next;
     end;
   finally
-    CheckCDS.IndexFieldNames := '';
-    CheckCDS.RecNo := nRecNo;
-    CheckCDS.Filtered := True;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
   end;
   CalcTotalSumm;
 end;
@@ -5136,10 +5162,7 @@ begin
   lblPromoCodeLoyalty.Caption := '';
   edPromoCodeLoyaltySumm.Value := 0;
 
-  CheckCDS.DisableControls;
-  CheckCDS.Filtered := false;
-  nRecNo := CheckCDS.RecNo;
-  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
+  CheckCDS_DisableControls;
   try
 
     CheckCDS.First;
@@ -5315,10 +5338,7 @@ begin
       CheckCDS.Next;
     end;
   finally
-    CheckCDS.IndexFieldNames := '';
-    CheckCDS.RecNo := nRecNo;
-    CheckCDS.Filtered := True;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
   end;
   CalcTotalSumm;
 end;
@@ -5355,10 +5375,7 @@ var
   nSumAll, nPrice, nChangeSumma: Currency;
 begin
 
-  nRecNo := CheckCDS.RecNo;
-  CheckCDS.DisableControls;
-  CheckCDS.Filtered := false;
-  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
+  CheckCDS_DisableControls;
   nSumAll := 0;
   try
 
@@ -5516,26 +5533,20 @@ begin
       CheckCDS.Next;
     end;
   finally
-    CheckCDS.IndexFieldNames := '';
-    CheckCDS.Filtered := True;
-    CheckCDS.RecNo := nRecNo;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
   end;
 end;
 
 procedure TMainCashForm2.MobileDiscountCalc;
 var
-  nRecNo, nRemainsRecNo: Integer;
+  nRecNo: Integer;
   nSumAll, nPrice, nChangeSumma: Currency;
 begin
 
   if DiscountServiceForm.gCode <> 0 then Exit;
 
-  nRecNo := CheckCDS.RecNo;
-  nRemainsRecNo := RemainsCDS.RecNo;
-  CheckCDS.DisableControls;
-  CheckCDS.Filtered := false;
-  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
+  nRecNo := RemainsCDS.RecNo;
+  CheckCDS_DisableControls;
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := false;
   nSumAll := 0;
@@ -5702,12 +5713,9 @@ begin
       CheckCDS.Next;
     end;
   finally
-    CheckCDS.IndexFieldNames := '';
-    CheckCDS.Filtered := True;
-    CheckCDS.RecNo := nRecNo;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
     RemainsCDS.Filtered := false;
-    RemainsCDS.RecNo := nRemainsRecNo;
+    RemainsCDS.RecNo := nRecNo;
     RemainsCDS.EnableControls;
   end;
 end;
@@ -5967,8 +5975,6 @@ var
   GoodsId, nCheckId: Integer;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
   Amount_find: Currency;
-  oldFilter: String;
-  oldFiltered: Boolean;
 begin
   // ShowMessage('actSetRimainsFromMemdataExecute - begin');
   Add_Log('Начало заполнения с Memdata');
@@ -5983,9 +5989,7 @@ begin
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
     nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := false;
-  CheckCDS.DisableControls;
-  oldFilter := CheckCDS.Filter;
-  oldFiltered := CheckCDS.Filtered;
+  CheckCDS_DisableControls;
   try
     MemData.First;
     while not MemData.Eof do
@@ -6005,8 +6009,6 @@ begin
         Amount_find := Amount_find + CheckCDS.FieldByName('Amount').asCurrency;
         CheckCDS.Next;
       end;
-      CheckCDS.Filter := oldFilter;
-      CheckCDS.Filtered := oldFiltered;
 
       if not RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([MemData.FieldByName('Id').AsInteger,
@@ -6182,11 +6184,8 @@ begin
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKINDID;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
-    if nCheckId <> 0 then
-      CheckCDS.Locate('GoodsId', nCheckId, []);
-    CheckCDS.EnableControls;
-    CheckCDS.Filter := oldFilter;
-    CheckCDS.Filtered := oldFiltered;
+    CheckCDS_EnableControls;
+    if nCheckId <> 0 then CheckCDS.Locate('GoodsId', nCheckId, []);
     difUpdate := True;
     Add_Log('Конец заполнения с Memdata');
   end;
@@ -6759,19 +6758,15 @@ end;
 // ***28.01.19
 
 procedure TMainCashForm2.SetSiteDiscount(ASiteDiscount: Currency);
-var
-  nRecNo: Integer;
 begin
 
   FormParams.ParamByName('SiteDiscount').Value := ASiteDiscount;
   pnlSiteDiscount.Visible := FormParams.ParamByName('SiteDiscount').Value > 0;
   edSiteDiscount.Value := FormParams.ParamByName('SiteDiscount').Value;
 
-  CheckCDS.DisableControls;
-  CheckCDS.Filtered := false;
+  CheckCDS_DisableControls;
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := false;
-  nRecNo := CheckCDS.RecNo;
   CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
 
@@ -6934,12 +6929,9 @@ begin
       CheckCDS.Next;
     end;
   finally
-    CheckCDS.IndexFieldNames := '';
-    CheckCDS.RecNo := nRecNo;
     RemainsCDS.Filtered := True;
     RemainsCDS.EnableControls;
-    CheckCDS.Filtered := True;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
   end;
   CalcTotalSumm;
 end;
@@ -9723,9 +9715,8 @@ begin
 
     if SoldRegim AND (nAmount > 0) then
     Begin
-      CheckCDS.DisableControls;
+      CheckCDS_DisableControls;
       try
-        CheckCDS.Filtered := false;
         // попытка добавить препарат с другой ценой. обновляем цену у уже существующего и обнуляем суммы для пересчета
         if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent',
           VarArrayOf([SourceClientDataSet.FieldByName('Id').AsInteger,
@@ -10050,8 +10041,7 @@ begin
         end else if CheckCDS.FieldByName('AmountOrder').asCurrency > 0 then
           lPriceSale := CheckCDS.FieldByName('PriceSale').asCurrency;
       finally
-        CheckCDS.Filtered := True;
-        CheckCDS.EnableControls;
+        CheckCDS_EnableControls;
       end;
       UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').AsInteger,
         SourceClientDataSet.FindField('PartionDateKindId').AsInteger,
@@ -10395,9 +10385,7 @@ begin
     nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := false;
   ADiffCDS.DisableControls;
-  CheckCDS.DisableControls;
-  oldFilter := CheckCDS.Filter;
-  oldFiltered := CheckCDS.Filtered;
+  CheckCDS_DisableControls;
 
   try
     ADiffCDS.First;
@@ -10485,9 +10473,7 @@ begin
     RemainsCDS.EnableControls;
     if nCheckId <> 0 then
       CheckCDS.Locate('GoodsId', nCheckId, []);
-    CheckCDS.EnableControls;
-    CheckCDS.Filter := oldFilter;
-    CheckCDS.Filtered := oldFiltered;
+    CheckCDS_EnableControls;
     Add_Log('Конец обновления остатков');
   end;
 end;
@@ -11042,6 +11028,12 @@ begin
   MedicalProgramSPCDS.Close;
   // очистить рецепт
   ClearReceipt1303;
+
+  CheckCDS.Filter := 'Amount > 0';
+  CheckCDS.Filtered := True;
+
+  RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
+  RemainsCDS.Filtered := True;
 
   while RemainsCDS.ControlsDisabled do RemainsCDS.EnableControls;
   while CheckCDS.ControlsDisabled do CheckCDS.EnableControls;
@@ -11621,12 +11613,10 @@ var
 begin
   Result := AAmount;
   // Если пусто - ничего не делаем
-  CheckCDS.DisableControls;
-  CheckCDS.Filtered := false;
+  CheckCDS_DisableControls;
   if CheckCDS.isempty then
   Begin
-    CheckCDS.Filtered := True;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
     exit;
   End;
 
@@ -11649,10 +11639,8 @@ begin
       CheckCDS.Next;
     end;
   finally
-    CheckCDS.Filtered := True;
-    if AGoodsId <> 0 then
-      CheckCDS.Locate('GoodsId', AGoodsId, []);
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
+    if AGoodsId <> 0 then CheckCDS.Locate('GoodsId', AGoodsId, []);
   end;
 end;
 
@@ -11668,12 +11656,10 @@ var
   // lPriceSale : Currency;
 begin
   // Если пусто - ничего не делаем
-  CheckCDS.DisableControls;
-  CheckCDS.Filtered := false;
+  CheckCDS_DisableControls;
   if CheckCDS.isempty then
   Begin
-    CheckCDS.Filtered := True;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
     exit;
   End;
   // открючаем реакции
@@ -12136,17 +12122,14 @@ begin
       CheckCDS.Next;
     end;
   finally
-    CheckCDS.IndexFieldNames := '';
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
     ExpirationDateCDS.Filter := oldFilterExpirationDate;
     ExpirationDateCDS.EnableControls;
-    CheckCDS.Filtered := True;
-    if AGoodsId <> 0 then
-      CheckCDS.Locate('GoodsId', AGoodsId, []);
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
+    if AGoodsId <> 0 then CheckCDS.Locate('GoodsId', AGoodsId, []);
   end;
 end;
 
@@ -12163,12 +12146,10 @@ begin
   if ALoadCheck then
   begin
     mdVIPCheck.Close;
-    CheckCDS.DisableControls;
-    CheckCDS.Filtered := false;
+    CheckCDS_DisableControls;
     if CheckCDS.isempty then
     Begin
-      CheckCDS.Filtered := True;
-      CheckCDS.EnableControls;
+      CheckCDS_EnableControls;
       exit;
     End;
     mdVIPCheck.Open;
@@ -12227,13 +12208,11 @@ begin
       CheckCDS.First;
 
     finally
-      CheckCDS.IndexFieldNames := '';
       RemainsCDS.Filtered := True;
       RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
       RemainsCDS.EnableControls;
-      CheckCDS.Filtered := True;
-      CheckCDS.EnableControls;
+      CheckCDS_EnableControls;
     end;
   end else if ASaveCheck = True then
   begin
@@ -12327,7 +12306,7 @@ var
   nAmount: Currency;
 begin
 
-  CheckCDS.DisableControls;
+  CheckCDS_DisableControls;
   try
 
     ListGoodsCDS := TClientDataSet.Create(Nil);
@@ -12378,7 +12357,7 @@ begin
     end;
   finally
     ListGoodsCDS.Free;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
   end;
 end;
 
@@ -12390,7 +12369,7 @@ begin
   Result := 0;
   nPartionDateKindId := 0;
   nAmountMonth := 0;
-  CheckCDS.DisableConstraints;
+  CheckCDS_DisableControls;
   try
     try
       CheckCDS.First;
@@ -12414,8 +12393,8 @@ begin
       ReleaseMutex(MutexGoodsExpirationDate);
     end;
   finally
+    CheckCDS_EnableControls;
     CheckCDS.First;
-    CheckCDS.EnableControls;
     Result := nPartionDateKindId;
   end;
 end;
@@ -14092,7 +14071,7 @@ begin
   isGo := False; JuridicalId := 0;
   spAsinoPharmaSP.Execute;
   AsinoPresentCDS.CreateDataSet;
-  CheckCDS.DisableControls;
+  CheckCDS_DisableControls;
   try
     if AsinoPharmaSPCDS.Active and (AsinoPharmaSPCDS.RecordCount > 0) then
     begin
@@ -14536,7 +14515,7 @@ begin
 
     // Востановим курсор
     CheckCDS.Last;
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
 
     AsinoPharmaSPCDS.Close;
     AsinoPresentCDS.Close;
@@ -14866,9 +14845,8 @@ begin
   if SalePromoGoodsCDS.IsEmpty then Exit;
 
   Add_Log('Проверка акционного товара');
-  CheckCDS.DisableConstraints;
+  CheckCDS_DisableControls;
   Bookmark := CheckCDS.GetBookmark;
-  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
     SalePromoGoodsCalcCDS.CreateDataSet;
@@ -14957,18 +14935,12 @@ begin
     end;
 
   finally
-    CheckCDS.IndexFieldNames := '';
     SalePromoGoodsCalcCDS.Filtered := False;
     SalePromoGoodsCalcCDS.Filter := '';
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
     SalePromoGoodsCDS.Filtered := False;
     SalePromoGoodsCDS.Filter := '';
-    try
-      if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-    except
-    end;
-    CheckCDS.FreeBookmark(Bookmark);
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
   end;
 
 end;
@@ -14979,8 +14951,7 @@ procedure TMainCashForm2.LoadVIPSalePromoGoods;
 begin
   if SalePromoGoodsCDS.IsEmpty then Exit;
 
-  CheckCDS.DisableConstraints;
-  CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
+  CheckCDS_DisableControls;
   try
 
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
@@ -15184,13 +15155,12 @@ begin
     UpdateSalePromoGoods;
 
   finally
-    CheckCDS.IndexFieldNames := '';
     SalePromoGoodsCalcCDS.Filtered := False;
     SalePromoGoodsCalcCDS.Filter := '';
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
     SalePromoGoodsCDS.Filtered := False;
     SalePromoGoodsCDS.Filter := '';
-    CheckCDS.EnableControls;
+    CheckCDS_EnableControls;
   end;
 
 end;
