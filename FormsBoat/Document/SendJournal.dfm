@@ -57,9 +57,9 @@ object SendJournalForm: TSendJournalForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel3: TcxLabel
-      Left = 446
+      Left = 419
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079#1072':'
+      Caption = #8470' '#1079#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -69,7 +69,7 @@ object SendJournalForm: TSendJournalForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 527
+      Left = 547
       Top = 5
       TabOrder = 5
       DesignSize = (
@@ -246,11 +246,12 @@ object SendJournalForm: TSendJournalForm
         Width = 70
       end
       object InvNumberInvoice: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
+        Caption = '***'#1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'InvNumberInvoice'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1048#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
         Options.Editing = False
         Width = 80
       end
@@ -280,12 +281,12 @@ object SendJournalForm: TSendJournalForm
         Width = 70
       end
       object InvNumber_parent: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+        Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'InvNumber_parent'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1087#1086#1080#1089#1082')'
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 70
       end
@@ -1723,7 +1724,7 @@ object SendJournalForm: TSendJournalForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 688
-    Top = 168
+    Left = 456
+    Top = 160
   end
 end

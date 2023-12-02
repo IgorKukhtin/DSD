@@ -263,6 +263,16 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object InvNumberInvoice: TcxGridDBColumn
+        Caption = '***'#8470' '#1057#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvNumberInvoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1048#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+        Options.Editing = False
+        Width = 80
+      end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
@@ -287,6 +297,15 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 200
+      end
+      object InvNumber_parent_choice: TcxGridDBColumn
+        Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'InvNumber_parent_choice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+        Width = 70
       end
       object DescName_parent: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -405,15 +424,6 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         Options.Editing = False
         Width = 80
       end
-      object InvNumberInvoice: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
-        DataBinding.FieldName = 'InvNumberInvoice'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
       object VATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
@@ -446,14 +456,6 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-      end
-      object InvNumber_parent_choice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
-        DataBinding.FieldName = 'InvNumber_parent_choice'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

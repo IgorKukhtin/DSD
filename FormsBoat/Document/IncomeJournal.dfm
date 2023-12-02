@@ -356,10 +356,11 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 56
       end
       object InvNumberInvoice: TcxGridDBColumn
-        Caption = #8470' '#1057#1095#1077#1090#1072
+        Caption = '***'#8470' '#1057#1095#1077#1090#1072
         DataBinding.FieldName = 'InvNumberInvoice'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
         Options.Editing = False
         Width = 70
       end

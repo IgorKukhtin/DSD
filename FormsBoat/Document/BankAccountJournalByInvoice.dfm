@@ -13,19 +13,19 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
     Width = 983
     Height = 258
     TabOrder = 3
-    ExplicitTop = 89
+    ExplicitTop = 59
     ExplicitWidth = 983
-    ExplicitHeight = 228
+    ExplicitHeight = 258
     ClientRectBottom = 258
     ClientRectRight = 983
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 983
-      ExplicitHeight = 228
+      ExplicitHeight = 258
       inherited cxGrid: TcxGrid
         Width = 983
         Height = 258
         ExplicitWidth = 983
-        ExplicitHeight = 228
+        ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -601,8 +601,8 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
       TabOrder = 0
     end
     object btnSetNull_GuidesClient: TcxButton
-      Left = 79
-      Top = 8
+      Left = 239
+      Top = 10
       Width = 190
       Height = 21
       Action = actGuidesInvoiceChoiceForm
@@ -734,6 +734,18 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
     end
     object actChoiceMoneyPlace: TOpenChoiceForm [18]
       Category = 'Update'

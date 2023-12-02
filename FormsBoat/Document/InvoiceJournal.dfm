@@ -961,6 +961,18 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <

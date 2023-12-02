@@ -171,19 +171,19 @@ type
     bbReport_Goods_child: TdxBarButton;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
-    Panel2: TPanel;
+    PanelScan_1: TPanel;
     cxLabel6: TcxLabel;
     edBarCode1: TcxTextEdit;
     cxLabel8: TcxLabel;
     EnterMoveNext1: TEnterMoveNext;
-    Panel3: TPanel;
+    PanelScan_2: TPanel;
     cxLabel5: TcxLabel;
     edPartNumber: TcxTextEdit;
     cxLabel7: TcxLabel;
     edBarCode2: TcxTextEdit;
     cxLabel9: TcxLabel;
     EnterMoveNext2: TEnterMoveNext;
-    Panel4: TPanel;
+    PanelScan_3: TPanel;
     edAmount: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
     cxLabel10: TcxLabel;
@@ -290,7 +290,10 @@ type
     bbsReserv: TdxBarSubItem;
     bbsPrint: TdxBarSubItem;
     actSetVisible_Grid: TBooleanSetVisibleAction;
-    cxButton1: TcxButton;
+    btnSetVisible_Grid: TcxButton;
+    PanelScan_all: TPanel;
+    actSetVisible_PanelScan: TBooleanSetVisibleAction;
+    bynSetVisible_PanelScan: TcxButton;
   private
   public
   end;

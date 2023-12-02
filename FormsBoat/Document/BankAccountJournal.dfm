@@ -712,6 +712,18 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
+    end
     object actChoiceMoneyPlace: TOpenChoiceForm [18]
       Category = 'Update'
       MoveParams = <>

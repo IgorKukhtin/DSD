@@ -161,121 +161,129 @@ object SendForm: TSendForm
       TabOrder = 15
       Width = 143
     end
-    object Panel2: TPanel
-      Left = 578
-      Top = 3
-      Width = 380
-      Height = 41
+    object PanelScan_all: TPanel
+      Left = 552
+      Top = 0
+      Width = 385
+      Height = 135
+      BevelOuter = bvNone
       TabOrder = 16
-      object cxLabel6: TcxLabel
-        Left = 188
+      object PanelScan_1: TPanel
+        Left = 1
         Top = 1
-        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-      end
-      object edBarCode1: TcxTextEdit
-        Left = 189
-        Top = 18
+        Width = 380
+        Height = 41
         TabOrder = 0
-        Width = 179
+        object cxLabel6: TcxLabel
+          Left = 188
+          Top = 1
+          Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+        end
+        object edBarCode1: TcxTextEdit
+          Left = 189
+          Top = 18
+          TabOrder = 0
+          Width = 179
+        end
+        object cxLabel8: TcxLabel
+          Left = 6
+          Top = 9
+          Caption = '1.'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -19
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
       end
-      object cxLabel8: TcxLabel
-        Left = 6
-        Top = 9
-        Caption = '1.'
-        ParentFont = False
-        Style.Font.Charset = DEFAULT_CHARSET
-        Style.Font.Color = clBlue
-        Style.Font.Height = -19
-        Style.Font.Name = 'Tahoma'
-        Style.Font.Style = []
-        Style.IsFontAssigned = True
-      end
-    end
-    object Panel3: TPanel
-      Left = 578
-      Top = 46
-      Width = 380
-      Height = 41
-      TabOrder = 17
-      object cxLabel5: TcxLabel
-        Left = 189
-        Top = 1
-        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-      end
-      object edPartNumber: TcxTextEdit
-        Left = 58
-        Top = 18
-        TabOrder = 0
-        Width = 125
-      end
-      object cxLabel7: TcxLabel
-        Left = 58
-        Top = 1
-        Caption = '<S/N> '#1074#1074#1086#1076
-      end
-      object edBarCode2: TcxTextEdit
-        Left = 189
-        Top = 18
+      object PanelScan_2: TPanel
+        Left = 1
+        Top = 43
+        Width = 380
+        Height = 41
         TabOrder = 1
-        Width = 179
+        object cxLabel5: TcxLabel
+          Left = 189
+          Top = 1
+          Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+        end
+        object edPartNumber: TcxTextEdit
+          Left = 58
+          Top = 18
+          TabOrder = 0
+          Width = 125
+        end
+        object cxLabel7: TcxLabel
+          Left = 58
+          Top = 1
+          Caption = '<S/N> '#1074#1074#1086#1076
+        end
+        object edBarCode2: TcxTextEdit
+          Left = 189
+          Top = 18
+          TabOrder = 1
+          Width = 179
+        end
+        object cxLabel9: TcxLabel
+          Left = 6
+          Top = 8
+          Caption = '2.'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -19
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
       end
-      object cxLabel9: TcxLabel
-        Left = 6
-        Top = 8
-        Caption = '2.'
-        ParentFont = False
-        Style.Font.Charset = DEFAULT_CHARSET
-        Style.Font.Color = clBlue
-        Style.Font.Height = -19
-        Style.Font.Name = 'Tahoma'
-        Style.Font.Style = []
-        Style.IsFontAssigned = True
-      end
-    end
-    object Panel4: TPanel
-      Left = 578
-      Top = 90
-      Width = 380
-      Height = 41
-      TabOrder = 18
-      object edAmount: TcxCurrencyEdit
-        Left = 58
-        Top = 18
-        EditValue = 1.000000000000000000
-        Properties.Alignment.Horz = taRightJustify
-        Properties.Alignment.Vert = taVCenter
-        Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.###'
-        TabOrder = 0
-        Width = 125
-      end
-      object cxLabel29: TcxLabel
-        Left = 58
-        Top = 1
-        Caption = '<'#1050#1086#1083'-'#1074#1086'> '#1074#1074#1086#1076
-      end
-      object cxLabel10: TcxLabel
-        Left = 189
-        Top = 1
-        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-      end
-      object edBarCode3: TcxTextEdit
-        Left = 189
-        Top = 18
-        TabOrder = 1
-        Width = 179
-      end
-      object cxLabel14: TcxLabel
-        Left = 6
-        Top = 8
-        Caption = '3.'
-        ParentFont = False
-        Style.Font.Charset = DEFAULT_CHARSET
-        Style.Font.Color = clBlue
-        Style.Font.Height = -19
-        Style.Font.Name = 'Tahoma'
-        Style.Font.Style = []
-        Style.IsFontAssigned = True
+      object PanelScan_3: TPanel
+        Left = 1
+        Top = 85
+        Width = 380
+        Height = 41
+        TabOrder = 2
+        object edAmount: TcxCurrencyEdit
+          Left = 58
+          Top = 18
+          EditValue = 1.000000000000000000
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.###'
+          TabOrder = 0
+          Width = 125
+        end
+        object cxLabel29: TcxLabel
+          Left = 58
+          Top = 1
+          Caption = '<'#1050#1086#1083'-'#1074#1086'> '#1074#1074#1086#1076
+        end
+        object cxLabel10: TcxLabel
+          Left = 189
+          Top = 1
+          Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+        end
+        object edBarCode3: TcxTextEdit
+          Left = 189
+          Top = 18
+          TabOrder = 1
+          Width = 179
+        end
+        object cxLabel14: TcxLabel
+          Left = 6
+          Top = 8
+          Caption = '3.'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -19
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
       end
     end
     object Panel1: TPanel
@@ -283,7 +291,7 @@ object SendForm: TSendForm
       Top = 140
       Width = 256
       Height = 32
-      TabOrder = 19
+      TabOrder = 18
       object edSearchArticle: TcxTextEdit
         Left = 122
         Top = 7
@@ -322,7 +330,7 @@ object SendForm: TSendForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 21
+      TabOrder = 20
       Width = 368
     end
     object cxLabel17: TcxLabel
@@ -345,12 +353,12 @@ object SendForm: TSendForm
     object cxLabel18: TcxLabel
       Left = 439
       Top = 130
-      Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+      Caption = '***'#8470' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit
       Left = 439
       Top = 147
-      TabOrder = 25
+      TabOrder = 21
       Width = 90
     end
   end
@@ -1013,6 +1021,7 @@ object SendForm: TSendForm
     Height = 69
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 504
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 4
@@ -1065,7 +1074,7 @@ object SendForm: TSendForm
     end
     object btnShowAll: TcxButton
       Left = 674
-      Top = 4
+      Top = 35
       Width = 153
       Height = 25
       Action = actShowAll
@@ -1104,24 +1113,34 @@ object SendForm: TSendForm
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 851
-      Top = 4
-      Width = 153
+      Left = 847
+      Top = 35
+      Width = 158
       Height = 25
       Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 9
     end
-    object cxButton1: TcxButton
+    object btnSetVisible_Grid: TcxButton
       Left = 674
-      Top = 35
+      Top = 4
       Width = 153
       Height = 25
       Action = actSetVisible_Grid
       ParentShowHint = False
       ShowHint = True
       TabOrder = 10
+    end
+    object bynSetVisible_PanelScan: TcxButton
+      Left = 847
+      Top = 4
+      Width = 158
+      Height = 25
+      Action = actSetVisible_PanelScan
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 11
     end
   end
   object FormParams: TdsdFormParams
@@ -3567,6 +3586,20 @@ object SendForm: TSendForm
       ImageIndexTrue = 25
       ImageIndexFalse = 26
     end
+    object actSetVisible_PanelScan: TBooleanSetVisibleAction
+      MoveParams = <>
+      Value = False
+      Components = <
+        item
+          Component = PanelScan_all
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
+      ImageIndexTrue = 31
+      ImageIndexFalse = 29
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4951,6 +4984,6 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 336
-    Top = 136
+    Top = 192
   end
 end

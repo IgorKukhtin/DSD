@@ -163,8 +163,8 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object cxLabel5: TcxLabel
       Left = 186
-      Top = 45
-      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+      Top = 46
+      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
     end
     object ceParent: TcxButtonEdit
       Left = 186
@@ -198,8 +198,8 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object cxLabel7: TcxLabel
       Left = 415
-      Top = 45
-      Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+      Top = 46
+      Caption = '***'#8470' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit
       Left = 415
@@ -5147,8 +5147,8 @@ object ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 259
-    Top = 47
+    Left = 267
+    Top = 63
   end
   object spUpdate_MI_Child: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_ProductionUnion_Child'

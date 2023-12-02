@@ -385,8 +385,10 @@ procedure TLoadFormTest.LoadIncomeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalByInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalByInvoiceForm');
-  exit;
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeItemForm');
 
@@ -396,8 +398,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeItemEdit_limitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeItemEdit_limitForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
 

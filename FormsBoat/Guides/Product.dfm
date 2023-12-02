@@ -399,7 +399,7 @@
           Width = 100
         end
         object InvNumber_OrderClient: TcxGridDBColumn
-          Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+          Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
           DataBinding.FieldName = 'InvNumber_OrderClient'
           Visible = False
           HeaderAlignmentHorz = taCenter

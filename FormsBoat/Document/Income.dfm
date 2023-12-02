@@ -533,7 +533,7 @@ object IncomeForm: TIncomeForm
       Left = 175
       Top = 5
       Hint = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
-      Caption = #8470' '#1057#1095#1077#1090#1072
+      Caption = '***'#8470' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit
       Left = 175
@@ -564,7 +564,6 @@ object IncomeForm: TIncomeForm
         Height = 184
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 231
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1282,7 +1281,6 @@ object IncomeForm: TIncomeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 178
       end
     end
     object cxTabSheetCost: TcxTabSheet
