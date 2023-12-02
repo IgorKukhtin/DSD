@@ -505,8 +505,8 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 95
-    Top = 263
+    Left = 135
+    Top = 287
   end
   object GuidesUnitChild: TdsdGuides
     KeyField = 'Id'

@@ -113,11 +113,12 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     Left = 0
     Top = 57
     Width = 943
-    Height = 387
+    Height = 348
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 387
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -295,7 +296,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
+        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         Options.Editing = False
         Width = 80
       end
@@ -304,7 +305,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
+        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         Options.Editing = False
         Width = 122
       end
@@ -321,7 +322,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
+        HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         Width = 150
       end
       object TotalSumm: TcxGridDBColumn
@@ -427,6 +428,35 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 405
+    Width = 943
+    Height = 39
+    Align = alBottom
+    TabOrder = 6
+    ExplicitLeft = -40
+    ExplicitTop = 317
+    ExplicitWidth = 983
+    object btnFormClose: TcxButton
+      Left = 525
+      Top = 8
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      TabOrder = 0
+    end
+    object btnSetNull_GuidesClient: TcxButton
+      Left = 79
+      Top = 8
+      Width = 190
+      Height = 21
+      Action = actGuidesInvoiceChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
     end
   end
   object DataSource: TDataSource
@@ -1078,6 +1108,38 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actGuidesInvoiceChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+      ImageIndex = 7
+      FormName = 'TInvoiceJournalChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesInvoice
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = ''
+          Component = GuidesInvoice
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1293,6 +1355,12 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      ImageIndex = 87
     end
   end
   object dsdStoredProc: TdsdStoredProc

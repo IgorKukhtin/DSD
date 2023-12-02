@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TIncomeJournalByInvoiceForm = class(TParentForm)
@@ -111,6 +111,11 @@ type
     cxLabel5: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
+    actFormClose: TdsdFormClose;
+    actGuidesInvoiceChoiceForm: TOpenChoiceForm;
+    Panel_btn: TPanel;
+    btnFormClose: TcxButton;
+    btnSetNull_GuidesClient: TcxButton;
   private
   public
   end;

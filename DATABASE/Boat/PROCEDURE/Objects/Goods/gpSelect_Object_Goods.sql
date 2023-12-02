@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , GoodsSizeId  Integer, GoodsSizeName TVarChar
              , ProdColorId Integer, ProdColorName TVarChar, Color_Value Integer
              , PartnerId Integer, PartnerName   TVarChar
-             , UnitId Integer, UnitName TVarChar, UnitName_receipt TVarChar, GoodsName_receipt TVarChar
+             , UnitId Integer, UnitName TVarChar, UnitName_receipt TVarChar, UnitName_child_receipt TVarChar, GoodsName_receipt TVarChar
              , DiscountPartnerId Integer, DiscountPartnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EngineId Integer, EngineName TVarChar
@@ -330,7 +330,6 @@ BEGIN
                        SELECT DISTINCT
                               tmpGoods.Id AS GoodsId
                             , ObjectLink_Unit.ChildObjectId       AS UnitId
-                            , ObjectLink_UnitChild.ChildObjectId  AS UnitChildId
                               -- какой узел собирается
                             , ObjectLink_ReceiptGoods_Object.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -352,10 +351,6 @@ BEGIN
                                                  ON ObjectLink_Unit.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit()
 
-                            LEFT JOIN ObjectLink AS ObjectLink_UnitChild
-                                                 ON ObjectLink_UnitChild.ObjectId = ObjectReceipt.Id
-                                                AND ObjectLink_UnitChild.DescId   = zc_ObjectLink_ReceiptGoods_UnitChild()
-
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                                                  ON ObjectLink_ReceiptGoods_Object.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
@@ -368,7 +363,6 @@ BEGIN
                        SELECT DISTINCT
                               tmpGoods.Id AS GoodsId
                             , ObjectLink_Unit.ChildObjectId       AS UnitId
-                            , ObjectLink_UnitChild.ChildObjectId  AS UnitChildId
                               -- какой узел собирается
                             , ObjectLink_GoodsChild.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -390,21 +384,16 @@ BEGIN
                                                  ON ObjectLink_Unit.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit()
  
-                            LEFT JOIN ObjectLink AS ObjectLink_UnitChild
-                                                 ON ObjectLink_UnitChild.ObjectId = ObjectReceipt.Id
-                                                AND ObjectLink_UnitChild.DescId   = zc_ObjectLink_ReceiptGoods_UnitChild()
                           --LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                           --                     ON ObjectLink_ReceiptGoods_Object.ObjectId = ObjectReceipt.Id
                           --                    AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
                        -- это виртуальная сборка
                        WHERE ObjectLink_GoodsChild.ChildObjectId > 0
-
                      UNION
                        -- сборка узлов из "виртуальных" узлов
                        SELECT DISTINCT
                               ObjectLink_GoodsChild.ChildObjectId AS GoodsId
                             , ObjectLink_Unit.ChildObjectId       AS UnitId
-                            , ObjectLink_UnitChild.ChildObjectId  AS UnitChildId
                               -- какой узел собирается
                             , ObjectLink_ReceiptGoods_Object.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -426,22 +415,16 @@ BEGIN
                                                  ON ObjectLink_Unit.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit() 
 
-                            LEFT JOIN ObjectLink AS ObjectLink_UnitChild
-                                                 ON ObjectLink_UnitChild.ObjectId = ObjectReceipt.Id
-                                                AND ObjectLink_UnitChild.DescId   = zc_ObjectLink_ReceiptGoods_UnitChild()
-
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                                                  ON ObjectLink_ReceiptGoods_Object.ObjectId = ObjectReceipt.Id
                                                 AND ObjectLink_ReceiptGoods_Object.DescId   = zc_ObjectLink_ReceiptGoods_Object()
                        -- это виртуальная сборка
                        WHERE ObjectLink_GoodsChild.ChildObjectId > 0
-
                      UNION
                        -- сборка моделей
                        SELECT DISTINCT
                               tmpGoods.Id AS GoodsId
                             , ObjectLink_Unit.ChildObjectId  AS UnitId
-                            , 0                              AS UnitChildId
                               -- какая модель собирается
                             , ObjectLink_ReceiptProdModel_Model.ChildObjectId AS ObjectId_master
                        FROM tmpGoods
@@ -467,14 +450,58 @@ BEGIN
            -- подразделение сборки
          , tmpUnit_receipt AS (SELECT tmpReceipt.GoodsId
                                     , STRING_AGG (DISTINCT Object_Unit.ValueData, '; ')      AS UnitName_receipt
-                                    , STRING_AGG (DISTINCT Object_UnitChild.ValueData, '; ') AS UnitName_child_receipt
                                FROM tmpReceipt
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpReceipt.UnitId
-                                   LEFT JOIN Object AS Object_UnitChild ON Object_UnitChild.Id = tmpReceipt.UnitChildId
                                WHERE tmpReceipt.UnitId > 0 
-                                  OR tmpReceipt.UnitChildId > 0
                                GROUP BY tmpReceipt.GoodsId
                                )
+
+         , tmpReceipt_UnitChild AS (
+                                    SELECT DISTINCT ObjectLink_GoodsChild.ChildObjectId AS GoodsId
+                                         , ObjectLink_UnitChild.ChildObjectId           AS UnitChildId
+                                    FROM ObjectLink AS ObjectLink_UnitChild
+                                         INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                               ON ObjectLink_ReceiptGoods.ChildObjectId = ObjectLink_UnitChild.ObjectId
+                                                              AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                         INNER JOIN Object AS ObjectReceipt ON ObjectReceipt.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                                                                            AND ObjectReceipt.isErased = FALSE                      
+                                         INNER JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                               ON ObjectLink_GoodsChild.ObjectId = ObjectLink_ReceiptGoods.ObjectId
+                                                              AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+
+                                    WHERE ObjectLink_UnitChild.DescId = zc_ObjectLink_ReceiptGoods_UnitChild()
+                                      AND ObjectLink_UnitChild.ChildObjectId > 0
+                                    
+                                    UNION ALL
+                                    
+                                    SELECT DISTINCT ObjectLink_Object.ChildObjectId     AS GoodsId
+                                         , ObjectLink_UnitChild.ChildObjectId           AS UnitChildId
+                                    FROM ObjectLink AS ObjectLink_UnitChild
+                                         INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                               ON ObjectLink_ReceiptGoods.ChildObjectId = ObjectLink_UnitChild.ObjectId
+                                                              AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                          INNER JOIN Object AS ObjectReceipt ON ObjectReceipt.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                                                                            AND ObjectReceipt.isErased = FALSE                      
+                                          INNER JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                                ON ObjectLink_GoodsChild.ObjectId = ObjectLink_ReceiptGoods.ObjectId
+                                                               AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                                          INNER JOIN ObjectLink AS ObjectLink_Object
+                                                                ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptGoods.ObjectId
+                                                               AND ObjectLink_Object.DescId        = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                    WHERE ObjectLink_UnitChild.DescId = zc_ObjectLink_ReceiptGoods_UnitChild()
+                                      AND ObjectLink_UnitChild.ChildObjectId > 0
+                                    )
+
+           -- подразделение сборки УЗла ПФ
+         , tmpUnitChild_receipt AS (SELECT tmpReceipt_UnitChild.GoodsId
+                                         , STRING_AGG (DISTINCT Object_Unit.ValueData, '; ')      AS UnitName_child_receipt
+                                    FROM tmpReceipt_UnitChild
+                                        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpReceipt_UnitChild.UnitChildId
+                                    WHERE tmpReceipt_UnitChild.UnitChildId > 0 
+                                    GROUP BY tmpReceipt_UnitChild.GoodsId
+                                    )
+
+                                                 
            -- товар сборки
          , tmpGoods_receipt AS (SELECT tmp.GoodsId
                                      , Object_Goods.ValueData AS GoodsName_receipt
@@ -591,8 +618,8 @@ BEGIN
             , Object_Partner.ValueData           AS PartnerName
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
-            , tmpUnit_receipt.UnitName_receipt        ::TVarChar
-            , tmpUnit_receipt.UnitName_child_receipt  ::TVarChar
+            , tmpUnit_receipt.UnitName_receipt             ::TVarChar
+            , tmpUnitChild_receipt.UnitName_child_receipt  ::TVarChar
 
             , tmpGoods_receipt.GoodsName_receipt ::TVarChar
           --, SUBSTRING (tmpGoods_receipt.Name_all, 1, 128) :: TVarChar AS GoodsName_receipt
@@ -667,164 +694,166 @@ BEGIN
                                  ON ObjectDate_Update.ObjectId = Object_Goods.Id
                                 AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
-                                  ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
-             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                 ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+            LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsType
-                                  ON ObjectLink_Goods_GoodsType.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
-             LEFT JOIN Object AS Object_GoodsType ON Object_GoodsType.Id = ObjectLink_Goods_GoodsType.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsType
+                                 ON ObjectLink_Goods_GoodsType.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
+            LEFT JOIN Object AS Object_GoodsType ON Object_GoodsType.Id = ObjectLink_Goods_GoodsType.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsSize
-                                  ON ObjectLink_Goods_GoodsSize.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_GoodsSize.DescId = zc_ObjectLink_Goods_GoodsSize()
-             LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = ObjectLink_Goods_GoodsSize.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsSize
+                                 ON ObjectLink_Goods_GoodsSize.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsSize.DescId = zc_ObjectLink_Goods_GoodsSize()
+            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = ObjectLink_Goods_GoodsSize.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
-                                  ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
-             LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
-             LEFT JOIN ObjectFloat AS ObjectFloat_ProdColor_Value
-                                   ON ObjectFloat_ProdColor_Value.ObjectId = Object_ProdColor.Id
-                                  AND ObjectFloat_ProdColor_Value.DescId   = zc_ObjectFloat_ProdColor_Value()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                 ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+            LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_ProdColor_Value
+                                  ON ObjectFloat_ProdColor_Value.ObjectId = Object_ProdColor.Id
+                                 AND ObjectFloat_ProdColor_Value.DescId   = zc_ObjectFloat_ProdColor_Value()
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
-                                  ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
-             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
+                                 ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Unit
-                                  ON ObjectLink_Goods_Unit.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_Unit.DescId = zc_ObjectLink_Goods_Unit()
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Goods_Unit.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Unit
+                                 ON ObjectLink_Goods_Unit.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Unit.DescId = zc_ObjectLink_Goods_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Goods_Unit.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_DiscountPartner
-                                  ON ObjectLink_Goods_DiscountPartner.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_DiscountPartner.DescId = zc_ObjectLink_Goods_DiscountPartner()
-             LEFT JOIN Object AS Object_DiscountPartner ON Object_DiscountPartner.Id = ObjectLink_Goods_DiscountPartner.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_DiscountPartner
+                                 ON ObjectLink_Goods_DiscountPartner.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_DiscountPartner.DescId = zc_ObjectLink_Goods_DiscountPartner()
+            LEFT JOIN Object AS Object_DiscountPartner ON Object_DiscountPartner.Id = ObjectLink_Goods_DiscountPartner.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                                  ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
+                                 ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
-                                  ON ObjectLink_Goods_Engine.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
-             LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
+                                 ON ObjectLink_Goods_Engine.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
+            LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId
 
-             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                   ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
-                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                  ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
-             LEFT JOIN ObjectDate AS ObjectDate_PartnerDate
-                                  ON ObjectDate_PartnerDate.ObjectId = Object_Goods.Id
-                                 AND ObjectDate_PartnerDate.DescId = zc_ObjectDate_Goods_PartnerDate()
+            LEFT JOIN ObjectDate AS ObjectDate_PartnerDate
+                                 ON ObjectDate_PartnerDate.ObjectId = Object_Goods.Id
+                                AND ObjectDate_PartnerDate.DescId = zc_ObjectDate_Goods_PartnerDate()
 
-             LEFT JOIN ObjectFloat AS ObjectFloat_Min
-                                   ON ObjectFloat_Min.ObjectId = Object_Goods.Id
-                                  AND ObjectFloat_Min.DescId   = zc_ObjectFloat_Goods_Min()
-             LEFT JOIN ObjectFloat AS ObjectFloat_Refer
-                                   ON ObjectFloat_Refer.ObjectId = Object_Goods.Id
-                                  AND ObjectFloat_Refer.DescId   = zc_ObjectFloat_Goods_Refer()
-             LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                   ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
-                                  AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
-             LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
-                                   ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
-                                  AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Min
+                                  ON ObjectFloat_Min.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Min.DescId   = zc_ObjectFloat_Goods_Min()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Refer
+                                  ON ObjectFloat_Refer.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Refer.DescId   = zc_ObjectFloat_Goods_Refer()
+            LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                  ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+            LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
+                                  ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
 
-             LEFT JOIN ObjectFloat AS ObjectFloat_Feet
-                                   ON ObjectFloat_Feet.ObjectId = Object_Goods.Id
-                                  AND ObjectFloat_Feet.DescId   = zc_ObjectFloat_Goods_Feet()
-             LEFT JOIN ObjectFloat AS ObjectFloat_Metres
-                                   ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
-                                  AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Feet
+                                  ON ObjectFloat_Feet.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Feet.DescId   = zc_ObjectFloat_Goods_Feet()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Metres
+                                  ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
 
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Arc
-                                     ON ObjectBoolean_Arc.ObjectId = Object_Goods.Id
-                                    AND ObjectBoolean_Arc.DescId = zc_ObjectBoolean_Goods_Arc()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Arc
+                                    ON ObjectBoolean_Arc.ObjectId = Object_Goods.Id
+                                   AND ObjectBoolean_Arc.DescId = zc_ObjectBoolean_Goods_Arc()
 
-             LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
-                                    ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                   AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-             LEFT JOIN ObjectString AS ObjectString_FeeNumber
-                                    ON ObjectString_FeeNumber.ObjectId = Object_Goods.Id
-                                   AND ObjectString_FeeNumber.DescId = zc_ObjectString_Goods_FeeNumber()
+            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                   ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_FeeNumber
+                                   ON ObjectString_FeeNumber.ObjectId = Object_Goods.Id
+                                  AND ObjectString_FeeNumber.DescId = zc_ObjectString_Goods_FeeNumber()
 
-             LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = Object_Goods.Id
-                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
-             LEFT JOIN ObjectString AS ObjectString_ArticleVergl
-                                    ON ObjectString_ArticleVergl.ObjectId = Object_Goods.Id
-                                   AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
-             LEFT JOIN ObjectString AS ObjectString_EAN
-                                    ON ObjectString_EAN.ObjectId = Object_Goods.Id
-                                   AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
-             LEFT JOIN ObjectString AS ObjectString_ASIN
-                                    ON ObjectString_ASIN.ObjectId = Object_Goods.Id
-                                   AND ObjectString_ASIN.DescId = zc_ObjectString_ASIN()
-             LEFT JOIN ObjectString AS ObjectString_MatchCode
-                                    ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
-                                   AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
+            LEFT JOIN ObjectString AS ObjectString_Article
+                                   ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+            LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                   ON ObjectString_ArticleVergl.ObjectId = Object_Goods.Id
+                                  AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
+            LEFT JOIN ObjectString AS ObjectString_EAN
+                                   ON ObjectString_EAN.ObjectId = Object_Goods.Id
+                                  AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
+            LEFT JOIN ObjectString AS ObjectString_ASIN
+                                   ON ObjectString_ASIN.ObjectId = Object_Goods.Id
+                                  AND ObjectString_ASIN.DescId = zc_ObjectString_ASIN()
+            LEFT JOIN ObjectString AS ObjectString_MatchCode
+                                   ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
+                                  AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
 
-             LEFT JOIN tmpDoc ON tmpDoc.GoodsId = Object_Goods.Id
+            LEFT JOIN tmpDoc ON tmpDoc.GoodsId = Object_Goods.Id
 
-             LEFT JOIN tmpPhoto AS tmpPhoto1
-                                ON tmpPhoto1.GoodsId = Object_Goods.Id
-                               AND tmpPhoto1.Ord = 1
-             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
-                                  ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
+            LEFT JOIN tmpPhoto AS tmpPhoto1
+                               ON tmpPhoto1.GoodsId = Object_Goods.Id
+                              AND tmpPhoto1.Ord = 1
+            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
+                                 ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
 
-             LEFT JOIN tmpPhoto AS tmpPhoto2
-                                ON tmpPhoto2.GoodsId = Object_Goods.Id
-                               AND tmpPhoto2.Ord = 2
-             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data2
-                                  ON ObjectBlob_GoodsPhoto_Data2.ObjectId = tmpPhoto2.PhotoId
+            LEFT JOIN tmpPhoto AS tmpPhoto2
+                               ON tmpPhoto2.GoodsId = Object_Goods.Id
+                              AND tmpPhoto2.Ord = 2
+            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data2
+                                 ON ObjectBlob_GoodsPhoto_Data2.ObjectId = tmpPhoto2.PhotoId
 
-             LEFT JOIN tmpPhoto AS tmpPhoto3
-                                ON tmpPhoto3.GoodsId = Object_Goods.Id
-                               AND tmpPhoto3.Ord = 3
-             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
-                                  ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
+            LEFT JOIN tmpPhoto AS tmpPhoto3
+                               ON tmpPhoto3.GoodsId = Object_Goods.Id
+                              AND tmpPhoto3.Ord = 3
+            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
+                                 ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
 
-             LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
-             LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
+            LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
 
-             LEFT JOIN tmpGoods_err_1 ON tmpGoods_err_1.Article   ILIKE ObjectString_Article.ValueData
-             LEFT JOIN tmpGoods_err_2 ON tmpGoods_err_2.GoodsCode = Object_Goods.ObjectCode
-             LEFT JOIN tmpGoods_err_3 ON tmpGoods_err_3.EAN       = ObjectString_EAN.ValueData
+            LEFT JOIN tmpGoods_err_1 ON tmpGoods_err_1.Article   ILIKE ObjectString_Article.ValueData
+            LEFT JOIN tmpGoods_err_2 ON tmpGoods_err_2.GoodsCode = Object_Goods.ObjectCode
+            LEFT JOIN tmpGoods_err_3 ON tmpGoods_err_3.EAN       = ObjectString_EAN.ValueData
 
-             -- если Товар участвует в сборке
-             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
-             -- если Опции
-             LEFT JOIN tmpReceiptGoods_all ON tmpReceiptGoods_all.GoodsId_child = Object_Goods.Id
-                                          AND tmpReceiptGoods_all.isProdOptions = TRUE
-             -- если это узел
-             LEFT JOIN tmpReceiptGoods_group ON tmpReceiptGoods_group.GoodsId = Object_Goods.Id
+            -- если Товар участвует в сборке
+            LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
+            -- если Опции
+            LEFT JOIN tmpReceiptGoods_all ON tmpReceiptGoods_all.GoodsId_child = Object_Goods.Id
+                                         AND tmpReceiptGoods_all.isProdOptions = TRUE
+            -- если это узел
+            LEFT JOIN tmpReceiptGoods_group ON tmpReceiptGoods_group.GoodsId = Object_Goods.Id
 
-             LEFT JOIN tmpUnit_receipt  ON tmpUnit_receipt.GoodsId  = Object_Goods.Id
-             LEFT JOIN tmpGoods_receipt ON tmpGoods_receipt.GoodsId = Object_Goods.Id
-         ORDER BY Object_Goods.Id  desc
-         LIMIT 10000--197022
+            LEFT JOIN tmpUnit_receipt  ON tmpUnit_receipt.GoodsId  = Object_Goods.Id
+            LEFT JOIN tmpGoods_receipt ON tmpGoods_receipt.GoodsId = Object_Goods.Id 
+
+            LEFT JOIN tmpUnitChild_receipt ON tmpUnitChild_receipt.GoodsId = Object_Goods.Id
+        ORDER BY Object_Goods.Id  desc
+        --LIMIT 197022
             ;
 
 END;
