@@ -64,7 +64,6 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -360,7 +359,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         Width = 130
       end
       object InvNumber_Invoice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. Invoice'
+        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
         DataBinding.FieldName = 'InvNumber_Invoice'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -374,8 +373,9 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         Width = 120
       end
       object Comment_Invoice: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1057#1095#1077#1090')'
         DataBinding.FieldName = 'Comment_Invoice'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

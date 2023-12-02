@@ -99,7 +99,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 69
           end
           inherited colInvNumber: TcxGridDBColumn
-            Caption = 'Interne Nr'
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 76
@@ -259,7 +259,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 60
           end
           object InvNumberFull_Invoice: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. Invoice'
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumberFull_Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -273,7 +273,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 120
           end
           object InvNumber_Invoice: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. Invoice (Search)'
+            Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter

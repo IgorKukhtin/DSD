@@ -349,7 +349,7 @@ object SaleJournalForm: TSaleJournalForm
         Width = 130
       end
       object InvNumber_parent: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. OrderClient'
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'InvNumber_parent'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -360,13 +360,23 @@ object SaleJournalForm: TSaleJournalForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Width = 120
       end
+      object InvNumber_Parent_choice: TcxGridDBColumn
+        Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'InvNumber_Parent_choice'
+        Visible = False
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
       object Comment_parent: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (OrderClient)'
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1079#1072#1082#1072#1079')'
         DataBinding.FieldName = 'Comment_parent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 95
       end
@@ -401,13 +411,6 @@ object SaleJournalForm: TSaleJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object InvNumber_Parent_choice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. OrderClient (choice)'
-        DataBinding.FieldName = 'InvNumber_Parent_choice'
-        Visible = False
-        Options.Editing = False
-        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

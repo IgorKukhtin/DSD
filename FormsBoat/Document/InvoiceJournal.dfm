@@ -179,7 +179,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 70
           end
           inherited colInvNumber: TcxGridDBColumn
-            Caption = 'Interne Nr'
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 63

@@ -448,7 +448,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 80
       end
       object InvNumberFull_Invoice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. Invoice'
+        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
         DataBinding.FieldName = 'InvNumberFull_Invoice'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -462,7 +462,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 120
       end
       object InvNumber_Invoice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. Invoice ('#1087#1086#1080#1089#1082')'
+        Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
         DataBinding.FieldName = 'InvNumber_Invoice'
         Visible = False
         HeaderAlignmentHorz = taCenter

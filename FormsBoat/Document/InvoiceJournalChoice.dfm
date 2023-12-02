@@ -5,6 +5,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -247
   ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -111,7 +112,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Width = 55
           end
           inherited colInvNumber: TcxGridDBColumn
-            Caption = 'Interne Nr'
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 55
@@ -296,7 +297,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Width = 78
           end
           object InvNumber_parent: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079' ('#1087#1086#1080#1089#1082')'
+            Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'InvNumber_parent'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -407,7 +408,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 321
     object btnFormClose: TcxButton
       Left = 685
       Top = 7
