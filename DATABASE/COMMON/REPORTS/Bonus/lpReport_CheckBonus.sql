@@ -1199,6 +1199,7 @@ BEGIN
       , tmpMovementBrutto AS (
                    WITH
                    tmpMovement AS (SELECT Movement.Id
+                                        , Movement_Parent.Id AS ParentId    --док взвешивание
                                         , Movement.OperDate
                                         , Movement.InvNumber
                                         , Movement.DescId AS MovementDescId
@@ -1209,7 +1210,10 @@ BEGIN
                                         , tmpContractBrutto.ContractConditionId
                                         , tmpContractBrutto.ContractConditionKindId 
                                         , tmpContractBrutto.GoodsPropertyId
-                                   FROM Movement 
+                                   FROM MovementDate AS MovementDate_OperDatePartner
+                                        JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                                     AND Movement.DescId = zc_Movement_Sale()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete() 
                                         INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -1226,15 +1230,17 @@ BEGIN
                                                                      AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                                                                      AND MovementLinkObject_PaidKind.ObjectId = tmpContractBrutto.PaidKindId_byBase
 
-                                   WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                     AND Movement.DescId = zc_Movement_Sale()
-                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                        JOIN Movement AS Movement_Parent
+                                                      ON Movement_Parent.ParentId = Movement.Id
+                                                     AND Movement_Parent.DescId = zc_Movement_WeighingPartner()
+                                                     AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+
+                                   WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                                     AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                    )
                  , tmpMI AS (SELECT MovementItem.* 
-                                  
                              FROM MovementItem
-                                                                                              
-                             WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                             WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.ParentId FROM tmpMovement)
                                AND MovementItem.DescId = zc_MI_Master()
                                AND MovementItem.isErased = FALSE
                              )  
@@ -1325,7 +1331,7 @@ BEGIN
                                  ) :: TFloat AS AmountWeightWithBox
                            --
                       FROM tmpMovement
-                            LEFT JOIN tmpMI_Amount AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                            LEFT JOIN tmpMI_Amount AS MovementItem ON MovementItem.MovementId = tmpMovement.ParentId
 
                             --для веса брутто   
                             -- Товар и Вид товара
