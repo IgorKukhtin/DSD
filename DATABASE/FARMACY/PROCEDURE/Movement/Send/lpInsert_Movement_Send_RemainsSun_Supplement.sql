@@ -255,9 +255,6 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_in
                                      ON ObjectBoolean_SUN_Supplement_in.ObjectId = Object_Unit.Id
                                     AND ObjectBoolean_SUN_Supplement_in.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_in()
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN
-                                     ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id
-                                    AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_out
                                      ON ObjectBoolean_SUN_Supplement_out.ObjectId = Object_Unit.Id
                                     AND ObjectBoolean_SUN_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_out()
@@ -282,7 +279,9 @@ BEGIN
                OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 4 OR
                OS_ListDaySUN.ValueData ILIKE '%' || CASE WHEN vbDOW_curr - 1 = 0 THEN 7 ELSE vbDOW_curr - 1 END::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 3)
 
-          AND COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
+          AND (COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE OR 
+               COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE OR
+               Object_Unit.Id IN (SELECT DISTINCT tmpGoodsUnit.GoodsId FROM gpSelect_GoodsUnitSupplementSUN1_All(inSession := inUserId::TVarChar) AS tmpGoodsUnit))
        ;
        
      ANALYSE _tmpUnit_SUN_Supplement;
@@ -2054,4 +2053,4 @@ $BODY$
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
 -- 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

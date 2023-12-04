@@ -111,6 +111,7 @@ type
 
     function InitSession : boolean;
     function ShowError(AText : string) : string;
+    procedure Add_LogHelsiApi;
   end;
 
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName, ADenUnit : string;
@@ -217,6 +218,37 @@ begin
   end;
 end;
 
+procedure THelsiApi.Add_LogHelsiApi;
+var
+  F: TextFile;
+begin
+  WaitForSingleObject(MutexLog, INFINITE);
+  try
+    try
+      AssignFile(F, ChangeFileExt(Application.ExeName, '_HelsiApi.log'));
+      if not fileExists(ChangeFileExt(Application.ExeName, '_HelsiApi.log')) then
+      begin
+        Rewrite(F);
+      end
+      else
+        Append(F);
+      //
+      try
+        Writeln(F, DateTimeToStr(Now) + ' **** ' + FRESTClient.BaseURL + '/' + FRESTRequest.Resource + ' **** '#13#10 + FRESTResponse.Content);
+      finally
+        CloseFile(F);
+      end;
+    except
+      on E: Exception do
+        ShowMessage
+          ('Ошибка сохранения в лог файл. Покажите это окно системному администратору: '
+          + #13#10 + E.Message);
+    end;
+  finally
+    ReleaseMutex(MutexLog);
+  end;
+end;
+
   { THelsiApi }
 constructor THelsiApi.Create;
 begin
@@ -317,7 +349,7 @@ begin
       ShowMessage('Ошибка подключения к eSign Integration client:'#13#10'Не был запущен Веб-сервер, запустите!')
     else ShowMessage('Ошибка подключения к eSign Integration client:'#13#10 +
                      IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText);
-  end;
+  end else Add_LogHelsiApi;
 end;
 
 
@@ -343,6 +375,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   if FRESTResponse.StatusCode = 200 then
@@ -353,8 +386,8 @@ begin
       FAccess_Token := jValue.FindValue('access_token').Value;
       FRefresh_Token := jValue.FindValue('refresh_token').Value;
       Result := FAccess_Token <> '';
-    end;
-  end;
+    end else Add_LogHelsiApi;
+  end else Add_LogHelsiApi;
 end;
 
 function THelsiApi.GetTokenRefresh : boolean;
@@ -378,6 +411,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   if FRESTResponse.StatusCode = 200 then
@@ -388,8 +422,8 @@ begin
       FAccess_Token := jValue.FindValue('access_token').Value;
       FRefresh_Token := jValue.FindValue('refresh_token').Value;
       Result := FAccess_Token <> '';
-    end;
-  end;
+    end else Add_LogHelsiApi;
+  end else Add_LogHelsiApi;
 end;
 
 function THelsiApi.InitReinitSession : boolean;
@@ -410,6 +444,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   if FRESTResponse.StatusCode = 200 then
@@ -431,8 +466,9 @@ begin
         FUser_blocked := jValue.FindValue('blocked').ClassNameIs('TJSONTrue');
       Result := True;
     except
+      Add_LogHelsiApi;
     end
-  end;
+  end else Add_LogHelsiApi;
 
 end;
 
@@ -465,6 +501,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
 //  ShowMessage(FHelsi_be + '/receipts/' + FNumber);
@@ -553,12 +590,13 @@ begin
         end;
       end;
     except
+      Add_LogHelsiApi;
     end
   end else if ((FRESTResponse.StatusCode = 200) or
     (FRESTResponse.StatusCode = 302)) and (FRESTResponse.ContentType = 'text/html') then
   begin
     if GetHTTPLocation then Result := True;
-  end;
+  end else Add_LogHelsiApi;
 end;
 
 
@@ -619,6 +657,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   case FRESTResponse.StatusCode of
@@ -634,7 +673,10 @@ begin
               end;
             end;
           end;
-    else ShowError('Ошибка создания запроса на погашение рецепта');
+    else begin
+           Add_LogHelsiApi;
+           ShowError('Ошибка создания запроса на погашение рецепта');
+         end;
   end;
 end;
 
@@ -674,6 +716,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   case FRESTResponse.StatusCode of
@@ -689,7 +732,10 @@ begin
               end;
             end;
           end;
-    else ShowError('Ошибка запроса оплаты рецепта')
+    else begin
+           Add_LogHelsiApi;
+           ShowError('Ошибка запроса оплаты рецепта')
+         end;
   end;
 end;
 
@@ -719,6 +765,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   case FRESTResponse.StatusCode of
@@ -762,6 +809,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   case FRESTResponse.StatusCode of
@@ -828,6 +876,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   case FRESTResponse.StatusCode of
@@ -888,6 +937,7 @@ begin
     FRESTRequest.Execute;
   except on E: Exception do
          Begin
+           Add_LogHelsiApi;
            if FRESTResponse.JSONValue <> Nil then
              ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + E.Message + #13#10 + FRESTResponse.JSONValue.Tostring)
            else ShowMessage('Ошибка подписи оплаты рецепта:'#13#10 + E.Message);
@@ -948,6 +998,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   case FRESTResponse.StatusCode of
@@ -1017,6 +1068,7 @@ begin
   try
     FRESTRequest.Execute;
   except
+    Add_LogHelsiApi;
   end;
 
   if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
