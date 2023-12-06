@@ -39,6 +39,13 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummIn(),   inDescId:= zc_Object_AnalyzerId(), inCode:= 1, inName:= 'Сумма с/с',    inEnumName:= 'zc_Enum_AnalyzerId_SummIn');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummCost(), inDescId:= zc_Object_AnalyzerId(), inCode:= 2, inName:= 'Сумма затрат', inEnumName:= 'zc_Enum_AnalyzerId_SummCost');
 
+     -- !!! Типы Счета
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InvoiceKind_PrePay(),   inDescId:= zc_Object_InvoiceKind(), inCode:= 1, inName:= 'Предоплата', inEnumName:= 'zc_Enum_InvoiceKind_PrePay');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InvoiceKind_Pay(),      inDescId:= zc_Object_InvoiceKind(), inCode:= 2, inName:= 'Счет',       inEnumName:= 'zc_Enum_InvoiceKind_Pay');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InvoiceKind_Return(),   inDescId:= zc_Object_InvoiceKind(), inCode:= 3, inName:= 'Возврат',    inEnumName:= 'zc_Enum_InvoiceKind_Return');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InvoiceKind_Proforma(), inDescId:= zc_Object_InvoiceKind(), inCode:= 4, inName:= 'Проформа',   inEnumName:= 'zc_Enum_InvoiceKind_Proforma');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InvoiceKind_Service(),  inDescId:= zc_Object_InvoiceKind(), inCode:= 5, inName:= 'Услуги',     inEnumName:= 'zc_Enum_InvoiceKind_Service');
+
 
 END $$;
 
