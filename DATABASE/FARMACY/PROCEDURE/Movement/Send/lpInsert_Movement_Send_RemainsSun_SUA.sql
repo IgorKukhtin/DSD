@@ -50,6 +50,8 @@ $BODY$
    DECLARE vbisEliminateColdSUN Boolean;
    DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisCancelBansSUN Boolean;
+   DECLARE vbisLegalEntitiesSUN Boolean;
+   DECLARE vbJuridicalId Integer;
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
@@ -62,7 +64,8 @@ BEGIN
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUA.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUA.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisOnlyColdSUN, vbisCancelBansSUN
+          , COALESCE(ObjectBoolean_CashSettings_LegalEntitiesSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisOnlyColdSUN, vbisCancelBansSUN, vbisLegalEntitiesSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUA
                                   ON ObjectBoolean_CashSettings_EliminateColdSUA.ObjectId = Object_CashSettings.Id 
@@ -73,6 +76,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
                                   ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_LegalEntitiesSUN
+                                  ON ObjectBoolean_CashSettings_LegalEntitiesSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_LegalEntitiesSUN.DescId = zc_ObjectBoolean_CashSettings_LegalEntitiesSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -1843,6 +1849,7 @@ raise notice 'Value 14: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpRemai
             -- , _tmpRemains_Partion_SUA.Amount_save AS Amount_save
              , COALESCE (_tmpGoods_SUN_SUA.KoeffSUN, 0)
 
+             , ObjectLink_Unit_Juridical.ChildObjectId         
         FROM _tmpRemains_Partion_SUA
              -- товары - для Кратность
              LEFT JOIN _tmpGoods_SUN_SUA ON _tmpGoods_SUN_SUA.GoodsId = _tmpRemains_Partion_SUA.GoodsId
@@ -1866,6 +1873,10 @@ raise notice 'Value 14: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpRemai
               -- а здесь, отбросили !!холод!!
               LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion_SUA.GoodsId
 
+              LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                   ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_Partion_SUA.UnitId
+                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
           AND FLOOR (_tmpRemains_Partion_SUA.Amount  - 
@@ -1886,7 +1897,7 @@ raise notice 'Value 14: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpRemai
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN;
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN, vbJuridicalId;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -1909,6 +1920,10 @@ raise notice 'Value 14: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpRemai
                                                            ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc_SUA.UnitId
                                                           AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc_SUA.GoodsId
 
+                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                       ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_calc_SUA.UnitId
+                                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
              WHERE (CASE WHEN COALESCE (_tmpGoods_SUN_SUA.KoeffSUN, 0) = 0 THEN
                       FLOOR (_tmpRemains_calc_SUA.AmountResult  - _tmpRemains_calc_SUA.AmountUse)
                     ELSE
@@ -1918,6 +1933,7 @@ raise notice 'Value 14: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpRemai
                AND _tmpRemains_calc_SUA.GoodsId = vbGoodsId
                AND _tmpRemains_calc_SUA.UnitId <> vbUnitId_from
                AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+               AND (vbisLegalEntitiesSUN = FALSE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
              ORDER BY 2 DESC
                     , _tmpRemains_calc_SUA.UnitId;
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ

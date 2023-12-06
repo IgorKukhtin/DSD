@@ -350,7 +350,7 @@ BEGIN
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
 
 --      , 1                                                    AS eHealthApi
-      , CASE WHEN inSession = '3' THEN 1 ELSE 1 END          AS eHealthApi
+      , CASE WHEN inSession = '0' THEN 1 ELSE 1 END          AS eHealthApi
 
       , CASE WHEN COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE) = FALSE THEN Object_Helsi_IdSP.Id
         ELSE NULL::Integer END                                   AS Helsi_IdSP

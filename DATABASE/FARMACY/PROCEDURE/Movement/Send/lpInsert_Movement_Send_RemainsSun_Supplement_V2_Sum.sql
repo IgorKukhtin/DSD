@@ -53,6 +53,8 @@ $BODY$
    DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisCancelBansSUN Boolean;
    DECLARE vbTurnoverMoreSUN2 TFloat;
+   DECLARE vbisLegalEntitiesSUN Boolean;
+   DECLARE vbJuridicalId Integer;
 BEGIN
      --
      --
@@ -67,7 +69,8 @@ BEGIN
           , COALESCE(ObjectFloat_CashSettings_TurnoverMoreSUN2.ValueData, 1500000) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbTurnoverMoreSUN2, vbisOnlyColdSUN, vbisCancelBansSUN
+          , COALESCE(ObjectBoolean_CashSettings_LegalEntitiesSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbTurnoverMoreSUN2, vbisOnlyColdSUN, vbisCancelBansSUN, vbisLegalEntitiesSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -81,6 +84,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
                                   ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_LegalEntitiesSUN
+                                  ON ObjectBoolean_CashSettings_LegalEntitiesSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_LegalEntitiesSUN.DescId = zc_ObjectBoolean_CashSettings_LegalEntitiesSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -818,6 +824,7 @@ BEGIN
              , _tmpRemains_all_Supplement_V2.GoodsId
              , COALESCE (_tmpRemains_all_Supplement_V2.Give, 0) AS Give
              , COALESCE (_tmpGoods_SUN_Supplement_V2.KoeffSUN, 0)
+             , ObjectLink_Unit_Juridical.ChildObjectId         
        FROM _tmpRemains_all_Supplement_V2
 
             LEFT JOIN _tmpGoods_SUN_Supplement_V2 ON _tmpGoods_SUN_Supplement_V2.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
@@ -844,6 +851,10 @@ BEGIN
             -- а здесь, отбросили !!холод!!
             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_all_Supplement_V2.GoodsId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement_V2.UnitId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
        WHERE COALESCE (_tmpRemains_all_Supplement_V2.Give, 0) > 0
          AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = True
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
@@ -860,7 +871,7 @@ BEGIN
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN;
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN, vbJuridicalId;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -892,6 +903,10 @@ BEGIN
                   LEFT JOIN _tmpUnit_SunExclusion_Supplement_V2 ON _tmpUnit_SunExclusion_Supplement_V2.UnitId_from = vbUnitId_from
                                                             AND _tmpUnit_SunExclusion_Supplement_V2.UnitId_to   = _tmpRemains_all_Supplement_V2.UnitId
 
+                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                       ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement_V2.UnitId
+                                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
              WHERE  FLOOR(CASE WHEN COALESCE (_tmpGoods_SUN_Supplement_V2.KoeffSUN, 0) = 0 
                                THEN (_tmpRemains_all_Supplement_V2.Need - COALESCE(_tmpRemains_all_Supplement_V2.AmountRemains, 0))::Integer -
                                     COALESCE(_tmpRemains_all_Supplement_V2.AmountUse, 0)
@@ -904,6 +919,7 @@ BEGIN
                AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_in = True
                AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
                AND _tmpUnit_SunExclusion_Supplement_V2.UnitId_to IS NULL
+               AND (vbisLegalEntitiesSUN = FALSE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
              ORDER BY FLOOR(CASE WHEN COALESCE (_tmpGoods_SUN_Supplement_V2.KoeffSUN, 0) = 0 
                                THEN (_tmpRemains_all_Supplement_V2.Need - COALESCE(_tmpRemains_all_Supplement_V2.AmountRemains, 0))::Integer -
                                     COALESCE(_tmpRemains_all_Supplement_V2.AmountUse, 0)

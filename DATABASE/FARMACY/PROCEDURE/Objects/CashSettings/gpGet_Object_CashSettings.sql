@@ -58,7 +58,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MobMessCount Integer
              , isEliminateColdSUN2 Boolean, isEliminateColdSUN3 Boolean, isEliminateColdSUN4 Boolean, isEliminateColdSUA Boolean
              , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
-             , isCancelBansSUN Boolean
+             , isCancelBansSUN Boolean, isLegalEntitiesSUN Boolean
              , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_CountAward Integer, AntiTOPMP_SumFine TFloat, AntiTOPMP_MinProcAward TFloat
              , UnitDeferredId Integer, UnitDeferredName TVarChar
              , CourseReport TFloat
@@ -133,6 +133,7 @@ BEGIN
         , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN4.ValueData, FALSE)       AS isOnlyColdSUN4
         , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUA.ValueData, FALSE)        AS isOnlyColdSUA
         , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE)      AS isCancelBansSUN
+        , COALESCE(ObjectBoolean_CashSettings_LegalEntitiesSUN.ValueData, FALSE)   AS isLegalEntitiesSUN
         
         , ObjectFloat_CashSettings_AntiTOPMP_Count.ValueData::Integer              AS AntiTOPMP_Count
         , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
@@ -144,6 +145,7 @@ BEGIN
         , Object_UnitDeferred.ValueData                                            AS UnitDeferredName
         
         , ObjectFloat_CashSettings_CourseReport.ValueData                          AS CourseReport
+        
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -260,6 +262,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
                                 ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_LegalEntitiesSUN
+                                ON ObjectBoolean_CashSettings_LegalEntitiesSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_LegalEntitiesSUN.DescId = zc_ObjectBoolean_CashSettings_LegalEntitiesSUN()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id

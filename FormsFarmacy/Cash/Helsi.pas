@@ -111,7 +111,7 @@ type
 
     function InitSession : boolean;
     function ShowError(AText : string) : string;
-    procedure Add_LogHelsiApi;
+    procedure Add_LogHelsiApi(AMessage : String = '');
   end;
 
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName, ADenUnit : string;
@@ -218,10 +218,11 @@ begin
   end;
 end;
 
-procedure THelsiApi.Add_LogHelsiApi;
+procedure THelsiApi.Add_LogHelsiApi(AMessage : String = '');
 var
   F: TextFile;
 begin
+  Exit;
   WaitForSingleObject(MutexLog, INFINITE);
   try
     try
@@ -234,7 +235,9 @@ begin
         Append(F);
       //
       try
-        Writeln(F, DateTimeToStr(Now) + ' **** ' + FRESTClient.BaseURL + '/' + FRESTRequest.Resource + ' **** '#13#10 + FRESTResponse.Content);
+        if AMessage = '' then
+          Writeln(F, DateTimeToStr(Now) + ' **** ' + FRESTClient.BaseURL + '/' + FRESTRequest.Resource + ' **** '#13#10 + FRESTResponse.Content)
+        else Writeln(F, DateTimeToStr(Now) + ' **** ' + FRESTClient.BaseURL + '/' + FRESTRequest.Resource + ' **** '#13#10 + AMessage);
       finally
         CloseFile(F);
       end;
@@ -622,6 +625,7 @@ begin
     jsonTemp.AddPair('sell_amount', TJSONNumber.Create(FSell_amount));
     jsonTemp.AddPair('discount_amount', TJSONNumber.Create(FDiscount_amount));
     jsonTemp.AddPair('program_medication_id', FProgram_Medication_Id);
+    //Temp.AddPair('program_medication_id', '50970b6a-9e9c-4bb6-bd07-d011fe93f2f3' {FProgram_Medication_Id});
 
     JSONA := TJSONArray.Create;
     JSONA.AddElement(jsonTemp);
@@ -650,6 +654,7 @@ begin
                                                                           [TRESTRequestParameterOption.poDoNotEncode]);
 
     FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+    Add_LogHelsiApi(jsonBody.ToString);
   finally
     jsonBody.Destroy;
   end;
@@ -709,6 +714,7 @@ begin
                                                                           [TRESTRequestParameterOption.poDoNotEncode]);
 
     FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+    Add_LogHelsiApi(jsonBody.ToString);
   finally
     jsonBody.Destroy;
   end;
@@ -929,6 +935,7 @@ begin
     FRESTRequest.Params.Clear;
 
     FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+    Add_LogHelsiApi(jsonBody.ToString);
   finally
     jsonBody.Destroy;
   end;
@@ -949,6 +956,7 @@ begin
     200 : Result := True;
     else
     begin
+      Add_LogHelsiApi;
       cError := '';
       if FRESTResponse.ContentType = 'application/json' then
       begin
@@ -991,6 +999,7 @@ begin
                                                                           [TRESTRequestParameterOption.poDoNotEncode]);
 
     FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+    Add_LogHelsiApi(jsonBody.ToString);
   finally
     jsonBody.Destroy;
   end;
@@ -1003,7 +1012,10 @@ begin
 
   case FRESTResponse.StatusCode of
     200 : Result := True;
-    else ShowError('Ошибка погашения запроса на погашения рецепта');
+    else begin
+           Add_LogHelsiApi;
+           ShowError('Ошибка погашения запроса на погашения рецепта');
+         end;
   end;
 end;
 
@@ -1251,18 +1263,18 @@ begin
         HelsiApi.FKeyPassword := DecodeString(ds.FieldByName('KeyPassword').AsString);
 
         // временно
-        if HelsiApi.FUserName = 'roza.y+gonchar@helsi.me' then
-        begin
-          fileStream := TFileStream.Create('Копия.ZS2', fmOpenRead);
-          base64Stream := TStringStream.Create;
-          try
-            EncodeStream(fileStream, base64Stream);
-            HelsiApi.FBase64Key := base64Stream.DataString;
-          finally
-            FreeAndNil(fileStream);
-            FreeAndNil(base64Stream);
-          end;
-        end;
+//        if HelsiApi.FUserName = 'roza.y+gonchar@helsi.me' then
+//        begin
+//          fileStream := TFileStream.Create('Копия.ZS2', fmOpenRead);
+//          base64Stream := TStringStream.Create;
+//          try
+//            EncodeStream(fileStream, base64Stream);
+//            HelsiApi.FBase64Key := base64Stream.DataString;
+//          finally
+//            FreeAndNil(fileStream);
+//            FreeAndNil(base64Stream);
+//          end;
+//        end;
 
       finally
         ds.free;

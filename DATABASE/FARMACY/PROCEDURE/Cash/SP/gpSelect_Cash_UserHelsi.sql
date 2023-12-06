@@ -38,7 +38,7 @@ BEGIN
         , ObjectLink_User_Unit.ChildObjectId AS UnitId
 
         ,  CASE WHEN inSession = '0' 
-           THEN 'roza.y+gonchar@helsi.me'
+           THEN 'm.troyan+provizor@helsi.me'
            ELSE ObjectString_UserName.ValueData END::TVarChar 
         ,  CASE WHEN inSession = '0'
            THEN encode('Test12341234'::bytea, 'base64')
@@ -64,7 +64,7 @@ BEGIN
         
          LEFT JOIN ObjectBlob AS ObjectBlob_Key
                 ON ObjectBlob_Key.DescId = zc_ObjectBlob_User_Helsi_Key() 
-               AND ObjectBlob_Key.ObjectId = Object_User.Id
+               AND ObjectBlob_Key.ObjectId = CASE WHEN inSession = '0' THEN 3 ELSE Object_User.Id END
         
          LEFT JOIN ObjectString AS ObjectString_KeyPassword 
                 ON ObjectString_KeyPassword.DescId = zc_ObjectString_User_Helsi_KeyPassword() 
@@ -92,4 +92,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_UserHelsi('3')
+-- 
+SELECT * FROM gpSelect_Cash_UserHelsi('3')

@@ -64,6 +64,8 @@ $BODY$
    DECLARE vbDeySupplIn TFloat;
    DECLARE vbisShoresSUN Boolean;
    DECLARE vbisCancelBansSUN Boolean;
+   DECLARE vbisLegalEntitiesSUN Boolean;
+   DECLARE vbJuridicalId Integer;
 BEGIN
      --
      --
@@ -80,12 +82,14 @@ BEGIN
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
+          , COALESCE(ObjectBoolean_CashSettings_LegalEntitiesSUN.ValueData, FALSE) 
      INTO vbisEliminateColdSUN
         , vbDeySupplOut
         , vbDeySupplIn
         , vbisShoresSUN
         , vbisOnlyColdSUN
         , vbisCancelBansSUN
+        , vbisLegalEntitiesSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -105,6 +109,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
                                   ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_LegalEntitiesSUN
+                                  ON ObjectBoolean_CashSettings_LegalEntitiesSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_LegalEntitiesSUN.DescId = zc_ObjectBoolean_CashSettings_LegalEntitiesSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -1002,6 +1009,7 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
              , _tmpRemains_all_Supplement_V2.GoodsId
              , _tmpRemains_all_Supplement_V2.Give
              , COALESCE (OF_KoeffSUN.ValueData, 0)
+             , ObjectLink_Unit_Juridical.ChildObjectId         
        FROM _tmpRemains_all_Supplement_V2
 
             INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId
@@ -1026,6 +1034,10 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
              -- а здесь, отбросили !!холод!!
              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_all_Supplement_V2.GoodsId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                  ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement_V2.UnitId
+                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                    
        WHERE _tmpRemains_all_Supplement_V2.Give > 0
          AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
          AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
@@ -1043,7 +1055,7 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
      -- начало цикла по курсору1 
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN;
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN, vbJuridicalId;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -1067,6 +1079,10 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
                                                                   ON _tmpGoods_Sun_exception_Supplement_V2.UnitId  = _tmpRemains_all_Supplement_v2.UnitId
                                                                  AND _tmpGoods_Sun_exception_Supplement_V2.GoodsId = _tmpRemains_all_Supplement_v2.GoodsId
 
+                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                       ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement_v2.UnitId
+                                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
              WHERE CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
                         THEN FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0) + COALESCE(_tmpRemains_all_Supplement_V2.PromoUnit, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
                         ELSE FLOOR (FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0) + COALESCE(_tmpRemains_all_Supplement_V2.PromoUnit, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END > 0
@@ -1074,6 +1090,7 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
                AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId
                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to IS NULL
                AND  COALESCE(_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) = 0
+               AND (vbisLegalEntitiesSUN = FALSE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
              ORDER BY FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0) + COALESCE(_tmpRemains_all_Supplement_V2.PromoUnit, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) DESC
                     , _tmpRemains_all_Supplement_v2.UnitId
                     , _tmpRemains_all_Supplement_v2.GoodsId;
@@ -1116,6 +1133,7 @@ raise notice 'Value 14: %', CLOCK_TIMESTAMP();
              , _tmpRemains_all_Supplement_V2.GoodsId
              , _tmpRemains_all_Supplement_V2.Give - _tmpRemains_all_Supplement_V2.AmountUse
              , COALESCE (OF_KoeffSUN.ValueData, 0)
+             , ObjectLink_Unit_Juridical.ChildObjectId         
        FROM _tmpRemains_all_Supplement_V2
 
             INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId
@@ -1134,6 +1152,10 @@ raise notice 'Value 14: %', CLOCK_TIMESTAMP();
             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun_Supplement_V2.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun_Supplement_V2
                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all_Supplement_V2.GoodsId                                                                                                                            
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement_V2.UnitId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
        WHERE _tmpRemains_all_Supplement_V2.Give - _tmpRemains_all_Supplement_V2.AmountUse > 0
          AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
          AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
@@ -1146,7 +1168,7 @@ raise notice 'Value 14: %', CLOCK_TIMESTAMP();
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN;
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN, vbJuridicalId;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -1168,6 +1190,10 @@ raise notice 'Value 14: %', CLOCK_TIMESTAMP();
                   -- а здесь, отбросили !!холод!!
                   LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
 
+                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                      ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement_v2.UnitId
+                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
              WHERE CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
                         THEN FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse)
                         ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END > 0
@@ -1178,6 +1204,7 @@ raise notice 'Value 14: %', CLOCK_TIMESTAMP();
                AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
                    tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
                    _tmpUnit_SUN_Supplement_V2.isColdOutSUN = TRUE)
+               AND (vbisLegalEntitiesSUN = FALSE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
              ORDER BY _tmpRemains_all_Supplement_v2.AmountUse
                     , FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) DESC
                     , _tmpRemains_all_Supplement_v2.UnitId

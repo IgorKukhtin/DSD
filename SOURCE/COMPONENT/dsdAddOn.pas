@@ -11,7 +11,7 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
      Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage,
-     cxGridChartView, cxGridDBChartView, cxDropDownEdit, cxCheckListBox
+     cxGridChartView, cxGridDBChartView, cxDropDownEdit, cxCheckListBox, cxCurrencyEdit
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -1556,6 +1556,9 @@ type
     property NameParam: TdsdParam  read FNameParam write FNameParam;
   end;
 
+  TcxCurrencyEdit_check = class(TcxCurrencyEdit)
+  end;
+
   procedure Register;
 
 implementation
@@ -1563,7 +1566,7 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, ADODB, RegularExpressions,
      dxCore, cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
-     cxGeometry, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
+     cxGeometry, dxBar, cxButtonEdit, cxDBEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
      cxMemo, cxMaskEdit, dsdException, Soap.EncdDecd, SimpleGauge;
@@ -1595,7 +1598,8 @@ begin
     TEnterMoveNext,
     TChartAddOn,
     TCheckerboardAddOn,
-    TCheckListBoxAddOn
+    TCheckListBoxAddOn,
+    TcxCurrencyEdit_check
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);

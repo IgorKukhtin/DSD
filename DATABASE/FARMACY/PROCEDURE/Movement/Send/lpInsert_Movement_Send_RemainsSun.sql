@@ -114,6 +114,8 @@ $BODY$
    
    DECLARE vbisShoresSUN Boolean;
    DECLARE vbisCancelBansSUN Boolean;
+   DECLARE vbisLegalEntitiesSUN Boolean;
+   DECLARE vbJuridicalId Integer;
 
 BEGIN
      --
@@ -147,7 +149,8 @@ BEGIN
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN, vbisCancelBansSUN
+          , COALESCE(ObjectBoolean_CashSettings_LegalEntitiesSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN, vbisCancelBansSUN, vbisLegalEntitiesSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -161,6 +164,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
                                   ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_LegalEntitiesSUN
+                                  ON ObjectBoolean_CashSettings_LegalEntitiesSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_LegalEntitiesSUN.DescId = zc_ObjectBoolean_CashSettings_LegalEntitiesSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
           
@@ -2392,6 +2398,8 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
              , _tmpGoods_SUN_PairSun.GoodsId_PairSun
              
              , _tmpRemains_Partion.isNotSold100
+             
+             , ObjectLink_Unit_Juridical.ChildObjectId         
 
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
@@ -2424,6 +2432,11 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
              
              -- а здесь, отбросили !!холод!!
              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
+             
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                  ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_Partion.UnitId
+                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+             
 
         WHERE -- !!!Отключили парные!!!
               COALESCE ( _tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
@@ -2456,7 +2469,7 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbAmount_sun, vbKoeffSUN, vbGoodsId_PairSun, vbisNotSold100;
+         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbAmount_sun, vbKoeffSUN, vbGoodsId_PairSun, vbisNotSold100, vbJuridicalId;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -2522,6 +2535,10 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
                                                  ON _tmpUnit_SunExclusion_MCS.UnitId_from = vbUnitId_from
                                                 AND _tmpUnit_SunExclusion_MCS.UnitId_to   = _tmpRemains_calc.UnitId
 
+                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                      ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_calc.UnitId
+                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                     
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
@@ -2530,6 +2547,7 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
               AND ((COALESCE(tmpPrice.isCloseMCS, FALSE) = FALSE OR _tmpUnit_SUN.isLock_ClosePL = FALSE) AND
                    (COALESCE(tmpPrice.isClose, FALSE) = FALSE OR _tmpUnit_SUN.isLock_CloseGd = FALSE) OR
                     COALESCE (tmpSalesGoods.GoodsId, 0) <> 0)
+              AND (vbisLegalEntitiesSUN = FALSE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
               -- !!!только в те аптеки, которые удовлетворяют ЛИМИТУ!!!
               --!!! AND _tmpRemains_calc.UnitId IN (SELECT DISTINCT _tmpSumm_limit.UnitId_to FROM _tmpSumm_limit WHERE _tmpSumm_limit.UnitId_from = vbUnitId_from AND _tmpSumm_limit.Summ >= vbSumm_limit)
             ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_calc.UnitId
@@ -2724,6 +2742,7 @@ raise notice 'Value 20: %', CLOCK_TIMESTAMP();
              , _tmpRemains_Partion.Amount_sun
              , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
              , _tmpRemains_Partion.isNotSold100
+             , ObjectLink_Unit_Juridical.ChildObjectId         
         FROM _tmpRemains_Partion
              -- сколько уже ушло после распределения - 1
              LEFT JOIN (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId
@@ -2752,6 +2771,10 @@ raise notice 'Value 20: %', CLOCK_TIMESTAMP();
              -- а здесь, отбросили !!холод!!
              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                  ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_Partion.UnitId
+                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
         WHERE FLOOR(_tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0)) > 0
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
           AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
@@ -2764,7 +2787,7 @@ raise notice 'Value 20: %', CLOCK_TIMESTAMP();
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_sun, vbKoeffSUN, vbisNotSold100;
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_sun, vbKoeffSUN, vbisNotSold100, vbJuridicalId;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -2843,6 +2866,10 @@ raise notice 'Value 20: %', CLOCK_TIMESTAMP();
                  LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = _tmpRemains_calc.UnitId 
                                         AND tmpSalesGoods.GoodsId = _tmpRemains_calc.GoodsId 
 
+                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                      ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_calc.UnitId
+                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                     
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               -- !!!НЕ распределяем
@@ -2861,6 +2888,7 @@ raise notice 'Value 20: %', CLOCK_TIMESTAMP();
               AND ((COALESCE(_tmpRemains_all.isCloseMCS, FALSE) = FALSE OR _tmpUnit_SUN.isLock_ClosePL = FALSE) AND
                    (COALESCE(tmpPrice.isClose, FALSE) = FALSE OR _tmpUnit_SUN.isLock_CloseGd = FALSE) OR
                     COALESCE (tmpSalesGoods.GoodsId, 0) <> 0)
+              AND (vbisLegalEntitiesSUN = FALSE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
 
             ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_calc.UnitId
            ;

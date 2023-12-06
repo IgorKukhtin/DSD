@@ -70,7 +70,9 @@ $BODY$
    DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
    DECLARE vbisCancelBansSUN Boolean;
+   DECLARE vbisLegalEntitiesSUN Boolean;
    DECLARE vbDays TFloat;
+   DECLARE vbJuridicalId Integer;
 BEGIN
      --
      --
@@ -85,7 +87,8 @@ BEGIN
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN, vbisCancelBansSUN
+          , COALESCE(ObjectBoolean_CashSettings_LegalEntitiesSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN, vbisCancelBansSUN, vbisLegalEntitiesSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -99,6 +102,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
                                   ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_LegalEntitiesSUN
+                                  ON ObjectBoolean_CashSettings_LegalEntitiesSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_LegalEntitiesSUN.DescId = zc_ObjectBoolean_CashSettings_LegalEntitiesSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -1809,11 +1815,12 @@ BEGIN
                       
      -- 3. распредел€ем
      --
-     -- курсор1 - все что можно распределить
+     -- курсор1 - вс€ потребность
      OPEN curPartion_next FOR 
          SELECT _tmpRemains_all_Supplement.UnitId
               , _tmpRemains_all_Supplement.GoodsId
               , _tmpRemains_all_Supplement.NeedCalc
+              , ObjectLink_Unit_Juridical.ChildObjectId         
          FROM _tmpRemains_all_Supplement
 
               LEFT JOIN (SELECT tmp.GoodsId FROM gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := inUserId::TVarChar) AS tmp 
@@ -1824,6 +1831,10 @@ BEGIN
               -- а здесь, отбросили !!холод!!
               LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_all_Supplement.GoodsId
 
+              LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                   ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement.UnitId
+                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                    
          WHERE _tmpRemains_all_Supplement.NeedCalc > 0
            AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
               -- отбросили !!холод!!
@@ -1837,26 +1848,33 @@ BEGIN
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_to, vbGoodsId, vbNeed;
+         FETCH curPartion_next INTO vbUnitId_to, vbGoodsId, vbNeed, vbJuridicalId;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
-         -- курсор2. - ѕотребность дл€ vbGoodsId
+         -- курсор2. - „то можно отдать дл€ vbGoodsId
          OPEN curResult_next FOR
            SELECT _tmpRemains_all_Supplement.UnitId
                 , _tmpRemains_all_Supplement.SurplusCalc
            FROM _tmpRemains_all_Supplement
 
                 LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
+                
+                LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
 
                 -- отбросили !!исключени€!!
-                LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = vbUnitId_from
-                                                          AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = _tmpRemains_all_Supplement.UnitId
+                LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = _tmpRemains_all_Supplement.UnitId
+                                                          AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = vbUnitId_to
                 
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                     ON ObjectLink_Unit_Juridical.ObjectId = _tmpRemains_all_Supplement.UnitId
+                                    AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
            WHERE _tmpRemains_all_Supplement.SurplusCalc > 0
              AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_to
              AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
-            AND COALESCE(_tmpUnit_SunExclusion_Supplement.UnitId_to, 0) = 0
+             AND COALESCE(_tmpUnit_SunExclusion_Supplement.UnitId_to, 0) = 0
+             AND (vbisLegalEntitiesSUN = FALSE OR _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
            ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
                   , _tmpRemains_all_Supplement.SurplusCalc DESC
                   , _tmpRemains_all_Supplement.UnitId
@@ -1866,7 +1884,7 @@ BEGIN
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти јвтозаказ
          LOOP
              -- данные по јвтозаказ
-             FETCH curResult_next INTO vbUnitId_from, vbSurplus;
+             FETCH curResult_next INTO vbUnitId_From, vbSurplus;
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR (vbNeed) <= 0 THEN EXIT; END IF;
 
@@ -2053,4 +2071,4 @@ $BODY$
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
 -- 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= 0, inUserId:= 3);

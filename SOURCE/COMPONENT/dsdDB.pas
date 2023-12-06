@@ -1122,7 +1122,15 @@ begin
           else
              Params.AddParam(FComponentItem, ftString, ptInput, FValue);
         end;
-     if Component is TcxCurrencyEdit then
+     if Component is TcxCurrencyEdit_check then
+     begin
+        if TryStrToFloat(ReplaceStr(ReplaceStr(VarToStr(FValue), '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator), Flo) then
+        begin
+          if Round((Component as TcxCurrencyEdit_check).Value * 10000) <> Round(Flo * 10000) then (Component as TcxCurrencyEdit_check).Value := Flo;
+        end
+        else
+          (Component as TcxCurrencyEdit_check).Clear;
+     end else if Component is TcxCurrencyEdit then
      begin
         if TryStrToFloat(ReplaceStr(ReplaceStr(VarToStr(FValue), '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator), Flo) then
           (Component as TcxCurrencyEdit).Value := Flo

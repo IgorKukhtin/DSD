@@ -870,7 +870,7 @@ initialization
   RegisterClass (TChartAddOn);
   RegisterClass (TCheckerboardAddOn);
   RegisterClass (TCheckListBoxAddOn);
-
+  RegisterClass (TcxCurrencyEdit_check);
 
 // дкъ реярю
 
