@@ -26,8 +26,6 @@ object InvoiceKindForm: TInvoiceKindForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 27
-    ExplicitWidth = 646
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -97,7 +95,6 @@ object InvoiceKindForm: TInvoiceKindForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitWidth = 646
     object btnChoiceGuides: TcxButton
       Left = 195
       Top = 7
@@ -320,14 +317,6 @@ object InvoiceKindForm: TInvoiceKindForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'NDS'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'NDS'
-          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1054#1050

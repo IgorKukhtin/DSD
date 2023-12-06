@@ -5,7 +5,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -247
   ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -92,7 +91,23 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 69
           end
-          object ReceiptNumber: TcxGridDBColumn [1]
+          object isAuto: TcxGridDBColumn [1]
+            Caption = 'Auto'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object InvoiceKindName: TcxGridDBColumn [2]
+            Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvoiceKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object ReceiptNumber: TcxGridDBColumn [3]
             Caption = 'Quittung Nr'
             DataBinding.FieldName = 'ReceiptNumber'
             HeaderAlignmentHorz = taCenter
@@ -101,7 +116,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 55
           end
-          object InvNumberPartner: TcxGridDBColumn [2]
+          object InvNumberPartner: TcxGridDBColumn [4]
             Caption = 'Externe Nr'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -469,8 +484,8 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Top = 67
   end
   inherited ActionList: TActionList
-    Left = 167
-    Top = 66
+    Left = 239
+    Top = 114
     object mactUpdateMoneyPlace: TMultiAction [3]
       Category = 'Update'
       MoveParams = <>

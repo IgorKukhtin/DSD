@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Invoice()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
  INOUT ioId               Integer  ,  --
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
     IN inUnitId           Integer  ,  --
     IN inInfoMoneyId      Integer  ,  --
     IN inPaidKindId       Integer  ,  --
+    IN inInvoiceKindId    Integer  ,
     IN inUserId           Integer      -- сессия пользователя
 )
 RETURNS Integer
@@ -105,7 +107,10 @@ BEGIN
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
     -- сохранили связь с <>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId); 
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InvoiceKind(), ioId, inInvoiceKindId);
+    
 
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Plan(), ioId, inPlanDate);
@@ -158,6 +163,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.23         *
  02.02.21         *
 */
 

@@ -25,7 +25,7 @@ $BODY$BEGIN
        FROM Object
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object.Id
-                                  AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_InvoiceKind_Comment()
 
             LEFT JOIN ObjectString AS ObjectString_Enum
                                    ON ObjectString_Enum.ObjectId = Object.Id 

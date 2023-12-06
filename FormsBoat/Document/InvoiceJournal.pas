@@ -87,6 +87,8 @@ type
     cxButton2: TcxButton;
     actOpenIncomeByInvoice: TdsdOpenForm;
     bbOpenIncomeByInvoice: TdxBarButton;
+    InvoiceKindName: TcxGridDBColumn;
+    isAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public

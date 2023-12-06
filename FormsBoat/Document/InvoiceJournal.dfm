@@ -169,7 +169,23 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 69
           end
-          object ReceiptNumber: TcxGridDBColumn [1]
+          object isAuto: TcxGridDBColumn [1]
+            Caption = 'Auto'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object InvoiceKindName: TcxGridDBColumn [2]
+            Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvoiceKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object ReceiptNumber: TcxGridDBColumn [3]
             Caption = 'Quittung Nr'
             DataBinding.FieldName = 'ReceiptNumber'
             HeaderAlignmentHorz = taCenter
@@ -184,7 +200,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 63
           end
-          object InvNumberPartner: TcxGridDBColumn [3]
+          object InvNumberPartner: TcxGridDBColumn [5]
             Caption = 'Externe Nr'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
