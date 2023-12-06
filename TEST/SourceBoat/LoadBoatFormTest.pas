@@ -536,6 +536,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;

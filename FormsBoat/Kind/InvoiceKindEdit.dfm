@@ -26,8 +26,6 @@ object InvoiceKindEditForm: TInvoiceKindEditForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 830
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -103,8 +101,6 @@ object InvoiceKindEditForm: TInvoiceKindEditForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitLeft = -110
-    ExplicitWidth = 646
     object btnFormClose: TcxButton
       Left = 297
       Top = 7
@@ -491,6 +487,14 @@ object InvoiceKindEditForm: TInvoiceKindEditForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Code'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
