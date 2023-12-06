@@ -70,7 +70,7 @@ BEGIN
                        )
 
       --данные док счет
-      , tmpInvoice_Params AS (SELECT tmp.MovementId
+      , tmpInvoice_Params AS (SELECT DISTINCT tmp.MovementId
                                    , MovementFloat_Amount.ValueData ::TFloat AS Amount
                                    , Object_Object.Id                                    AS ObjectId
                                    , Object_Object.ValueData                             AS ObjectName
@@ -153,8 +153,10 @@ BEGIN
                                     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
                                                                    ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
                                                                   AND MovementLinkMovement_Invoice.DescId          = zc_MovementLinkMovement_Invoice()
-                                    -- Parent - если указан
+                                                                  AND COALESCE (Movement.ParentId,0) = 0
+                                     -- Parent - если указан
                                     LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = COALESCE (Movement.ParentId, MovementLinkMovement_Invoice.MovementId)
+                                                                         AND Movement_Parent.DescId = zc_Movement_BankAccount()
                                     LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
                               )
 
