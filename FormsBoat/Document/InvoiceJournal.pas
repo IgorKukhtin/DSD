@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons;
+  Vcl.StdCtrls, cxButtons, cxSplitter;
 
 type
   TInvoiceJournalForm = class(TAncestorJournal_boatForm)
@@ -89,6 +89,23 @@ type
     bbOpenIncomeByInvoice: TdxBarButton;
     InvoiceKindName: TcxGridDBColumn;
     isAuto: TcxGridDBColumn;
+    ItemCDS: TClientDataSet;
+    ItemDS: TDataSource;
+    ItemViewAddOn: TdsdDBViewAddOn;
+    spSelectMI: TdsdStoredProc;
+    cxGrid_Item: TcxGrid;
+    cxGridDBTableView_Det: TcxGridDBTableView;
+    Article_ch4: TcxGridDBColumn;
+    ObjectCode_ch4: TcxGridDBColumn;
+    ObjectName_ch4: TcxGridDBColumn;
+    OperPrice_ch4: TcxGridDBColumn;
+    Amount_ch4: TcxGridDBColumn;
+    Comment_ch4: TcxGridDBColumn;
+    isErased_ch4: TcxGridDBColumn;
+    cxGridLevel_Det: TcxGridLevel;
+    cxSplitter_Bottom_Detail: TcxSplitter;
+    actSetVisible_Grid_Item: TBooleanSetVisibleAction;
+    cxButton5: TcxButton;
   private
     { Private declarations }
   public
