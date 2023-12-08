@@ -209,18 +209,19 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             Width = 60
           end
           object Count: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081
+            Caption = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081' ('#1073#1077#1079' '#1089#1090#1072#1090#1091#1089#1072')'
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081' ('#1073#1077#1079' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1090#1072#1090#1091#1089#1072' '#1076#1086#1082')'
             Options.Editing = False
             Width = 70
           end
           object Count_status: TcxGridDBColumn
-            Caption = #1048#1079#1084'. '#1089#1090#1072#1090#1091#1089#1072' '#1076#1086#1082'.'
+            Caption = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081' ('#1089#1090#1072#1090#1091#1089')'
             DataBinding.FieldName = 'Count_status'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
