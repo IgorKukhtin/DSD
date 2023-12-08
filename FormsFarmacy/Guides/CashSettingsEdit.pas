@@ -169,6 +169,7 @@ type
     UnitGuides: TdsdGuides;
     ceCourseReport: TcxCurrencyEdit;
     cxLabel48: TcxLabel;
+    cbLegalEntitiesSUN: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -1874,7 +1874,7 @@ BEGIN
              AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_to
              AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
              AND COALESCE(_tmpUnit_SunExclusion_Supplement.UnitId_to, 0) = 0
-             AND (vbisLegalEntitiesSUN = FALSE OR _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
+             AND (vbisLegalEntitiesSUN = FALSE /*OR _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE*/ OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId)
            ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
                   , _tmpRemains_all_Supplement.SurplusCalc DESC
                   , _tmpRemains_all_Supplement.UnitId
