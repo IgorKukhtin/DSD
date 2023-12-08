@@ -5074,7 +5074,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
+    Left = 616
     Top = 209
   end
   object spInsertUpdate_IncomeCost: TdsdStoredProc

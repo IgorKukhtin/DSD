@@ -31,6 +31,7 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, UserStatus T
              , Count        TFloat       
              , Count_Prog   Tfloat      
              , Count_Work   Tfloat
+             , Count_status Tfloat
 
              , Time_Prog   TVarChar      
              , Time_Work   TVarChar
@@ -228,7 +229,32 @@ BEGIN
                        FROM MovementItemProtocol_arc_arc AS MovementItemProtocol
                             INNER JOIN tmpUser ON tmpUser.UserId = MovementItemProtocol.UserId
                        WHERE MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
-                      ) 
+                      )  
+  --данные изменения статуса документа
+  , tmpMov_Protocol_Status AS (SELECT MovementProtocol.UserId
+                                    , DATE_TRUNC ('DAY', MovementProtocol.OperDate) AS OperDate
+                                    , MovementProtocol.OperDate                     AS OperDate_Protocol
+                                    , MovementProtocol.MovementId                   AS Id
+                                    , CAST (XPATH ('/XML/Field[@FieldName = "Статус"] /@FieldValue', MovementProtocol.ProtocolData :: XML)AS TEXT) AS ProtocolData_str
+                                    , ROW_Number() OVER (Partition by MovementProtocol.MovementId, MovementProtocol.UserId ORDER BY MovementProtocol.OperDate) AS ord
+                               FROM MovementProtocol
+                                    INNER JOIN tmpUser ON tmpUser.UserId = MovementProtocol.UserId
+                               WHERE MovementProtocol.OperDate >= inStartDate  AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
+                                  AND CAST (XPATH ('/XML/Field[@FieldName = "Статус"]/@FieldValue', MovementProtocol.ProtocolData :: XML) AS TEXT) <> '{}'
+                               )    
+  , tmpCount_Status AS (SELECT tmpMov_Protocol_Status.UserId
+                             --, tmpMov_Protocol_Status.OperDate 
+                             , CASE WHEN inIsDay = TRUE THEN tmpMov_Protocol_Status.OperDate ELSE inStartDate END AS OperDate
+                             , SUM (CASE WHEN tmpMov_Protocol_Status.ProtocolData_str <> tmpMov_Protocol_2.ProtocolData_str AND tmpMov_Protocol_2.ProtocolData_str IS NOT NULL THEN 1 ELSE 0 END) AS Count
+                        FROM tmpMov_Protocol_Status
+                             LEFT JOIN tmpMov_Protocol_Status AS tmpMov_Protocol_2 
+                                                              ON tmpMov_Protocol_2.UserId = tmpMov_Protocol_Status.UserId
+                                                             AND tmpMov_Protocol_2.Id = tmpMov_Protocol_Status.Id
+                                                             AND tmpMov_Protocol_2.Ord - 1 = tmpMov_Protocol_Status.Ord
+                        GROUP BY tmpMov_Protocol_Status.UserId
+                               , CASE WHEN inIsDay = TRUE THEN tmpMov_Protocol_Status.OperDate ELSE inStartDate END
+                        )
+
          -- определяем
  , tmpTimeMotion_all AS (SELECT tmp.UserId, tmp.OperDate, MIN (tmp.OperDate_Protocol) AS OperDate_Start, MAX (tmp.OperDate_Protocol) AS OperDate_End
                          FROM (SELECT * FROM tmpMov_Protocol
@@ -382,12 +408,14 @@ BEGIN
           , COALESCE (tmpMov.Mov_Count,0)   ::TFloat     AS Mov_Count           -- кол-во документов 
           , COALESCE (tmpMI.MI_Count,0)     ::TFloat     AS MI_Count            -- кол-во мувИтемов
             -- итого кол-во действий
-          , (COALESCE (tmpMov.All_Count,0) + COALESCE (tmpMI.All_Count,0)) :: TFloat AS Count
+          , (COALESCE (tmpMov.All_Count,0) + COALESCE (tmpMI.All_Count,0) -  COALESCE (tmpCount_Status.Count,0)) :: TFloat AS Count             --без операций проведения
           --, tmpLoginProtocol.Minute_Diff  :: TFloat AS Count
             -- отработал - Кол-во часов (по вх/вых)
-          , CAST (tmpLoginProtocol.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Prog
+          , CAST (tmpLoginProtocol.Minute_calc / 60 AS NUMERIC (16, 2))    :: TFloat AS Count_Prog
             -- отработал - Кол-во часов (по док.)
-          , CAST (tmpTimeMotion.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Work
+          , CAST (tmpTimeMotion.Minute_calc / 60 AS NUMERIC (16, 2))       :: TFloat AS Count_Work 
+          
+          , COALESCE (tmpCount_Status.Count,0)                             :: TFloat AS Count_status 
 
 
             -- отработал - Кол-во часов (по вх/вых)
@@ -441,7 +469,10 @@ BEGIN
           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpUser.MemberId
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpUser.PositionId
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
-          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId 
+          
+          LEFT JOIN tmpCount_Status ON tmpCount_Status.UserId = tmpUser.UserId
+                                   AND tmpCount_Status.OperDate = tmpDay.OperDate
      -- WHERE COALESCE (tmpLoginProtocol.OperDate_Entry , zc_DateStart() ) <> zc_DateStart() 
     UNION 
      -- добавляем сотрудников, которые не работали в программе в рабочие дни согласно графиков работы
@@ -483,12 +514,14 @@ BEGIN
           , 0     :: TFloat AS Count_Prog
             -- отработал - Кол-во часов (по док.)
           , 0     :: TFloat AS Count_Work
+           --проведение документа 
+          , 0     :: TFloat AS Count_status
 
             -- отработал - Кол-во часов (по вх/вых)
           , '00:00'  ::TVarChar  AS Time_Prog
             -- отработал - Кол-во часов (по док.) 
           , '00:00'  ::TVarChar  AS Time_Work
-         
+          
             -- Подсвечиваем красным если человек не работает
           , zc_Color_Red() AS Color_Calc
           
@@ -533,3 +566,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_UserProtocol (inStartDate:= '07.11.2022', inEndDate:= '11.11.2022', inBranchId:= 0, inUnitId:= 0 , inUserId:= 0, inIsDay:=False,  inIsShowAll:= FALSE, inDiff:= 0, inSession:= '5');
+-- select * from gpReport_UserProtocol(inStartDate := ('06.12.2023')::TDateTime , inEndDate := ('07.12.2023')::TDateTime , inBranchId := 0 , inUnitId := 0 , inUserId := 9761338 , inisDay := True , inisShowAll := True , inDiff := 10 ,  inSession := '9457':: TVarchar);

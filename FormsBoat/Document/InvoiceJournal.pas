@@ -67,9 +67,8 @@ type
     DescName_parent: TcxGridDBColumn;
     actOpenIncomeCostByInvoice: TdsdOpenForm;
     bbOpenIncomeCostByInvoice: TdxBarButton;
-    bb: TdxBarButton;
+    bbtPrint: TdxBarButton;
     Panel_btn: TPanel;
-    btnInsert: TcxButton;
     btnUpdate: TcxButton;
     btnComplete: TcxButton;
     btnUnComplete: TcxButton;
@@ -96,16 +95,39 @@ type
     cxGrid_Item: TcxGrid;
     cxGridDBTableView_Det: TcxGridDBTableView;
     Article_ch4: TcxGridDBColumn;
-    ObjectCode_ch4: TcxGridDBColumn;
-    ObjectName_ch4: TcxGridDBColumn;
+    GoodsCode_ch4: TcxGridDBColumn;
+    GoodsName_ch4: TcxGridDBColumn;
     OperPrice_ch4: TcxGridDBColumn;
     Amount_ch4: TcxGridDBColumn;
     Comment_ch4: TcxGridDBColumn;
     isErased_ch4: TcxGridDBColumn;
     cxGridLevel_Det: TcxGridLevel;
-    cxSplitter_Bottom_Detail: TcxSplitter;
     actSetVisible_Grid_Item: TBooleanSetVisibleAction;
     cxButton5: TcxButton;
+    actInsertAction: TdsdInsertUpdateAction;
+    actUpdateAction: TdsdInsertUpdateAction;
+    mactUpdateAction: TMultiAction;
+    mactInsertAction: TMultiAction;
+    bbsGoods: TdxBarSubItem;
+    bbInsertAction: TdxBarButton;
+    bbUpdateAction: TdxBarButton;
+    spErasedMIMaster: TdsdStoredProc;
+    spUnErasedMIMaster: TdsdStoredProc;
+    actSetErasedItem: TdsdUpdateErased;
+    actSetUnErasedItem: TdsdUpdateErased;
+    bbSetUnErased: TdxBarButton;
+    bbSetErasedItem: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    cxSplitter_Bottom_Item: TcxSplitter;
+    actInsert_PrePay: TdsdInsertUpdateAction;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    actInsert_Pay: TdsdInsertUpdateAction;
+    cxButton6: TcxButton;
+    actInsert_Service: TdsdInsertUpdateAction;
+    actInsert_Proforma: TdsdInsertUpdateAction;
+    cxButton7: TcxButton;
+    cxButton8: TcxButton;
   private
     { Private declarations }
   public

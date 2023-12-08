@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice(
     IN inMovementId        Integer  , -- ключ Документа 
     IN inMovementId_OrderClient Integer,
     IN inProductId         Integer,
     IN inClientId          Integer,
-    IN inOperDate          TDateTime , --
+    IN inOperDate          TDateTime ,
+    IN inInvoiceKindDesc   TVarChar  ,--
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
@@ -68,8 +70,8 @@ BEGIN
            , NULL :: TDateTime          AS PlanDate
            , lfObject_Status.Code       AS StatusCode
            , lfObject_Status.Name       AS StatusName
-           , 0                          AS InvoiceKindId
-           , CAST ('' as TVarChar)      AS InvoiceKindName
+           , Object_InvoiceKind.Id        AS InvoiceKindId
+           , Object_InvoiceKind.ValueData AS InvoiceKindName
            , FALSE                      AS isAuto
 
            , 0::TFloat                  AS VATPercent
@@ -110,6 +112,13 @@ BEGIN
                                 ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
                                AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+           
+           LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = CASE WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_PrePay'   THEN zc_Enum_InvoiceKind_PrePay()
+                                                                                  WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_Pay'      THEN zc_Enum_InvoiceKind_Pay()
+                                                                                  WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_Proforma' THEN zc_Enum_InvoiceKind_Proforma()
+                                                                                  WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_Service'  THEN zc_Enum_InvoiceKind_Service()
+                                                                                  ELSE 0
+                                                                             END
       ;
      ELSE
 
@@ -256,4 +265,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 1, inMovementId_OrderClient :=0, inProductId:=0, inClientId:=0, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 1, inMovementId_OrderClient :=0, inProductId:=0, inClientId:=0, inOperDate:= NULL :: TDateTime, inInvoiceKindDesc:= 0, inSession:= zfCalc_UserAdmin());

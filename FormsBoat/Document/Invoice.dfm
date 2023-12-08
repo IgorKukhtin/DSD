@@ -652,6 +652,13 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindDesc'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 47
     Top = 335
@@ -831,6 +838,15 @@
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceKindDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvoiceKindDesc'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

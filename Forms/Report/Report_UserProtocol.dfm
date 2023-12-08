@@ -6,8 +6,6 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -254
-  ExplicitTop = -98
   ExplicitWidth = 903
   ExplicitHeight = 591
   PixelsPerInch = 96
@@ -56,6 +54,11 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
               Format = ',0.####'
               Kind = skSum
               Column = Count
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_status
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -87,6 +90,11 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
               Format = ',0.####'
               Kind = skSum
               Column = Count
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_status
             end>
           OptionsData.Deleting = False
           OptionsData.Editing = False
@@ -210,6 +218,18 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Count_status: TcxGridDBColumn
+            Caption = #1048#1079#1084'. '#1089#1090#1072#1090#1091#1089#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'Count_status'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1072' '#1076#1086#1082')'
+            Options.Editing = False
+            Width = 85
           end
           object Mov_Count: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082'.'
@@ -346,6 +366,10 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
           object serCount: TcxGridDBChartSeries
             DataBinding.FieldName = 'Count'
             DisplayText = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081
+          end
+          object serCount_status: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Count_status'
+            DisplayText = #1048#1079#1084'. '#1089#1090#1072#1090#1091#1089#1072' '#1076#1086#1082'.'
           end
           object serMov_Count: TcxGridDBChartSeries
             DataBinding.FieldName = 'Mov_Count'
@@ -571,7 +595,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -579,7 +603,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -678,7 +702,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -686,7 +710,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -745,7 +769,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         end
         item
           Name = 'isDay'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -806,7 +830,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       end
       item
         Name = 'inisDay'
-        Value = 'True'
+        Value = True
         Component = cbisDay
         DataType = ftBoolean
         ParamType = ptInput
@@ -1061,14 +1085,14 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       end
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','

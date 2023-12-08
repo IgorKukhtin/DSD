@@ -351,7 +351,6 @@ end;
 
 procedure TLoadFormTest.LoadInvoiceFormTest;
 begin
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
 
@@ -361,6 +360,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalChoiceForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceItemEditForm');
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;

@@ -11,12 +11,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice_Item(
 )
 RETURNS TABLE (MovementId Integer
              , Id         Integer
-             , ObjectId   Integer
-             , ObjectCode Integer
-             , ObjectName TVarChar
-             , Article TVarChar
+             , GoodsId    Integer
+             , GoodsCode  Integer
+             , GoodsName  TVarChar
+             , Article    TVarChar
              , Amount     TFloat
              , OperPrice  TFloat
+             , Summà      TFloat
              , Comment    TVarChar
              , isErased   Boolean
              )
@@ -47,17 +48,19 @@ BEGIN
                       WHERE MovementLinkObject_Object.ObjectId = inClientId
                         OR COALESCE (inClientId,0) = 0 
                       )
+
        -- Ðåçóëüòàò
-       SELECT Movement.Id                 AS MovementId
-            , MovementItem.Id             AS Id
-            , MovementItem.ObjectId       AS ObjectId
-            , Object_Object.ObjectCode    AS ObjectCode
-            , Object_Object.ValueData     AS ObjectName  
+       SELECT Movement.Id                     AS MovementId
+            , MovementItem.Id                 AS Id
+            , MovementItem.ObjectId           AS GoodsId
+            , Object_Goods.ObjectCode         AS GoodsCode
+            , Object_Goods.ValueData          AS GoodsName  
             , ObjectString_Article.ValueData  AS Article
             , MovementItem.Amount         ::TFloat AS Amount  
             , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice
-            , MIString_Comment.ValueData  AS Comment
-            , MovementItem.isErased       AS isErased
+            , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summà
+            , MIString_Comment.ValueData      AS Comment
+            , MovementItem.isErased           AS isErased
  
        FROM tmpMovement AS Movement
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
@@ -69,7 +72,8 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-            LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
+
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId
