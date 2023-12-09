@@ -367,7 +367,10 @@ uses
   ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
   ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
   BankAccountMovement in '..\..\FormsBoat\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
-  IncomeJournalByInvoice in '..\..\FormsBoat\Document\IncomeJournalByInvoice.pas' {IncomeJournalByInvoiceForm: TParentForm};
+  IncomeJournalByInvoice in '..\..\FormsBoat\Document\IncomeJournalByInvoice.pas' {IncomeJournalByInvoiceForm: TParentForm},
+  InvoiceKind in '..\..\FormsBoat\Kind\InvoiceKind.pas' {InvoiceKindForm: TParentForm},
+  InvoiceKindEdit in '..\..\FormsBoat\Kind\InvoiceKindEdit.pas' {InvoiceKindEditForm: TParentForm},
+  InvoiceItemEdit in '..\..\FormsBoat\Document\InvoiceItemEdit.pas' {InvoiceItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

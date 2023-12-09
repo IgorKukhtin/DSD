@@ -14,6 +14,9 @@ RETURNS TABLE (Id              Integer
              , PlanDate        TDateTime
              , StatusCode      Integer
              , StatusName      TVarChar
+             , InvoiceKindId   Integer
+             , InvoiceKindName TVarChar
+             , isAuto          Boolean
              , AmountIn         TFloat
              , AmountOut        TFloat
              , AmountIn_NotVAT  TFloat
@@ -109,7 +112,10 @@ BEGIN
       , tmpData.OperDate
       , tmpData.PlanDate
       , tmpData.StatusCode
-      , tmpData.StatusName
+      , tmpData.StatusName 
+      , tmpData.InvoiceKindId
+      , tmpData.InvoiceKindName
+      , tmpData.isAuto 
         -- с НДС
       , tmpData.AmountIn
       , tmpData.AmountOut
@@ -180,6 +186,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.12.23         *
  12.05.21         *
 */
 

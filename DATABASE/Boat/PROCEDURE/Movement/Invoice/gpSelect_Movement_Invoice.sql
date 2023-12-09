@@ -18,6 +18,9 @@ RETURNS TABLE (Id              Integer
              , PlanDate        TDateTime
              , StatusCode      Integer
              , StatusName      TVarChar
+             , InvoiceKindId   Integer
+             , InvoiceKindName TVarChar
+             , isAuto          Boolean
              , AmountIn         TFloat
              , AmountOut        TFloat
              , AmountIn_NotVAT  TFloat
@@ -112,6 +115,13 @@ BEGIN
                                                              )
                            )
 
+     , tmpMovementBoolean AS (SELECT MovementBoolean.*
+                              FROM MovementBoolean
+                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementBoolean.DescId IN (zc_MovementBoolean_Auto()
+                                                              )
+                             )
+
      , tmpMLO AS (SELECT MovementLinkObject.*
                   FROM MovementLinkObject
                   WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -120,6 +130,7 @@ BEGIN
                                                      , zc_MovementLinkObject_InfoMoney()
                                                      --, zc_MovementLinkObject_Product()
                                                      , zc_MovementLinkObject_PaidKind()
+                                                     , zc_MovementLinkObject_InvoiceKind()
                                                       )
                   )
        -- Âñå äîêóìåíòû, â êîòîðûõ óêàçàí ýòîò Ñ÷åò, âîçüìåì ïåðâûé
@@ -162,7 +173,9 @@ BEGIN
                        , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
                        , Object_Status.ObjectCode                            AS StatusCode
                        , Object_Status.ValueData                             AS StatusName
-
+                       , Object_InvoiceKind.Id                               AS InvoiceKindId
+                       , Object_InvoiceKind.ValueData                        AS InvoiceKindName
+                       , COALESCE (MovementBoolean_Auto.ValueData, FALSE) ::Boolean AS isAuto
                          -- ñ ÍÄÑ
                        , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
                        , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
@@ -266,6 +279,10 @@ BEGIN
                                                      ON MovementString_Comment.MovementId = Movement.Id
                                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+                         LEFT JOIN tmpMovementBoolean AS MovementBoolean_Auto
+                                                      ON MovementBoolean_Auto.MovementId = Movement.Id
+                                                     AND MovementBoolean_Auto.DescId = zc_MovementBoolean_Auto()
+
                          LEFT JOIN tmpMLO AS MovementLinkObject_Object
                                           ON MovementLinkObject_Object.MovementId = Movement.Id
                                          AND MovementLinkObject_Object.DescId = zc_MovementLinkObject_Object()
@@ -292,6 +309,11 @@ BEGIN
                                           ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                          AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+                         LEFT JOIN tmpMLO AS MovementLinkObject_InvoiceKind
+                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                         LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
 
                          LEFT JOIN MovementDate AS MovementDate_Insert
                                                 ON MovementDate_Insert.MovementId = Movement.Id
@@ -341,6 +363,9 @@ BEGIN
       , tmpData.PlanDate
       , tmpData.StatusCode
       , tmpData.StatusName
+      , tmpData.InvoiceKindId
+      , tmpData.InvoiceKindName
+      , tmpData.isAuto 
         -- ñ ÍÄÑ
       , tmpData.AmountIn
       , tmpData.AmountOut
@@ -436,6 +461,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 06.12.23         *
  02.02.21         *
 */
 

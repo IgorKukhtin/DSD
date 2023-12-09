@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCheckBox;
 
 type
   TInvoiceForm = class(TAncestorEditDialog_boatForm)
@@ -69,6 +70,10 @@ type
     actObjectChoiceForm: TOpenChoiceForm;
     btnGuidesParentChoiceForm: TcxButton;
     actGuidesParentChoiceForm: TOpenChoiceForm;
+    cbAuto: TcxCheckBox;
+    cxLabel8: TcxLabel;
+    edInvoiceKind: TcxButtonEdit;
+    GuidesInvoiceKind: TdsdGuides;
   private
     { Private declarations }
   public

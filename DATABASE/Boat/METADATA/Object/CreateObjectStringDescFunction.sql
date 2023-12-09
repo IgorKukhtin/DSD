@@ -351,9 +351,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ProdColor_Value() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ProdColor_Value', zc_Object_ProdColor(), 'Значение цвета' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdColor_Value');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_InvoiceKind_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InvoiceKind_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_InvoiceKind_Comment', zc_Object_ProductDocument(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InvoiceKind_Comment');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 06.12.23         * zc_ObjectString_InvoiceKind_Comment
  15.11.23         * zc_ObjectString_Partner_Street_add
                     zc_ObjectString_Client_Street_add
  07.10.22         * zc_ObjectString_ReceiptLevel_ObjectDesc

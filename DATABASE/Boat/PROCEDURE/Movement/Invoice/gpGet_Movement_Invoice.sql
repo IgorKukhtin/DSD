@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice(
     IN inMovementId        Integer  , -- êëþ÷ Äîêóìåíòà 
     IN inMovementId_OrderClient Integer,
     IN inProductId         Integer,
     IN inClientId          Integer,
-    IN inOperDate          TDateTime , --
+    IN inOperDate          TDateTime ,
+    IN inInvoiceKindDesc   TVarChar  ,--
     IN inSession           TVarChar   -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
@@ -16,6 +18,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , PlanDate        TDateTime
              , StatusCode      Integer
              , StatusName      TVarChar
+             , InvoiceKindId   Integer
+             , InvoiceKindName TVarChar
+             , isAuto          Boolean
+             
              , VATPercent      TFloat
              , AmountIn        TFloat
              , AmountOut       TFloat
@@ -64,6 +70,9 @@ BEGIN
            , NULL :: TDateTime          AS PlanDate
            , lfObject_Status.Code       AS StatusCode
            , lfObject_Status.Name       AS StatusName
+           , Object_InvoiceKind.Id        AS InvoiceKindId
+           , Object_InvoiceKind.ValueData AS InvoiceKindName
+           , FALSE                      AS isAuto
 
            , 0::TFloat                  AS VATPercent
            , 0::TFloat                  AS AmountIn
@@ -103,6 +112,13 @@ BEGIN
                                 ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
                                AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+           
+           LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = CASE WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_PrePay'   THEN zc_Enum_InvoiceKind_PrePay()
+                                                                                  WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_Pay'      THEN zc_Enum_InvoiceKind_Pay()
+                                                                                  WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_Proforma' THEN zc_Enum_InvoiceKind_Proforma()
+                                                                                  WHEN inInvoiceKindDesc = 'zc_Enum_InvoiceKind_Service'  THEN zc_Enum_InvoiceKind_Service()
+                                                                                  ELSE 0
+                                                                             END
       ;
      ELSE
 
@@ -128,6 +144,10 @@ BEGIN
          , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
          , Object_Status.ObjectCode                            AS StatusCode
          , Object_Status.ValueData                             AS StatusName
+         , Object_InvoiceKind.Id                               AS InvoiceKindId
+         , Object_InvoiceKind.ValueData                        AS InvoiceKindName
+         , COALESCE (MovementBoolean_Auto.ValueData, FALSE) ::Boolean AS isAuto         
+         
          , COALESCE (MovementFloat_VATPercent.ValueData, 0)    ::TFloat      AS VATPercent
          , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN MovementFloat_Amount.ValueData      ELSE 0 END::TFloat AS AmountIn
          , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
@@ -178,6 +198,10 @@ BEGIN
                                     ON MovementString_Comment.MovementId = Movement.Id
                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+           LEFT JOIN MovementBoolean AS MovementBoolean_Auto
+                                     ON MovementBoolean_Auto.MovementId = Movement.Id
+                                    AND MovementBoolean_Auto.DescId = zc_MovementBoolean_Auto()
+
            --  Client or Partner
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Object
                                         ON MovementLinkObject_Object.MovementId = Movement.Id
@@ -198,6 +222,12 @@ BEGIN
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                        ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                       AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+           LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
+
 
            -- Parent - åñëè "íàøëè"
            LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice
@@ -230,8 +260,9 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 06.12.23         *
  03.02.21         *
 */
 
 -- òåñò
--- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 1, inMovementId_OrderClient :=0, inProductId:=0, inClientId:=0, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 1, inMovementId_OrderClient :=0, inProductId:=0, inClientId:=0, inOperDate:= NULL :: TDateTime, inInvoiceKindDesc:= 0, inSession:= zfCalc_UserAdmin());

@@ -500,8 +500,7 @@ BEGIN
                                     WHERE tmpReceipt_UnitChild.UnitChildId > 0 
                                     GROUP BY tmpReceipt_UnitChild.GoodsId
                                     )
-
-                                                 
+            
            -- товар сборки
          , tmpGoods_receipt AS (SELECT tmp.GoodsId
                                      , Object_Goods.ValueData AS GoodsName_receipt

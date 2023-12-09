@@ -307,6 +307,8 @@ type
     actProductionUnion_noDialog: TdsdOpenForm;
     actInvoiceJournal_noDialog: TdsdOpenForm;
     actBankAccountJournal_noDialog: TdsdOpenForm;
+    actInvoiceKindEdit: TdsdOpenForm;
+    N1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private

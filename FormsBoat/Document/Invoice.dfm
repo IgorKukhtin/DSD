@@ -1,23 +1,23 @@
 ﻿inherited InvoiceForm: TInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
-  ClientHeight = 537
+  ClientHeight = 534
   ClientWidth = 399
   AddOnFormData.isSingle = False
   ExplicitWidth = 405
-  ExplicitHeight = 566
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 105
-    Top = 505
+    Top = 499
     ExplicitLeft = 105
-    ExplicitTop = 505
+    ExplicitTop = 499
   end
   inherited bbCancel: TcxButton
     Left = 208
-    Top = 504
+    Top = 499
     ExplicitLeft = 208
-    ExplicitTop = 504
+    ExplicitTop = 499
   end
   object Код: TcxLabel [2]
     Left = 15
@@ -25,12 +25,12 @@
     Caption = 'Interne Nr'
   end
   object cxLabel1: TcxLabel [3]
-    Left = 150
+    Left = 178
     Top = 5
     Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object ceOperDate: TcxDateEdit [4]
-    Left = 150
+    Left = 178
     Top = 25
     EditValue = 44230d
     Properties.SaveTime = False
@@ -40,7 +40,7 @@
   end
   object ceAmountIn: TcxCurrencyEdit [5]
     Left = 15
-    Top = 128
+    Top = 123
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 4
@@ -48,12 +48,12 @@
   end
   object cxLabel7: TcxLabel [6]
     Left = 15
-    Top = 108
+    Top = 103
     Caption = 'Debet'
   end
   object ceAmountOut: TcxCurrencyEdit [7]
     Left = 111
-    Top = 128
+    Top = 123
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 5
@@ -61,17 +61,17 @@
   end
   object cxLabel3: TcxLabel [8]
     Left = 111
-    Top = 108
+    Top = 103
     Caption = 'Kredit'
   end
   object cxLabel6: TcxLabel [9]
     Left = 15
-    Top = 155
+    Top = 150
     Caption = 'Lieferanten / Kunden'
   end
   object ceObject: TcxButtonEdit [10]
     Left = 14
-    Top = 175
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -83,13 +83,13 @@
   end
   object cxLabel5: TcxLabel [11]
     Left = 15
-    Top = 206
+    Top = 201
     Hint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 15
-    Top = 228
+    Top = 223
     Properties.Buttons = <
       item
         Default = True
@@ -101,24 +101,23 @@
   end
   object cxLabel10: TcxLabel [13]
     Left = 15
-    Top = 404
+    Top = 399
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [14]
     Left = 15
-    Top = 425
+    Top = 420
     TabOrder = 9
     Width = 375
   end
   object cxLabel9: TcxLabel [15]
-    Left = 151
-    Top = 396
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-    Visible = False
+    Left = 291
+    Top = 55
+    Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
   end
   object edPaidKind: TcxButtonEdit [16]
     Left = 223
-    Top = 400
+    Top = 395
     Properties.Buttons = <
       item
         Default = True
@@ -135,11 +134,11 @@
     Properties.ReadOnly = True
     TabOrder = 17
     Text = '0'
-    Width = 100
+    Width = 96
   end
   object ceUnit: TcxButtonEdit [18]
     Left = 15
-    Top = 275
+    Top = 270
     Properties.Buttons = <
       item
         Default = True
@@ -151,17 +150,17 @@
   end
   object cxLabel14: TcxLabel [19]
     Left = 15
-    Top = 255
+    Top = 250
     Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
   end
   object cxLabel15: TcxLabel [20]
     Left = 15
-    Top = 352
+    Top = 347
     Caption = 'Boat'
   end
   object ceProduct: TcxButtonEdit [21]
     Left = 15
-    Top = 373
+    Top = 368
     Properties.Buttons = <
       item
         Default = True
@@ -189,41 +188,41 @@
   end
   object cxLabel18: TcxLabel [24]
     Left = 15
-    Top = 54
+    Top = 55
     Caption = 'Externe Nr'
   end
   object edInvNumberPartner: TcxTextEdit [25]
     Left = 15
-    Top = 74
+    Top = 75
     Hint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1083#1080#1077#1085#1090#1072
     ParentShowHint = False
     ShowHint = True
     TabOrder = 25
-    Width = 155
+    Width = 130
   end
   object cxLabel19: TcxLabel [26]
-    Left = 208
-    Top = 54
+    Left = 156
+    Top = 55
     Caption = 'Quittung Nr'
   end
   object edReceiptNumber: TcxTextEdit [27]
-    Left = 208
-    Top = 74
+    Left = 156
+    Top = 75
     Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
     TabOrder = 27
-    Width = 182
+    Width = 124
   end
   object cxLabel2: TcxLabel [28]
     Left = 211
-    Top = 108
+    Top = 103
     Caption = '% '#1053#1044#1057
   end
   object edVATPercent: TcxCurrencyEdit [29]
     Left = 211
-    Top = 128
+    Top = 123
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
@@ -232,12 +231,12 @@
   end
   object cxLabel4: TcxLabel [30]
     Left = 15
-    Top = 302
+    Top = 297
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object ceParent: TcxButtonEdit [31]
     Left = 16
-    Top = 325
+    Top = 320
     Properties.Buttons = <
       item
         Default = True
@@ -249,12 +248,12 @@
   end
   object cxLabel44: TcxLabel [32]
     Left = 273
-    Top = 108
+    Top = 103
     Caption = #1042#1080#1076' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit [33]
     Left = 273
-    Top = 128
+    Top = 123
     Properties.Buttons = <
       item
         Default = True
@@ -266,7 +265,7 @@
   end
   object btnGoodsChoiceForm: TcxButton [34]
     Left = 15
-    Top = 465
+    Top = 460
     Width = 180
     Height = 25
     Action = actObjectChoiceForm
@@ -276,7 +275,7 @@
   end
   object btnGuidesParentChoiceForm: TcxButton [35]
     Left = 208
-    Top = 465
+    Top = 460
     Width = 180
     Height = 25
     Action = actGuidesParentChoiceForm
@@ -284,17 +283,43 @@
     ShowHint = True
     TabOrder = 35
   end
+  object cbAuto: TcxCheckBox [36]
+    Left = 121
+    Top = 25
+    Caption = 'Auto'
+    Properties.ReadOnly = True
+    TabOrder = 36
+    Width = 49
+  end
+  object cxLabel8: TcxLabel [37]
+    Left = 158
+    Top = 403
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    Visible = False
+  end
+  object edInvoiceKind: TcxButtonEdit [38]
+    Left = 290
+    Top = 75
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 38
+    Width = 100
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
-    Top = 324
+    Top = 319
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 183
-    Top = 188
+    Top = 183
   end
   inherited ActionList: TActionList
     Left = 237
-    Top = 171
+    Top = 166
     object actGetPlanDate: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -627,9 +652,16 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindDesc'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 47
-    Top = 340
+    Top = 335
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Invoice'
@@ -753,8 +785,17 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 327
+    Top = 219
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice'
@@ -797,6 +838,15 @@
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceKindDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvoiceKindDesc'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -967,9 +1017,31 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 32
+    Left = 56
+    Top = 0
   end
   object GuidesObject: TdsdGuides
     KeyField = 'Id'
@@ -1086,7 +1158,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 107
-    Top = 165
+    Top = 160
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -1113,7 +1185,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 231
-    Top = 258
+    Top = 253
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1139,8 +1211,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 258
-    Top = 385
+    Left = 330
+    Top = 388
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1167,7 +1239,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 159
-    Top = 215
+    Top = 210
   end
   object GuidesProduct: TdsdGuides
     KeyField = 'Id'
@@ -1240,7 +1312,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 115
-    Top = 359
+    Top = 354
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1250,8 +1322,8 @@
       item
         Component = GuidesObject
       end>
-    Left = 96
-    Top = 64
+    Left = 56
+    Top = 72
   end
   object spGetPlanDate: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice_PlanDate'
@@ -1282,8 +1354,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 40
+    Left = 176
+    Top = 56
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -1426,7 +1498,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 155
-    Top = 303
+    Top = 298
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -1456,6 +1528,33 @@
         MultiSelectSeparator = ','
       end>
     Left = 269
-    Top = 207
+    Top = 202
+  end
+  object GuidesInvoiceKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvoiceKind
+    FormNameParam.Value = 'TInvoiceKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 346
+    Top = 65
   end
 end

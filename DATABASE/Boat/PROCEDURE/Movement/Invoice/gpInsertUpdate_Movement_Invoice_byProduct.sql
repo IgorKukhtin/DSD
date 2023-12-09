@@ -58,6 +58,7 @@ BEGIN
                                            , inUnitId           := Null                                ::Integer
                                            , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
                                            , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
+                                           , inInvoiceKindId    := zc_Enum_InvoiceKind_Pay()           ::Integer
                                            , inUserId           := vbUserId
                                            )
             FROM Object AS Object_Client

@@ -297,8 +297,8 @@ object PriceListItemEditForm: TPriceListItemEditForm
     Caption = 'CatalogPage'
   end
   object cbOutlet: TcxCheckBox
-    Left = 354
-    Top = 122
+    Left = 355
+    Top = 124
     Caption = 'Outlet'
     TabOrder = 30
     Width = 61
