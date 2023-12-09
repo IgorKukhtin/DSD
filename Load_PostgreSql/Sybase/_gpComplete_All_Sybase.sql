@@ -16,7 +16,7 @@ $BODY$
   DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
-     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+     --***vbOperDate_Begin1:= CLOCK_TIMESTAMP();
 
      -- нашли
      SELECT DescId, StatusId, OperDate INTO vbMovementDescId, vbStatusId, vbOperDate FROM Movement WHERE Id = inMovementId;
@@ -350,7 +350,8 @@ BEGIN
 
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+     --***
+     /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -391,7 +392,7 @@ BEGIN
              , inMovementId :: TVarChar
         || ' ' || COALESCE ((SELECT Object.ValueData FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()), '')
      || ' => ' || COALESCE ((SELECT Object.ValueData FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To()), '')
-              ;
+              ;*/
 
 -- SELECT OperDate AS T_start, Time5 AS T_end, Time1 AS diff, Value1 AS ProcessCount, Value2 AS ProcessVAC, ProcName, ProtocolData FROM ResourseProtocol WHERE OperDate >= '26.11.2023' AND UserId = zc_Enum_Process_Auto_PrimeCost() :: Integer ORDER BY OperDate
 
