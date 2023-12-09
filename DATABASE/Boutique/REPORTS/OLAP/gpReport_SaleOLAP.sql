@@ -1060,11 +1060,28 @@ BEGIN
                                , CASE WHEN inIsOperPrice    = TRUE THEN Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 :: TFloat END AS OperPrice
 
                                  -- Приход от поставщика - только для UnitId
-                               , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - COALESCE (tmpReturnOut.Amount, 0)) ELSE 0 END AS Income_Amount
-                               , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - COALESCE (tmpReturnOut.Amount, 0)) * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS Income_Summ
+                               , CASE WHEN _tmpUnit.UnitId > 0
+                                       AND (inIsPeriodAll = TRUE OR Object_PartionGoods.OperDate BETWEEN inStartDate AND inEndDate)
+                                           THEN (Object_PartionGoods.Amount - COALESCE (tmpReturnOut.Amount, 0))
+                                      ELSE 0
+                                 END AS Income_Amount
+                               , CASE WHEN _tmpUnit.UnitId > 0
+                                       AND (inIsPeriodAll = TRUE OR Object_PartionGoods.OperDate BETWEEN inStartDate AND inEndDate)
+                                           THEN (Object_PartionGoods.Amount - COALESCE (tmpReturnOut.Amount, 0)) * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                      ELSE 0
+                                 END AS Income_Summ
+
                                  -- Приход от поставщика - только для UnitId
-                               , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - 0) ELSE 0 END AS IncomeReal_Amount
-                               , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - 0) * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS IncomeReal_Summ
+                               , CASE WHEN _tmpUnit.UnitId > 0
+                                       AND (inIsPeriodAll = TRUE OR Object_PartionGoods.OperDate BETWEEN inStartDate AND inEndDate)
+                                           THEN (Object_PartionGoods.Amount - 0)
+                                      ELSE 0
+                                 END AS IncomeReal_Amount
+                               , CASE WHEN _tmpUnit.UnitId > 0
+                                       AND (inIsPeriodAll = TRUE OR Object_PartionGoods.OperDate BETWEEN inStartDate AND inEndDate)
+                                          THEN (Object_PartionGoods.Amount - 0) * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                      ELSE 0
+                                 END AS IncomeReal_Summ
 
                                  -- Остаток - без учета "долга"
                                , 0 AS Remains_Amount
@@ -1196,6 +1213,8 @@ BEGIN
                           WHERE (_tmpUnit.UnitId > 0 OR inPartnerId <> 0 OR inBrandId <> 0)
                             AND (Object_PartionGoods.MovementItemId IN (SELECT tmpSale_all.PartionId FROM tmpSale_all)
                               OR inIsPeriodAll = TRUE
+                              OR Object_PartionGoods.OperDate BETWEEN inStartDate AND inEndDate
+                            --OR 1=1
                                 )
 
                          UNION ALL
