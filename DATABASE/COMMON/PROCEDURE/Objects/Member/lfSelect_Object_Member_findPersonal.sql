@@ -35,11 +35,11 @@ BEGIN
                                , COALESCE (ObjectBoolean_Main.ValueData, FALSE) AS isMain
                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
                                                     -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
-                                                    ORDER BY CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
+                                                    ORDER BY CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
+                                                           , CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
                                                            , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
                                                            -- , CASE WHEN ObjectLink_PersonalServiceList.ChildObjectId > 0 THEN 0 ELSE 1 END
                                                            , CASE WHEN ObjectBoolean_Official.ValueData = TRUE THEN 0 ELSE 1 END
-                                                           , CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
                                                            , ObjectLink_Personal_Member.ObjectId
                                                    ) AS Ord
                                , ObjectDate_DateIn.ValueData                            AS DateIn
