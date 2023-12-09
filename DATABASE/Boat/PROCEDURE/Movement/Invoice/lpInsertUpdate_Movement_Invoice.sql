@@ -124,7 +124,7 @@ BEGIN
 
 
     -- если Счет был Создан
-    IF vbIsInsert = TRUE
+    IF vbIsInsert = TRUE AND inParentId > 0
     THEN
         -- в док. ParentId - это Заказ или Заказ сохраняеем связь со Счетом
         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);

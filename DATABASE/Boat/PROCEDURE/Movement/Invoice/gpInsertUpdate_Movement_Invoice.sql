@@ -48,7 +48,7 @@ BEGIN
 
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_Invoice (ioId               := ioId
-                                           , inParentId         := inParentId
+                                           , inParentId         := CASE WHEN inParentId > 0 THEN inParentId ELSE NULL END
                                            , inInvNumber        := inInvNumber
                                            , inOperDate         := inOperDate
                                            , inPlanDate         := inPlanDate

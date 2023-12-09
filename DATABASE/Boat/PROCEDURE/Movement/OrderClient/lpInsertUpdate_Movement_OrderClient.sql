@@ -100,7 +100,7 @@ BEGIN
      -- сохранили св€зь с документом <—чет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
-     IF vbIsInsert = TRUE
+     IF vbIsInsert = TRUE AND inProductId > 0
      THEN
          -- сохранили новое значение <NPP>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), ioId
