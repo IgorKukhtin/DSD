@@ -42,7 +42,8 @@ BEGIN
      END IF;
 
      -- проверка
-     IF inFIO = '-' AND COALESCE (inAmount, 0) = 0
+     IF (inFIO = '-' AND COALESCE (inAmount, 0) = 0)
+        OR (TRIM (inFIO) = '' AND TRIM (inPersonalServiceListName) = '' AND COALESCE (inAmount, 0) = 0)
      THEN
          RETURN;
      END IF;
@@ -185,7 +186,15 @@ BEGIN
      END IF;
 
       --находим Ведомость для распределения
-     vbPersonalServiceListId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PersonalServiceList() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalServiceListName));
+     vbPersonalServiceListId := (WITH tmpObject AS (SELECT Object.* FROM Object WHERE Object.DescId = zc_Object_PersonalServiceList())
+                                 SELECT Object.Id FROM tmpObject AS Object WHERE TRIM (Object.ValueData) ILIKE TRIM (inPersonalServiceListName)
+                                );
+     IF COALESCE (vbPersonalServiceListId, 0) = 0
+     THEN
+         vbPersonalServiceListId := (WITH tmpObject AS (SELECT Object.* FROM Object WHERE Object.DescId = zc_Object_PersonalServiceList())
+                                     SELECT Object.Id FROM tmpObject AS Object WHERE REPLACE (TRIM (Object.ValueData), CHR(39), '`') ILIKE REPLACE (TRIM (inPersonalServiceListName), CHR(39), '`')
+                                    );
+     END IF;
      IF COALESCE (vbPersonalServiceListId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Ведомость <%> не найдена для Сотрудника <%> должность = <%> и суммой <%> .', inPersonalServiceListName, inFIO, inPositionName, inAmount;

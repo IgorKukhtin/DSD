@@ -14,14 +14,38 @@ $BODY$
   DECLARE vbPartnerId_max Integer;
 BEGIN
      -- Проверка
-     IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0)
+     IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END)
+                FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/
+                HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0
+               )
      -- AND inUserId <> 5
      THEN
-         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)  (%)  os = (%) (%) (%) (%)'
+         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : % tr (%) + fl (%) = all (%)  %all-2 = (%) %count=(%) find=(%) %(%) = (%) + (%)  %Основные средства = (%) (%) (%) (%)'
+                       , CHR (13)
                        , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE IsMaster = TRUE)
                        , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE IsMaster = FALSE)
                        , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem)
+                       , CHR (13)
                        , (SELECT SUM (COALESCE (OperSumm, 0) + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem)
+                       , CHR (13)
+                       , (SELECT COUNT(*)
+                          FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ObjectId, SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END)
+                                FROM _tmpItem
+                                GROUP BY _tmpItem.MovementItemId, _tmpItem.ObjectId HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0
+                                ) AS tmpItem
+                         )
+                       , (SELECT lfGet_Object_ValueData (tmpItem.ObjectId)
+                          FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ObjectId, SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END)
+                                FROM _tmpItem
+                                GROUP BY _tmpItem.MovementItemId, _tmpItem.ObjectId HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0
+                                ) AS tmpItem
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem)
+                       , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END > 0)
+                       , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END < 0)
+                       , CHR (13)
                        , (SELECT SUM (coalesce (OperSumm_Asset, 0)) FROM _tmpItem where OperSumm_Asset > 0)
                        , (SELECT SUM (coalesce (OperSumm_Asset, 0)) FROM _tmpItem where OperSumm_Asset < 0)
                        , (SELECT SUM (coalesce (OperSumm_Diff_Asset, 0)) FROM _tmpItem where OperSumm_Diff_Asset > 0)

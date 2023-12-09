@@ -558,10 +558,15 @@ BEGIN
                                  , MIF.ValueData AS OperSumm_find
                             FROM _tmpItem
                                  INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId
-                                                                    AND MIF.DescId IN (zc_MIFloat_SummChild()
-                                                                                     , zc_MIFloat_SummMinusExt()
-                                                                                      )
-                            
+                                                                    AND MIF.DescId         = zc_MIFloat_SummChild()
+                            WHERE MIF.ValueData <> 0
+                           UNION ALL
+                            SELECT _tmpItem.*
+                                 , MIF.DescId    AS DescId_find
+                                 , MIF.ValueData AS OperSumm_find
+                            FROM _tmpItem
+                                 INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId
+                                                                    AND MIF.DescId         = zc_MIFloat_SummMinusExt()
                             WHERE MIF.ValueData <> 0
                            )
            ,  tmpMI_re AS (SELECT tmpMI_find.*, -1 * tmpMI_find.OperSumm_find AS OperSumm_re
@@ -690,6 +695,7 @@ BEGIN
 
         WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
           AND Object_ObjectTo.Id IS NULL
+
        UNION ALL
          -- 1.2.2. Перевыставление затрат на Юр Лицо - по ЗП
         SELECT _tmpItem.MovementDescId
@@ -818,7 +824,6 @@ BEGIN
              INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                  AND Object_ObjectTo.DescId = zc_Object_Founder()
 
-
        UNION ALL
         -- 1.3.1. ОПиУ по налогам - удержания с ЗП (или Учредителя) - !!!доход!!!
         SELECT _tmpItem.MovementDescId
@@ -879,7 +884,7 @@ BEGIN
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_50101() -- Налоговые платежи по ЗП - Отчисления
         WHERE MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0
 
-       UNION
+       UNION ALL
         -- 1.3.2.1. долг сотруднику по ЗП - удержания с ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
@@ -939,7 +944,7 @@ BEGIN
         WHERE MIF.ValueData <> 0 
           AND Object_ObjectTo.Id IS NULL
 
-       UNION
+       UNION ALL
         -- 1.3.2.2. долг сотруднику по ЗП - возмещение к ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
@@ -1059,6 +1064,7 @@ BEGIN
              INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                  AND Object_ObjectTo.DescId = zc_Object_Founder()
         WHERE MIF.ValueData <> 0
+
        UNION ALL
          -- 1.3.3.2. Перевыставление по возмещению налогов на Учредителя
         SELECT _tmpItem.MovementDescId

@@ -1441,7 +1441,7 @@ BEGIN
        -- документ Взвешивания
      , tmpMI_WeighingPartner AS (SELECT MovementItem.ObjectId                             AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
-                                      , COUNT(*)                                          AS Box_count
+                                      , SUM (CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN 1 ELSE 0 END) AS Box_count
                                  FROM Movement
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.DescId     = zc_MI_Master()
@@ -1450,6 +1450,11 @@ BEGIN
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                                     LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                                                   ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
+                                                                  AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+
                                  WHERE Movement.ParentId = inMovementId
                                    AND Movement.DescId   = zc_Movement_WeighingPartner()
                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -1679,7 +1684,7 @@ BEGIN
                    ELSE FALSE
               END :: Boolean AS isFozziTare
 
-            , CASE WHEN tmpMI_WeighingPartner.Box_count = 1 AND COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
+            , CASE WHEN tmpMI_WeighingPartner.Box_count <= 1 AND COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
                    THEN tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)
                    ELSE tmpMI_WeighingPartner.Box_count
               END :: Integer AS Box_count_calc
