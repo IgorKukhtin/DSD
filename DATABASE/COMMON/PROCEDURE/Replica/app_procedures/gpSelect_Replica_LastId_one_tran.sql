@@ -105,8 +105,8 @@ BEGIN
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
                      WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 20
-                                                                                                                            THEN vb_Query_start - INTERVAL '10 SEC'
-                                                                                                                            ELSE vb_Query_start - INTERVAL '10 SEC'
+                                                                                                                            THEN vb_Query_start - INTERVAL '120 SEC'
+                                                                                                                            ELSE vb_Query_start - INTERVAL '120 SEC'
                                                                                                                        END))
                     );
 
@@ -128,8 +128,8 @@ BEGIN
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
                      WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 20
-                                                                                                                            THEN vb_Query_start - INTERVAL '10 SEC'
-                                                                                                                            ELSE vb_Query_start - INTERVAL '10 SEC'
+                                                                                                                            THEN vb_Query_start - INTERVAL '120 SEC'
+                                                                                                                            ELSE vb_Query_start - INTERVAL '120 SEC'
                                                                                                                        END))
                     );
         -- если не вся транзакция - 1-ая попытка
@@ -1627,8 +1627,8 @@ END IF;
         -- если вышли за границу по времени
         IF EXISTS (SELECT last_modified FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End
                                                                           AND last_modified >= timezone('utc'::text, CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 20
-                                                                                                                          THEN vb_Query_start - INTERVAL '10 SEC'
-                                                                                                                          ELSE vb_Query_start - INTERVAL '10 SEC'
+                                                                                                                          THEN vb_Query_start - INTERVAL '120 SEC'
+                                                                                                                          ELSE vb_Query_start - INTERVAL '120 SEC'
                                                                                                                      END))
         THEN
             RAISE EXCEPTION 'Ошибка.Вышли за границу по времени % inId_start = <%> % vbId_End_start = <%>  % vbId_End = <%> % Start_count = <%> % curr_count = <%> % find_max = <%> % need_max = <%> % curr = <%> % step = <%>'
@@ -1648,8 +1648,8 @@ END IF;
                           , (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
                           , CHR (13)
                           , timezone('utc'::text, CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 20
-                                                            THEN vb_Query_start - INTERVAL '10 SEC'
-                                                            ELSE vb_Query_start - INTERVAL '10 SEC'
+                                                            THEN vb_Query_start - INTERVAL '120 SEC'
+                                                            ELSE vb_Query_start - INTERVAL '120 SEC'
                                                   END)
                           , CHR (13)
                           , timezone('utc'::text, CURRENT_TIMESTAMP)
@@ -1670,8 +1670,8 @@ END IF;
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
                      WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 20
-                                                                                                                            THEN vb_Query_start - INTERVAL '10 SEC'
-                                                                                                                            ELSE vb_Query_start - INTERVAL '10 SEC'
+                                                                                                                            THEN vb_Query_start - INTERVAL '120 SEC'
+                                                                                                                            ELSE vb_Query_start - INTERVAL '120 SEC'
                                                                                                                        END))
                     );
     END IF;
@@ -1693,8 +1693,8 @@ END IF;
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
                      WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 20
-                                                                                                                            THEN vb_Query_start - INTERVAL '10 SEC'
-                                                                                                                            ELSE vb_Query_start - INTERVAL '10 SEC'
+                                                                                                                            THEN vb_Query_start - INTERVAL '120 SEC'
+                                                                                                                            ELSE vb_Query_start - INTERVAL '120 SEC'
                                                                                                                        END))
                     );*/
 
