@@ -840,7 +840,7 @@ BEGIN
                                                                                     ELSE inOperDate
                                                                                END
                                                   , inInvNumberPartner      := ''
-                                                  , inPriceWithVAT          := CASE WHEN inBranchCode BETWEEN 301 AND 310
+                                                  , inPriceWithVAT          := CASE WHEN inBranchCode BETWEEN 1 AND 310
                                                                                          THEN COALESCE ((SELECT tmp.isPriceWithVAT
                                                                                                          FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
                                                                                                                                                                      THEN COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
