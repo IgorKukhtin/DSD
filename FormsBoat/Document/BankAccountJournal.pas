@@ -86,6 +86,7 @@ type
     edSearchInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    InvoiceKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1047,17 +1047,17 @@ object ProductEditForm: TProductEditForm
               Properties.Items = <
                 item
                   Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-                  ImageIndex = 11
+                  ImageIndex = 76
                   Value = 1
                 end
                 item
                   Description = #1055#1088#1086#1074#1077#1076#1077#1085
-                  ImageIndex = 12
+                  ImageIndex = 77
                   Value = 2
                 end
                 item
                   Description = #1059#1076#1072#1083#1077#1085
-                  ImageIndex = 13
+                  ImageIndex = 52
                   Value = 3
                 end>
               HeaderAlignmentHorz = taCenter
@@ -1078,9 +1078,17 @@ object ProductEditForm: TProductEditForm
               DataBinding.FieldName = 'InvNumber'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1054#1087#1083#1072#1090#1072
+              HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1056#1072#1089#1095#1077#1090#1099
               Options.Editing = False
               Width = 55
+            end
+            object InvoiceKindName_vh2: TcxGridDBColumn
+              Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+              DataBinding.FieldName = 'InvoiceKindName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
             end
             object InvNumber_Invoice_Full_ch2: TcxGridDBColumn
               Caption = '***Interne Nr'
@@ -1389,7 +1397,15 @@ object ProductEditForm: TProductEditForm
               Options.Editing = False
               Width = 70
             end
-            object colInvNumber: TcxGridDBColumn
+            object InvoiceKindName: TcxGridDBColumn
+              Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+              DataBinding.FieldName = 'InvoiceKindName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
+            object InvNumber: TcxGridDBColumn
               Caption = 'Interne Nr'
               DataBinding.FieldName = 'InvNumber'
               HeaderAlignmentHorz = taCenter
@@ -2332,7 +2348,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
+      ImageIndex = 77
       Status = mtComplete
       DataSource = BankDS
     end
@@ -2344,9 +2360,9 @@ object ProductEditForm: TProductEditForm
         item
           StoredProc = spMovementUnCompleteBank
         end>
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 11
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 76
       Status = mtUncomplete
       DataSource = BankDS
     end
@@ -2360,7 +2376,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 13
+      ImageIndex = 52
       Status = mtDelete
       DataSource = BankDS
     end

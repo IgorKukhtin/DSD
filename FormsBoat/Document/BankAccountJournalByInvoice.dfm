@@ -4,6 +4,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
   ClientWidth = 983
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -89
   ExplicitWidth = 999
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -282,6 +283,14 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Options.Editing = False
             Width = 100
           end
+          object InvoiceKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvoiceKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object ReceiptNumber_Invoice: TcxGridDBColumn
             Caption = '***Quittung Nr'
             DataBinding.FieldName = 'ReceiptNumber_Invoice'
@@ -303,6 +312,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
@@ -319,6 +329,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
@@ -355,9 +366,9 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Options.Editing = False
             Width = 128
           end
-          object DescName_Invoice: TcxGridDBColumn
+          object ObjectDescName_Invoice: TcxGridDBColumn
             Caption = '***'#1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'DescName_Invoice'
+            DataBinding.FieldName = 'ObjectDescName_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090' '#1074' '#1044#1086#1082#1091#1084#1077#1085#1090#1077' '#1057#1095#1077#1090
@@ -407,7 +418,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             DataBinding.FieldName = 'InvNumberFull_parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 109
           end
@@ -421,9 +432,9 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             Options.Editing = False
             Width = 109
           end
-          object DescName_parent: TcxGridDBColumn
+          object MovementDescName_parent: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'DescName_parent'
+            DataBinding.FieldName = 'MovementDescName_parent'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

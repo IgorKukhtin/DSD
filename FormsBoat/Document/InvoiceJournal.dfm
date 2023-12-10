@@ -3,6 +3,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   ClientHeight = 569
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -212
   ExplicitWidth = 1122
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -12,18 +13,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Height = 276
     TabOrder = 3
     ExplicitWidth = 1106
-    ExplicitHeight = 263
+    ExplicitHeight = 276
     ClientRectBottom = 276
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1106
-      ExplicitHeight = 263
+      ExplicitHeight = 276
       inherited cxGrid: TcxGrid
         Width = 1106
         Height = 276
-        ExplicitTop = -3
         ExplicitWidth = 1106
-        ExplicitHeight = 299
+        ExplicitHeight = 276
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -409,12 +409,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 128
           end
-          object DescName: TcxGridDBColumn
+          object ObjectDescName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'DescName'
+            DataBinding.FieldName = 'ObjectDescName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
             Options.Editing = False
             Width = 70
           end
@@ -566,9 +567,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 109
           end
-          object DescName_parent: TcxGridDBColumn
+          object MovementDescName_parent: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'DescName_parent'
+            DataBinding.FieldName = 'MovementDescName_parent'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -821,7 +822,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Height = 115
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 365
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1033,7 +1033,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
-    ExplicitTop = 350
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <

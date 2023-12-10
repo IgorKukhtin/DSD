@@ -249,6 +249,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 100
           end
+          object InvoiceKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvoiceKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object ReceiptNumber_Invoice: TcxGridDBColumn
             Caption = 'Quittung Nr'
             DataBinding.FieldName = 'ReceiptNumber_Invoice'
@@ -353,9 +361,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 128
           end
-          object DescName_Invoice: TcxGridDBColumn
+          object ObjectDescName_Invoice: TcxGridDBColumn
             Caption = '***'#1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'DescName_Invoice'
+            DataBinding.FieldName = 'ObjectDescName_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

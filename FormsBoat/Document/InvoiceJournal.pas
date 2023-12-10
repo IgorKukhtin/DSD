@@ -40,7 +40,7 @@ type
     InfoMoneyDestinationName: TcxGridDBColumn;
     InvNumberPartner: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    DescName: TcxGridDBColumn;
+    ObjectDescName: TcxGridDBColumn;
     bbAddBonus: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -64,7 +64,7 @@ type
     actOpenBankAccountJournalByInvoice: TdsdOpenForm;
     bbOpenBankAccountJournalByInvoice: TdxBarButton;
     InvNumber_parent: TcxGridDBColumn;
-    DescName_parent: TcxGridDBColumn;
+    MovementDescName_parent: TcxGridDBColumn;
     actOpenIncomeCostByInvoice: TdsdOpenForm;
     bbOpenIncomeCostByInvoice: TdxBarButton;
     bbtPrint: TdxBarButton;

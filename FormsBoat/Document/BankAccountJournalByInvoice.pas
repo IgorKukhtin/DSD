@@ -80,6 +80,7 @@ type
     ceInfoMoney: TcxButtonEdit;
     GuidesObject: TdsdGuides;
     GuidesInfoMoney: TdsdGuides;
+    InvoiceKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

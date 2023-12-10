@@ -221,7 +221,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     colStatus: TcxGridDBColumn;
     ReceiptNumber: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
     InvNumberPartner: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
     PlanDate: TcxGridDBColumn;
@@ -292,6 +292,8 @@ type
     GuidesTaxKind: TdsdGuides;
     InvNumber_Invoice_Full_ch2: TcxGridDBColumn;
     cxButton5: TcxButton;
+    InvoiceKindName: TcxGridDBColumn;
+    InvoiceKindName_vh2: TcxGridDBColumn;
   private
     { Private declarations }
   public
