@@ -72,6 +72,7 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
     Style.Font.Height = -11
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
+    Style.TextColor = clBlack
     Style.IsFontAssigned = True
     TabOrder = 0
     Width = 120
@@ -478,15 +479,10 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
-    GuidesList = <
-      item
-        Guides = GuidesGoods
-      end>
-    ActionItemList = <
-      item
-      end>
-    Left = 96
-    Top = 24
+    GuidesList = <>
+    ActionItemList = <>
+    Left = 352
+    Top = 112
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <

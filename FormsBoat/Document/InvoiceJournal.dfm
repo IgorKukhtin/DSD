@@ -3,6 +3,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   ClientHeight = 569
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -212
   ExplicitWidth = 1122
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -1029,12 +1030,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = Owner
+        Component = actSetVisible_Grid_Item
         Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
+          'Value')
       end
       item
         Component = deEnd
@@ -1045,6 +1043,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
       end>
   end
   inherited ActionList: TActionList
