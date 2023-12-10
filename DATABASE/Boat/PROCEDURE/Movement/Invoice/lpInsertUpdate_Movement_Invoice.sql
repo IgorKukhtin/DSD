@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
     IN inPlanDate         TDateTime,  -- Плановая дата оплаты по Счету
     IN inVATPercent       TFloat   ,  --
     IN inAmount           TFloat   ,  --
-    IN inInvNumberPartner TVarChar ,  --
-    IN inReceiptNumber    TVarChar ,  --
+    IN inInvNumberPartner TVarChar ,  -- Номер документа - External Nr
+    IN inReceiptNumber    TVarChar ,  -- Официальный номер квитанции - Quittung Nr, формируется только для Amount>0
     IN inComment          TVarChar ,  --
     IN inObjectId         Integer  ,  --
     IN inUnitId           Integer  ,  --
@@ -41,8 +41,8 @@ BEGIN
                                                  FROM ObjectLink AS ObjectLink_TaxKind
                                                       LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
                                                       LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
                                                  WHERE ObjectLink_TaxKind.ObjectId = inObjectId
                                                    AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                 ), 0)
@@ -54,8 +54,8 @@ BEGIN
                                                              FROM ObjectLink AS ObjectLink_TaxKind
                                                                   LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
                                                                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
                                                              WHERE ObjectLink_TaxKind.ObjectId = inObjectId
                                                                AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                             ), 0))
@@ -64,10 +64,34 @@ BEGIN
 
 
     -- inReceiptNumber формируется только для Amount > 0
-    IF COALESCE (inAmount, 0) <= 0
+    IF COALESCE (inAmount, 0) <= 0 OR inInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
     THEN
         inReceiptNumber := NULL;
+    ELSE
+        -- если такой номер уже найден, т.е. параллельно добавили
+        IF EXISTS (SELECT 1
+                   FROM MovementString
+                        JOIN Movement ON Movement.Id       = MovementString.MovementId
+                                     AND Movement.DescId   = zc_Movement_Invoice()
+                                     AND Movement.StatusId <> zc_Enum_Status_Erased()
+                   WHERE MovementString.DescId    = zc_MovementString_ReceiptNumber()
+                     AND MovementString.ValueData = TRIM (inReceiptNumber)
+                  )
+        THEN
+            -- еще раз найдем
+            inReceiptNumber:= 1 + COALESCE ((SELECT MAX (zfConvert_StringToNumber (MovementString.ValueData))
+                                             FROM MovementString
+                                                  JOIN Movement ON Movement.Id       = MovementString.MovementId
+                                                               AND Movement.DescId   = zc_Movement_Invoice()
+                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                                             WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
+                                            ), 0);
+            -- !!!проверка уникальности!!! - потом добавить
+
+        END IF;
+
     END IF;
+
 
     -- сначала Parent
     IF inParentId > 0
@@ -107,10 +131,10 @@ BEGIN
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
     -- сохранили связь с <>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId); 
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InvoiceKind(), ioId, inInvoiceKindId);
-    
+
 
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Plan(), ioId, inPlanDate);

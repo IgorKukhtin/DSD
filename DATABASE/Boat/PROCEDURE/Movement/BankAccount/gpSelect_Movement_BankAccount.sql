@@ -15,13 +15,17 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
+              -- Счет
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
-             , MovementId_parent Integer, InvNumberFull_parent TVarChar, InvNumber_parent TVarChar, DescName_parent TVarChar
+              -- Заказ Клиента / Заказ Поставщику
+             , MovementId_parent Integer, InvNumberFull_parent TVarChar, InvNumber_parent TVarChar, MovementDescName_parent TVarChar
+               --
              , Amount_Invoice TFloat
              , Amount_diff TFloat
              , isDiff Boolean
+
              , ObjectName_Invoice TVarChar
-             , DescName_Invoice TVarChar
+             , ObjectDescName_Invoice TVarChar
              , InfoMoneyCode_Invoice Integer, InfoMoneyGroupName_Invoice TVarChar, InfoMoneyDestinationName_Invoice TVarChar, InfoMoneyName_Invoice TVarChar, InfoMoneyName_all_Invoice TVarChar
 
              , ProductCode_Invoice Integer
@@ -31,6 +35,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , UnitName_Invoice TVarChar
              , ReceiptNumber_Invoice TVarChar
              , Comment_Invoice TVarChar
+             , InvoiceKindName TVarChar
+
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -76,7 +82,7 @@ BEGIN
                                    , MovementFloat_Amount.ValueData            :: TFloat AS Amount
                                    , Object_Object.Id                                    AS ObjectId
                                    , Object_Object.ValueData                             AS ObjectName
-                                   , ObjectDesc.ItemName                                 AS DescName
+                                   , ObjectDesc.ItemName                                 AS DescName_object
                                    , Object_InfoMoney_View.InfoMoneyId
                                    , Object_InfoMoney_View.InfoMoneyCode
                                    , Object_InfoMoney_View.InfoMoneyGroupName
@@ -95,6 +101,9 @@ BEGIN
                                    , Object_Unit.ValueData                      AS UnitName
                                    , MovementString_ReceiptNumber.ValueData     AS ReceiptNumber
                                    , MovementString_Comment.ValueData           AS Comment
+
+                                   , Object_InvoiceKind.Id                      AS InvoiceKindId
+                                   , Object_InvoiceKind.ValueData               AS InvoiceKindName
 
                               FROM (SELECT DISTINCT tmpMovementLinkMovement.MovementChildId AS MovementId_Invoice FROM tmpMovementLinkMovement) AS tmp
                                     LEFT JOIN MovementFloat AS MovementFloat_Amount
@@ -129,6 +138,11 @@ BEGIN
                                                                  ON MovementLinkObject_PaidKind.MovementId = tmp.MovementId_Invoice
                                                                 AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                                     LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                                 ON MovementLinkObject_InvoiceKind.MovementId = tmp.MovementId_Invoice
+                                                                AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                    LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
 
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                                                  ON MovementLinkObject_Product.MovementId = tmp.MovementId_Invoice
@@ -179,11 +193,11 @@ BEGIN
            , Movement_Invoice.Id AS MovementId_Invoice
            , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
            , Movement_Invoice.InvNumber        AS InvNumber_Invoice
-           --parent для Invoice
+             -- Заказ Клиента / Заказ Поставщику
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
            , Movement_Parent.InvNumber                 AS InvNumber_parent
-           , MovementDesc_Parent.ItemName              AS DescName_parent
+           , MovementDesc_Parent.ItemName              AS MovementDescName_parent
 
              -- Сумма по Счету - только в последнем платеже
            , CASE WHEN tmpInvoice_Params.Amount > 0 AND MLM_Invoice.Ord = 1
@@ -205,7 +219,7 @@ BEGIN
              END ::Boolean AS isDiff
 
            , tmpInvoice_Params.ObjectName          AS ObjectName_Invoice
-           , tmpInvoice_Params.DescName            AS DescName_Invoice
+           , tmpInvoice_Params.DescName_object     AS ObjectDescName_Invoice
            , tmpInvoice_Params.InfoMoneyCode       AS InfoMoneyCode_Invoice
            , tmpInvoice_Params.InfoMoneyGroupName  AS InfoMoneyGroupName_Invoice
            , tmpInvoice_Params.InfoMoneyDestinationName AS InfoMoneyDestinationName_Invoice
@@ -218,6 +232,7 @@ BEGIN
            , tmpInvoice_Params.UnitName            AS UnitName_Invoice
            , tmpInvoice_Params.ReceiptNumber       AS ReceiptNumber_Invoice
            , tmpInvoice_Params.Comment             AS Comment_Invoice
+           , tmpInvoice_Params.InvoiceKindName     AS InvoiceKindName
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate

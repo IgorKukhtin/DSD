@@ -11,36 +11,37 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id              Integer
-             , InvNumber       Integer
-             , InvNumber_Full  TVarChar
-             , OperDate        TDateTime
-             , PlanDate        TDateTime
-             , StatusCode      Integer
-             , StatusName      TVarChar
-             , InvoiceKindId   Integer
-             , InvoiceKindName TVarChar
-             , isAuto          Boolean
+RETURNS TABLE (Id               Integer
+             , InvNumber        Integer
+             , InvNumber_Full   TVarChar
+             , OperDate         TDateTime
+             , PlanDate         TDateTime
+             , StatusCode       Integer
+             , StatusName       TVarChar
+             , InvoiceKindId    Integer
+             , InvoiceKindName  TVarChar
+             , isAuto           Boolean
              , AmountIn         TFloat
              , AmountOut        TFloat
              , AmountIn_NotVAT  TFloat
              , AmountOut_NotVAT TFloat
              , AmountIn_VAT     TFloat
              , AmountOut_VAT    TFloat
-             , VATPercent      TFloat
+             , VATPercent       TFloat
 
-             -- оплата
+               -- оплата
              , AmountIn_BankAccount  TFloat
              , AmountOut_BankAccount TFloat
-             , Amount_BankAccount    TFloat --итого оплата
-             -- остаток по счету
-             , AmountIn_rem  TFloat
-             , AmountOut_rem TFloat
-             , Amount_rem    TFloat
+               -- итого оплата
+             , Amount_BankAccount    TFloat
+               -- остаток по счету
+             , AmountIn_rem          TFloat
+             , AmountOut_rem         TFloat
+             , Amount_rem            TFloat
 
              , ObjectId        Integer
              , ObjectName      TVarChar
-             , DescName        TVarChar
+             , ObjectDescName  TVarChar
              , TaxKindName     TVarChar
              , TaxKindName_info TVarChar
              , TaxKindName_Comment TVarChar
@@ -53,15 +54,18 @@ RETURNS TABLE (Id              Integer
              , UnitId          Integer
              , UnitName        TVarChar
 
+               -- Номер документа - External Nr
              , InvNumberPartner TVarChar
+               -- Официальный номер квитанции - Quittung Nr
              , ReceiptNumber    TVarChar
+               -- 
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
 
              , MovementId_parent Integer
              , InvNumberFull_parent TVarChar, InvNumber_parent TVarChar
-             , DescName_parent TVarChar
+             , MovementDescName_parent TVarChar
 
              , Color_Pay Integer
               )
@@ -365,7 +369,7 @@ BEGIN
       , tmpData.StatusName
       , tmpData.InvoiceKindId
       , tmpData.InvoiceKindName
-      , tmpData.isAuto 
+      , tmpData.isAuto
         -- с НДС
       , tmpData.AmountIn
       , tmpData.AmountOut

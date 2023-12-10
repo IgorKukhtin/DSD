@@ -36,7 +36,7 @@ RETURNS TABLE (Id              Integer
 
              , ObjectId        Integer
              , ObjectName      TVarChar
-             , DescName        TVarChar
+             , ObjectDescName  TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -46,15 +46,18 @@ RETURNS TABLE (Id              Integer
              , UnitId          Integer
              , UnitName        TVarChar
 
+               -- Номер документа - External Nr
              , InvNumberPartner TVarChar
+               -- Официальный номер квитанции - Quittung Nr
              , ReceiptNumber    TVarChar
+               --
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              
              , MovementId_parent Integer
              , InvNumber_parent TVarChar
-             , DescName_parent TVarChar
+             , MovementDescName_parent TVarChar
       
              , Color_Pay Integer
               )
@@ -128,18 +131,18 @@ BEGIN
 
       , tmpData.VATPercent
 
-      -- оплата
+        -- оплата
       , tmpData.AmountIn_BankAccount
       , tmpData.AmountOut_BankAccount
       , tmpData.Amount_BankAccount
-      -- остаток по счету
+        -- остаток по счету
       , tmpData.AmountIn_rem
       , tmpData.AmountOut_rem
       , tmpData.Amount_rem
 
       , tmpData.ObjectId
       , tmpData.ObjectName
-      , tmpData.DescName
+      , tmpData.ObjectDescName
       , tmpData.InfoMoneyId
       , tmpData.InfoMoneyCode
       , tmpData.InfoMoneyName
@@ -172,7 +175,7 @@ BEGIN
 
       , tmpData.MovementId_parent
       , tmpData.InvNumber_parent
-      , tmpData.DescName_parent
+      , tmpData.MovementDescName_parent
 
       -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
       , tmpData.Color_Pay

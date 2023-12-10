@@ -5,7 +5,7 @@ BEGIN
     INCREMENT 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
-    START 1
+    START 1001
     CACHE 1;  
     ALTER TABLE Movement_Invoice_seq
       OWNER TO postgres;

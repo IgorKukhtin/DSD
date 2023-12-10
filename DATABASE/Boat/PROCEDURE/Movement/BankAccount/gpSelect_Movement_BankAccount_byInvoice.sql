@@ -20,10 +20,13 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , Amount_Invoice TFloat
              , Amount_diff TFloat
              , isDiff Boolean
+
              , ObjectName_Invoice TVarChar
-             , DescName_Invoice TVarChar
+             , ObjectDescName_Invoice TVarChar
+
              , InfoMoneyCode_Invoice Integer, InfoMoneyGroupName_Invoice TVarChar, InfoMoneyDestinationName_Invoice TVarChar
              , InfoMoneyName_Invoice TVarChar, InfoMoneyName_all_Invoice TVarChar
+
              , ProductCode_Invoice Integer
              , ProductName_Invoice TVarChar
              , ProductCIN_Invoice TVarChar
@@ -32,10 +35,13 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , InvNumberPartner_Invoice TVarChar
              , ReceiptNumber_Invoice TVarChar
              , Comment_Invoice TVarChar
+             , InvoiceKindName TVarChar
+
              , MovementId_parent      Integer
              , InvNumberFull_parent   TVarChar
              , InvNumber_parent       TVarChar
-             , DescName_parent        TVarChar
+             , MovementDescName_parent        TVarChar
+
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -74,7 +80,7 @@ BEGIN
                                    , MovementFloat_Amount.ValueData ::TFloat AS Amount
                                    , Object_Object.Id                                    AS ObjectId
                                    , Object_Object.ValueData                             AS ObjectName
-                                   , ObjectDesc.ItemName                                 AS DescName
+                                   , ObjectDesc.ItemName                                 AS ObjectDescName
                                    , Object_InfoMoney_View.InfoMoneyId
                                    , Object_InfoMoney_View.InfoMoneyCode
                                    , Object_InfoMoney_View.InfoMoneyName
@@ -93,10 +99,13 @@ BEGIN
                                    , MovementString_ReceiptNumber.ValueData     AS ReceiptNumber
                                    , MovementString_Comment.ValueData           AS Comment
 
+                                   , Object_InvoiceKind.Id                      AS InvoiceKindId
+                                   , Object_InvoiceKind.ValueData               AS InvoiceKindName
+
                                    , Movement_Parent.Id                         AS MovementId_parent
                                    , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
                                    , Movement_Parent.InvNumber                  AS InvNumber_parent
-                                   , MovementDesc_Parent.ItemName               AS DescName_parent
+                                   , MovementDesc_Parent.ItemName               AS MovementDescName_parent
                               FROM (SELECT DISTINCT tmpMovement.MovementId_Invoice AS MovementId FROM tmpMovement) AS tmp
                                     LEFT JOIN Movement ON Movement.Id = tmp.MovementId
                                     LEFT JOIN MovementFloat AS MovementFloat_Amount
@@ -148,6 +157,11 @@ BEGIN
                                                                  ON MovementLinkObject_PaidKind.MovementId = tmp.MovementId
                                                                 AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                                     LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                                 ON MovementLinkObject_InvoiceKind.MovementId = tmp.MovementId
+                                                                AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                    LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
 
                                     -- Parent - если "нашли"
                                     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
@@ -214,7 +228,7 @@ BEGIN
                   THEN TRUE ELSE FALSE END ::Boolean AS isDiff
 
            , tmpInvoice_Params.ObjectName          AS ObjectName_Invoice
-           , tmpInvoice_Params.DescName            AS DescName_Invoice
+           , tmpInvoice_Params.ObjectDescName      AS ObjectDescName_Invoice
            , tmpInvoice_Params.InfoMoneyCode       AS InfoMoneyCode_Invoice
            , tmpInvoice_Params.InfoMoneyGroupName  AS InfoMoneyGroupName_Invoice
            , tmpInvoice_Params.InfoMoneyDestinationName AS InfoMoneyDestinationName_Invoice
@@ -228,10 +242,12 @@ BEGIN
            , tmpInvoice_Params.InvNumberPartner    AS InvNumberPartner_Invoice
            , tmpInvoice_Params.ReceiptNumber       AS ReceiptNumber_Invoice
            , tmpInvoice_Params.Comment             AS Comment_Invoice
-           , tmpInvoice_Params.MovementId_parent      ::Integer
-           , tmpInvoice_Params.InvNumberFull_parent   ::TVarChar
-           , tmpInvoice_Params.InvNumber_parent       ::TVarChar
-           , tmpInvoice_Params.DescName_parent        ::TVarChar
+           , tmpInvoice_Params.InvoiceKindName     AS InvoiceKindName
+
+           , tmpInvoice_Params.MovementId_parent        ::Integer
+           , tmpInvoice_Params.InvNumberFull_parent     ::TVarChar
+           , tmpInvoice_Params.InvNumber_parent         ::TVarChar
+           , tmpInvoice_Params.MovementDescName_parent  ::TVarChar
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate

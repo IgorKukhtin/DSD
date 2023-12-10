@@ -13,17 +13,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
     IN inOperDate         TDateTime,  --
     IN inPlanDate         TDateTime,  -- Плановая дата оплаты по Счету
     IN inVATPercent       TFloat   ,  --
-    IN inAmountIn         TFloat   ,  -- 
-    IN inAmountOut        TFloat   ,  -- 
-    IN inInvNumberPartner TVarChar ,  -- 
-    IN inReceiptNumber    TVarChar ,  -- 
-    IN inComment          TVarChar ,  -- 
-    IN inObjectId         Integer  ,  -- 
-    IN inUnitId           Integer  ,  -- 
-    IN inInfoMoneyId      Integer  ,  -- 
+    IN inAmountIn         TFloat   ,  --
+    IN inAmountOut        TFloat   ,  --
+    IN inInvNumberPartner TVarChar ,  -- Номер документа - External Nr
+    IN inReceiptNumber    TVarChar ,  -- Официальный номер квитанции - Quittung Nr, формируется только для Amount>0
+    IN inComment          TVarChar ,  --
+    IN inObjectId         Integer  ,  --
+    IN inUnitId           Integer  ,  --
+    IN inInfoMoneyId      Integer  ,  --
     --IN inProductId        Integer  ,  --
-    IN inPaidKindId       Integer  ,  -- 
-    IN inInvoiceKindId    Integer  ,  -- 
+    IN inPaidKindId       Integer  ,  --
+    IN inInvoiceKindId    Integer  ,  --
     IN inSession          TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
