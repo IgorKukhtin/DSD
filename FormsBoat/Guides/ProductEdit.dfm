@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
   ClientHeight = 567
-  ClientWidth = 599
+  ClientWidth = 610
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -46,7 +46,7 @@ object ProductEditForm: TProductEditForm
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 0
-    Width = 599
+    Width = 610
     Height = 497
     Align = alTop
     TabOrder = 3
@@ -54,7 +54,7 @@ object ProductEditForm: TProductEditForm
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
     ClientRectBottom = 497
-    ClientRectRight = 599
+    ClientRectRight = 610
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
@@ -961,7 +961,7 @@ object ProductEditForm: TProductEditForm
       object Panel1: TPanel
         Left = 0
         Top = 217
-        Width = 599
+        Width = 610
         Height = 256
         Align = alClient
         Caption = 'Panel1'
@@ -969,7 +969,7 @@ object ProductEditForm: TProductEditForm
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 597
+          Width = 608
           Height = 26
           Align = dalTop
           BarManager = BarManager
@@ -977,7 +977,7 @@ object ProductEditForm: TProductEditForm
         object cxGrid1: TcxGrid
           Left = 1
           Top = 27
-          Width = 597
+          Width = 608
           Height = 228
           Align = alClient
           TabOrder = 1
@@ -1074,7 +1074,7 @@ object ProductEditForm: TProductEditForm
               Width = 55
             end
             object InvNumber_ch2: TcxGridDBColumn
-              Caption = 'Interne Nr'
+              Caption = #8470' '#1076#1086#1082'.'
               DataBinding.FieldName = 'InvNumber'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -1091,13 +1091,22 @@ object ProductEditForm: TProductEditForm
               Width = 70
             end
             object InvNumber_Invoice_Full_ch2: TcxGridDBColumn
-              Caption = '***Interne Nr'
+              Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
               DataBinding.FieldName = 'InvNumber_Invoice_Full'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
               Options.Editing = False
               Width = 70
+            end
+            object ReceiptNumber_Invoice_ch2: TcxGridDBColumn
+              Caption = 'Inv No'
+              DataBinding.FieldName = 'ReceiptNumber_Invoice'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+              Options.Editing = False
+              Width = 55
             end
             object BankAccountNamech2: TcxGridDBColumn
               Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
@@ -1215,7 +1224,7 @@ object ProductEditForm: TProductEditForm
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 599
+        Width = 610
         Height = 217
         Align = alTop
         Caption = 'Panel1'
@@ -1223,7 +1232,7 @@ object ProductEditForm: TProductEditForm
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 597
+          Width = 608
           Height = 26
           Align = dalTop
           BarManager = BarManager
@@ -1231,7 +1240,7 @@ object ProductEditForm: TProductEditForm
         object cxGrid: TcxGrid
           Left = 1
           Top = 27
-          Width = 597
+          Width = 608
           Height = 189
           Align = alClient
           TabOrder = 1
@@ -1397,6 +1406,14 @@ object ProductEditForm: TProductEditForm
               Options.Editing = False
               Width = 70
             end
+            object isAuto: TcxGridDBColumn
+              Caption = #1040#1074#1090#1086
+              DataBinding.FieldName = 'isAuto'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 55
+            end
             object InvoiceKindName: TcxGridDBColumn
               Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
               DataBinding.FieldName = 'InvoiceKindName'
@@ -1406,7 +1423,7 @@ object ProductEditForm: TProductEditForm
               Width = 70
             end
             object InvNumber: TcxGridDBColumn
-              Caption = 'Interne Nr'
+              Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
               DataBinding.FieldName = 'InvNumber'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -1415,11 +1432,11 @@ object ProductEditForm: TProductEditForm
               Width = 63
             end
             object ReceiptNumber: TcxGridDBColumn
-              Caption = 'Quittung Nr'
+              Caption = 'Inv No'
               DataBinding.FieldName = 'ReceiptNumber'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
+              HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
               Options.Editing = False
               Width = 70
             end
@@ -1528,11 +1545,12 @@ object ProductEditForm: TProductEditForm
               Width = 95
             end
             object InvNumber_parent: TcxGridDBColumn
-              Caption = #1047#1072#1082#1072#1079
+              Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
               DataBinding.FieldName = 'InvNumber_parent'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
               Options.Editing = False
               Width = 109
             end
@@ -3630,8 +3648,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 236
-    Top = 30
+    Left = 308
+    Top = 65534
   end
   object GuidesStatus: TdsdGuides
     KeyField = 'Id'

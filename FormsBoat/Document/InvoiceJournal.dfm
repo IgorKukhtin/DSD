@@ -13,17 +13,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Height = 316
     TabOrder = 3
     ExplicitWidth = 1106
-    ExplicitHeight = 276
-    ClientRectBottom = 276
+    ExplicitHeight = 316
+    ClientRectBottom = 316
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1106
-      ExplicitHeight = 276
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1106
-        Height = 276
+        Height = 316
         ExplicitWidth = 1106
-        ExplicitHeight = 276
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -187,11 +187,11 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 79
           end
           object ReceiptNumber: TcxGridDBColumn [3]
-            Caption = 'Quittung Nr'
+            Caption = 'Inv No'
             DataBinding.FieldName = 'ReceiptNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
+            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
             Options.Editing = False
             Width = 70
           end
@@ -708,7 +708,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     TabOrder = 6
     object btnUpdate: TcxButton
       Left = 231
-      Top = 7
+      Top = 9
       Width = 101
       Height = 25
       Action = actUpdate
@@ -716,7 +716,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object btnComplete: TcxButton
       Left = 349
-      Top = 7
+      Top = 9
       Width = 150
       Height = 25
       Action = actComplete
@@ -724,7 +724,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object btnUnComplete: TcxButton
       Left = 505
-      Top = 7
+      Top = 9
       Width = 150
       Height = 25
       Action = actUnComplete
@@ -732,7 +732,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object btnSetErased: TcxButton
       Left = 661
-      Top = 7
+      Top = 9
       Width = 162
       Height = 25
       Action = actSetErased
@@ -740,7 +740,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object btnFormClose: TcxButton
       Left = 857
-      Top = 6
+      Top = 8
       Width = 159
       Height = 25
       Action = actFormClose
@@ -750,7 +750,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object cxButton1: TcxButton
       Left = 349
-      Top = 44
+      Top = 42
       Width = 218
       Height = 25
       Action = actOpenBankAccountJournalByInvoice
@@ -758,7 +758,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object cxButton2: TcxButton
       Left = 582
-      Top = 44
+      Top = 42
       Width = 241
       Height = 25
       Action = actOpenIncomeByInvoice
@@ -766,7 +766,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object cxButton5: TcxButton
       Left = 857
-      Top = 44
+      Top = 42
       Width = 159
       Height = 25
       Action = actSetVisible_Grid_Item
@@ -776,7 +776,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object cxButton3: TcxButton
       Left = 10
-      Top = 6
+      Top = 8
       Width = 95
       Height = 25
       Action = actInsert_PrePay
@@ -784,7 +784,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object cxButton4: TcxButton
       Left = 111
-      Top = 6
+      Top = 8
       Width = 95
       Height = 25
       Action = actInsert_Pay
@@ -792,7 +792,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object cxButton7: TcxButton
       Left = 10
-      Top = 44
+      Top = 42
       Width = 95
       Height = 25
       Action = actInsert_Proforma
@@ -800,7 +800,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object cxButton8: TcxButton
       Left = 111
-      Top = 44
+      Top = 42
       Width = 95
       Height = 25
       Action = actInsert_Service
@@ -946,6 +946,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Comment_ch4: TcxGridDBColumn
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 362
+      end
       object Article_ch4: TcxGridDBColumn
         Caption = 'Artikel Nr'
         DataBinding.FieldName = 'Article'
@@ -957,6 +964,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       object GoodsCode_ch4: TcxGridDBColumn
         Caption = 'Interne Nr'
         DataBinding.FieldName = 'GoodsCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -977,7 +985,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Width = 266
       end
       object Amount_ch4: TcxGridDBColumn
-        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -985,7 +993,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 119
+        Width = 80
       end
       object OperPrice_ch4: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
@@ -996,13 +1004,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 134
-      end
-      object Comment_ch4: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 362
       end
       object isErased_ch4: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -1876,12 +1877,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           Component = cxGrid_Item
         end>
-      HintTrue = #1057#1082#1088#1099#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-      ImageIndexTrue = 25
-      ImageIndexFalse = 26
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1044#1077#1090#1072#1083#1100#1085#1086
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1044#1077#1090#1072#1083#1100#1085#1086
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1044#1077#1090#1072#1083#1100#1085#1086
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1044#1077#1090#1072#1083#1100#1085#1086
+      ImageIndexTrue = 31
+      ImageIndexFalse = 32
     end
     object mactUpdateAction: TMultiAction
       Category = 'DSDLib'

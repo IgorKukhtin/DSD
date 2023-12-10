@@ -294,6 +294,8 @@ type
     cxButton5: TcxButton;
     InvoiceKindName: TcxGridDBColumn;
     InvoiceKindName_vh2: TcxGridDBColumn;
+    isAuto: TcxGridDBColumn;
+    ReceiptNumber_Invoice_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public
