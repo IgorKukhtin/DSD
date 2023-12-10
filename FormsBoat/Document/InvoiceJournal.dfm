@@ -9,21 +9,20 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1106
-    Height = 276
+    Height = 316
     TabOrder = 3
     ExplicitWidth = 1106
-    ExplicitHeight = 263
-    ClientRectBottom = 276
+    ExplicitHeight = 276
+    ClientRectBottom = 316
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1106
-      ExplicitHeight = 263
+      ExplicitHeight = 276
       inherited cxGrid: TcxGrid
         Width = 1106
-        Height = 276
-        ExplicitTop = -3
+        Height = 316
         ExplicitWidth = 1106
-        ExplicitHeight = 299
+        ExplicitHeight = 276
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -700,9 +699,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   end
   object Panel_btn: TPanel [2]
     Left = 0
-    Top = 456
+    Top = 496
     Width = 1106
-    Height = 113
+    Height = 73
     Align = alBottom
     TabOrder = 6
     object btnUpdate: TcxButton
@@ -789,21 +788,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Action = actInsert_Pay
       TabOrder = 9
     end
-    object cxButton6: TcxButton
-      Left = 1039
-      Top = 103
-      Width = 101
-      Height = 25
-      Action = actInsert_Pay
-      TabOrder = 10
-    end
     object cxButton7: TcxButton
       Left = 10
       Top = 44
       Width = 95
       Height = 25
       Action = actInsert_Proforma
-      TabOrder = 11
+      TabOrder = 10
     end
     object cxButton8: TcxButton
       Left = 111
@@ -811,17 +802,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 95
       Height = 25
       Action = actInsert_Service
-      TabOrder = 12
+      TabOrder = 11
     end
   end
   object cxGrid_Item: TcxGrid [3]
     Left = 0
-    Top = 341
+    Top = 381
     Width = 1106
     Height = 115
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 365
+    ExplicitTop = 341
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1028,12 +1019,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   end
   object cxSplitter_Bottom_Item: TcxSplitter [4]
     Left = 0
-    Top = 333
+    Top = 373
     Width = 1106
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
-    ExplicitTop = 350
+    ExplicitTop = 333
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1476,6 +1467,63 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     inherited mactSetErasedList: TMultiAction
       Enabled = False
     end
+    object actPrintInvoice: TdsdPrintAction [27]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44927d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44927d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Invoice1'
+      ReportNameParam.Value = 'PrintMovement_Invoice1'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameInvoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1500,7 +1548,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ImageIndex = 3
       DataSets = <
         item
-          DataSet = PrintItemsCDS
+          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
       Params = <
@@ -1866,6 +1914,44 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ErasedFieldName = 'isErased'
       DataSource = ItemDS
     end
+    object actInvoiceReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actInvoiceReportName'
+    end
+    object mactPrint_Invoice: TMultiAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInvoiceReportName
+        end
+        item
+          Action = actPrintInvoice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 15
+      ShortCut = 16464
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -2007,6 +2093,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -2135,6 +2229,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbPrint_Invoice: TdxBarButton
+      Action = mactPrint_Invoice
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -2188,6 +2286,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameInvoice'
+        Value = 'PrintMovement_Invoice1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -2203,8 +2308,11 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'
-    DataSet = PrintItemsCDS
+    DataSet = PrintHeaderCDS
     DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
       item
         DataSet = PrintItemsCDS
       end>
@@ -2385,5 +2493,44 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     PackSize = 1
     Left = 558
     Top = 400
+  end
+  object spGetReportName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Invoice_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_parent'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Invoice_ReportName'
+        Value = 'PrintMovement_Sale1_test'
+        Component = FormParams
+        ComponentItem = 'ReportNameInvoice'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 800
+    Top = 160
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 788
+    Top = 257
   end
 end

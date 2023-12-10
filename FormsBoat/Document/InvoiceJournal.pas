@@ -123,11 +123,16 @@ type
     cxButton3: TcxButton;
     cxButton4: TcxButton;
     actInsert_Pay: TdsdInsertUpdateAction;
-    cxButton6: TcxButton;
     actInsert_Service: TdsdInsertUpdateAction;
     actInsert_Proforma: TdsdInsertUpdateAction;
     cxButton7: TcxButton;
     cxButton8: TcxButton;
+    spGetReportName: TdsdStoredProc;
+    actInvoiceReportName: TdsdExecStoredProc;
+    mactPrint_Invoice: TMultiAction;
+    actPrintInvoice: TdsdPrintAction;
+    bbPrint_Invoice: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
   private
     { Private declarations }
   public
