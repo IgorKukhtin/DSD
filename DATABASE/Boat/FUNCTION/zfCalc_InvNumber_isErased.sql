@@ -1,4 +1,4 @@
--- Function: zfCalc_InvNumber_isErased (TVarChar, Integer)
+-- Function: zfCalc_InvNumber_isErased (TVarChar, TVarChar, TDateTime, Integer)
 
 DROP FUNCTION IF EXISTS zfCalc_InvNumber_isErased (TVarChar, Integer);
 DROP FUNCTION IF EXISTS zfCalc_InvNumber_isErased (TVarChar, TVarChar, TDateTime, Integer);
