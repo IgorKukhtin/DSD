@@ -239,12 +239,14 @@ BEGIN
      OPEN Cursor4 FOR    --для печати счета - опции
         SELECT MovementItem.ObjectId                    AS ObjectId
              , Object_Object.ObjectCode                 AS ObjectCode
-             , Object_Object.ValueData                  AS ObjectName
+             , MIString_Comment.ValueData               AS ObjectName
         FROM MovementItem 
-             INNER JOIN Object AS Object_Object
+             LEFT JOIN Object AS Object_Object
                                ON Object_Object.Id = MovementItem.ObjectId
                               AND Object_Object.DescId = zc_Object_ProdOptions() 
-
+             LEFT JOIN MovementItemString AS MIString_Comment
+                                          ON MIString_Comment.MovementItemId = MovementItem.Id
+                                         AND MIString_Comment.DescId = zc_MIString_Comment()
         WHERE MovementItem.MovementId = vbMovementId_order
           AND MovementItem.DescId = zc_MI_Child()
           AND MovementItem.isErased   = FALSE 
