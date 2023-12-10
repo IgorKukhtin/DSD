@@ -19,7 +19,7 @@ BEGIN
   outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
   -- устанавливаем новое значение
-  UPDATE Object_PartionGoods SET isErased = FALSE WHERE MovementItemId = inMovementItemId;
+ -- UPDATE Object_PartionGoods SET isErased = FALSE WHERE MovementItemId = inMovementItemId;
 
   -- устанавливаем новое значение
   -- UPDATE Object SET isErased = FALSE WHERE Object.Id = (SELECT Object_PartionGoods.GoodsId

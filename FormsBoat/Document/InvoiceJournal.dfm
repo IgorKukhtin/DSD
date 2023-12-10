@@ -3,7 +3,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   ClientHeight = 569
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -212
   ExplicitWidth = 1122
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -1326,6 +1325,15 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+    end
     object actInsert_PrePay: TdsdInsertUpdateAction [8]
       Category = 'DSDLib'
       MoveParams = <>
@@ -2389,6 +2397,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   end
   object ItemViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_Det
     OnDblClickActionList = <
       item
       end>
