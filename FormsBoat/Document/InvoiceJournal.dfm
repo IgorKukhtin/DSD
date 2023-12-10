@@ -2186,6 +2186,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object bbtPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      UnclickAfterDoing = False
     end
     object bbOpenIncomeByInvoice: TdxBarButton
       Action = actOpenIncomeByInvoice
@@ -2468,7 +2469,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = MasterCDS
+        Component = ItemCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2476,14 +2477,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = MasterCDS
+        Component = ItemCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 478
-    Top = 396
+    Left = 510
+    Top = 412
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Invoice_SetUnErased'
@@ -2511,8 +2512,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 558
-    Top = 400
+    Left = 446
+    Top = 416
   end
   object spGetReportName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice_ReportName'
