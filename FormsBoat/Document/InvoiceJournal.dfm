@@ -2061,7 +2061,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbsGoods'
+          ItemName = 'bbDetail'
         end
         item
           Visible = True
@@ -2187,8 +2187,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Category = 0
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object bbsGoods: TdxBarSubItem
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+    object bbDetail: TdxBarSubItem
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       Category = 0
       Visible = ivAlways
       ImageIndex = 7

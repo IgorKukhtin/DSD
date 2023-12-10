@@ -108,7 +108,7 @@ type
     actUpdateAction: TdsdInsertUpdateAction;
     mactUpdateAction: TMultiAction;
     mactInsertAction: TMultiAction;
-    bbsGoods: TdxBarSubItem;
+    bbDetail: TdxBarSubItem;
     bbInsertAction: TdxBarButton;
     bbUpdateAction: TdxBarButton;
     spErasedMIMaster: TdsdStoredProc;

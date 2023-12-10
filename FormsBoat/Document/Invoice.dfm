@@ -111,7 +111,7 @@
     Width = 375
   end
   object cxLabel9: TcxLabel [15]
-    Left = 291
+    Left = 240
     Top = 55
     Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
   end
@@ -203,17 +203,27 @@
   object cxLabel19: TcxLabel [26]
     Left = 156
     Top = 55
-    Caption = 'Quittung Nr'
+    Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+    Caption = 'Invoice No'
+    ParentShowHint = False
+    ShowHint = True
   end
   object edReceiptNumber: TcxTextEdit [27]
     Left = 156
     Top = 75
-    Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
+    Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+    ParentFont = False
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 27
-    Width = 124
+    Width = 72
   end
   object cxLabel2: TcxLabel [28]
     Left = 211
@@ -298,16 +308,23 @@
     Visible = False
   end
   object edInvoiceKind: TcxButtonEdit [38]
-    Left = 290
+    Left = 240
     Top = 75
+    ParentFont = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 38
-    Width = 100
+    Width = 148
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
@@ -1354,8 +1371,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 176
-    Top = 56
+    Left = 272
+    Top = 16
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
