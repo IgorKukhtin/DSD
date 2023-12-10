@@ -22,9 +22,14 @@ BEGIN
         -- Все документы, в которых указан этот Счет, возьмем первый
        tmpMov_Parent AS (SELECT Movement.Id
                               , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS ord
-                         FROM  Movement 
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                            ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                           AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                                                           AND MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_PrePay()
                          WHERE Movement.DescId = zc_Movement_Invoice()
                            AND Movement.ParentId = inMovementId_Parent
+                           AND Movement.StatusId = zc_Enum_Status_Complete() --zc_Enum_Status_Erased()
                          )
 
        -- Результат

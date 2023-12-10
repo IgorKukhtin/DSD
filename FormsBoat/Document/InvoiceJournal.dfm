@@ -2194,7 +2194,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object bbtPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      UnclickAfterDoing = False
+      Visible = ivNever
     end
     object bbOpenIncomeByInvoice: TdxBarButton
       Action = actOpenIncomeByInvoice
