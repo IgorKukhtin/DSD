@@ -11,6 +11,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE Cursor1 refcursor;
+  DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
@@ -22,13 +23,15 @@ OPEN Cursor1 FOR
              tmpInvoice AS (SELECT tmp.*
                                  , Object_Insert.ValueData AS InsertName
                                  , Object.ObjectCode
-                            FROM gpGet_Movement_Invoice (inMovementId, 0 , 0 , 0 ,  CURRENT_DATE, 0, inSession) AS tmp
+                            FROM gpGet_Movement_Invoice (inMovementId, 0 , 0 , 0 ,  CURRENT_DATE, '', inSession) AS tmp
                                  LEFT JOIN MovementLinkObject AS MLO_Insert
                                                               ON MLO_Insert.MovementId = tmp.Id
                                                              AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
                                  LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId 
                                  LEFT JOIN Object ON Object.Id = tmp.ObjectId
-                           )
+                           )    
+                           
+                           
            , tmpProduct AS (SELECT tmp.*
                             FROM tmpInvoice
                                  LEFT JOIN gpSelect_Object_Product (inMovementId_OrderClient:= tmpInvoice.MovementId_parent, inIsShowAll:= TRUE, inIsSale:= FALSE, inSession:= inSession) AS tmp  
@@ -36,57 +39,6 @@ OPEN Cursor1 FOR
                             WHERE tmp.Id = tmpInvoice.ProductId
                             )
            
-                          /*(SELECT tmpInvoice.ProductId
-                                  , Object_Product.ObjectCode        AS ProductCode
-                                  , Object_Brand.Id                  AS BrandId
-                                  , Object_Brand.ValueData           AS BrandName
-                                  , Object_Model.Id                  AS ModelId
-                                  , Object_Model.ValueData           AS ModelName
-                                  , (Object_Brand.ValueData || '-' || Object_Model.ValueData) ::TVarChar AS ModelName_full
-                                  , Object_Engine.Id                 AS EngineId
-                                  , Object_Engine.ValueData          AS EngineName
-                                  , ObjectString_CIN.ValueData       AS CIN
-                                  , ObjectString_EngineNum.ValueData AS EngineNum 
-                                  , EXTRACT (YEAR FROM ObjectDate_DateBegin.ValueData)  ::TVarChar AS YearBegin
-                                  , '' ::TVarChar AS ModelGroupName
-                                  , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
-                                  , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
-                            FROM tmpInvoice
-                                 LEFT JOIN ObjectString AS ObjectString_CIN
-                                                        ON ObjectString_CIN.ObjectId = tmpInvoice.ProductId
-                                                       AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
-                                 LEFT JOIN ObjectString AS ObjectString_EngineNum
-                                                        ON ObjectString_EngineNum.ObjectId = tmpInvoice.ProductId
-                                                       AND ObjectString_EngineNum.DescId = zc_ObjectString_Product_EngineNum()
- 
-                                  LEFT JOIN ObjectDate AS ObjectDate_DateBegin
-                                                       ON ObjectDate_DateBegin.ObjectId = tmpInvoice.ProductId
-                                                      AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Model
-                                                      ON ObjectLink_Model.ObjectId = tmpInvoice.ProductId
-                                                     AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model() 
-                                 LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ObjectId
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Brand
-                                                      ON ObjectLink_Brand.ObjectId = tmpInvoice.ProductId
-                                                     AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
-                                 LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Engine
-                                                      ON ObjectLink_Engine.ObjectId = tmpInvoice.ProductId
-                                                     AND ObjectLink_Engine.DescId = zc_ObjectLink_Product_Engine()
-                                 LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
-
-                                 LEFT JOIN ObjectFloat AS ObjectFloat_Power
-                                                       ON ObjectFloat_Power.ObjectId = Object_Engine.Id
-                                                      AND ObjectFloat_Power.DescId = zc_ObjectFloat_ProdEngine_Power()
-                                 LEFT JOIN ObjectFloat AS ObjectFloat_Volume
-                                                       ON ObjectFloat_Volume.ObjectId = Object_Engine.Id
-                                                      AND ObjectFloat_Volume.DescId = zc_ObjectFloat_ProdEngine_Volume() 
-                                 LEFT JOIN Object AS Object_Product AS Object_Product.Id = tmpInvoice.ProductId
-                            )*/
-
      -- данные по оплате счета
      , tmpBankAccount AS (SELECT SUM (MovementItem.Amount)   ::TFloat AS AmountIn
                           FROM MovementLinkMovement
@@ -115,7 +67,11 @@ OPEN Cursor1 FOR
             -- сумма счета
             , tmpInvoice.AmountIn     ::TFloat AS Invoice_summ
             -- сумма педоплаты
-            , tmpBankAccount.AmountIn ::TFloat AS Prepayment_summ
+            , tmpBankAccount.AmountIn ::TFloat AS Prepayment_summ  
+            --% счета от общей суммы лодки
+            , CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END :: TFloat AS Persent_invoice
+            --% НДС Клиента
+            , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS TaxKind_Value
             --
             , tmpInfo.Mail           ::TVarChar AS Mail
             , tmpInfo.WWW            ::TVarChar AS WWW
@@ -179,12 +135,66 @@ OPEN Cursor1 FOR
                                ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                               AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
           LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                               ON ObjectLink_TaxKind.ObjectId = tmpProduct.ClientId
+                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId 
 
-
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
           
           ;
 
-    RETURN NEXT Cursor1;
+    RETURN NEXT Cursor1; 
+    
+    OPEN Cursor2 FOR     
+         SELECT Movement.Id                     AS MovementId
+              , MovementItem.Id                 AS Id
+              , MovementItem.ObjectId           AS GoodsId
+              , Object_Goods.ObjectCode         AS GoodsCode
+              , Object_Goods.ValueData          AS GoodsName  
+              , ObjectString_Article.ValueData  AS Article
+              , MovementItem.Amount         ::TFloat AS Amount  
+              , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice
+              , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summа
+              , MIString_Comment.ValueData      AS Comment
+              , MovementItem.isErased           AS isErased
+         FROM Movement
+              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                                     AND MovementItem.DescId = zc_MI_Master()
+                                     AND (MovementItem.isErased = FALSE)
+              LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                          ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                         AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()  
+              LEFT JOIN MovementItemString AS MIString_Comment
+                                           ON MIString_Comment.MovementItemId = MovementItem.Id
+                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+  
+              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+  
+              LEFT JOIN ObjectString AS ObjectString_Article
+                                     ON ObjectString_Article.ObjectId = MovementItem.ObjectId
+                                    AND ObjectString_Article.DescId   = zc_ObjectString_Article() 
+         WHERE Movement.Id = inMovementId;
+    RETURN NEXT Cursor2; 
+
+    OPEN Cursor3 FOR    --для печати возврата
+        WITH
+        -- Все документы, в которых указан этот Счет, возьмем первый
+       tmpMov_Parent AS (SELECT Movement.Id
+                              , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS ord
+                         FROM  Movement 
+                         WHERE Movement.DescId = zc_Movement_Invoice()
+                           AND Movement.ParentId = inMovementId_Parent
+                           AND Movement.Id <> inMovementId
+                         )
+       SELECT 
+       FROM 
+       WHERE ;
+       
+    RETURN NEXT Cursor3;
 
 END;
 $BODY$
