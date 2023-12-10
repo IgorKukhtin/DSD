@@ -634,7 +634,7 @@ object OrderClientForm: TOrderClientForm
     Height = 375
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 375
     ClientRectRight = 1349
@@ -3483,8 +3483,8 @@ object OrderClientForm: TOrderClientForm
     Width = 70
   end
   object edBasisWVAT_summ_transport: TcxCurrencyEdit
-    Left = 1088
-    Top = 121
+    Left = 1083
+    Top = 122
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -4295,6 +4295,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -4315,6 +4316,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -4466,6 +4468,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -4475,6 +4478,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -4491,6 +4495,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -4562,6 +4567,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 57
@@ -4632,6 +4638,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -4690,6 +4697,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
       StoredProcList = <
@@ -4741,6 +4749,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       Action = actGoodsChoiceForm
@@ -4968,6 +4977,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
       ImageIndex = 34
@@ -5254,6 +5264,7 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       ImageIndex = 34

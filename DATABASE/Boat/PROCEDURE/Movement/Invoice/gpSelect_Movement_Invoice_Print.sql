@@ -10,14 +10,27 @@ RETURNS SETOF refcursor
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbMovementId_order Integer;
   DECLARE Cursor1 refcursor;
-  DECLARE Cursor2 refcursor;
+  DECLARE Cursor2 refcursor; 
+  DECLARE Cursor3 refcursor;
+  DECLARE Cursor4 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
      vbUserId := lpGetUserBySession (inSession);
 
-OPEN Cursor1 FOR
+     -- документ заказа, из него получим опции для печати счета
+     vbMovementId_order := (SELECT Movement.ParentId
+                            FROM Movement
+                                INNER JOIN Movement AS Movement_order 
+                                                    ON Movement_order.Id = Movement.ParentId
+                                                   AND Movement_order.DescId = zc_Movement_OrderClient()
+                                                   AND Movement_order.StatusId <> zc_Enum_Status_Erased()
+                            WHERE Movement.Id = inMovementId
+                            );
+
+     OPEN Cursor1 FOR
 
         WITH -- Все документы заказа, в которых указан этот Счет, возьмем первый
              tmpInvoice AS (SELECT tmp.*
@@ -66,12 +79,13 @@ OPEN Cursor1 FOR
             , tmpInvoice.* 
             -- сумма счета
             , tmpInvoice.AmountIn     ::TFloat AS Invoice_summ
+            , tmpInvoice.AmountOut    ::TFloat AS Invoice_summOut
             -- сумма педоплаты
             , tmpBankAccount.AmountIn ::TFloat AS Prepayment_summ  
             --% счета от общей суммы лодки
             , CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END :: TFloat AS Persent_invoice
-            --% НДС Клиента
-            , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS TaxKind_Value
+            --% НДС из заказа Клиента    есть в   tmpProduct
+            --, COALESCE (MovementFloat_VATPercent.ValueData, 0)         :: TFloat AS VATPercent
             --
             , tmpInfo.Mail           ::TVarChar AS Mail
             , tmpInfo.WWW            ::TVarChar AS WWW
@@ -136,20 +150,11 @@ OPEN Cursor1 FOR
                               AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
           LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
  
-          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                               ON ObjectLink_TaxKind.ObjectId = tmpProduct.ClientId
-                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId 
-
-          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
-                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-          
           ;
 
-    RETURN NEXT Cursor1; 
+     RETURN NEXT Cursor1; 
     
-    OPEN Cursor2 FOR     
+     OPEN Cursor2 FOR     
          SELECT Movement.Id                     AS MovementId
               , MovementItem.Id                 AS Id
               , MovementItem.ObjectId           AS GoodsId
@@ -178,23 +183,49 @@ OPEN Cursor1 FOR
                                      ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                     AND ObjectString_Article.DescId   = zc_ObjectString_Article() 
          WHERE Movement.Id = inMovementId;
-    RETURN NEXT Cursor2; 
+     RETURN NEXT Cursor2; 
 
-    OPEN Cursor3 FOR    --для печати возврата
+     OPEN Cursor3 FOR    --для печати возврата
         WITH
         -- Все документы, в которых указан этот Счет, возьмем первый
        tmpMov_Parent AS (SELECT Movement.Id
+                              , Movement.InvNumber
                               , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS ord
                          FROM  Movement 
                          WHERE Movement.DescId = zc_Movement_Invoice()
-                           AND Movement.ParentId = inMovementId_Parent
+                           AND Movement.ParentId = vbMovementId_order
                            AND Movement.Id <> inMovementId
                          )
-       SELECT 
-       FROM 
-       WHERE ;
+       SELECT tmpMov_Parent.InvNumber
+            , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
+            , CASE WHEN tmpMov_Parent.Ord = 1 THEN 'Reservation fee' ELSE 'First, Second and Third Advance-payment'  END AS Text_ret
+            , tmpMov_Parent.Ord ::TFloat
+       FROM tmpMov_Parent
+            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                    ON MovementFloat_Amount.MovementId = tmpMov_Parent.Id
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()       
+       ORDER BY tmpMov_Parent.Ord
+       ;
        
-    RETURN NEXT Cursor3;
+     RETURN NEXT Cursor3;
+
+     OPEN Cursor4 FOR    --для печати счета - опции
+        SELECT MovementItem.ObjectId                    AS ObjectId
+             , Object_Object.ObjectCode                 AS ObjectCode
+             , Object_Object.ValueData                  AS ObjectName
+        FROM MovementItem 
+             INNER JOIN Object AS Object_Object
+                               ON Object_Object.Id = MovementItem.ObjectId
+                              AND Object_Object.DescId = zc_Object_ProdOptions() 
+
+        WHERE MovementItem.MovementId = vbMovementId_order
+          AND MovementItem.DescId = zc_MI_Child()
+          AND MovementItem.isErased   = FALSE 
+          AND COALESCE (MovementItem.ParentId, 0) = 0
+        ;
+
+    RETURN NEXT Cursor4;
+
 
 END;
 $BODY$
@@ -208,3 +239,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Invoice_Print (inMovementId:= 1, inSession:= zfCalc_UserAdmin());
+-- [IIf (<frxDBDReturn."ord"> = 1, '', '%') ] [IIf (<frxDBDReturn."ord"> = 1, '', <frxDBDHeader."modelname_full") ] [IIf (<frxDBDReturn."ord"> = 1, '', 'Order:' <frxDBDHeader."invnumber_orderclient">) ] 
+

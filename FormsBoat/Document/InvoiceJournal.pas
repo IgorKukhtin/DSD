@@ -133,6 +133,8 @@ type
     actPrintInvoice: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
+    PrintReturnCDS: TClientDataSet;
+    PrintOptionCDS: TClientDataSet;
   private
     { Private declarations }
   public

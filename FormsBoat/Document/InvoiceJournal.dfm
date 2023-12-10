@@ -3,7 +3,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   ClientHeight = 569
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -212
   ExplicitWidth = 1122
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -1498,6 +1497,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintReturnCDS
+          UserName = 'frxDBDReturn'
+        end
+        item
+          DataSet = PrintOptionCDS
+          UserName = 'frxDBDOption'
         end>
       Params = <
         item
@@ -2316,6 +2323,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintReturnCDS
+      end
+      item
+        DataSet = PrintOptionCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -2531,7 +2544,19 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 788
-    Top = 257
+    Left = 812
+    Top = 225
+  end
+  object PrintReturnCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 812
+    Top = 278
+  end
+  object PrintOptionCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 876
+    Top = 286
   end
 end
