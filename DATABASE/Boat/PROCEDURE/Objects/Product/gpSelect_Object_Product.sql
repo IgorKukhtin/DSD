@@ -106,6 +106,8 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , SummDiscount2_opt  TFloat
                -- ИТОГО Сумма Скидка № 1 + 2 (options) - без НДС
              , SummDiscount3_opt  TFloat
+             , SummDiscount3      TFloat  ---так назівался раньше, исп. в печ формах
+             
 
                -- ИТОГО Сумма Скидка (Basis) + (options) - без НДС
              , SummDiscount_total TFloat
@@ -932,7 +934,8 @@ BEGIN
            ) :: TFloat AS SummDiscount2_opt
 
            -- ИТОГО Сумма Скидка № 1+2 (options) - без НДС
-         , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)) :: TFloat AS SummDiscount3_opt
+         , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)) :: TFloat AS SummDiscount3_opt 
+         , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)) :: TFloat AS SummDiscount3    
 
            -- ИТОГО Сумма Скидка (Basis) + (options) - без НДС
          , (-- итоговая скидка (Basis)
