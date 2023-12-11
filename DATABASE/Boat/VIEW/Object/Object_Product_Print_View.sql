@@ -27,7 +27,8 @@ CREATE OR REPLACE VIEW Object_Product_PrintInfo_View AS
         , 'Bankverbindung'||Chr(13)||Chr(10)||'Aachener Bank eG'||Chr(13)||Chr(10)||'IBAN: DE56390601800154560009'||Chr(13)||Chr(10)||'BIC: GENODED1AAC' ::TVarChar AS Footer2
         , 'Geschaftsfuhrer:Starchenko Maxym'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Amtsgericht Duren HRB 8163'||Chr(13)||Chr(10)||'Ust.-ID: DE326730388' ::TVarChar AS Footer3   --***
         , 'Tel: +49 (0)2461 340 333-15'||Chr(13)||Chr(10)||'Fax: +49 (0)2461 340 333 13'||Chr(13)||Chr(10)||'Email: info@agilis-jettenders.com'||Chr(13)||Chr(10)||'WEB: www.agilis-jettenders.com' ::TVarChar AS Footer4
-            
+        , 'BANKKONTO: Aachener Bank eG'||Chr(13)||Chr(10)||'IBAN: DE56390601800154560009'||Chr(10)||'SWIFT: GENODED1AAC' ::TVarChar AS Footer_bank
+        , 'CEO: STARCHENKO MAXYM, REGISTERGERICHT: DUREN HRB 8163, UMSATZSTEUERGESETZ: DE326730388' ::TVarChar AS Footer_user    
    ;
 
 
@@ -38,6 +39,7 @@ ALTER TABLE Object_Product_PrintInfo_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+11.12.23          *
  2.03.21          *
 */
 
