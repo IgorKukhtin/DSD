@@ -67,7 +67,21 @@ BEGIN
                             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                           GROUP BY MovementLinkMovement.MovementChildId
                           )
- 
+      -- Все документы предоплаты, в которых указан этот док заказ (нужна итого сумма для счета показать сумму счетов предоплаты)
+      , tmpMov_PrePay AS (SELECT SUM (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS Total_PrePay
+                         FROM Movement
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                                                         AND MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_PrePay()
+                            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                    ON MovementFloat_Amount.MovementId = Movement.Id
+                                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount() 
+                         WHERE Movement.DescId = zc_Movement_Invoice()
+                           AND Movement.ParentId = vbMovementId_order
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                         )
+
        -- Результат
        SELECT tmpProduct.*
             , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
@@ -86,6 +100,8 @@ BEGIN
             , CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END :: TFloat AS Persent_invoice
             --% НДС из заказа Клиента    есть в   tmpProduct
             --, COALESCE (MovementFloat_VATPercent.ValueData, 0)         :: TFloat AS VATPercent
+            --сумма счетов предоплаты
+            , tmpMov_PrePay.Total_PrePay ::TFloat
             --
             , tmpInfo.Mail           ::TVarChar AS Mail
             , tmpInfo.WWW            ::TVarChar AS WWW
@@ -148,7 +164,9 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Country
                                ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                               AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
-          LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
+          LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId  
+          
+          LEFT JOIN tmpMov_PrePay ON 1 = 1
  
           ;
 
@@ -187,23 +205,32 @@ BEGIN
 
      OPEN Cursor3 FOR    --для печати возврата
         WITH
-        -- Все документы, в которых указан этот Счет, возьмем первый
+        -- Все документы предоплаты, в которых указан этот док заказ
        tmpMov_Parent AS (SELECT Movement.Id
                               , Movement.InvNumber
                               , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS ord
-                         FROM  Movement 
+                         FROM Movement
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                                                         AND MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_PrePay() 
                          WHERE Movement.DescId = zc_Movement_Invoice()
                            AND Movement.ParentId = vbMovementId_order
                            AND Movement.Id <> inMovementId
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
                          )
        SELECT tmpMov_Parent.InvNumber
+            , MovementString_ReceiptNumber.ValueData     AS ReceiptNumber            
             , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
             , CASE WHEN tmpMov_Parent.Ord = 1 THEN 'Reservation fee' ELSE 'First, Second and Third Advance-payment'  END AS Text_ret
             , tmpMov_Parent.Ord ::TFloat
        FROM tmpMov_Parent
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId = tmpMov_Parent.Id
-                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()       
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+            LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                     ON MovementString_ReceiptNumber.MovementId = tmpMov_Parent.Id
+                                    AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()       
        ORDER BY tmpMov_Parent.Ord
        ;
        
@@ -212,12 +239,14 @@ BEGIN
      OPEN Cursor4 FOR    --для печати счета - опции
         SELECT MovementItem.ObjectId                    AS ObjectId
              , Object_Object.ObjectCode                 AS ObjectCode
-             , Object_Object.ValueData                  AS ObjectName
+             , MIString_Comment.ValueData               AS ObjectName
         FROM MovementItem 
-             INNER JOIN Object AS Object_Object
+             LEFT JOIN Object AS Object_Object
                                ON Object_Object.Id = MovementItem.ObjectId
                               AND Object_Object.DescId = zc_Object_ProdOptions() 
-
+             LEFT JOIN MovementItemString AS MIString_Comment
+                                          ON MIString_Comment.MovementItemId = MovementItem.Id
+                                         AND MIString_Comment.DescId = zc_MIString_Comment()
         WHERE MovementItem.MovementId = vbMovementId_order
           AND MovementItem.DescId = zc_MI_Child()
           AND MovementItem.isErased   = FALSE 

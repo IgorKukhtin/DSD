@@ -3,7 +3,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   ClientHeight = 569
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -212
   ExplicitWidth = 1122
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -1326,6 +1325,15 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+    end
     object actInsert_PrePay: TdsdInsertUpdateAction [8]
       Category = 'DSDLib'
       MoveParams = <>
@@ -2186,6 +2194,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object bbtPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      Visible = ivNever
     end
     object bbOpenIncomeByInvoice: TdxBarButton
       Action = actOpenIncomeByInvoice
@@ -2388,6 +2397,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   end
   object ItemViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_Det
     OnDblClickActionList = <
       item
       end>
@@ -2468,7 +2478,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = MasterCDS
+        Component = ItemCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2476,14 +2486,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = MasterCDS
+        Component = ItemCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 478
-    Top = 396
+    Left = 510
+    Top = 412
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Invoice_SetUnErased'
@@ -2511,8 +2521,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 558
-    Top = 400
+    Left = 446
+    Top = 416
   end
   object spGetReportName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice_ReportName'
