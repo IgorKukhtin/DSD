@@ -646,7 +646,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edSearchInvNumber_OrderClient: TcxTextEdit
+    object edSearch_InvNumber_OrderClient: TcxTextEdit
       Left = 699
       Top = 5
       TabOrder = 5
@@ -655,7 +655,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         21)
       Width = 110
     end
-    object edSearchInvNumber_Invoice: TcxTextEdit
+    object edSearch_ReceiptNumber_Invoice: TcxTextEdit
       Left = 510
       Top = 5
       TabOrder = 6
@@ -676,7 +676,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edSearchObjectName: TcxTextEdit
+    object edSearch_ObjectName: TcxTextEdit
       Left = 972
       Top = 5
       TabOrder = 8
@@ -686,9 +686,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 110
     end
     object lbSearchArticle: TcxLabel
-      Left = 446
-      Top = 4
-      Caption = #8470' '#1089#1095#1077#1090': '
+      Left = 420
+      Top = 5
+      Caption = 'Inv No '#1089#1095#1077#1090': '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -2359,8 +2359,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Left = 631
     Top = 232
   end
-  object FieldFilter_Article: TdsdFieldFilter
-    TextEdit = edSearchInvNumber_OrderClient
+  object FieldFilter_InvNumber_parent: TdsdFieldFilter
+    TextEdit = edSearch_InvNumber_OrderClient
     DataSet = MasterCDS
     Column = InvNumber_parent
     ColumnList = <
@@ -2368,17 +2368,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Column = InvNumber_parent
       end
       item
-        Column = colInvNumber
-        TextEdit = edSearchInvNumber_Invoice
+        Column = ReceiptNumber
+        TextEdit = edSearch_ReceiptNumber_Invoice
       end
       item
         Column = ObjectName
-        TextEdit = edSearchObjectName
+        TextEdit = edSearch_ObjectName
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 984
-    Top = 128
+    Left = 592
+    Top = 136
   end
   object ItemCDS: TClientDataSet
     Aggregates = <>

@@ -75,12 +75,12 @@ type
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     cxLabel4: TcxLabel;
-    edSearchInvNumber_OrderClient: TcxTextEdit;
-    edSearchInvNumber_Invoice: TcxTextEdit;
+    edSearch_InvNumber_OrderClient: TcxTextEdit;
+    edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     cxLabel3: TcxLabel;
-    edSearchObjectName: TcxTextEdit;
+    edSearch_ObjectName: TcxTextEdit;
     lbSearchArticle: TcxLabel;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_InvNumber_parent: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
