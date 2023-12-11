@@ -25,16 +25,16 @@ BEGIN
    THEN
    RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , CAST (0 as Integer)    AS GoodsId
-           , CAST (0 as Integer)    AS GoodsCode
-           , CAST ('' as TVarChar)  AS GoodsName
-           , CAST ('' as TVarChar)  AS Article 
-           , CAST (0 as Integer)    AS PartnerId
-           , CAST ('' as TVarChar)  AS PartnerName
-           , CAST (0 as TFloat)     AS Amount
-           , CAST (0 as TFloat)     AS OperPrice
-           , CAST ('' as TVarChar)  AS Comment;
+             CAST (0 AS Integer)    AS Id
+           , CAST (0 AS Integer)    AS GoodsId
+           , CAST (0 AS Integer)    AS GoodsCode
+           , CAST ('' AS TVarChar)  AS GoodsName
+           , CAST ('' AS TVarChar)  AS Article 
+           , CAST (0 AS Integer)    AS PartnerId
+           , CAST ('' AS TVarChar)  AS PartnerName
+           , CAST (1 AS TFloat)     AS Amount
+           , CAST (0 AS TFloat)     AS OperPrice
+           , CAST ('' AS TVarChar)  AS Comment;
    ELSE
          RETURN QUERY
            -- Результат

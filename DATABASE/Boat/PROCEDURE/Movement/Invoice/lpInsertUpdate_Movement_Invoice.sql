@@ -64,7 +64,7 @@ BEGIN
 
 
     -- inReceiptNumber формируется только для Amount > 0
-    IF COALESCE (inAmount, 0) <= 0 OR inInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
+    IF (COALESCE (inAmount, 0) <= 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Return()) OR inInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
     THEN
         inReceiptNumber := NULL;
     ELSE

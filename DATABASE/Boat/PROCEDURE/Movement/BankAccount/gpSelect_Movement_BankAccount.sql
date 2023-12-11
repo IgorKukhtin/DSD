@@ -33,7 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , ProductCIN_Invoice TVarChar
              , PaidKindName_Invoice TVarChar
              , UnitName_Invoice TVarChar
-             , ReceiptNumber_Invoice TVarChar
+             , ReceiptNumber_Invoice Integer
              , Comment_Invoice TVarChar
              , InvoiceKindName TVarChar
 
@@ -90,11 +90,6 @@ BEGIN
                                    , Object_InfoMoney_View.InfoMoneyName
                                    , Object_InfoMoney_View.InfoMoneyName_all
 
-                                   , Object_Product.Id                          AS ProductId
-                                   , Object_Product.ObjectCode                  AS ProductCode
-                                   , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName
-                                   , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN
-
                                    , Object_PaidKind.Id                         AS PaidKindId
                                    , Object_PaidKind.ValueData                  AS PaidKindName
                                    , Object_Unit.Id                             AS UnitId
@@ -143,15 +138,6 @@ BEGIN
                                                                  ON MovementLinkObject_InvoiceKind.MovementId = tmp.MovementId_Invoice
                                                                 AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
                                     LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
-
-                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                                                 ON MovementLinkObject_Product.MovementId = tmp.MovementId_Invoice
-                                                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
-                                    LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
-
-                                    LEFT JOIN ObjectString AS ObjectString_CIN
-                                                           ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                                          AND ObjectString_CIN.DescId   = zc_ObjectString_Product_CIN()
                               )
 
         -- у Invoice нашли ВСЕ его BankAccount
@@ -225,12 +211,15 @@ BEGIN
            , tmpInvoice_Params.InfoMoneyDestinationName AS InfoMoneyDestinationName_Invoice
            , tmpInvoice_Params.InfoMoneyName       AS InfoMoneyName_Invoice
            , tmpInvoice_Params.InfoMoneyName_all   AS InfoMoneyName_all_Invoice
-           , tmpInvoice_Params.ProductCode         AS ProductCode_Invoice
-           , tmpInvoice_Params.ProductName         AS ProductName_Invoice
-           , tmpInvoice_Params.ProductCIN          AS ProductCIN_Invoice
+
+           , Object_Product.ObjectCode                                                       AS ProductCode_Invoice
+           , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName_Invoice
+           , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN_Invoice
+
+
            , tmpInvoice_Params.PaidKindName        AS PaidKindName_Invoice
            , tmpInvoice_Params.UnitName            AS UnitName_Invoice
-           , tmpInvoice_Params.ReceiptNumber       AS ReceiptNumber_Invoice
+           , zfConvert_StringToNumber (tmpInvoice_Params.ReceiptNumber) ::Integer AS ReceiptNumber_Invoice
            , tmpInvoice_Params.Comment             AS Comment_Invoice
            , tmpInvoice_Params.InvoiceKindName     AS InvoiceKindName
 
@@ -255,6 +244,14 @@ BEGIN
                                ON Movement_Parent.Id = Movement_Invoice.ParentId
                               AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
             LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                         ON MovementLinkObject_Product.MovementId = Movement_Parent.Id
+                                        AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+            LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_CIN
+                                   ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                  AND ObjectString_CIN.DescId   = zc_ObjectString_Product_CIN()
 
             -- данные BankAccount
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id

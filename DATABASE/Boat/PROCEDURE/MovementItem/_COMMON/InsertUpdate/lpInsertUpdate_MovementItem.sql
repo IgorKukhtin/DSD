@@ -51,7 +51,14 @@ BEGIN
      SELECT StatusId, InvNumber, DescId INTO vbStatusId, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = inMovementId;
 
      -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно для SYBASE -1 * zc_User_Sybase() !!!
-     IF vbStatusId <> zc_Enum_Status_UnComplete() 
+     IF vbMovementDescId = zc_Movement_Invoice()
+     THEN
+         IF vbStatusId = zc_Enum_Status_Erased() 
+         THEN
+             RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
+         END IF;
+
+     ELSEIF vbStatusId <> zc_Enum_Status_UnComplete() 
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
      END IF;
@@ -66,7 +73,7 @@ BEGIN
      END IF;
 
      -- проверка - inObjectId
-     IF inObjectId IS NULL AND inDescId = zc_MI_Master()
+     IF inObjectId IS NULL AND inDescId = zc_MI_Master() AND vbMovementDescId <> zc_Movement_Invoice()
      THEN
          RAISE EXCEPTION 'Ошибка-1.Не определен Элемент в документе № <%>.', vbInvNumber;
      END IF;

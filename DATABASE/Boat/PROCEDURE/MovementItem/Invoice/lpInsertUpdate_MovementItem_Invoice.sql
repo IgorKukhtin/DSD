@@ -18,6 +18,10 @@ $BODY$
 BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
+     
+
+     -- !!!замена - временно!!!
+     inGoodsId:= CASE WHEN inGoodsId > 0 THEN inGoodsId ELSE (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Object()) END;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, inAmount, NULL, inUserId);

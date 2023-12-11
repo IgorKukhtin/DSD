@@ -17,19 +17,24 @@ RETURNS TABLE (Id              Integer
              , InvoiceKindId   Integer
              , InvoiceKindName TVarChar
              , isAuto          Boolean
+               -- с НДС
              , AmountIn         TFloat
              , AmountOut        TFloat
+               -- без НДС
              , AmountIn_NotVAT  TFloat
              , AmountOut_NotVAT TFloat
+               -- НДС
              , AmountIn_VAT     TFloat
              , AmountOut_VAT    TFloat
+
              , VATPercent      TFloat             
 
-             -- оплата
+               -- оплата
              , AmountIn_BankAccount  TFloat
              , AmountOut_BankAccount TFloat
-             , Amount_BankAccount    TFloat --итого оплата
-             -- остаток по счету
+               --итого оплата
+             , Amount_BankAccount    TFloat
+               -- остаток по счету
              , AmountIn_rem  TFloat
              , AmountOut_rem TFloat
              , Amount_rem    TFloat
@@ -37,6 +42,7 @@ RETURNS TABLE (Id              Integer
              , ObjectId        Integer
              , ObjectName      TVarChar
              , ObjectDescName  TVarChar
+
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -49,14 +55,15 @@ RETURNS TABLE (Id              Integer
                -- Номер документа - External Nr
              , InvNumberPartner TVarChar
                -- Официальный номер квитанции - Quittung Nr
-             , ReceiptNumber    TVarChar
+             , ReceiptNumber    Integer
                --
              , Comment TVarChar
+
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              
-             , MovementId_parent Integer
-             , InvNumber_parent TVarChar
+             , MovementId_parent       Integer
+             , InvNumber_parent        TVarChar
              , MovementDescName_parent TVarChar
       
              , Color_Pay Integer
@@ -102,9 +109,9 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH 
-       tmpData AS (SELECT spSelect.*
-                   FROM gpSelect_Movement_Invoice(inStartDate :=vbStartDate, inEndDate := vbEndDate, inClientId:= vbClientId, inIsErased := inIsErased,  inSession := inSession) AS spSelect
-                        INNER JOIN tmpInvoice ON tmpInvoice.Id = spSelect.Id
+       tmpData AS (SELECT gpSelect.*
+                   FROM gpSelect_Movement_Invoice(inStartDate :=vbStartDate, inEndDate := vbEndDate, inClientId:= vbClientId, inIsErased := inIsErased,  inSession := inSession) AS gpSelect
+                        INNER JOIN tmpInvoice ON tmpInvoice.Id = gpSelect.Id
                    )
 
     -- Результат
@@ -143,6 +150,7 @@ BEGIN
       , tmpData.ObjectId
       , tmpData.ObjectName
       , tmpData.ObjectDescName
+
       , tmpData.InfoMoneyId
       , tmpData.InfoMoneyCode
       , tmpData.InfoMoneyName
@@ -177,10 +185,11 @@ BEGIN
       , tmpData.InvNumber_parent
       , tmpData.MovementDescName_parent
 
-      -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
+        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
       , tmpData.Color_Pay
+
     FROM tmpData
-    ;
+   ;
 
 END;
 $BODY$

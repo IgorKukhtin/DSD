@@ -30,6 +30,11 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
      vbUserId := lpGetUserBySession (inSession);
 
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
      RETURN QUERY
       WITH
        tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -38,15 +43,16 @@ BEGIN
                     )
 
      , tmpMovement AS (SELECT Movement.*
+                            , COALESCE (MovementLinkObject_Object.ObjectId, 0) AS ObjectId
                       FROM tmpStatus
                            INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
                                               AND Movement.DescId = zc_Movement_Invoice()
                                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Object
-                                            ON MovementLinkObject_Object.MovementId = Movement.Id
-                                           AND MovementLinkObject_Object.DescId = zc_MovementLinkObject_Object()
+                                                        ON MovementLinkObject_Object.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Object.DescId = zc_MovementLinkObject_Object()
                       WHERE MovementLinkObject_Object.ObjectId = inClientId
-                        OR COALESCE (inClientId,0) = 0 
+                        OR COALESCE (inClientId, 0) = 0
                       )
 
        -- Результат
@@ -54,26 +60,27 @@ BEGIN
             , MovementItem.Id                 AS Id
             , MovementItem.ObjectId           AS GoodsId
             , Object_Goods.ObjectCode         AS GoodsCode
-            , Object_Goods.ValueData          AS GoodsName  
+            , Object_Goods.ValueData          AS GoodsName
             , ObjectString_Article.ValueData  AS Article
-            , MovementItem.Amount         ::TFloat AS Amount  
+            , MovementItem.Amount         ::TFloat AS Amount
             , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice
             , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summа
             , MIString_Comment.ValueData      AS Comment
             , MovementItem.isErased           AS isErased
- 
+
        FROM tmpMovement AS Movement
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()  
+                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id    = MovementItem.ObjectId
+                                            AND Movement.ObjectId <> MovementItem.ObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId

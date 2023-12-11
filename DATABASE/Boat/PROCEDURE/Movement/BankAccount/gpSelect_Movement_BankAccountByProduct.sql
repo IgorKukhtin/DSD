@@ -59,7 +59,7 @@ BEGIN
                               WHERE MovementLinkObject_Product.ObjectId = inProductId
                                 AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                               )
-       --документы счет
+       -- документы счет
       , tmpMovementInvoice AS (SELECT Movement.*
                                FROM tmpMovementParent
                                    INNER JOIN Movement ON Movement.DescId = zc_Movement_Invoice()
@@ -203,7 +203,7 @@ BEGIN
            , ObjectDesc.ItemName
 
            , Movement_Invoice.Id AS MovementId_Invoice
-           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
+           , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, tmpInvoice_Params.ReceiptNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
 
              -- —умма по —чету - только в последнем платеже
            , CASE WHEN tmpInvoice_Params.Amount > 0 AND Movement.Ord = 1

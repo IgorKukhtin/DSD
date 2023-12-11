@@ -21,12 +21,16 @@ RETURNS TABLE (Id               Integer
              , InvoiceKindId    Integer
              , InvoiceKindName  TVarChar
              , isAuto           Boolean
+               -- с НДС
              , AmountIn         TFloat
              , AmountOut        TFloat
+               -- без НДС
              , AmountIn_NotVAT  TFloat
              , AmountOut_NotVAT TFloat
+               -- НДС
              , AmountIn_VAT     TFloat
              , AmountOut_VAT    TFloat
+
              , VATPercent       TFloat
 
                -- оплата
@@ -57,7 +61,7 @@ RETURNS TABLE (Id               Integer
                -- Номер документа - External Nr
              , InvNumberPartner TVarChar
                -- Официальный номер квитанции - Quittung Nr
-             , ReceiptNumber    TVarChar
+             , ReceiptNumber    Integer
                -- 
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -172,7 +176,7 @@ BEGIN
     , tmpData AS (SELECT
                          Movement.Id
                        , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
-                       , zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) AS InvNumber_Full
+                       , zfCalc_InvNumber_two_isErased ('', Movement.InvNumber, MovementString_ReceiptNumber.ValueData, Movement.OperDate, Movement.StatusId) AS InvNumber_Full
                        , Movement.OperDate
                        , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
                        , Object_Status.ObjectCode                            AS StatusCode
@@ -420,7 +424,7 @@ BEGIN
       , tmpData.UnitName
 
       , tmpData.InvNumberPartner
-      , tmpData.ReceiptNumber
+      , zfConvert_StringToNumber (tmpData.ReceiptNumber) ::Integer AS ReceiptNumber
       , tmpData.Comment
 
       , tmpData.InsertName
@@ -433,15 +437,22 @@ BEGIN
       , tmpData.InvNumber_parent
       , tmpData.DescName_parent
 
-      -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
-      , CASE WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END > COALESCE (tmpData.AmountIn_BankAccount,0)) -- AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
+        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
+      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+             THEN zc_Color_Black()
+
+             WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END > COALESCE (tmpData.AmountIn_BankAccount,0)) -- AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
                OR (CASE WHEN COALESCE (tmpData.AmountOut,0) <> 0 THEN tmpData.AmountOut ELSE 0 END > COALESCE (tmpData.AmountOut_BankAccount,0)) -- AND COALESCE (tmpData.AmountOut_BankAccount,0)<>0
              THEN zc_Color_Blue()
+
              WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END < COALESCE (tmpData.AmountIn_BankAccount,0)) -- AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
                OR (CASE WHEN COALESCE (tmpData.AmountOut,0) <> 0 THEN tmpData.AmountOut ELSE 0 END < COALESCE (tmpData.AmountOut_BankAccount,0)) -- AND COALESCE (tmpData.AmountOut_BankAccount,0)<>0
              THEN zc_Color_Red()
+
              ELSE zc_Color_Black()
+
         END ::Integer AS Color_Pay
+
     FROM tmpData
         LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                              ON ObjectLink_TaxKind.ObjectId = tmpData.ObjectId
