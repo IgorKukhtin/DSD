@@ -74,6 +74,9 @@ type
     cxLabel8: TcxLabel;
     edInvoiceKind: TcxButtonEdit;
     GuidesInvoiceKind: TdsdGuides;
+    spGetPrepay: TdsdStoredProc;
+    actGetPrepay: TdsdDataSetRefresh;
+    mactGuidesParentChoiceForm: TMultiAction;
   private
     { Private declarations }
   public

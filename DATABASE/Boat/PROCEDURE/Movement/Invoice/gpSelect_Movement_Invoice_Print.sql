@@ -68,7 +68,9 @@ BEGIN
                           GROUP BY MovementLinkMovement.MovementChildId
                           )
       -- ¬се документы предоплаты, в которых указан этот док заказ (нужна итого сумма дл€ счета показать сумму счетов предоплаты)
-      , tmpMov_PrePay AS (SELECT SUM (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS Total_PrePay
+      , tmpMov_PrePay AS (SELECT Movement.Id
+                               , (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS Total_PrePay
+                               , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS Ord
                          FROM Movement
                             INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                           ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
@@ -133,7 +135,29 @@ BEGIN
             , tmpInfo.Footer3        ::TVarChar AS Footer3   --***
             , tmpInfo.Footer4        ::TVarChar AS Footer4 
             , tmpInfo.Footer_bank    ::TVarChar AS Footer_bank
-            , tmpInfo.Footer_user    ::TVarChar AS Footer_user
+            , tmpInfo.Footer_user    ::TVarChar AS Footer_user    
+            
+            --строка дл€ предоплаты берем из комментари€, если комментарий пусто то формируем сами
+            , CASE WHEN COALESCE (MovementString_Comment.ValueData,'') <> '' THEN MovementString_Comment.ValueData
+                   ELSE CASE WHEN tmpPrePay.Ord = 1 THEN 'Reservation Fee ' 
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                             WHEN tmpPrePay.Ord = 2 THEN 'First Advance-payment '
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                             WHEN tmpPrePay.Ord = 3 THEN 'First and Second Advance-payment '
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient 
+                             ELSE /*WHEN tmpPrePay.Ord = 4 THEN*/ 'First, Second and Third Advance-payment '
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                          END
+                     
+              END  :: TVarChar AS Comment_PrePay
+          
+             --Reservation Fee  [FormatFloat( ',0.0', <frxDBDHeader."Persent_invoice">)]%  for [frxDBDHeader."modelname_full"] Order: [frxDBDHeader."invnumber_orderclient"]
+
+             --First, Second and Third Advance-payment [FormatFloat( ',0.0', <frxDBDHeader."Persent_invoice">)]%  for [frxDBDHeader."modelname_full"] Order: [frxDBDHeader."invnumber_orderclient"]
 
 
        FROM tmpInvoice
@@ -167,8 +191,14 @@ BEGIN
                                ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                               AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
           LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId  
-          
-          LEFT JOIN tmpMov_PrePay ON 1 = 1
+          --итого сумма предоплат
+          LEFT JOIN (SELECT SUM (tmpMov_PrePay.Total_PrePay) AS Total_PrePay FROM  tmpMov_PrePay) AS tmpMov_PrePay ON 1 = 1  
+          --номер предоплаты
+          LEFT JOIN tmpMov_PrePay AS tmpPrePay ON tmpPrePay.Id = tmpInvoice.Id
+
+          LEFT JOIN MovementString AS MovementString_Comment
+                                   ON MovementString_Comment.MovementId = tmpInvoice.Id
+                                  AND MovementString_Comment.DescId = zc_MovementString_Comment()
  
           ;
 
