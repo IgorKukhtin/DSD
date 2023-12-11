@@ -842,7 +842,7 @@ BEGIN
                                                   , inInvNumberPartner      := ''
                                                   , inPriceWithVAT          := CASE WHEN inBranchCode BETWEEN 1 AND 310
                                                                                          THEN COALESCE ((SELECT tmp.isPriceWithVAT
-                                                                                                         FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                                         FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 1 AND 310 AND vbMovementDescId = zc_Movement_Income()
                                                                                                                                                                      THEN COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                                                                                                                                                   , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
                                                                                                                                                                                    )
@@ -850,7 +850,7 @@ BEGIN
                                                                                                                                                                 END
                                                                                                                                               , inJuridicalId:= 0
                                                                                                                                               , inPartnerId  := 0
-                                                                                                                                              , inContractId := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                                                                              , inContractId := CASE WHEN inBranchCode BETWEEN 1 AND 310 AND vbMovementDescId = zc_Movement_Income()
                                                                                                                                                                      THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                                                                                                                                                      ELSE -1
                                                                                                                                                                 END
@@ -1166,7 +1166,7 @@ BEGIN
      FROM (WITH -- Товары в договорах(Спецификация)
                 tmpContractGoods
                      AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.CountForAmount
-                         FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                         FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 1 AND 310 AND vbMovementDescId = zc_Movement_Income()
                                                                                      THEN COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                                                                   , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
                                                                                                    )
@@ -1174,14 +1174,14 @@ BEGIN
                                                                                 END
                                                               , inJuridicalId:= 0
                                                               , inPartnerId  := 0
-                                                              , inContractId := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                              , inContractId := CASE WHEN inBranchCode BETWEEN 1 AND 310 AND vbMovementDescId = zc_Movement_Income()
                                                                                      THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                                                                      ELSE -1
                                                                                 END
                                                               , inGoodsId    := 0
                                                               , inUserId     := vbUserId
                                                                ) AS tmp
-                         WHERE inBranchCode BETWEEN 301 AND 310
+                         WHERE inBranchCode BETWEEN 1 AND 310
                            AND vbMovementDescId = zc_Movement_Income()
                         )
                 -- элементы документа (были сохранены раньше)
@@ -2149,7 +2149,29 @@ end if;*/
   , (SELECT MI.Amount FROM MovementItem AS MI LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_AmountPartner() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
   , (SELECT MIF.ValueData FROM MovementItem AS MI LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_AmountPartner() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
   , zfConvert_DateToString (vbOperDate_scale)
-  , zfConvert_DateToString (inOperDate)
+--  , zfConvert_DateToString (inOperDate)
+  , (select CASE WHEN inBranchCode BETWEEN 1 AND 310
+                                                                                         THEN COALESCE ((SELECT tmp.isPriceWithVAT
+                                                                                                         FROM lpGet_MovementItem_ContractGoods (inOperDate   := CASE WHEN inBranchCode BETWEEN 1 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                                                                                                     THEN COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                                                                                                                                  , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                                                                                                                                   )
+                                                                                                                                                                     ELSE NULL
+                                                                                                                                                                END
+                                                                                                                                              , inJuridicalId:= 0
+                                                                                                                                              , inPartnerId  := 0
+                                                                                                                                              , inContractId := CASE WHEN inBranchCode BETWEEN 1 AND 310 AND vbMovementDescId = zc_Movement_Income()
+                                                                                                                                                                     THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                                                                                                                                     ELSE -1
+                                                                                                                                                                END
+                                                                                                                                              , inGoodsId    := 0
+                                                                                                                                              , inUserId     := vbUserId
+                                                                                                                                               ) AS tmp
+                                                                                                         LIMIT 1)
+                                                                                                      , null)
+
+                                                                                         ELSE null
+                                                                               END)
    ;
 END IF;
 
