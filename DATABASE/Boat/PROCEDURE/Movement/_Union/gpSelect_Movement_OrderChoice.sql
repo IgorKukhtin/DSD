@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumber
              , ProductCIN TVarChar
 
              , Comment TVarChar
-             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, ReceiptNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
 
@@ -96,7 +96,6 @@ BEGIN
                                 LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                          ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                                         AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
                                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                        ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -105,8 +104,7 @@ BEGIN
                                                                ON MovementLinkMovement_Invoice.MovementId = Movement.Id
                                                               AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                           )
-
-
+        -- Результат
         SELECT Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
              , zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) AS InvNumber_Full
@@ -144,10 +142,13 @@ BEGIN
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
-             , Movement_Invoice.Id                      AS MovementId_Invoice
-             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
-             , Movement_Invoice.InvNumber               AS InvNumber_Invoice
-             , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
+             , Movement_Invoice.Id                            AS MovementId_Invoice
+             , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber_Invoice.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
+               -- Поиск по этому номеру
+             , MovementString_ReceiptNumber_Invoice.ValueData
+             -- , Movement_Invoice.InvNumber                     AS InvNumber_Invoice
+             , MovementString_ReceiptNumber_Invoice.ValueData AS ReceiptNumber_Invoice
+             , MovementString_Comment_Invoice.ValueData       AS Comment_Invoice
 
              , Object_InfoMoney_View.InfoMoneyId
              , Object_InfoMoney_View.InfoMoneyCode
@@ -181,6 +182,10 @@ BEGIN
              LEFT JOIN Object AS Object_Product  ON Object_Product.Id  = MovementLinkObject_Product.ObjectId
 
              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = Movement.MovementId_Invoice
+
+             LEFT JOIN MovementString AS MovementString_ReceiptNumber_Invoice
+                                      ON MovementString_ReceiptNumber_Invoice.MovementId = Movement.MovementId_Invoice
+                                     AND MovementString_ReceiptNumber_Invoice.DescId     = zc_MovementString_ReceiptNumber()
 
              LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                       ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id

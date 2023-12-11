@@ -57,7 +57,7 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
          IF inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Proforma'
-         THEN vbReceiptNumber:= '';
+         THEN vbReceiptNumber:= 0;
          ELSE
              -- Quittung Nr последний+1  -- формируется только для Amount>0
              vbReceiptNumber := 1 + COALESCE ((SELECT MAX (zfConvert_StringToNumber (MovementString.ValueData))
