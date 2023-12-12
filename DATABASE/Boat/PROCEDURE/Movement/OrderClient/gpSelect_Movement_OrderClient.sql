@@ -207,7 +207,7 @@ BEGIN
              , Object_Status.ValueData                      AS StatusName
 
              , MovementBoolean_PriceWithVAT.ValueData       AS PriceWithVAT
-             , MovementFloat_VATPercent.ValueData           AS VATPercent
+             , COALESCE (MovementFloat_VATPercent.ValueData, 0) :: TFloat AS VATPercent
              , MovementFloat_DiscountTax.ValueData          AS DiscountTax
              , MovementFloat_DiscountNextTax.ValueData      AS DiscountNextTax
              , MovementFloat_TotalCount.ValueData           AS TotalCount
@@ -301,7 +301,7 @@ BEGIN
              , MovementString_ReceiptNumber_Invoice.ValueData  AS ReceiptNumber_Invoice
              , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice
 
-             , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
+             , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS Value_TaxKind
              , Object_TaxKind.ValueData                     AS TaxKindName
              , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
 
