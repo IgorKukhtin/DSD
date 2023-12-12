@@ -100,13 +100,12 @@ BEGIN
              , MovementDate_Insert.ValueData        AS InsertDate
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
-                                                                                                                                                                                                                   LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
-                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
              , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
              , Object_TaxKind.Id                            AS TaxKindId
              , Object_TaxKind.ValueData                     AS TaxKindName
              , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
+
         FROM Movement_Sale
 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
@@ -119,7 +118,6 @@ BEGIN
                                AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
 
-
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                 ON MovementFloat_TotalSummPVAT.MovementId = Movement_Sale.Id
                                AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
@@ -127,6 +125,10 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                 ON MovementFloat_TotalSummMVAT.MovementId = Movement_Sale.Id
                                AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
+                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
         LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                 ON MovementFloat_VATPercent.MovementId = Movement_Sale.Id
