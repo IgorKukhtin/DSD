@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumber
              , VATPercent TFloat, DiscountTax TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
-             , TotalSumm_debet TFloat, TotalSumm_credit TFloat
+             , TotalSumm_debet TFloat, TotalSumm_credit TFloat 
+             , BasisWVAT_summ_transport TFloat
 
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -104,6 +105,35 @@ BEGIN
                                                                ON MovementLinkMovement_Invoice.MovementId = Movement.Id
                                                               AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                           )
+        , tmpSummProduct AS (SELECT  
+                                   gpSelect.MovementId_OrderClient
+                                 -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
+                                 , gpSelect.Basis_summ1_orig
+                                   -- ИТОГО Без скидки, Сумма опций, без НДС
+                                 , gpSelect.Basis_summ2_orig
+                                   -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
+                                 , gpSelect.Basis_summ_orig
+
+                                   -- ИТОГО Сумма Скидки - без НДС
+                                 , gpSelect.SummDiscount1
+                                 , gpSelect.SummDiscount2
+                                 , gpSelect.SummDiscount3
+                                 , gpSelect.SummDiscount_total
+
+                                   -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+                                 , gpSelect.Basis_summ
+                                   -- Сумма транспорт с сайта
+                                 , gpSelect.TransportSumm_load
+
+                                   -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                 , gpSelect.Basis_summ_transport
+                                   -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                 , gpSelect.BasisWVAT_summ_transport
+
+                            FROM gpSelect_Object_Product (0, FALSE, FALSE, '') AS gpSelect
+                            --WHERE gpSelect.MovementId_OrderClient = inMovementId
+                           )
+
         -- Результат
         SELECT Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
@@ -124,8 +154,11 @@ BEGIN
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
 
-             , MovementFloat_TotalSumm.ValueData AS TotalSumm_debet
+             , tmpSummProduct.BasisWVAT_summ_transport AS TotalSumm_debet     --MovementFloat_TotalSumm.ValueData
              , 0                       :: TFloat AS TotalSumm_credit
+              -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+             , tmpSummProduct.BasisWVAT_summ_transport ::TFloat
+             
 
              , Object_Object.Id                             AS ObjectId
              , Object_Object.ObjectCode                     AS ObjectCode
@@ -219,6 +252,14 @@ BEGIN
                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
                                     AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
+             --
+             /*LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
+                                     ON MovementFloat_TransportSumm_load.MovementId = Movement.Id
+                                    AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
+             LEFT JOIN MovementFloat AS MovementFloat_SummTax
+                                     ON MovementFloat_SummTax.MovementId = Movement.Id
+                                    AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()*/
+
              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                        ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -256,7 +297,9 @@ BEGIN
                                    AND ObjectString_TaxKind_Info.DescId   = zc_ObjectString_TaxKind_Info()
              LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                     ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                   AND ObjectString_TaxKind_Comment.DescId   = zc_ObjectString_TaxKind_Comment()
+                                   AND ObjectString_TaxKind_Comment.DescId   = zc_ObjectString_TaxKind_Comment()    
+             
+             LEFT JOIN tmpSummProduct ON tmpSummProduct.MovementId_OrderClient = Movement.Id
 
         WHERE Movement.ObjectId = inObjectId OR COALESCE (inObjectId, 0) = 0
        ;

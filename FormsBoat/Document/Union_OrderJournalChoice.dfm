@@ -48,6 +48,16 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             item
               Format = ',0.00##'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BasisWVAT_summ_transport
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -74,6 +84,16 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ObjectName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BasisWVAT_summ_transport
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -186,13 +206,27 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 70
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            Caption = '***Total LP ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1048#1058#1054#1043#1054' '#1088#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084 +
+              #1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+            Width = 80
+          end
+          object BasisWVAT_summ_transport: TcxGridDBColumn
+            Caption = 'Total LP + Vat'
+            DataBinding.FieldName = 'BasisWVAT_summ_transport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
             Width = 80
           end
           object DiscountTax: TcxGridDBColumn
