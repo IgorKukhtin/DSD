@@ -458,9 +458,9 @@ BEGIN
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3 ELSE 0 END) AS Summ3_cost
 
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1_bon ELSE 0 END) AS Summ1_bon
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2_bon ELSE 0 END) AS Summ2_bon
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3_bon ELSE 0 END) AS Summ3_bon
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_in_calc * tmpChildReceiptTable.Price1_bon ELSE 0 END) AS Summ1_bon
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_in_calc * tmpChildReceiptTable.Price2_bon ELSE 0 END) AS Summ2_bon
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_in_calc * tmpChildReceiptTable.Price3_bon ELSE 0 END) AS Summ3_bon
 
 
                        , SUM (tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price1) AS Summ1_calc
@@ -470,9 +470,9 @@ BEGIN
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost_calc
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price3 ELSE 0 END) AS Summ3_cost_calc
 
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price1_bon ELSE 0 END) AS Summ1_bon_calc
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price2_bon ELSE 0 END) AS Summ2_bon_calc
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out_calc * tmpChildReceiptTable.Price3_bon ELSE 0 END) AS Summ3_bon_calc
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_in_calc * tmpChildReceiptTable.Price1_bon ELSE 0 END) AS Summ1_bon_calc
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_in_calc * tmpChildReceiptTable.Price2_bon ELSE 0 END) AS Summ2_bon_calc
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_in_calc * tmpChildReceiptTable.Price3_bon ELSE 0 END) AS Summ3_bon_calc
 
                        , MAX (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Koeff1_bon ELSE 0 END) AS Koeff1_bon
                        , MAX (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Koeff2_bon ELSE 0 END) AS Koeff2_bon
@@ -607,16 +607,41 @@ BEGIN
            , tmpChild.Amount_out_Weight      :: TFloat AS Amount_out_Weight
            , tmpChild.Amount_out_Weight_calc :: TFloat AS Amount_out_Weight_calc
 
-           , CAST ((tmpResult.Summ1 + COALESCE (tmpResult.Summ1_bon, 0)) / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price1
-           , CAST ((tmpResult.Summ2 + COALESCE (tmpResult.Summ1_bon, 0)) / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price2
-           , CAST ((tmpResult.Summ3 + COALESCE (tmpResult.Summ1_bon, 0)) / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price3
+           , CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData + CASE WHEN vbUserId = 0 THEN COALESCE (tmpResult.Summ1_bon, 0) / tmpResult.Amount_in_calc
+                                                                                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                        WHEN tmpResult.Amount_in_calc > 0 THEN COALESCE (tmpResult.Summ1_bon, 0) / tmpResult.Amount_in_calc
+                                                                                                             * CASE WHEN 1=1 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                        ELSE 0
+                                                                   END AS NUMERIC (16, 3)) :: TFloat AS Price1
+           , CAST (tmpResult.Summ2 / ObjectFloat_Value.ValueData + CASE WHEN vbUserId = 0 THEN COALESCE (tmpResult.Summ1_bon, 0) / tmpResult.Amount_in_calc
+                                                                                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                        WHEN tmpResult.Amount_in_calc > 0 THEN COALESCE (tmpResult.Summ1_bon, 0) / tmpResult.Amount_in_calc
+                                                                                                             * CASE WHEN 1=1 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                        ELSE 0
+                                                                   END AS NUMERIC (16, 3)) :: TFloat AS Price2
+           , CAST (tmpResult.Summ3 / ObjectFloat_Value.ValueData + CASE WHEN vbUserId = 0 THEN COALESCE (tmpResult.Summ1_bon, 0) / tmpResult.Amount_in_calc
+                                                                                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                        WHEN tmpResult.Amount_in_calc > 0 THEN COALESCE (tmpResult.Summ1_bon, 0) / tmpResult.Amount_in_calc
+                                                                                                             * CASE WHEN 1=1 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                        ELSE 0
+                                                                   END AS NUMERIC (16, 3)) :: TFloat AS Price3
+
            , CAST (tmpResult.Summ1_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price1_cost
            , CAST (tmpResult.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price2_cost
            , CAST (tmpResult.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price3_cost
 
-           , CAST ((tmpResult.Summ1_calc + COALESCE (tmpResult.Summ1_bon_calc, 0)) / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price1_calc
-           , CAST ((tmpResult.Summ2_calc + COALESCE (tmpResult.Summ1_bon_calc, 0)) / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price2_calc
-           , CAST ((tmpResult.Summ3_calc + COALESCE (tmpResult.Summ1_bon_calc, 0)) / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price3_calc
+           , CAST (tmpResult.Summ1_calc / tmpResult.Amount_in_calc + COALESCE (tmpResult.Summ1_bon_calc, 0) / tmpResult.Amount_in_calc
+                                                                   * CASE WHEN 1=0 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                    AS NUMERIC (16, 3)) :: TFloat AS Price1_calc
+
+           , CAST (tmpResult.Summ2_calc / tmpResult.Amount_in_calc + COALESCE (tmpResult.Summ1_bon_calc, 0) / tmpResult.Amount_in_calc
+                                                                   * CASE WHEN 1=0 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                   AS NUMERIC (16, 3)) :: TFloat AS Price2_calc
+
+           , CAST (tmpResult.Summ3_calc / tmpResult.Amount_in_calc + COALESCE (tmpResult.Summ1_bon_calc, 0) / tmpResult.Amount_in_calc
+                                                                   * CASE WHEN 1=0 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                    AS NUMERIC (16, 3)) :: TFloat AS Price3_calc
+
            , CAST (tmpResult.Summ1_cost_calc / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price1_cost_calc
            , CAST (tmpResult.Summ2_cost_calc / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price2_cost_calc
            , CAST (tmpResult.Summ3_cost_calc / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price3_cost_calc
@@ -627,9 +652,15 @@ BEGIN
            , tmpResult.Koeff1_bon :: TFloat AS Price2_bon
            , tmpResult.Koeff1_bon :: TFloat AS Price3_bon
 
-           , COALESCE (tmpResult.Summ1_bon / ObjectFloat_Value.ValueData, 0) :: TFloat AS Price1_bon_sale
-           , COALESCE (tmpResult.Summ1_bon / ObjectFloat_Value.ValueData, 0) :: TFloat AS Price2_bon_sale
-           , COALESCE (tmpResult.Summ1_bon / ObjectFloat_Value.ValueData, 0) :: TFloat AS Price3_bon_sale
+           , CASE WHEN tmpResult.Amount_in_calc > 0 THEN COALESCE (tmpResult.Summ1_bon / tmpResult.Amount_in_calc, 0)
+                                                                                       * CASE when vbUserId = 5 then 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                  ELSE 0 END :: TFloat AS Price1_bon_sale
+           , CASE WHEN tmpResult.Amount_in_calc > 0 THEN COALESCE (tmpResult.Summ1_bon / tmpResult.Amount_in_calc, 0)
+                                                                                       * CASE when vbUserId = 5 then 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                  ELSE 0 END :: TFloat AS Price2_bon_sale
+           , CASE WHEN tmpResult.Amount_in_calc > 0 THEN COALESCE (tmpResult.Summ1_bon / tmpResult.Amount_in_calc, 0)
+                                                                                       * CASE when vbUserId = 5 then 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                  ELSE 0 END :: TFloat AS Price3_bon_sale
 
 
            , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
@@ -816,6 +847,7 @@ BEGIN
             , tmpReceiptChild.Amount_in
             , tmpReceiptChild.Amount_in_calc
 
+-- tmpReceiptChild.GoodsId_out = zc_Enum_InfoMoney_21501() AND vbUserId = 5 THEN ObjectFloatReceipt_Value.ValueData
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Amount_out ELSE 0 END AS Amount
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price1 WHEN ObjectFloatReceipt_Value.ValueData > 0 THEN tmpChild_calc.Summ1 / ObjectFloatReceipt_Value.ValueData ELSE 0 END AS Price1
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price2 WHEN ObjectFloatReceipt_Value.ValueData > 0 THEN tmpChild_calc.Summ2 / ObjectFloatReceipt_Value.ValueData ELSE 0 END AS Price2
@@ -903,8 +935,10 @@ BEGIN
                     --
                   , zc_Enum_InfoMoney_21501() AS GoodsId_out
                   , 0 AS GoodsKindId_out
-                  , tmpChildReceiptTable.Amount_out
-                  , tmpChildReceiptTable.Amount_out_start
+                  , CASE WHEN 1 = 1 THEN tmpChildReceiptTable.Amount_in      ELSE tmpChildReceiptTable.Amount_out       END AS Amount_out
+                  , CASE WHEN 1 = 1 THEN tmpChildReceiptTable.Amount_in_calc ELSE tmpChildReceiptTable.Amount_out_start END AS Amount_out_start
+--                  , 1 :: TFloat AS Amount_out
+--                  , 1 :: TFloat AS Amount_out_start
                   , tmpChildReceiptTable.isStart
                   , tmpChildReceiptTable.isCost
 
