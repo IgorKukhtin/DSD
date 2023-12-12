@@ -79,8 +79,8 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id    = MovementItem.ObjectId
-                                            AND Movement.ObjectId <> MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id     = MovementItem.ObjectId
+                                            AND Object_Goods.DescId = zc_Object_Goods()
 
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId
