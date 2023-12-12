@@ -119,7 +119,7 @@ type
     actSetNull_GuidesClient: TdsdSetDefaultParams;
     btnSetNull_GuidesClient: TcxButton;
     cxLabel4: TcxLabel;
-    edSearchInvNumber_Invoice: TcxTextEdit;
+    edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     InvNumber_Invoice: TcxGridDBColumn;
   private
   public

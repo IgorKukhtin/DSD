@@ -76,9 +76,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Width = 131
     end
     object cxLabel4: TcxLabel
-      Left = 678
-      Top = 5
-      Caption = #8470' '#1089#1095#1077#1090':'
+      Left = 676
+      Top = 4
+      Caption = 'Inv No '#1089#1095#1077#1090':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -87,8 +87,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edSearchInvNumber_Invoice: TcxTextEdit
-      Left = 743
+    object edSearch_ReceiptNumber_Invoice: TcxTextEdit
+      Left = 763
       Top = 5
       TabOrder = 7
       DesignSize = (
@@ -469,6 +469,15 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object ReceiptNumber_Invoice: TcxGridDBColumn
+        Caption = 'Inv No'
+        DataBinding.FieldName = 'ReceiptNumber_Invoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+        Options.Editing = False
+        Width = 55
       end
       object DiscountTax: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080
@@ -2799,8 +2808,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Column = InvNumber
       end
       item
-        Column = InvNumber_Invoice
-        TextEdit = edSearchInvNumber_Invoice
+        Column = ReceiptNumber_Invoice
+        TextEdit = edSearch_ReceiptNumber_Invoice
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

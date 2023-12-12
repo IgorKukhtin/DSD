@@ -55,12 +55,12 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel6: TcxLabel
-      Left = 782
+      Left = 797
       Top = 6
       Caption = 'Kunden:'
     end
     object edClient: TcxButtonEdit
-      Left = 826
+      Left = 842
       Top = 5
       Properties.Buttons = <
         item
@@ -68,7 +68,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 218
+      Width = 191
     end
     object cxLabel3: TcxLabel
       Left = 388
@@ -94,7 +94,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     object cxLabel4: TcxLabel
       Left = 581
       Top = 4
-      Caption = #8470' '#1089#1095#1077#1090':'
+      Caption = 'Inv No '#1089#1095#1077#1090':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -103,8 +103,8 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edSearchInvNumber_Invoice: TcxTextEdit
-      Left = 642
+    object edSearch_ReceiptNumber_Invoice: TcxTextEdit
+      Left = 665
       Top = 5
       TabOrder = 9
       DesignSize = (
@@ -494,6 +494,16 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object ReceiptNumber_Invoice: TcxGridDBColumn
+        Caption = 'Inv No'
+        DataBinding.FieldName = 'ReceiptNumber_Invoice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+        Options.Editing = False
+        Width = 55
       end
       object Comment_Invoice: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
@@ -1782,8 +1792,8 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Column = InvNumber
       end
       item
-        Column = InvNumber_Invoice
-        TextEdit = edSearchInvNumber_Invoice
+        Column = ReceiptNumber_Invoice
+        TextEdit = edSearch_ReceiptNumber_Invoice
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

@@ -274,7 +274,7 @@
     Width = 117
   end
   object btnGoodsChoiceForm: TcxButton [34]
-    Left = 15
+    Left = 22
     Top = 460
     Width = 180
     Height = 25
@@ -288,7 +288,7 @@
     Top = 460
     Width = 180
     Height = 25
-    Action = actGuidesParentChoiceForm
+    Action = mactGuidesParentChoiceForm
     ParentShowHint = False
     ShowHint = True
     TabOrder = 35
@@ -337,6 +337,20 @@
   inherited ActionList: TActionList
     Left = 237
     Top = 166
+    object actGetPrepay: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spGetPrepay
+      StoredProcList = <
+        item
+          StoredProc = spGetPrepay
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
+      Hint = #1056#1072#1089#1095#1077#1090' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
+      RefreshOnTabSetChanges = False
+    end
     object actGetPlanDate: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -614,6 +628,20 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object mactGuidesParentChoiceForm: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGuidesParentChoiceForm
+        end
+        item
+          Action = actGetPrepay
+        end>
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+      ImageIndex = 7
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1371,8 +1399,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 16
+    Left = 264
+    Top = 56
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -1573,5 +1601,37 @@
       end>
     Left = 346
     Top = 65
+  end
+  object spGetPrepay: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Invoice_Prepay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId_order'
+        Value = 44230d
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSumm_debet'
+        Value = Null
+        Component = ceAmountIn
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountIn'
+        Value = 42005d
+        Component = ceAmountIn
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 232
+    Top = 424
   end
 end
