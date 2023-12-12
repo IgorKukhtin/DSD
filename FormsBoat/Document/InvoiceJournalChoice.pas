@@ -72,7 +72,7 @@ type
     btnClientPartnerChoiceForm: TcxButton;
     actSetNull_GuidesClient: TdsdSetDefaultParams;
     cxLabel4: TcxLabel;
-    edSearchInvNumber_Invoice: TcxTextEdit;
+    edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     cxLabel3: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;

@@ -77,7 +77,7 @@ type
     btnSetNull_GuidesClient: TcxButton;
     btnClientPartnerChoiceForm: TcxButton;
     lbSearchArticle: TcxLabel;
-    edSearchInvNumber_Invoice: TcxTextEdit;
+    edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     cxLabel3: TcxLabel;
     edSearchObjectName: TcxTextEdit;
   private

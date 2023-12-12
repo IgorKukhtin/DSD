@@ -79,7 +79,7 @@ type
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     lbSearchArticle: TcxLabel;
-    edSearchInvNumber_Invoice: TcxTextEdit;
+    edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     cxLabel3: TcxLabel;
     edSearchMoneyPlaceName: TcxTextEdit;
     cxLabel4: TcxLabel;

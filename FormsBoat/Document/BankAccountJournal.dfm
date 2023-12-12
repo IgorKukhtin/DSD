@@ -457,9 +457,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     ExplicitWidth = 1213
     ExplicitHeight = 30
     object lbSearchArticle: TcxLabel
-      Left = 664
+      Left = 651
       Top = 4
-      Caption = #8470' '#1089#1095#1077#1090': '
+      Caption = 'Inv No '#1089#1095#1077#1090':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -468,8 +468,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edSearchInvNumber_Invoice: TcxTextEdit
-      Left = 733
+    object edSearch_ReceiptNumber_Invoice: TcxTextEdit
+      Left = 735
       Top = 5
       TabOrder = 5
       DesignSize = (
@@ -499,7 +499,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Width = 131
     end
     object cxLabel4: TcxLabel
-      Left = 456
+      Left = 447
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
@@ -511,7 +511,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Style.IsFontAssigned = True
     end
     object edSearchInvNumber_OrderClient: TcxTextEdit
-      Left = 526
+      Left = 514
       Top = 5
       TabOrder = 9
       DesignSize = (
@@ -1639,8 +1639,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Column = InvNumber_parent
       end
       item
-        Column = InvNumber_Invoice
-        TextEdit = edSearchInvNumber_Invoice
+        Column = ReceiptNumber_Invoice
+        TextEdit = edSearch_ReceiptNumber_Invoice
       end
       item
         Column = MoneyPlaceName

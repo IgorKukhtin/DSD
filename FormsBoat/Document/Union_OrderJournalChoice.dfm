@@ -281,6 +281,16 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Options.Editing = False
             Width = 120
           end
+          object ReceiptNumber_Invoice: TcxGridDBColumn
+            Caption = 'Inv No'
+            DataBinding.FieldName = 'ReceiptNumber_Invoice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+            Options.Editing = False
+            Width = 55
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -399,7 +409,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Width = 230
     end
     object edSearchInvNumber: TcxTextEdit
-      Left = 263
+      Left = 285
       Top = 32
       TabOrder = 6
       DesignSize = (
@@ -408,7 +418,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Width = 115
     end
     object lbSearchCode: TcxLabel
-      Left = 195
+      Left = 216
       Top = 33
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
@@ -422,7 +432,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     object lbSearchArticle: TcxLabel
       Left = 12
       Top = 33
-      Caption = #8470' '#1089#1095#1077#1090': '
+      Caption = 'Inv No '#1089#1095#1077#1090':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -431,8 +441,8 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edSearchInvNumber_Invoice: TcxTextEdit
-      Left = 74
+    object edSearch_ReceiptNumber_Invoice: TcxTextEdit
+      Left = 97
       Top = 32
       TabOrder = 9
       DesignSize = (
@@ -441,7 +451,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Width = 110
     end
     object cxLabel3: TcxLabel
-      Left = 392
+      Left = 408
       Top = 33
       Caption = 'Lieferanten / Kunden: '
       ParentFont = False
@@ -453,7 +463,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
       Style.IsFontAssigned = True
     end
     object edSearchObjectName: TcxTextEdit
-      Left = 539
+      Left = 562
       Top = 32
       TabOrder = 11
       DesignSize = (
@@ -1620,8 +1630,8 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
         TextEdit = edSearchObjectName
       end
       item
-        Column = InvNumber_Invoice
-        TextEdit = edSearchInvNumber_Invoice
+        Column = ReceiptNumber_Invoice
+        TextEdit = edSearch_ReceiptNumber_Invoice
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

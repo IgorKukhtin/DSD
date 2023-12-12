@@ -46,7 +46,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , ModelId Integer, ModelName TVarChar
              , CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
-             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, ReceiptNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , Value_TaxKind TFloat, TaxKindName TVarChar, TaxKindName_info TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -298,6 +298,7 @@ BEGIN
              , Movement_Invoice.Id                          AS MovementId_Invoice
              , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
              , Movement_Invoice.InvNumber                   AS InvNumber_Invoice
+             , MovementString_ReceiptNumber_Invoice.ValueData  AS ReceiptNumber_Invoice
              , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice
 
              , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
@@ -339,6 +340,10 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                       ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
                                      AND MovementString_Comment_Invoice.DescId     = zc_MovementString_Comment()
+
+             LEFT JOIN MovementString AS MovementString_ReceiptNumber_Invoice
+                                      ON MovementString_ReceiptNumber_Invoice.MovementId = Movement_Invoice.Id
+                                     AND MovementString_ReceiptNumber_Invoice.DescId     = zc_MovementString_ReceiptNumber()
 
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement_OrderClient.Id

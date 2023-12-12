@@ -656,7 +656,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Width = 110
     end
     object edSearch_ReceiptNumber_Invoice: TcxTextEdit
-      Left = 510
+      Left = 514
       Top = 5
       TabOrder = 6
       DesignSize = (
@@ -687,7 +687,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object lbSearchArticle: TcxLabel
       Left = 420
-      Top = 5
+      Top = 4
       Caption = 'Inv No '#1089#1095#1077#1090': '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET

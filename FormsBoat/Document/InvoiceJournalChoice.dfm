@@ -356,6 +356,22 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   inherited Panel: TPanel
     Width = 1141
     ExplicitWidth = 1141
+    inherited deStart: TcxDateEdit
+      Left = 102
+      ExplicitLeft = 102
+      ExplicitWidth = 80
+      Width = 80
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 301
+      ExplicitLeft = 301
+      ExplicitWidth = 79
+      Width = 79
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 191
+      ExplicitLeft = 191
+    end
     object cxLabel6: TcxLabel
       Left = 834
       Top = 6
@@ -374,9 +390,9 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       Width = 197
     end
     object cxLabel4: TcxLabel
-      Left = 426
-      Top = 4
-      Caption = #8470' '#1089#1095#1077#1090':'
+      Left = 413
+      Top = 5
+      Caption = 'Inv No '#1089#1095#1077#1090':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -385,8 +401,8 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
-    object edSearchInvNumber_Invoice: TcxTextEdit
-      Left = 487
+    object edSearch_ReceiptNumber_Invoice: TcxTextEdit
+      Left = 495
       Top = 5
       TabOrder = 7
       DesignSize = (
@@ -395,8 +411,8 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       Width = 120
     end
     object cxLabel3: TcxLabel
-      Left = 616
-      Top = 4
+      Left = 621
+      Top = 5
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -407,7 +423,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 686
+      Left = 689
       Top = 5
       TabOrder = 9
       DesignSize = (
@@ -480,8 +496,8 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         Properties.Strings = (
           'Date')
       end>
-    Left = 248
-    Top = 67
+    Left = 280
+    Top = 147
   end
   inherited ActionList: TActionList
     Left = 239
@@ -1066,8 +1082,8 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Top = 131
   end
   inherited BarManager: TdxBarManager
-    Left = 208
-    Top = 67
+    Left = 200
+    Top = 147
     DockControlHeights = (
       0
       0
@@ -1318,11 +1334,11 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 624
-    Top = 3
+    Left = 584
+    Top = 43
   end
   object FieldFilter_Article: TdsdFieldFilter
-    TextEdit = edSearchInvNumber_Invoice
+    TextEdit = edSearch_ReceiptNumber_Invoice
     DataSet = MasterCDS
     Column = colInvNumber
     ColumnList = <

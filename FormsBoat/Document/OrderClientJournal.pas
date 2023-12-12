@@ -154,7 +154,7 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
     cxLabel4: TcxLabel;
-    edSearchInvNumber_Invoice: TcxTextEdit;
+    edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     InvNumber_Invoice: TcxGridDBColumn;
   private
   public
