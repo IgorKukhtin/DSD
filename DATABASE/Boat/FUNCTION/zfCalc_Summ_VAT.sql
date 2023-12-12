@@ -1,21 +1,17 @@
--- Function: Считаем % наценки
+-- Function: Считаем Сумму НДС - Округление до 2-х знаков
 
-DROP FUNCTION IF EXISTS zfCalc_Value_VAT (TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_Summ_VAT (TFloat, TFloat);
 
-CREATE OR REPLACE FUNCTION zfCalc_Value_VAT(
-    IN inSummFrom  TFloat, -- 100
-    IN inSummTo    TFloat  -- 100 + X %
+CREATE OR REPLACE FUNCTION zfCalc_Summ_VAT(
+    IN inSumm          TFloat, -- Сумма с НДС
+    IN inTaxKindValue  TFloat  -- % НДС
 )
 RETURNS TFloat
 AS
 $BODY$
 BEGIN
      -- округлили до 2-х знаков
-     RETURN CASE WHEN COALESCE (inSummFrom, 0) = 0 AND COALESCE (inSummTo, 0) > 0 THEN  100
-                 WHEN COALESCE (inSummFrom, 0) = 0 AND COALESCE (inSummTo, 0) < 0 THEN -100
-                 WHEN COALESCE (inSummFrom, 0) = 0 AND COALESCE (inSummTo, 0) = 0 THEN    0
-                 ELSE COALESCE (inSummTo, 0) * 100 / inSummFrom - 100
-            END;
+     RETURN inSumm - zfCalc_Summ_NoVAT (inSumm, inTaxKindValue);
                 
 END;
 $BODY$
@@ -29,4 +25,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM zfCalc_Value_VAT (inSummFrom:= 100, inSummTo:= 120)
+-- SELECT * FROM zfCalc_Summ_VAT (inSumm:= 119, inTaxKindValue:= 19)

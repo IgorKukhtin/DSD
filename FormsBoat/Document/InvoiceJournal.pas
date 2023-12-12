@@ -135,6 +135,9 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintReturnCDS: TClientDataSet;
     PrintOptionCDS: TClientDataSet;
+    Summà_ch4: TcxGridDBColumn;
+    Summà_WVAT_ch4: TcxGridDBColumn;
+    Summà_VAT_ch4: TcxGridDBColumn;
   private
     { Private declarations }
   public

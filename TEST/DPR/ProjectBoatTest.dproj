@@ -773,10 +773,6 @@
 				<Form>Report_Goods_RemainsCurrentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\InvoiceJournal.pas">
-				<Form>InvoiceJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas">
 				<Form>BankAccountJournalByInvoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1280,6 +1276,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\InvoiceItemEdit.pas">
 				<Form>InvoiceItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\InvoiceJournal.pas">
+				<Form>InvoiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

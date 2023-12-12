@@ -236,7 +236,6 @@ uses
   Report_BalanceDialog in '..\..\FormsBoat\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
   Report_Goods_RemainsCurrentDialog in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
   Report_Goods_RemainsCurrent in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
-  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
   BankAccountJournalByInvoice in '..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas' {BankAccountJournalByInvoiceForm: TParentForm},
   OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
   Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
@@ -370,7 +369,8 @@ uses
   IncomeJournalByInvoice in '..\..\FormsBoat\Document\IncomeJournalByInvoice.pas' {IncomeJournalByInvoiceForm: TParentForm},
   InvoiceKind in '..\..\FormsBoat\Kind\InvoiceKind.pas' {InvoiceKindForm: TParentForm},
   InvoiceKindEdit in '..\..\FormsBoat\Kind\InvoiceKindEdit.pas' {InvoiceKindEditForm: TParentForm},
-  InvoiceItemEdit in '..\..\FormsBoat\Document\InvoiceItemEdit.pas' {InvoiceItemEditForm: TParentForm};
+  InvoiceItemEdit in '..\..\FormsBoat\Document\InvoiceItemEdit.pas' {InvoiceItemEditForm: TParentForm},
+  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
