@@ -631,15 +631,15 @@ BEGIN
            , CAST (tmpResult.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) :: TFloat AS Price3_cost
 
            , CAST (tmpResult.Summ1_calc / tmpResult.Amount_in_calc + COALESCE (tmpResult.Summ1_bon_calc, 0) / tmpResult.Amount_in_calc
-                                                                   * CASE WHEN 1=0 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                   * CASE WHEN 1=1 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                     AS NUMERIC (16, 3)) :: TFloat AS Price1_calc
 
            , CAST (tmpResult.Summ2_calc / tmpResult.Amount_in_calc + COALESCE (tmpResult.Summ1_bon_calc, 0) / tmpResult.Amount_in_calc
-                                                                   * CASE WHEN 1=0 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                   * CASE WHEN 1=1 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                    AS NUMERIC (16, 3)) :: TFloat AS Price2_calc
 
            , CAST (tmpResult.Summ3_calc / tmpResult.Amount_in_calc + COALESCE (tmpResult.Summ1_bon_calc, 0) / tmpResult.Amount_in_calc
-                                                                   * CASE WHEN 1=0 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                   * CASE WHEN 1=1 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                     AS NUMERIC (16, 3)) :: TFloat AS Price3_calc
 
            , CAST (tmpResult.Summ1_cost_calc / tmpResult.Amount_in_calc AS NUMERIC (16, 3)) :: TFloat AS Price1_cost_calc
@@ -853,7 +853,7 @@ BEGIN
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price2 WHEN ObjectFloatReceipt_Value.ValueData > 0 THEN tmpChild_calc.Summ2 / ObjectFloatReceipt_Value.ValueData ELSE 0 END AS Price2
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price3 WHEN ObjectFloatReceipt_Value.ValueData > 0 THEN tmpChild_calc.Summ3 / ObjectFloatReceipt_Value.ValueData ELSE 0 END AS Price3
 
-            , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Amount_out_calc ELSE 0 END AS Amount_calc
+            , CASE /*WHEN vbUserId = 5 THEN tmpReceiptChild.Amount_in_calc*/ WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Amount_out_calc ELSE 0 END AS Amount_calc
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price1_calc WHEN tmpReceiptChild.Amount_in_calc > 0 THEN tmpChild_calc.Summ1_calc / tmpReceiptChild.Amount_in_calc ELSE 0 END AS Price1_calc
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price2_calc WHEN tmpReceiptChild.Amount_in_calc > 0 THEN tmpChild_calc.Summ2_calc / tmpReceiptChild.Amount_in_calc ELSE 0 END AS Price2_calc
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price3_calc WHEN tmpReceiptChild.Amount_in_calc > 0 THEN tmpChild_calc.Summ3_calc / tmpReceiptChild.Amount_in_calc ELSE 0 END AS Price3_calc
@@ -930,15 +930,21 @@ BEGIN
 
             UNION ALL
              SELECT tmpChildReceiptTable.ReceiptId_parent, tmpChildReceiptTable.ReceiptId_from, tmpChildReceiptTable.ReceiptId, tmpChildReceiptTable.GoodsId_in, tmpChildReceiptTable.GoodsKindId_in, tmpChildReceiptTable.Amount_in
-                  , tmpChildReceiptTable.ReceiptId_calc, tmpChildReceiptTable.Amount_in_calc, tmpChildReceiptTable.Amount_in_calc_two, tmpChildReceiptTable.Amount_out_calc
+                  , tmpChildReceiptTable.ReceiptId_calc
+
+                  , tmpChildReceiptTable.Amount_in_calc
+                  , tmpChildReceiptTable.Amount_in_calc_two
+
+                  , CASE WHEN 1=1 THEN tmpChildReceiptTable.Amount_in_calc ELSE tmpChildReceiptTable.Amount_out_calc END AS Amount_out_calc
+
                   , tmpChildReceiptTable.ReceiptChildId
                     --
                   , zc_Enum_InfoMoney_21501() AS GoodsId_out
                   , 0 AS GoodsKindId_out
-                  , CASE WHEN 1 = 1 THEN tmpChildReceiptTable.Amount_in      ELSE tmpChildReceiptTable.Amount_out       END AS Amount_out
-                  , CASE WHEN 1 = 1 THEN tmpChildReceiptTable.Amount_in_calc ELSE tmpChildReceiptTable.Amount_out_start END AS Amount_out_start
---                  , 1 :: TFloat AS Amount_out
---                  , 1 :: TFloat AS Amount_out_start
+
+                  , CASE WHEN 1=1 THEN tmpChildReceiptTable.Amount_in      ELSE tmpChildReceiptTable.Amount_out       END AS Amount_out
+                  , CASE WHEN 1=1 THEN tmpChildReceiptTable.Amount_in_calc ELSE tmpChildReceiptTable.Amount_out_start END AS Amount_out_start
+
                   , tmpChildReceiptTable.isStart
                   , tmpChildReceiptTable.isCost
 
