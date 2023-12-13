@@ -10,7 +10,7 @@ AS
 $BODY$
 BEGIN
      -- Получили для Пользователя - к какому Подразделению он привязан
-     IF lpGetUnit_byUser (inUserId) > 0
+     IF lpGetUnit_byUser (inUserId) > 0 AND inUserId <> 1234551 -- Рогожан Е.
      THEN
          -- Нельзя показывать цену ВХ.
          RETURN FALSE;
