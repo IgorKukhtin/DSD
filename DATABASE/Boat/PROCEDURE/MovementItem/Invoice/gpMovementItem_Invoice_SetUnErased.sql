@@ -18,8 +18,15 @@ BEGIN
   -- устанавливаем новое значение
   outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
+  --формировать сумму с ндс автоматом и записывать в zc_MovementFloat_Amount
+  PERFORM lpInsertUpdate_Movement_Invoice_Amount (MovementItem.MovementId, vbUserId)
+  FROm MovementItem
+  WHERE MovementItem.Id = inMovementItemId
+  LIMIT 1;
+
+
   -- устанавливаем новое значение
- -- UPDATE Object_PartionGoods SET isErased = FALSE WHERE MovementItemId = inMovementItemId;
+  -- UPDATE Object_PartionGoods SET isErased = FALSE WHERE MovementItemId = inMovementItemId;
 
   -- устанавливаем новое значение
   -- UPDATE Object SET isErased = FALSE WHERE Object.Id = (SELECT Object_PartionGoods.GoodsId

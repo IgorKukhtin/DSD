@@ -141,6 +141,9 @@ type
     spInsertUpdateItem: TdsdStoredProc;
     actChoiceFormGoods_item: TOpenChoiceForm;
     actUpdateDataSet_item: TdsdUpdateDataSet;
+    bbsView: TdxBarSubItem;
+    bbsDoc: TdxBarSubItem;
+    bbsOpenForm: TdxBarSubItem;
   private
     { Private declarations }
   public

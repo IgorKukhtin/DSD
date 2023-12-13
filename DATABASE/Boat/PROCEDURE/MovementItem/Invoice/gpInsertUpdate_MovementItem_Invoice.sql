@@ -35,8 +35,11 @@ BEGIN
                                                 );
 
 
+     --формировать сумму с ндс автоматом и записывать в zc_MovementFloat_Amount
+     PERFORM lpInsertUpdate_Movement_Invoice_Amount (inMovementId, vbUserId);
+     
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
