@@ -76,6 +76,8 @@ BEGIN
                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                    WHERE MovementString.DescId    = zc_MovementString_ReceiptNumber()
                      AND MovementString.ValueData = TRIM (inReceiptNumber)
+                     -- другой документ
+                     AND MovementString.MovementId <> ioId
                   )
         THEN
             -- еще раз найдем
