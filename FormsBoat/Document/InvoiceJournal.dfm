@@ -1,4 +1,4 @@
-inherited InvoiceJournalForm: TInvoiceJournalForm
+﻿inherited InvoiceJournalForm: TInvoiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 569
   ClientWidth = 1106
@@ -887,6 +887,21 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summа_ch4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summа_WVAT_ch4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summа_VAT_ch4
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -930,6 +945,21 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summа_ch4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summа_WVAT_ch4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summа_VAT_ch4
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1012,6 +1042,33 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
+      end
+      object Summа_ch4: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+        DataBinding.FieldName = 'Summ'#1072
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Summа_WVAT_ch4: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+        DataBinding.FieldName = 'Summ'#1072'_WVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Summа_VAT_ch4: TcxGridDBColumn
+        Caption = #1053#1044#1057
+        DataBinding.FieldName = 'Summ'#1072'_VAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
     end

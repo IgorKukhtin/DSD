@@ -17,7 +17,9 @@ RETURNS TABLE (MovementId Integer
              , Article    TVarChar
              , Amount     TFloat
              , OperPrice  TFloat
-             , Summà      TFloat
+             , Summà      TFloat 
+             , Summà_WVAT TFloat
+             , Summà_VAT  TFloat
              , Comment    TVarChar
              , isErased   Boolean
              )
@@ -64,11 +66,17 @@ BEGIN
             , ObjectString_Article.ValueData  AS Article
             , MovementItem.Amount         ::TFloat AS Amount
             , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice
-            , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summà
+            , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summà 
+            , zfCalc_SummWVAT (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0), MovementFloat_VATPercent.ValueData) ::TFloat Summà_WVAT
+            , (zfCalc_SummWVAT (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0),MovementFloat_VATPercent.ValueData) -  (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ::TFloat Summà_VAT 
             , MIString_Comment.ValueData      AS Comment
             , MovementItem.isErased           AS isErased
 
-       FROM tmpMovement AS Movement
+       FROM tmpMovement AS Movement 
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
@@ -86,7 +94,6 @@ BEGIN
                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
           ;
-
 
 END;
 $BODY$
