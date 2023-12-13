@@ -64,13 +64,13 @@ type
     HeaderSaver: THeaderSaver;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
-    GridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    SetErased: TdsdUpdateErased;
-    SetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
@@ -80,9 +80,9 @@ type
     spUnErasedMIMaster: TdsdStoredProc;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
-    UnCompleteMovement: TChangeGuidesStatus;
-    CompleteMovement: TChangeGuidesStatus;
-    DeleteMovement: TChangeGuidesStatus;
+    actUnCompleteMovement: TChangeGuidesStatus;
+    actCompleteMovement: TChangeGuidesStatus;
+    actDeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
     GuidesFrom: TdsdGuides;
     actMIContainer: TdsdOpenForm;
@@ -93,7 +93,6 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrintOld: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
@@ -106,7 +105,7 @@ type
     bbactSetErasedCost: TdxBarButton;
     actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
-    InsertRecordGoods: TInsertRecord;
+    actInsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
@@ -149,7 +148,7 @@ type
     actPrintOrderConfirmation: TdsdPrintAction;
     bbPrintStructure: TdxBarButton;
     bbPrintTender: TdxBarButton;
-    InsertRecordInfo: TInsertRecord;
+    actInsertRecordInfo: TInsertRecord;
     actUpdateDataSetInfoDS: TdsdUpdateDataSet;
     bbInsertRecordInfo: TdxBarButton;
     actRefreshInfo: TdsdDataSetRefresh;
@@ -159,7 +158,7 @@ type
     actInsert_MI_byOrderClient: TdsdExecStoredProc;
     bbInsert_MI_byOrderClient: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    SetErasedChild: TdsdUpdateErased;
+    actSetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     getMovementForm: TdsdStoredProc;
     actOpenForm: TdsdOpenForm;
@@ -220,7 +219,6 @@ type
     edBasis_summ_transport: TcxCurrencyEdit;
     edBasisWVAT_summ_transport: TcxCurrencyEdit;
     actFormClose: TdsdFormClose;
-    actCompleteMovement_andSave: TChangeGuidesStatus;
     Panel_btn: TPanel;
     btnInsertUpdateMovement: TcxButton;
     btntAdd_limit: TcxButton;
@@ -240,6 +238,7 @@ type
     bbsPartion: TdxBarSubItem;
     bbsOpenForm: TdxBarSubItem;
     bbsProtocol: TdxBarSubItem;
+    mactCompleteMovement_andSave: TMultiAction;
   private
   public
   end;

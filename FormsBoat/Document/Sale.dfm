@@ -99,16 +99,16 @@ object SaleForm: TSaleForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = CompleteMovement
+          Action = actCompleteMovement
           Kind = bkGlyph
         end
         item
-          Action = UnCompleteMovement
+          Action = actUnCompleteMovement
           Default = True
           Kind = bkGlyph
         end
         item
-          Action = DeleteMovement
+          Action = actDeleteMovement
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
@@ -1008,7 +1008,7 @@ object SaleForm: TSaleForm
       Top = 6
       Width = 150
       Height = 25
-      Action = CompleteMovement
+      Action = actCompleteMovement
       ParentShowHint = False
       ShowHint = True
       TabOrder = 2
@@ -1018,7 +1018,7 @@ object SaleForm: TSaleForm
       Top = 35
       Width = 150
       Height = 25
-      Action = UnCompleteMovement
+      Action = actUnCompleteMovement
       ParentShowHint = False
       ShowHint = True
       TabOrder = 3
@@ -1048,7 +1048,7 @@ object SaleForm: TSaleForm
       Top = 5
       Width = 117
       Height = 25
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
@@ -1058,17 +1058,17 @@ object SaleForm: TSaleForm
       Top = 6
       Width = 116
       Height = 25
-      Action = SetErased
+      Action = actSetErased
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
     end
     object btnCompleteMovement_andSave: TcxButton
       Left = 24
-      Top = 37
+      Top = 35
       Width = 155
       Height = 25
-      Action = actCompleteMovement_andSave
+      Action = mactCompleteMovement_andSave
       ParentShowHint = False
       ShowHint = True
       TabOrder = 8
@@ -1278,15 +1278,15 @@ object SaleForm: TSaleForm
       Category = 0
     end
     object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbErased: TdxBarButton
-      Action = SetErased
+      Action = actSetErased
       Category = 0
     end
     object bbUnErased: TdxBarButton
-      Action = SetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -1344,7 +1344,7 @@ object SaleForm: TSaleForm
       Category = 0
     end
     object bbInsertRecordGoods: TdxBarButton
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
@@ -1386,7 +1386,7 @@ object SaleForm: TSaleForm
       Category = 0
     end
     object bbInsertRecordInfo: TdxBarButton
-      Action = InsertRecordInfo
+      Action = actInsertRecordInfo
       Category = 0
     end
     object bbProtocolInfoOpen: TdxBarButton
@@ -1398,7 +1398,7 @@ object SaleForm: TSaleForm
       Category = 0
     end
     object bbSetErasedChild: TdxBarButton
-      Action = SetErasedChild
+      Action = actSetErasedChild
       Category = 0
     end
     object bbOpenDocument: TdxBarButton
@@ -1733,7 +1733,7 @@ object SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1742,7 +1742,7 @@ object SaleForm: TSaleForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object SetErasedChild: TdsdUpdateErased
+    object actSetErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -1760,7 +1760,7 @@ object SaleForm: TSaleForm
       ErasedFieldName = 'isErased'
       isSetErased = False
     end
-    object SetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1776,7 +1776,7 @@ object SaleForm: TSaleForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object SetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1793,7 +1793,7 @@ object SaleForm: TSaleForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object UnCompleteMovement: TChangeGuidesStatus
+    object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1811,7 +1811,7 @@ object SaleForm: TSaleForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
-    object CompleteMovement: TChangeGuidesStatus
+    object actCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1829,7 +1829,7 @@ object SaleForm: TSaleForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object DeleteMovement: TChangeGuidesStatus
+    object actDeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1943,33 +1943,6 @@ object SaleForm: TSaleForm
         end>
       isShowModal = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actGoodsKindChoice'
-      FormName = 'TGoodsKind_ObjectForm'
-      FormNameParam.Value = 'TGoodsKind_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -2021,7 +1994,7 @@ object SaleForm: TSaleForm
         end>
       isShowModal = True
     end
-    object InsertRecordGoods: TInsertRecord
+    object actInsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2288,7 +2261,7 @@ object SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object InsertRecordInfo: TInsertRecord
+    object actInsertRecordInfo: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       Enabled = False
@@ -2357,7 +2330,7 @@ object SaleForm: TSaleForm
       MoveParams = <>
       ActionList = <
         item
-          Action = SetErased
+          Action = actSetErased
         end>
       View = cxGridDBTableView
       Caption = 'macErasedMI_Master_list'
@@ -2500,30 +2473,20 @@ object SaleForm: TSaleForm
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
-    object actCompleteMovement_andSave: TChangeGuidesStatus
-      Category = 'DSDLib'
+    object mactCompleteMovement_andSave: TMultiAction
       MoveParams = <>
-      StoredProc = spInsertUpdateMovement
-      StoredProcList = <
+      ActionList = <
         item
-          StoredProc = spInsertUpdateMovement
+          Action = actInsertUpdateMovement
         end
         item
-          StoredProc = spSelectMI
+          Action = actRefresh
         end
         item
-        end
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spChangeStatus
+          Action = actCompleteMovement
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 86
-      Status = mtComplete
-      Guides = StatusGuides
     end
   end
   object MasterDS: TDataSource
