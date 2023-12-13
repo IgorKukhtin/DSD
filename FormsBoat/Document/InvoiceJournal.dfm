@@ -1616,6 +1616,9 @@
           StoredProc = spInsertUpdateItem
         end
         item
+          StoredProc = spSelect
+        end
+        item
           StoredProc = spSelectMI
         end>
       Caption = 'actUpdateDataSet'
@@ -2142,51 +2145,22 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbEdit'
+          ItemName = 'bbsView'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsDoc'
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -2200,23 +2174,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbOpenBankAccountJournalByInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenIncomeCostByInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenIncomeByInvoice'
+          ItemName = 'bbsOpenForm'
         end
         item
           Visible = True
@@ -2233,18 +2191,6 @@
         item
           Visible = True
           ItemName = 'bbPrint_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2363,15 +2309,100 @@
       Category = 0
     end
     object dxBarSeparator1: TdxBarSeparator
-      Caption = 'New Item'
+      Caption = 'Separator'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'Separator'
       Visible = ivAlways
       ShowCaption = False
     end
     object bbPrint_Invoice: TdxBarButton
       Action = mactPrint_Invoice
       Category = 0
+    end
+    object bbsView: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 83
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end>
+    end
+    object bbsDoc: TdxBarSubItem
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end>
+    end
+    object bbsOpenForm: TdxBarSubItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenBankAccountJournalByInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenIncomeCostByInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenIncomeByInvoice'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
