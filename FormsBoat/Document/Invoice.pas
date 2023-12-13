@@ -20,7 +20,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, cxMemo;
 
 type
   TInvoiceForm = class(TAncestorEditDialog_boatForm)
@@ -38,7 +38,6 @@ type
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
     cxLabel10: TcxLabel;
-    ceComment: TcxTextEdit;
     cxLabel9: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
@@ -77,6 +76,7 @@ type
     spGetPrepay: TdsdStoredProc;
     actGetPrepay: TdsdDataSetRefresh;
     mactGuidesParentChoiceForm: TMultiAction;
+    ceComment: TcxMemo;
   private
     { Private declarations }
   public
