@@ -1094,8 +1094,10 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
          -- !!!ВРЕМЕННО!!!
-         --INSERT INTO _tmpErr (ContainerId) SELECT _tmpMaster.ContainerId FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
-         --DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
+         INSERT INTO _tmpErr (ContainerId) SELECT _tmpMaster.ContainerId FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
+         DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
+
+
          -- !!!ВРЕМЕННО!!!
          --DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
          --UPDATE _tmpMaster SET  WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
@@ -1133,7 +1135,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
          -- расчет с/с
          UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
                              , CalcSumm_external = _tmpSumm.CalcSumm_external
-               
+
                -- Расчет суммы всех составляющих
          FROM (WITH tmp_const AS  (SELECT HistoryCost.ContainerId, MAX (HistoryCost.Price) AS Price
                                    FROM Container AS Container_Summ
@@ -1248,6 +1250,12 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      END LOOP;
 
 
+     /*IF EXISTS (select 1 from _tmpErr ) -- WHERE _tmpErr.ContainerId = 151207
+     THEN
+           -- test
+           RAISE EXCEPTION 'Ошибка. <%>', (select count(*) from _tmpErr);
+           RAISE EXCEPTION 'Ошибка. <%>   <%>   <%>', vbItearation, (select count(*) from _tmpErr) , (select STRING_AGG (_tmpErr.ContainerId :: TVarChar, ';') from _tmpErr order by 1 limit 1);
+     END IF;*/
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
      INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
