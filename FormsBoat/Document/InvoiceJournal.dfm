@@ -969,7 +969,6 @@
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
@@ -1006,6 +1005,7 @@
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
+            Action = actChoiceFormGoods_item
             Default = True
             Kind = bkEllipsis
           end>
@@ -1022,7 +1022,6 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object OperPrice_ch4: TcxGridDBColumn
@@ -1051,6 +1050,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object Summа_WVAT_ch4: TcxGridDBColumn
@@ -1060,6 +1060,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object Summа_VAT_ch4: TcxGridDBColumn
@@ -1069,6 +1070,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
     end
@@ -1604,6 +1606,21 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateDataSet_item: TdsdUpdateDataSet [30]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateItem
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateItem
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = ItemDS
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -2031,6 +2048,48 @@
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 15
       ShortCut = 16464
+    end
+    object actChoiceFormGoods_item: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsKindChoice'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -2632,5 +2691,69 @@
     Params = <>
     Left = 876
     Top = 286
+  end
+  object spInsertUpdateItem: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Invoice'
+    DataSet = ItemCDS
+    DataSets = <
+      item
+        DataSet = ItemCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ItemCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ItemCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        Component = ItemCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ItemCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = 0.000000000000000000
+        Component = ItemCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = ''
+        Component = ItemCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 644
+    Top = 425
   end
 end

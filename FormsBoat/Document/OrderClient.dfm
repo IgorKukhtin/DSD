@@ -863,11 +863,9 @@ object OrderClientForm: TOrderClientForm
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
-              Options.Editing = False
               Width = 80
             end
             object OperPrice: TcxGridDBColumn
@@ -3713,8 +3711,8 @@ object OrderClientForm: TOrderClientForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 262
-    Top = 143
+    Left = 214
+    Top = 111
     DockControlHeights = (
       0
       0
@@ -4740,6 +4738,22 @@ object OrderClientForm: TOrderClientForm
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EmpfPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceList'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BasisPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -4749,6 +4763,7 @@ object OrderClientForm: TOrderClientForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
+      View = cxGridDBTableView
       Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -7187,8 +7202,8 @@ object OrderClientForm: TOrderClientForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 728
-    Top = 208
+    Left = 768
+    Top = 240
   end
   object DBViewAddOnInfo: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
