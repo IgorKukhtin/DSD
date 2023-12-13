@@ -144,6 +144,9 @@ type
     bbsView: TdxBarSubItem;
     bbsDoc: TdxBarSubItem;
     bbsOpenForm: TdxBarSubItem;
+    mactSetErasedItem: TMultiAction;
+    actRefreshMov: TdsdDataSetRefresh;
+    mactSetUnErasedItem: TMultiAction;
   private
     { Private declarations }
   public

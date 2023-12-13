@@ -1385,6 +1385,19 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actRefreshMov: TdsdDataSetRefresh [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     inherited actShowErased: TBooleanStoredProcAction
       StoredProcList = <
         item
@@ -1394,7 +1407,7 @@
           StoredProc = spSelectMI
         end>
     end
-    object actInsert_PrePay: TdsdInsertUpdateAction [8]
+    object actInsert_PrePay: TdsdInsertUpdateAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
@@ -1541,7 +1554,7 @@
     inherited mactSetErasedList: TMultiAction
       Enabled = False
     end
-    object actPrintInvoice: TdsdPrintAction [27]
+    object actPrintInvoice: TdsdPrintAction [28]
       Category = 'Print'
       MoveParams = <
         item
@@ -1606,7 +1619,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdateDataSet_item: TdsdUpdateDataSet [30]
+    object actUpdateDataSet_item: TdsdUpdateDataSet [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1828,8 +1841,6 @@
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
-        end
-        item
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1894,6 +1905,21 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object mactSetUnErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetUnErasedItem
+        end
+        item
+          Action = actRefreshMov
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
     end
     object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2004,8 +2030,6 @@
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
-        end
-        item
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -2093,6 +2117,21 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object mactSetErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetErasedItem
+        end
+        item
+          Action = actRefreshMov
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 2
+      ShortCut = 46
     end
   end
   inherited MasterDS: TDataSource
@@ -2301,11 +2340,11 @@
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = actSetUnErasedItem
+      Action = mactSetUnErasedItem
       Category = 0
     end
     object bbSetErasedItem: TdxBarButton
-      Action = actSetErasedItem
+      Action = mactSetErasedItem
       Category = 0
     end
     object dxBarSeparator1: TdxBarSeparator
