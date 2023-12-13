@@ -138,6 +138,9 @@ type
     Summà_ch4: TcxGridDBColumn;
     Summà_WVAT_ch4: TcxGridDBColumn;
     Summà_VAT_ch4: TcxGridDBColumn;
+    spInsertUpdateItem: TdsdStoredProc;
+    actChoiceFormGoods_item: TOpenChoiceForm;
+    actUpdateDataSet_item: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
