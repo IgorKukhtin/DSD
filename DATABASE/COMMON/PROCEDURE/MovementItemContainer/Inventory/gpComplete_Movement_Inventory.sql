@@ -1,4 +1,4 @@
- -- Function: gpComplete_Movement_Inventory()
+-- Function: gpComplete_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory  (Integer, Boolean, TVarChar);
 
