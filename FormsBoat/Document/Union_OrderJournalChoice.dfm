@@ -5,6 +5,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -134
   ExplicitWidth = 1044
   ExplicitHeight = 394
   PixelsPerInch = 96
@@ -219,7 +220,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 70
           end
           object TotalSumm_debet: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1089#1095#1077#1090#1072' ('#1076#1077#1073#1077#1090')'
+            Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1089#1095#1077#1090#1072' ('#1076#1077#1073#1077#1090')'
             DataBinding.FieldName = 'TotalSumm_debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -230,7 +231,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 100
           end
           object TotalSumm_credit: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1089#1095#1077#1090#1072' ('#1082#1088#1077#1076#1080#1090')'
+            Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1089#1095#1077#1090#1072' ('#1082#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'TotalSumm_credit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

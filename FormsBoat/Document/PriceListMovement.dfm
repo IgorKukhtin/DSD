@@ -778,7 +778,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           StoredProc = spErasedMIMaster
         end>
-      ShortCut = 0
+      ShortCut = 49220
     end
     object mactStartLoad_Uflex3: TMultiAction [17]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -870,7 +870,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           StoredProc = spUnErasedMIMaster
         end>
-      ShortCut = 0
+      ShortCut = 49220
     end
     object actDoLoad_ASGEMEA: TExecuteImportSettingsAction [22]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1732,9 +1732,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Visible = ivAlways
       ImageIndex = 18
-    end
-    inherited bbStatic: TdxBarStatic
-      ShowCaption = False
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever

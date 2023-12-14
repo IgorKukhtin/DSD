@@ -632,6 +632,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       RefreshOnTabSetChanges = True
     end
     inherited actInsert: TdsdInsertUpdateAction
+      ShortCut = 16433
       FormName = 'TBankAccountMovementForm'
       GuiParams = <
         item

@@ -2530,7 +2530,7 @@ object IncomeForm: TIncomeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -2549,7 +2549,7 @@ object IncomeForm: TIncomeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -2568,7 +2568,7 @@ object IncomeForm: TIncomeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2588,7 +2588,7 @@ object IncomeForm: TIncomeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2934,7 +2934,7 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>  ('#1083#1080#1084#1080#1090')'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>  ('#1083#1080#1084#1080#1090')'
-      ShortCut = 45
+      ShortCut = 49232
       ImageIndex = 0
       FormName = 'TIncomeItemEdit_limitForm'
       FormNameParam.Value = 'TIncomeItemEdit_limitForm'
@@ -2984,7 +2984,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
-      ShortCut = 45
+      ShortCut = 49232
       ImageIndex = 0
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
@@ -3049,6 +3049,7 @@ object IncomeForm: TIncomeForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
       ImageIndex = 0
+      ShortCut = 16434
     end
     object mactInsertMask: TMultiAction
       Category = 'DSDLib'
@@ -3062,7 +3063,7 @@ object IncomeForm: TIncomeForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 1
+      ImageIndex = 27
     end
     object actOpenFormInvoice: TdsdOpenForm
       Category = 'OpenForm'
@@ -3098,7 +3099,8 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
-      ImageIndex = 1
+      ShortCut = 49232
+      ImageIndex = 27
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
       FormNameParam.DataType = ftString
@@ -3368,6 +3370,7 @@ object IncomeForm: TIncomeForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
+      ShortCut = 49232
       ImageIndex = 0
     end
     object actOpenFormOrderPartner: TdsdOpenForm
@@ -3646,6 +3649,7 @@ object IncomeForm: TIncomeForm
       Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1053#1086#1074#1086#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1077#1077'>'
       ImageIndex = 0
+      ShortCut = 16433
       WithoutNext = True
     end
     object mactPrintStiker: TMultiAction

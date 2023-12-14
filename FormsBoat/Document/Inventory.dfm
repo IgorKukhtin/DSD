@@ -1250,7 +1250,7 @@ object InventoryForm: TInventoryForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1266,7 +1266,7 @@ object InventoryForm: TInventoryForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1852,6 +1852,7 @@ object InventoryForm: TInventoryForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 54
+      ShortCut = 16434
       WithoutNext = True
     end
     object mactAdd: TMultiAction
@@ -1867,6 +1868,7 @@ object InventoryForm: TInventoryForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 0
+      ShortCut = 16433
       WithoutNext = True
     end
     object actAdd_limit: TdsdInsertUpdateAction

@@ -1021,7 +1021,6 @@ object SendForm: TSendForm
     Height = 69
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 504
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 4
@@ -2015,7 +2014,7 @@ object SendForm: TSendForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -2031,7 +2030,7 @@ object SendForm: TSendForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -2047,7 +2046,7 @@ object SendForm: TSendForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -2064,7 +2063,7 @@ object SendForm: TSendForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -3127,6 +3126,7 @@ object SendForm: TSendForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 1
+      ShortCut = 16434
       WithoutNext = True
     end
     object actUpdate: TdsdInsertUpdateAction
@@ -3213,7 +3213,7 @@ object SendForm: TSendForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 0
-      ShortCut = 113
+      ShortCut = 16433
       WithoutNext = True
     end
     object actAdd: TdsdInsertUpdateAction

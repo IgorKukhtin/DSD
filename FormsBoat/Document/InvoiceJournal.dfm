@@ -1172,6 +1172,7 @@
     inherited actInsert: TdsdInsertUpdateAction [1]
       Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
+      ShortCut = 16433
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -1218,7 +1219,7 @@
       MoveParams = <>
       Caption = #1057#1095#1077#1090
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
-      ShortCut = 45
+      ShortCut = 16434
       ImageIndex = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
@@ -1272,7 +1273,7 @@
       MoveParams = <>
       Caption = #1055#1088#1086#1092#1086#1088#1084#1072
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1088#1086#1092#1086#1088#1084#1072
-      ShortCut = 45
+      ShortCut = 16435
       ImageIndex = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
@@ -1325,7 +1326,7 @@
       MoveParams = <>
       Caption = #1059#1089#1083#1091#1075#1080
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1059#1089#1083#1091#1075#1080
-      ShortCut = 45
+      ShortCut = 16436
       ImageIndex = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'

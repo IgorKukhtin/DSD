@@ -284,14 +284,12 @@ object OrderPartnerForm: TOrderPartnerForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 436
     ClientRectBottom = 367
     ClientRectRight = 1236
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 412
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -300,7 +298,6 @@ object OrderPartnerForm: TOrderPartnerForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitHeight = 194
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -308,7 +305,6 @@ object OrderPartnerForm: TOrderPartnerForm
           Height = 123
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 126
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -662,8 +658,6 @@ object OrderPartnerForm: TOrderPartnerForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
-        ExplicitLeft = -1
-        ExplicitTop = 120
       end
       object Panel4: TPanel
         Left = 0
@@ -673,7 +667,6 @@ object OrderPartnerForm: TOrderPartnerForm
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
-        ExplicitTop = 202
         object cxSplitter1: TcxSplitter
           Left = 1
           Top = 1
@@ -687,8 +680,6 @@ object OrderPartnerForm: TOrderPartnerForm
           Height = 208
           Align = alClient
           TabOrder = 1
-          ExplicitTop = 48
-          ExplicitHeight = 161
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -966,7 +957,7 @@ object OrderPartnerForm: TOrderPartnerForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = False
-    TabOrder = 7
+    TabOrder = 6
     Width = 125
   end
   object Panel_btn: TPanel
@@ -976,8 +967,6 @@ object OrderPartnerForm: TOrderPartnerForm
     Height = 69
     Align = alBottom
     TabOrder = 8
-    ExplicitLeft = -136
-    ExplicitWidth = 1372
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
@@ -1746,7 +1735,7 @@ object OrderPartnerForm: TOrderPartnerForm
         item
           StoredProc = spSelectMI_Child
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 16430
@@ -1765,7 +1754,7 @@ object OrderPartnerForm: TOrderPartnerForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1781,7 +1770,7 @@ object OrderPartnerForm: TOrderPartnerForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2024,7 +2013,7 @@ object OrderPartnerForm: TOrderPartnerForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
+      ShortCut = 16433
       ImageIndex = 0
     end
     object actPrintStructure: TdsdPrintAction
@@ -2318,8 +2307,8 @@ object OrderPartnerForm: TOrderPartnerForm
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1084#1077#1085#1090#1072'>'
       ImageIndex = 28
       FormName = 'TOrderClientForm'
       FormNameParam.Value = 'TOrderClientForm'
