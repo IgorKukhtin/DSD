@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS zfCalc_Summ_Equal (TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_Summ_Equal(
-    IN inSumm1          TFloat, -- 
-    IN inSumm2          TFloat  -- 
+    IN inSumm1          TFloat, --   Cумма к оплате
+    IN inSumm2          TFloat  --   сумме счета
 )
 RETURNS TFloat
 AS
@@ -13,7 +13,7 @@ BEGIN
      IF COALESCE (inSumm1,0) <> COALESCE (inSumm2,0)
      THEN
          -- 
-         RAISE EXCEPTION 'Ошибка. Cумма к оплате не соответствует сумме счета.'; 
+         RAISE EXCEPTION 'Ошибка. Cумма к оплате <%> не соответствует сумме счета <%>.', CAST (inSumm1 AS NUMERIC (16,2)), CAST (inSumm2 AS NUMERIC (16,2));  
      END IF;
 
      RETURN COALESCE (inSumm1, 0);
