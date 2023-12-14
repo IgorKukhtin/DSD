@@ -1,0 +1,33 @@
+-- Function: Считаем Сумму с НДС - Округление до 4-х знаков
+
+DROP FUNCTION IF EXISTS zfCalc_SummWVAT_4 (TFloat, TFloat);
+
+CREATE OR REPLACE FUNCTION zfCalc_SummWVAT_4(
+    IN inSumm          TFloat, -- Сумма без НДС
+    IN inTaxKindValue  TFloat  -- % НДС
+)
+RETURNS TFloat
+AS
+$BODY$
+BEGIN
+     IF inTaxKindValue > 0
+     THEN
+         -- округлили до 2-х знаков
+         RETURN CAST (COALESCE (inSumm, 0) * (1 + COALESCE (inTaxKindValue, 0)/100) AS NUMERIC (16, 4));
+     ELSE
+         RETURN COALESCE (inSumm, 0);
+     END IF;
+                
+END;
+$BODY$
+  LANGUAGE PLPGSQL IMMUTABLE;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.03.21                                        *
+*/
+
+-- тест
+-- SELECT * FROM zfCalc_SummWVAT_4 (inSumm:= 1.12, inTaxKindValue:= 19)

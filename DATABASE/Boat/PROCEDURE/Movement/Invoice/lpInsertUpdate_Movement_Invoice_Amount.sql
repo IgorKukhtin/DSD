@@ -11,22 +11,26 @@ RETURNS TFloat
 AS
 $BODY$
 BEGIN
-    
-    outAmount := (SELECT SUM (zfCalc_SummWVAT (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0), MovementFloat_VATPercent.ValueData)) ::TFloat Summà_WVAT
-                  FROM Movement           
-                     LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                             ON MovementFloat_VATPercent.MovementId = Movement.Id
-                                            AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
-                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                            AND MovementItem.DescId = zc_MI_Master()
-                                            AND MovementItem.isErased = FALSE
-
-                     LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                 ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                                AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                  WHERE Movement.Id = inId
-                  );
+    outAmount := (SELECT zfCalc_SummWVAT (tmp.Summà_WVAT, tmp.VATPercent)
+                  FROM (SELECT SUM (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) AS Summà_WVAT
+                             , MovementFloat_VATPercent.ValueData AS VATPercent
+                        FROM Movement
+                           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+ 
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Master()
+                                                  AND MovementItem.isErased = FALSE
+ 
+                           LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                       ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+                        WHERE Movement.Id = inId
+                        GROUP BY MovementFloat_VATPercent.ValueData
+                       ) AS tmp
+                 );
 
 
     -- Ñîõðàíèëè ñâîéñòâî <Èòîãî Ñóììà>
