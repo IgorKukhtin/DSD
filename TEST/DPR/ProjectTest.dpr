@@ -1478,7 +1478,7 @@ uses
 {$R DevExpressRus.res}
 
 begin
-  gc_AdminPassword := 'asdasxw1';
+  gc_AdminPassword := 'asdasxq1';
   Application.Initialize;
   gc_isSetDefault := true;
   dsdProject := prProject;
