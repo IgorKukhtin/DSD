@@ -124,7 +124,15 @@ BEGIN
             --% НДС из заказа Клиента    есть в   tmpProduct
             --, COALESCE (MovementFloat_VATPercent.ValueData, 0)         :: TFloat AS VATPercent
             --сумма счетов предоплаты
-            , tmpMov_PrePay.Total_PrePay ::TFloat
+            , tmpMov_PrePay.Total_PrePay ::TFloat 
+            
+            --сумма итого заказа клиента - сумма уже выставленных счетов      
+            , CASE WHEN ( COALESCE (tmpProduct.Basis_summ_transport,0) - COALESCE (tmpMov_PrePay.Total_PrePay,0) - COALESCE (tmpInvoice.AmountIn,0)) <> 0 
+                   THEN zfCalc_Summ_Equal (1,2)
+                   ELSE COALESCE (tmpInvoice.AmountIn,0)
+              END ::TFloat AS  Invoice_summ_calc 
+            --  если сумма счета не соотв. расчетной сумме
+            --, zfCalc_Summ_Equal (( COALESCE (tmpProduct.Basis_summ_transport,0) - COALESCE (tmpMov_PrePay.Total_PrePay,0)), COALESCE (tmpInvoice.AmountIn,0) ) :: TFloat AS Invoice_message 
             --
             , tmpInfo.Mail           ::TVarChar AS Mail
             , tmpInfo.WWW            ::TVarChar AS WWW
@@ -301,8 +309,8 @@ BEGIN
                                || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
                                || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
                           END
-END
-else ''
+                        END
+                   else ''
               END  :: TVarChar AS Text_ret
               
        FROM tmpMov_Parent
