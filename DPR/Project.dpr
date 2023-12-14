@@ -136,8 +136,16 @@ begin
 
   TdsdApplication.Create;
   // Процесс аутентификации
+  if FindCmdLineSwitch('autologin_a', true) then begin
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'asdasxq1', gc_User);
+     TUpdater.AutomaticUpdateProgram;
+     TUpdater.AutomaticCheckConnect;
+     Application.CreateForm(TdmMain, dmMain);
+     Application.CreateForm(TMainForm, MainFormInstance);
+  end
+  else
   if FindCmdLineSwitch('autologin', true) then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Климентьев К.И.', 'qsxqsxw1', gc_User);
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Климентьев К.И.', 'asdasxq1', gc_User);
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);

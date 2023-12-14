@@ -113,6 +113,17 @@ begin
 
   TdsdApplication.Create;
 
+  // Процесс аутентификации
+  if FindCmdLineSwitch('autologin', true) then begin
+     if SysUtils.FileExists('real.txt')
+     then TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'АдминАдмин', gc_User)
+     else TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+     TUpdater.AutomaticUpdateProgram;
+     TUpdater.AutomaticCheckConnect;
+     Application.CreateForm(TdmMain, dmMain);
+     Application.CreateForm(TMainForm, MainFormInstance);
+  end
+  else
   with TLoginForm.Create(Application) do
     // Если все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then
