@@ -389,7 +389,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeItemForm');
 
