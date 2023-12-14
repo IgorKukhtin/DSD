@@ -127,12 +127,11 @@ BEGIN
             , tmpMov_PrePay.Total_PrePay ::TFloat 
             
             --сумма итого заказа клиента - сумма уже выставленных счетов      
-            , CASE WHEN ( COALESCE (tmpProduct.Basis_summ_transport,0) - COALESCE (tmpMov_PrePay.Total_PrePay,0) - COALESCE (tmpInvoice.AmountIn,0)) <> 0 
-                   THEN zfCalc_Summ_Equal (1,2)
+           /* , CASE WHEN ( COALESCE (tmpProduct.Basis_summ_transport,0) - COALESCE (tmpMov_PrePay.Total_PrePay,0) - COALESCE (tmpInvoice.AmountIn,0)) <> 0 
+                   THEN zfCalc_Summ_Equal (1,2)      --если сумма счета не соотв. расчетной сумме
                    ELSE COALESCE (tmpInvoice.AmountIn,0)
               END ::TFloat AS  Invoice_summ_calc 
-            --  если сумма счета не соотв. расчетной сумме
-            --, zfCalc_Summ_Equal (( COALESCE (tmpProduct.Basis_summ_transport,0) - COALESCE (tmpMov_PrePay.Total_PrePay,0)), COALESCE (tmpInvoice.AmountIn,0) ) :: TFloat AS Invoice_message 
+              */
             --
             , tmpInfo.Mail           ::TVarChar AS Mail
             , tmpInfo.WWW            ::TVarChar AS WWW

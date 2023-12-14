@@ -356,6 +356,11 @@ type
     macUpdate_PriceList_list: TMultiAction;
     macUpdate_PriceList: TMultiAction;
     bbUpdate_PriceList: TdxBarButton;
+    macPrint_Group_cash: TMultiAction;
+    macPrint_Group_list_cash: TMultiAction;
+    macPrintPack_2copy: TMultiAction;
+    actPrintPack_2copy: TdsdPrintAction;
+    bbPrint_Group_cash: TdxBarButton;
   private
     { Private declarations }
   public

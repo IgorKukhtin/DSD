@@ -13,7 +13,8 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
- 
+     
+        
     -- собственно проводки
     PERFORM lpComplete_Movement_Invoice(inMovementId, -- ключ Документа
                                           vbUserId);    -- Пользователь  
