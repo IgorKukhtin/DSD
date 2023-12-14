@@ -779,7 +779,7 @@
       Top = 8
       Width = 95
       Height = 25
-      Action = actInsert_PrePay
+      Action = actInsert
       TabOrder = 8
     end
     object cxButton4: TcxButton
@@ -1012,7 +1012,7 @@
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 266
+        Width = 199
       end
       object Amount_ch4: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -1022,7 +1022,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 66
       end
       object OperPrice_ch4: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
@@ -1032,7 +1032,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 134
+        Width = 88
       end
       object isErased_ch4: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -1169,17 +1169,11 @@
         end>
       isShowModal = False
     end
-    object actInsert_Service: TdsdInsertUpdateAction [1]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1059#1089#1083#1091#1075#1080
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1059#1089#1083#1091#1075#1080
-      ShortCut = 45
-      ImageIndex = 0
+    inherited actInsert: TdsdInsertUpdateAction [1]
+      Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1213,125 +1207,13 @@
         end
         item
           Name = 'InvoiceKindDesc'
-          Value = 'zc_Enum_InvoiceKind_Service'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = MasterDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actInsert_Proforma: TdsdInsertUpdateAction [2]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1092#1086#1088#1084#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1088#1086#1092#1086#1088#1084#1072
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TInvoiceForm'
-      FormNameParam.Value = 'TInvoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 44927d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId_OrderClient'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductId'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ClientId'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvoiceKindDesc'
-          Value = 'zc_Enum_InvoiceKind_Proforma'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = MasterDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actOpenIncomeCostByInvoice: TdsdOpenForm [3]
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'('#1079#1072#1090#1088#1072#1090#1099')>'
-      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'('#1079#1072#1090#1088#1072#1090#1099')>'
-      ImageIndex = 26
-      FormName = 'TIncomeCostJournalByInvoiceForm'
-      FormNameParam.Value = 'TIncomeCostJournalByInvoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MovementId_Invoice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberFull_Invoice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumber_Full'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          Component = actShowErased
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ObjectName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
+          Value = 'zc_Enum_InvoiceKind_PrePay'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
     end
-    object actInsert_Pay: TdsdInsertUpdateAction [5]
+    object actInsert_Pay: TdsdInsertUpdateAction [2]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1057#1095#1077#1090
@@ -1385,33 +1267,11 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actRefreshMov: TdsdDataSetRefresh [7]
+    object actInsert_Proforma: TdsdInsertUpdateAction [3]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      RefreshOnTabSetChanges = False
-    end
-    inherited actShowErased: TBooleanStoredProcAction
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMI
-        end>
-    end
-    object actInsert_PrePay: TdsdInsertUpdateAction [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
+      Caption = #1055#1088#1086#1092#1086#1088#1084#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1088#1086#1092#1086#1088#1084#1072
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TInvoiceForm'
@@ -1451,9 +1311,8 @@
         end
         item
           Name = 'InvoiceKindDesc'
-          Value = 'zc_Enum_InvoiceKind_PrePay'
+          Value = 'zc_Enum_InvoiceKind_Proforma'
           DataType = ftString
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1461,18 +1320,17 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMI
-        end>
-    end
-    inherited actInsert: TdsdInsertUpdateAction
+    object actInsert_Service: TdsdInsertUpdateAction [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1089#1083#1091#1075#1080
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1059#1089#1083#1091#1075#1080
+      ShortCut = 45
+      ImageIndex = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1481,7 +1339,7 @@
         end
         item
           Name = 'inOperDate'
-          Value = 41640d
+          Value = 44927d
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1503,7 +1361,111 @@
           Value = Null
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindDesc'
+          Value = 'zc_Enum_InvoiceKind_Service'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actOpenIncomeCostByInvoice: TdsdOpenForm [5]
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1086' '#1089#1095#1077#1090#1091' - <'#1055#1088#1080#1093#1086#1076' ('#1079#1072#1090#1088#1072#1090#1099')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1086' '#1089#1095#1077#1090#1091' - <'#1055#1088#1080#1093#1086#1076' ('#1079#1072#1090#1088#1072#1090#1099')>'
+      ImageIndex = 26
+      FormName = 'TIncomeCostJournalByInvoiceForm'
+      FormNameParam.Value = 'TIncomeCostJournalByInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    inherited actMovementItemContainer: TdsdOpenForm [6]
+    end
+    inherited actMovementProtocolOpenForm: TdsdOpenForm [7]
+    end
+    object actRefreshMov: TdsdDataSetRefresh [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    inherited actShowErased: TBooleanStoredProcAction [9]
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+    end
+    inherited actRefresh: TdsdDataSetRefresh [10]
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+    end
+    inherited actGridToExcel: TdsdGridToExcel [11]
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TInvoiceForm'
@@ -1554,7 +1516,7 @@
     inherited mactSetErasedList: TMultiAction
       Enabled = False
     end
-    object actPrintInvoice: TdsdPrintAction [28]
+    object actPrintInvoice: TdsdPrintAction [27]
       Category = 'Print'
       MoveParams = <
         item
@@ -1619,7 +1581,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdateDataSet_item: TdsdUpdateDataSet [31]
+    object actUpdateDataSet_item: TdsdUpdateDataSet [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1651,6 +1613,7 @@
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
+      Enabled = False
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -1919,7 +1882,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
     end
     object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2073,7 +2036,6 @@
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 15
       ShortCut = 16464
     end
     object actChoiceFormGoods_item: TOpenChoiceForm
@@ -2131,7 +2093,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
     end
   end
   inherited MasterDS: TDataSource
@@ -2221,14 +2183,6 @@
         end
         item
           Visible = True
-          ItemName = 'bbtPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint_Invoice'
         end
         item
@@ -2296,11 +2250,9 @@
     object bbtPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbOpenIncomeByInvoice: TdxBarButton
       Action = actOpenIncomeByInvoice
-      Caption = #1046#1091#1088#1085#1072#1083' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Category = 0
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
@@ -2313,6 +2265,10 @@
         item
           Visible = True
           ItemName = 'bbInsertAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_Pay'
         end
         item
           Visible = True
@@ -2401,6 +2357,18 @@
         end
         item
           Visible = True
+          ItemName = 'bbInsert_Pay'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_Proforma'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -2428,20 +2396,28 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarSeparator1'
-        end
-        item
-          Visible = True
           ItemName = 'bbOpenBankAccountJournalByInvoice'
         end
         item
           Visible = True
-          ItemName = 'bbOpenIncomeCostByInvoice'
+          ItemName = 'bbOpenIncomeByInvoice'
         end
         item
           Visible = True
-          ItemName = 'bbOpenIncomeByInvoice'
+          ItemName = 'bbOpenIncomeCostByInvoice'
         end>
+    end
+    object bbInsert_Pay: TdxBarButton
+      Action = actInsert_Pay
+      Category = 0
+    end
+    object bbInsert_Proforma: TdxBarButton
+      Action = actInsert_Proforma
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actInsert_Service
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -80,6 +80,8 @@ type
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     cxLabel3: TcxLabel;
     edSearchObjectName: TcxTextEdit;
+    TotalSumm_debet: TcxGridDBColumn;
+    TotalSumm_credit: TcxGridDBColumn;
   private
     { Private declarations }
   public

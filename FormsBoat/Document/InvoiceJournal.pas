@@ -119,7 +119,6 @@ type
     bbSetErasedItem: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
     cxSplitter_Bottom_Item: TcxSplitter;
-    actInsert_PrePay: TdsdInsertUpdateAction;
     cxButton3: TcxButton;
     cxButton4: TcxButton;
     actInsert_Pay: TdsdInsertUpdateAction;
@@ -147,6 +146,9 @@ type
     mactSetErasedItem: TMultiAction;
     actRefreshMov: TdsdDataSetRefresh;
     mactSetUnErasedItem: TMultiAction;
+    bbInsert_Pay: TdxBarButton;
+    bbInsert_Proforma: TdxBarButton;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
