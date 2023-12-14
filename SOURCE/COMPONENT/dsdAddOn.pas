@@ -1557,6 +1557,15 @@ type
   end;
 
   TcxCurrencyEdit_check = class(TcxCurrencyEdit)
+  public
+  private
+    procedure SetButtons(Value: TcxEditButtons);
+    function GetButtons: TcxEditButtons;
+    procedure SetImages(Value: TCustomImageList);
+    function GetImages: TCustomImageList;
+  published
+    property Buttons: TcxEditButtons read GetButtons write SetButtons;
+    property Images: TCustomImageList read GetImages write SetImages;
   end;
 
   procedure Register;
@@ -8248,5 +8257,28 @@ begin
 
   end;
 end;
+
+{ TcxCustomInnerTextEdit }
+
+procedure TcxCurrencyEdit_check.SetButtons(Value: TcxEditButtons);
+begin
+  Properties.Buttons.Assign(Value);
+end;
+
+function TcxCurrencyEdit_check.GetButtons: TcxEditButtons;
+begin
+  Result := Properties.Buttons;
+end;
+
+procedure TcxCurrencyEdit_check.SetImages(Value: TCustomImageList);
+begin
+  Properties.Images := Value;
+end;
+
+function TcxCurrencyEdit_check.GetImages: TCustomImageList;
+begin
+  Result := Properties.Images;
+end;
+
 
 end.

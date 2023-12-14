@@ -5570,7 +5570,7 @@ begin
               FormParams.ParamByName('RoundingDown').Value)
           else
             nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-              CheckCDS.FieldByName('PriceSale').asCurrency,
+              RemainsCDS.FieldByName('PriceView').asCurrency,
               FormParams.ParamByName('RoundingDown').Value);
         end;
         CheckCDS.Next;
@@ -5599,7 +5599,7 @@ begin
                 ('Amount').asCurrency, -1)
             else
               nPrice := RoundTo(GetSumm(CheckCDS.FieldByName('Amount')
-                .asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
+                .asCurrency, RemainsCDS.FieldByName('PriceView').asCurrency,
                 FormParams.ParamByName('RoundingDown').Value) *
                 (nSumAll - nChangeSumma) / nSumAll / CheckCDS.FieldByName
                 ('Amount').asCurrency, -1);
