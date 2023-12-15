@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Inte
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(                                                                                                                           
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
     IN inAmount              TFloat    , -- Количество
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
+    IN inPrice               TFloat    , -- Цена продажи
     IN inPartionGoodsDate    TDateTime , -- Дата партии/Дата перемещения
     IN inPartionGoods        TVarChar  , -- Партия товара
  INOUT ioPartNumber          TVarChar  , -- № по тех паспорту 
@@ -44,6 +46,7 @@ BEGIN
                                             , inAmount              := inAmount
                                             , inCount               := inCount
                                             , inHeadCount           := inHeadCount
+                                            , inPrice               := inPrice
                                             , inPartionGoodsDate    := inPartionGoodsDate
                                             , inPartionGoods        := inPartionGoods
                                             , inPartNumber          := ioPartNumber
@@ -63,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.12.23         *
  25.05.23         *
  13.03.22         *
  10.10.14                                        * add inPartionGoodsId

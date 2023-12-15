@@ -20,7 +20,8 @@ BEGIN
                                             , inGoodsId             := tmp.GoodsId
                                             , inAmount              := COALESCE (tmp.Amount,0)
                                             , inCount               := COALESCE (tmp.Count,0)
-                                            , inHeadCount           := COALESCE (tmp.HeadCount,0)
+                                            , inHeadCount           := COALESCE (tmp.HeadCount,0) 
+                                            , inPrice               := COALESCE (tmp.Price,0)
                                             , inPartionGoodsDate    := tmp.PartionGoodsDate
                                             , inPartionGoods        := tmp.PartionGoods
                                             , inPartNumber          := Null ::TVarChar
@@ -42,7 +43,8 @@ BEGIN
                   , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0)) :: TFloat  AS Amount
                   , COALESCE (tmpMI.Count, 0)                                        :: TFloat  AS Count
                   , COALESCE (tmpMI.HeadCount, 0)                                    :: TFloat  AS HeadCount
-
+                  , COALESCE (tmpMI.Price, 0)                                        :: TFloat  AS Price
+                  
             FROM (SELECT MovementItem.ObjectId                       AS GoodsId
                        , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -75,6 +77,7 @@ BEGIN
        
                                   , MIFloat_Count.ValueData            AS Count
                                   , MIFloat_HeadCount.ValueData        AS HeadCount
+                                  , COALESCE (MIFloat_Price.ValueData,0):: TFloat AS Price
                                   , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
                                   , MIString_PartionGoods.ValueData    AS PartionGoods
        
@@ -94,6 +97,10 @@ BEGIN
                                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
                                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                              ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()

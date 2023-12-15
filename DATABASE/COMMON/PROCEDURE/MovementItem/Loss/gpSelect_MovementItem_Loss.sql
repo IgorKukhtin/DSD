@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
 RETURNS TABLE (Id Integer, ContainerId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountRemains TFloat, Count TFloat, HeadCount TFloat
+             , Price TFloat
              , PartionGoodsDate TDateTime
              , PartionGoodsId Integer, PartionGoods TVarChar
              , PartNumber TVarChar
@@ -30,6 +31,7 @@ $BODY$
   DECLARE vbBranchId_Constraint Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbDescId_from Integer;
+  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Loss());
@@ -46,7 +48,8 @@ BEGIN
          vbUnitId:= (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_To());
      END IF;
 
-
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     
      IF inShowAll = TRUE THEN
 
      -- Результат такой
@@ -59,6 +62,7 @@ BEGIN
 
                            , MIFloat_Count.ValueData            AS Count
                            , MIFloat_HeadCount.ValueData        AS HeadCount
+                           , MIFloat_Price.ValueData            AS Price
                            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
                            , MIString_PartionGoods.ValueData    AS PartionGoods
                            , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
@@ -85,6 +89,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
                            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -259,6 +266,13 @@ BEGIN
                                    WHERE COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0
                                    )
 
+       -- Цены из прайса
+      , tmpPriceList AS (SELECT lfSelect.GoodsId     AS GoodsId
+                              , lfSelect.GoodsKindId AS GoodsKindId
+                              , lfSelect.ValuePrice  AS Price_PriceList
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:=  zc_PriceList_Basis(), inOperDate:= COALESCE (vbOperDate, CURRENT_DATE)::TDateTime) AS lfSelect
+                         )
+
 
        -- Результат
        SELECT
@@ -273,7 +287,10 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount
            , COALESCE (tmpRemains.Amount, 0)  :: TFloat  AS AmountRemains
            , CAST (NULL AS TFloat)      AS Count
-           , CAST (NULL AS TFloat)      AS HeadCount
+           , CAST (NULL AS TFloat)      AS HeadCount 
+           
+           , CAST (COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat) AS Price
+           
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , CAST (NULL AS Integer)     AS PartionGoodsId
            , COALESCE (tmpRemains.PartionGoodsName,NULL) :: TVarChar AS PartionGoods
@@ -342,6 +359,16 @@ BEGIN
 
             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpGoods.GoodsId
                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpGoods.GoodsKindId
+
+            -- привязываем 2 раза по виду товара и без
+            LEFT JOIN tmpPriceList AS tmpPriceList_Kind 
+                                   ON tmpPriceList_Kind.GoodsId = tmpGoods.GoodsId
+                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
+
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
+
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -357,7 +384,8 @@ BEGIN
            , tmpMI.Amount
            , COALESCE (tmpRemains.Amount, 0)  :: TFloat  AS AmountRemains
            , tmpMI.Count
-           , tmpMI.HeadCount
+           , tmpMI.HeadCount 
+           , tmpMI.Price ::TFloat
            , tmpMI.PartionGoodsDate
            , tmpMI.PartionGoodsId
            , tmpMI.PartionGoods
@@ -543,6 +571,7 @@ BEGIN
            , COALESCE (tmpRemains.Amount, 0) :: TFloat   AS AmountRemains
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
+           , COALESCE (MIFloat_Price.ValueData,0) AS Price      
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , Object_PartionGoods.Id :: Integer AS PartionGoodsId
            , COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) ::TVarChar AS PartionGoods
@@ -585,6 +614,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -680,6 +713,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.12.23         * add Price
  25.06.23         *
  13.12.22         * isPeresort
  08.02.22         *

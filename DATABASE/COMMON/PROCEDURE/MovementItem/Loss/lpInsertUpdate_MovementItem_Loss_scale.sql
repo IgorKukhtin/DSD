@@ -27,7 +27,8 @@ BEGIN
                                             , inGoodsId             := inGoodsId
                                             , inAmount              := inAmount
                                             , inCount               := 0    -- !!!не ошибка, здесь не формируется!!!
-                                            , inHeadCount           := 0    -- !!!не ошибка, здесь не формируется!!!
+                                            , inHeadCount           := 0    -- !!!не ошибка, здесь не формируется!!! 
+                                            , inPrice               := inPrice
                                             , inPartionGoodsDate    := inPartionGoodsDate
                                             , inPartionGoods        := inPartionGoods
                                             , inPartNumber          := Null ::TVarChar
@@ -41,7 +42,7 @@ BEGIN
                                              );
 
      -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+     --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
      -- сохранили свойство <Цена за количество>
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
