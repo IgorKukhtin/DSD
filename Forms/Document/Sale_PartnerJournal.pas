@@ -251,6 +251,8 @@ type
     macUpdate_PriceList_list: TMultiAction;
     macUpdate_PriceList: TMultiAction;
     bbUpdate_PriceList: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbBarSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

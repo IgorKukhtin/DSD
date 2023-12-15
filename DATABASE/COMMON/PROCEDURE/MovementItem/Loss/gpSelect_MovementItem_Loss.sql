@@ -289,7 +289,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount 
            
-           , CAST (COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat) AS Price
+           , CAST (COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) AS TFloat) :: TFloat AS Price
            
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , CAST (NULL AS Integer)     AS PartionGoodsId
@@ -571,7 +571,7 @@ BEGIN
            , COALESCE (tmpRemains.Amount, 0) :: TFloat   AS AmountRemains
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
-           , COALESCE (MIFloat_Price.ValueData,0) AS Price      
+           , COALESCE (MIFloat_Price.ValueData,0):: TFloat AS Price      
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , Object_PartionGoods.Id :: Integer AS PartionGoodsId
            , COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) ::TVarChar AS PartionGoods

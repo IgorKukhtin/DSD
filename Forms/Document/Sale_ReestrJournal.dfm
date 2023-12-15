@@ -3297,123 +3297,15 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Transport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_PackWeight'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Sale_Total'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Sale_Total_To'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Sale_Total_List'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Bill'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Account_List'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTax_Client'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTax_Us'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Spec'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Pack'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Pack21'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Pack22'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintPackGross'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_TTN'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Quality'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSaleOrder'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSaleOrderTax'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintReturnInDay'
         end
         item
           Visible = True
@@ -3561,6 +3453,136 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
     object bbPrint_PackWeight: TdxBarButton
       Action = actPrint_PackWeight
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Transport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_PackWeight'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Sale_Total'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Sale_Total_To'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Sale_Total_List'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Bill'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Account_List'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax_Client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Spec'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack21'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack22'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPackGross'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Quality'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSaleOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSaleOrderTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintReturnInDay'
+        end>
+    end
+    object bbBarSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

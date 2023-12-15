@@ -225,6 +225,8 @@ type
     actUpdate_isMail: TdsdExecStoredProc;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    bbsPrint: TdxBarSubItem;
+    bbBarSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

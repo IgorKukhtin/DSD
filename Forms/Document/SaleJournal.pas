@@ -361,6 +361,9 @@ type
     macPrintPack_2copy: TMultiAction;
     actPrintPack_2copy: TdsdPrintAction;
     bbPrint_Group_cash: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbsPrintGroup: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

@@ -329,6 +329,9 @@ type
     macPrint_Group_list_cash: TMultiAction;
     macPrint_Group_cash: TMultiAction;
     bbPrint_Group_cash: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbsPrintGroup: TdxBarSubItem;
+    bbBarSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

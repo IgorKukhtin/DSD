@@ -217,6 +217,8 @@ type
     actPrint_Quality_ReportName: TdsdExecStoredProc;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    bbsPrint: TdxBarSubItem;
+    bbBarSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public
