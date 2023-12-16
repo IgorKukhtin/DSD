@@ -2,6 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 749
   ClientWidth = 1258
+  ExplicitLeft = -381
   ExplicitWidth = 1274
   ExplicitHeight = 788
   PixelsPerInch = 96
@@ -3252,6 +3253,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       RefreshOnTabSetChanges = True
     end
+    object actGridToExcel_Child: TdsdGridToExcel [24]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Grid = cxGrid1
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1044#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1044#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 6
+      ShortCut = 16440
+    end
     inherited actMISetErased: TdsdUpdateErased
       StoredProcList = <
         item
@@ -3282,7 +3293,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [29]
+    object actUpdateIsMain: TdsdExecStoredProc [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3301,7 +3312,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [31]
+    object actPrint_Detail: TdsdPrintAction [32]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -3342,7 +3353,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [32]
+    object actPrint_All: TdsdPrintAction [33]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -3410,7 +3421,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.ParamType = ptInput
     end
-    object actUpdate_PriceNalog: TdsdExecStoredProc [35]
+    object actUpdate_PriceNalog: TdsdExecStoredProc [36]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3452,7 +3463,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [41]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [42]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3479,7 +3490,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [44]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [45]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4825,6 +4836,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_Child'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -5080,6 +5099,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbUpdate_PriceNalog: TdxBarButton
       Action = macUpdate_PriceNalog
+      Category = 0
+    end
+    object bbGridToExcel_Child: TdxBarButton
+      Action = actGridToExcel_Child
       Category = 0
     end
   end

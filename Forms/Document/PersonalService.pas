@@ -319,6 +319,8 @@ type
     macUpdate_PriceNalog: TMultiAction;
     actUpdate_PriceNalog: TdsdExecStoredProc;
     bbUpdate_PriceNalog: TdxBarButton;
+    actGridToExcel_Child: TdsdGridToExcel;
+    bbGridToExcel_Child: TdxBarButton;
   private
     { Private declarations }
   public
