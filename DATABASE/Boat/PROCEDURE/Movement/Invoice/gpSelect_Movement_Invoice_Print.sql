@@ -299,13 +299,13 @@ BEGIN
                               -- || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
                               -- || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
                              WHEN tmpMov_Parent.Ord = 2 THEN 'Storno invoice '||MovementString_ReceiptNumber.ValueData||' First Advance-payment '
-                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN MovementFloat_Amount.ValueData *100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
                                || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
                              WHEN tmpMov_Parent.Ord = 3 THEN 'Storno invoice '||MovementString_ReceiptNumber.ValueData||' First and Second Advance-payment '
-                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN MovementFloat_Amount.ValueData * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
                                || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient 
                              ELSE  'Storno invoice '||MovementString_ReceiptNumber.ValueData||' First, Second and Third Advance-payment '
-                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN MovementFloat_Amount.ValueData * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
                                || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
                           END
                         END
