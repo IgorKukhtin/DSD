@@ -6709,11 +6709,14 @@ end;
 
 function TdsdSetVisibleParamsItem.GetDisplayName: string;
 begin
-  result := inherited;
-  if FParam.Name <> '' then result := FParam.Name
-  else if Assigned(FParam.Component) then
-    result := FParam.Component.Name + ' ' + FParam.ComponentItem
-  else Result := inherited;;
+  result := '';
+  if Assigned(FComponent) then result := FComponent.Name;
+  if Assigned(FParam.Component) then
+  begin
+    if Result <> '' then Result := Result + '; ';
+    result := Result + FParam.Component.Name + ' ' + FParam.ComponentItem;
+  end;
+  if Result = '' then Result := inherited;
 end;
 
 procedure TdsdSetVisibleParamsItem.Assign(Source: TPersistent);

@@ -3,27 +3,27 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
   ClientHeight = 500
   ClientWidth = 1315
   AddOnFormData.AddOnFormRefresh.ParentList = 'EmployeeScheduleNew'
-  ExplicitWidth = 1331
-  ExplicitHeight = 539
+  ExplicitWidth = 1337
+  ExplicitHeight = 556
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
+    Top = 88
     Width = 1315
-    Height = 418
-    ExplicitTop = 82
+    Height = 412
+    ExplicitTop = 88
     ExplicitWidth = 1315
-    ExplicitHeight = 418
-    ClientRectBottom = 418
+    ExplicitHeight = 412
+    ClientRectBottom = 412
     ClientRectRight = 1315
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1315
-      ExplicitHeight = 394
+      ExplicitHeight = 388
       inherited cxGrid: TcxGrid
         Width = 1315
-        Height = 394
+        Height = 388
         ExplicitWidth = 1315
-        ExplicitHeight = 394
+        ExplicitHeight = 388
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -914,7 +914,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     DockControlHeights = (
       0
       0
-      26
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1184,7 +1184,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Top = 232
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_EmployeeScheduleNew'
+    StoredProcName = 'gpUpdate_Status_EmployeeSchedule'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Top = 232
