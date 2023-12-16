@@ -1,25 +1,26 @@
 ﻿inherited InvoiceJournalForm: TInvoiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 569
-  ClientWidth = 1106
+  ClientWidth = 1121
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1122
+  ExplicitLeft = -236
+  ExplicitWidth = 1137
   ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1106
+    Width = 1121
     Height = 316
     TabOrder = 3
     ExplicitWidth = 1106
     ExplicitHeight = 316
     ClientRectBottom = 316
-    ClientRectRight = 1106
+    ClientRectRight = 1121
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1106
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
-        Width = 1106
+        Width = 1121
         Height = 316
         ExplicitWidth = 1106
         ExplicitHeight = 316
@@ -629,14 +630,14 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1106
+    Width = 1121
     ExplicitWidth = 1106
     inherited deEnd: TcxDateEdit
       Left = 315
       ExplicitLeft = 315
     end
     object cxLabel4: TcxLabel
-      Left = 631
+      Left = 659
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
@@ -648,25 +649,28 @@
       Style.IsFontAssigned = True
     end
     object edSearch_InvNumber_OrderClient: TcxTextEdit
-      Left = 699
+      Left = 728
       Top = 5
       TabOrder = 5
       DesignSize = (
-        110
+        100
         21)
-      Width = 110
+      Width = 100
     end
     object edSearch_ReceiptNumber_Invoice: TcxTextEdit
-      Left = 514
+      Left = 545
       Top = 5
+      Hint = #1055#1086#1080#1089#1082' '#1076#1083#1103' '#1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 6
       DesignSize = (
-        110
+        100
         21)
-      Width = 110
+      Width = 100
     end
     object cxLabel3: TcxLabel
-      Left = 823
+      Left = 835
       Top = 4
       Caption = 'Lieferanten / Kunden: '
       ParentFont = False
@@ -678,19 +682,22 @@
       Style.IsFontAssigned = True
     end
     object edSearch_ObjectName: TcxTextEdit
-      Left = 972
+      Left = 989
       Top = 5
       TabOrder = 8
       DesignSize = (
-        110
+        120
         21)
-      Width = 110
+      Width = 120
     end
     object lbSearchArticle: TcxLabel
-      Left = 420
+      Left = 411
       Top = 4
-      Caption = 'Inv No '#1089#1095#1077#1090': '
+      Hint = #1055#1086#1080#1089#1082' '#1076#1083#1103' '#1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+      Caption = #1055#1086#1080#1089#1082' Inv No '#1089#1095#1077#1090': '
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
       Style.Font.Height = -13
@@ -702,10 +709,11 @@
   object Panel_btn: TPanel [2]
     Left = 0
     Top = 496
-    Width = 1106
+    Width = 1121
     Height = 73
     Align = alBottom
     TabOrder = 6
+    ExplicitWidth = 1106
     object btnUpdate: TcxButton
       Left = 231
       Top = 9
@@ -810,10 +818,11 @@
   object cxGrid_Item: TcxGrid [3]
     Left = 0
     Top = 381
-    Width = 1106
+    Width = 1121
     Height = 115
     Align = alBottom
     TabOrder = 7
+    ExplicitWidth = 1106
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1081,10 +1090,11 @@
   object cxSplitter_Bottom_Item: TcxSplitter [4]
     Left = 0
     Top = 373
-    Width = 1106
+    Width = 1121
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
+    ExplicitWidth = 1106
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <

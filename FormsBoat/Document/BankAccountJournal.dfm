@@ -4,6 +4,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -457,10 +458,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     ExplicitWidth = 1213
     ExplicitHeight = 30
     object lbSearchArticle: TcxLabel
-      Left = 651
+      Left = 408
       Top = 4
-      Caption = 'Inv No '#1089#1095#1077#1090':'
+      Hint = #1055#1086#1080#1089#1082' '#1076#1083#1103' '#1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+      Caption = #1055#1086#1080#1089#1082' Inv No '#1089#1095#1077#1090':'
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
       Style.Font.Height = -13
@@ -469,16 +473,19 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Style.IsFontAssigned = True
     end
     object edSearch_ReceiptNumber_Invoice: TcxTextEdit
-      Left = 735
+      Left = 538
       Top = 5
+      Hint = #1055#1086#1080#1089#1082' '#1076#1083#1103' '#1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 5
       DesignSize = (
-        118
+        100
         21)
-      Width = 118
+      Width = 100
     end
     object cxLabel3: TcxLabel
-      Left = 859
+      Left = 841
       Top = 4
       Caption = 'Lieferanten / Kunden: '
       ParentFont = False
@@ -490,16 +497,16 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Style.IsFontAssigned = True
     end
     object edSearchMoneyPlaceName: TcxTextEdit
-      Left = 1009
+      Left = 992
       Top = 5
       TabOrder = 7
       DesignSize = (
-        131
+        120
         21)
-      Width = 131
+      Width = 120
     end
     object cxLabel4: TcxLabel
-      Left = 447
+      Left = 656
       Top = 4
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
@@ -511,13 +518,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Style.IsFontAssigned = True
     end
     object edSearchInvNumber_OrderClient: TcxTextEdit
-      Left = 514
+      Left = 725
       Top = 5
       TabOrder = 9
       DesignSize = (
-        131
+        100
         21)
-      Width = 131
+      Width = 100
     end
   end
   object Panel_btn: TPanel [2]
@@ -1321,22 +1328,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint1'
         end
         item
           Visible = True
