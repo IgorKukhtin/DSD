@@ -164,6 +164,7 @@ type
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     btnInsertMask: TcxButton;
+    UnitName_parent_receipt: TcxGridDBColumn;
   private
     { Private declarations }
   public
