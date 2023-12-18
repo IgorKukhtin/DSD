@@ -332,6 +332,9 @@ type
     bbsPrint: TdxBarSubItem;
     bbsPrintGroup: TdxBarSubItem;
     bbBarSeparator: TdxBarSeparator;
+    bbsEdit: TdxBarSubItem;
+    bbsUnLoad: TdxBarSubItem;
+    bbsSend: TdxBarSubItem;
   private
     { Private declarations }
   public
