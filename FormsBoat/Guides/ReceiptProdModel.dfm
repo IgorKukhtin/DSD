@@ -232,7 +232,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Width = 70
         end
         object UnitName: TcxGridDBColumn
-          Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+          Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
           DataBinding.FieldName = 'UnitName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -1384,7 +1384,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 130
   end
   object Panel_btn: TPanel

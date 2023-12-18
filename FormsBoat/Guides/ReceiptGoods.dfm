@@ -153,6 +153,7 @@
         object Name: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'Name'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
@@ -284,6 +285,30 @@
           HeaderAlignmentVert = vaCenter
           Width = 164
         end
+        object Comment_goods: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+          DataBinding.FieldName = 'Comment_goods'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          Options.Editing = False
+          Width = 80
+        end
+        object ProdColorName: TcxGridDBColumn
+          Caption = 'Farbe ('#1050#1086#1084#1087#1083'.)'
+          DataBinding.FieldName = 'ProdColorName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = 'Farbe '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          Width = 70
+        end
         object Article_group: TcxGridDBColumn
           Caption = 'Artikel Nr***'
           DataBinding.FieldName = 'Article_group'
@@ -325,34 +350,11 @@
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = True
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = '***'#1041#1072#1079#1086#1074#1072#1103' '#1089#1073#1086#1088#1082#1072
           Width = 120
-        end
-        object ProdColorName: TcxGridDBColumn
-          Caption = 'Farbe ('#1050#1086#1084#1087#1083'.)'
-          DataBinding.FieldName = 'ProdColorName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = 'Farbe '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-          Width = 70
-        end
-        object Comment_goods: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
-          DataBinding.FieldName = 'Comment_goods'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-          Options.Editing = False
-          Width = 80
         end
         object MeasureName: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -364,20 +366,20 @@
           Width = 40
         end
         object UnitName: TcxGridDBColumn
-          Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+          Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
           DataBinding.FieldName = 'UnitName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 87
+          Width = 100
         end
         object UnitChildName: TcxGridDBColumn
-          Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1077#1083'-'#1055#1060
+          Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' ('#1059#1079#1077#1083' '#1055#1060')'
           DataBinding.FieldName = 'UnitChildName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 87
+          Width = 100
         end
         object EKPrice_summ: TcxGridDBColumn
           Caption = 'Total EK'
@@ -1556,13 +1558,13 @@
       Width = 171
     end
     object cxLabel4: TcxLabel
-      Left = 804
-      Top = 8
-      Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080':'
+      Left = 467
+      Top = 9
+      Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080':'
     end
     object edUnit: TcxButtonEdit
-      Left = 881
-      Top = 7
+      Left = 557
+      Top = 8
       Properties.Buttons = <
         item
           Default = True
@@ -1573,15 +1575,15 @@
       Width = 194
     end
     object cxLabel15: TcxLabel
-      Left = 510
+      Left = 953
       Top = 9
       Caption = #1057#1073#1086#1088#1082#1072' '#1059#1079#1083#1072' '#1055#1060':'
       ParentShowHint = False
       ShowHint = True
     end
     object edGoodsChild: TcxButtonEdit
-      Left = 599
-      Top = 7
+      Left = 1045
+      Top = 8
       Properties.Buttons = <
         item
           Default = True
@@ -1598,7 +1600,7 @@
     Width = 1272
     Height = 64
     Align = alBottom
-    TabOrder = 9
+    TabOrder = 8
     object btnInsert: TcxButton
       Left = 17
       Top = 4
@@ -1711,12 +1713,12 @@
     end
   end
   object cxLabel1: TcxLabel
-    Left = 760
+    Left = 414
     Top = 38
-    Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072' '#1055#1060':'
+    Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' ('#1059#1079#1077#1083' '#1055#1060'):'
   end
   object edUnitChild: TcxButtonEdit
-    Left = 881
+    Left = 557
     Top = 37
     Properties.Buttons = <
       item
@@ -4637,8 +4639,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 999
-    Top = 19
+    Left = 1135
+    Top = 3
   end
   object spInsUpd_Unit: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ReceiptGoods_Unit'
