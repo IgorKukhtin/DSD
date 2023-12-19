@@ -267,6 +267,17 @@ BEGIN
                                  AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                                  ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+             LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                  ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                                 AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+             LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
+
+
        WHERE Object_Goods.DescId = zc_Object_Goods()
        AND (COALESCE (vbIsIrna, FALSE) = FALSE
          OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
@@ -297,6 +308,12 @@ BEGIN
 
             , 0                   :: Integer  AS GoodsGroupAnalystId
             , ''                  :: TVarChar AS GoodsGroupAnalystName
+
+            , 0                   :: Integer  AS GoodsGroupPropertyId
+            , ''                  :: TVarChar AS GoodsGroupPropertyName
+            
+            , 0                   :: Integer  AS GoodsGroupPropertyId_Parent
+            , ''                  :: TVarChar AS GoodsGroupPropertyName_Parent
 
             , 0                   :: Integer  AS AssetId
             , ''                  :: TVarChar AS AssetName
@@ -346,6 +363,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 19.12.23         *
  22.05.23         *
  30.06.22         *
  04.05.22         *

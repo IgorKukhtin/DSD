@@ -155,6 +155,10 @@ type
     macUpdate_Group: TMultiAction;
     bbcUpdate_Group: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    spGetImportSettingId_GGProperty: TdsdStoredProc;
+    actGetImportSetting_GGProperty: TdsdExecStoredProc;
+    macStartLoad_GGProperty: TMultiAction;
+    bbStartLoad_GGProperty: TdxBarButton;
   private
     { Private declarations }
   public

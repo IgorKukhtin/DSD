@@ -605,20 +605,20 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyEditForm');
-   exit;
+  // exit;
 
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-   exit;
-
+  // exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
@@ -668,7 +668,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
   exit;

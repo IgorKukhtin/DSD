@@ -60,8 +60,8 @@ object GoodsGroupPropertyEditForm: TGoodsGroupPropertyEditForm
     Width = 273
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 100
+    Left = 8
+    Top = 99
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object edParent: TcxButtonEdit

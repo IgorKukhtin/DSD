@@ -87,6 +87,9 @@ type
     edDate_BUH: TcxDateEdit;
     cxLabel19: TcxLabel;
     edShortName: TcxTextEdit;
+    cxLabel20: TcxLabel;
+    edGoodsGroupProperty: TcxButtonEdit;
+    GuidesGoodsGroupProperty: TdsdGuides;
   private
     { Private declarations }
   public
