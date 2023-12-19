@@ -40,11 +40,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_12
             end
             item
@@ -96,11 +91,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_18
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalCount
             end
             item
               Format = ',0.####'

@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
+             , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
              , AssetId Integer, AssetName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , TradeMarkName TVarChar
@@ -78,6 +79,12 @@ BEGIN
 
             , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
             , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
+
+            , Object_GoodsGroupProperty.Id        AS GoodsGroupPropertyId
+            , Object_GoodsGroupProperty.ValueData AS GoodsGroupPropertyName
+            
+            , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+            , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
 
             , Object_Asset.Id        AS AssetId
             , Object_Asset.ValueData AS AssetName

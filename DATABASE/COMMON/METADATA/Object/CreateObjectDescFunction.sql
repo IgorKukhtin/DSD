@@ -1057,7 +1057,11 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ObjectColor', 'Цвет авто' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ObjectColor');
  
-  
+  CREATE OR REPLACE FUNCTION zc_Object_GoodsGroupProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsGroupProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsGroupProperty', 'Аналитический классификатор' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsGroupProperty');
+ 
+   
    
  
 
@@ -1695,6 +1699,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 19.12.23         * zc_Object_GoodsGroupProperty
  12.10.23                                                                                        * zc_Object_UKTZED
  18.08.23                                                                                        * zc_Object_StoredProcExternal
  16.07.23         * zc_Object_CarType

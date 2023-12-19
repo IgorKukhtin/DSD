@@ -1472,7 +1472,10 @@ uses
   CarPropertyEdit in '..\..\Forms\Guides\CarPropertyEdit.pas' {CarPropertyEditForm: TParentForm},
   Select_HolidayCompensation_zp in '..\..\Forms\Report\Select_HolidayCompensation_zp.pas' {Select_HolidayCompensation_zpForm: TParentForm},
   Select_HolidayCompensation_day in '..\..\Forms\Report\Select_HolidayCompensation_day.pas' {Select_HolidayCompensation_dayForm: TParentForm},
-  PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm};
+  PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm},
+  GoodsGroupPropertyEdit in '..\..\Forms\Guides\GoodsGroupPropertyEdit.pas' {GoodsGroupPropertyEditForm: TParentForm},
+  GoodsGroupProperty in '..\..\Forms\Guides\GoodsGroupProperty.pas' {GoodsGroupPropertyForm: TParentForm},
+  GoodsGroupProperty_Object in '..\..\Forms\Guides\GoodsGroupProperty_Object.pas' {GoodsGroupProperty_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
