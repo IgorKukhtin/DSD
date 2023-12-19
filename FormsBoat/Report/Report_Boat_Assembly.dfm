@@ -50,11 +50,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_111
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_112
             end
             item
@@ -81,6 +76,11 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_17
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -106,11 +106,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_12
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_111
             end
             item
               Format = ',0.####'
@@ -146,6 +141,11 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = InvNumberFull_OrderClient
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -282,6 +282,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -296,14 +297,23 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1086#1089#1085'.'#1089#1082#1083#1072#1076#1077
             Width = 80
           end
-          object Amount_111: TcxGridDBColumn
-            Caption = '1.1.1 '#1054#1089#1090'. '#1082#1086#1084#1087#1083'.'
-            DataBinding.FieldName = 'Amount_111'
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1079#1072#1082#1072#1079#1077
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1086#1089#1085'.'#1089#1082#1083#1072#1076#1077
+            Width = 80
+          end
+          object Amount_111: TcxGridDBColumn
+            Caption = '1.1.1 '#1054#1089#1090'. '#1082#1086#1084#1087#1083'.'
+            DataBinding.FieldName = 'Amount_111'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Amount_112: TcxGridDBColumn

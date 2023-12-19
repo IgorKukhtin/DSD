@@ -24,9 +24,10 @@ RETURNS TABLE (ClientId Integer, ClientCode Integer, ClientName TVarChar
 
              --
              , TotalCount  TFloat
-             , Remains     TFloat  
+             , Remains     TFloat
+             , Amount      TFloat  
             --
-             , Amount_111 TFloat
+             , Amount_111 TVarChar
              , Amount_112 TFloat
              , Amount_12  TFloat
              , Amount_13  TFloat
@@ -113,9 +114,11 @@ BEGIN
    , tmpData AS (SELECT tmpGoods.MovementId
                       , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END AS ObjectId 
                       , tmpGoods.TotalCount
+                      , SUM (COALESCE (tmpGoods.Amount,0)) AS Amount
                       , SUM (COALESCE (tmpContainer_All.Remains,0)) AS Remains
                       , SUM (COALESCE (tmpGoods_mi.Amount_total,0)) AS Amount_total  --сколько уже в использовании в др. заказах
-                      , SUM (CASE WHEN COALESCE (tmpContainer_All.Remains,0) - COALESCE (tmpGoods_mi.Amount_total,0) < tmpGoods.Amount THEN 0 ELSE 1 END) AS Count
+                      , SUM (CASE WHEN COALESCE (tmpContainer_All.Remains,0) - COALESCE (tmpGoods_mi.Amount_total,0) < tmpGoods.Amount THEN 0 ELSE 1 END) AS Count 
+                      
                  FROM tmpGoods
                       LEFT JOIN tmpGoods_mi ON tmpGoods_mi.ObjectId = tmpGoods.ObjectId
                                            AND tmpGoods_mi.MovementId = tmpGoods.MovementId
@@ -154,9 +157,10 @@ BEGIN
 
             --
           , tmpData.TotalCount :: TFloat
-          , tmpData.Remains    :: TFloat
+          , tmpData.Remains    :: TFloat 
+          , tmpData.Amount     :: TFloat
           --
-          , tmpData.Count :: TFloat AS Amount_111
+          , (''||tmpData.Count ||' из '|| tmpData.TotalCount)::TVarChar AS Amount_111
           , 0 :: TFloat AS Amount_112
           , 0 :: TFloat AS Amount_12
           , 0 :: TFloat AS Amount_13
