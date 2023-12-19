@@ -5,7 +5,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -189
   ExplicitWidth = 1386
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -4021,7 +4020,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
         end>
-      CopiesCount = 2
       Params = <
         item
           Name = 'Id'
