@@ -64,6 +64,9 @@ type
     FormDispensingName: TcxGridDBColumn;
     Measure: TcxGridDBColumn;
     PartionGoods: TcxGridDBColumn;
+    cbNotIncome: TcxCheckBox;
+    isNoGoodsIncome: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

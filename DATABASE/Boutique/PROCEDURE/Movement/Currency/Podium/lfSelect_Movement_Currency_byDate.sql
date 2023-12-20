@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION lfSelect_Movement_Currency_byDate(
 RETURNS TABLE (MovementId Integer, OperDate TDateTime
              , CurrencyFromId Integer, CurrencyFromName TVarChar
              , CurrencyToId Integer, CurrencyToName TVarChar
-             , Amount TFloat, CurrencyValueOut TFloat, ParValue TFloat
+             , Amount TFloat, CurrencyValueIn TFloat, ParValue TFloat
              )
 AS
 $BODY$
@@ -24,7 +24,7 @@ BEGIN
                                  , MovementItem.Id                AS MovementItemId
                                  , MovementItem.ObjectId          AS CurrencyFromId
                                  , MovementItem.Amount            AS Amount
-                                 , MIFloat_CurrencyValueOut.ValueData  AS CurrencyValueOut
+                                 , MIFloat_CurrencyValueIn.ValueData  AS CurrencyValueIn
                                  , CASE WHEN MIFloat_ParValue.ValueData > 0 THEN MIFloat_ParValue.ValueData ELSE 1 END AS ParValue
                                  , MILinkObject_Currency.ObjectId AS CurrencyToId
                             FROM Movement
@@ -35,9 +35,9 @@ BEGIN
                                                                   AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
                                  INNER JOIN tmpCurrency ON tmpCurrency.CurrencyFromId = MovementItem.ObjectId
                                                        AND tmpCurrency.CurrencyToId   = MILinkObject_Currency.ObjectId
-                                 LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueOut
-                                                             ON MIFloat_CurrencyValueOut.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_CurrencyValueOut.DescId = zc_MIFloat_CurrencyValueOut()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueIn
+                                                             ON MIFloat_CurrencyValueIn.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_CurrencyValueIn.DescId = zc_MIFloat_CurrencyValueIn()
                                  LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                              ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                             AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
@@ -64,11 +64,11 @@ BEGIN
              END :: TFloat AS Amount
 
            , CASE WHEN tmpMovement.CurrencyFromId = inCurrencyFromId AND tmpMovement.CurrencyToId = inCurrencyToId
-                       THEN tmpMovement.CurrencyValueOut
+                       THEN tmpMovement.CurrencyValueIn
                   WHEN tmpMovement.CurrencyFromId = inCurrencyToId AND tmpMovement.CurrencyToId = inCurrencyFromId
-                       THEN tmpMovement.ParValue / tmpMovement.CurrencyValueOut
+                       THEN tmpMovement.ParValue / tmpMovement.CurrencyValueIn
                           * tmpMovement.ParValue
-             END :: TFloat AS CurrencyValueOut
+             END :: TFloat AS CurrencyValueIn
 
            , CASE WHEN tmpMovement.CurrencyFromId = inCurrencyFromId AND tmpMovement.CurrencyToId = inCurrencyToId
                        THEN tmpMovement.ParValue

@@ -39,7 +39,7 @@ type
     actDoLoadDop: TExecuteImportSettingsAction;
     macStartLoadDop: TMultiAction;
     bbStartLoadDop: TdxBarButton;
-    clCurrencyValueOut: TcxGridDBColumn;
+    clCurrencyValueIn: TcxGridDBColumn;
   private
     { Private declarations }
   public
