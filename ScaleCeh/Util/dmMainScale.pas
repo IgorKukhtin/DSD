@@ -46,6 +46,7 @@ begin
                         ParamsMovement.ParamByName('isStorageLine').asBoolean     := CDS.FieldByName('isStorageLine').asBoolean;
                         ParamsMovement.ParamByName('isArticleLoss').asBoolean     := CDS.FieldByName('isArticleLoss').asBoolean;
                         ParamsMovement.ParamByName('isSubjectDoc').asBoolean      := CDS.FieldByName('isSubjectDoc').asBoolean;
+                        ParamsMovement.ParamByName('isCalc_Sh').asBoolean         := CDS.FieldByName('isCalc_Sh').asBoolean;
                   end;
         end
         else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';

@@ -1386,7 +1386,7 @@ object MainCehForm: TMainCehForm
       end
       object EditEnterCount: TcxCurrencyEdit
         Left = 10
-        Top = 14
+        Top = 15
         ParentFont = False
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
@@ -2480,8 +2480,8 @@ object MainCehForm: TMainCehForm
             ExplicitWidth = 19
           end
           object EditGoodsCode: TcxCurrencyEdit
-            Left = 4
-            Top = 12
+            Left = 5
+            Top = 13
             Properties.Alignment.Horz = taRightJustify
             Properties.Alignment.Vert = taVCenter
             Properties.AssignedValues.DisplayFormat = True

@@ -78,7 +78,7 @@ var
   DMMainScaleCehForm: TDMMainScaleCehForm;
 
 implementation
-uses Inifiles,TypInfo,DialogMovementDesc,UtilConst;
+uses Inifiles,TypInfo,UtilConst;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 procedure TDMMainScaleCehForm.DataModuleCreate(Sender: TObject);
@@ -938,7 +938,12 @@ begin
            Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput, execParamsMovement.ParamByName('isPartionGoodsDate').AsBoolean);
            Params.AddParam('inIsAsset', ftBoolean, ptInput, execParamsMovement.ParamByName('isAsset').AsBoolean);
            Params.AddParam('inOperCount', ftFloat, ptInput, execParamsMI.ParamByName('OperCount').AsFloat);
-           Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
+
+           if (execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+           and(execParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+           then Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight_Get').AsFloat)
+           else Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
+
            Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
            Params.AddParam('inLiveWeight', ftFloat, ptInput, execParamsMI.ParamByName('LiveWeight').AsFloat);
            Params.AddParam('inHeadCount', ftFloat, ptInput, execParamsMI.ParamByName('HeadCount').AsFloat);
@@ -1135,6 +1140,8 @@ begin
               ParamByName('Weight_gd').AsFloat        := DataSet.FieldByName('Weight_gd').AsFloat;
               ParamByName('WeightTare_gd').AsFloat    := DataSet.FieldByName('WeightTare_gd').AsFloat;
               ParamByName('CountForWeight_gd').AsFloat:= DataSet.FieldByName('CountForWeight_gd').AsFloat;
+              ParamByName('WeightPackageSticker_gd').AsFloat:= DataSet.FieldByName('WeightPackageSticker_gd').AsFloat;
+
               // —хема - втулки - перевод из веса - только дл€ программы ScaleCeh
               if (ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
               and(ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)

@@ -347,6 +347,7 @@ begin
      ParamAdd(Params,'isArticleLoss',ftBoolean);
      ParamAdd(Params,'isLockStartWeighing',ftBoolean);
      ParamAdd(Params,'isListInventory',ftBoolean);
+     ParamAdd(Params,'isCalc_Sh',ftBoolean);
 
      ParamAdd(Params,'isAsset',ftBoolean);
      ParamAdd(Params,'AssetId',ftInteger);
@@ -590,8 +591,10 @@ begin
      ParamAdd(Params,'Weight_gd',ftFloat);           // Вес товара
      ParamAdd(Params,'WeightTare_gd',ftFloat);       // Вес втулки
      ParamAdd(Params,'CountForWeight_gd',ftFloat);   // Кол. для Веса
+     ParamAdd(Params,'WeightPackageSticker_gd',ftFloat);//  вес 1-ого пакета -  Вес пакета для печ.ЭТИКЕТКИ
 
      ParamAdd(Params,'OperCount',ftFloat);           // Количество (с учетом: минус тара и прочее)
+     ParamAdd(Params,'RealWeight_Get',ftFloat);      //
      ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и прочее)
      ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
      ParamAdd(Params,'WeightOther',ftFloat);         // Вес, прочее

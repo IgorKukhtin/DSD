@@ -79,6 +79,7 @@ type
   public
     function Execute(BarCode: String): boolean; virtual;
     function Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
+    function Get_isCalc_Sh(MovementDescNumber:Integer): boolean;
   end;
 
 var
@@ -102,7 +103,6 @@ begin
            ParamsMovement.ParamByName('OrderExternal_BarCode').asString   := '';
            ParamsMovement.ParamByName('OrderExternal_InvNumber').asString := '';
            ParamsMovement.ParamByName('OrderExternalName_master').asString:= '';
-
            //
            ParamsMovement.ParamByName('ColorGridValue').AsInteger          := CDS.FieldByName('ColorGridValue').asInteger;
            ParamsMovement.ParamByName('MovementDescNumber').AsInteger      := CDS.FieldByName('Number').asInteger;
@@ -127,6 +127,7 @@ begin
            ParamsMovement.ParamByName('isListInventory').asBoolean         := CDS.FieldByName('isListInventory').asBoolean;
            ParamsMovement.ParamByName('isAsset').asBoolean                 := CDS.FieldByName('isAsset').asBoolean;
            ParamsMovement.ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
+           ParamsMovement.ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
 
            ParamsMovement.ParamByName('FromId').AsInteger           := CDS.FieldByName('FromId').asInteger;
            ParamsMovement.ParamByName('FromCode').asString          := CDS.FieldByName('FromCode').asString;
@@ -250,6 +251,22 @@ begin
              if CDS.RecordCount<>1
              then ShowMessage('Ошибка.Код операции не определен.')
              else Result:=CDS.FieldByName('isSendOnPriceIn').asBoolean;
+        end;
+end;
+{------------------------------------------------------------------------}
+function TDialogMovementDescForm.Get_isCalc_Sh(MovementDescNumber:Integer): boolean;
+begin
+     Result:=false;
+     //
+        if MovementDescNumber <> 0 then
+        begin
+             CDS.Filter:='(Number='+IntToStr(MovementDescNumber)
+                        +')'
+                          ;
+             CDS.Filtered:=true;
+             if CDS.RecordCount<>1
+             then ShowMessage('Ошибка.Код операции не определен.')
+             else Result:=CDS.FieldByName('isCalc_Sh').asBoolean;
         end;
 end;
 {------------------------------------------------------------------------}
@@ -401,6 +418,7 @@ begin
           ParamByName('isListInventory').asBoolean         := CDS.FieldByName('isListInventory').asBoolean;
           ParamByName('isAsset').asBoolean                 := CDS.FieldByName('isAsset').asBoolean;
           ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
+          ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)

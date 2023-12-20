@@ -444,6 +444,7 @@ type
 
     function fGetScale_TimerWeight:Boolean;
     function fGetScale_CurrentWeight:Double;
+    function fGetScale_CurrentWeight_real:Double;
     function GetOldRealWeight:Double;
 
     procedure pSetSubjectDoc;
@@ -2136,7 +2137,9 @@ begin
             or(ParamsMI.ParamByName('isWeight_gd').AsBoolean = FALSE)
               )
              )
-           or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+           or((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+              //***and((ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = FALSE) or (fGetScale_CurrentWeight_real = 0))
+             )
            or(ParamsMI.ParamByName('isEnterCount').AsBoolean = TRUE)
           then if HeadCountPanel.Visible then ActiveControl:=EditEnterCount;
           //и выставим вид упаковки
@@ -2183,6 +2186,7 @@ begin
      end;
      //
      ParamsMI.ParamByName('RealWeight').AsFloat:=fGetScale_CurrentWeight;
+     ParamsMI.ParamByName('RealWeight_Get').AsFloat:=ParamsMI.ParamByName('RealWeight').AsFloat;
      SetParams_OperCount;
      //
      if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
@@ -2284,10 +2288,15 @@ begin
      begin
            SetParams_OperCount;
            //
-           if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
+           if (ParamsMI.ParamByName('OperCount').AsFloat<=0) and (ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = FALSE)
            then begin ActiveControl:=EditWeightTare_enter;
                       PanelMovementDesc.Font.Color:=clRed;
                       PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
+                end
+           else if (ParamsMI.ParamByName('OperCount').AsFloat<0)
+           then begin ActiveControl:=EditWeightTare_enter;
+                      PanelMovementDesc.Font.Color:=clRed;
+                      PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть < 0';
                 end
            else WriteParamsMovement;
      end;
@@ -2299,10 +2308,15 @@ begin
      begin
            SetParams_OperCount;
            //
-           if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
+           if (ParamsMI.ParamByName('OperCount').AsFloat<=0) and (ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = FALSE)
            then begin ActiveControl:=EditSkewer1;
                       PanelMovementDesc.Font.Color:=clRed;
                       PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
+                end
+           else if (ParamsMI.ParamByName('OperCount').AsFloat<0)
+           then begin ActiveControl:=EditSkewer1;
+                      PanelMovementDesc.Font.Color:=clRed;
+                      PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть < 0';
                 end
            else WriteParamsMovement;
      end;
@@ -2314,25 +2328,62 @@ begin
      begin
            SetParams_OperCount;
            //
-           if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
+           if (ParamsMI.ParamByName('OperCount').AsFloat<=0) and (ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = FALSE)
            then begin ActiveControl:=EditSkewer2;
                       PanelMovementDesc.Font.Color:=clRed;
                       PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
+                end
+           else if (ParamsMI.ParamByName('OperCount').AsFloat<0)
+           then begin ActiveControl:=EditSkewer2;
+                      PanelMovementDesc.Font.Color:=clRed;
+                      PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть < 0';
                 end
            else WriteParamsMovement;
      end;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditWeightOtherExit(Sender: TObject);
+var Value_EnterCount:Double;
 begin
      if ParamsMI.ParamByName('GoodsId').AsInteger > 0 then
      begin
+           if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+           and(ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+           then begin
+                //
+                try
+                   Value_EnterCount:= StrToFloat (EditEnterCount.Text);
+                except
+                     Value_EnterCount:= 0;
+                end;
+                //
+                if Value_EnterCount = 0 then
+                begin
+                   Value_EnterCount:= fGetScale_CurrentWeight_real;
+                   EditEnterCount.Text:= FloatToStr(ROUND ((Value_EnterCount
+                                                           -ParamsMI.ParamByName('WeightTare').AsFloat
+                                                           -ParamsMI.ParamByName('WeightOther').AsFloat
+                                                           -ParamsMI.ParamByName('CountSkewer1').AsFloat * SettingMain.WeightSkewer1
+                                                           -ParamsMI.ParamByName('CountSkewer2').AsFloat * SettingMain.WeightSkewer2
+                                                           )
+                                                         / (ParamsMI.ParamByName('Weight_gd').AsFloat
+                                                          + ParamsMI.ParamByName('WeightPackageSticker_gd').AsFloat
+                                                           ))
+                                                  );
+                end;
+           end;
+
            SetParams_OperCount;
            //
-           if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
+           if (ParamsMI.ParamByName('OperCount').AsFloat<=0) and (ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = FALSE)
            then begin ActiveControl:=EditWeightOther;
                       PanelMovementDesc.Font.Color:=clRed;
                       PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
+                end
+           else if (ParamsMI.ParamByName('OperCount').AsFloat<0)
+           then begin ActiveControl:=EditWeightOther;
+                      PanelMovementDesc.Font.Color:=clRed;
+                      PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть < 0';
                 end
            else WriteParamsMovement;
      end;
@@ -2347,10 +2398,15 @@ begin
            if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
            then WriteParamsMovement
            else
-           if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
+           if (ParamsMI.ParamByName('OperCount').AsFloat<=0) and (ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = FALSE)
            then begin ActiveControl:=EditEnterCount;
                       PanelMovementDesc.Font.Color:=clRed;
                       PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
+                end
+           else if (ParamsMI.ParamByName('OperCount').AsFloat<0)
+           then begin ActiveControl:=EditEnterCount;
+                      PanelMovementDesc.Font.Color:=clRed;
+                      PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть < 0';
                 end
            else WriteParamsMovement;
      end;
@@ -2563,7 +2619,10 @@ procedure TMainCehForm.EditWeightOtherKeyDown(Sender: TObject; var Key: Word;Shi
 begin
      if Key = 13
      then if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE) then ActiveControl:=EditNumberKVK
-          else ActiveControl:=EditGoodsCode;
+          else if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+               and(ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+               then ActiveControl:=EditEnterCount
+               else ActiveControl:=EditGoodsCode;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditEnterCountKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -3530,6 +3589,43 @@ begin
           try Result:=StrToFloat(EditEnterCount.Text)
           except Result:=0;
           end;
+          //
+          if Result = 0 then
+          Result:=fGetScale_CurrentWeight_real;
+     //
+     PanelWeight_Scale.Caption:=FloatToStr(Result);
+end;
+//------------------------------------------------------------------------------------------------
+function TMainCehForm.fGetScale_CurrentWeight_real:Double;
+begin
+     // открываем ВЕСЫ, только когда НУЖЕН вес
+     //Initialize_Scale_DB;
+     // считывание веса
+     try
+        if Scale_Array[rgScale.ItemIndex].ScaleType = stBI
+        then Result:=Scale_BI.Weight
+             else if Scale_Array[rgScale.ItemIndex].ScaleType = stDB
+                  then Result:=Scale_DB.Weight
+                  else if Scale_Array[rgScale.ItemIndex].ScaleType = stZeus
+                       then Result:=Scale_Zeus.Weight
+                       else Result:=0;
+     except Result:=0;end;
+
+     //if lTimerWeight_zero = false
+     //then Result:=0
+     //else Result:=0.495;
+
+     // закрываем ВЕСЫ
+     // Scale_DB.Active:=0;
+     //
+//*****
+     if (System.Pos('ves=',ParamStr(1))>0)and(Result=0)
+     then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-4));
+     if (System.Pos('ves=',ParamStr(2))>0)and(Result=0)
+     then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
+     if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
+     then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
+//*****
      //
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;
