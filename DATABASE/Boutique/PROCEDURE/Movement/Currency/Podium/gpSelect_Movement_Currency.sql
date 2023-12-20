@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , StartDate TDateTime
              , EndDate   TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , Amount TFloat, CurrencyValueOut TFloat, ParValue TFloat
+             , Amount TFloat, CurrencyValueIn TFloat, ParValue TFloat
              , Comment TVarChar
              , CurrencyFromName TVarChar
              , CurrencyToName TVarChar
@@ -43,7 +43,7 @@ BEGIN
                       
                       
                               , MovementItem.Amount             AS Amount
-                              , MIFloat_CurrencyValueOut.ValueData  AS CurrencyValueOut
+                              , MIFloat_CurrencyValueIn.ValueData  AS CurrencyValueIn
                               , MIFloat_ParValue.ValueData      AS ParValue
                       
                               , MIString_Comment.ValueData      AS Comment
@@ -70,9 +70,9 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                            ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                           AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
-                               LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueOut
-                                                           ON MIFloat_CurrencyValueOut.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_CurrencyValueOut.DescId = zc_MIFloat_CurrencyValueOut()
+                               LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueIn
+                                                           ON MIFloat_CurrencyValueIn.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CurrencyValueIn.DescId = zc_MIFloat_CurrencyValueIn()
                                LEFT JOIN MovementItemString AS MIString_Comment 
                                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                                            AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -87,7 +87,7 @@ BEGIN
             , tmpMovement.OperDate AS StartDate
             , CASE WHEN tmpMovement.OperDate < COALESCE (tmpMovement_next.OperDate, zc_DateEnd()) THEN COALESCE (tmpMovement_next.OperDate - INTERVAL '1 DAY', zc_DateEnd()) ELSE NULL END :: TDateTime AS EndDate
             , tmpMovement.StatusCode, tmpMovement.StatusName
-            , tmpMovement.Amount, tmpMovement.CurrencyValueOut, tmpMovement.ParValue
+            , tmpMovement.Amount, tmpMovement.CurrencyValueIn, tmpMovement.ParValue
             , tmpMovement.Comment
             , tmpMovement.CurrencyFromName
             , tmpMovement.CurrencyToName

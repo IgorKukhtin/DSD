@@ -267,6 +267,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsAnalog() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Goods_GoodsAnalog', 'Связь товаров с аналогом товара', zc_Object_Goods(), zc_Object_GoodsAnalog() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsAnalog');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsGroupProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroupProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Goods_GoodsGroupProperty', 'Связь товаров с Аналитическим классификатором ', zc_Object_Goods(), zc_Object_GoodsGroupProperty() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroupProperty');
+
+
+
 
 -- !!!zc_Object_GoodsPropertyValue!!!
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2989,9 +2995,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_SubjectDoc_Reason() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_SubjectDoc_Reason', 'Причина возврата / перемещения', zc_Object_SubjectDoc(), zc_Object_Reason() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SubjectDoc_Reason');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroupProperty_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroupProperty_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор', zc_Object_GoodsGroupProperty(), zc_Object_GoodsGroupProperty() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroupProperty_Parent');
+
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.12.23         * zc_ObjectLink_GoodsGroupProperty_Parent
+                    zc_ObjectLink_Goods_GoodsGroupProperty
  20.11.23                                                                                      * zc_ObjectLink_SubjectDoc_Reason
  20.10.23                                                                                      * zc_ObjectLink_CashSettings_UnitDeferred
  11.08.23         * zc_ObjectLink_Asset_PartionModel

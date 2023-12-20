@@ -3,7 +3,7 @@ object GoodsForm: TGoodsForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
-  ClientWidth = 982
+  ClientWidth = 1081
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,13 +21,12 @@ object GoodsForm: TGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 982
+    Width = 1081
     Height = 378
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -24
-    ExplicitTop = 18
+    ExplicitWidth = 982
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -81,6 +80,23 @@ object GoodsForm: TGoodsForm
       object GoodsGroupAnalystName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
         DataBinding.FieldName = 'GoodsGroupAnalystName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object GoodsGroupPropertyName: TcxGridDBColumn
+        Caption = ' '#9#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '
+        DataBinding.FieldName = 'GoodsGroupPropertyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object GoodsGroupPropertyName_Parent: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088')'
+        DataBinding.FieldName = 'GoodsGroupPropertyName_Parent'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -424,7 +440,7 @@ object GoodsForm: TGoodsForm
     EditValue = 45047d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 5
+    TabOrder = 3
     Width = 81
   end
   object cxLabel2: TcxLabel
@@ -604,6 +620,14 @@ object GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbcUpdate_Group'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_GGProperty'
         end
         item
           Visible = True
@@ -799,6 +823,10 @@ object GoodsForm: TGoodsForm
       Category = 0
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbStartLoad_GGProperty: TdxBarButton
+      Action = macStartLoad_GGProperty
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1545,6 +1573,37 @@ object GoodsForm: TGoodsForm
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1085#1086#1074#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1089#1087#1080#1089#1082#1072
       ImageIndex = 48
     end
+    object actGetImportSetting_GGProperty: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_GGProperty
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_GGProperty
+        end>
+      Caption = 'actGetImportSetting_GGProperty'
+      ImageIndex = 49
+    end
+    object macStartLoad_GGProperty: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_GGProperty
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1086#1084#1091' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1091' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103' '#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103' '#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+      ImageIndex = 49
+    end
     object actUpdate_isIrna: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2050,5 +2109,37 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 472
     Top = 152
+  end
+  object spGetImportSettingId_GGProperty: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_GGProperty'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 136
   end
 end

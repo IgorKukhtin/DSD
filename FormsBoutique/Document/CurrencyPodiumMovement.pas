@@ -39,7 +39,7 @@ type
     edInvNumber: TcxTextEdit;
     ceParValue: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
-    ceCurrencyValueOut: TcxCurrencyEdit;
+    ceCurrencyValueIn: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
   private
     { Private declarations }

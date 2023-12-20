@@ -1457,6 +1457,9 @@ type
     actObjectColor: TdsdOpenForm;
     miObjectColor: TMenuItem;
     miCarProperty: TMenuItem;
+    actGoodsGroupProperty: TdsdOpenForm;
+    N257: TMenuItem;
+    N258: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

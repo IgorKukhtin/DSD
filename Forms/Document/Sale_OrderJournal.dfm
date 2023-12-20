@@ -4020,7 +4020,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
         end>
-      CopiesCount = 2
       Params = <
         item
           Name = 'Id'
@@ -4575,7 +4574,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateMI_Sale_PriceIn'
+          ItemName = 'bbsEdit'
         end
         item
           Visible = True
@@ -4583,15 +4582,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRoundAmountPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_PriceList'
+          ItemName = 'bbsUnLoad'
         end
         item
           Visible = True
@@ -4604,14 +4595,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExport_XML'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportFile_fromMail_All'
         end
         item
           BeginGroup = True
@@ -4641,51 +4624,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbExport'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbmacExportAll'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExport_xls_2244900110'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOrdSpr'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDesadv'
+          ItemName = 'bbsSend'
         end
         item
           Visible = True
@@ -5017,6 +4956,91 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = 'Separator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbsEdit: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 79
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateMI_Sale_PriceIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRoundAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PriceList'
+        end>
+    end
+    object bbsUnLoad: TdxBarSubItem
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 5
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbExport_XML'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportFile_fromMail_All'
+        end>
+    end
+    object bbsSend: TdxBarSubItem
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 50
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacExportAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport_xls_2244900110'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrdSpr'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDesadv'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

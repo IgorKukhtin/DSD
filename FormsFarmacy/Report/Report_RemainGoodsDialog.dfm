@@ -3,7 +3,7 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1054#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 178
+  ClientHeight = 205
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 137
+    Top = 159
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 137
+    Top = 159
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -46,7 +46,7 @@
   end
   object edUnit: TcxButtonEdit
     Left = 10
-    Top = 85
+    Top = 107
     Properties.Buttons = <
       item
         Default = True
@@ -58,7 +58,7 @@
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 65
+    Top = 87
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -96,6 +96,14 @@
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     TabOrder = 8
+    Width = 197
+  end
+  object cbNotIncome: TcxCheckBox
+    Left = 128
+    Top = 77
+    Hint = #1055#1088#1086#1074#1077#1088#1103#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+    Caption = #1055#1088#1086#1074#1077#1088#1103#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+    TabOrder = 10
     Width = 197
   end
   object PeriodChoice: TPeriodChoice
@@ -173,10 +181,17 @@
       end
       item
         Name = 'inisVendorminPrices'
-        Value = 'False'
+        Value = False
         Component = cbVendorminPrices
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotIncome'
+        Value = Null
+        Component = cbNotIncome
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 22

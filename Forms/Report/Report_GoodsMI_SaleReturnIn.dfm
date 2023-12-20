@@ -643,6 +643,23 @@
             Options.Editing = False
             Width = 68
           end
+          object GoodsGroupPropertyName: TcxGridDBColumn
+            Caption = ' '#9#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '
+            DataBinding.FieldName = 'GoodsGroupPropertyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsGroupPropertyName_Parent: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088')'
+            DataBinding.FieldName = 'GoodsGroupPropertyName_Parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object GoodsGroupAnalystName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
             DataBinding.FieldName = 'GoodsGroupAnalystName'

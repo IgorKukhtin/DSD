@@ -370,7 +370,8 @@ uses
   InvoiceKind in '..\..\FormsBoat\Kind\InvoiceKind.pas' {InvoiceKindForm: TParentForm},
   InvoiceKindEdit in '..\..\FormsBoat\Kind\InvoiceKindEdit.pas' {InvoiceKindEditForm: TParentForm},
   InvoiceItemEdit in '..\..\FormsBoat\Document\InvoiceItemEdit.pas' {InvoiceItemEditForm: TParentForm},
-  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
+  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
+  Report_Boat_Assembly in '..\..\FormsBoat\Report\Report_Boat_Assembly.pas' {Report_Boat_AssemblyForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -8,21 +8,21 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 64
+    Top = 68
     Width = 1010
-    Height = 274
+    Height = 270
     TabOrder = 3
     ExplicitTop = 64
     ExplicitWidth = 1010
     ExplicitHeight = 274
-    ClientRectBottom = 274
+    ClientRectBottom = 270
     ClientRectRight = 1010
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1010
       ExplicitHeight = 274
       inherited cxGrid: TcxGrid
         Width = 1010
-        Height = 274
+        Height = 270
         ExplicitWidth = 1010
         ExplicitHeight = 274
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -517,15 +517,28 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 80
           end
+          object isNoGoodsIncome: TcxGridDBColumn
+            Caption = #1041#1077#1079' '#1087#1088#1080#1093#1086#1076#1072' '#1085#1072' '#1072#1087#1090#1077#1082#1091
+            DataBinding.FieldName = 'isNoGoodsIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 1010
-    Height = 38
+    Height = 42
     ExplicitWidth = 1010
-    ExplicitHeight = 38
+    ExplicitHeight = 42
     inherited deStart: TcxDateEdit
       Left = 131
       Top = 4
@@ -570,30 +583,38 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
     object cbVendorminPrices: TcxCheckBox
       Left = 530
-      Top = 16
+      Top = 19
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       TabOrder = 6
       Width = 197
     end
+    object cbNotIncome: TcxCheckBox
+      Left = 744
+      Top = 19
+      Hint = #1055#1088#1086#1074#1077#1088#1103#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      Caption = #1055#1088#1086#1074#1077#1088#1103#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      TabOrder = 7
+      Width = 197
+    end
   end
   object cbPartion: TcxCheckBox [2]
     Left = 530
-    Top = 1
+    Top = -1
     Action = actRefreshIsPartion
     TabOrder = 6
     Width = 94
   end
   object cbPartionPrice: TcxCheckBox [3]
     Left = 627
-    Top = 1
+    Top = -1
     Action = actRefreshPartionPrice
     TabOrder = 7
     Width = 200
   end
   object cbJuridical: TcxCheckBox [4]
     Left = 840
-    Top = 1
+    Top = -1
     Action = actRefreshJuridical
     TabOrder = 8
     Width = 112
@@ -788,6 +809,13 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isNotIncome'
+          Value = Null
+          Component = cbNotIncome
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -902,6 +930,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotIncome'
+        Value = Null
+        Component = cbNotIncome
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 216
@@ -971,6 +1007,11 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     Left = 424
     Top = 256
   end

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Currency(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , Amount TFloat, CurrencyValueOut TFloat, ParValue TFloat
+             , Amount TFloat, CurrencyValueIn TFloat, ParValue TFloat
              , Comment TVarChar
              , CurrencyFromId Integer, CurrencyFromName TVarChar
              , CurrencyToId Integer, CurrencyToName TVarChar
@@ -35,7 +35,7 @@ BEGIN
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
            , 0::TFloat                        AS Amount
-           , 0::TFloat                        AS CurrencyValueOut
+           , 0::TFloat                        AS CurrencyValueIn
            , 1::TFloat                        AS ParValue
            , ''::TVarChar                     AS Comment
            , 0                                AS CurrencyFromId
@@ -56,7 +56,7 @@ BEGIN
                      
            , MovementItem.Amount AS Amount
 
-           , MIFloat_CurrencyValueOut.ValueData  AS CurrencyValueOut
+           , MIFloat_CurrencyValueIn.ValueData  AS CurrencyValueIn
            , MIFloat_ParValue.ValueData   AS ParValue
            , MIString_Comment.ValueData   AS Comment
 
@@ -77,9 +77,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                         ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                        AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
-            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueOut
-                                        ON MIFloat_CurrencyValueOut.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CurrencyValueOut.DescId = zc_MIFloat_CurrencyValueOut()
+            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueIn
+                                        ON MIFloat_CurrencyValueIn.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CurrencyValueIn.DescId = zc_MIFloat_CurrencyValueIn()
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()

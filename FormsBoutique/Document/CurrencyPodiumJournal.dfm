@@ -12,17 +12,17 @@ inherited CurrencyPodiumJournalForm: TCurrencyPodiumJournalForm
     Width = 900
     Height = 347
     TabOrder = 3
-    ExplicitWidth = 814
+    ExplicitWidth = 900
     ExplicitHeight = 347
     ClientRectBottom = 347
     ClientRectRight = 900
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 814
+      ExplicitWidth = 900
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
         Width = 900
         Height = 347
-        ExplicitWidth = 814
+        ExplicitWidth = 900
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -72,9 +72,9 @@ inherited CurrencyPodiumJournalForm: TCurrencyPodiumJournalForm
             Options.Editing = False
             Width = 75
           end
-          object clCurrencyValueOut: TcxGridDBColumn
-            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'CurrencyValueOut'
+          object clCurrencyValueIn: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072' '#1087#1086#1082#1091#1087#1082#1080
+            DataBinding.FieldName = 'CurrencyValueIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####'
@@ -120,7 +120,7 @@ inherited CurrencyPodiumJournalForm: TCurrencyPodiumJournalForm
   end
   inherited Panel: TPanel
     Width = 900
-    ExplicitWidth = 814
+    ExplicitWidth = 900
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end

@@ -598,18 +598,27 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupProperty_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupProperty_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyEditForm');
+  // exit;
+
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-   exit;
-
+  // exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
@@ -659,7 +668,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
   exit;
@@ -2600,7 +2609,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeKill_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeKill_OlapDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayCompensationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayCompensationForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayCompensationDialogForm'));
@@ -2611,7 +2620,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSelect_HolidayCompensation_dayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSelect_HolidayCompensation_dayForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalDialogForm'));
@@ -2724,13 +2733,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCost_DifferenceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCost_DifferenceDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCost_DifferenceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCost_DifferenceForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementSaleReturnForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementSaleReturnForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementSaleReturnDialogForm'));

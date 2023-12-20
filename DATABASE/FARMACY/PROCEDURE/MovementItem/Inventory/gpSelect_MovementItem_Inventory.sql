@@ -103,12 +103,12 @@ BEGIN
                                     
     ANALYSE tmpContainer;
 
-    -- остатки на начало следующего дня
+    -- остатки на начало следующего дня для непроведенных
     CREATE TEMP TABLE tmpREMAINS ON COMMIT DROP AS
                                (
                                 SELECT
                                     T0.ObjectId
-                                   ,SUM (T0.Amount) :: TFloat AS Amount
+                                   ,SUM (T0.Amount) :: TFloat                          AS Amount
                                    ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
                                 FROM tmpContainer AS T0
 
@@ -245,35 +245,59 @@ raise notice 'Блок 1';
               , MovementItem.Remains  AS Remains_Save
               , (MovementItem.Remains * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Remains_SumSave
 
-              , CASE WHEN COALESCE (REMAINS.Amount, 0) > COALESCE (MovementItem.Amount, 0)
-                     THEN COALESCE (REMAINS.Amount, 0) - COALESCE (MovementItem.Amount, 0)
+              , CASE WHEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MovementItem.Remains
+                                         ELSE REMAINS.Amount END, 0) > COALESCE (MovementItem.Amount, 0)
+                     THEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MovementItem.Remains
+                                         ELSE REMAINS.Amount END, 0) - COALESCE (MovementItem.Amount, 0)
                 END :: TFloat                                                       AS Deficit
-              , (CASE WHEN COALESCE (REMAINS.Amount, 0) > COALESCE (MovementItem.Amount, 0)
-                      THEN COALESCE (REMAINS.Amount, 0) - COALESCE (MovementItem.Amount, 0)
+              , (CASE WHEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                          THEN MovementItem.Remains
+                                          ELSE REMAINS.Amount END, 0) > COALESCE (MovementItem.Amount, 0)
+                      THEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                          THEN MovementItem.Remains
+                                          ELSE REMAINS.Amount END, 0) - COALESCE (MovementItem.Amount, 0)
                  END * COALESCE (MovementItem.Price, tmpPrice.Price)
                 ) :: TFloat                                                         AS DeficitSumm
 
-              , CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (REMAINS.Amount, 0)
-                     THEN COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                             THEN MovementItem.Remains
+                                                                             ELSE REMAINS.Amount END, 0)
+                     THEN COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                             THEN MovementItem.Remains
+                                                                             ELSE REMAINS.Amount END, 0)
                 END :: TFloat                                                       AS Proficit
-              , (CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (REMAINS.Amount, 0)
-                      THEN COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , (CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                             THEN MovementItem.Remains
+                                                                             ELSE REMAINS.Amount END, 0)
+                      THEN COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                             THEN MovementItem.Remains
+                                                                             ELSE REMAINS.Amount END, 0)
                  END * COALESCE (MovementItem.Price, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
-              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS Diff
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                    THEN MovementItem.Remains
+                                                                    ELSE REMAINS.Amount END, 0)) :: TFloat AS Diff
 
-              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
+              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                    THEN MovementItem.Remains
+                                                                    ELSE REMAINS.Amount END, 0))
                  * COALESCE (MovementItem.Price, tmpPrice.Price)
                 ) :: TFloat                                                         AS DiffSumm
 
               , MovementItem.Diff_calc                                    :: TFloat AS Diff_calc
               , MovementItem.DiffSumm_calc                                :: TFloat AS DiffSumm_calc
 
-              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                    THEN MovementItem.Remains
+                                                                    ELSE REMAINS.Amount END, 0)
                  - COALESCE (MovementItem.Diff_calc, 0)
                 ) :: TFloat                                                         AS Diff_diff
-              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
+              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                    THEN MovementItem.Remains
+                                                                    ELSE REMAINS.Amount END, 0))
                  * COALESCE (MovementItem.Price, tmpPrice.Price)
                  - COALESCE (MovementItem.DiffSumm_calc, 0)
                 ) :: TFloat                                                         AS DiffSumm_diff
@@ -291,7 +315,9 @@ raise notice 'Блок 1';
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MovementItem.ObjectId, REMAINS.ObjectId)
 
                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
-            WHERE inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) <> 0
+            WHERE inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                                                THEN MovementItem.Remains
+                                                                                                ELSE REMAINS.Amount END, 0)) <> 0
             ;
 
     ELSEIF inShowAll = FALSE
@@ -357,40 +383,66 @@ raise notice 'Блок 1';
               , REMAINS.Amount :: TFloat                                            AS Remains_Amount
 --              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
-              , (COALESCE (REMAINS.Amount,0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
+              , (COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                THEN MIFloat_Remains.ValueData
+                                ELSE REMAINS.Amount END,0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
               , MIFloat_Remains.ValueData  AS Remains_Save
               , (COALESCE (MIFloat_Remains.ValueData,0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_SumSave
 
-              , CASE WHEN COALESCE (REMAINS.Amount, 0) > COALESCE (MovementItem.Amount, 0)
-                     THEN COALESCE (REMAINS.Amount, 0) - COALESCE (MovementItem.Amount, 0)
+              , CASE WHEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MIFloat_Remains.ValueData
+                                         ELSE REMAINS.Amount END, 0) > COALESCE (MovementItem.Amount, 0)
+                     THEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MIFloat_Remains.ValueData
+                                         ELSE REMAINS.Amount END, 0) - COALESCE (MovementItem.Amount, 0)
                 END :: TFloat                                                       AS Deficit
-              , (CASE WHEN COALESCE (REMAINS.Amount, 0) > COALESCE (MovementItem.Amount, 0)
-                      THEN COALESCE (REMAINS.Amount, 0) - COALESCE (MovementItem.Amount, 0)
+              , (CASE WHEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                          THEN MIFloat_Remains.ValueData
+                                          ELSE REMAINS.Amount END, 0) > COALESCE (MovementItem.Amount, 0)
+                      THEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                          THEN MIFloat_Remains.ValueData
+                                          ELSE REMAINS.Amount END, 0) - COALESCE (MovementItem.Amount, 0)
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS DeficitSumm
 
-              , CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (REMAINS.Amount, 0)
-                     THEN COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                             THEN MIFloat_Remains.ValueData
+                                                                             ELSE REMAINS.Amount END, 0)
+                     THEN COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                             THEN MIFloat_Remains.ValueData
+                                                                             ELSE REMAINS.Amount END, 0)
                 END :: TFloat                                                       AS Proficit
-              , (CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (REMAINS.Amount, 0)
-                      THEN COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , (CASE WHEN COALESCE (MovementItem.Amount, 0) > COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                              THEN MIFloat_Remains.ValueData
+                                                                              ELSE REMAINS.Amount END, 0)
+                      THEN COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                              THEN MIFloat_Remains.ValueData
+                                                                              ELSE REMAINS.Amount END, 0)
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
-              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS Diff
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                    THEN MIFloat_Remains.ValueData
+                                                                    ELSE REMAINS.Amount END, 0)) :: TFloat AS Diff
 
-              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
+              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                     THEN MIFloat_Remains.ValueData
+                                                                     ELSE REMAINS.Amount END, 0))
                  * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS DiffSumm
 
               , COALESCE (tmpMI_calc.Diff, 0)                                           :: TFloat AS Diff_calc
               , (COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)) :: TFloat AS DiffSumm_calc
 
-              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                    THEN MIFloat_Remains.ValueData
+                                                                    ELSE REMAINS.Amount END, 0)
                  - COALESCE (tmpMI_calc.Diff, 0)
                 ) :: TFloat                                                         AS Diff_diff
-              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
+              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                     THEN MIFloat_Remains.ValueData
+                                                                     ELSE REMAINS.Amount END, 0))
                  * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                  - COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)
                 ) :: TFloat                                                         AS DiffSumm_diff
@@ -430,7 +482,9 @@ raise notice 'Блок 1';
               AND (MovementItem.isErased  = FALSE
                    OR inIsErased          = TRUE
                   )
-              AND (inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) <> 0);
+              AND (inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                                                 THEN MIFloat_Remains.ValueData
+                                                                                                 ELSE REMAINS.Amount END, 0)) <> 0);
 
     ELSE
         raise notice 'Блок 3';
@@ -494,41 +548,67 @@ raise notice 'Блок 1';
               , REMAINS.Amount :: TFloat                                            AS Remains_Amount
 --              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
-              , (COALESCE (REMAINS.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
+              , (COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                THEN MIFloat_Remains.ValueData
+                                ELSE REMAINS.Amount END, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
               , MIFloat_Remains.ValueData  AS Remains_Save
               , (MIFloat_Remains.ValueData * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_SumSave
 
-              , CASE WHEN COALESCE (REMAINS.Amount, 0) > MovementItem.Amount
-                     THEN COALESCE (REMAINS.Amount, 0) - COALESCE (MovementItem.Amount, 0)
+              , CASE WHEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MIFloat_Remains.ValueData
+                                         ELSE REMAINS.Amount END, 0) > MovementItem.Amount
+                     THEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MIFloat_Remains.ValueData
+                                         ELSE REMAINS.Amount END, 0) - COALESCE (MovementItem.Amount, 0)
                 END :: TFloat                                                       AS Deficit
 
-              , (CASE WHEN COALESCE (REMAINS.Amount, 0) > MovementItem.Amount
-                      THEN COALESCE (REMAINS.Amount, 0) - COALESCE (MovementItem.Amount, 0)
+              , (CASE WHEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MIFloat_Remains.ValueData
+                                         ELSE REMAINS.Amount END, 0) > MovementItem.Amount
+                      THEN COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                         THEN MIFloat_Remains.ValueData
+                                         ELSE REMAINS.Amount END, 0) - COALESCE (MovementItem.Amount, 0)
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS DeficitSumm
 
-              , CASE WHEN MovementItem.Amount > COALESCE (REMAINS.Amount, 0)
-                     THEN COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , CASE WHEN MovementItem.Amount > COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                               THEN MIFloat_Remains.ValueData
+                                                               ELSE REMAINS.Amount END, 0)
+                     THEN COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                             THEN MIFloat_Remains.ValueData
+                                                                             ELSE REMAINS.Amount END, 0)
                 END :: TFloat                                                       AS Proficit
-              , (CASE WHEN MovementItem.Amount > COALESCE (REMAINS.Amount, 0)
-                      THEN COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+              , (CASE WHEN MovementItem.Amount > COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                THEN MIFloat_Remains.ValueData
+                                                                ELSE REMAINS.Amount END, 0)
+                      THEN COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                              THEN MIFloat_Remains.ValueData
+                                                                              ELSE REMAINS.Amount END, 0)
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
-              , (MovementItem.Amount - COALESCE (REMAINS.Amount, 0)) :: TFloat AS Diff
+              , (MovementItem.Amount - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                      THEN MIFloat_Remains.ValueData
+                                                      ELSE REMAINS.Amount END, 0)) :: TFloat AS Diff
 
-              , ((MovementItem.Amount - COALESCE (REMAINS.Amount, 0))
+              , ((MovementItem.Amount - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                       THEN MIFloat_Remains.ValueData
+                                                       ELSE REMAINS.Amount END, 0))
                  * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS DiffSumm
 
               , COALESCE (tmpMI_calc.Diff, 0)                                           :: TFloat AS Diff_calc
               , (COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)) :: TFloat AS DiffSumm_calc
 
-              , (MovementItem.Amount - COALESCE (REMAINS.Amount, 0)
+              , (MovementItem.Amount - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                      THEN MIFloat_Remains.ValueData
+                                                      ELSE REMAINS.Amount END, 0)
                  - COALESCE (tmpMI_calc.Diff, 0)
                 ) :: TFloat                                                         AS Diff_diff
-              , ((MovementItem.Amount - COALESCE (REMAINS.Amount, 0))
+              , ((MovementItem.Amount - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                       THEN MIFloat_Remains.ValueData
+                                                       ELSE REMAINS.Amount END, 0))
                  * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                  - COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)
                 ) :: TFloat                                                         AS DiffSumm_diff
@@ -576,7 +656,9 @@ raise notice 'Блок 1';
               AND (Object_Goods_Retail.IsErased = FALSE
                 OR MovementItem.Id       > 0
                   )
-              AND (inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) <> 0);
+              AND (inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (CASE WHEN vbStatusId = zc_Enum_Status_Complete()
+                                                                                                 THEN MIFloat_Remains.ValueData
+                                                                                                 ELSE REMAINS.Amount END, 0)) <> 0);
 
     END IF;
     
@@ -613,3 +695,6 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, Boole
 from gpSelect_MovementItem_Inventory(inMovementId := 33370112 , inShowAll := 'False' , inIsErased := 'False' , inShowDeviated := 'False' ,  inSession := '3')
 where COALESCE(Remains_Save, 0) <> COALESCE(Amount, 0);*/
 
+
+
+select * from gpSelect_MovementItem_Inventory(inMovementId := 34279758 , inShowAll := 'False' , inIsErased := 'False' , inShowDeviated := 'False' ,  inSession := '3');

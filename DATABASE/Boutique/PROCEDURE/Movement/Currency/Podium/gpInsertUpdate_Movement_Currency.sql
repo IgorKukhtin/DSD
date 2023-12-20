@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
     IN inComment                  TVarChar  , -- Комментарий
     IN inCurrencyFromId           Integer   , -- валюта в которой вводится курc
     IN inCurrencyToId             Integer   , -- валюта для которой вводится курс
-    IN inCurrencyValueOut         TFloat    , -- курс продажи
+    IN inCurrencyValueIn         TFloat    , -- курс продажи
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -94,7 +94,7 @@ BEGIN
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCurrencyFromId,Null, ioId, inAmount, NULL);
 
      -- курс продажи
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValueOut(), vbMovementItemId, inCurrencyValueOut);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValueIn(), vbMovementItemId, inCurrencyValueIn);
 
      -- Номинал валюты для которой вводится курс
      IF COALESCE (inParValue, 0) = 0 THEN inParValue := 1; END IF;

@@ -121,7 +121,7 @@
     Top = 150
     Caption = #1053#1086#1084#1080#1085#1072#1083
   end
-  object ceCurrencyValueOut: TcxCurrencyEdit [16]
+  object ceCurrencyValueIn: TcxCurrencyEdit [16]
     Left = 8
     Top = 126
     Properties.DecimalPlaces = 4
@@ -132,7 +132,7 @@
   object cxLabel3: TcxLabel [17]
     Left = 8
     Top = 107
-    Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072' '#1087#1088#1086#1076#1072#1078#1080
+    Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072' '#1087#1086#1082#1091#1087#1082#1080
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 107
@@ -237,9 +237,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyValueOut'
+        Name = 'inCurrencyValueIn'
         Value = Null
-        Component = ceCurrencyValueOut
+        Component = ceCurrencyValueIn
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -347,9 +347,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyValueOut'
+        Name = 'CurrencyValueIn'
         Value = Null
-        Component = ceCurrencyValueOut
+        Component = ceCurrencyValueIn
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

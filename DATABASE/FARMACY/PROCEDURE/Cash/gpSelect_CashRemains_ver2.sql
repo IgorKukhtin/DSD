@@ -1274,6 +1274,27 @@ BEGIN
                   WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) IN (0, zc_Enum_PartionDateKind_Good())
                   THEN tmpForSiteMobile.Price_unit_sale
              END :: TFloat AS PriceSite
+             
+           /*, CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) > 0 
+                  THEN COALESCE (tmpPriceChange.PriceChange, 0)
+                  WHEN COALESCE (tmpPriceChange.FixPercent, 0) > 0 
+                  THEN CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                             AND Object_Goods_Retail.Price > 0
+                                 THEN Object_Goods_Retail.Price
+                            ELSE CashSessionSnapShot.Price
+                       END  * (100.0 - COALESCE (tmpPriceChange.FixPercent, 0)) / 100.0
+                  WHEN COALESCE (tmpPriceChange.FixDiscount, 0) > 0 AND 
+                       CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                             AND Object_Goods_Retail.Price > 0
+                                 THEN Object_Goods_Retail.Price
+                            ELSE CashSessionSnapShot.Price
+                       END  > COALESCE (tmpPriceChange.FixDiscount, 0)
+                  THEN CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                             AND Object_Goods_Retail.Price > 0
+                                 THEN Object_Goods_Retail.Price
+                            ELSE CashSessionSnapShot.Price
+                       END  - COALESCE (tmpPriceChange.FixDiscount, 0)
+                  ELSE Null END :: TFloat AS PriceChangeCalc*/
           
          FROM
             tmpCashSessionSnapShot AS CashSessionSnapShot
@@ -1326,10 +1347,61 @@ BEGIN
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = CashSessionSnapShot.AccommodationId
 
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
+
+            LEFT JOIN tmpMIPromoBonus ON tmpMIPromoBonus.GoodsId = CashSessionSnapShot.ObjectId
+
             -- Цена со скидкой
             LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = CashSessionSnapShot.ObjectId
                                     AND (COALESCE(tmpPriceChange.PartionDateKindId, 0) = 0 
-                                      OR COALESCE(tmpPriceChange.PartionDateKindId, 0) = CashSessionSnapShot.PartionDateKindId)
+                                    AND (COALESCE (CashSessionSnapShot.PartionDateKindId, 0) = 0 OR
+                                         CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                AND Object_Goods_Retail.Price > 0
+                                                 OR COALESCE(tmpPriceChange.PartionDateKindId, 0) <> 0
+                                               THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                                                           CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
+                                                           COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                               WHEN CashSessionSnapShot.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
+                                                AND COALESCE(tmpMIPromoBonus.PromoBonus, 0) <> 0
+                                                AND Object_Goods_Retail.IsTop = False 
+                                                AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
+                                                     COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
+                                                     COALESCE(tmpPriceChange.FixDiscount, 0) = 0 OR
+                                                     COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
+                                                AND COALESCE ( tmpPricePartionDate.PricePartionDate, 0) > 0
+                                                AND COALESCE ( tmpPricePartionDate.PricePartionDate, 0) > 
+                                                     zfCalc_PriceCash(Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                                                     (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2), 
+                                                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                                          THEN FALSE ELSE TRUE END OR
+                                                                     COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                               THEN zfCalc_PriceCash(Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                                                     (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2), 
+                                                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                                          THEN FALSE ELSE TRUE END OR
+                                                                     COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                               ELSE tmpPricePartionDate.PricePartionDate
+                                               END >
+                                         CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) > 0 
+                                              THEN COALESCE (tmpPriceChange.PriceChange, 0)
+                                              WHEN COALESCE (tmpPriceChange.FixPercent, 0) > 0 
+                                              THEN CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                         AND Object_Goods_Retail.Price > 0
+                                                             THEN Object_Goods_Retail.Price
+                                                        ELSE CashSessionSnapShot.Price
+                                                   END  * (100.0 - COALESCE (tmpPriceChange.FixPercent, 0)) / 100.0
+                                              WHEN COALESCE (tmpPriceChange.FixDiscount, 0) > 0 AND 
+                                                   CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                         AND Object_Goods_Retail.Price > 0
+                                                             THEN Object_Goods_Retail.Price
+                                                        ELSE CashSessionSnapShot.Price
+                                                   END  > COALESCE (tmpPriceChange.FixDiscount, 0)
+                                              THEN CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                         AND Object_Goods_Retail.Price > 0
+                                                             THEN Object_Goods_Retail.Price
+                                                        ELSE CashSessionSnapShot.Price
+                                                   END  - COALESCE (tmpPriceChange.FixDiscount, 0)
+                                              ELSE Null END)  
+                                     OR COALESCE(tmpPriceChange.PartionDateKindId, 0) = CashSessionSnapShot.PartionDateKindId)
 
            -- Тип срок/не срок
            LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (CashSessionSnapShot.PartionDateKindId, 0)
@@ -1367,9 +1439,7 @@ BEGIN
            LEFT JOIN tmpGoodsAutoVIPforSalesCash ON tmpGoodsAutoVIPforSalesCash.GoodsId = CashSessionSnapShot.ObjectId
            
            LEFT JOIN tmpGoodsSP_1303 ON tmpGoodsSP_1303.GoodsId = CashSessionSnapShot.ObjectId
-                      
-           LEFT JOIN tmpMIPromoBonus ON tmpMIPromoBonus.GoodsId = CashSessionSnapShot.ObjectId
-           
+                                 
            LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = CashSessionSnapShot.ObjectId
                                    
            LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
@@ -1461,8 +1531,11 @@ SELECT Id
      , PriceSP
      , PaymentSP
      , PriceSaleSP 
+     , PriceChange
+     , FixPercent          
+     , FixDiscount
 
 FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3') 
-where PartionDateKindId IS NOT NULL --PriceView <> PriceSite --and id = 15015521
+--where PartionDateKindId IS NOT NULL --PriceView <> PriceSite --and id = 15015521
 order by GoodsName
        , PartionDateKindName

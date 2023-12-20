@@ -4,8 +4,8 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
   ClientWidth = 821
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 837
-  ExplicitHeight = 548
+  ExplicitWidth = 843
+  ExplicitHeight = 565
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -389,6 +389,9 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
       end>
   end
   inherited ActionList: TActionList
+    inherited actGridToExcel: TdsdGridToExcel
+      Grid = cxGrid1
+    end
     object actOpenPartionReport: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -505,7 +508,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
         end
         item
           Name = 'EndDate'
-          Value = 'False'
+          Value = 41395d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -586,7 +589,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
         end
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -616,7 +619,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
     Params = <
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -624,7 +627,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
       end
       item
         Name = 'inDateFinal'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -769,10 +772,13 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 432
     Top = 344
   end

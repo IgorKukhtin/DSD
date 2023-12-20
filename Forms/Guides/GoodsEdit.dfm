@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 535
-  ClientWidth = 350
+  ClientHeight = 583
+  ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 67
-    Top = 495
+    Left = 70
+    Top = 543
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 203
-    Top = 495
+    Left = 206
+    Top = 543
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -340,6 +340,23 @@
     TabOrder = 41
     Width = 190
   end
+  object cxLabel20: TcxLabel
+    Left = 39
+    Top = 481
+    Caption = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '
+  end
+  object edGoodsGroupProperty: TcxButtonEdit
+    Left = 39
+    Top = 499
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 43
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 304
     Top = 120
@@ -502,6 +519,14 @@
         Name = 'inGoodsGroupAnalystId'
         Value = Null
         Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupPropertyId'
+        Value = Null
+        Component = GuidesGoodsGroupProperty
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -782,6 +807,21 @@
         Name = 'ShortName'
         Value = Null
         Component = edShortName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupPropertyId'
+        Value = Null
+        Component = GuidesGoodsGroupProperty
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupPropertyName'
+        Value = Null
+        Component = GuidesGoodsGroupProperty
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1100,5 +1140,35 @@
       end>
     Left = 144
     Top = 408
+  end
+  object GuidesGoodsGroupProperty: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroupProperty
+    FormNameParam.Value = 'TGoodsGroupProperty_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroupProperty_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroupProperty
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroupProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 190
+    Top = 483
   end
 end

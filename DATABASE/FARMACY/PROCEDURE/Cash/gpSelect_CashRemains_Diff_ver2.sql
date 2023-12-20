@@ -865,7 +865,55 @@ BEGIN
 
             -- Цена со скидкой
             LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = _DIFF.ObjectId
-                                    AND (COALESCE(tmpPriceChange.PartionDateKindId, 0) = 0 
+                                    AND (COALESCE(tmpPriceChange.PartionDateKindId, 0) = 0                                      
+                                    AND (COALESCE (_DIFF.PartionDateKindId, 0) = 0 OR
+                                         CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                AND Object_Goods_Retail.Price > 0
+                                                 OR COALESCE(tmpPriceChange.PartionDateKindId, 0) <> 0
+                                               THEN zfCalc_PriceCash(_DIFF.Price, 
+                                                           CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
+                                                           COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                               WHEN _DIFF.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6(), zc_Enum_PartionDateKind_Cat_5())
+                                                AND COALESCE(tmpMIPromoBonus.PromoBonus, 0) <> 0
+                                                AND Object_Goods_Retail.IsTop = False 
+                                                AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
+                                                     COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
+                                                     COALESCE(tmpPriceChange.FixDiscount, 0) = 0 OR
+                                                     COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
+                                                AND COALESCE ( tmpPricePartionDate.PricePartionDate, 0) > 0
+                                                AND COALESCE ( tmpPricePartionDate.PricePartionDate, 0) > 
+                                                     zfCalc_PriceCash(Round(_DIFF.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                                                     (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2), 
+                                                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                                          THEN FALSE ELSE TRUE END OR
+                                                                     COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                               THEN zfCalc_PriceCash(Round(_DIFF.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                                                     (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2), 
+                                                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                                                          THEN FALSE ELSE TRUE END OR
+                                                                     COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                               ELSE tmpPricePartionDate.PricePartionDate
+                                               END >
+                                         CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) > 0 
+                                              THEN COALESCE (tmpPriceChange.PriceChange, 0)
+                                              WHEN COALESCE (tmpPriceChange.FixPercent, 0) > 0 
+                                              THEN CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                         AND Object_Goods_Retail.Price > 0
+                                                             THEN Object_Goods_Retail.Price
+                                                        ELSE _DIFF.Price
+                                                   END  * (100.0 - COALESCE (tmpPriceChange.FixPercent, 0)) / 100.0
+                                              WHEN COALESCE (tmpPriceChange.FixDiscount, 0) > 0 AND 
+                                                   CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                         AND Object_Goods_Retail.Price > 0
+                                                             THEN Object_Goods_Retail.Price
+                                                        ELSE _DIFF.Price
+                                                   END  > COALESCE (tmpPriceChange.FixDiscount, 0)
+                                              THEN CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                                                         AND Object_Goods_Retail.Price > 0
+                                                             THEN Object_Goods_Retail.Price
+                                                        ELSE _DIFF.Price
+                                                   END  - COALESCE (tmpPriceChange.FixDiscount, 0)
+                                              ELSE Null END)
                                       OR COALESCE(tmpPriceChange.PartionDateKindId, 0) = _DIFF.PartionDateKindId)
                                       
             LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = _DIFF.ObjectId
@@ -916,5 +964,5 @@ SELECT Id
      , PromoBonusPrice
      , PriceView
 FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
-where PartionDateKindId IS NOT NULL --PriceView <> PriceSite --and id = 15015521
+--where PartionDateKindId IS NOT NULL --PriceView <> PriceSite --and id = 15015521
 order by GoodsName , PartionDateKindName
