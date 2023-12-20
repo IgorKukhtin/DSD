@@ -74,7 +74,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , OperDate_month TDateTime
              , DayOfWeekName_Full TVarChar
              , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
-             , isRealEx Boolean -- Физ обмен договор
+             , isRealEx Boolean -- Физ обмен договор   
+             --аналитический классификатор товара
+             , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
               )
 AS
 $BODY$
@@ -157,7 +159,11 @@ BEGIN
             , 0 ::TFloat AS Sale_SummIn_pav
             , 0 ::TFloat AS ReturnIn_SummIn_pav
             , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
-
+            
+            , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+            , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+            , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+            , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -177,6 +183,16 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                   ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
                                  AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                               ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = gpReport.GoodsId
+                              AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+          LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                               ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                              AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+          LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
        ;
        RETURN;
     ELSE
@@ -194,8 +210,13 @@ BEGIN
             , NULL ::TDateTime AS OperDate 
             , ''   ::TVarChar  AS DayOfWeekName_Full
             , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
-            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
-
+            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx  
+            
+            , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+            , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+            , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+            , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
+            
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -215,6 +236,18 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                   ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
                                  AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                               ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = gpReport.GoodsId
+                              AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+          LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                               ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                              AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+          LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
+
+
           ;
        RETURN;
     END IF;
@@ -453,7 +486,8 @@ BEGIN
             , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE STRING_AGG (COALESCE (gpReport.GoodsKindName_str_agg,'') , '; ') END ::TVarChar AS GoodsKindName
             , gpReport.MeasureName
             , gpReport.TradeMarkId, gpReport.TradeMarkName
-            , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
+            , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName 
+            
             , gpReport.GoodsPlatformName
             , gpReport.JuridicalGroupName
             , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
@@ -520,6 +554,11 @@ BEGIN
             , SUM (gpReport.ReturnIn_SummIn_pav) ::TFloat AS ReturnIn_SummIn_pav
 
             , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
+ 
+            , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+            , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+            , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+            , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent 
        FROM tmpData AS gpReport
           LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                   ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
@@ -529,6 +568,16 @@ BEGIN
                                ON ObjectLink_Juridical_Section.ObjectId = gpReport.JuridicalId
                               AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
           LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                               ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = gpReport.GoodsId
+                              AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+          LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                               ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                              AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+          LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
 
        WHERE gpReport.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Мясное сырье
           OR vbUserId <> 1058530 -- Няйко В.И.
@@ -572,6 +621,12 @@ BEGIN
               , Object_Section.Id
               , Object_Section.ValueData
               --, CASE WHEN gpReport.Ord = 1 THEN 1 ELSE 0 END
+
+              , Object_GoodsGroupProperty.Id 
+              , Object_GoodsGroupProperty.ValueData       
+              , Object_GoodsGroupPropertyParent.Id        
+              , Object_GoodsGroupPropertyParent.ValueData 
+
                ;
        --
        RETURN;
@@ -1052,6 +1107,11 @@ BEGIN
          , 0 ::TFloat AS ReturnIn_SummIn_pav
 
          , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
+
+         , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+         , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+         , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+         , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -1156,6 +1216,16 @@ BEGIN
                                  AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
 
           LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON 1=1
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                               ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = tmpOperationGroup.GoodsId
+                              AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+          LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                               ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                              AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+          LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
 
        WHERE tmpOperationGroup.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Мясное сырье
           OR vbUserId <> 1058530 -- Няйко В.И.

@@ -57,23 +57,30 @@ BEGIN
    END IF;
 
    --классификатор
-   vbGoodsGroupPropertyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroupProperty() AND TRIM (UPPER (Object.ValueData)) = TRIM (UPPER ( inGoodsGroupPropertyName)) );
+   vbGoodsGroupPropertyId := (SELECT Object.Id 
+                              FROM Object
+                                   INNER JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                                         ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object.Id
+                                                        AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+                                                        AND ObjectLink_GoodsGroupProperty_Parent.ChildObjectId = vbGoodsGroupPropertyId_parent 
+                              WHERE Object.DescId = zc_Object_GoodsGroupProperty()
+                                AND TRIM (UPPER (Object.ValueData)) = TRIM (UPPER ( inGoodsGroupPropertyName)) );
    --если не находим создаем
    IF COALESCE (vbGoodsGroupPropertyId,0) = 0
    THEN
         vbGoodsGroupPropertyId := (SELECT tmp.ioId
-                                          FROM gpInsertUpdate_Object_GoodsGroupProperty (ioId           := 0         :: Integer
-                                                                                       , inCode         := 0         :: Integer
-                                                                                       , inName         := TRIM (inGoodsGroupPropertyName) :: TVarChar
-                                                                                       , inParentId     := vbGoodsGroupPropertyId   :: Integer
-                                                                                       , inSession      := inSession :: TVarChar
-                                                                                        ) AS tmp);
+                                   FROM gpInsertUpdate_Object_GoodsGroupProperty (ioId           := 0         :: Integer
+                                                                                , inCode         := 0         :: Integer
+                                                                                , inName         := TRIM (inGoodsGroupPropertyName) :: TVarChar
+                                                                                , inParentId     := vbGoodsGroupPropertyId   :: Integer
+                                                                                , inSession      := inSession :: TVarChar
+                                                                                 ) AS tmp);
    END IF;
 
      
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GoodsGroupProperty(), vbGoodsId, vbGoodsGroupPropertyId);
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupProperty(), vbGoodsId, vbGoodsGroupPropertyId);
 
 
 END;
