@@ -25,7 +25,10 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Object_User());
 
 
-   IF vbUserId = 8790175 
+   IF   vbUserId = 8790175  -- Зенько Н.Ю.
+     OR vbUserId = 10033382 -- Яцечко І.В.
+     OR vbUserId = 10206255 -- Похвалітов О.О.
+     OR vbUserId = 14610    -- Федорец В.А.
    THEN
        RAISE EXCEPTION 'Ошибка.Нет прав.';
    END IF;
@@ -113,8 +116,6 @@ BEGIN
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
