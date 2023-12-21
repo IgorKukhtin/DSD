@@ -13,17 +13,17 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Width = 999
     Height = 400
     TabOrder = 3
-    ExplicitWidth = 765
+    ExplicitWidth = 999
     ExplicitHeight = 400
     ClientRectBottom = 400
     ClientRectRight = 999
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 765
+      ExplicitWidth = 999
       ExplicitHeight = 400
       inherited cxGrid: TcxGrid
         Width = 999
         Height = 400
-        ExplicitWidth = 765
+        ExplicitWidth = 999
         ExplicitHeight = 400
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -320,7 +320,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   end
   inherited Panel: TPanel
     Width = 999
-    ExplicitWidth = 765
+    ExplicitWidth = 999
     inherited deStart: TcxDateEdit
       Left = 96
       ExplicitLeft = 96
@@ -412,7 +412,6 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 765
     object btnFormClose: TcxButton
       Left = 290
       Top = 7
@@ -476,15 +475,25 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     end
     inherited mactReCompleteList: TMultiAction
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
     inherited mactCompleteList: TMultiAction
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?  '
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
     inherited mactUnCompleteList: TMultiAction
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1084#1077#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?  '
+      InfoAfterExecute = #1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1086#1090#1084#1077#1085#1080#1083#1086#1089#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
     inherited mactSetErasedList: TMultiAction
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
     object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'

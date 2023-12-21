@@ -82,7 +82,7 @@ type
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
     actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
+    mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     dsdChoiceGuides: TdsdChoiceGuides;

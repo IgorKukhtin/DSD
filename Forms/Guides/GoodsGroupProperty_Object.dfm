@@ -1,9 +1,9 @@
 object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' ('#1059#1088#1086#1074#1077#1085#1100' 1)>'
   ClientHeight = 311
-  ClientWidth = 651
+  ClientWidth = 608
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 651
+    Width = 608
     Height = 285
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 651
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -48,15 +49,18 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 48
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
         Options.Editing = False
         Width = 208
       end
@@ -69,14 +73,6 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object ParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'ParentName'
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1043#1088#1091#1087#1087#1072' '#1090#1077#1083#1077#1075#1088#1072#1084
-        Options.Editing = False
-        Width = 199
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -383,7 +379,7 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsGroupProperty'
+    StoredProcName = 'gpSelect_Object_GoodsGroupProperty_Parent'
     DataSet = ClientDataSet
     DataSets = <
       item

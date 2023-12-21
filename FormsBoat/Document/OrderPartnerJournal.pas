@@ -96,7 +96,7 @@ type
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
     mactSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
+    mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actPrintSticker: TdsdPrintAction;

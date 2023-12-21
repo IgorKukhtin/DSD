@@ -4,7 +4,6 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
   ClientWidth = 983
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -89
   ExplicitWidth = 999
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -644,6 +643,8 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
       end>
   end
   inherited ActionList: TActionList
+    Left = 199
+    Top = 66
     object macUpdateMoneyPlace: TMultiAction [2]
       Category = 'Update'
       MoveParams = <>
@@ -746,17 +747,29 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited mactReCompleteList: TMultiAction
+    inherited mactSetErasedList: TMultiAction [12]
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    inherited mactCompleteList: TMultiAction
-      Enabled = False
+    inherited actSetErased: TdsdChangeMovementStatus [13]
     end
-    inherited mactUnCompleteList: TMultiAction
+    inherited mactReCompleteList: TMultiAction [14]
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    inherited mactSetErasedList: TMultiAction
+    inherited mactCompleteList: TMultiAction [15]
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    inherited mactUnCompleteList: TMultiAction [16]
+      Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1084#1077#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1086#1090#1084#1077#1085#1080#1083#1086#1089#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
     object actChoiceMoneyPlace: TOpenChoiceForm [18]
       Category = 'Update'
@@ -1261,8 +1274,8 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
     Top = 179
   end
   inherited BarManager: TdxBarManager
-    Left = 128
-    Top = 131
+    Left = 152
+    Top = 75
     DockControlHeights = (
       0
       0

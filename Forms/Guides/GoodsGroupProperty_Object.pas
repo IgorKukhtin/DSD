@@ -56,7 +56,6 @@ type
     actInsert: TdsdInsertUpdateAction;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    ParentName: TcxGridDBColumn;
   private
     { Private declarations }
   public
