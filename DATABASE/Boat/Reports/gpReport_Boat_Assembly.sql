@@ -24,19 +24,20 @@ RETURNS TABLE (ClientId Integer, ClientCode Integer, ClientName TVarChar
 
              --
              , TotalCount  TFloat
-             , Remains     TFloat
+             , Remains_111 TFloat
+             , Remains_112 TFloat
              , Amount      TFloat  
             --
              , Amount_111 TVarChar
-             , Amount_112 TFloat
-             , Amount_12  TFloat
-             , Amount_13  TFloat
-             , Amount_14  TFloat
-             , Amount_15  TFloat
-             , Amount_16  TFloat
-             , Amount_17  TFloat
-             , Amount_18  TFloat
-             , Amount_19  TFloat
+             , Amount_112 TVarChar
+             , Amount_12  TVarChar
+             , Amount_13  TVarChar
+             , Amount_14  TVarChar
+             , Amount_15  TVarChar
+             , Amount_16  TVarChar
+             , Amount_17  TVarChar
+             , Amount_18  TVarChar
+             , Amount_19  TVarChar
           
               )
 AS
@@ -76,7 +77,7 @@ BEGIN
                             , tmpProduct.NPP_2
                        FROM tmpProduct) AS tmp
                       INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
-                                             AND MovementItem.DescId = zc_MI_Child()
+                                             AND MovementItem.DescId IN (zc_MI_Child(), zc_MI_Detail())
                                              AND MovementItem.isErased = FALSE
 
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
@@ -101,28 +102,42 @@ BEGIN
                             , tmpGoods.Amount
                      )
 
-    -- остатки текущие
-   , tmpContainer_All AS (SELECT Container.ObjectId                  AS GoodsId
+    -- остатки текущие Основной склад - 35139
+   , tmpContainer_111 AS (SELECT Container.ObjectId                  AS GoodsId
                                 -- Остаток кол-во
                                , SUM (COALESCE (Container.Amount,0))  AS Remains
                           FROM Container
                            WHERE Container.DescId = zc_Container_Count() 
-                             AND Container.WhereObjectId = 35139    --Основной склад     --33347 основной участок сборки            -- 
+                             AND Container.WhereObjectId = 35139      
                              AND Container.Amount <> 0
                           GROUP BY Container.ObjectId
                          )
+    --остатки текущие Участок сборки Стеклопластик  - 253868
+   , tmpContainer_112 AS (SELECT Container.ObjectId                  AS GoodsId
+                                -- Остаток кол-во
+                               , SUM (COALESCE (Container.Amount,0))  AS Remains
+                          FROM Container
+                           WHERE Container.DescId = zc_Container_Count() 
+                             AND Container.WhereObjectId = 253868    
+                             AND Container.Amount <> 0
+                          GROUP BY Container.ObjectId
+                         )
+    -- 
    , tmpData AS (SELECT tmpGoods.MovementId
                       , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END AS ObjectId 
                       , tmpGoods.TotalCount
                       , SUM (COALESCE (tmpGoods.Amount,0)) AS Amount
-                      , SUM (COALESCE (tmpContainer_All.Remains,0)) AS Remains
+                      , SUM (COALESCE (tmpContainer_111.Remains,0)) AS Remains_111
+                      , SUM (COALESCE (tmpContainer_112.Remains,0)) AS Remains_112
                       , SUM (COALESCE (tmpGoods_mi.Amount_total,0)) AS Amount_total  --сколько уже в использовании в др. заказах
-                      , SUM (CASE WHEN COALESCE (tmpContainer_All.Remains,0) - COALESCE (tmpGoods_mi.Amount_total,0) < tmpGoods.Amount THEN 0 ELSE 1 END) AS Count 
+                      , SUM (CASE WHEN COALESCE (tmpContainer_111.Remains,0) - COALESCE (tmpGoods_mi.Amount_total,0) < tmpGoods.Amount THEN 0 ELSE 1 END) AS Count_111
+                      , SUM (CASE WHEN COALESCE (tmpContainer_112.Remains,0) - COALESCE (tmpGoods_mi.Amount_total,0) < tmpGoods.Amount THEN 0 ELSE 1 END) AS Count_112 
                       
                  FROM tmpGoods
                       LEFT JOIN tmpGoods_mi ON tmpGoods_mi.ObjectId = tmpGoods.ObjectId
                                            AND tmpGoods_mi.MovementId = tmpGoods.MovementId
-                      LEFT JOIN tmpContainer_All ON tmpContainer_All.GoodsId = tmpGoods.ObjectId
+                      LEFT JOIN tmpContainer_111 ON tmpContainer_111.GoodsId = tmpGoods.ObjectId
+                      LEFT JOIN tmpContainer_112 ON tmpContainer_112.GoodsId = tmpGoods.ObjectId
                  GROUP BY tmpGoods.MovementId
                         , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END 
                         , tmpGoods.TotalCount
@@ -157,19 +172,20 @@ BEGIN
 
             --
           , tmpData.TotalCount :: TFloat
-          , tmpData.Remains    :: TFloat 
+          , tmpData.Remains_111    :: TFloat
+          , tmpData.Remains_112    :: TFloat 
           , tmpData.Amount     :: TFloat
           --
-          , (''||tmpData.Count ||' из '|| tmpData.TotalCount)::TVarChar AS Amount_111
-          , 0 :: TFloat AS Amount_112
-          , 0 :: TFloat AS Amount_12
-          , 0 :: TFloat AS Amount_13
-          , 0 :: TFloat AS Amount_14
-          , 0 :: TFloat AS Amount_15
-          , 0 :: TFloat AS Amount_16
-          , 0 :: TFloat AS Amount_17
-          , 0 :: TFloat AS Amount_18
-          , 0 :: TFloat AS Amount_19
+          , (''||tmpData.Count_111 ||' из '|| tmpData.TotalCount)::TVarChar AS Amount_111
+          , (''||tmpData.Count_112 ||' из '|| tmpData.TotalCount)::TVarChar AS Amount_112
+          , ''::TVarChar AS Amount_12
+          , ''::TVarChar AS Amount_13
+          , ''::TVarChar AS Amount_14
+          , ''::TVarChar AS Amount_15
+          , ''::TVarChar AS Amount_16
+          , ''::TVarChar AS Amount_17
+          , ''::TVarChar AS Amount_18
+          , ''::TVarChar AS Amount_19
 
    FROM tmpProduct
        LEFT JOIN tmpData ON tmpData.MovementId = tmpProduct.MovementId_OrderClient

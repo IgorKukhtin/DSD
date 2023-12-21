@@ -3,7 +3,6 @@
   ClientHeight = 569
   ClientWidth = 1121
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -236
   ExplicitWidth = 1137
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -12,17 +11,17 @@
     Width = 1121
     Height = 316
     TabOrder = 3
-    ExplicitWidth = 1106
+    ExplicitWidth = 1121
     ExplicitHeight = 316
     ClientRectBottom = 316
     ClientRectRight = 1121
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1106
+      ExplicitWidth = 1121
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1121
         Height = 316
-        ExplicitWidth = 1106
+        ExplicitWidth = 1121
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -631,7 +630,7 @@
   end
   inherited Panel: TPanel
     Width = 1121
-    ExplicitWidth = 1106
+    ExplicitWidth = 1121
     inherited deEnd: TcxDateEdit
       Left = 315
       ExplicitLeft = 315
@@ -713,7 +712,6 @@
     Height = 73
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1106
     object btnUpdate: TcxButton
       Left = 231
       Top = 9
@@ -822,7 +820,6 @@
     Height = 115
     Align = alBottom
     TabOrder = 7
-    ExplicitWidth = 1106
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1094,7 +1091,6 @@
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
-    ExplicitWidth = 1106
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1517,15 +1513,23 @@
     end
     inherited mactReCompleteList: TMultiAction
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
     inherited mactCompleteList: TMultiAction
       Enabled = False
     end
     inherited mactUnCompleteList: TMultiAction
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1084#1077#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1086#1090#1084#1077#1085#1080#1083#1086#1089#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
     inherited mactSetErasedList: TMultiAction
       Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
     object actPrintInvoice: TdsdPrintAction [27]
       Category = 'Print'

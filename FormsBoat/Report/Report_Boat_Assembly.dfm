@@ -30,52 +30,21 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Remains
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_18
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_12
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_112
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_13
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_14
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_15
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_16
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_17
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_111
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_112
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -85,47 +54,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Remains
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_18
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_12
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_112
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_13
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_14
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_15
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_16
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_17
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
@@ -136,6 +64,16 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_111
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_112
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -276,15 +214,26 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object Remains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains'
+          object Remains_111: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' (111)'
+            DataBinding.FieldName = 'Remains_111'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1086#1089#1085'.'#1089#1082#1083#1072#1076#1077
+            Width = 80
+          end
+          object Remains_112: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' (112)'
+            DataBinding.FieldName = 'Remains_112'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1059#1095'. '#1089#1073#1086#1088#1082#1080' '#1057#1090#1077#1082#1083#1086#1087#1083#1072#1089#1090#1080#1082
             Width = 80
           end
           object Amount: TcxGridDBColumn
@@ -309,9 +258,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_112: TcxGridDBColumn
             Caption = '1.1.2. '#1054#1089#1090'. '#1082#1086#1084#1087#1083'.'
             DataBinding.FieldName = 'Amount_112'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -319,9 +265,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_12: TcxGridDBColumn
             Caption = '1.2. '#1055#1077#1088#1077#1084#1077#1097'. '#1082#1086#1084#1087#1083'.'
             DataBinding.FieldName = 'Amount_12'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -329,9 +272,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_13: TcxGridDBColumn
             Caption = '1.3. '#1055#1077#1088#1077#1084#1077#1097'. '#1059#1079#1083#1099' '#1055#1060
             DataBinding.FieldName = 'Amount_13'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -339,9 +279,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_14: TcxGridDBColumn
             Caption = '1.4. '#1055#1077#1088#1077#1084#1077#1097'. '#1059#1079#1083#1099' '#1057#1090#1077#1082#1083#1086#1087#1083#1072#1089#1090
             DataBinding.FieldName = 'Amount_14'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -349,9 +286,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_15: TcxGridDBColumn
             Caption = '1.5. '#1055#1077#1088#1077#1084#1077#1097'. '#1059#1079#1077#1083' Hypalon'
             DataBinding.FieldName = 'Amount_15'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -359,9 +293,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_16: TcxGridDBColumn
             Caption = '1.6. '#1055#1077#1088#1077#1084#1077#1097'. '#1082#1086#1084#1087#1083'. Teak'
             DataBinding.FieldName = 'Amount_16'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -370,9 +301,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_17: TcxGridDBColumn
             Caption = '1.7. '#1055#1077#1088#1077#1084#1077#1097'. '#1059#1079#1077#1083' Upholstery'
             DataBinding.FieldName = 'Amount_17'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -381,9 +309,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_18: TcxGridDBColumn
             Caption = '1.8. '#1055#1077#1088#1077#1084#1077#1097'. '#1082#1086#1084#1087#1083'. '#1084#1086#1090#1086#1088
             DataBinding.FieldName = 'Amount_18'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -392,9 +317,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
           object Amount_19: TcxGridDBColumn
             Caption = '1.8. '#1055#1077#1088#1077#1084#1077#1097'. '#1082#1086#1084#1087#1083'. '#1086#1087#1094#1080#1080
             DataBinding.FieldName = 'Amount_19'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

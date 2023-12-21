@@ -13,7 +13,7 @@ $BODY$BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroupProperty()());
 
-   RETURN QUERY 
+   RETURN QUERY
    SELECT 
           Object.Id         AS Id 
         , Object.ObjectCode AS Code
@@ -22,11 +22,13 @@ $BODY$BEGIN
         , Object_Parent.ValueData ::TVarChar AS ParentName
         , Object.isErased   AS isErased
    FROM Object
-        LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
-                             ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object.Id
-                            AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+        INNER JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                              ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object.Id
+                             AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
-   WHERE Object.DescId = zc_Object_GoodsGroupProperty();
+   WHERE Object.DescId = zc_Object_GoodsGroupProperty()
+     AND COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId,0) <> 0
+   ;
   
 END;$BODY$
 

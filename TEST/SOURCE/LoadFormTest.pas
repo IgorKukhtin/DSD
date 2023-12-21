@@ -605,6 +605,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyParentEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyParentEditForm');
   // exit;
 
    {

@@ -16,9 +16,14 @@ BEGIN
    -- проверка прав пользовател€ на вызов процедуры
     vbUserId:=lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_GoodsGroupProperty());
 
+   IF COALESCE (inCode,0) = 0 AND COALESCE (ioId,0) <> 0
+   THEN
+       inCode := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = ioId AND Object.DescId = zc_Object_GoodsGroupProperty());
+   END IF;
+   
    -- ≈сли код не установлен, определ€ем его каи последний+1
    inCode:=lfGet_ObjectCode (inCode, zc_Object_GoodsGroupProperty());
-   
+                               
    -- проверка прав уникальности дл€ свойства <Ќаименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsGroupProperty(), inName);
    -- проверка прав уникальности дл€ свойства < од>

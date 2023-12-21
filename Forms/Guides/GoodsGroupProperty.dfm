@@ -53,10 +53,19 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
         Options.Editing = False
         Width = 48
       end
+      object ParentName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ParentName'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
+        Options.Editing = False
+        Width = 199
+      end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 2'
         Options.Editing = False
         Width = 208
       end
@@ -69,14 +78,6 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object ParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'ParentName'
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1043#1088#1091#1087#1087#1072' '#1090#1077#1083#1077#1075#1088#1072#1084
-        Options.Editing = False
-        Width = 199
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -313,8 +314,8 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1043#1088#1091#1087#1087#1091
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1043#1088#1091#1087#1087#1091
       ImageIndex = 31
-      FormName = 'TGoodsGroupPropertyEditForm'
-      FormNameParam.Value = 'TGoodsGroupPropertyEditForm'
+      FormName = 'TGoodsGroupPropertyParentEditForm'
+      FormNameParam.Value = 'TGoodsGroupPropertyParentEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

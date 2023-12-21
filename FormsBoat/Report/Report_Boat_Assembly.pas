@@ -37,7 +37,6 @@ type
     OperDate_OrderClient: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    Remains: TcxGridDBColumn;
     cxLabel8: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;

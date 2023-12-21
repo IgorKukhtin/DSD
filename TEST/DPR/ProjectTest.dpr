@@ -1475,7 +1475,8 @@ uses
   PersonalServiceItemJournal in '..\..\Forms\Document\PersonalServiceItemJournal.pas' {PersonalServiceItemJournalForm: TParentForm},
   GoodsGroupPropertyEdit in '..\..\Forms\Guides\GoodsGroupPropertyEdit.pas' {GoodsGroupPropertyEditForm: TParentForm},
   GoodsGroupProperty in '..\..\Forms\Guides\GoodsGroupProperty.pas' {GoodsGroupPropertyForm: TParentForm},
-  GoodsGroupProperty_Object in '..\..\Forms\Guides\GoodsGroupProperty_Object.pas' {GoodsGroupProperty_ObjectForm: TParentForm};
+  GoodsGroupProperty_Object in '..\..\Forms\Guides\GoodsGroupProperty_Object.pas' {GoodsGroupProperty_ObjectForm: TParentForm},
+  GoodsGroupPropertyParentEdit in '..\..\Forms\Guides\GoodsGroupPropertyParentEdit.pas' {GoodsGroupPropertyParentEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
