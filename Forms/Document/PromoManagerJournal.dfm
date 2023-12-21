@@ -5,7 +5,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1100
-  ExplicitHeight = 445
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -197,7 +197,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
             Width = 112
           end
           object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -614,7 +614,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = chbPeriodForOperDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -908,9 +908,6 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
-    end
     object dxBarButton1: TdxBarButton
       Action = actPrint
       Category = 0
@@ -1038,7 +1035,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1046,7 +1043,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1150,7 +1147,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1174,7 +1171,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

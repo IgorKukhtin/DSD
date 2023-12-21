@@ -1937,7 +1937,7 @@
     object cxLabel13: TcxLabel
       Left = 579
       Top = 38
-      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      Caption = #1054#1087#1080#1089#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
       Left = 579
