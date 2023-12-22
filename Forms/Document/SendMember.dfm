@@ -2,6 +2,7 @@ inherited SendMemberForm: TSendMemberForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1052#1054'>'
   ClientHeight = 602
   ClientWidth = 1013
+  ExplicitTop = -114
   ExplicitWidth = 1029
   ExplicitHeight = 641
   PixelsPerInch = 96
@@ -282,6 +283,7 @@ inherited SendMemberForm: TSendMemberForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

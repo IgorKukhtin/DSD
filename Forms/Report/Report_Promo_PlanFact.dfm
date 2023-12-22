@@ -4,7 +4,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
   ClientWidth = 1098
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 1114
-  ExplicitHeight = 472
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,8 +23,6 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
       inherited cxGrid: TcxGrid
         Width = 1098
         Height = 351
-        ExplicitLeft = -72
-        ExplicitTop = 3
         ExplicitWidth = 1098
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -410,7 +408,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 59
           end
           object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             Visible = False
             HeaderAlignmentHorz = taCenter

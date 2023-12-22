@@ -1,11 +1,11 @@
 inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1087#1077#1094#1086#1076#1077#1078#1076#1072')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1087#1077#1094#1086#1076#1077#1078#1076#1072') >'
   ClientHeight = 399
   ClientWidth = 853
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 437
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -67,7 +67,7 @@ inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
             Options.Editing = False
             Width = 63
           end
-          object lPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
@@ -87,31 +87,6 @@ inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
           object StorageName: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'StorageName'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Alignment.Horz = taLeftJustify
-            Properties.Alignment.Vert = taVCenter
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = #1055#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 12
-                Value = 1
-              end
-              item
-                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 11
-                Value = 2
-              end
-              item
-                Description = #1047#1072#1074#1077#1088#1096#1077#1085
-                ImageIndex = 13
-                Value = 3
-              end
-              item
-                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-                ImageIndex = 66
-                Value = 4
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -225,6 +200,13 @@ inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'StorageId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'StorageName'
           Value = Null
           Component = MasterCDS
@@ -234,7 +216,7 @@ inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
         end
         item
           Name = 'OperDatePartion'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -270,24 +252,6 @@ inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
           Component = MasterCDS
           ComponentItem = 'Amount'
           DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Value = Null
-          DataType = ftString
-          ParamType = ptUnknown
-          MultiSelectSeparator = ','
-        end
-        item
-          Value = Null
-          DataType = ftString
-          ParamType = ptUnknown
-          MultiSelectSeparator = ','
-        end
-        item
-          Value = Null
-          DataType = ftFloat
-          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end>
     end

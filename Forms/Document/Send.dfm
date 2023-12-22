@@ -2,6 +2,8 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1172
+  ExplicitLeft = -295
+  ExplicitTop = -170
   ExplicitWidth = 1188
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -326,6 +328,7 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -490,6 +493,9 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -715,6 +721,9 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0

@@ -27,7 +27,7 @@ uses
 type
   TPartionGoods20202ChoiceForm = class(TAncestorEnumForm)
     OperDate: TcxGridDBColumn;
-    lPrice: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
@@ -45,6 +45,7 @@ type
     UnitGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     GoodsCode: TcxGridDBColumn;
+    StorageName: TcxGridDBColumn;
   private
     { Private declarations }
   public
