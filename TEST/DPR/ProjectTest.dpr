@@ -1476,7 +1476,9 @@ uses
   GoodsGroupPropertyEdit in '..\..\Forms\Guides\GoodsGroupPropertyEdit.pas' {GoodsGroupPropertyEditForm: TParentForm},
   GoodsGroupProperty in '..\..\Forms\Guides\GoodsGroupProperty.pas' {GoodsGroupPropertyForm: TParentForm},
   GoodsGroupProperty_Object in '..\..\Forms\Guides\GoodsGroupProperty_Object.pas' {GoodsGroupProperty_ObjectForm: TParentForm},
-  GoodsGroupPropertyParentEdit in '..\..\Forms\Guides\GoodsGroupPropertyParentEdit.pas' {GoodsGroupPropertyParentEditForm: TParentForm};
+  GoodsGroupPropertyParentEdit in '..\..\Forms\Guides\GoodsGroupPropertyParentEdit.pas' {GoodsGroupPropertyParentEditForm: TParentForm},
+  Report_WageWarehouseBranchDialog in '..\..\Forms\Report\Report_WageWarehouseBranchDialog.pas' {Report_WageWarehouseBranchDialogForm: TParentForm},
+  Report_WageWarehouseBranch in '..\..\Forms\Report\Report_WageWarehouseBranch.pas' {Report_WageWarehouseBranchForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

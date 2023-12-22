@@ -26,7 +26,7 @@ RETURNS TABLE (InvNumber TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
 
-             , MovementDescName TVarChar
+             , MovementDescId Integer, MovementDescName TVarChar
              , BranchFromName TVarChar, BranchToName TVarChar
              , FromName TVarChar, ToName TVarChar
 
@@ -211,6 +211,7 @@ BEGIN
               , tmp.PositionCode
               , tmp.PositionName
 
+              , tmp.MovementDescId          AS MovementDescId
               , MovementDesc.ItemName       AS MovementDescName
               , Object_BranchFrom.ValueData AS BranchFromName
               , Object_BranchTo.ValueData   AS BranchToName
@@ -448,6 +449,7 @@ BEGIN
                , Object_From.ValueData
                , Object_To.ValueData
                , MovementDesc.ItemName
+               , tmp.MovementDescId
                 ;
 
 END;

@@ -2432,6 +2432,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageWarehouseBranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WageWarehouseBranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageWarehouseBranchDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WageWarehouseBranchDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_PartionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_PartionForm');

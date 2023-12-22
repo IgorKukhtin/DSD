@@ -103,43 +103,7 @@ object SendJournalForm: TSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = TotalCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -153,45 +117,9 @@ object SendJournalForm: TSendJournalForm
           Column = TotalSumm
         end
         item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = FromName
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

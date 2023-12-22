@@ -5162,6 +5162,14 @@
 				<Form>GoodsGroupPropertyParentEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_WageWarehouseBranchDialog.pas">
+				<Form>Report_WageWarehouseBranchDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_WageWarehouseBranch.pas">
+				<Form>Report_WageWarehouseBranchForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
