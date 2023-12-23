@@ -897,6 +897,7 @@ function TMainCehForm.Save_MI:Boolean;
 var ParamsWorkProgress:TParams;
     MovementInfo : String;
     isCheckKVK : Boolean;
+    Value_EnterCount:Double;
 begin
      Result:=false;
      //
@@ -917,8 +918,45 @@ begin
              PanelMovementDesc.Caption:='Ошибка.Не определен код <Продукции>';
              exit;
        end;
+       //
+       //
+       //
+           if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+           and(ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+           then begin
+                //
+                try
+                   Value_EnterCount:= StrToFloat (EditEnterCount.Text);
+                except
+                     Value_EnterCount:= 0;
+                end;
+                //
+                if Value_EnterCount = 0 then
+                begin
+                   Value_EnterCount:= fGetScale_CurrentWeight_real;
+                   ParamsMI.ParamByName('RealWeight').AsFloat:=Value_EnterCount;
+                   ParamsMI.ParamByName('RealWeight_Get').AsFloat:=ParamsMI.ParamByName('RealWeight').AsFloat;
+                   //
+                   Value_EnterCount:= ROUND ((Value_EnterCount
+                                             -ParamsMI.ParamByName('WeightTare').AsFloat
+                                             -ParamsMI.ParamByName('WeightOther').AsFloat
+                                             -ParamsMI.ParamByName('CountSkewer1').AsFloat * SettingMain.WeightSkewer1
+                                             -ParamsMI.ParamByName('CountSkewer2').AsFloat * SettingMain.WeightSkewer2
+                                             )
+                                           / (ParamsMI.ParamByName('Weight_gd').AsFloat
+                                            + ParamsMI.ParamByName('WeightPackageSticker_gd').AsFloat
+                                             ));
+                   if MessageDlg('Расчетное кол-во ШТ = <'+FloatToStr(Value_EnterCount)+'>.'+#10+#13+'Продолжить?',mtConfirmation,mbYesNoCancel,0) = 6
+                   then EditEnterCount.Text:= FloatToStr(Value_EnterCount)
+                   else begin ActiveControl:=EditEnterCount;exit;end;
+
+                end;
+           end;
+       //
+       //
        //Сначала пересчитали кол-во
        SetParams_OperCount;
+       //
        // проверка
        if ParamsMI.ParamByName('OperCount').AsFloat <= 0 then
        begin ActiveControl:=EditGoodsCode;
@@ -2347,7 +2385,7 @@ var Value_EnterCount:Double;
 begin
      if ParamsMI.ParamByName('GoodsId').AsInteger > 0 then
      begin
-           if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+           {if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
            and(ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
            then begin
                 //
@@ -2360,18 +2398,24 @@ begin
                 if Value_EnterCount = 0 then
                 begin
                    Value_EnterCount:= fGetScale_CurrentWeight_real;
-                   EditEnterCount.Text:= FloatToStr(ROUND ((Value_EnterCount
-                                                           -ParamsMI.ParamByName('WeightTare').AsFloat
-                                                           -ParamsMI.ParamByName('WeightOther').AsFloat
-                                                           -ParamsMI.ParamByName('CountSkewer1').AsFloat * SettingMain.WeightSkewer1
-                                                           -ParamsMI.ParamByName('CountSkewer2').AsFloat * SettingMain.WeightSkewer2
-                                                           )
-                                                         / (ParamsMI.ParamByName('Weight_gd').AsFloat
-                                                          + ParamsMI.ParamByName('WeightPackageSticker_gd').AsFloat
-                                                           ))
-                                                  );
+                   ParamsMI.ParamByName('RealWeight').AsFloat:=Value_EnterCount;
+                   ParamsMI.ParamByName('RealWeight_Get').AsFloat:=ParamsMI.ParamByName('RealWeight').AsFloat;
+                   //
+                   Value_EnterCount:= ROUND ((Value_EnterCount
+                                             -ParamsMI.ParamByName('WeightTare').AsFloat
+                                             -ParamsMI.ParamByName('WeightOther').AsFloat
+                                             -ParamsMI.ParamByName('CountSkewer1').AsFloat * SettingMain.WeightSkewer1
+                                             -ParamsMI.ParamByName('CountSkewer2').AsFloat * SettingMain.WeightSkewer2
+                                             )
+                                           / (ParamsMI.ParamByName('Weight_gd').AsFloat
+                                            + ParamsMI.ParamByName('WeightPackageSticker_gd').AsFloat
+                                             ));
+                   if MessageDlg('Расчетное кол-во ШТ = <'+FloatToStr(Value_EnterCount)+'>.'+#10+#13+'Исправить значение можно будет вручную.Продолжить?',mtConfirmation,mbYesNoCancel,0) = 6
+                   then EditEnterCount.Text:= FloatToStr(Value_EnterCount)
+                   else begin exit;end; // ActiveControl:=EditEnterCount;
+
                 end;
-           end;
+           end;}
 
            SetParams_OperCount;
            //
@@ -3585,13 +3629,17 @@ begin
      then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
 //*****
      end
-     else
+     else begin
           try Result:=StrToFloat(EditEnterCount.Text)
           except Result:=0;
           end;
           //
-          if Result = 0 then
-          Result:=fGetScale_CurrentWeight_real;
+          {if (Result = 0)
+           and(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+           and(ParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+          then
+              Result:=fGetScale_CurrentWeight_real;}
+     end;
      //
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;

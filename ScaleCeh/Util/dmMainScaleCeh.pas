@@ -941,6 +941,7 @@ begin
 
            if (execParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
            and(execParamsMovement.ParamByName('isCalc_Sh').AsBoolean = TRUE)
+           and(execParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
            then Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight_Get').AsFloat)
            else Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
 
