@@ -54,8 +54,8 @@
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 21
-    Top = 31
+    Left = 23
+    Top = 33
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
