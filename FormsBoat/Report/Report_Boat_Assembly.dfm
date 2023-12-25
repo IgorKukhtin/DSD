@@ -1,28 +1,28 @@
 inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1073#1086#1088#1082#1072' '#1083#1086#1076#1082#1080'>'
-  ClientHeight = 341
+  ClientHeight = 346
   ClientWidth = 1071
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1087
-  ExplicitHeight = 380
+  ExplicitHeight = 385
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1071
-    Height = 261
+    Height = 266
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1071
     ExplicitHeight = 261
-    ClientRectBottom = 261
+    ClientRectBottom = 266
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 1071
-        Height = 261
+        Height = 266
         ExplicitWidth = 1071
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -315,7 +315,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             Width = 70
           end
           object Amount_19: TcxGridDBColumn
-            Caption = '1.8. '#1055#1077#1088#1077#1084#1077#1097'. '#1082#1086#1084#1087#1083'. '#1086#1087#1094#1080#1080
+            Caption = '1.9. '#1055#1077#1088#1077#1084#1077#1097'. '#1082#1086#1084#1087#1083'. '#1086#1087#1094#1080#1080
             DataBinding.FieldName = 'Amount_19'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
