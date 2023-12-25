@@ -80,10 +80,15 @@ RETURNS TABLE(
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbBranchId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
+
+
+    --
+    vbBranchId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUnitId AND OL.DescId = zc_ObjectLink_Unit_Branch());
 
 
     -- список дней
@@ -378,6 +383,18 @@ AS  (SELECT
                                                                           , zc_Enum_SelectKind_MovementReestrWeight()
                                                                           , zc_Enum_SelectKind_MovementReestrDoc()
                                                                           , zc_Enum_SelectKind_MovementReestrPartner()
+                                                                            -- Комплектация
+                                                                          , zc_Enum_SelectKind_MovementCount(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MI_Master()
+                                                                            -- Стикеровка
+                                                                          , zc_Enum_SelectKind_MI_MasterSh()
+                                                                            -- Значение для клдв.
+                                                                          , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                                                            -- Значение возврат на филилал
+                                                                          , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                                                            -- Значение возврат на Днепр
+                                                                          , zc_Enum_SelectKind_MI_Master_WareOut()
+                                                                            -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
+                                                                          , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                                                            )
             )
    )
@@ -452,8 +469,16 @@ AS  (SELECT
                               Setting.MovementDescId
                        FROM Setting_Wage_1 as Setting
                        WHERE Setting.MovementDescId IS NOT NULL
-                         AND Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
-                                                          zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
+                         AND Setting.SelectKindId NOT IN (-- Кол-во документов компл. + Кол-во строк по документам компл. + Кол-во вес по документам компл.
+                                                          zc_Enum_SelectKind_MovementCount(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MI_Master()
+                                                          -- Стикеровка
+                                                        , zc_Enum_SelectKind_MI_MasterSh()
+                                                          -- Значение для клдв.
+                                                        , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                                          -- Значение возврат на филилал
+                                                        , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                                          -- Значение возврат на Днепр
+                                                        , zc_Enum_SelectKind_MI_Master_WareOut()
                                                           -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
                                                         , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                                          )
@@ -610,7 +635,7 @@ AS  (SELECT
                               , tmpMI.StorageLineId_From
                               , tmpMI.StorageLineId_To
                               , SUM (MIFloat_HeadCount.ValueData) AS Amount
-                 
+
                          FROM (SELECT DISTINCT MovementItemContainer.MovementItemId
                                  ,MovementItemContainer.OperDate
                                  ,MovementItemContainer.MovementDescId
@@ -632,7 +657,7 @@ AS  (SELECT
                                        ELSE Container.ObjectId
                                   END AS GoodsId_to
                                  , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
-                 
+
                                  , CASE WHEN MovementItemContainer.IsActive = FALSE
                                              THEN MILO_StorageLine.ObjectId
                                         ELSE 0
@@ -641,7 +666,7 @@ AS  (SELECT
                                              THEN MILO_StorageLine.ObjectId
                                         ELSE 0
                                    END AS StorageLineId_To
-                 
+
                               FROM (SELECT DISTINCT Setting.MovementDescId FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())) AS tmp  -- Кол-во голов приход + Кол-во голов расход
                                    INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
                                                                    AND MovementItemContainer.DescId         = zc_MIContainer_Count()
@@ -720,10 +745,10 @@ AS  (SELECT
                       SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
                                 AND tmpMovement.OperDate_num <> 6 -- суббота
                                     THEN 0
-        
+
                                WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
                                     THEN tmpMovement_HeadCount.Amount
-        
+
                                WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                                     THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                                    THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
@@ -731,7 +756,7 @@ AS  (SELECT
                                               ELSE 0
                                          END
                                ELSE tmpMovement.Amount
-        
+
                           END)
              END :: TFloat AS Gross
 
@@ -749,10 +774,10 @@ AS  (SELECT
                       SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
                                 AND tmpMovement.OperDate_num <> 6 -- суббота
                                     THEN 0
-        
+
                                WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
                                     THEN tmpMovement_HeadCount.Amount
-        
+
                                WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                                     THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                                    THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
@@ -760,7 +785,7 @@ AS  (SELECT
                                               ELSE 0
                                          END
                                ELSE tmpMovement.Amount
-        
+
                           END)
              END :: TFloat
            , 2) :: TFloat AS Amount
@@ -788,6 +813,14 @@ AS  (SELECT
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         WHERE Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
                                            zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
+                                           -- Стикеровка
+                                         , zc_Enum_SelectKind_MI_MasterSh()
+                                           -- Значение для клдв.
+                                         , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                           -- Значение возврат на филилал
+                                         , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                           -- Значение возврат на Днепр
+                                         , zc_Enum_SelectKind_MI_Master_WareOut()
                                            -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
                                          , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                           )
@@ -864,7 +897,7 @@ AS  (SELECT
              -- !!!стажеры!!!
            , COALESCE (ObjectFloat_WorkTimeKind_Tax.ValueData, 0) AS Tax_Trainee
 
-             -- 
+             --
            , MIObject_WorkTimeKind.ObjectId AS WorkTimeKindId
 
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
@@ -1070,6 +1103,71 @@ AS  (SELECT
                , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
        )
+         -- Данные для - WageWarehouseBranch
+       , tmpWageWarehouseBranch AS (SELECT *
+                                    FROM gpReport_WageWarehouseBranch (inStartDate   := inStartDate
+                                                                     , inEndDate     := inEndDate
+                                                                     , inPersonalId  := 0
+                                                                     , inPositionId  := 0
+                                                                     , inBranchId    := vbBranchId
+                                                                     , inKoef_11     := 0
+                                                                     , inKoef_12     := 0
+                                                                     , inKoef_13     := 0
+                                                                     , inKoef_22     := 0
+                                                                     , inKoef_31     := 0
+                                                                     , inKoef_32     := 0
+                                                                     , inKoef_33     := 0
+                                                                     , inKoef_41     := 0
+                                                                     , inKoef_42     := 0
+                                                                     , inKoef_43     := 0
+                                                                     , inSession     := CASE WHEN COALESCE (vbBranchId, 0) IN (0, zc_Branch_Basis())
+                                                                                               OR NOT EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_MasterSh()
+                                                                                                                                                                                   , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                                                                                                                                                                   , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                                                                                                                                                                   , zc_Enum_SelectKind_MI_Master_WareOut()
+                                                                                                                                                                                   ))
+                                                                                             THEN '-123'
+                                                                                             ELSE inSession
+                                                                                        END
+                                                                      ))
+       , tmpMovement_WarehouseBranch AS
+       (SELECT inEndDate AS OperDate
+             , DATE_PART ('ISODOW', inEndDate)  AS OperDate_num
+             , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
+             , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
+             , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+               -- Стикеровка
+             , SUM (COALESCE (gpReport.TotalCountStick_2, 0)) :: TFloat AS TotalCountStick_2
+               -- Взвешивание+документация
+             , SUM (COALESCE (gpReport.CountMovement1_3, 0))  :: TFloat AS CountMovement1_3
+             , SUM (COALESCE (gpReport.CountMI1_3, 0))        :: TFloat AS CountMI1_3
+             , SUM (COALESCE (gpReport.TotalCountKg1_3, 0))   :: TFloat AS TotalCountKg1_3
+               -- Возвраты на филиал
+             , SUM (COALESCE (gpReport.CountMovement1_4, 0))  :: TFloat AS CountMovement1_4
+             , SUM (COALESCE (gpReport.TotalCountKg1_4, 0))   :: TFloat AS TotalCountKg1_4
+               -- Возвраты в Днепр
+             , SUM (COALESCE (gpReport.TotalCountKg1_5, 0))   :: TFloat AS TotalCountKg1_5
+
+        FROM tmpWageWarehouseBranch AS gpReport
+             INNER JOIN (SELECT DISTINCT Setting_Wage_1.FromId, Setting_Wage_1.UnitId
+                         FROM Setting_Wage_1
+                         WHERE Setting_Wage_1.SelectKindId IN (-- Стикеровка
+                                                               zc_Enum_SelectKind_MI_MasterSh()
+                                                               -- Значение для клдв.
+                                                             , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                                               -- Значение возврат на филилал
+                                                             , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                                               -- Значение возврат на Днепр
+                                                             , zc_Enum_SelectKind_MI_Master_WareOut()
+                                                              )
+                           AND Setting_Wage_1.FromId > 0 OR Setting_Wage_1.UnitId > 0
+                        ) AS tmpFrom ON (tmpFrom.FromId = gpReport.UnitId AND tmpFrom.FromId > 0)
+                                     OR (tmpFrom.UnitId = gpReport.UnitId AND tmpFrom.UnitId > 0 AND COALESCE (tmpFrom.FromId, 0) = 0)
+        GROUP BY gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
+               , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
+               , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+       )
+
          -- Данные для - Transport + Реестр Документов
        , tmpUnit_Reestr AS (SELECT DISTINCT Setting_Wage_1.UnitId
                             FROM Setting_Wage_1
@@ -1419,13 +1517,13 @@ AS  (SELECT
        ,Setting.Ratio
         -- вот товар
        ,COALESCE (ServiceModelMovement.GoodsId_from, Setting.ModelServiceItemChild_FromId) AS ModelServiceItemChild_FromId
-        -- 
+        --
        ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
         -- вот товар
        ,COALESCE (ServiceModelMovement.GoodsId_to, Setting.ModelServiceItemChild_ToId) AS ModelServiceItemChild_ToId
-        -- 
+        --
        ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
@@ -1496,12 +1594,12 @@ AS  (SELECT
                       AND tmpList_ModelService_Trainee.ModelServiceId > 0 -- AND Setting.ServiceModelId = 12387 -- деликатесы
                       AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
                           THEN Movement_Sheet.AmountInDay_andTrainee_pGroup / NULLIF (Movement_Sheet.Amount_andTrainee, 0)
-      
+
                      -- 1.2. по дням табель - стажер - !!!сначала!!!
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime() AND Movement_Sheet.Tax_Trainee > 0
                       AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
                           THEN Movement_Sheet_Trainee.AmountInDay_pGroup / NULLIF (Movement_Sheet.Amount_Trainee, 0) * 100 / Movement_Sheet.Tax_Trainee
-      
+
                      -- 1.3. по дням табель + PersonalGroupId
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
                       AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
@@ -1637,6 +1735,14 @@ AS  (SELECT
 
     WHERE Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
                                        zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
+                                       -- Стикеровка
+                                     , zc_Enum_SelectKind_MI_MasterSh()
+                                       -- Значение для клдв.
+                                     , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                       -- Значение возврат на филилал
+                                     , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                       -- Значение возврат на Днепр
+                                     , zc_Enum_SelectKind_MI_Master_WareOut()
                                        -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
                                      , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                       )
@@ -1749,6 +1855,7 @@ AS  (SELECT
                                                   OR tmpMovement_PersonalComplete.TotalCountKg  <> 0
                                                   OR tmpMovement_PersonalComplete.CountMovement <> 0
                                                     )
+                                                AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                               ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
                              AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
@@ -1759,6 +1866,176 @@ AS  (SELECT
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
+
+   UNION ALL
+    -- Данные для - WageWarehouseBranch
+    SELECT
+        Setting.StaffListId
+      , 0 :: Integer AS DocumentKindId
+      , Setting.UnitId
+      , Setting.UnitName
+       ,tmpMovement_PersonalComplete.PositionId
+       ,tmpMovement_PersonalComplete.PositionName
+       ,Object_PositionLevel.Id        AS PositionLevelId
+       ,Object_PositionLevel.ValueData AS PositionLevelName
+       ,Setting.Count_Member
+       -- , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_Member) :: Integer AS Count_Member
+       ,Setting.HoursPlan
+       ,Setting.HoursDay
+       , Object_PersonalGroup.Id        AS PersonalGroupId
+       , Object_PersonalGroup.ValueData AS PersonalGroupName
+       ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
+       ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
+       ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
+       ,0 :: TFloat  AS SUM_MemberHours
+       ,0 :: TFloat  AS SheetWorkTime_Amount
+       ,0 :: Integer AS Ord_SheetWorkTime
+       ,Setting.ServiceModelId
+       ,Setting.ServiceModelCode
+       ,Setting.ServiceModelName
+       ,Setting.Price
+       ,Setting.FromId
+       ,Setting.FromName
+       ,Setting.ToId
+       ,Setting.ToName
+       ,Setting.MovementDescId
+       ,Setting.MovementDescName
+       ,Setting.SelectKindId
+       ,Setting.SelectKindName
+       ,Setting.Ratio
+       ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode
+       ,Setting.ModelServiceItemChild_FromDescId
+       ,Setting.ModelServiceItemChild_FromName
+       ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToCode
+       ,Setting.ModelServiceItemChild_ToDescId
+       ,Setting.ModelServiceItemChild_ToName
+
+       ,Setting.StorageLineId_From, Setting.StorageLineName_From
+       ,Setting.StorageLineId_To, Setting.StorageLineName_To
+
+       ,Setting.GoodsKind_FromId, Setting.GoodsKind_FromName, Setting.GoodsKindComplete_FromId, Setting.GoodsKindComplete_FromName
+       ,Setting.GoodsKind_ToId, Setting.GoodsKind_ToName, Setting.GoodsKindComplete_ToId, Setting.GoodsKindComplete_ToName
+
+       , tmpMovement_PersonalComplete.OperDate AS OperDate
+       , 0 :: Integer AS Count_Day
+       , 0 :: Integer AS Count_MemberInDay
+       , CASE -- Стикеровка
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterSh()
+                    THEN tmpMovement_PersonalComplete.TotalCountStick_2
+              -- Значение для клдв.
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMI1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_Ware()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_3
+              -- Значение возврат на филилал
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_WareIn()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_4
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareIn()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_4
+              -- Значение возврат на Днепр
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareOut()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_5
+              ELSE 0
+         END :: TFloat AS Gross
+       , CASE -- Стикеровка
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterSh()
+                    THEN tmpMovement_PersonalComplete.TotalCountStick_2
+              -- Значение для клдв.
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMI1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_Ware()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_3
+              -- Значение возврат на филилал
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_WareIn()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_4
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareIn()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_4
+              -- Значение возврат на Днепр
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareOut()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_5
+              ELSE 0
+         END :: TFloat AS GrossOnOneMember
+       , (CASE -- Стикеровка
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterSh()
+                    THEN tmpMovement_PersonalComplete.TotalCountStick_2
+              -- Значение для клдв.
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMI1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_Ware()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_3
+              -- Значение возврат на филилал
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_WareIn()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_4
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareIn()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_4
+              -- Значение возврат на Днепр
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareOut()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_5
+              ELSE 0
+         END * Setting.Ratio * Setting.Price) :: TFloat AS Amount
+       , (CASE -- Стикеровка
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterSh()
+                    THEN tmpMovement_PersonalComplete.TotalCountStick_2
+              -- Значение для клдв.
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount_Ware()
+                    THEN tmpMovement_PersonalComplete.CountMI1_3
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_Ware()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_3
+              -- Значение возврат на филилал
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_WareIn()
+                    THEN tmpMovement_PersonalComplete.CountMovement1_4
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareIn()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_4
+              -- Значение возврат на Днепр
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareOut()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg1_5
+              ELSE 0
+         END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
+
+       , 0 :: TFloat AS KoeffHoursWork_car
+
+    FROM Setting_Wage_1 AS Setting
+         INNER JOIN tmpMovement_WarehouseBranch AS tmpMovement_PersonalComplete
+                                                ON ((tmpMovement_PersonalComplete.UnitId = Setting.FromId AND Setting.FromId > 0)
+                                                       OR (tmpMovement_PersonalComplete.UnitId = Setting.UnitId AND Setting.UnitId > 0 AND COALESCE (Setting.FromId, 0) = 0)
+                                                   )
+                                               AND (tmpMovement_PersonalComplete.TotalCountStick_2 <> 0
+                                                 OR tmpMovement_PersonalComplete.CountMovement1_3  <> 0
+                                                 OR tmpMovement_PersonalComplete.CountMI1_3        <> 0
+                                                 OR tmpMovement_PersonalComplete.TotalCountKg1_3   <> 0
+                                                 OR tmpMovement_PersonalComplete.CountMovement1_4  <> 0
+                                                 OR tmpMovement_PersonalComplete.TotalCountKg1_4   <> 0
+                                                 OR tmpMovement_PersonalComplete.TotalCountKg1_5   <> 0
+                                                   )
+                                               AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                              ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                             AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                             AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
+         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+
+    WHERE Setting.SelectKindId IN (-- Стикеровка
+                                   zc_Enum_SelectKind_MI_MasterSh()
+                                   -- Значение для клдв.
+                                 , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                   -- Значение возврат на филилал
+                                 , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                   -- Значение возврат на Днепр
+                                 , zc_Enum_SelectKind_MI_Master_WareOut()
+                                  )
 
    UNION ALL
     -- Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
@@ -1930,7 +2207,7 @@ AS  (SELECT
        ,Setting.ModelServiceItemChild_FromCode
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
-       ,Setting.ModelServiceItemChild_ToId 
+       ,Setting.ModelServiceItemChild_ToId
        ,Setting.ModelServiceItemChild_ToCode
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
@@ -1949,7 +2226,7 @@ AS  (SELECT
        , tmpMovement_PersonalComplete.HoursWork :: TFloat AS GrossOnOneMember
        , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS Amount
        , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS AmountOnOneMember
-       
+
        , tmpMovement_PersonalComplete.KoeffHoursWork_car :: TFloat AS KoeffHoursWork_car
 
     FROM Setting_Wage_1 AS Setting
