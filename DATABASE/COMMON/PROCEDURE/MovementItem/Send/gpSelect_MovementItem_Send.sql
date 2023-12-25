@@ -634,7 +634,7 @@ BEGIN
 
            , Object_Unit_partion.ValueData      AS UnitName
            , Object_Storage.Id                  AS StorageId
-           , Object_Storage.ValueData           AS StorageName
+           , CASE WHEN tmpMI_Goods.StorageId IS NULL AND tmpMIContainer.StorageId > 0 THEN '***Только для партии расхода: ' || Object_Storage.ValueData ELSE Object_Storage.ValueData END :: TVarChar AS StorageName
            , Object_PartionModel.Id             AS PartionModelId
            , Object_PartionModel.ValueData      AS PartionModelName
            
