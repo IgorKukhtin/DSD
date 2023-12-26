@@ -63,6 +63,11 @@ type
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
     cbisGoods: TcxCheckBox;
+    StateText_Complete: TcxGridDBColumn;
+    ModelName: TcxGridDBColumn;
+    ModelName_full: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
+    ProdColorName: TcxGridDBColumn;
   private
     { Private declarations }
   public

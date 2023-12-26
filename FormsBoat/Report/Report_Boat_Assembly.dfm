@@ -9,21 +9,21 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 54
     Width = 1071
-    Height = 266
+    Height = 292
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1071
     ExplicitHeight = 266
-    ClientRectBottom = 266
+    ClientRectBottom = 292
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 266
       inherited cxGrid: TcxGrid
         Width = 1071
-        Height = 266
+        Height = 292
         ExplicitWidth = 1071
         ExplicitHeight = 266
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -105,6 +105,15 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object StateText_Complete: TcxGridDBColumn
+            Caption = '***'#1057#1086#1089#1090#1086#1103#1085#1080#1077
+            DataBinding.FieldName = 'StateText_Complete'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object OperDate_OrderClient: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'OperDate_OrderClient'
@@ -131,6 +140,40 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             HeaderHint = #1050#1083#1080#1077#1085#1090
             Options.Editing = False
             Width = 130
+          end
+          object ModelName: TcxGridDBColumn
+            Caption = 'Model'
+            DataBinding.FieldName = 'ModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ModelName_full: TcxGridDBColumn
+            Caption = '***Model'
+            DataBinding.FieldName = 'ModelName_full'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ProdColorName: TcxGridDBColumn
+            Caption = '~Farbe'
+            DataBinding.FieldName = 'ProdColorName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'Farbe Boat Structure'
+            Options.Editing = False
+            Width = 80
+          end
+          object EngineName: TcxGridDBColumn
+            Caption = 'Engine'
+            DataBinding.FieldName = 'EngineName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object ProductName: TcxGridDBColumn
             Caption = 'Boat'
@@ -354,48 +397,48 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
   end
   inherited Panel: TPanel
     Width = 1071
-    Height = 54
+    Height = 28
     Visible = False
     ExplicitWidth = 1071
-    ExplicitHeight = 54
+    ExplicitHeight = 28
     inherited deStart: TcxDateEdit
-      Left = 974
+      Left = 742
       Top = 4
       Properties.SaveTime = False
       Visible = False
-      ExplicitLeft = 974
+      ExplicitLeft = 742
       ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
-      Left = 974
-      Top = 30
+      Left = 949
+      Top = 4
       Properties.SaveTime = False
       Visible = False
-      ExplicitLeft = 974
-      ExplicitTop = 30
+      ExplicitLeft = 949
+      ExplicitTop = 4
     end
     inherited cxLabel1: TcxLabel
-      Left = 877
-      Top = 7
+      Left = 645
+      Top = 5
       Visible = False
-      ExplicitLeft = 877
-      ExplicitTop = 7
+      ExplicitLeft = 645
+      ExplicitTop = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 862
-      Top = 31
+      Left = 833
+      Top = 5
       Visible = False
-      ExplicitLeft = 862
-      ExplicitTop = 31
+      ExplicitLeft = 833
+      ExplicitTop = 5
     end
     object cxLabel3: TcxLabel
-      Left = 219
-      Top = 31
+      Left = 315
+      Top = 7
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
     end
     object edGoods: TcxButtonEdit
-      Left = 315
-      Top = 30
+      Left = 414
+      Top = 4
       Properties.Buttons = <
         item
           Default = True
@@ -406,12 +449,12 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
       Width = 209
     end
     object cxLabel8: TcxLabel
-      Left = 263
+      Left = 31
       Top = 7
       Caption = #1050#1083#1080#1077#1085#1090':'
     end
     object edPartner: TcxButtonEdit
-      Left = 315
+      Left = 82
       Top = 4
       Properties.Buttons = <
         item
