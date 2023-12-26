@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TReport_Boat_AssemblyForm = class(TAncestorReport_boatForm)
@@ -59,7 +60,7 @@ type
     Amount_14: TcxGridDBColumn;
     Amount_15: TcxGridDBColumn;
     actChoiceGuides: TdsdChoiceGuides;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_Name: TdsdFieldFilter;
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
     cbisGoods: TcxCheckBox;
@@ -68,6 +69,16 @@ type
     ModelName_full: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
     ProdColorName: TcxGridDBColumn;
+    StateColor: TcxGridDBColumn;
+    Panel4: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchInvNumber_OrderClient: TcxTextEdit;
+    edSearchClientName: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    Panel_btn: TPanel;
+    btnUpdate_OrderClient: TcxButton;
+    btnFormClose: TcxButton;
+    InvNumber_OrderClient: TcxGridDBColumn;
   private
     { Private declarations }
   public

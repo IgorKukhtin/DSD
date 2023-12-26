@@ -961,7 +961,12 @@ BEGIN
 
            -- Состояние
          , zfCalc_Order_State (tmpResAll.isSale
-                             , tmpOrderClient.NPP :: Integer
+                             , CASE WHEN tmpOrderClient.StatusId = zc_Enum_Status_Complete()
+                                         THEN tmpOrderClient.NPP
+                                    WHEN tmpOrderClient.StatusId = zc_Enum_Status_UnComplete()
+                                         THEN 0
+                                    ELSE -1
+                               END :: Integer
                              , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
                              , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
                              , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
@@ -976,7 +981,12 @@ BEGIN
                     zc_Color_White()
            END :: Integer AS StateColor */
          , zfCalc_Order_State_color (tmpResAll.isSale
-                                   , tmpOrderClient.NPP :: Integer
+                                   , CASE WHEN tmpOrderClient.StatusId = zc_Enum_Status_Complete()
+                                               THEN tmpOrderClient.NPP
+                                          WHEN tmpOrderClient.StatusId = zc_Enum_Status_UnComplete()
+                                               THEN 0
+                                          ELSE -1
+                                     END :: Integer
                                    , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
                                    , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
                                    , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)

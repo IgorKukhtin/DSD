@@ -38,7 +38,10 @@ BEGIN
                    WHEN inNPP > 0
                    THEN 'Планируется'
 
-                   ELSE ''
+                   WHEN inNPP = 0
+                   THEN 'Не запланировано'
+
+                   ELSE 'Удален'
 
                END
 --          || CASE WHEN inMovementId_OrderInternal   > 0 THEN ' ' || (SELECT zfCalc_InvNumber_isErased (MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate, Movement.StatusId) FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = inMovementId_OrderInternal)   ELSE '' END
