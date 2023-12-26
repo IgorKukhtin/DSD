@@ -1451,7 +1451,6 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actShowErased: TBooleanStoredProcAction [9]
@@ -1475,6 +1474,7 @@
     inherited actGridToExcel: TdsdGridToExcel [11]
     end
     inherited actInsertMask: TdsdInsertUpdateAction
+      ShortCut = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -1811,6 +1811,7 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1089#1095#1077#1090#1072
       ImageIndex = 0
+      ShortCut = 16437
     end
     object actSetUnErasedItem: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1823,7 +1824,6 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ItemDS
@@ -1903,7 +1903,6 @@
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TInvoiceItemEditForm'
       FormNameParam.Value = 'TInvoiceItemEditForm'
@@ -2000,6 +1999,7 @@
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1089#1095#1077#1090#1072'>'
       ImageIndex = 1
+      ShortCut = 16438
     end
     object actSetErasedItem: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2012,7 +2012,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ItemDS
     end
@@ -2280,10 +2279,6 @@
         item
           Visible = True
           ItemName = 'bbInsertAction'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsert_Pay'
         end
         item
           Visible = True

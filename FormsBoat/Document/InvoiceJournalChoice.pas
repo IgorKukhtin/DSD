@@ -75,7 +75,7 @@ type
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     cxLabel3: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_InvNumber: TdsdFieldFilter;
   private
     { Private declarations }
   public

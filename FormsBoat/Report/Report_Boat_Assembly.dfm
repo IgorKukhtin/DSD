@@ -12,19 +12,19 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
     Width = 1071
     Height = 219
     TabOrder = 3
-    ExplicitTop = 54
+    ExplicitTop = 87
     ExplicitWidth = 1071
-    ExplicitHeight = 292
+    ExplicitHeight = 219
     ClientRectBottom = 219
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
-      ExplicitHeight = 292
+      ExplicitHeight = 219
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 219
         ExplicitWidth = 1071
-        ExplicitHeight = 292
+        ExplicitHeight = 219
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -488,9 +488,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitLeft = -117
-    ExplicitTop = 0
-    ExplicitWidth = 1188
     object lbSearchName: TcxLabel
       Left = 5
       Top = 7
@@ -541,7 +538,6 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
     Height = 40
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 305
     object btnUpdate_OrderClient: TcxButton
       Left = 178
       Top = 6
@@ -1135,7 +1131,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
     Left = 296
     Top = 200
   end
-  object FieldFilter_Name: TdsdFieldFilter
+  object FieldFilter_InvNumber: TdsdFieldFilter
     TextEdit = edSearchInvNumber_OrderClient
     DataSet = MasterCDS
     Column = InvNumber_OrderClient
@@ -1150,7 +1146,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 352
-    Top = 184
+    Left = 288
+    Top = 72
   end
 end

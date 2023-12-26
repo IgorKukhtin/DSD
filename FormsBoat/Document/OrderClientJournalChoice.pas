@@ -113,14 +113,13 @@ type
     bbsPrint: TdxBarSubItem;
     cxLabel3: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_InvNumber: TdsdFieldFilter;
     btnClientChoiceForm: TcxButton;
     actClientChoiceForm: TOpenChoiceForm;
     actSetNull_GuidesClient: TdsdSetDefaultParams;
     btnSetNull_GuidesClient: TcxButton;
     cxLabel4: TcxLabel;
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;
-    InvNumber_Invoice: TcxGridDBColumn;
   private
   public
   end;

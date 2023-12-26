@@ -232,13 +232,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 70
           end
           object isDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085'.'
+            Caption = #1056#1072#1079#1085'. ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1045#1089#1090#1100' '#1088#1072#1079#1085#1080#1094#1072' '#1089' '#1089#1091#1084#1084#1086#1081' '#1087#1086' '#1089#1095#1077#1090#1091' '#1076#1072'/'#1085#1077#1090
             Options.Editing = False
-            Width = 51
+            Width = 55
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -606,37 +606,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end>
   end
   inherited ActionList: TActionList
-    object macUpdateMoneyPlace: TMultiAction [2]
-      Category = 'Update'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actChoiceMoneyPlace
-        end
-        item
-          Action = actUpdateMoneyPlace
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
-      ImageIndex = 55
-    end
-    object actUpdateMoneyPlace: TdsdDataSetRefresh [3]
-      Category = 'Update'
-      MoveParams = <>
-      StoredProc = spUpdateJuridical
-      StoredProcList = <
-        item
-          StoredProc = spUpdateJuridical
-        end>
-      Caption = 'actUpdateContract'
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 55
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 16433
       FormName = 'TBankAccountMovementForm'
@@ -678,6 +647,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
+      ShortCut = 0
       FormName = 'TBankAccountMovementForm'
       FormNameParam.Value = 'TBankAccountMovementForm'
       GuiParams = <
@@ -748,106 +718,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Enabled = False
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-    end
-    object actChoiceMoneyPlace: TOpenChoiceForm [18]
-      Category = 'Update'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'JuridicalChoice'
-      ImageIndex = 55
-      FormName = 'TMoneyPlace_ObjectForm'
-      FormNameParam.Value = 'TMoneyPlace_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'MoneyPlaceId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MoneyPlaceName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actChoiceContract: TOpenChoiceForm [19]
-      Category = 'Update'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractChoice'
-      ImageIndex = 24
-      FormName = 'TContractChoiceForm'
-      FormNameParam.Value = 'TContractChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MasterJuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MoneyPlaceId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MoneyPlaceName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actUpdateContract: TdsdDataSetRefresh [20]
-      Category = 'Update'
-      MoveParams = <>
-      StoredProc = spUpdateContract
-      StoredProcList = <
-        item
-          StoredProc = spUpdateContract
-        end>
-      Caption = 'actUpdateContract'
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 24
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -956,116 +826,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Hint = 'actMasterPost'
       DataSource = MasterDS
     end
-    object mactIsCopy: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actIsCopy
-        end
-        item
-          Action = actMasterPost
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
-    end
-    object actIsCopy: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'isCopy'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'isCopy'
-          FromParam.DataType = ftBoolean
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'isCopy'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'isCopy'
-          ToParam.DataType = ftBoolean
-          ToParam.MultiSelectSeparator = ','
-        end>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isCopy
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isCopy
-        end>
-      Caption = 'actIsCopy'
-    end
-    object mactInsertProfitLossService: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actIsCopyTrue
-        end
-        item
-          Action = actMasterPost
-        end
-        item
-          Action = actInsertProfitLossService
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
-      ImageIndex = 27
-    end
-    object actIsCopyTrue: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'isCopy'
-          FromParam.Value = False
-          FromParam.DataType = ftBoolean
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'isCopy'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'isCopy'
-          ToParam.DataType = ftBoolean
-          ToParam.MultiSelectSeparator = ','
-        end>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isCopy
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isCopy
-        end>
-      Caption = 'actIsCopyTrue'
-    end
-    object actInsertProfitLossService: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actInsertProfitLossService'
-      FormName = 'TProfitLossServiceForm'
-      FormNameParam.Value = 'TProfitLossServiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '-1'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementId_Value'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      IdFieldName = 'Id'
-    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -1101,10 +861,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Invoice
       StoredProcList = <
         item
-          StoredProc = spUpdate_Invoice
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
@@ -1174,23 +932,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object macUpdateContract: TMultiAction
-      Category = 'Update'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actChoiceContract
-        end
-        item
-          Action = actUpdateContract
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
-      ImageIndex = 43
     end
     object actOpenInvoiceForm: TdsdOpenForm
       Category = 'OpenForm'
@@ -1286,10 +1027,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertMask'
-        end
-        item
-          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -1360,8 +1097,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
     end
     object bbAddBonus: TdxBarButton
-      Action = mactInsertProfitLossService
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      Visible = ivAlways
+      ImageIndex = 27
     end
     object bbPrint: TdxBarButton
       Action = actPrint
@@ -1373,16 +1113,22 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ShortCut = 16465
     end
     object bbisCopy: TdxBarButton
-      Action = mactIsCopy
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
+      Visible = ivAlways
+      ImageIndex = 58
     end
     object bb: TdxBarButton
       Action = actOpenInvoiceForm
       Category = 0
     end
     object bbUpdateMoneyPlace: TdxBarButton
-      Action = macUpdateMoneyPlace
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
+      Visible = ivAlways
+      ImageIndex = 55
     end
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -1500,136 +1246,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 631
     Top = 232
-  end
-  object spUpdate_isCopy: TdsdStoredProc
-    StoredProcName = 'gpUpdateMovement_isCopy'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCopy'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'isCopy'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsCopy'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isCopy'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 464
-    Top = 243
-  end
-  object spUpdate_Invoice: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementLink_Invoice'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId '
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Invoice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId_Invoice'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMovementId_Invoice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId_Invoice'
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 792
-    Top = 153
-  end
-  object spUpdateContract: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_BankAccount_Contract'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId '
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ContractId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 904
-    Top = 169
-  end
-  object spUpdateJuridical: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_BankAccount_MoneyPlace'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId '
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMoneyPlaceId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'MoneyPlaceId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ContractId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 896
-    Top = 217
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchInvNumber_OrderClient
