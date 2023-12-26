@@ -36,6 +36,17 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не определено значение <УП статья назначения>.';
      END IF;
 
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inInvoiceKindId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Тип счета>.';
+     END IF;
+
+     -- проверка - свойство должно быть установлено
+     IF zfConvert_StringToNumber (inReceiptNumber) = 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Proforma()
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Invoice No>.';
+     END IF;
+
      -- Проверка
      IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
                                                  FROM ObjectLink AS ObjectLink_TaxKind
@@ -98,15 +109,17 @@ BEGIN
     -- сначала Parent
     IF inParentId > 0
     THEN
-         -- если меняют на другой документ
+         -- если меняют на другой документ - Заказ или Заказ
          IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.ParentId > 0 AND Movement.ParentId <> inParentId)
          THEN
              -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со Счетом
              PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), NULL);
          END IF;
 
-         -- если Счет уже есть
-         IF ioId > 0
+         -- если Счет уже создан, а у Заказа нет связи со счетом или это Счет
+         IF ioId > 0 AND (NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inParentId AND MLM.DescId = zc_MovementLinkMovement_Invoice())
+                       OR inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+                         )
          THEN
              -- в док. ParentId - это Заказ или Заказ сохраняеем связь со Счетом
              PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
@@ -154,8 +167,11 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 
-    -- если Счет был Создан
+    -- если Счет был Создан + у Заказа нет связи со счетом или это Счет
     IF vbIsInsert = TRUE AND inParentId > 0
+       AND (NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inParentId AND MLM.DescId = zc_MovementLinkMovement_Invoice())
+         OR inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+           )
     THEN
         -- в док. ParentId - это Заказ или Заказ сохраняеем связь со Счетом
         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);

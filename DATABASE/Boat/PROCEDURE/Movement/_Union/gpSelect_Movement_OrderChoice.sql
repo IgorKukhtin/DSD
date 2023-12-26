@@ -223,10 +223,15 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                       ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
                                      AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
-                                          ON MovementLinkObject_InfoMoney.MovementId = Movement_Invoice.Id
-                                         AND MovementLinkObject_InfoMoney.DescId     = zc_MovementLinkObject_InfoMoney()
-             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Client_InfoMoney
+                                  ON ObjectLink_Client_InfoMoney.ObjectId = Object_Object.Id
+                                 AND ObjectLink_Client_InfoMoney.DescId   = zc_ObjectLink_Client_InfoMoney()
+             LEFT JOIN ObjectLink AS ObjectLink_Partner_InfoMoney
+                                  ON ObjectLink_Partner_InfoMoney.ObjectId = Object_Object.Id
+                                 AND ObjectLink_Partner_InfoMoney.DescId   = zc_ObjectLink_Partner_InfoMoney()
+
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (ObjectLink_Client_InfoMoney.ChildObjectId, ObjectLink_Partner_InfoMoney.ChildObjectId)
 
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement.Id

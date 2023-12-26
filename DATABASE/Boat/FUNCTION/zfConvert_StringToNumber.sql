@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION zfConvert_StringToNumber(Number TVarChar)
 RETURNS Integer AS
 $BODY$
 BEGIN
-  RETURN Number :: Integer;
+  RETURN COALESCE (Number :: Integer, 0);
 EXCEPTION
   WHEN OTHERS THEN	
      RETURN 0;

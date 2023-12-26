@@ -177,7 +177,7 @@ BEGIN
            , ObjectDesc.ItemName
 
            , Movement_Invoice.Id AS MovementId_Invoice
-           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
+           , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, tmpInvoice_Params.ReceiptNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
            , Movement_Invoice.InvNumber        AS InvNumber_Invoice
              -- Заказ Клиента / Заказ Поставщику
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
