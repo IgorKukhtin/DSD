@@ -2,7 +2,7 @@ unit uFillDataSet;
 
 interface
 
-uses DB, SysUtils, DateUtils;
+uses DB, SysUtils, DateUtils, TypInfo;
 
 type
 
@@ -169,7 +169,7 @@ begin
               Move(LDateTimeValue, LRes[Length(LRes) - (SizeOf(LDateTimeValue) - 1)], SizeOf(LDateTimeValue));
             end
         else
-          raise Exception.Create('TFillDataSet.PackDataset: Wrong type');
+          raise Exception.Create('TFillDataSet.PackDataset: Field Name ' + LField.FieldName + '. Wrong type ' + GetEnumName(TypeInfo(TFieldType), ord(LField.DataType)));
         end;
     end;
     ADataSet.Next;

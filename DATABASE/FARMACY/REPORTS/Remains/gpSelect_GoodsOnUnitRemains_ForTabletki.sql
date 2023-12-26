@@ -1058,7 +1058,10 @@ BEGIN
                                                                                            ,'FM9999990.00')
                                ||'" Quantity="'||CAST((CASE WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 THEN RemainsDiscount.AmountDiscount ELSE Remains.Amount END - 
                                                        coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) AS TVarChar)
-                               ||'" PriceReserve="'||to_char(CASE WHEN COALESCE(Object_Price.Price, 0) > 0 AND COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
+                               ||'" PriceReserve="'||to_char(CASE WHEN COALESCE (tmpContainerCountPD.GoodsId, 0) = Remains.ObjectId 
+                                                            AND Remains.Amount <= tmpContainerCountPD.Remains
+                                                           THEN tmpContainerCountPD.PricePartionDate                                                           
+                                                           WHEN COALESCE(Object_Price.Price, 0) > 0 AND COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
                                                            THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Object_Price.Price < GoodsDiscount.MaxPrice
                                                                            THEN Object_Price.Price ELSE GoodsDiscount.MaxPrice END * (100 - GoodsDiscount.DiscountProcent) / 100, 1)
                                                            ELSE zfCalc_PriceCash(CASE WHEN COALESCE (PriceChange.PriceChange, 0) > 0 
@@ -1185,5 +1188,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 -- тест
 -- 
 
-Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(183292 ,'3') --  where RowData ILIKE '%Гептрал%'
-ORDER BY 1;
+Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(8156016 ,'3') --  where RowData ILIKE '%Гептрал%'
