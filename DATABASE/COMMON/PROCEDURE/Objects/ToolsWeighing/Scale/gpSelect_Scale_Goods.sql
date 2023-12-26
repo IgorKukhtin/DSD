@@ -1218,8 +1218,8 @@ BEGIN
                              OR (ObjectBoolean_Goods_Asset.ValueData = TRUE AND inBranchCode BETWEEN 301 AND 310)
                                )
                         )
-          , tmpPrice1 AS (SELECT tmpGoods.GoodsId
-                               , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS Price
+        , tmpPrice1_1 AS (SELECT tmpGoods.GoodsId
+                               , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
                           FROM tmpGoods
                                 INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                       ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpGoods.GoodsId
@@ -1239,9 +1239,36 @@ BEGIN
                                                              ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                             AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                           WHERE ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
+                            AND ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
                          )
-          , tmpPrice2 AS (SELECT tmpGoods.GoodsId
-                               , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS Price
+        , tmpPrice1_2 AS (SELECT tmpGoods.GoodsId
+                               , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
+                               , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
+                                 -- ¹ ï/ï
+                               , ROW_NUMBER() OVER (PARTITION BY tmpGoods.GoodsId, ObjectLink_PriceListItem_GoodsKind.ChildObjectId ORDER BY ObjectHistoryFloat_PriceListItem_Value.ValueData DESC) AS Ord
+                          FROM tmpGoods
+                                INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                      ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                     AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                      ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                     AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                                     AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                     ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                    AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                                LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                        ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                       AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                       AND inOperDate >= ObjectHistory_PriceListItem.StartDate AND inOperDate < ObjectHistory_PriceListItem.EndDate
+                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                             ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                            AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                          WHERE ObjectLink_PriceListItem_GoodsKind.ChildObjectId > 0
+                            AND ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
+                         )
+        , tmpPrice2_1 AS (SELECT tmpGoods.GoodsId
+                               , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
                           FROM tmpGoods
                                 INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                       ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpGoods.GoodsId
@@ -1262,6 +1289,34 @@ BEGIN
                                                              ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                             AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                           WHERE ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
+                            AND ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
+                         )
+        , tmpPrice2_2 AS (SELECT tmpGoods.GoodsId
+                               , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
+                               , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
+                                 -- ¹ ï/ï
+                               , ROW_NUMBER() OVER (PARTITION BY tmpGoods.GoodsId, ObjectLink_PriceListItem_GoodsKind.ChildObjectId ORDER BY ObjectHistoryFloat_PriceListItem_Value.ValueData DESC) AS Ord
+                          FROM tmpGoods
+                                INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                      ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                     AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                      ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                     AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                                     AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                     ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                    AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                                LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                        ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                       AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                       AND (inOperDate - (inDayPrior_PriceReturn :: TVarChar || ' DAY') :: INTERVAL) >= ObjectHistory_PriceListItem.StartDate
+                                                       AND (inOperDate - (inDayPrior_PriceReturn :: TVarChar || ' DAY') :: INTERVAL) < ObjectHistory_PriceListItem.EndDate
+                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                             ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                            AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                          WHERE ObjectLink_PriceListItem_GoodsKind.ChildObjectId > 0
+                            AND ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
                          )
           , tmpChangePercentAmount AS
                          (SELECT tmpGoods.GoodsId
@@ -1311,8 +1366,8 @@ BEGIN
                 , 0 :: TFloat AS Amount_diff
                 , 0 :: TFloat AS Amount_diffWeight
                 , FALSE :: Boolean AS isTax_diff
-                , lfObjectHistory_PriceListItem.Price        :: TFloat AS Price
-                , lfObjectHistory_PriceListItem_Return.Price :: TFloat AS Price_Return
+                , COALESCE (lfObjectHistory_PriceListItem.Price, lfObjectHistory_PriceListItem_2.Price, lfObjectHistory_PriceListItem_3.Price) :: TFloat AS Price
+                , COALESCE (lfObjectHistory_PriceListItem_Return.Price, lfObjectHistory_PriceListItem_Return_2.Price, lfObjectHistory_PriceListItem_Return_3.Price) :: TFloat AS Price_Return
                 , 1 :: TFloat                 AS CountForPrice
                 , 1 :: TFloat                 AS CountForPrice_Return
 
@@ -1369,8 +1424,17 @@ BEGIN
 
                 LEFT JOIN tmpChangePercentAmount ON tmpChangePercentAmount.GoodsId     = tmpGoods.GoodsId
 
-                LEFT JOIN tmpPrice1 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
-                LEFT JOIN tmpPrice2 AS lfObjectHistory_PriceListItem_Return ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId
+                LEFT JOIN tmpPrice1_1 AS lfObjectHistory_PriceListItem   ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+                LEFT JOIN tmpPrice1_2 AS lfObjectHistory_PriceListItem_2 ON lfObjectHistory_PriceListItem_2.GoodsId     = tmpGoods.GoodsId
+                                                                        AND lfObjectHistory_PriceListItem_2.GoodsKindId = tmpGoods.GoodsKindId_max :: Integer
+                LEFT JOIN tmpPrice1_2 AS lfObjectHistory_PriceListItem_3 ON lfObjectHistory_PriceListItem_3.GoodsId = tmpGoods.GoodsId
+                                                                        AND lfObjectHistory_PriceListItem_3.Ord     = 1
+
+                LEFT JOIN tmpPrice2_1 AS lfObjectHistory_PriceListItem_Return   ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId
+                LEFT JOIN tmpPrice2_2 AS lfObjectHistory_PriceListItem_Return_2 ON lfObjectHistory_PriceListItem_Return_2.GoodsId     = tmpGoods.GoodsId
+                                                                               AND lfObjectHistory_PriceListItem_Return_2.GoodsKindId = tmpGoods.GoodsKindId_max :: Integer
+                LEFT JOIN tmpPrice2_2 AS lfObjectHistory_PriceListItem_Return_3 ON lfObjectHistory_PriceListItem_Return_3.GoodsId = tmpGoods.GoodsId
+                                                                               AND lfObjectHistory_PriceListItem_Return_3.Ord     = 1
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                      ON ObjectLink_Goods_InfoMoney.ObjectId = tmpGoods.GoodsId
