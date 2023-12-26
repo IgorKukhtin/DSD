@@ -312,6 +312,9 @@ type
     actReport_Boat_Assembly: TdsdOpenForm;
     miiReport_Boat_Assembly: TMenuItem;
     N2: TMenuItem;
+    cxButton1: TcxButton;
+    actOrderClient_noDialog: TdsdOpenForm;
+    cxButton2: TcxButton;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private
