@@ -4948,6 +4948,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Visible = True
           ItemName = 'bbPrint_Group_cash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPacklist'
         end>
     end
     object bbBarSeparator: TdxBarSeparator
@@ -5041,6 +5045,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           Visible = True
           ItemName = 'bbDesadv'
         end>
+    end
+    object bbPrintPacklist: TdxBarButton
+      Action = macPrintPacklist
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

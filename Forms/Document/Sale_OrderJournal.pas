@@ -335,6 +335,7 @@ type
     bbsEdit: TdxBarSubItem;
     bbsUnLoad: TdxBarSubItem;
     bbsSend: TdxBarSubItem;
+    bbPrintPacklist: TdxBarButton;
   private
     { Private declarations }
   public

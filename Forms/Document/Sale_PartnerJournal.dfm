@@ -790,7 +790,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   inherited Panel: TPanel
     Width = 1165
     Height = 50
-    ExplicitLeft = 8
     ExplicitWidth = 1165
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
@@ -3436,6 +3435,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbsPrintGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsPrint'
         end
         item
@@ -3707,6 +3714,25 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Hint = 'Separator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbsPrintGroup: TdxBarSubItem
+      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 44
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPacklist'
+        end>
+    end
+    object bbPrintPacklist: TdxBarButton
+      Action = macPrintPacklist
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

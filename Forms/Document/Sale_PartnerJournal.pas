@@ -253,6 +253,8 @@ type
     bbUpdate_PriceList: TdxBarButton;
     bbsPrint: TdxBarSubItem;
     bbBarSeparator: TdxBarSeparator;
+    bbsPrintGroup: TdxBarSubItem;
+    bbPrintPacklist: TdxBarButton;
   private
     { Private declarations }
   public

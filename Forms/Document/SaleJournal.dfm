@@ -5124,6 +5124,10 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbPrint_Group_cash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPacklist'
         end>
     end
     object bbSeparator: TdxBarSeparator
