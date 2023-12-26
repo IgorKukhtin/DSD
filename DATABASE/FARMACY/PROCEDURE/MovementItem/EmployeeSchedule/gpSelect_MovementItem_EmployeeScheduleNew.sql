@@ -51,11 +51,11 @@ BEGIN
           , MIChild.Amount                                                               AS Day
           , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
           , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
-            THEN PayrollType_ShortName.ValueData  ELSE 'ัย' END                          AS PThortName
+            THEN PayrollType_ShortName.ValueData  ELSE 'ัย' END::TVarChar                AS PThortName
           , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
-            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END                 AS TimeStart
+            THEN TO_CHAR(MIDate_Start.ValueData, 'HH24:mi')  ELSE '' END::TVarChar       AS TimeStart
           , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
-            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
+            THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END::TVarChar         AS TimeEnd
           , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
           , ROW_NUMBER() OVER (PARTITION BY MIMaster.ID, MIChild.Amount
                                ORDER BY (COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) =
@@ -2105,4 +2105,3 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeScheduleNew (Integer, TDateTime, Bo
 -- select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 15869657 , inDate := ('01.10.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
 
 select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 26560770 , inDate := ('01.10.2022')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
-

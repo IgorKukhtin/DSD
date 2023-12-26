@@ -61,6 +61,10 @@ BEGIN
      -- если валюта не выбрана
      IF COALESCE (inCurrencyId, 0) NOT IN (0, zc_Enum_Currency_Basis())
      THEN 
+          -- проверка
+          IF COALESCE (inCurrencyPartnerValue, 0) = 0 THEN
+             RAISE EXCEPTION 'Ошибка.Должен быть введен курс для долга в валюте.';
+          END IF;
           -- если валюта выбрана по ioIsCalculated
           IF ioIsCalculated = TRUE
           THEN 

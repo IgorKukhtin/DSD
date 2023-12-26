@@ -12,10 +12,17 @@ RETURNS TABLE (ClientId Integer, ClientCode Integer, ClientName TVarChar
              , MovementId_OrderClient Integer, InvNumberFull_OrderClient TVarChar, InvNumber_OrderClient TVarChar, OperDate_OrderClient TDateTime
              , StateText TVarChar
              , StateText_Complete TVarChar
-             , DateBegin TDateTime  
+             , StateColor Integer
+
+             , DateBegin TDateTime
              , NPP_OrderClient Integer
-             , NPP_2 Integer  
+             , NPP_2 Integer
+
              , ProductName TVarChar
+             , ProdColorName TVarChar
+             , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
+             , EngineId Integer, EngineName TVarChar
+
              , ObjectId Integer
              , ObjectCode Integer
              , ObjectName TVarChar
@@ -26,7 +33,7 @@ RETURNS TABLE (ClientId Integer, ClientCode Integer, ClientName TVarChar
              , TotalCount  TFloat
              , Remains_111 TFloat
              , Remains_112 TFloat
-             , Amount      TFloat  
+             , Amount      TFloat
             --
              , Amount_111 TVarChar
              , Amount_112 TVarChar
@@ -38,7 +45,7 @@ RETURNS TABLE (ClientId Integer, ClientCode Integer, ClientName TVarChar
              , Amount_17  TVarChar
              , Amount_18  TVarChar
              , Amount_19  TVarChar
-          
+
               )
 AS
 $BODY$
@@ -57,9 +64,9 @@ BEGIN
                    FROM gpSelect_Object_Product (0, FALSE, FALSE, '') AS gpSelect
                   -- WHERE gpSelect.OperDate_OrderClient BETWEEN inStartDate AND inEndDate
                   )
-   -- комплектующие из док заказов    
+   -- комплектующие из док заказов
    , tmpGoods AS (
-                 SELECT                                                               
+                 SELECT
                         MovementItem.DescId                       AS DescId_mi
                         --MovementItem.Id                           AS MovementItemId
                       , MovementItem.MovementId                   AS MovementId
@@ -71,10 +78,10 @@ BEGIN
                         -- Комплектующие
                       , MovementItem.ObjectId                     AS ObjectId
                       , MovementItem.Amount                       AS Amount
-                      --, SUM (COALESCE (MovementItem.Amount,0)) OVER (PARTITION BY MovementItem.ObjectId) AS TotalAmount 
+                      --, SUM (COALESCE (MovementItem.Amount,0)) OVER (PARTITION BY MovementItem.ObjectId) AS TotalAmount
                       , COUNT (*) OVER (PARTITION BY MovementItem.MovementId) AS TotalCount
                       --, COUNT (*) OVER (PARTITION BY MovementItem.MovementId, MovementItem.DescId) AS TotalCount_mi
-                      
+
                       , ROW_NUMBER () OVER (PARTITION BY MovementItem.ObjectId ORDER BY tmp.NPP_2) AS Ord
                  FROM (SELECT DISTINCT tmpProduct.MovementId_OrderClient AS MovementId
                             , tmpProduct.NPP_2
@@ -95,11 +102,11 @@ BEGIN
                  )
    , tmpGoods_mi AS (SELECT tmpGoods.MovementId
                             , tmpGoods.ObjectId
-                          , SUM (COALESCE (tmpGoods_2.Amount,0))  AS Amount_total 
-                     FROM tmpGoods 
+                          , SUM (COALESCE (tmpGoods_2.Amount,0))  AS Amount_total
+                     FROM tmpGoods
                          LEFT JOIN tmpGoods AS tmpGoods_2
                                             ON tmpGoods_2.ObjectId = tmpGoods.ObjectId
-                                           AND tmpGoods_2.Ord < tmpGoods.Ord 
+                                           AND tmpGoods_2.Ord < tmpGoods.Ord
                      GROUP BY tmpGoods.MovementId
                             , tmpGoods.ObjectId
                             , tmpGoods.Amount
@@ -110,8 +117,8 @@ BEGIN
                                 -- Остаток кол-во
                                , SUM (COALESCE (Container.Amount,0))  AS Remains
                           FROM Container
-                           WHERE Container.DescId = zc_Container_Count() 
-                             AND Container.WhereObjectId = 35139      
+                           WHERE Container.DescId = zc_Container_Count()
+                             AND Container.WhereObjectId = 35139
                              AND Container.Amount <> 0
                           GROUP BY Container.ObjectId
                          )
@@ -120,13 +127,13 @@ BEGIN
                                 -- Остаток кол-во
                                , SUM (COALESCE (Container.Amount,0))  AS Remains
                           FROM Container
-                           WHERE Container.DescId = zc_Container_Count() 
-                             AND Container.WhereObjectId = 253868    
+                           WHERE Container.DescId = zc_Container_Count()
+                             AND Container.WhereObjectId = 253868
                              AND Container.Amount <> 0
                           GROUP BY Container.ObjectId
-                         )  
-   --узлы ПФ , чтоб посчитать сколько в заказе узлов пф   
-   --38874;12;"Участок изготовление  Стеклопластик ПФ"  
+                         )
+   --узлы ПФ , чтоб посчитать сколько в заказе узлов пф
+   --38874;12;"Участок изготовление  Стеклопластик ПФ"
    --253868;13;"Участок сборки Стеклопластик"
     -- все
    , tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
@@ -136,14 +143,14 @@ BEGIN
                               , Object_ReceiptGoods_find_View.isReceiptGoods
                                 -- Опция (да/нет) - Участвует в опциях
                               , Object_ReceiptGoods_find_View.isProdOptions
-                  
+
                                 -- в каком ОДНОМ Узле/Модель лодки Детали/узлы участвуют в сборке, т.е. что собирается
                               , Object_ReceiptGoods_find_View.GoodsId_receipt
                                 -- в каком ОДНОМ Узле/Модель лодки Детали/узлы участвуют в сборке, т.е. что собирается
                               , Object_ReceiptGoods_find_View.GoodsName_receipt
                                 -- в каких ВСЕХ Узлах/Моделях лодки Детали/узлы участвуют в сборке, т.е. что собирается
                               , Object_ReceiptGoods_find_View.GoodsName_receipt_all
-                  
+
                                 -- На каком участке происходит расход Узла/Детали на сборку
                               , Object_ReceiptGoods_find_View.UnitId_receipt
                               , Object_ReceiptGoods_find_View.UnitName_receipt
@@ -152,8 +159,8 @@ BEGIN
                               , Object_ReceiptGoods_find_View.UnitName_child_receipt
                                 -- На каком участке происходит сборка Узла
                               , Object_ReceiptGoods_find_View.UnitId_parent_receipt
-                              , Object_ReceiptGoods_find_View.UnitName_parent_receipt     --- ++ 
-       
+                              , Object_ReceiptGoods_find_View.UnitName_parent_receipt     --- ++
+
                          FROM Object_ReceiptGoods_find_View
                         )
 
@@ -195,20 +202,20 @@ BEGIN
                       --Заказ Клиента
                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                   ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()   
+                                                 AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                  GROUP BY tmpMovement.ToId
                         , tmpMovement.FromId
                         , MovementItem.ObjectId
                         , MIFloat_MovementId.ValueData
                 )
-    
-    
-    
-    -- 
+
+
+
+    --
    , tmpData AS (SELECT tmpGoods.MovementId
-                      , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END AS ObjectId 
+                      , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END AS ObjectId
                       , tmpGoods.TotalCount
-                      , SUM (CASE WHEN tmpGoods.DescId_mi = zc_MI_Child() THEN 1 ELSE 0 END)  AS TotalCount_mi 
+                      , SUM (CASE WHEN tmpGoods.DescId_mi = zc_MI_Child() THEN 1 ELSE 0 END)  AS TotalCount_mi
                       , SUM (CASE WHEN COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND UnitId_parent_receipt = 38874 THEN 1 ELSE 0 END)  AS TotalCount_13   --38874;12;"Участок изготовление  Стеклопластик ПФ"
                       , SUM (CASE WHEN COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND UnitId_parent_receipt = 253868 THEN 1 ELSE 0 END) AS TotalCount_14   --253868;13;"Участок сборки Стеклопластик"
                       , SUM (CASE WHEN COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND UnitId_parent_receipt = 38875  THEN 1 ELSE 0 END) AS TotalCount_15
@@ -227,71 +234,76 @@ BEGIN
                       , SUM (CASE WHEN COALESCE (tmpSend_17.Amount,0) > 0 THEN 1 ELSE 0 END) AS Count_17
                  FROM tmpGoods
                       LEFT JOIN tmpGoods_mi ON tmpGoods_mi.ObjectId = tmpGoods.ObjectId
-                                           AND tmpGoods_mi.MovementId = tmpGoods.MovementId   
-                      -- определить узлы 
-                      LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpGoods.ObjectId 
-                      
+                                           AND tmpGoods_mi.MovementId = tmpGoods.MovementId
+                      -- определить узлы
+                      LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpGoods.ObjectId
+
                       LEFT JOIN tmpContainer_111 ON tmpContainer_111.GoodsId = tmpGoods.ObjectId
-                      LEFT JOIN tmpContainer_112 ON tmpContainer_112.GoodsId = tmpGoods.ObjectId  
-                      
+                      LEFT JOIN tmpContainer_112 ON tmpContainer_112.GoodsId = tmpGoods.ObjectId
+
                       -- основной  - комплектующие
                       LEFT JOIN tmp_Send AS tmpSend_12
                                          ON tmpSend_12.GoodsId = tmpGoods.ObjectId
                                         AND tmpSend_12.MovementId_OrderClient = tmpGoods.MovementId
-                                        AND tmpSend_12.FromId = 35139 
+                                        AND tmpSend_12.FromId = 35139
                       -- Участок изготовление  Стеклопластик ПФ
                       LEFT JOIN tmp_Send AS tmpSend_13
                                          ON tmpSend_13.GoodsId = tmpGoods.GoodsId
-                                        AND tmpSend_13.MovementId_OrderClient = tmpGoods.MovementId 
+                                        AND tmpSend_13.MovementId_OrderClient = tmpGoods.MovementId
                                         AND tmpSend_13.FromId = 38874                               --"Участок изготовление  Стеклопластик ПФ
                                         AND COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND tmpReceiptGoods.UnitId_parent_receipt = 38874
                       --Участок сборки Стеклопластик
                       LEFT JOIN tmp_Send AS tmpSend_14
                                          ON tmpSend_14.GoodsId = tmpGoods.GoodsId
-                                        AND tmpSend_14.MovementId_OrderClient = tmpGoods.MovementId 
+                                        AND tmpSend_14.MovementId_OrderClient = tmpGoods.MovementId
                                         AND tmpSend_14.FromId = 253868                              --"Участок сборки Стеклопластик"
                                         AND COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND tmpReceiptGoods.UnitId_parent_receipt = 253868
 
                       --Участок сборки Hypalon
                       LEFT JOIN tmp_Send AS tmpSend_15
                                          ON tmpSend_15.GoodsId = tmpGoods.GoodsId
-                                        AND tmpSend_15.MovementId_OrderClient = tmpGoods.MovementId 
+                                        AND tmpSend_15.MovementId_OrderClient = tmpGoods.MovementId
                                         AND tmpSend_15.FromId = 38875                              --38875;14;"Участок сборки Hypalon"
                                         AND COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND tmpReceiptGoods.UnitId_parent_receipt = 38875
                       --Участок UPHOLSTERY
                       LEFT JOIN tmp_Send AS tmpSend_17
                                          ON tmpSend_17.GoodsId = tmpGoods.GoodsId
-                                        AND tmpSend_17.MovementId_OrderClient = tmpGoods.MovementId 
+                                        AND tmpSend_17.MovementId_OrderClient = tmpGoods.MovementId
                                         AND tmpSend_17.FromId = 253225                              --"253225 --"Участок UPHOLSTERY"
                                         AND COALESCE (tmpReceiptGoods.isReceiptGoods_group, FALSE) = TRUE AND tmpReceiptGoods.UnitId_parent_receipt = 253225
                  GROUP BY tmpGoods.MovementId
-                        , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END 
+                        , CASE WHEN inisGoods = TRUE THEN tmpGoods.ObjectId ELSE 0 END
                         , tmpGoods.TotalCount
                         --, CASE WHEN tmpGoods.DescId_mi = zc_MI_Child () THEN tmpGoods.TotalCount_mi ELSE 0 END
                 )
  --253225 --"Участок UPHOLSTERY"
  --38875;14;"Участок сборки Hypalon"
- 
+
      SELECT
             tmpProduct.ClientId
           , tmpProduct.ClientCode
           , tmpProduct.ClientName
           , tmpProduct.TaxKindName_Client
           , tmpProduct.MovementId_OrderClient
-          , tmpProduct.InvNumberFull_OrderClient 
+          , tmpProduct.InvNumberFull_OrderClient
           , tmpProduct.InvNumber_OrderClient
           , tmpProduct.OperDate_OrderClient
-         
+
           , tmpProduct.StateText
           , CASE WHEN tmpProduct.StateText = 'Готова' THEN 'Completed'
-                 ELSE '' 
+                 ELSE ''
             END :: TVarChar AS StateText_Complete
-          , tmpProduct.DateBegin  
+          , tmpProduct.StateColor
+
+          , tmpProduct.DateBegin
           , tmpProduct.NPP_OrderClient
-          , tmpProduct.NPP_2 
-          
+          , tmpProduct.NPP_2
+
           , tmpProduct.Name AS ProductName
-          
+          , tmpProduct.ProdColorName
+          , tmpProduct.ModelId, tmpProduct.ModelName, tmpProduct.ModelName_full
+          , tmpProduct.EngineId, tmpProduct.EngineName
+
           , Object_Object.Id         AS ObjectId
           , Object_Object.ObjectCode AS ObjectCode
           , Object_Object.ValueData  AS ObjectName
@@ -301,7 +313,7 @@ BEGIN
             --
           , tmpData.TotalCount :: TFloat
           , tmpData.Remains_111    :: TFloat
-          , tmpData.Remains_112    :: TFloat 
+          , tmpData.Remains_112    :: TFloat
           , tmpData.Amount     :: TFloat
           --
           , (''||tmpData.Count_111 ||' из '|| tmpData.TotalCount)::TVarChar AS Amount_111
@@ -317,7 +329,7 @@ BEGIN
 
    FROM tmpProduct
        LEFT JOIN tmpData ON tmpData.MovementId = tmpProduct.MovementId_OrderClient
-       LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpData.ObjectId 
+       LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpData.ObjectId
 
        LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                               ON ObjectString_GoodsGroupFull.ObjectId = tmpData.ObjectId
@@ -341,6 +353,5 @@ $BODY$
 */
 
 -- тест
--- 
---SELECT * FROM gpReport_Boat_Assembly(inisGoods := false ,  inSession := '5')
---where MovementId_OrderClient = 708;
+--
+--SELECT * FROM gpReport_Boat_Assembly(inisGoods := false ,  inSession := '5') --where MovementId_OrderClient = 708;

@@ -358,8 +358,41 @@ BEGIN
             , COALESCE(ObjectFloat_ProdColor_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
             , Object_Partner.Id                  AS PartnerId
             , Object_Partner.ValueData           AS PartnerName
+
             , Object_Unit.Id                     AS UnitId
-            , Object_Unit.ValueData              AS UnitName
+            --, Object_Unit.ValueData              AS UnitName
+     
+            , CASE -- узел Стеклопластик + Опция
+                   WHEN tmpReceiptGoods.isReceiptGoods_group = TRUE AND tmpReceiptGoods.isProdOptions = TRUE
+                        -- Склад Основной
+                        THEN lfGet_Object_ValueData_sh (35139)
+
+                   -- Опция
+                   WHEN tmpReceiptGoods.isProdOptions = TRUE
+                        -- Склад Основной
+                        THEN lfGet_Object_ValueData_sh (35139)
+
+                   -- узел
+                   WHEN tmpReceiptGoods.isReceiptGoods_group = TRUE
+                        -- Склад Основной
+                        THEN lfGet_Object_ValueData_sh (35139)
+
+                   -- Деталь + НЕ Узел + есть Unit-ПФ
+                   WHEN tmpReceiptGoods.isReceiptGoods = TRUE AND tmpReceiptGoods.isReceiptGoods_group = FALSE AND tmpReceiptGoods.UnitName_child_receipt <> ''
+                        THEN tmpReceiptGoods.UnitName_child_receipt
+
+                   -- Участок сборки Hypalon
+                   WHEN tmpReceiptGoods.UnitId_receipt = 38875
+                        THEN tmpReceiptGoods.UnitName_receipt
+
+                   -- Участок UPHOLSTERY
+                   WHEN tmpReceiptGoods.UnitId_receipt = 253225
+                        THEN tmpReceiptGoods.UnitName_receipt
+
+                   -- Склад Основной
+                   ELSE lfGet_Object_ValueData_sh (35139)
+
+              END  :: TVarChar AS UnitName
 
               -- На каком участке происходит расход Узла/Детали на сборку
             , tmpReceiptGoods.UnitName_receipt

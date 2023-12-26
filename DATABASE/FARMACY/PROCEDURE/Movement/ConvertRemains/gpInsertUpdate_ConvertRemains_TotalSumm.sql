@@ -28,7 +28,7 @@ BEGIN
       WHERE MovementItem.MovementId = inMovementId
         AND MovementItem.isErased = FALSE
         AND MovementItem.Amount > 0 
-        AND COALESCE(MIString_Comment.ValueData , '') = ''
+        --AND COALESCE(MIString_Comment.ValueData , '') = ''
         AND MovementItem.DescId = zc_MI_Master();
 
       -- Сохранили свойство <Итого количество>
@@ -46,3 +46,5 @@ ALTER FUNCTION gpInsertUpdate_ConvertRemains_TotalSumm (Integer, TVarChar) OWNER
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  25.10.2023                                                     *
 */
+
+-- select From gpInsertUpdate_ConvertRemains_TotalSumm (34334044, '3');

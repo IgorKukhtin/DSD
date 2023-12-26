@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster(
     IN inComment             TVarChar  , -- Примечание
     IN inModelServiceId      Integer   , -- Модели начисления
     IN inFromId              Integer   , -- Подразделения(От кого)
-    IN inToId                Integer   , -- Подразделения(Кому) 	
+    IN inToId                Integer   , -- Подразделения(Кому)
     IN inSelectKindId        Integer   , -- Тип выбора данных
     IN inDocumentKindId      Integer   , -- Тип выбора данных
     IN inSession             TVarChar    -- сессия пользователя
@@ -26,6 +26,7 @@ BEGIN
 
    -- проверка прав
    IF NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_ModelService())
+      AND vbUserId <> 5
    THEN
         RAISE EXCEPTION 'Ошибка.%Нет прав корректировать = <%>.'
                       , CHR (13)
@@ -35,16 +36,16 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ModelServiceItemMaster(), 0, '');
-   
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ModelServiceItemMaster_MovementDesc(), ioId, inMovementDescId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ModelServiceItemMaster_Ratio(), ioId, inRatio);
-   -- сохранили свойство <>   
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ModelServiceItemMaster_Comment(), ioId, inComment);
-   
+
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemMaster_ModelService(), ioId, inModelServiceId);   
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemMaster_ModelService(), ioId, inModelServiceId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemMaster_From(), ioId, inFromId);
    -- сохранили связь с <>
@@ -59,20 +60,16 @@ BEGIN
 
 END;
 $BODY$
+  LANGUAGE PLPGSQL VOLATILE;
 
-LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster (Integer,  TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
-
-  
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  17.06.16         * DocumentKind
  21.11.13                                        * inMovementDesc -> inMovementDescId
- 19.10.13         * 
+ 19.10.13         *
 
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ModelServiceItemMaster (0,  198, 2, 1000, 1, 5, 6, '2')
-    

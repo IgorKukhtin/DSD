@@ -1,7 +1,7 @@
 ﻿object Report_WageWarehouseBranchForm: TReport_WageWarehouseBranchForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1047#1055' '#1089#1082#1083#1072#1076'  '#1092#1080#1083#1080#1072#1083'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1047#1055' '#1057#1082#1083#1072#1076'  '#1092#1080#1083#1080#1072#1083'>'
   ClientHeight = 496
   ClientWidth = 1295
   Color = clBtnFace
@@ -25,7 +25,6 @@
     Height = 412
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 48
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -289,231 +288,231 @@
         Width = 180
       end
       object CountMovement_1: TcxGridDBColumn
-        Caption = #1076#1086#1082#1091#1084#1077#1085#1090
+        Caption = '1.1. '#1044#1086#1082#1091#1084#1077#1085#1090
         DataBinding.FieldName = 'CountMovement_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103' - '#1073#1072#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
         Options.Editing = False
         Width = 70
       end
       object CountMovement_1_koef: TcxGridDBColumn
-        Caption = #1076#1086#1082#1091#1084#1077#1085#1090'*'
+        Caption = '1.1. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'CountMovement_1_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
         Options.Editing = False
         Width = 70
       end
       object CountMI_1: TcxGridDBColumn
-        Caption = #1072#1088#1090#1080#1082#1091#1083
+        Caption = '1.2. '#1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'CountMI_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103' - '#1073#1072#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1089#1090#1088#1086#1082
         Options.Editing = False
         Width = 70
       end
       object CountMI_1_koef: TcxGridDBColumn
-        Caption = #1072#1088#1090#1080#1082#1091#1083'*'
+        Caption = '1.2. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'CountMI_1_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1089#1090#1088#1086#1082
         Options.Editing = False
         Width = 70
       end
       object TotalCountKg_1: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075
+        Caption = '1.3. '#1042#1077#1089','#1082#1075
         DataBinding.FieldName = 'TotalCountKg_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103' - '#1073#1072#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Options.Editing = False
         Width = 70
       end
       object TotalCountKg_1_koef: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075'*'
+        Caption = '1.3. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalCountKg_1_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Options.Editing = False
         Width = 70
       end
       object TotalCountStick_2: TcxGridDBColumn
-        Caption = #1082'-'#1074#1086' '#1089#1090#1080#1082#1077#1088#1086#1074
+        Caption = '2. '#1050#1086#1083'-'#1074#1086' '#1057#1090#1080#1082#1077#1088#1086#1074
         DataBinding.FieldName = 'TotalCountStick_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1090#1080#1082#1077#1088#1086#1074#1082#1072
+        HeaderHint = #1057#1090#1080#1082#1077#1088#1086#1074#1082#1072' - '#1073#1072#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1059#1087#1072#1082#1086#1074#1086#1082
         Options.Editing = False
         Width = 70
       end
       object TotalCountStick_2_koef: TcxGridDBColumn
-        Caption = #1082'-'#1074#1086' '#1089#1090#1080#1082#1077#1088#1086#1074'*'
+        Caption = '2. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalCountStick_2_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1090#1080#1082#1077#1088#1086#1074#1082#1072
+        HeaderHint = #1057#1090#1080#1082#1077#1088#1086#1074#1082#1072' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1059#1087#1072#1082#1086#1074#1086#1082
         Options.Editing = False
         Width = 70
       end
       object CountMovement1_3: TcxGridDBColumn
-        Caption = #1076#1086#1082#1091#1084#1077#1085#1090
+        Caption = '3.1. '#1044#1086#1082#1091#1084#1077#1085#1090
         DataBinding.FieldName = 'CountMovement1_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103
+        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103' - '#1073#1072#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
         Width = 70
       end
       object CountMovement1_3_koef: TcxGridDBColumn
-        Caption = #1076#1086#1082#1091#1084#1077#1085#1090'*'
+        Caption = '3.1. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'CountMovement1_3_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103
+        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
         Width = 70
       end
       object CountMI1_3: TcxGridDBColumn
-        Caption = #1072#1088#1090#1080#1082#1091#1083
+        Caption = '3.2. '#1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'CountMI1_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103
+        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103' - '#1073#1072#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1089#1090#1088#1086#1082
         Width = 70
       end
       object CountMI1_3_koef: TcxGridDBColumn
-        Caption = #1072#1088#1090#1080#1082#1091#1083'*'
+        Caption = '3.2. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'CountMI1_3_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103
+        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1089#1090#1088#1086#1082
         Width = 70
       end
       object TotalCountKg1_3: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075
+        Caption = '3.3. '#1042#1077#1089','#1082#1075
         DataBinding.FieldName = 'TotalCountKg1_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103
+        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103' - '#1073#1072#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Width = 70
       end
       object TotalCountKg1_3_koef: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075'*'
+        Caption = '3.3. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalCountKg1_3_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103
+        HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077'+'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Width = 70
       end
       object CountMovement1_4: TcxGridDBColumn
-        Caption = #1076#1086#1082#1091#1084#1077#1085#1090
+        Caption = '4.1. '#1044#1086#1082#1091#1084#1077#1085#1090
         DataBinding.FieldName = 'CountMovement1_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1047#1072#1087#1086#1088#1086#1078#1100#1077
+        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1085#1072' '#1092#1080#1083#1080#1072#1083' - '#1073#1072#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
         Width = 70
       end
       object CountMovement1_4_koef: TcxGridDBColumn
-        Caption = #1076#1086#1082#1091#1084#1077#1085#1090'*'
+        Caption = '4.1. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'CountMovement1_4_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1047#1072#1087#1086#1088#1086#1078#1100#1077
+        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1085#1072' '#1092#1080#1083#1080#1072#1083' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1082#1086#1083'-'#1074#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
         Width = 70
       end
       object TotalCountKg1_4: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075
+        Caption = '4.2. '#1042#1077#1089','#1082#1075
         DataBinding.FieldName = 'TotalCountKg1_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1047#1072#1087#1086#1088#1086#1078#1100#1077
+        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1085#1072' '#1092#1080#1083#1080#1072#1083' - '#1073#1072#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Width = 70
       end
       object TotalCountKg1_4_koef: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075'*'
+        Caption = '4.2. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalCountKg1_4_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1047#1072#1087#1086#1088#1086#1078#1100#1077
+        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1085#1072' '#1092#1080#1083#1080#1072#1083' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Width = 70
       end
       object TotalCountKg1_5: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075
+        Caption = '5. '#1042#1077#1089','#1082#1075
         DataBinding.FieldName = 'TotalCountKg1_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1044#1085#1077#1087#1088
+        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1044#1085#1077#1087#1088' - '#1073#1072#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Width = 70
       end
       object TotalCountKg1_5_koef: TcxGridDBColumn
-        Caption = #1074#1077#1089', '#1082#1075'*'
+        Caption = '5. '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalCountKg1_5_koef'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.#;-,0.#; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1044#1085#1077#1087#1088
+        HeaderHint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1074' '#1044#1085#1077#1087#1088' - '#1057#1091#1084#1084#1072' '#1079#1072' '#1042#1077#1089' '#1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
         Width = 70
       end
     end
@@ -591,8 +590,8 @@
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
     object vbKoef_11: TcxCurrencyEdit
-      Left = 708
-      Top = 30
+      Left = 807
+      Top = 5
       EditValue = 0.100000000000000000
       Properties.AssignedValues.DisplayFormat = True
       Properties.DecimalPlaces = 2
@@ -602,13 +601,13 @@
       Width = 35
     end
     object Код: TcxLabel
-      Left = 731
-      Top = 7
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+      Left = 714
+      Top = 8
+      Caption = '1.'#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103':'
     end
     object vbKoef_12: TcxCurrencyEdit
-      Left = 749
-      Top = 30
+      Left = 846
+      Top = 5
       EditValue = 0.300000000000000000
       Properties.AssignedValues.DisplayFormat = True
       Properties.DecimalPlaces = 2
@@ -618,8 +617,8 @@
       Width = 35
     end
     object vbKoef_13: TcxCurrencyEdit
-      Left = 790
-      Top = 30
+      Left = 885
+      Top = 5
       EditValue = 0.150000000000000000
       Properties.AssignedValues.DisplayFormat = True
       Properties.DecimalPlaces = 2
@@ -629,17 +628,17 @@
       Width = 35
     end
     object cxLabel7: TcxLabel
-      Left = 841
-      Top = 7
-      Caption = #1057#1090#1080#1082#1077#1088'.'
+      Left = 998
+      Top = 8
+      Caption = '2.'#1057#1090#1080#1082#1077#1088':'
     end
     object cxLabel8: TcxLabel
-      Left = 905
-      Top = 7
-      Caption = #1042#1079#1074#1077#1096#1080#1074'.+'#1076#1086#1082#1091#1084#1077#1085'.'
+      Left = 709
+      Top = 31
+      Caption = '3.'#1042#1079#1074#1077#1096#1080#1074'.+'#1076#1086#1082'.:'
     end
     object vbKoef_31: TcxCurrencyEdit
-      Left = 900
+      Left = 807
       Top = 30
       EditValue = 0.400000000000000000
       Properties.AssignedValues.DisplayFormat = True
@@ -650,7 +649,7 @@
       Width = 35
     end
     object vbKoef_32: TcxCurrencyEdit
-      Left = 941
+      Left = 845
       Top = 30
       EditValue = 0.300000000000000000
       Properties.AssignedValues.DisplayFormat = True
@@ -661,7 +660,7 @@
       Width = 35
     end
     object vbKoef_33: TcxCurrencyEdit
-      Left = 982
+      Left = 885
       Top = 30
       EditValue = 0.220000000000000000
       Properties.AssignedValues.DisplayFormat = True
@@ -672,9 +671,9 @@
       Width = 35
     end
     object cxLabel9: TcxLabel
-      Left = 1036
-      Top = 7
-      Caption = #1042#1086#1079#1074#1088'. '#1060#1080#1083#1080#1072#1083
+      Left = 930
+      Top = 31
+      Caption = '4.'#1042#1086#1079#1074#1088#1072#1090#1099' '#1085#1072' '#1060#1080#1083#1080#1072#1083':'
     end
   end
   object cxLabel1: TcxLabel
@@ -695,12 +694,12 @@
     Width = 198
   end
   object cxLabel2: TcxLabel
-    Left = 1134
-    Top = 7
-    Caption = #1042#1086#1079#1074#1088'. '#1085#1072' '#1044#1085#1077#1087#1088
+    Left = 1141
+    Top = 31
+    Caption = '5.'#1042#1086#1079#1074#1088'. '#1085#1072' '#1044#1085#1077#1087#1088':'
   end
   object vbKoef_41: TcxCurrencyEdit
-    Left = 1038
+    Left = 1055
     Top = 30
     EditValue = 0.400000000000000000
     Properties.AssignedValues.DisplayFormat = True
@@ -711,7 +710,7 @@
     Width = 35
   end
   object vbKoef_42: TcxCurrencyEdit
-    Left = 1079
+    Left = 1093
     Top = 30
     EditValue = 0.200000000000000000
     Properties.AssignedValues.DisplayFormat = True
@@ -722,18 +721,18 @@
     Width = 35
   end
   object vbKoef_22: TcxCurrencyEdit
-    Left = 844
-    Top = 30
+    Left = 1054
+    Top = 5
     EditValue = 0.100000000000000000
     Properties.AssignedValues.DisplayFormat = True
     Properties.DecimalPlaces = 2
-    TabOrder = 9
+    TabOrder = 7
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 35
   end
   object vbKoef_43: TcxCurrencyEdit
-    Left = 1155
+    Left = 1244
     Top = 30
     EditValue = 0.200000000000000000
     Properties.AssignedValues.DisplayFormat = True

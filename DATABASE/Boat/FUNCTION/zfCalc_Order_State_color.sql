@@ -36,7 +36,10 @@ BEGIN
                    WHEN inNPP > 0
                    THEN zc_Color_Pink() --'Планируется'
 
-                   ELSE zc_Color_White() --''
+                   WHEN inNPP = 0
+                   THEN zc_Color_White() -- 'Не запланировано'
+
+                   ELSE zc_Color_Red() --'Удален'
 
                END
             );

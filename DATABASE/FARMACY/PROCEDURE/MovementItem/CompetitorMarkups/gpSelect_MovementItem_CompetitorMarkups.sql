@@ -35,7 +35,7 @@ BEGIN
                           AND MovementItem.DescId     = zc_MI_Child()
                           AND (MovementItem.isErased  = false OR inIsErased = TRUE))
                           
-      SELECT ROW_NUMBER() OVER(ORDER BY Object_Competitor.ValueData) as ID
+      SELECT (ROW_NUMBER() OVER(ORDER BY Object_Competitor.ValueData))::Integer as ID
            , tmpCompetitor.CompetitorId
            , Object_Competitor.ObjectCode          AS CompetitorCode
            , Object_Competitor.ValueData           AS CompetitorName
@@ -240,4 +240,5 @@ $BODY$
  05.05.22                                                        *
 */
 -- 
-select * from gpSelect_MovementItem_CompetitorMarkups(inMovementId := 24892120 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_CompetitorMarkups(inMovementId := 34229895 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

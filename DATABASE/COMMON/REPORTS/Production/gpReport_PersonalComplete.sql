@@ -40,7 +40,7 @@ RETURNS TABLE (InvNumber TVarChar
              , CountMI1        TFloat   -- Кол. строк (клдв)
              , CountMovement1  TFloat   -- Кол. док. (клдв)
 
-             , TotalCountStick TFloat   -- Количество шт. (стикеровщик)
+             , TotalCountStick TFloat   -- Количество шт. (стикеровщик) - Кол-во Упаковок (пакетов)
 
              , BranchName  TVarChar
              , FromId Integer, ToId  Integer

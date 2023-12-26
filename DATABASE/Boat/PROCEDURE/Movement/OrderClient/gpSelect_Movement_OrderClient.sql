@@ -312,7 +312,12 @@ BEGIN
 
                -- Состояние
              , zfCalc_Order_State (CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END
-                                 , Movement_OrderClient.NPP
+                                 , CASE WHEN Movement_OrderClient.StatusId = zc_Enum_Status_Complete()
+                                             THEN Movement_OrderClient.NPP
+                                        WHEN Movement_OrderClient.StatusId = zc_Enum_Status_UnComplete()
+                                             THEN 0
+                                        ELSE -1
+                                   END :: Integer
                                  , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
                                  , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
                                  , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
@@ -320,7 +325,12 @@ BEGIN
                                   ) AS StateText
                -- все состояния подсветить
              , zfCalc_Order_State_color (CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END
-                                       , Movement_OrderClient.NPP
+                                       , CASE WHEN Movement_OrderClient.StatusId = zc_Enum_Status_Complete()
+                                                   THEN Movement_OrderClient.NPP
+                                              WHEN Movement_OrderClient.StatusId = zc_Enum_Status_UnComplete()
+                                                   THEN 0
+                                              ELSE -1
+                                         END :: Integer
                                        , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
                                        , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
                                        , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
