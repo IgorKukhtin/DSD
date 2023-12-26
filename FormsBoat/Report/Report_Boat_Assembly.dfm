@@ -3,6 +3,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
   ClientHeight = 346
   ClientWidth = 1071
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -177
   ExplicitWidth = 1087
   ExplicitHeight = 385
   PixelsPerInch = 96
@@ -252,28 +253,30 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             Width = 80
           end
           object Amount_111: TcxGridDBColumn
-            Caption = '1.1.1 '#1054#1089#1090'. '#1082#1086#1084#1087#1083'.'
+            Caption = '1.1.1 '#1054#1089#1090'. '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
             DataBinding.FieldName = 'Amount_111'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' <'#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081'>'
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1076#1077#1090#1072#1083#1077#1081' '#1085#1072' <'#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081'>'
             Options.Editing = False
             Width = 80
           end
           object Amount_112: TcxGridDBColumn
-            Caption = '1.1.2. '#1054#1089#1090'. '#1082#1086#1084#1087#1083'.'
+            Caption = '1.1.2. '#1054#1089#1090'. '#1059#1095#1072#1089#1090#1086#1082' '#1055#1060
             DataBinding.FieldName = 'Amount_112'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' <'#1059#1095#1072#1089#1090#1086#1082' '#1080#1079#1075#1086#1090#1086#1074#1083#1077#1085#1080#1077' '#1057#1090#1077#1082#1083#1086#1087#1083#1072#1089#1090#1080#1082' '#1055#1060'>'
+            HeaderHint = #1054#1089#1090#1072#1090#1082#1080' '#1089#1099#1088#1100#1103' '#1085#1072' <'#1059#1095#1072#1089#1090#1086#1082' '#1080#1079#1075#1086#1090#1086#1074#1083#1077#1085#1080#1077' '#1057#1090#1077#1082#1083#1086#1087#1083#1072#1089#1090#1080#1082' '#1055#1060'>'
             Width = 85
           end
           object Amount_12: TcxGridDBColumn
-            Caption = '1.2. '#1055#1077#1088#1077#1084#1077#1097'. '#1082#1086#1084#1087#1083'.'
+            Caption = '1.2. '#1055#1077#1088#1077#1084#1077#1097'. '#1076#1077#1090#1072#1083#1077#1081
             DataBinding.FieldName = 'Amount_12'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = 
+              #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1076#1077#1090#1072#1083#1077#1081' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054 +
+              #1089#1085#1086#1074#1085#1086#1081
             Width = 70
           end
           object Amount_13: TcxGridDBColumn
@@ -281,7 +284,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             DataBinding.FieldName = 'Amount_13'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054#1089#1085#1086#1074#1085#1086#1081
             Width = 70
           end
           object Amount_14: TcxGridDBColumn
@@ -289,7 +292,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             DataBinding.FieldName = 'Amount_14'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054#1089#1085#1086#1074#1085#1086#1081
             Width = 70
           end
           object Amount_15: TcxGridDBColumn
@@ -297,7 +300,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             DataBinding.FieldName = 'Amount_15'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054#1089#1085#1086#1074#1085#1086#1081
             Width = 85
           end
           object Amount_16: TcxGridDBColumn
@@ -305,7 +308,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             DataBinding.FieldName = 'Amount_16'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054#1089#1085#1086#1074#1085#1086#1081
             Options.Editing = False
             Width = 70
           end
@@ -314,7 +317,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             DataBinding.FieldName = 'Amount_17'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054#1089#1085#1086#1074#1085#1086#1081
             Options.Editing = False
             Width = 90
           end
@@ -323,7 +326,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             DataBinding.FieldName = 'Amount_18'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054#1089#1085#1086#1074#1085#1086#1081
             Options.Editing = False
             Width = 70
           end
@@ -332,7 +335,7 @@ inherited Report_Boat_AssemblyForm: TReport_Boat_AssemblyForm
             DataBinding.FieldName = 'Amount_19'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1086#1089#1090#1072#1090#1082#1072' '#1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081' -> '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1054#1089#1085#1086#1074#1085#1086#1081
             Options.Editing = False
             Width = 70
           end
