@@ -3,8 +3,8 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1047#1055' '#1089#1082#1083#1072#1076'  '#1092#1080#1083#1080#1072#1083'>'
-  ClientHeight = 215
-  ClientWidth = 388
+  ClientHeight = 212
+  ClientWidth = 397
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 80
-    Top = 174
+    Top = 169
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
   end
   object cxButton2: TcxButton
     Left = 254
-    Top = 174
+    Top = 169
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,7 +37,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 232
+    Left = 217
     Top = 6
     EditValue = 42005d
     Properties.ShowTime = False
@@ -45,7 +45,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
     Width = 82
   end
   object deStart: TcxDateEdit
-    Left = 77
+    Left = 62
     Top = 6
     EditValue = 42005d
     Properties.ShowTime = False
@@ -54,7 +54,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
   end
   object edPosition: TcxButtonEdit
     Left = 98
-    Top = 81
+    Top = 76
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
   end
   object edPersonal: TcxButtonEdit
     Left = 98
-    Top = 119
+    Top = 114
     Properties.Buttons = <
       item
         Default = True
@@ -78,32 +78,32 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 85
+    Top = 80
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
   end
   object cxLabel1: TcxLabel
     Left = 11
-    Top = 120
+    Top = 115
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
   end
   object cxLabel6: TcxLabel
-    Left = 26
+    Left = 11
     Top = 7
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel7: TcxLabel
-    Left = 174
+    Left = 159
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 50
+    Top = 45
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit
     Left = 98
-    Top = 50
+    Top = 45
     Properties.Buttons = <
       item
         Default = True
@@ -113,15 +113,23 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
     TabOrder = 11
     Width = 250
   end
+  object cbinIsDay: TcxCheckBox
+    Left = 315
+    Top = 6
+    Caption = #1087#1086' '#1076#1085#1103#1084
+    Properties.ReadOnly = False
+    TabOrder = 12
+    Width = 65
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 355
-    Top = 152
+    Top = 147
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 352
-    Top = 42
+    Top = 37
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -134,7 +142,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 291
-    Top = 134
+    Top = 129
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -208,6 +216,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
       item
         Name = 'inIsDay'
         Value = Null
+        Component = cbinIsDay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -234,7 +243,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
         MultiSelectSeparator = ','
       end>
     Left = 27
-    Top = 138
+    Top = 133
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -264,7 +273,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
         MultiSelectSeparator = ','
       end>
     Left = 150
-    Top = 110
+    Top = 105
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -309,7 +318,7 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
         MultiSelectSeparator = ','
       end>
     Left = 245
-    Top = 74
+    Top = 69
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -340,6 +349,6 @@ object Report_WageWarehouseBranchDialogForm: TReport_WageWarehouseBranchDialogFo
         MultiSelectSeparator = ','
       end>
     Left = 126
-    Top = 36
+    Top = 31
   end
 end

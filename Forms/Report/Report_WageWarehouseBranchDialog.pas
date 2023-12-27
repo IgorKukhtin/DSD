@@ -42,6 +42,7 @@ type
     cxLabel2: TcxLabel;
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
+    cbinIsDay: TcxCheckBox;
   private
     { Private declarations }
   public

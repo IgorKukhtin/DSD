@@ -12,7 +12,7 @@
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
@@ -255,6 +255,14 @@
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -546,7 +554,7 @@
       Width = 85
     end
     object edPersonal: TcxButtonEdit
-      Left = 234
+      Left = 473
       Top = 5
       Properties.Buttons = <
         item
@@ -558,12 +566,12 @@
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 171
+      Left = 406
       Top = 6
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
     end
     object edPosition: TcxButtonEdit
-      Left = 234
+      Left = 473
       Top = 30
       Properties.Buttons = <
         item
@@ -575,8 +583,8 @@
       Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 171
-      Top = 29
+      Left = 405
+      Top = 31
       Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
     end
     object cxLabel5: TcxLabel
@@ -675,15 +683,23 @@
       Top = 31
       Caption = '4.'#1042#1086#1079#1074#1088#1072#1090#1099' '#1085#1072' '#1060#1080#1083#1080#1072#1083':'
     end
+    object cbIsDay: TcxCheckBox
+      Left = 167
+      Top = 29
+      Action = actIsDay
+      Properties.ReadOnly = False
+      TabOrder = 18
+      Width = 74
+    end
   end
   object cxLabel1: TcxLabel
-    Left = 449
+    Left = 151
     Top = 6
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit
-    Left = 494
-    Top = 5
+    Left = 197
+    Top = 3
     Properties.Buttons = <
       item
         Default = True
@@ -935,11 +951,30 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = gpGet_Koeff
+      StoredProcList = <
+        item
+          StoredProc = gpGet_Koeff
+        end
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spReport
+      StoredProc = gpGet_Koeff
       StoredProcList = <
+        item
+          StoredProc = gpGet_Koeff
+        end
         item
           StoredProc = spReport
         end>
@@ -1039,6 +1074,7 @@
         item
           Name = 'inIsDay'
           Value = Null
+          Component = cbIsDay
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1405,6 +1441,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsDay'
+        Value = Null
+        Component = cbIsDay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inKoef_11'
         Value = Null
         Component = vbKoef_11
@@ -1542,8 +1586,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 16
+    Left = 400
+    Top = 65528
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -1757,8 +1801,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 272
+    Left = 672
+    Top = 264
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -1790,5 +1834,124 @@
       end>
     Left = 560
     Top = 16
+  end
+  object gpGet_Koeff: TdsdStoredProc
+    StoredProcName = 'GetReport_WageWarehouseBranch'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = PositionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_11'
+        Value = Null
+        Component = vbKoef_11
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_12'
+        Value = Null
+        Component = vbKoef_12
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_13'
+        Value = Null
+        Component = vbKoef_13
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_22'
+        Value = Null
+        Component = vbKoef_22
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_31'
+        Value = Null
+        Component = vbKoef_31
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_32'
+        Value = Null
+        Component = vbKoef_32
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_33'
+        Value = Null
+        Component = vbKoef_33
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_41'
+        Value = Null
+        Component = vbKoef_41
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_42'
+        Value = Null
+        Component = vbKoef_42
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'koeff_43'
+        Value = Null
+        Component = vbKoef_43
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 176
   end
 end

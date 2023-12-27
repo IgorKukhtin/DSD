@@ -103,6 +103,9 @@ type
     vbKoef_33: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
     TotalCountKg1_5: TcxGridDBColumn;
+    cbIsDay: TcxCheckBox;
+    gpGet_Koeff: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
   public
   end;
