@@ -120,6 +120,8 @@ type
     btnSetNull_GuidesClient: TcxButton;
     cxLabel4: TcxLabel;
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;
+    isPay: TcxGridDBColumn;
+    InvNumber_InvoiceCalc: TcxGridDBColumn;
   private
   public
   end;

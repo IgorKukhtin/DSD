@@ -98,15 +98,15 @@
     Width = 259
   end
   object cxLabel10: TcxLabel [13]
-    Left = 8
-    Top = 220
+    Left = 287
+    Top = 222
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [14]
-    Left = 8
+    Left = 287
     Top = 241
     TabOrder = 8
-    Width = 438
+    Width = 159
   end
   object edInvNumber: TcxTextEdit [15]
     Left = 8
@@ -203,17 +203,40 @@
     ShowHint = True
     TabOrder = 25
   end
+  object cxLabel9: TcxLabel [26]
+    Left = 8
+    Top = 221
+    Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+  end
+  object edInvoiceKind: TcxButtonEdit [27]
+    Left = 8
+    Top = 241
+    ParentFont = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 27
+    Width = 259
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 35
-    Top = 164
+    Top = 116
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 80
-    Top = 228
+    Left = 96
+    Top = 172
   end
   inherited ActionList: TActionList
-    Left = 167
-    Top = 219
+    Left = 191
+    Top = 195
     object actGuidesInvoiceChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -456,8 +479,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 24
-    Top = 236
+    Left = 32
+    Top = 212
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_BankAccount'
@@ -726,8 +749,23 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Top = 224
+    Left = 232
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -857,9 +895,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 116
-    Top = 117
+    Left = 132
+    Top = 77
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'
@@ -985,9 +1038,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 124
-    Top = 183
+    Left = 196
+    Top = 151
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -1001,8 +1069,8 @@
     ActionItemList = <
       item
       end>
-    Left = 200
-    Top = 136
+    Left = 216
+    Top = 104
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -1105,5 +1173,32 @@
       end>
     Left = 356
     Top = 183
+  end
+  object GuidesInvoiceKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvoiceKind
+    FormNameParam.Value = 'TInvoiceKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 231
   end
 end

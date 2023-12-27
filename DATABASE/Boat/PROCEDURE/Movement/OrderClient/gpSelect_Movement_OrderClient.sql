@@ -3,11 +3,13 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClientChoice (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient (TDateTime, TDateTime, Integer, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
-    IN inClientId      Integer  ,
+    IN inClientId      Integer  , 
+    IN inSummPay       TFloat   , --сумма оплаты
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -47,6 +49,10 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, ReceiptNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , InvoiceKindId Integer, InvoiceKindName  TVarChar
+             , isPay Boolean -- Оплачен счет - да/нетснят  
+             , MovementId_InvoiceCalc Integer, InvNumber_InvoiceCalc TVarChar
+
              , Value_TaxKind TFloat, TaxKindName TVarChar, TaxKindName_info TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -193,7 +199,40 @@ BEGIN
                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                    AND Movement.ParentId IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
                                 )
-         */
+         */ 
+         
+         --оплаты счетов
+     , tmpMLM_BankAccount AS (SELECT MovementLinkMovement.MovementChildId
+                                   , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
+                                   , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut    
+                                   , SUM (COALESCE (MovementItem.Amount,0))                                    ::TFloat AS Amount
+                              FROM MovementLinkMovement
+                                  INNER JOIN Movement AS Movement_BankAccount
+                                                      ON Movement_BankAccount.Id = MovementLinkMovement.MovementId
+                                                     AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()   ---<> zc_Enum_Status_Erased()
+                                                     AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                                         AND COALESCE (MovementItem.Amount,0) <> 0
+                              WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT Movement_OrderClient.MovementId_Invoice FROM Movement_OrderClient)
+                                AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                              GROUP BY MovementLinkMovement.MovementChildId
+                              )
+    , tmpInvoicePay AS (SELECT tmp.MovementId_Invoice
+                             , MovementFloat_Amount.ValueData
+                             , tmpMLM_BankAccount.Amount
+                             , ((COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - (COALESCE (tmpMLM_BankAccount.AmountIn,0) ))
+                              - (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ) ::TFloat AS AmountPay_rem
+                        FROM (SELECT DISTINCT Movement_OrderClient.MovementId_Invoice FROM Movement_OrderClient) AS tmp
+                             LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                     ON MovementFloat_Amount.MovementId = tmp.MovementId_Invoice
+                                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                             -- оплаты из документа BankAccount
+                             LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementChildId = tmp.MovementId_Invoice 
+                        WHERE  COALESCE (tmp.MovementId_Invoice,0) <> 0                     
+                        )
+ 
 
         -- Результат
         SELECT Movement_OrderClient.Id
@@ -299,7 +338,15 @@ BEGIN
              , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber_Invoice.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
              , Movement_Invoice.InvNumber                   AS InvNumber_Invoice
              , MovementString_ReceiptNumber_Invoice.ValueData  AS ReceiptNumber_Invoice
-             , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice
+             , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice 
+             , Object_InvoiceKind.Id                        AS InvoiceKindId
+             , Object_InvoiceKind.ValueData                 AS InvoiceKindName 
+             
+             , CASE WHEN COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0 THEN TRUE ELSE FALSE END ::Boolean AS isPay  -- 
+             , CASE WHEN (COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0)
+                   OR (COALESCE (Movement_Invoice.Id,0) = 0 THEN 0 ELSE Movement_Invoice.Id END ::Integer AS MovementId_InvoiceCalc
+             , CASE WHEN (COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0)
+                   OR (COALESCE (Movement_Invoice.Id,0) = 0 THEN '' ELSE Movement_Invoice.InvNumber END ::TVarChar AS InvNumber_InvoiceCalc
 
              , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS Value_TaxKind
              , Object_TaxKind.ValueData                     AS TaxKindName
@@ -354,6 +401,13 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_ReceiptNumber_Invoice
                                       ON MovementString_ReceiptNumber_Invoice.MovementId = Movement_Invoice.Id
                                      AND MovementString_ReceiptNumber_Invoice.DescId     = zc_MovementString_ReceiptNumber()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
+                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+             LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId     
+             
+             LEFT JOIN tmpInvoicePay ON tmpInvoicePay.MovementId_Invoice = Movement_Invoice.Id
 
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement_OrderClient.Id
@@ -502,4 +556,4 @@ $BODY$
 4) итого сумма скидки
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.10.2022', inEndDate:= '31.12.2023', inClientId:=0 , inIsErased := true, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.10.2022', inEndDate:= '31.12.2023', inClientId:=0 , inSummPay:= 0 , inIsErased := true, inSession:= zfCalc_UserAdmin())

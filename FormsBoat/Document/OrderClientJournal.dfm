@@ -2304,6 +2304,13 @@ object OrderClientJournalForm: TOrderClientJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSummPay'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased

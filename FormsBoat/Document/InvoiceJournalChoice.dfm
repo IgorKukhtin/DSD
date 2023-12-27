@@ -988,6 +988,21 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvoiceKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvoiceKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

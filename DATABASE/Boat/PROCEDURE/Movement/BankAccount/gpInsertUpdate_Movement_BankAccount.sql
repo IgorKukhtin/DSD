@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inAmountOut            TFloat    , -- Сумма расхода
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
-    IN inMovementId_Invoice   Integer   , -- Счет
+    IN inMovementId_Invoice   Integer   , -- Счет    
+    IN inInvoiceKindId        Integer   , -- вид счета
     IN inMovementId_Parent    Integer   , -- Заказ Клиента
     IN inComment              TVarChar  , -- Комментарий
     IN inSession              TVarChar    -- сессия пользователя
@@ -84,7 +86,7 @@ BEGIN
                                                                 , inUnitId           := NULL                                ::Integer
                                                                 , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
                                                                 , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
-                                                                , inInvoiceKindId    := zc_Enum_InvoiceKind_PrePay()
+                                                                , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END :: Integer
                                                                 , inUserId           := vbUserId
                                                                  )
          FROM Object AS Object_Client
