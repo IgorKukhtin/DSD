@@ -343,10 +343,15 @@ BEGIN
              , Object_InvoiceKind.ValueData                 AS InvoiceKindName 
              
              , CASE WHEN COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0 THEN TRUE ELSE FALSE END ::Boolean AS isPay  -- 
+
              , CASE WHEN (COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0)
-                   OR (COALESCE (Movement_Invoice.Id,0) = 0 THEN 0 ELSE Movement_Invoice.Id END ::Integer AS MovementId_InvoiceCalc
+                   OR (COALESCE (Movement_Invoice.Id,0) = 0) 
+                    THEN 0 ELSE Movement_Invoice.Id
+               END                                                                                                                        ::Integer AS MovementId_InvoiceCalc
              , CASE WHEN (COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0)
-                   OR (COALESCE (Movement_Invoice.Id,0) = 0 THEN '' ELSE Movement_Invoice.InvNumber END ::TVarChar AS InvNumber_InvoiceCalc
+                   OR (COALESCE (Movement_Invoice.Id,0) = 0) 
+                    THEN '' ELSE Movement_Invoice.InvNumber
+               END                                                                                                                        ::TVarChar AS InvNumber_InvoiceCalc
 
              , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS Value_TaxKind
              , Object_TaxKind.ValueData                     AS TaxKindName
