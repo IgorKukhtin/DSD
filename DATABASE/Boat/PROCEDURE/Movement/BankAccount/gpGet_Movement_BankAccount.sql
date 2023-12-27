@@ -36,6 +36,21 @@ BEGIN
      THEN
 
      RETURN QUERY
+       WITH tmpBankAccount AS (SELECT Object_BankAccount.Id            AS Id
+                                    , Object_BankAccount.ObjectCode    AS Code
+                                    , Object_BankAccount.ValueData     AS Name
+                                    , Object_Bank.Id                   AS BankId
+                                    , Object_Bank.ValueData            AS BankName
+                               FROM Object AS Object_BankAccount
+                                    LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                                         ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
+                                                        AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                                    LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+                               WHERE Object_BankAccount.DescId = zc_Object_BankAccount()
+                                 AND Object_BankAccount.isErased = FALSE
+                               ORDER BY Object_BankAccount.Id
+                               LIMIT 1
+                              )
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar)  AS InvNumber
@@ -46,10 +61,10 @@ BEGIN
            , 0::TFloat                                         AS AmountIn
            , 0::TFloat                                         AS AmountOut
            , ''::TVarChar                                      AS Comment
-           , 0                                                 AS BankAccountId
-           , '':: TVarChar                                     AS BankAccountName
-           , 0                                                 AS BankId
-           , '':: TVarChar                                     AS BankName
+           , tmpBankAccount.Id                                 AS BankAccountId
+           , tmpBankAccount.Name                               AS BankAccountName
+           , tmpBankAccount.BankId                             AS BankId
+           , tmpBankAccount.BankName                           AS BankName
            , Object_MoneyPlace.Id                              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData                       AS MoneyPlaceName
            , Movement_Invoice.Id                               AS MovementId_Invoice
@@ -66,6 +81,7 @@ BEGIN
             LEFT JOIN Movement AS Movement_Parent
                                ON Movement_Parent.Id = inMovementId_parent
             LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+            LEFT JOIN tmpBankAccount ON 1=1
       ;
      ELSE
 

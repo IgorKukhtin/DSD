@@ -375,6 +375,7 @@
           Value = ''
           Component = GuidesObject
           ComponentItem = 'Key'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -383,6 +384,7 @@
           Component = GuidesObject
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -390,6 +392,7 @@
           Value = '0'
           Component = GuidesParent
           ComponentItem = 'Key'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -398,6 +401,7 @@
           Component = GuidesParent
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item

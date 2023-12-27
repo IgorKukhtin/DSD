@@ -296,7 +296,7 @@ BEGIN
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Movement_Invoice.Id                          AS MovementId_Invoice
-             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
+             , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber_Invoice.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
              , Movement_Invoice.InvNumber                   AS InvNumber_Invoice
              , MovementString_ReceiptNumber_Invoice.ValueData  AS ReceiptNumber_Invoice
              , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice

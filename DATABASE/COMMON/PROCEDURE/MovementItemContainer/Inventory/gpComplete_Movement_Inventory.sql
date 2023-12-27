@@ -54,10 +54,14 @@ BEGIN
 
 
      -- !!!ВРЕМЕННО, исправляется ошибка!!!!
-     UPDATE MovementItem SET isErased = TRUE
-     WHERE MovementItem.isErased = FALSE
-       AND MovementItem.Amount = 0
-       AND MovementItem.MovementId = inMovementId;
+     IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_List() AND MB.ValueData = TRUE)
+     THEN
+         UPDATE MovementItem SET isErased = TRUE
+         WHERE MovementItem.isErased = FALSE
+           AND MovementItem.Amount = 0
+           AND MovementItem.MovementId = inMovementId
+        ;
+     END IF;
 
 
      -- Эти параметры нужны для расчета остатка

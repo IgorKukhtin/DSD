@@ -1,3 +1,4 @@
 copy /Y Boat_init_real.php Boat_init.php
 copy /Y Boat_init_real.php "../Bin/_64/INIT/Boat_init.php"
 copy /Y real_.txt "../Bin/real.txt"
+copy /Y real_.txt "../Bin/_64/Bin/real.txt"

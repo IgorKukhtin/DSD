@@ -486,15 +486,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object InvNumber_Invoice: TcxGridDBColumn
-        Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
-        DataBinding.FieldName = 'InvNumber_Invoice'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
       object ReceiptNumber_Invoice: TcxGridDBColumn
         Caption = 'Inv No'
         DataBinding.FieldName = 'ReceiptNumber_Invoice'
@@ -1075,19 +1066,19 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvNumber_Invoice'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InvNumber_Invoice'
-          DataType = ftString
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'MovementId_Invoice'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MovementId_Invoice'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Invoice'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumberFull_Invoice'
+          DataType = ftString
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
@@ -1118,19 +1109,19 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'ProductId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProductId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ProductName_Full'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ProductName_Full'
           DataType = ftString
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ProductId'
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
@@ -1783,7 +1774,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Left = 896
     Top = 3
   end
-  object FieldFilter_Article: TdsdFieldFilter
+  object FieldFilter_InvNumber: TdsdFieldFilter
     TextEdit = edInvNumber_OrderClient
     DataSet = ClientDataSet
     Column = InvNumber
@@ -1797,7 +1788,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 824
-    Top = 160
+    Left = 488
+    Top = 72
   end
 end

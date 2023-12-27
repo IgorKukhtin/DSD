@@ -1019,18 +1019,18 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MovementId_Invoice'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_Invoice'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'InvNumber_Invoice'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InvNumber_Invoice'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId_Invoice'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MovementId_Invoice'
           MultiSelectSeparator = ','
         end
         item

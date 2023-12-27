@@ -806,17 +806,17 @@ BEGIN
 
 
 -- IF inUserId = 5 AND 1=0
-IF inMovementId = 26518645 AND 1=0
+/*IF inMovementId = 26666487   AND 1=1
 THEN
     RAISE EXCEPTION 'Ошибка - 1.<%>  %   %  %   %'
-    , (select _tmpItem.OperCount from _tmpItem where _tmpItem.MovementItemId = 271765406 )
-    , (select _tmpItem.OperCount from _tmpItem where _tmpItem.MovementItemId = 271765408 )
-    , (select _tmpItem.ContainerId_GoodsFrom from _tmpItem where _tmpItem.MovementItemId = 271765406 )
-    , (select _tmpItem.ContainerId_GoodsFrom from _tmpItem where _tmpItem.MovementItemId = 271765408 )
-    , (select max (_tmpItem.StorageId_mi) from _tmpItem where _tmpItem.GoodsId = 7981 )
+    , (select _tmpItem.OperCount from _tmpItem where _tmpItem.MovementItemId = 273318373  )
+    , (select _tmpItem.OperCount from _tmpItem where _tmpItem.MovementItemId = 273318373  )
+    , (select _tmpItem.ContainerId_GoodsFrom from _tmpItem where _tmpItem.MovementItemId = 273318373  )
+    , (select _tmpItem.ContainerId_GoodsFrom from _tmpItem where _tmpItem.MovementItemId = 273318373  )
+    , (select max (_tmpItem.StorageId_mi) from _tmpItem where _tmpItem.GoodsId = 6836  )
     ;
 end if;
-
+*/
 
      --  №1.1. - формируются Партии товара для Master(ПРИХОД)-элементы, новая схема - ОС
      UPDATE _tmpItem SET PartionGoodsId_To = lpInsertFind_Object_PartionGoods (inUnitId_Partion := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_From AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())

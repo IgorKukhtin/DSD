@@ -60,7 +60,7 @@ type
     Amount_14: TcxGridDBColumn;
     Amount_15: TcxGridDBColumn;
     actChoiceGuides: TdsdChoiceGuides;
-    FieldFilter_Name: TdsdFieldFilter;
+    FieldFilter_InvNumber: TdsdFieldFilter;
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
     cbisGoods: TcxCheckBox;

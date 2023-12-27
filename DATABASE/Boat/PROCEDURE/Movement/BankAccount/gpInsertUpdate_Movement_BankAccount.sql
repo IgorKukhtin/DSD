@@ -44,7 +44,7 @@ BEGIN
      END IF;
 
      -- проверка
-     IF COALESCE (inMovementId_Invoice, 0) = 0
+     IF COALESCE (inMovementId_Invoice, 0) = 0 AND COALESCE (inMovementId_Parent, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.Не выбран документ Счет.';
      END IF;
@@ -57,8 +57,8 @@ BEGIN
         vbAmount := -1 * inAmountOut;
      END IF;
 
-     -- проверка, если док. Счет пусто нужно его создать
-     IF COALESCE (inMovementId_Invoice,0) = 0
+     -- если док. Счет пусто нужно его создать
+     IF COALESCE (inMovementId_Invoice, 0) = 0
      THEN
          -- сохранили <Документ> + для inMovementId_Parent уствновится связь на этот inMovementId_Invoice
          inMovementId_Invoice := lpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
@@ -71,12 +71,20 @@ BEGIN
                                                                   -- 
                                                                 , inAmount           := vbAmount                            ::TFloat
                                                                 , inInvNumberPartner := ''                                  ::TVarChar
-                                                                , inReceiptNumber    := ''                                  ::TVarChar
+                                                                , inReceiptNumber    := (1 + COALESCE ((SELECT MAX (zfConvert_StringToNumber (MovementString.ValueData))
+                                                                                                        FROM MovementString
+                                                                                                             JOIN Movement ON Movement.Id       = MovementString.MovementId
+                                                                                                                          AND Movement.DescId   = zc_Movement_Invoice()
+                                                                                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                                                                        WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
+                                                                                                       ), 0)
+                                                                                        ) :: TVarChar
                                                                 , inComment          := ''                                  ::TVarChar
                                                                 , inObjectId         := inMoneyPlaceId
                                                                 , inUnitId           := NULL                                ::Integer
                                                                 , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
                                                                 , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
+                                                                , inInvoiceKindId    := zc_Enum_InvoiceKind_PrePay()
                                                                 , inUserId           := vbUserId
                                                                  )
          FROM Object AS Object_Client

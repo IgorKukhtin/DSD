@@ -533,6 +533,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
+      ShortCut = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -551,6 +552,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       Enabled = False
+      ShortCut = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -569,6 +571,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
+      ShortCut = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -1347,13 +1350,13 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Left = 584
     Top = 43
   end
-  object FieldFilter_Article: TdsdFieldFilter
+  object FieldFilter_InvNumber: TdsdFieldFilter
     TextEdit = edSearch_ReceiptNumber_Invoice
     DataSet = MasterCDS
-    Column = colInvNumber
+    Column = ReceiptNumber
     ColumnList = <
       item
-        Column = colInvNumber
+        Column = ReceiptNumber
       end
       item
         Column = InvNumber_parent
@@ -1361,7 +1364,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 976
-    Top = 48
+    Left = 768
+    Top = 120
   end
 end
