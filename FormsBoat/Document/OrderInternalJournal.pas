@@ -91,7 +91,6 @@ type
     mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
@@ -114,6 +113,9 @@ type
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

@@ -237,8 +237,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 206
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = -271
-          ExplicitTop = 41
           object cxGrid_MasterDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -2342,7 +2340,7 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbPrintSticker1: TdxBarButton
-      Action = actPrintSticker
+      Action = actPrintSticker1
       Category = 0
     end
   end
@@ -3781,7 +3779,7 @@ object OrderInternalForm: TOrderInternalForm
       Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       ImageIndex = 47
     end
-    object actPrintSticker: TdsdPrintAction
+    object actPrintSticker1: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintSticker
@@ -5421,14 +5419,6 @@ object OrderInternalForm: TOrderInternalForm
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementItemId'
-        Value = 0
-        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

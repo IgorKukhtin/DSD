@@ -1,10 +1,11 @@
 -- Function: gpSelect_Movement_OrderInternal_PrintSticker (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal_PrintSticker (Integer, Integer, BooLean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal_PrintSticker (Integer, BooLean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal_PrintSticker(
     IN inMovementId        Integer   ,   -- ключ Документа
-    IN inMovementItemId    Integer   ,   -- ключ    
+   -- IN inMovementItemId    Integer   ,   -- ключ    
     IN inSession           TVarChar      -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -55,7 +56,7 @@ BEGIN
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
                         AND MovementItem.Amount     <> 0
-                        AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
+                        --AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
                      )  
            
        -- Результат

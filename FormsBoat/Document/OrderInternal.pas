@@ -294,7 +294,7 @@ uses
     bbUpdate_MI_Child_byOrder: TdxBarButton;
     cbChangeReceipt: TcxCheckBox;
     actRefreshChild: TdsdDataSetRefresh;
-    actPrintSticker: TdsdPrintAction;
+    actPrintSticker1: TdsdPrintAction;
     bbPrintSticker1: TdxBarButton;
     spSelectPrintSticker: TdsdStoredProc;
 
