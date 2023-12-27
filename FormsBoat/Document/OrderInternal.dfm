@@ -237,6 +237,8 @@ object OrderInternalForm: TOrderInternalForm
           Height = 206
           Align = alClient
           TabOrder = 1
+          ExplicitLeft = -271
+          ExplicitTop = 41
           object cxGrid_MasterDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -1286,9 +1288,6 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1925,7 +1924,7 @@ object OrderInternalForm: TOrderInternalForm
       Visible = ivAlways
       ImageIndex = 64
     end
-    object bbPrintSticker: TdxBarButton
+    object bbPrintS: TdxBarButton
       Action = actPrint
       Category = 0
     end
@@ -2331,11 +2330,19 @@ object OrderInternalForm: TOrderInternalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPrintSticker'
+          ItemName = 'bbPrintS'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker1'
         end>
     end
     object bbUpdate_MI_Child_byOrder: TdxBarButton
       Action = mactUpdate_MI_Child_byOrder
+      Category = 0
+    end
+    object bbPrintSticker1: TdxBarButton
+      Action = actPrintSticker
       Category = 0
     end
   end
@@ -3774,6 +3781,33 @@ object OrderInternalForm: TOrderInternalForm
       Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1087#1086' '#1096#1072#1073#1083#1086#1085#1091' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       ImageIndex = 47
     end
+    object actPrintSticker: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_OrderInternalSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_OrderInternalSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4352,7 +4386,7 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
+    Left = 648
     Top = 264
   end
   object spSelectPrintStructure: TdsdStoredProc
@@ -5373,5 +5407,34 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 718
     Top = 351
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternal_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = 0
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 903
+    Top = 208
   end
 end

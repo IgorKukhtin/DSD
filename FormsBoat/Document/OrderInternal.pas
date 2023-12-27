@@ -91,7 +91,7 @@ uses
     bbShowErasedCost: TdxBarButton;
     actInsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
-    bbPrintSticker: TdxBarButton;
+    bbPrintS: TdxBarButton;
     bbMIContainerCost: TdxBarButton;
     Panel_all: TPanel;
     cxGrid_Master: TcxGrid;
@@ -294,6 +294,9 @@ uses
     bbUpdate_MI_Child_byOrder: TdxBarButton;
     cbChangeReceipt: TcxCheckBox;
     actRefreshChild: TdsdDataSetRefresh;
+    actPrintSticker: TdsdPrintAction;
+    bbPrintSticker1: TdxBarButton;
+    spSelectPrintSticker: TdsdStoredProc;
 
   private
   public
