@@ -2209,6 +2209,22 @@ inherited SendForm: TSendForm
         end>
       isShowModal = False
     end
+    object actSmashSumSend: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spSmashSumSend
+      StoredProcList = <
+        item
+          StoredProc = spSmashSumSend
+        end>
+      Caption = #1056#1072#1079#1073#1080#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1089#1091#1084#1084#1077
+      Hint = #1056#1072#1079#1073#1080#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1089#1091#1084#1084#1077
+      ImageIndex = 50
+      QuestionBeforeExecute = #1056#1072#1079#1073#1080#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1089#1091#1084#1084#1077'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2428,6 +2444,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton17'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton16'
         end
         item
@@ -2604,6 +2624,10 @@ inherited SendForm: TSendForm
     end
     object bbReport_GoodsRemainsSend: TdxBarButton
       Action = actReport_GoodsRemainsSend
+      Category = 0
+    end
+    object dxBarButton17: TdxBarButton
+      Action = actSmashSumSend
       Category = 0
     end
   end
@@ -4744,5 +4768,22 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 672
     Top = 243
+  end
+  object spSmashSumSend: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Send_SmashSumSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 752
+    Top = 227
   end
 end

@@ -548,11 +548,25 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Hint = #1050#1091#1088#1089' '#1076#1083#1103' "'#1054#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'"'
         Caption = #1050#1091#1088#1089' '#1076#1083#1103' "'#1054#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'"'
       end
+      object ceSmashSumSend: TcxCurrencyEdit
+        Left = 402
+        Top = 493
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        Properties.EditFormat = ',0.####'
+        TabOrder = 71
+        Width = 121
+      end
+      object cxLabel49: TcxLabel
+        Left = 18
+        Top = 494
+        Hint = #1056#1072#1079#1073#1080#1074#1082#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1089#1091#1084#1084#1077
+        Caption = #1056#1072#1079#1073#1080#1074#1082#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1089#1091#1084#1084#1077
+      end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1057#1059#1053
       ImageIndex = 1
-      ExplicitLeft = -3
       object cbEliminateColdSUN: TcxCheckBox
         Left = 535
         Top = 72
@@ -1521,6 +1535,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSmashSumSend'
+        Value = Null
+        Component = ceSmashSumSend
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 696
@@ -2007,6 +2029,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = cbLegalEntitiesSUN
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SmashSumSend'
+        Value = Null
+        Component = ceSmashSumSend
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

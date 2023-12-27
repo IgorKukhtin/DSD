@@ -46,6 +46,11 @@ BEGIN
                            INNER JOIN Object AS Object_User ON Object_User.Id = ObjectLink_User_Member.ObjectId
                                                            AND Object_User.isErased = False
                            INNER JOIN tmpUser ON tmpUser.UserID = Object_User.Id)
+      , tmpMovement AS (SELECT DISTINCT MIContainer.WhereObjectId_analyzer AS UnitID
+                        FROM MovementItemContainer AS MIContainer
+                        WHERE MIContainer.OperDate >= CURRENT_DATE - INTERVAL '1 DAY'
+                          AND MIContainer.DescId = zc_Container_Count()
+                          AND MIContainer.MovementDescId = zc_Movement_Check())
 
        SELECT
              Object_Unit_View.Id
@@ -66,12 +71,19 @@ BEGIN
             INNER JOIN ObjectString AS ObjectString_Unit_Address
                                     ON ObjectString_Unit_Address.ObjectId  = Object_Unit_View.Id
                                    AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+            LEFT JOIN ObjectString AS ObjectString_ListDaySUN
+                                   ON ObjectString_ListDaySUN.ObjectId = Object_Unit_View.Id
+                                  AND ObjectString_ListDaySUN.DescId = zc_ObjectString_Unit_ListDaySUN()
+
 
             LEFT JOIN tmpMember ON tmpMember.UnitID = Object_Unit_View.Id
 
+            LEFT JOIN tmpMovement ON tmpMovement.UnitID = Object_Unit_View.Id
 
        WHERE Object_Unit_View.isErased = False
          AND Object_Unit_View.Name NOT ILIKE '%закрыта%'
+         AND Object_Unit_View.Name NOT ILIKE '%зачинена%'
+         AND (COALESCE (ObjectString_ListDaySUN.ValueData, '') <> '-0' OR COALESCE(tmpMovement.UnitID, 0) <> 0)
          AND COALESCE (ObjectString_Unit_Address.ValueData, '') <> ''
          AND Object_Unit_View.Id <> 11460971
        ORDER BY Object_Unit_View.Id;
@@ -89,4 +101,6 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Farmak_CRMPharmacy ('3')
+-- 
+
+SELECT * FROM gpSelect_Farmak_CRMPharmacy('3')

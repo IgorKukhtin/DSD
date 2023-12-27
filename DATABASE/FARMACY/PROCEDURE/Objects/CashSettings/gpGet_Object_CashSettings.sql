@@ -61,7 +61,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isCancelBansSUN Boolean, isLegalEntitiesSUN Boolean
              , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_CountAward Integer, AntiTOPMP_SumFine TFloat, AntiTOPMP_MinProcAward TFloat
              , UnitDeferredId Integer, UnitDeferredName TVarChar
-             , CourseReport TFloat
+             , CourseReport TFloat, SmashSumSend TFloat
              ) AS
 $BODY$
 BEGIN
@@ -145,6 +145,7 @@ BEGIN
         , Object_UnitDeferred.ValueData                                            AS UnitDeferredName
         
         , ObjectFloat_CashSettings_CourseReport.ValueData                          AS CourseReport
+        , ObjectFloat_CashSettings_SmashSumSend.ValueData                          AS SmashSumSend
         
 
    FROM Object AS Object_CashSettings
@@ -374,6 +375,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_CourseReport
                               ON ObjectFloat_CashSettings_CourseReport.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_CourseReport.DescId = zc_ObjectFloat_CashSettings_CourseReport()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_SmashSumSend
+                              ON ObjectFloat_CashSettings_SmashSumSend.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_SmashSumSend.DescId = zc_ObjectFloat_CashSettings_SmashSumSend()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

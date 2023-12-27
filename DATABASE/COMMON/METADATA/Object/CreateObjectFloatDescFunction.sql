@@ -2492,10 +2492,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_CourseReport() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_CourseReport', 'Курс для "Отчет остатки по подразделению для маркетинга"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_CourseReport');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_SmashSumSend() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_SmashSumSend'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_SmashSumSend', 'Разбивка перемещений по сумме' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_SmashSumSend');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.12.23                                                                                      * zc_ObjectFloat_CashSettings_SmashSumSend
  24.10.23                                                                                      * zc_ObjectFloat_CashSettings_CourseReport
  13.10.23                                                                                      * zc_ObjectFloat_CashSettings_Cat_5
  11.07.23                                                                                      * zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward

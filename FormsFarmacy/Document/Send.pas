@@ -230,6 +230,9 @@ type
     actReport_GoodsRemainsSend: TdsdOpenForm;
     bbReport_GoodsRemainsSend: TdxBarButton;
     PriceInDiff: TcxGridDBColumn;
+    spSmashSumSend: TdsdStoredProc;
+    actSmashSumSend: TdsdExecStoredProc;
+    dxBarButton17: TdxBarButton;
   private
     { Private declarations }
   public

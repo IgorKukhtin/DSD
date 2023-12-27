@@ -155,97 +155,97 @@
          LEFT JOIN tmpMovement ON tmpMovement.ContainerId = Container.Id;
 
      -- Ќечего создать выходим
-    IF NOT EXISTS(SELECT 1 FROM tmpContainerOverdue)
+    IF EXISTS(SELECT 1 FROM tmpContainerOverdue)
     THEN
-      RETURN;
+
+        -- ѕрописуем во временную таблицу ID мастера если есть
+      UPDATE tmpContainerOverdue SET MasterID = MovementItem.ID
+      FROM (SELECT MovementItem.Id
+                 , MovementItem.ObjectId
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementID
+              AND MovementItem.DescId = zc_MI_Master()) AS MovementItem
+      WHERE MovementItem.ObjectId = tmpContainerOverdue.GoodsId;    
+
+        -- «аполн€ем данные мастера
+      PERFORM lpInsertUpdate_MovementItem_Send (ioId                   := COALESCE(tmpContainerOverdue.MasterID, 0),
+                                                inMovementId           := inMovementId,
+                                                inGoodsId              := tmpContainerOverdue.GoodsId,
+                                                inAmount               := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                                inAmountManual         := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                                inAmountStorage        := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
+                                                inReasonDifferencesId  := 0,
+                                                inCommentSendID        := 0,
+                                                inUserId               := vbUserId)
+      FROM tmpContainerOverdue
+      GROUP BY tmpContainerOverdue.GoodsId, tmpContainerOverdue.MasterID
+      ORDER BY tmpContainerOverdue.GoodsId;
+
+        --если цена получател€ = 0 замен€ем ее на цену отвравител€ и записываем в прайс
+      PERFORM lpInsertUpdate_Object_Price(inGoodsId := GoodsId,
+                                          inUnitId  := vbUnitOverdueID,
+                                          inPrice   := PriceFrom,
+                                          inDate    := CURRENT_DATE::TDateTime,
+                                          inUserId  := vbUserId)
+      FROM ( WITH
+             tmpPrice AS (SELECT MovementItem.ObjectId     AS GoodsId
+                               , ObjectLink_Unit.ChildObjectId  AS UnitId
+                               , ROUND (ObjectFloat_Price_Value.ValueData, 2)  AS Price
+                          FROM MovementItem
+                               INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                     ON ObjectLink_Goods.ChildObjectId = MovementItem.ObjectId
+                                                    AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                               INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                     ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
+                                                    AND ObjectLink_Unit.ChildObjectId in (vbUnitId, vbUnitOverdueID)
+                                                    AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
+                                                     ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Goods.ObjectId
+                                                    AND ObjectFloat_Price_Value.DescId   = zc_ObjectFloat_Price_Value()
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId = zc_MI_Master()
+                         )
+
+      SELECT MovementItem.ObjectId AS GoodsId
+        , COALESCE (Object_Price_From.Price, 0) AS PriceFrom
+        , COALESCE (Object_Price_To.Price, 0)   AS PriceTo
+
+      FROM MovementItem
+
+              LEFT JOIN tmpPrice AS Object_Price_From
+                                 ON Object_Price_From.GoodsId = MovementItem.ObjectId
+                                AND Object_Price_From.UnitId = vbUnitId
+              LEFT JOIN tmpPrice AS Object_Price_To
+                                 ON Object_Price_To.GoodsId = MovementItem.ObjectId
+                                AND Object_Price_To.UnitId = vbUnitOverdueID
+
+
+      WHERE MovementItem.MovementId = inMovementId
+        AND MovementItem.DescId = zc_MI_Master()
+        AND COALESCE (Object_Price_To.Price, 0) = 0
+        AND COALESCE (Object_Price_From.Price, 0) > 0) AS T1;
+
+        -- ѕрописуем во временную таблицу ID мастера
+      UPDATE tmpContainerOverdue SET MasterID = MovementItem.ID
+      FROM (SELECT MovementItem.Id
+                 , MovementItem.ObjectId
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementId
+              AND MovementItem.DescId = zc_MI_Master()) AS MovementItem
+      WHERE MovementItem.ObjectId = tmpContainerOverdue.GoodsId;
+
+        -- «аполн€ем данные Child
+      PERFORM lpInsertUpdate_MovementItem_Send_Child(ioId            := COALESCE (tmpContainerOverdue.ChildID, 0),
+                                                     inParentId      := tmpContainerOverdue.MasterID,
+                                                     inMovementId    := inMovementId,
+                                                     inGoodsId       := tmpContainerOverdue.GoodsId,
+                                                     inAmount        := tmpContainerOverdue.Amount,
+                                                     inContainerId   := tmpContainerOverdue.Id,
+                                                     inUserId        := vbUserId)
+      FROM tmpContainerOverdue
+      WHERE COALESCE(tmpContainerOverdue.MasterID, 0) <> 0;
+      
     END IF;
-
-      -- ѕрописуем во временную таблицу ID мастера если есть
-    UPDATE tmpContainerOverdue SET MasterID = MovementItem.ID
-    FROM (SELECT MovementItem.Id
-               , MovementItem.ObjectId
-          FROM MovementItem
-          WHERE MovementItem.MovementId = inMovementID
-            AND MovementItem.DescId = zc_MI_Master()) AS MovementItem
-    WHERE MovementItem.ObjectId = tmpContainerOverdue.GoodsId;    
-
-      -- «аполн€ем данные мастера
-    PERFORM lpInsertUpdate_MovementItem_Send (ioId                   := COALESCE(tmpContainerOverdue.MasterID, 0),
-                                              inMovementId           := inMovementId,
-                                              inGoodsId              := tmpContainerOverdue.GoodsId,
-                                              inAmount               := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
-                                              inAmountManual         := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
-                                              inAmountStorage        := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
-                                              inReasonDifferencesId  := 0,
-                                              inCommentSendID        := 0,
-                                              inUserId               := vbUserId)
-    FROM tmpContainerOverdue
-    GROUP BY tmpContainerOverdue.GoodsId, tmpContainerOverdue.MasterID
-    ORDER BY tmpContainerOverdue.GoodsId;
-
-      --если цена получател€ = 0 замен€ем ее на цену отвравител€ и записываем в прайс
-    PERFORM lpInsertUpdate_Object_Price(inGoodsId := GoodsId,
-                                        inUnitId  := vbUnitOverdueID,
-                                        inPrice   := PriceFrom,
-                                        inDate    := CURRENT_DATE::TDateTime,
-                                        inUserId  := vbUserId)
-    FROM ( WITH
-           tmpPrice AS (SELECT MovementItem.ObjectId     AS GoodsId
-                             , ObjectLink_Unit.ChildObjectId  AS UnitId
-                             , ROUND (ObjectFloat_Price_Value.ValueData, 2)  AS Price
-                        FROM MovementItem
-                             INNER JOIN ObjectLink AS ObjectLink_Goods
-                                                   ON ObjectLink_Goods.ChildObjectId = MovementItem.ObjectId
-                                                  AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
-                             INNER JOIN ObjectLink AS ObjectLink_Unit
-                                                   ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
-                                                  AND ObjectLink_Unit.ChildObjectId in (vbUnitId, vbUnitOverdueID)
-                                                  AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
-                                                   ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Goods.ObjectId
-                                                  AND ObjectFloat_Price_Value.DescId   = zc_ObjectFloat_Price_Value()
-                        WHERE MovementItem.MovementId = inMovementId
-                          AND MovementItem.DescId = zc_MI_Master()
-                       )
-
-    SELECT MovementItem.ObjectId AS GoodsId
-      , COALESCE (Object_Price_From.Price, 0) AS PriceFrom
-      , COALESCE (Object_Price_To.Price, 0)   AS PriceTo
-
-    FROM MovementItem
-
-            LEFT JOIN tmpPrice AS Object_Price_From
-                               ON Object_Price_From.GoodsId = MovementItem.ObjectId
-                              AND Object_Price_From.UnitId = vbUnitId
-            LEFT JOIN tmpPrice AS Object_Price_To
-                               ON Object_Price_To.GoodsId = MovementItem.ObjectId
-                              AND Object_Price_To.UnitId = vbUnitOverdueID
-
-
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId = zc_MI_Master()
-      AND COALESCE (Object_Price_To.Price, 0) = 0
-      AND COALESCE (Object_Price_From.Price, 0) > 0) AS T1;
-
-      -- ѕрописуем во временную таблицу ID мастера
-    UPDATE tmpContainerOverdue SET MasterID = MovementItem.ID
-    FROM (SELECT MovementItem.Id
-               , MovementItem.ObjectId
-          FROM MovementItem
-          WHERE MovementItem.MovementId = inMovementId
-            AND MovementItem.DescId = zc_MI_Master()) AS MovementItem
-    WHERE MovementItem.ObjectId = tmpContainerOverdue.GoodsId;
-
-      -- «аполн€ем данные Child
-    PERFORM lpInsertUpdate_MovementItem_Send_Child(ioId            := COALESCE (tmpContainerOverdue.ChildID, 0),
-                                                   inParentId      := tmpContainerOverdue.MasterID,
-                                                   inMovementId    := inMovementId,
-                                                   inGoodsId       := tmpContainerOverdue.GoodsId,
-                                                   inAmount        := tmpContainerOverdue.Amount,
-                                                   inContainerId   := tmpContainerOverdue.Id,
-                                                   inUserId        := vbUserId)
-    FROM tmpContainerOverdue
-    WHERE COALESCE(tmpContainerOverdue.MasterID, 0) <> 0;
     
       -- ”далили записи Child с 0
     PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItem.ID,
@@ -310,3 +310,5 @@
 
 -- тест select * from grUpdate_MovementUnit_SendOverdue(inMovementID := 24847865 ,  inSession := '3');
 
+
+select * from grUpdate_MovementUnit_SendOverdue(inMovementID := 33683608 ,  inSession := '3');

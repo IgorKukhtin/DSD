@@ -170,6 +170,8 @@ type
     ceCourseReport: TcxCurrencyEdit;
     cxLabel48: TcxLabel;
     cbLegalEntitiesSUN: TcxCheckBox;
+    ceSmashSumSend: TcxCurrencyEdit;
+    cxLabel49: TcxLabel;
   private
     { Private declarations }
   public
