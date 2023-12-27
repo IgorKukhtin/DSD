@@ -69,7 +69,7 @@ BEGIN
            , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient 
            , Movement_OrderClient.InvNumber  AS InvNumber_OrderClient  
            , (Object_Brand.ValueData || '-' || Object_Model.ValueData) ::TVarChar AS ModelName_full
-           , ObjectDate_DateBegin.ValueData   AS DateBegin 
+           , ObjectDate_DateBegin.ValueData ::Date   AS DateBegin 
            , COALESCE (MovementFloat_NPP.ValueData,0) :: Integer AS NPP
            
        FROM tmpMI
