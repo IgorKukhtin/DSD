@@ -1,8 +1,9 @@
-﻿-- Function: GetReport_WageWarehouseBranch()
+﻿-- Function: gpGetReport_WageWarehouseBranch()
 
 DROP FUNCTION IF EXISTS GetReport_WageWarehouseBranch (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGetReport_WageWarehouseBranch (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION GetReport_WageWarehouseBranch(
+CREATE OR REPLACE FUNCTION gpGetReport_WageWarehouseBranch(
     IN inStartDate   TDateTime ,              --
     IN inEndDate     TDateTime ,              --
     IN inPersonalId  Integer   ,              -- сотудник
@@ -10,16 +11,16 @@ CREATE OR REPLACE FUNCTION GetReport_WageWarehouseBranch(
     IN inBranchId    Integer   ,              -- филиал   
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (koeff_1  TFloat
-             , koeff_2  TFloat
-             , koeff_3  TFloat
-             , koeff_4  TFloat
-             , koeff_5  TFloat
-             , koeff_6  TFloat
-             , koeff_7  TFloat
-             , koeff_8  TFloat
-             , koeff_9  TFloat
-             , koeff_10 TFloat
+RETURNS TABLE (koeff_11 TFloat
+             , koeff_12 TFloat
+             , koeff_13 TFloat
+             , koeff_22 TFloat
+             , koeff_31 TFloat
+             , koeff_32 TFloat
+             , koeff_33 TFloat
+             , koeff_41 TFloat
+             , koeff_42 TFloat
+             , koeff_43 TFloat
 ) AS
 $BODY$
 BEGIN
@@ -213,16 +214,16 @@ BEGIN
                                                     )
                    )
 
-     SELECT COALESCE (tmpKoeff.koeff_1, tmp.koeff_1)   ::TFloat AS koeff_1 
-          , COALESCE (tmpKoeff.koeff_2, tmp.koeff_2)   ::TFloat AS koeff_2 
-          , COALESCE (tmpKoeff.koeff_3, tmp.koeff_3)   ::TFloat AS koeff_3 
-          , COALESCE (tmpKoeff.koeff_4, tmp.koeff_4)   ::TFloat AS koeff_4 
-          , COALESCE (tmpKoeff.koeff_5, tmp.koeff_5)   ::TFloat AS koeff_5 
-          , COALESCE (tmpKoeff.koeff_6, tmp.koeff_6)   ::TFloat AS koeff_6 
-          , COALESCE (tmpKoeff.koeff_7, tmp.koeff_7)   ::TFloat AS koeff_7 
-          , COALESCE (tmpKoeff.koeff_8, tmp.koeff_8)   ::TFloat AS koeff_8 
-          , COALESCE (tmpKoeff.koeff_9, tmp.koeff_9)   ::TFloat AS koeff_9 
-          , COALESCE (tmpKoeff.koeff_10, tmp.koeff_10) ::TFloat AS koeff_10
+     SELECT COALESCE (tmpKoeff.koeff_1, tmp.koeff_1)   ::TFloat AS koeff_11 
+          , COALESCE (tmpKoeff.koeff_2, tmp.koeff_2)   ::TFloat AS koeff_12 
+          , COALESCE (tmpKoeff.koeff_3, tmp.koeff_3)   ::TFloat AS koeff_13 
+          , COALESCE (tmpKoeff.koeff_4, tmp.koeff_4)   ::TFloat AS koeff_22 
+          , COALESCE (tmpKoeff.koeff_5, tmp.koeff_5)   ::TFloat AS koeff_31 
+          , COALESCE (tmpKoeff.koeff_6, tmp.koeff_6)   ::TFloat AS koeff_32 
+          , COALESCE (tmpKoeff.koeff_7, tmp.koeff_7)   ::TFloat AS koeff_33 
+          , COALESCE (tmpKoeff.koeff_8, tmp.koeff_8)   ::TFloat AS koeff_41 
+          , COALESCE (tmpKoeff.koeff_9, tmp.koeff_9)   ::TFloat AS koeff_42 
+          , COALESCE (tmpKoeff.koeff_10, tmp.koeff_10) ::TFloat AS koeff_43
      
      FROM (SELECT 0,1  AS koeff_1
                 , 0,3  AS koeff_2
@@ -253,4 +254,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---
+-- select * from gpGetReport_WageWarehouseBranch(inStartDate := ('01.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime , inPersonalId := 0 , inPositionId := 0 , inBranchId := 301310 ,  inSession := '9457');

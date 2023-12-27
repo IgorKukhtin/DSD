@@ -1,251 +1,175 @@
--- Function: GetReport_WageWarehouseBranch()
+-- Function: gpreport_wagewarehousebranch()
 
-DROP FUNCTION IF EXISTS GetReport_WageWarehouseBranch (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpreport_wagewarehousebranch (tdatetime, tdatetime, integer, integer, integer, boolean, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar);
 
-CREATE OR REPLACE FUNCTION GetReport_WageWarehouseBranch(
-    IN inStartDate   TDateTime ,              --
-    IN inEndDate     TDateTime ,              --
-    IN inPersonalId  Integer   ,              -- сотудник
-    IN inPositionId  Integer   ,              -- должность
-    IN inBranchId    Integer   ,              -- филиал   
-    IN inSession     TVarChar       -- сессия пользователя
-)
-RETURNS TABLE (koeff_11 TFloat
-             , koeff_12 TFloat
-             , koeff_13 TFloat
-             , koeff_22 TFloat
-             , koeff_31 TFloat
-             , koeff_32 TFloat
-             , koeff_33 TFloat
-             , koeff_41 TFloat
-             , koeff_42 TFloat
-             , koeff_43 TFloat
+CREATE OR REPLACE FUNCTION gpreport_wagewarehousebranch(
+    IN instartdate tdatetime,
+    IN inenddate tdatetime,
+    IN inpersonalid integer,
+    IN inpositionid integer,
+    IN inbranchid integer,
+    IN inisday boolean,
+    IN inkoef_11 tfloat,
+    IN inkoef_12 tfloat,
+    IN inkoef_13 tfloat,
+    IN inkoef_22 tfloat,
+    IN inkoef_31 tfloat,
+    IN inkoef_32 tfloat,
+    IN inkoef_33 tfloat,
+    IN inkoef_41 tfloat,
+    IN inkoef_42 tfloat,
+    IN inkoef_43 tfloat,
+    IN insession tvarchar)
+  RETURNS TABLE(operdate tdatetime, unitid integer, unitcode integer, unitname tvarchar
+              , personalid integer, personalcode integer, personalname tvarchar
+              , positionid integer, positioncode integer, positionname tvarchar
+              , branchname tvarchar
+              , countmovement_1 tfloat
+              , countmi_1 tfloat
+              , totalcountkg_1 tfloat
+              , countmovement_1_koef tfloat
+              , countmi_1_koef tfloat
+              , totalcountkg_1_koef tfloat
+              , totalcountstick_2 tfloat
+              , totalcountstick_2_koef tfloat
+              , countmovement1_3 tfloat
+              , countmi1_3 tfloat
+              , totalcountkg1_3 tfloat
+              , countmovement1_3_koef tfloat
+              , countmi1_3_koef tfloat
+              , totalcountkg1_3_koef tfloat
+              , countmovement1_4 tfloat
+              , totalcountkg1_4 tfloat
+              , countmovement1_4_koef tfloat
+              , totalcountkg1_4_koef tfloat
+              , totalcountkg1_5 tfloat
+              , totalcountkg1_5_koef tfloat
 ) AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalComplete());
+     vbUserId:= lpGetUserBySession (inSession);
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Account());
-   
-      RETURN QUERY 
- 
- WITH  
- Setting_Wage_1 AS (
-    SELECT
-        ObjectLink_StaffList_Unit.ChildObjectId             AS UnitId                 -- Поразделение
-       ,ObjectLink_StaffList_Position.ChildObjectId         AS PositionId             -- Должность
-       ,ObjectFloat_StaffListCost_Price.ValueData           AS Price                  -- Расценка грн./кг. (из справочника Расценки штатного расписания для Модель начисления)
-       ,ObjectLink_ModelServiceItemMaster_From.ChildObjectId  AS FromId                 -- Подразделение(От кого) (из справочника Главные элементы Модели начисления)
-       ,ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId AS SelectKindId           -- Тип выбора данных (из справочника Главные элементы Модели начисления)
-    FROM Object as Object_StaffList
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionLevel
-                                ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id
-                               AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
-        --Unit подразделение
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_StaffList_Unit
-                                   ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
-                                  AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
-        
-        --Position  должность
-        LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
-                             ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
-                            AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
-        --PositionLevel разряд должности
-        LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
-                             ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
-                            AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
-        LEFT JOIN Object AS Object_PositionLevel
-                         ON Object_PositionLevel.Id = ObjectLink_StaffList_PositionLevel.ChildObjectId
-        
-        --StaffListCost
-        INNER JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
-                              ON ObjectLink_StaffListCost_StaffList.ChildObjectId = Object_StaffList.ID
-                             AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
-        INNER JOIN Object AS Object_StaffListCost
-                          ON Object_StaffListCost.Id = ObjectLink_StaffListCost_StaffList.ObjectId
-                         AND Object_StaffListCost.isErased = FALSE
-        --Price расценка
-        LEFT JOIN ObjectFloat AS ObjectFloat_StaffListCost_Price
-                              ON ObjectFloat_StaffListCost_Price.ObjectId = Object_StaffListCost.Id
-                             AND ObjectFloat_StaffListCost_Price.DescId = zc_ObjectFloat_StaffListCost_Price()
-        --ModelService  модель начисления
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
-                                   ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
-                                  AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
-        INNER JOIN Object AS Object_ModelService
-                          ON Object_ModelService.Id = ObjectLink_StaffListCost_ModelService.ChildObjectId
-                         AND Object_ModelService.isErased = FALSE
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelService_ModelServiceKind
-                                   ON ObjectLink_ModelService_ModelServiceKind.ObjectId = Object_ModelService.Id
-                                  AND ObjectLink_ModelService_ModelServiceKind.DescId = zc_ObjectLink_ModelService_ModelServiceKind()
-        --ModelServiceItemMaster Типы документов для обработки
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
-                                   ON ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId = Object_ModelService.Id
-                                  AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
 
-        INNER JOIN Object AS Object_ModelServiceItemMaster
-                          ON Object_ModelServiceItemMaster.Id       = ObjectLink_ModelServiceItemMaster_ModelService.ObjectId
-                         AND Object_ModelServiceItemMaster.DescId   = zc_Object_ModelServiceItemMaster()
-                         AND Object_ModelServiceItemMaster.isErased = FALSE
+     IF inSession = '-123'
+     THEN
+         RETURN;
+     ELSE
+         -- Результат
+         RETURN QUERY
+            WITH
+            -- сотрудники
+            tmpReport AS (SELECT tmp.*
+                          FROM gpReport_PersonalComplete (inStartDate := inStartDate
+                                                        , inEndDate   := inEndDate
+                                                        , inPersonalId:= inPersonalId
+                                                        , inPositionId:= inPositionId
+                                                        , inBranchId  := inBranchId
+                                                        , inIsDay     := inIsDay
+                                                        , inIsMonth   := FALSE
+                                                        , inIsDetail  := True
+                                                        , inisMovement:= True
+                                                        , inSession   := inSession) AS tmp
+                          )
 
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_DocumentKind
-                                   ON ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId = Object_ModelServiceItemMaster.Id
-                                  AND ObjectLink_ModelServiceItemMaster_DocumentKind.DescId = zc_ObjectLink_ModelServiceItemMaster_DocumentKind()
-       
-        --Ftom  документы от кого
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_From
-                                   ON ObjectLink_ModelServiceItemMaster_From.ObjectId = Object_ModelServiceItemMaster.Id
-                                  AND ObjectLink_ModelServiceItemMaster_From.DescId = zc_ObjectLink_ModelServiceItemMaster_From()
-       
-        --SelectKind тип выбора
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_SelectKind
-                                   ON ObjectLink_ModelServiceItemMaster_SelectKind.ObjectId = Object_ModelServiceItemMaster.Id
-                                  AND ObjectLink_ModelServiceItemMaster_SelectKind.DescId = zc_ObjectLink_ModelServiceItemMaster_SelectKind()
-        --ограничения по товару / группе
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
-                                   ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId = Object_ModelServiceItemMaster.Id
-                                  AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
-        LEFT JOIN Object AS Object_ModelServiceItemChild
-                         ON Object_ModelServiceItemChild.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId
-                        AND Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
-                        AND Object_ModelServiceItemChild.isErased = FALSE
-          
+          , tmpData AS (SELECT CASE WHEN inIsDay = TRUE THEN tmpReport.OperDate 
+                                    ELSE inEndDate
+                               END ::TDateTime AS OperDate 
+                             , tmpReport.UnitId
+                             , tmpReport.UnitCode
+                             , tmpReport.UnitName
+                             , tmpReport.PersonalId
+                             , tmpReport.PersonalCode
+                             , tmpReport.PersonalName
+                             , tmpReport.PositionId
+                             , tmpReport.PositionCode
+                             , tmpReport.PositionName
+                             , tmpReport.BranchName
+                              --Комплектация
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.CountMovement,0) ELSE 0 END) AS CountMovement_1
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.CountMI,0) ELSE 0 END)       AS CountMI_1
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.TotalCountKg,0) ELSE 0 END)  AS TotalCountKg_1
+                              --Стикеровка
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.TotalCountStick,0) ELSE 0 END) AS TotalCountStick_2
+                              --Взвешивание+документация
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.CountMovement1,0) ELSE 0 END)  AS CountMovement1_3
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.CountMI1,0) ELSE 0 END)        AS CountMI1_3
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.TotalCountKg1,0) ELSE 0 END)   AS TotalCountKg1_3
+                              --Возвраты в Запорожье
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (tmpReport.CountMovement1,0) ELSE 0 END)    AS CountMovement1_4
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (tmpReport.TotalCountKg1,0) ELSE 0 END)     AS TotalCountKg1_4
+                             --Возвраты в Днепр
+                             , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_SendOnPrice() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) <> inBranchId
+                                         THEN COALESCE (tmpReport.TotalCountKg1,0) ELSE 0 END)  AS TotalCountKg1_5
+                        FROM tmpReport
+                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                    ON ObjectLink_Unit_Branch.ObjectId = tmpReport.ToId
+                                   AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                        GROUP BY CASE WHEN inIsDay = TRUE THEN tmpReport.OperDate 
+                                      ELSE inEndDate
+                                 END 
+                               , tmpReport.UnitId
+                               , tmpReport.UnitCode
+                               , tmpReport.UnitName
+                               , tmpReport.PersonalId
+                               , tmpReport.PersonalCode
+                               , tmpReport.PersonalName
+                               , tmpReport.PositionId
+                               , tmpReport.PositionCode
+                               , tmpReport.PositionName
+                               , tmpReport.BranchName
+                        )
 
-    WHERE Object_StaffList.DescId = zc_Object_StaffList()
-        AND Object_StaffList.isErased = FALSE
-        AND (Object_ModelServiceItemChild.Id > 0
-          OR ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId IN (zc_Enum_SelectKind_MovementTransportHours()
-                                                                          , zc_Enum_SelectKind_MovementReestrWeight()
-                                                                          , zc_Enum_SelectKind_MovementReestrDoc()
-                                                                          , zc_Enum_SelectKind_MovementReestrPartner()
-                                                                            -- Комплектация
-                                                                          , zc_Enum_SelectKind_MovementCount(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MI_Master()
-                                                                            -- Стикеровка
-                                                                          , zc_Enum_SelectKind_MI_MasterSh()
-                                                                            -- Значение для клдв.
-                                                                          , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
-                                                                            -- Значение возврат на филилал
-                                                                          , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
-                                                                            -- Значение возврат на Днепр
-                                                                          , zc_Enum_SelectKind_MI_Master_WareOut()
-                                                                            -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
-                                                                          , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
-                                                                           )
-            )
-   )
+            -- Результат
+            SELECT tmpData.OperDate
+                 , tmpData.UnitId
+                 , tmpData.UnitCode
+                 , tmpData.UnitName
+                 , tmpData.PersonalId
+                 , tmpData.PersonalCode
+                 , tmpData.PersonalName
+                 , tmpData.PositionId
+                 , tmpData.PositionCode
+                 , tmpData.PositionName
+                 , tmpData.BranchName
+                  --Комплектация
+                 , tmpData.CountMovement_1                 ::TFloat
+                 , tmpData.CountMI_1                       ::TFloat
+                 , tmpData.TotalCountKg_1                  ::TFloat
 
-     -- Данные для - WageWarehouseBranch
-       , tmpWageWarehouseBranch AS (SELECT *
-                                    FROM gpReport_WageWarehouseBranch (inStartDate   := inStartDate
-                                                                     , inEndDate     := inEndDate
-                                                                     , inPersonalId  := inPersonalId
-                                                                     , inPositionId  := inPositionId
-                                                                     , inBranchId    := inBranchId
-                                                                     , inIsDay       := FALSE
-                                                                     , inKoef_11     := 0
-                                                                     , inKoef_12     := 0
-                                                                     , inKoef_13     := 0
-                                                                     , inKoef_22     := 0
-                                                                     , inKoef_31     := 0
-                                                                     , inKoef_32     := 0
-                                                                     , inKoef_33     := 0
-                                                                     , inKoef_41     := 0
-                                                                     , inKoef_42     := 0
-                                                                     , inKoef_43     := 0
-                                                                     , inSession     := inSession
-                                                                      ))
-       , tmpMovement_WarehouseBranch AS
-       (SELECT gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
-             --, gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
-             , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
-        FROM tmpWageWarehouseBranch AS gpReport
-             INNER JOIN (SELECT DISTINCT Setting_Wage_1.FromId, Setting_Wage_1.UnitId
-                         FROM Setting_Wage_1
-                         WHERE Setting_Wage_1.SelectKindId IN (-- Стикеровка
-                                                               zc_Enum_SelectKind_MI_MasterSh()
-                                                               -- Значение для клдв.
-                                                             , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
-                                                               -- Значение возврат на филилал
-                                                             , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
-                                                               -- Значение возврат на Днепр
-                                                             , zc_Enum_SelectKind_MI_Master_WareOut()
-                                                              )
-                           AND Setting_Wage_1.FromId > 0 OR Setting_Wage_1.UnitId > 0
-                        ) AS tmpFrom ON (tmpFrom.FromId = gpReport.UnitId AND tmpFrom.FromId > 0)
-                                     OR (tmpFrom.UnitId = gpReport.UnitId AND tmpFrom.UnitId > 0 AND COALESCE (tmpFrom.FromId, 0) = 0)
-        GROUP BY gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
-               , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
-       )
+                 , (inKoef_11 * tmpData.CountMovement_1)   ::TFloat AS CountMovement_1_koef
+                 , (inKoef_12 * tmpData.CountMI_1)         ::TFloat AS CountMI_1_koef
+                 , (inKoef_13 * tmpData.TotalCountKg_1)    ::TFloat AS TotalCountKg_1_koef
+                  --Стикеровка
+                 , tmpData.TotalCountStick_2               ::TFloat
+                 , (inKoef_22 * tmpData.TotalCountStick_2) ::TFloat AS TotalCountStick_2_koef
+                  --Взвешивание+документация
+                 , tmpData.CountMovement1_3                ::TFloat
+                 , tmpData.CountMI1_3                      ::TFloat
+                 , tmpData.TotalCountKg1_3                 ::TFloat
 
-    , tmpKoeff AS (SELECT MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount() THEN Setting.Price ELSE 0 END)        AS koeff_1
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount() THEN Setting.Price ELSE 0 END)       AS koeff_2
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master() THEN Setting.Price ELSE 0 END)            AS koeff_3
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterSh() THEN Setting.Price ELSE 0 END)          AS koeff_4
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_Ware() THEN Setting.Price ELSE 0 END)   AS koeff_5
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount_Ware() THEN Setting.Price ELSE 0 END)  AS koeff_6
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_Ware() THEN Setting.Price ELSE 0 END)       AS koeff_7
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount_WareIn() THEN Setting.Price ELSE 0 END) AS koeff_8
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareIn() THEN Setting.Price ELSE 0 END)     AS koeff_9
-                        , MAX (CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master_WareOut() THEN Setting.Price ELSE 0 END)    AS koeff_10
-                     
-                      FROM Setting_Wage_1 AS Setting
-                           INNER JOIN tmpMovement_WarehouseBranch AS tmpMovement_PersonalComplete
-                                                                  ON ((tmpMovement_PersonalComplete.UnitId = Setting.FromId AND Setting.FromId > 0)
-                                                                         OR (tmpMovement_PersonalComplete.UnitId = Setting.UnitId AND Setting.UnitId > 0 AND COALESCE (Setting.FromId, 0) = 0)
-                                                                     )
-                                                                 AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
-                           
-                  
-                    WHERE Setting.SelectKindId IN (-- Стикеровка
-                                                     zc_Enum_SelectKind_MI_MasterSh()
-                                                     -- Значение для клдв.
-                                                   , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
-                                                     -- Значение возврат на филилал
-                                                   , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
-                                                     -- Значение возврат на Днепр
-                                                   , zc_Enum_SelectKind_MI_Master_WareOut()
-                                                     --"Кол-во документов компл."
-                                                   ,  zc_Enum_SelectKind_MovementCount()
-                                                     --"Кол-во строк по документам компл."
-                                                   , zc_Enum_SelectKind_MI_MasterCount()
-                                                     --;"Кол-во вес по документам компл."
-                                                   , zc_Enum_SelectKind_MI_Master()
-                                                    )
-                   )
+                 , (inKoef_31 * tmpData.CountMovement1_3)  ::TFloat AS CountMovement1_3_koef
+                 , (inKoef_32 * tmpData.CountMI1_3)        ::TFloat AS CountMI1_3_koef
+                 , (inKoef_33 * tmpData.TotalCountKg1_3)   ::TFloat AS TotalCountKg1_3_koef
+                  --Возвраты в Запорожье
+                 , tmpData.CountMovement1_4                ::TFloat
+                 , tmpData.TotalCountKg1_4                 ::TFloat
 
-     SELECT COALESCE (tmpKoeff.koeff_1, tmp.koeff_1)   ::TFloat AS koeff_11 
-          , COALESCE (tmpKoeff.koeff_2, tmp.koeff_2)   ::TFloat AS koeff_12 
-          , COALESCE (tmpKoeff.koeff_3, tmp.koeff_3)   ::TFloat AS koeff_13 
-          , COALESCE (tmpKoeff.koeff_4, tmp.koeff_4)   ::TFloat AS koeff_22 
-          , COALESCE (tmpKoeff.koeff_5, tmp.koeff_5)   ::TFloat AS koeff_31 
-          , COALESCE (tmpKoeff.koeff_6, tmp.koeff_6)   ::TFloat AS koeff_32 
-          , COALESCE (tmpKoeff.koeff_7, tmp.koeff_7)   ::TFloat AS koeff_33 
-          , COALESCE (tmpKoeff.koeff_8, tmp.koeff_8)   ::TFloat AS koeff_41 
-          , COALESCE (tmpKoeff.koeff_9, tmp.koeff_9)   ::TFloat AS koeff_42 
-          , COALESCE (tmpKoeff.koeff_10, tmp.koeff_10) ::TFloat AS koeff_43
-     
-     FROM (SELECT 0,1  AS koeff_1
-                , 0,3  AS koeff_2
-                , 0,15 AS koeff_3
-                , 0,1  AS koeff_4
-                , 0,4  AS koeff_5
-                , 0,3  AS koeff_6
-                , 0,22 AS koeff_7
-                , 0,4  AS koeff_8
-                , 0,2  AS koeff_9
-                , 0,2  AS koeff_10
-           )  AS tmp
-           FULL JOIN tmpKoeff ON 1 = 1  
- 
- 
- ;      
+                 , (inKoef_41 * tmpData.CountMovement1_4)  ::TFloat AS CountMovement1_4_koef
+                 , (inKoef_42 * tmpData.TotalCountKg1_4)   ::TFloat AS TotalCountKg1_4_koef
+                 --Возвраты в Днепр
+                 , tmpData.TotalCountKg1_5                 ::TFloat
+                 , (inKoef_43 * tmpData.TotalCountKg1_5)   ::TFloat AS TotalCountKg1_5_koef
+            FROM tmpData
+            ;
+     END IF;
 
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-
-
+  LANGUAGE plpgsql VOLATILE;
+                           
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -253,4 +177,7 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- select * from GetReport_WageWarehouseBranch(inStartDate := ('01.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime , inPersonalId := 0 , inPositionId := 0 , inBranchId := 301310 ,  inSession := '9457');
+/*
+SELECT * FROM gpReport_WageWarehouseBranch (inStartDate := ('01.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 301310, inisday := FALSE
+, inKoef_11:= 0.1, inKoef_12:= 0.3, inKoef_13:= 0.15, inKoef_22:= 0.1, inKoef_31:= 0.4, inKoef_32:= 0.3, inKoef_33:= 0.22, inKoef_41:= 0.4, inKoef_42:= 0.2, inKoef_43:= 0.2, inSession:= zfCalc_UserAdmin())
+*/
