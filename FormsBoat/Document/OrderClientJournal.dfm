@@ -2820,7 +2820,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 744
-    Top = 72
+    Left = 688
+    Top = 80
   end
 end

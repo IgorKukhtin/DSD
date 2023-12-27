@@ -536,6 +536,15 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         VisibleForCustomization = False
         Width = 55
       end
+      object InvoiceKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvoiceKindName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1207,6 +1216,23 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           ComponentItem = 'VATPercent'
           DataType = ftFloat
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvoiceKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvoiceKindName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       Caption = #1054#1050

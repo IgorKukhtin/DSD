@@ -835,10 +835,6 @@
 				<Form>Report_OrderClientForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalChoice.pas">
-				<Form>OrderClientJournalChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\DocTag.pas">
 				<Form>DocTagForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1284,6 +1280,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Report\Report_Boat_Assembly.pas">
 				<Form>Report_Boat_AssemblyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalChoice.pas">
+				<Form>OrderClientJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

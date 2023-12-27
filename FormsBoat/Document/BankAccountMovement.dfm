@@ -443,6 +443,23 @@
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId'
+          Value = Null
+          Component = GuidesInvoiceKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName'
+          Value = Null
+          Component = GuidesInvoiceKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1166,6 +1183,23 @@
         Name = 'InvNumber_Invoice'
         Value = Null
         Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = Null
+        Component = GuidesInvoiceKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
