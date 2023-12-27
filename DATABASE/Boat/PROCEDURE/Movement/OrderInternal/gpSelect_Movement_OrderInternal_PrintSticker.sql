@@ -67,7 +67,11 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_MI(), tmpMI.Id) AS IdBarCode
            , ObjectString_Article.ValueData AS Article
            , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient 
-           , Movement_OrderClient.InvNumber  AS InvNumber_OrderClient
+           , Movement_OrderClient.InvNumber  AS InvNumber_OrderClient  
+           , (Object_Brand.ValueData || '-' || Object_Model.ValueData) ::TVarChar AS ModelName_full
+           , ObjectDate_DateBegin.ValueData   AS DateBegin 
+           , COALESCE (MovementFloat_NPP.ValueData,0) :: Integer AS NPP
+           
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
@@ -78,7 +82,28 @@ BEGIN
                                         ON MIFloat_MovementId.MovementItemId = tmpMI.Id
                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId() 
             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData :: Integer
-                                       
+
+            LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                    ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                         ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
+                                        AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+            LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Model
+                                 ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
+            LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Brand
+                                 ON ObjectLink_Brand.ObjectId = Object_Product.Id
+                                AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
+            LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId  
+
+            LEFT JOIN ObjectDate AS ObjectDate_DateBegin
+                                 ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
+                                AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()                                     
        ORDER BY Object_Goods.ValueData
        ;
 
