@@ -350,6 +350,9 @@ type
     bbStartLoadPriceList: TdxBarButton;
     ChangePercent: TcxGridDBColumn;
     ChangePercentPartner: TcxGridDBColumn;
+    actInsertUpdateCP_grid: TdsdExecStoredProc;
+    bbInsertUpdateCP_grid: TdxBarButton;
+    spInsertUpdateContractPartner_connect: TdsdStoredProc;
 
   private
     { Private declarations }
