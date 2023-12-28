@@ -192,6 +192,25 @@ type
     PartionModelName: TcxGridDBColumn;
     NewOpenChoiceForm1: TOpenChoiceForm;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxTabSheet_PartionCell: TcxTabSheet;
+    cxGrid_PartionCell: TcxGrid;
+    cxGridDBTableView_PartionCell: TcxGridDBTableView;
+    GoodsGroupNameFull_ch4: TcxGridDBColumn;
+    GoodsCode_ch4: TcxGridDBColumn;
+    GoodsName_ch4: TcxGridDBColumn;
+    GoodsKindName_ch4GoodsKindName: TcxGridDBColumn;
+    MeasureName_ch4: TcxGridDBColumn;
+    Amount_ch4: TcxGridDBColumn;
+    PartionCellName_1_ch4: TcxGridDBColumn;
+    PartionCellName_2_ch4: TcxGridDBColumn;
+    isPartionCell_Close_1_ch4: TcxGridDBColumn;
+    cxGridLevel_PartionCell: TcxGridLevel;
+    PartionCellDS: TDataSource;
+    PartionCellCDS: TClientDataSet;
+    PartionCell_Amount_1_ch4: TcxGridDBColumn;
+    PartionCell_Last_ch4: TcxGridDBColumn;
+    spSelect_MI_PartionCell: TdsdStoredProc;
+    DBViewAddOn_PartionCell: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

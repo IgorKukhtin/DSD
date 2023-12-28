@@ -1666,9 +1666,31 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_CurrencyValueIn() RETURNS Integer AS $BODY
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_CurrencyValueIn', 'Курс покупки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CurrencyValueIn');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_1', 'Расчетное значение Количество для Ячейка-1' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_1');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_2', 'Расчетное значение Количество для Ячейка-2' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_2');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_3', 'Расчетное значение Количество для Ячейка-3' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_3');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_4', 'Расчетное значение Количество для Ячейка-4' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_4');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_5', 'Расчетное значение Количество для Ячейка-5' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_5');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 28.12.23         * zc_MIFloat_PartionCell_Amount_...
  08.11.23         * zc_MIFloat_CountForAmount
  25.10.23                                                                                                     * zc_MIFloat_VAT
  04.07.23         * zc_MIFloat_DayPriceNalog
