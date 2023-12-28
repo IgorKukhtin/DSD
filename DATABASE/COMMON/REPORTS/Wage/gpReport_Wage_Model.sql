@@ -1110,6 +1110,7 @@ AS  (SELECT
                                                                      , inPersonalId  := 0
                                                                      , inPositionId  := 0
                                                                      , inBranchId    := vbBranchId
+                                                                     , inIsDay       := TRUE
                                                                      , inKoef_11     := 0
                                                                      , inKoef_12     := 0
                                                                      , inKoef_13     := 0
@@ -1131,8 +1132,8 @@ AS  (SELECT
                                                                                         END
                                                                       ))
        , tmpMovement_WarehouseBranch AS
-       (SELECT inEndDate AS OperDate
-             , DATE_PART ('ISODOW', inEndDate)  AS OperDate_num
+       (SELECT gpReport.OperDate
+             , DATE_PART ('ISODOW', gpReport.OperDate)  AS OperDate_num
              , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
              , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
              , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
@@ -1163,7 +1164,7 @@ AS  (SELECT
                            AND Setting_Wage_1.FromId > 0 OR Setting_Wage_1.UnitId > 0
                         ) AS tmpFrom ON (tmpFrom.FromId = gpReport.UnitId AND tmpFrom.FromId > 0)
                                      OR (tmpFrom.UnitId = gpReport.UnitId AND tmpFrom.UnitId > 0 AND COALESCE (tmpFrom.FromId, 0) = 0)
-        GROUP BY gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
+        GROUP BY gpReport.OperDate, gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
                , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
        )

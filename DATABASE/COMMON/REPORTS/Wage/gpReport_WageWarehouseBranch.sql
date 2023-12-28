@@ -3,23 +3,23 @@
 DROP FUNCTION IF EXISTS gpreport_wagewarehousebranch (tdatetime, tdatetime, integer, integer, integer, boolean, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpreport_wagewarehousebranch(
-    IN instartdate tdatetime,
-    IN inenddate tdatetime,
-    IN inpersonalid integer,
-    IN inpositionid integer,
-    IN inbranchid integer,
-    IN inisday boolean,
-    IN inkoef_11 tfloat,
-    IN inkoef_12 tfloat,
-    IN inkoef_13 tfloat,
-    IN inkoef_22 tfloat,
-    IN inkoef_31 tfloat,
-    IN inkoef_32 tfloat,
-    IN inkoef_33 tfloat,
-    IN inkoef_41 tfloat,
-    IN inkoef_42 tfloat,
-    IN inkoef_43 tfloat,
-    IN insession tvarchar)
+    IN inStartDate tdatetime,
+    IN inEndDate tdatetime,
+    IN inPersonalId integer,
+    IN inPositionId integer,
+    IN inBranchId integer,
+    IN inIsDay boolean,
+    IN inKoef_11 tfloat,
+    IN inKoef_12 tfloat,
+    IN inKoef_13 tfloat,
+    IN inKoef_22 tfloat,
+    IN inKoef_31 tfloat,
+    IN inKoef_31 tfloat,
+    IN inKoef_33 tfloat,
+    IN inKoef_41 tfloat,
+    IN inKoef_42 tfloat,
+    IN inKoef_43 tfloat,
+    IN inSession tvarchar)
   RETURNS TABLE(operdate tdatetime, unitid integer, unitcode integer, unitname tvarchar
               , personalid integer, personalcode integer, personalname tvarchar
               , positionid integer, positioncode integer, positionname tvarchar

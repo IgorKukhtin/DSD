@@ -121,4 +121,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderInternal_PrintSticker (inMovementId:= 432692, inMovementItemId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_OrderInternal_PrintSticker (inMovementId:= 432692, inSession:= '5');
