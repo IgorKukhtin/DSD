@@ -27,7 +27,6 @@ object PartionCellForm: TPartionCellForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 502
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -36,7 +35,6 @@ object PartionCellForm: TPartionCellForm
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = Level_l1
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -51,9 +49,9 @@ object PartionCellForm: TPartionCellForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Level_l1: TcxGridDBColumn
+      object Name_l1: TcxGridDBColumn
         Caption = '1.'#1059#1088#1086#1074#1077#1085#1100
-        DataBinding.FieldName = 'Level_l1'
+        DataBinding.FieldName = 'Name_l1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -148,9 +146,9 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Level_l2: TcxGridDBColumn
+      object Name_l2: TcxGridDBColumn
         Caption = '2.'#1059#1088#1086#1074#1077#1085#1100
-        DataBinding.FieldName = 'Level_l2'
+        DataBinding.FieldName = 'Name_l2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -245,9 +243,9 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Level_l3: TcxGridDBColumn
+      object Name_l3: TcxGridDBColumn
         Caption = '3.'#1059#1088#1086#1074#1077#1085#1100
-        DataBinding.FieldName = 'Level_l3'
+        DataBinding.FieldName = 'Name_l3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -342,9 +340,9 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Level_l4: TcxGridDBColumn
+      object Name_l4: TcxGridDBColumn
         Caption = '4.'#1059#1088#1086#1074#1077#1085#1100
-        DataBinding.FieldName = 'Level_l4'
+        DataBinding.FieldName = 'Name_l4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -439,9 +437,9 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Level_l5: TcxGridDBColumn
+      object Name_l5: TcxGridDBColumn
         Caption = '5.'#1059#1088#1086#1074#1077#1085#1100
-        DataBinding.FieldName = 'Level_l5'
+        DataBinding.FieldName = 'Name_l5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -536,9 +534,9 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Level_l6: TcxGridDBColumn
+      object Name_l6: TcxGridDBColumn
         Caption = '6.'#1059#1088#1086#1074#1077#1085#1100
-        DataBinding.FieldName = 'Level_l6'
+        DataBinding.FieldName = 'Name_l6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -1037,6 +1035,7 @@ object PartionCellForm: TPartionCellForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -1047,6 +1046,7 @@ object PartionCellForm: TPartionCellForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource

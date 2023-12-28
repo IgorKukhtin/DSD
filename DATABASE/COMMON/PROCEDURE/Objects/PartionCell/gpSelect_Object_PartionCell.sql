@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_PartionCell (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartionCell(
     IN inSession     TVarChar            -- сессия пользователя
 )
-RETURNS TABLE (Id_l1 Integer
+RETURNS TABLE (GroupName TVarChar
+             , Id_l1 Integer
              , Id_l2 Integer
              , Id_l3 Integer
              , Id_l4 Integer
@@ -80,8 +81,8 @@ BEGIN
                          WHERE spSelect.Id > 0
                          )
  
-       SELECT
-             MAX (CASE WHEN Object.Level = 1 THEN Object.Id ELSE 0 END) AS Id_l1
+       SELECT RIGHT (Object.Name,5) :: TVarChar AS GroupName
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Id ELSE 0 END) AS Id_l1
            , MAX (CASE WHEN Object.Level = 2 THEN Object.Id ELSE 0 END) AS Id_l2
            , MAX (CASE WHEN Object.Level = 3 THEN Object.Id ELSE 0 END) AS Id_l3
            , MAX (CASE WHEN Object.Level = 4 THEN Object.Id ELSE 0 END) AS Id_l4
@@ -152,6 +153,7 @@ BEGIN
            , MAX (CASE WHEN Object.Level = 6 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l6
 
        FROM tmpPartionCell AS Object
+       GROUP BY RIGHT (Object.Name,5)
       ;
 
 

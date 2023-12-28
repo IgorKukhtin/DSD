@@ -11286,6 +11286,9 @@ inherited MainForm: TMainForm
       object N73: TMenuItem
         Action = actStorageLine
       end
+      object miPartionCell: TMenuItem
+        Action = actPartionCell
+      end
       object N33: TMenuItem
         Caption = '-'
       end
@@ -11428,9 +11431,6 @@ inherited MainForm: TMainForm
         object miBarCodeBox: TMenuItem
           Action = actBarCodeBox
         end
-      end
-      object miPartionCell: TMenuItem
-        Action = actPartionCell
       end
       object N1: TMenuItem
         Caption = '-'
