@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , BankId Integer, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , InvoiceKindId    Integer, InvoiceKindName  TVarChar
              , MovementId_parent Integer
              , InvNumber_parent TVarChar
              )
@@ -67,13 +68,24 @@ BEGIN
            , tmpBankAccount.BankName                           AS BankName
            , Object_MoneyPlace.Id                              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData                       AS MoneyPlaceName
+           
            , Movement_Invoice.Id                               AS MovementId_Invoice
            , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData          AS Comment_Invoice
+           
+           , Object_InvoiceKind.Id                             AS InvoiceKindId
+           , Object_InvoiceKind.ValueData                      AS InvoiceKindName
+                       
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = inMovementId_Invoice
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                         ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
+                                        AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+            LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = COALESCE (MovementLinkObject_InvoiceKind.ObjectId, zc_Enum_InvoiceKind_PrePay())
+
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                      ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
                                     AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
@@ -110,6 +122,9 @@ BEGIN
            , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
 
+           , Object_InvoiceKind.Id             AS InvoiceKindId
+           , Object_InvoiceKind.ValueData      AS InvoiceKindName
+
            --parent для Invoice
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
@@ -121,6 +136,11 @@ BEGIN
                                            ON MovementLinkMovement_Invoice.MovementId = Movement.Id
                                           AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                         ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
+                                        AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+            LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = COALESCE (MovementLinkObject_InvoiceKind.ObjectId, zc_Enum_InvoiceKind_PrePay())
 
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                      ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
@@ -148,7 +168,7 @@ BEGIN
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
-        --Parent для Movement_Invoice - Документ Заказ или ПРиход
+        --Parent для Movement_Invoice - Документ Заказ или Приход
         LEFT JOIN Movement AS Movement_Parent
                            ON Movement_Parent.Id = Movement_Invoice.ParentId
                           AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()

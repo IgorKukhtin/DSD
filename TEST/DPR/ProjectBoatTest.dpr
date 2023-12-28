@@ -253,7 +253,6 @@ uses
   OrderPartnerJournal in '..\..\FormsBoat\Document\OrderPartnerJournal.pas' {OrderPartnerJournalForm: TParentForm},
   Report_OrderClientDialog in '..\..\FormsBoat\Report\Report_OrderClientDialog.pas' {Report_OrderClientDialogForm: TParentForm},
   Report_OrderClient in '..\..\FormsBoat\Report\Report_OrderClient.pas' {Report_OrderClientForm: TParentForm},
-  OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm},
   DocTag in '..\..\FormsBoat\Guides\DocTag.pas' {DocTagForm: TParentForm},
   DocTagEdit in '..\..\FormsBoat\Guides\DocTagEdit.pas' {DocTagEditForm: TParentForm},
   ProductDocumentPhotoEdit in '..\..\FormsBoat\Guides\ProductDocumentPhotoEdit.pas' {ProductDocumentPhotoEditForm: TParentForm},
@@ -371,7 +370,8 @@ uses
   InvoiceKindEdit in '..\..\FormsBoat\Kind\InvoiceKindEdit.pas' {InvoiceKindEditForm: TParentForm},
   InvoiceItemEdit in '..\..\FormsBoat\Document\InvoiceItemEdit.pas' {InvoiceItemEditForm: TParentForm},
   InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
-  Report_Boat_Assembly in '..\..\FormsBoat\Report\Report_Boat_Assembly.pas' {Report_Boat_AssemblyForm: TParentForm};
+  Report_Boat_Assembly in '..\..\FormsBoat\Report\Report_Boat_Assembly.pas' {Report_Boat_AssemblyForm: TParentForm},
+  OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

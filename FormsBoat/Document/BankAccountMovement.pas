@@ -55,6 +55,9 @@ type
     bbGuidesInvoiceChoiceForm: TcxButton;
     actGuidesParentChoiceForm: TOpenChoiceForm;
     bbGuidesParentChoiceForm: TcxButton;
+    cxLabel9: TcxLabel;
+    edInvoiceKind: TcxButtonEdit;
+    GuidesInvoiceKind: TdsdGuides;
   private
     { Private declarations }
   public

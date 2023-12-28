@@ -61,7 +61,7 @@ BEGIN
        SELECT 
              0 :: Integer  AS Id
            , 0 :: Integer  AS Code
-         
+
            , View_Contract.ContractId
            , View_Contract.ContractCode
            , View_Contract.InvNumber
@@ -73,7 +73,7 @@ BEGIN
 
            , FALSE                           AS isConnected
            , Object_Partner.isErased         AS isErased
-           
+
        FROM Object AS Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id

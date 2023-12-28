@@ -1009,6 +1009,11 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MemberReport_Comment', zc_object_MemberReport(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberReport_Comment');
 
 
+ CREATE OR REPLACE FUNCTION zc_ObjectString_PartionCell_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartionCell_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PartionCell_Comment', zc_object_PartionCell(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartionCell_Comment');
+
+
 
 ---!!! Аптека
 
@@ -1613,6 +1618,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 27.12.23         * zc_ObjectString_PartionCell_Comment
  23.11.23         * zc_ObjectString_SubjectDoc_MovementDesc
  21.11.23         * zc_ObjectLink_SubjectDoc_Reason
  20.11.23                                                                                                         * zc_ObjectString_SubjectDoc_Short, zc_ObjectString_Reason_Short

@@ -2148,6 +2148,18 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateCP_grid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenFormPartner'
         end>
     end
@@ -2249,6 +2261,10 @@
     end
     object bbStartLoadPriceList: TdxBarButton
       Action = macStartLoadPriceList
+      Category = 0
+    end
+    object bbInsertUpdateCP_grid: TdxBarButton
+      Action = actInsertUpdateCP_grid
       Category = 0
     end
   end
@@ -3653,6 +3669,14 @@
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isConnected'
+          Value = True
+          Component = CDSContractPartner
+          ComponentItem = 'isConnected'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -4077,6 +4101,22 @@
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1044#1086#1075#1086#1074#1086#1088#1072' ('#1092#1080#1079#1086#1073#1084#1077#1085')'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1044#1086#1075#1086#1074#1086#1088#1072' ('#1092#1080#1079#1086#1073#1084#1077#1085')'
       ImageIndex = 41
+    end
+    object actInsertUpdateCP_grid: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateContractPartner_connect
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateContractPartner_connect
+        end
+        item
+          StoredProc = spSelectContractPartner
+        end>
+      Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
+      Hint = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
+      ImageIndex = 76
     end
   end
   object spSelect: TdsdStoredProc
@@ -5276,5 +5316,46 @@
     PackSize = 1
     Left = 840
     Top = 192
+  end
+  object spInsertUpdateContractPartner_connect: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ContractPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = CDSContractPartner
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = CDSContractPartner
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = CDSContractPartner
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1008
+    Top = 440
   end
 end

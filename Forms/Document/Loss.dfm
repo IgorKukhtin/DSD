@@ -2,7 +2,6 @@ inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1038
-  ExplicitTop = -58
   ExplicitWidth = 1054
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -2014,6 +2013,15 @@ inherited LossForm: TLossForm
       item
         Name = 'inHeadCount'
         Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

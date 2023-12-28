@@ -10,18 +10,19 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
     Top = 59
     Width = 669
     Height = 380
+    ExplicitTop = 59
     ExplicitWidth = 669
-    ExplicitHeight = 413
+    ExplicitHeight = 380
     ClientRectBottom = 380
     ClientRectRight = 669
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 669
-      ExplicitHeight = 413
+      ExplicitHeight = 380
       inherited cxGrid: TcxGrid
         Width = 669
         Height = 380
         ExplicitWidth = 669
-        ExplicitHeight = 413
+        ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -100,8 +101,6 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitLeft = 8
-    ExplicitTop = -6
     object lbSearchName: TcxLabel
       Left = 6
       Top = 6
@@ -161,6 +160,21 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
         item
           Name = 'InvNumber_invoice'
           Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvoiceKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvoiceKindName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
