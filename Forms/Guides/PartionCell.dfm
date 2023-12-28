@@ -15,6 +15,7 @@ object PartionCellForm: TPartionCellForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -680,7 +681,7 @@ object PartionCellForm: TPartionCellForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 264
+    Left = 256
     Top = 80
     DockControlHeights = (
       0
@@ -754,6 +755,14 @@ object PartionCellForm: TPartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end>
       OneOnRow = True
@@ -818,6 +827,10 @@ object PartionCellForm: TPartionCellForm
     end
     object bbUpdate6: TdxBarButton
       Action = actUpdate6
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -1091,6 +1104,51 @@ object PartionCellForm: TPartionCellForm
       GuiParams = <>
       isShowModal = False
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inDate_BUH'
+          Value = 45047d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1053#1072#1079#1074#1072#1085#1080#1081' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCell'
@@ -1155,5 +1213,47 @@ object PartionCellForm: TPartionCellForm
     PropertiesCellList = <>
     Left = 136
     Top = 224
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPartionCellForm;zc_Object_ImportSetting_PartionCell'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 88
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 504
+    Top = 136
   end
 end

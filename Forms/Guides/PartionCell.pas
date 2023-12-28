@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, ExternalLoad;
 
 type
   TPartionCellForm = class(TParentForm)
@@ -66,6 +66,12 @@ type
     bbUpdate4: TdxBarButton;
     bbUpdate5: TdxBarButton;
     bbUpdate6: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actDoLoad: TExecuteImportSettingsAction;
+    macStartLoad: TMultiAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public
