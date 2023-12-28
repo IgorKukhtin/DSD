@@ -92,9 +92,11 @@ BEGIN
    -- vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
    -- vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
    vbIsConstraint:= zfCalc_AccessKey_GuideAll (vbUserId) = FALSE AND (COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0);
-   vbIsCommerce:= vbIsConstraint OR (EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerce <> 0)
+   vbIsCommerce:= (vbIsConstraint OR (EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerce <> 0)
                                      AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerceAll <> 0)
-                                    );
+                                    )
+                  ) AND zfCalc_AccessKey_GuideAll (vbUserId) = FALSE
+                   ;
    -- Галат Е.Н. + Середа Ю.В. + Дмитриева О.В. + Якимчик А.С. + Аналитики Мясо
    vbIsCommerce:= vbIsCommerce = TRUE AND vbUserId NOT IN (106593, 106596, 106594, 602817) AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 80536);
 
@@ -526,7 +528,9 @@ BEGIN
 
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
-           OR vbIsConstraint = FALSE)
+           OR vbIsConstraint = FALSE
+           OR vbUserId = 343013
+          )
 
       AND ((Object_Contract_View.isErased = FALSE
         AND Object_Contract_View.ContractStateKindId > 0
