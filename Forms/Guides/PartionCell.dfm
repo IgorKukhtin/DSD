@@ -3,7 +3,7 @@ object PartionCellForm: TPartionCellForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
   ClientHeight = 376
-  ClientWidth = 502
+  ClientWidth = 958
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,17 +20,23 @@ object PartionCellForm: TPartionCellForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 502
+    Width = 958
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 502
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = Level_l1
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -39,24 +45,11 @@ object PartionCellForm: TPartionCellForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 156
-      end
       object Level_l1: TcxGridDBColumn
         Caption = '1.'#1059#1088#1086#1074#1077#1085#1100
         DataBinding.FieldName = 'Level_l1'
@@ -70,6 +63,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'Length_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -81,6 +75,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -92,6 +87,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -114,6 +110,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowBoxCount_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -124,6 +121,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowWidth_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -134,6 +132,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowHeight_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -142,6 +141,7 @@ object PartionCellForm: TPartionCellForm
       object Comment_l1: TcxGridDBColumn
         Caption = '1.'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment_l1'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -160,6 +160,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'Length_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -171,6 +172,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -182,6 +184,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -204,6 +207,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowBoxCount_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -214,6 +218,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowWidth_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -224,6 +229,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowHeight_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -232,6 +238,7 @@ object PartionCellForm: TPartionCellForm
       object Comment_l2: TcxGridDBColumn
         Caption = '2.'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment_l2'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -250,6 +257,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'Length_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -261,6 +269,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -272,6 +281,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -294,6 +304,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowBoxCount_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -304,6 +315,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowWidth_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -314,6 +326,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowHeight_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -322,6 +335,7 @@ object PartionCellForm: TPartionCellForm
       object Comment_l3: TcxGridDBColumn
         Caption = '3.'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment_l3'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -340,6 +354,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'Length_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -351,6 +366,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -362,6 +378,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -384,6 +401,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowBoxCount_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -394,6 +412,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowWidth_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -404,6 +423,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowHeight_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -412,6 +432,7 @@ object PartionCellForm: TPartionCellForm
       object Comment_l4: TcxGridDBColumn
         Caption = '4.'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment_l4'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -430,6 +451,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'Length_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -441,6 +463,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -452,6 +475,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -474,6 +498,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowBoxCount_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -484,6 +509,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowWidth_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -494,6 +520,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowHeight_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -502,13 +529,14 @@ object PartionCellForm: TPartionCellForm
       object Comment_l5: TcxGridDBColumn
         Caption = '5.'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment_l5'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
       object Level_l6: TcxGridDBColumn
-        Caption = '5.'#1059#1088#1086#1074#1077#1085#1100
+        Caption = '6.'#1059#1088#1086#1074#1077#1085#1100
         DataBinding.FieldName = 'Level_l6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -520,6 +548,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'Length_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -531,6 +560,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -542,6 +572,7 @@ object PartionCellForm: TPartionCellForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -564,6 +595,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowBoxCount_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -574,6 +606,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowWidth_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -584,6 +617,7 @@ object PartionCellForm: TPartionCellForm
         DataBinding.FieldName = 'RowHeight_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -592,6 +626,7 @@ object PartionCellForm: TPartionCellForm
       object Comment_l6: TcxGridDBColumn
         Caption = '6.'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment_l6'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -670,15 +705,31 @@ object PartionCellForm: TPartionCellForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'bbUpdate2'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bbUpdate3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate5'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate6'
         end
         item
           Visible = True
@@ -691,16 +742,19 @@ object PartionCellForm: TPartionCellForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenPartionCell_list'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoice'
+          ItemName = 'bbToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -717,7 +771,7 @@ object PartionCellForm: TPartionCellForm
       Category = 0
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Action = actUpdate1
       Category = 0
     end
     object bbSetErased: TdxBarButton
@@ -740,6 +794,30 @@ object PartionCellForm: TPartionCellForm
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbOpenPartionCell_list: TdxBarButton
+      Action = actOpenPartionCell_list
+      Category = 0
+    end
+    object bbUpdate2: TdxBarButton
+      Action = actUpdate2
+      Category = 0
+    end
+    object bbUpdate3: TdxBarButton
+      Action = actUpdate3
+      Category = 0
+    end
+    object bbUpdate4: TdxBarButton
+      Action = actUpdate4
+      Category = 0
+    end
+    object bbUpdate5: TdxBarButton
+      Action = actUpdate5
+      Category = 0
+    end
+    object bbUpdate6: TdxBarButton
+      Action = actUpdate6
       Category = 0
     end
   end
@@ -783,13 +861,13 @@ object PartionCellForm: TPartionCellForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actUpdate: TdsdInsertUpdateAction
+    object actUpdate2: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 2'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 2'
       ShortCut = 115
-      ImageIndex = 1
+      ImageIndex = 48
       FormName = 'TPartionCellEditForm'
       FormNameParam.Value = 'TPartionCellEditForm'
       FormNameParam.DataType = ftString
@@ -799,7 +877,137 @@ object PartionCellForm: TPartionCellForm
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'Id_l2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate3: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 3'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 3'
+      ShortCut = 115
+      ImageIndex = 49
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l3'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate4: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 4'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 4'
+      ShortCut = 115
+      ImageIndex = 68
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l4'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate5: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 5'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 5'
+      ShortCut = 115
+      ImageIndex = 69
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l5'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate6: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 6'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 6'
+      ShortCut = 115
+      ImageIndex = 70
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l6'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate1: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 1'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1091#1088#1086#1074#1077#1085#1100' 1'
+      ShortCut = 115
+      ImageIndex = 47
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l1'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -812,30 +1020,20 @@ object PartionCellForm: TPartionCellForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
+      StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
+      StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -881,6 +1079,18 @@ object PartionCellForm: TPartionCellForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actOpenPartionCell_list: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenPartionCell_list'
+      ImageIndex = 26
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCell'
@@ -923,7 +1133,7 @@ object PartionCellForm: TPartionCellForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
+        Action = actUpdate1
       end>
     ActionItemList = <
       item
@@ -931,7 +1141,7 @@ object PartionCellForm: TPartionCellForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
+        Action = actUpdate1
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
