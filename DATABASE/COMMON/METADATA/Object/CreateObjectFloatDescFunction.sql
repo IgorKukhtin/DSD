@@ -1295,6 +1295,38 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderCarInfo_Min() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_OrderCarInfo_Min', zc_Object_OrderCarInfo(), 'Минуты, Время отгрузки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderCarInfo_Min');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_Level() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Level'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_Level', zc_Object_PartionCell(), ' Уровень стелажа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Level');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_Length() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Length'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_Length', zc_Object_PartionCell(), ' Длина ячейки, мм' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Length');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_Width() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Width'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_Width', zc_Object_PartionCell(), ' Ширина ячейки, мм' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Width');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_Height() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Height'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_Height', zc_Object_PartionCell(), ' Высота ячейки, мм' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Height');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_BoxCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_BoxCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_BoxCount', zc_Object_PartionCell(), ' Кол-во ящиков Е2 (итого в ячейке)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_BoxCount');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_RowBoxCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_RowBoxCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_RowBoxCount', zc_Object_PartionCell(), ' Кол-во ящиков в ряду' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_RowBoxCount');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_RowWidth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_RowWidth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_RowWidth', zc_Object_PartionCell(), ' Кол-во рядов (глубина)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_RowWidth');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_RowHeight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_RowHeight'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PartionCell_RowHeight', zc_Object_PartionCell(), ' Кол-во рядов (высота)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_RowHeight');
+
 
 
 
@@ -2499,6 +2531,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.12.23         * zc_ObjectFloat_PartionCell_...
  27.12.23                                                                                      * zc_ObjectFloat_CashSettings_SmashSumSend
  24.10.23                                                                                      * zc_ObjectFloat_CashSettings_CourseReport
  13.10.23                                                                                      * zc_ObjectFloat_CashSettings_Cat_5
