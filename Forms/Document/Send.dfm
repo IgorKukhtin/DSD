@@ -2,7 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1172
-  ExplicitTop = -48
+  ExplicitTop = -27
   ExplicitWidth = 1188
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -11,6 +11,7 @@ inherited SendForm: TSendForm
     Top = 118
     Width = 1172
     Height = 540
+    Properties.ActivePage = cxTabSheet_PartionCell
     ExplicitTop = 118
     ExplicitWidth = 1172
     ExplicitHeight = 540
@@ -22,8 +23,6 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1172
         Height = 516
-        ExplicitLeft = 920
-        ExplicitTop = 40
         ExplicitWidth = 1172
         ExplicitHeight = 516
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1069,7 +1068,6 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
@@ -1085,7 +1083,6 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1102,7 +1099,6 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1119,7 +1115,6 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1136,7 +1131,6 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1544,6 +1538,9 @@ inherited SendForm: TSendForm
         end>
       Caption = 'actGetImportSetting'
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
     object macLoadExcel2: TMultiAction [3]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1586,6 +1583,7 @@ inherited SendForm: TSendForm
     end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     object actMISetUnErasedDetail: TdsdUpdateErased [6]
       Category = 'DSDLib'
@@ -1610,6 +1608,7 @@ inherited SendForm: TSendForm
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
@@ -1643,6 +1642,7 @@ inherited SendForm: TSendForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     object actShowAllDetail: TBooleanStoredProcAction [11]
       Category = 'DSDLib'
@@ -1667,6 +1667,7 @@ inherited SendForm: TSendForm
     end
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     object actUpdatePartionCellDS: TdsdUpdateDataSet [13]
       Category = 'DSDLib'
@@ -1916,6 +1917,7 @@ inherited SendForm: TSendForm
     end
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
     object actReturnKindOpenForm: TOpenChoiceForm [27]
       Category = 'DSDLib'
@@ -2054,6 +2056,7 @@ inherited SendForm: TSendForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
     object actAddMaskDetail: TdsdExecStoredProc [35]
       Category = 'DSDLib'
@@ -2075,6 +2078,7 @@ inherited SendForm: TSendForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
+      Enabled = False
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2746,6 +2750,7 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertRecordAsset
@@ -2889,6 +2894,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = InsertRecord20202
@@ -2968,6 +2974,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       ImageIndex = 26
