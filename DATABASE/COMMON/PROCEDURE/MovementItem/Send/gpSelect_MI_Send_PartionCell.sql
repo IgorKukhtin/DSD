@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionCell_Amount_2  TFloat
              , PartionCell_Amount_3  TFloat
              , PartionCell_Amount_4  TFloat
-             , PartionCell_Amount_5  TFloat
+             , PartionCell_Amount_5  TFloat 
+             , PartionCell_Last      TFloat
             
              , isPartionCell_Close_1 Boolean
              , isPartionCell_Close_2 Boolean
@@ -75,6 +76,8 @@ BEGIN
            , MIFloat_PartionCell_Amount_3.ValueData  ::TFloat AS PartionCell_Amount_3
            , MIFloat_PartionCell_Amount_4.ValueData  ::TFloat AS PartionCell_Amount_4
            , MIFloat_PartionCell_Amount_5.ValueData  ::TFloat AS PartionCell_Amount_5
+           
+           , MIFloat_PartionCell_Last.ValueData  ::TFloat AS PartionCell_Last
           
            , COALESCE (MIBoolean_PartionCell_Close_1.ValueData, FALSE) ::Boolean AS isPartionCell_Close_1
            , COALESCE (MIBoolean_PartionCell_Close_2.ValueData, FALSE) ::Boolean AS isPartionCell_Close_2
@@ -161,6 +164,10 @@ BEGIN
                                         ON MIFloat_PartionCell_Amount_5.MovementItemId = MovementItem.Id
                                        AND MIFloat_PartionCell_Amount_5.DescId         = zc_MIFloat_PartionCell_Amount_5()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_Last
+                                        ON MIFloat_PartionCell_Last.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_Last.DescId         = zc_MIFloat_PartionCell_Last()
+                                                  
             LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Close_1
                                           ON MIBoolean_PartionCell_Close_1.MovementItemId = MovementItem.Id
                                          AND MIBoolean_PartionCell_Close_1.DescId = zc_MIBoolean_PartionCell_Close_1()

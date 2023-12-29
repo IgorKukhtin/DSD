@@ -898,6 +898,8 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitLeft = 32
+        ExplicitTop = -8
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -1434,7 +1436,7 @@ inherited SendForm: TSendForm
     Width = 153
   end
   object edIsAuto: TcxCheckBox [4]
-    Left = 179
+    Left = 180
     Top = 63
     Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
@@ -2119,6 +2121,7 @@ inherited SendForm: TSendForm
     end
     object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
       Category = 'Asset'
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
@@ -3072,6 +3075,71 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actUpdateMIPertionCell_edit: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet_PartionCell
+      MoveParams = <>
+      Enabled = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
+      ImageIndex = 1
+      FormName = 'TSendPartionCellEditForm'
+      FormNameParam.Value = 'TSendPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'MovementItemId'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3185,6 +3253,10 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbPartionGoodsAssetChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIPertionCell_edit'
         end
         item
           Visible = True
@@ -3409,6 +3481,10 @@ inherited SendForm: TSendForm
     end
     object bbPartionGoodsAssetChoiceForm: TdxBarButton
       Action = actPartionGoodsAssetChoiceForm
+      Category = 0
+    end
+    object bbUpdateMIPertionCell_edit: TdxBarButton
+      Action = actUpdateMIPertionCell_edit
       Category = 0
     end
   end
@@ -5180,8 +5256,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 888
-    Top = 528
+    Left = 936
+    Top = 512
   end
   object DBViewAddOn_PartionCell: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -5226,15 +5302,6 @@ inherited SendForm: TSendForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoodsDate'
-        Value = Null
-        Component = PartionCellCDS
-        ComponentItem = 'PartionGoodsDate'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

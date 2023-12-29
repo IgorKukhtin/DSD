@@ -1481,7 +1481,8 @@ uses
   PartionCell in '..\..\Forms\Guides\PartionCell.pas' {PartionCellForm: TParentForm},
   PartionCell_list in '..\..\Forms\Guides\PartionCell_list.pas' {PartionCell_listForm: TParentForm},
   PartionCellEdit in '..\..\Forms\Guides\PartionCellEdit.pas' {PartionCellEditForm: TParentForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm};
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  SendPartionCellEdit in '..\..\Forms\Document\SendPartionCellEdit.pas' {SendPartionCellEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

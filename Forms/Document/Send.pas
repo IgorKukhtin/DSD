@@ -218,6 +218,8 @@ type
     actOpenPartionCellForm5: TOpenChoiceForm;
     spInsertUpdateMIPartionCell: TdsdStoredProc;
     actUpdatePartionCellDS: TdsdUpdateDataSet;
+    actUpdateMIPertionCell_edit: TdsdInsertUpdateAction;
+    bbUpdateMIPertionCell_edit: TdxBarButton;
   private
     { Private declarations }
   public

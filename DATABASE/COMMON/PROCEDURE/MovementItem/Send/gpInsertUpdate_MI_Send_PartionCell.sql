@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_MI_Send_PartionCell()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_PartionCell(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
-    IN inPartionGoodsDate      TDateTime , -- 
+    --IN inPartionGoodsDate      TDateTime , -- 
  INOUT ioPartionCellName_1     TVarChar   , -- 
  INOUT ioPartionCellName_2     TVarChar   ,
  INOUT ioPartionCellName_3     TVarChar   ,
