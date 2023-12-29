@@ -11,7 +11,6 @@ inherited SendForm: TSendForm
     Top = 118
     Width = 1172
     Height = 540
-    Properties.ActivePage = cxTabSheet_PartionCell
     ExplicitTop = 118
     ExplicitWidth = 1172
     ExplicitHeight = 540
@@ -1538,9 +1537,6 @@ inherited SendForm: TSendForm
         end>
       Caption = 'actGetImportSetting'
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     object macLoadExcel2: TMultiAction [3]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1583,7 +1579,6 @@ inherited SendForm: TSendForm
     end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     object actMISetUnErasedDetail: TdsdUpdateErased [6]
       Category = 'DSDLib'
@@ -1608,7 +1603,6 @@ inherited SendForm: TSendForm
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
@@ -1642,7 +1636,6 @@ inherited SendForm: TSendForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
-      Enabled = False
     end
     object actShowAllDetail: TBooleanStoredProcAction [11]
       Category = 'DSDLib'
@@ -1667,7 +1660,6 @@ inherited SendForm: TSendForm
     end
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
-      Enabled = False
     end
     object actUpdatePartionCellDS: TdsdUpdateDataSet [13]
       Category = 'DSDLib'
@@ -1917,7 +1909,6 @@ inherited SendForm: TSendForm
     end
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
-      Enabled = False
     end
     object actReturnKindOpenForm: TOpenChoiceForm [27]
       Category = 'DSDLib'
@@ -2056,7 +2047,6 @@ inherited SendForm: TSendForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
-      Enabled = False
     end
     object actAddMaskDetail: TdsdExecStoredProc [35]
       Category = 'DSDLib'
@@ -2078,7 +2068,6 @@ inherited SendForm: TSendForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
-      Enabled = False
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2750,7 +2739,6 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actInsertRecordAsset
@@ -2894,7 +2882,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = InsertRecord20202
@@ -2974,7 +2961,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       ImageIndex = 26
