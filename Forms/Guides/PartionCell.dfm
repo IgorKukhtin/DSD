@@ -50,50 +50,15 @@ object PartionCellForm: TPartionCellForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Name_l1: TcxGridDBColumn
-        Caption = '1.'#1059#1088#1086#1074#1077#1085#1100
+        Caption = '1.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Length_l1: TcxGridDBColumn
-        Caption = '1.'#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Length_l1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Width_l1: TcxGridDBColumn
-        Caption = '1.'#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Width_l1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Height_l1: TcxGridDBColumn
-        Caption = '1.'#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Height_l1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
       object BoxCount_l1: TcxGridDBColumn
-        Caption = '1.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
+        Caption = '1.2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -101,11 +66,50 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '1.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
         Options.Editing = False
         Width = 135
       end
+      object Length_l1: TcxGridDBColumn
+        Caption = '1.3. '#1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'Length_l1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '1.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Width = 90
+      end
+      object Width_l1: TcxGridDBColumn
+        Caption = '1.4 '#1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'Width_l1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '1.4 '#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
+      object Height_l1: TcxGridDBColumn
+        Caption = '1.5 '#1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height_l1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '1.5 '#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
       object RowBoxCount_l1: TcxGridDBColumn
-        Caption = '1.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Caption = '1.6 '#1071#1097'. '#1074' '#1088#1103#1076#1091
         DataBinding.FieldName = 'RowBoxCount_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -113,10 +117,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '1.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
         Width = 99
       end
       object RowWidth_l1: TcxGridDBColumn
-        Caption = '1.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Caption = '1.7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowWidth_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -124,10 +129,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '1.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
         Width = 90
       end
       object RowHeight_l1: TcxGridDBColumn
-        Caption = '1.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Caption = '1.8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowHeight_l1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -135,6 +141,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '1.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
         Width = 90
       end
       object Comment_l1: TcxGridDBColumn
@@ -147,50 +154,15 @@ object PartionCellForm: TPartionCellForm
         Width = 90
       end
       object Name_l2: TcxGridDBColumn
-        Caption = '2.'#1059#1088#1086#1074#1077#1085#1100
+        Caption = '2.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Length_l2: TcxGridDBColumn
-        Caption = '2.'#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Length_l2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Width_l2: TcxGridDBColumn
-        Caption = '2.'#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Width_l2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Height_l2: TcxGridDBColumn
-        Caption = '2.'#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Height_l2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
       object BoxCount_l2: TcxGridDBColumn
-        Caption = '2.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
+        Caption = '2.2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -198,11 +170,50 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '2.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
         Options.Editing = False
         Width = 135
       end
+      object Length_l2: TcxGridDBColumn
+        Caption = '2.3. '#1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'Length_l2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '2.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Width = 90
+      end
+      object Width_l2: TcxGridDBColumn
+        Caption = '2.4 '#1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'Width_l2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '2.4 '#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
+      object Height_l2: TcxGridDBColumn
+        Caption = '2.5 '#1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height_l2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '2.5 '#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
       object RowBoxCount_l2: TcxGridDBColumn
-        Caption = '2.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Caption = '2.6 '#1071#1097'. '#1074' '#1088#1103#1076#1091
         DataBinding.FieldName = 'RowBoxCount_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -210,10 +221,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '2.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
         Width = 99
       end
       object RowWidth_l2: TcxGridDBColumn
-        Caption = '2.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Caption = '2.7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowWidth_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -221,10 +233,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '2.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
         Width = 90
       end
       object RowHeight_l2: TcxGridDBColumn
-        Caption = '2.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Caption = '2.8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowHeight_l2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -232,6 +245,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '2.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
         Width = 90
       end
       object Comment_l2: TcxGridDBColumn
@@ -244,50 +258,15 @@ object PartionCellForm: TPartionCellForm
         Width = 90
       end
       object Name_l3: TcxGridDBColumn
-        Caption = '3.'#1059#1088#1086#1074#1077#1085#1100
+        Caption = '3.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Length_l3: TcxGridDBColumn
-        Caption = '3.'#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Length_l3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Width_l3: TcxGridDBColumn
-        Caption = '3.'#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Width_l3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Height_l3: TcxGridDBColumn
-        Caption = '3.'#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Height_l3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
       object BoxCount_l3: TcxGridDBColumn
-        Caption = '3.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
+        Caption = '3.2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -295,11 +274,50 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '3.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
         Options.Editing = False
         Width = 135
       end
+      object Length_l3: TcxGridDBColumn
+        Caption = '3.3. '#1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'Length_l3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '3.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Width = 90
+      end
+      object Width_l3: TcxGridDBColumn
+        Caption = '3.4 '#1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'Width_l3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '3.4 '#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
+      object Height_l3: TcxGridDBColumn
+        Caption = '3.5 '#1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height_l3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '3.5 '#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
       object RowBoxCount_l3: TcxGridDBColumn
-        Caption = '3.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Caption = '3.6 '#1071#1097'. '#1074' '#1088#1103#1076#1091
         DataBinding.FieldName = 'RowBoxCount_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -307,10 +325,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '3.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
         Width = 99
       end
       object RowWidth_l3: TcxGridDBColumn
-        Caption = '3.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Caption = '3.7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowWidth_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -318,10 +337,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '3.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
         Width = 90
       end
       object RowHeight_l3: TcxGridDBColumn
-        Caption = '3.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Caption = '3.8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowHeight_l3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -329,6 +349,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '3.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
         Width = 90
       end
       object Comment_l3: TcxGridDBColumn
@@ -341,50 +362,15 @@ object PartionCellForm: TPartionCellForm
         Width = 90
       end
       object Name_l4: TcxGridDBColumn
-        Caption = '4.'#1059#1088#1086#1074#1077#1085#1100
+        Caption = '4.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Length_l4: TcxGridDBColumn
-        Caption = '4.'#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Length_l4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Width_l4: TcxGridDBColumn
-        Caption = '4.'#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Width_l4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Height_l4: TcxGridDBColumn
-        Caption = '4.'#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Height_l4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
       object BoxCount_l4: TcxGridDBColumn
-        Caption = '4.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
+        Caption = '4.2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -392,11 +378,50 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '4.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
         Options.Editing = False
         Width = 135
       end
+      object Length_l4: TcxGridDBColumn
+        Caption = '4.3. '#1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'Length_l4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '4.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Width = 90
+      end
+      object Width_l4: TcxGridDBColumn
+        Caption = '4.4 '#1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'Width_l4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '4.4 '#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
+      object Height_l4: TcxGridDBColumn
+        Caption = '4.5 '#1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height_l4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '4.5 '#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
       object RowBoxCount_l4: TcxGridDBColumn
-        Caption = '4.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Caption = '4.6 '#1071#1097'. '#1074' '#1088#1103#1076#1091
         DataBinding.FieldName = 'RowBoxCount_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -404,10 +429,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '4.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
         Width = 99
       end
       object RowWidth_l4: TcxGridDBColumn
-        Caption = '4.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Caption = '4.7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowWidth_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -415,10 +441,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '4.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
         Width = 90
       end
       object RowHeight_l4: TcxGridDBColumn
-        Caption = '4.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Caption = '4.8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowHeight_l4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -426,6 +453,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '4.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
         Width = 90
       end
       object Comment_l4: TcxGridDBColumn
@@ -438,50 +466,15 @@ object PartionCellForm: TPartionCellForm
         Width = 90
       end
       object Name_l5: TcxGridDBColumn
-        Caption = '5.'#1059#1088#1086#1074#1077#1085#1100
+        Caption = '5.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Length_l5: TcxGridDBColumn
-        Caption = #1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Length_l5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Width_l5: TcxGridDBColumn
-        Caption = '5.'#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Width_l5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Height_l5: TcxGridDBColumn
-        Caption = '5.'#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Height_l5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
       object BoxCount_l5: TcxGridDBColumn
-        Caption = '5.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
+        Caption = '5.2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -489,11 +482,50 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '5.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
         Options.Editing = False
         Width = 135
       end
+      object Length_l5: TcxGridDBColumn
+        Caption = '5.3. '#1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'Length_l5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '5.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Width = 90
+      end
+      object Width_l5: TcxGridDBColumn
+        Caption = '5.4 '#1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'Width_l5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '5.4 '#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
+      object Height_l5: TcxGridDBColumn
+        Caption = '5.5 '#1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height_l5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '5.5 '#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
       object RowBoxCount_l5: TcxGridDBColumn
-        Caption = '5.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Caption = '5.6 '#1071#1097'. '#1074' '#1088#1103#1076#1091
         DataBinding.FieldName = 'RowBoxCount_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -501,10 +533,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '5.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
         Width = 99
       end
       object RowWidth_l5: TcxGridDBColumn
-        Caption = '5.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Caption = '5.7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowWidth_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -512,10 +545,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '5.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
         Width = 90
       end
       object RowHeight_l5: TcxGridDBColumn
-        Caption = '5.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Caption = '5.8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowHeight_l5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -523,6 +557,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '5.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
         Width = 90
       end
       object Comment_l5: TcxGridDBColumn
@@ -535,50 +570,15 @@ object PartionCellForm: TPartionCellForm
         Width = 90
       end
       object Name_l6: TcxGridDBColumn
-        Caption = '6.'#1059#1088#1086#1074#1077#1085#1100
+        Caption = '6.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 90
       end
-      object Length_l6: TcxGridDBColumn
-        Caption = '5.'#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Length_l6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Width_l6: TcxGridDBColumn
-        Caption = '6.'#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Width_l6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Height_l6: TcxGridDBColumn
-        Caption = '6.'#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Height_l6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
       object BoxCount_l6: TcxGridDBColumn
-        Caption = '6.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
+        Caption = '6.2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -586,11 +586,50 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '6.2. '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
         Options.Editing = False
         Width = 135
       end
+      object Length_l6: TcxGridDBColumn
+        Caption = '6.3. '#1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'Length_l6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '6.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Width = 90
+      end
+      object Width_l6: TcxGridDBColumn
+        Caption = '6.4 '#1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'Width_l6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '6.4 '#1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
+      object Height_l6: TcxGridDBColumn
+        Caption = '6.5 '#1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height_l6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '6.5 '#1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 90
+      end
       object RowBoxCount_l6: TcxGridDBColumn
-        Caption = '6.'#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Caption = '6.6 '#1071#1097'. '#1074' '#1088#1103#1076#1091
         DataBinding.FieldName = 'RowBoxCount_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -598,10 +637,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '6.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
         Width = 99
       end
       object RowWidth_l6: TcxGridDBColumn
-        Caption = '6.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Caption = '6.7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowWidth_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -609,10 +649,11 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '6.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
         Width = 90
       end
       object RowHeight_l6: TcxGridDBColumn
-        Caption = '6.'#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Caption = '6.8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowHeight_l6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -620,6 +661,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '6.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
         Width = 90
       end
       object Comment_l6: TcxGridDBColumn
@@ -754,6 +796,14 @@ object PartionCellForm: TPartionCellForm
         item
           Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
         end
         item
           Visible = True
@@ -1059,7 +1109,7 @@ object PartionCellForm: TPartionCellForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'Id_l1'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1067,15 +1117,98 @@ object PartionCellForm: TPartionCellForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'Name_l1'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Code'
+          Name = 'Id_l1'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Code'
+          ComponentItem = 'Id_l1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_l2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_l3'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_l4'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_l5'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_l6'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id_l6'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l1'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_l1'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_l2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l3'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_l3'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l4'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_l4'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l5'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_l5'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l6'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_l6'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

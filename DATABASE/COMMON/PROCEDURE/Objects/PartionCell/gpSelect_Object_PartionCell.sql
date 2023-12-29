@@ -12,6 +12,14 @@ RETURNS TABLE (GroupName TVarChar
              , Id_l4 Integer
              , Id_l5 Integer
              , Id_l6 Integer
+                           
+             , Code_l1 Integer
+             , Code_l2 Integer
+             , Code_l3 Integer
+             , Code_l4 Integer
+             , Code_l5 Integer
+             , Code_l6 Integer            
+             
              , Name_l1 TVarChar 
              , Name_l2 TVarChar 
              , Name_l3 TVarChar 
@@ -89,6 +97,13 @@ BEGIN
            , MAX (CASE WHEN Object.Level = 5 THEN Object.Id ELSE 0 END) AS Id_l5
            , MAX (CASE WHEN Object.Level = 6 THEN Object.Id ELSE 0 END) AS Id_l6
            
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Code ELSE 0 END) AS Code_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Code ELSE 0 END) AS Code_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Code ELSE 0 END) AS Code_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Code ELSE 0 END) AS Code_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Code ELSE 0 END) AS Code_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Code ELSE 0 END) AS Code_l6
+
            , MAX (CASE WHEN Object.Level = 1 THEN Object.Name ELSE '' END)::TVarChar AS Name_l1
            , MAX (CASE WHEN Object.Level = 2 THEN Object.Name ELSE '' END)::TVarChar AS Name_l2
            , MAX (CASE WHEN Object.Level = 3 THEN Object.Name ELSE '' END)::TVarChar AS Name_l3

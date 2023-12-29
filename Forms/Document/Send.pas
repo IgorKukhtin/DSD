@@ -211,6 +211,13 @@ type
     PartionCell_Last_ch4: TcxGridDBColumn;
     spSelect_MI_PartionCell: TdsdStoredProc;
     DBViewAddOn_PartionCell: TdsdDBViewAddOn;
+    actOpenPartionCellForm1: TOpenChoiceForm;
+    actOpenPartionCellForm2: TOpenChoiceForm;
+    actOpenPartionCellForm3: TOpenChoiceForm;
+    actOpenPartionCellForm4: TOpenChoiceForm;
+    actOpenPartionCellForm5: TOpenChoiceForm;
+    spInsertUpdateMIPartionCell: TdsdStoredProc;
+    actUpdatePartionCellDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
