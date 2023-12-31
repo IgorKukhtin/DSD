@@ -428,7 +428,7 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MovementId_Invoice'
+          Name = 'MovementId_Invoice_find'
           Value = Null
           Component = GuidesInvoice
           ComponentItem = 'Key'
@@ -436,7 +436,7 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvNumber_Invoice'
+          Name = 'InvNumber_Invoice_find'
           Value = Null
           Component = GuidesInvoice
           ComponentItem = 'TextValue'
@@ -445,7 +445,7 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvoiceKindId'
+          Name = 'InvoiceKindId_find'
           Value = Null
           Component = GuidesInvoiceKind
           ComponentItem = 'Key'
@@ -453,7 +453,7 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvoiceKindName'
+          Name = 'InvoiceKindName_find'
           Value = Null
           Component = GuidesInvoiceKind
           ComponentItem = 'TextValue'
@@ -570,6 +570,14 @@
         Name = 'inMovementId_Invoice'
         Value = 0
         Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1157,6 +1165,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'SummDebet'
+        Value = Null
+        Component = ceAmountIn
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId_parent'
         Value = '0'
         Component = GuidesParent
@@ -1172,7 +1187,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MovementId_Invoice'
+        Name = 'MovementId_Invoice_find'
         Value = Null
         Component = GuidesInvoice
         ComponentItem = 'Key'
@@ -1180,7 +1195,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_Invoice'
+        Name = 'InvNumberFull_Invoice_find'
         Value = Null
         Component = GuidesInvoice
         ComponentItem = 'TextValue'
@@ -1189,7 +1204,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvoiceKindId'
+        Name = 'InvoiceKindId_find'
         Value = Null
         Component = GuidesInvoiceKind
         ComponentItem = 'Key'
@@ -1197,7 +1212,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvoiceKindName'
+        Name = 'InvoiceKindName_find'
         Value = Null
         Component = GuidesInvoiceKind
         ComponentItem = 'TextValue'

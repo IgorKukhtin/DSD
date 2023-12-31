@@ -121,7 +121,11 @@ type
     cxLabel4: TcxLabel;
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     isPay: TcxGridDBColumn;
-    InvNumber_InvoiceCalc: TcxGridDBColumn;
+    InvNumber_Invoice: TcxGridDBColumn;
+    InvNumberFull_Invoice_find: TcxGridDBColumn;
+    InvoiceKindName_find: TcxGridDBColumn;
+    Amount_Invoice: TcxGridDBColumn;
+    Amount_Invoice_pay: TcxGridDBColumn;
   private
   public
   end;

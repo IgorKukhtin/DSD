@@ -154,6 +154,16 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_Invoice
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_Invoice_pay
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -185,6 +195,16 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = FromName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_Invoice
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_Invoice_pay
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -471,6 +491,57 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Options.Editing = False
         Width = 200
       end
+      object Amount_Invoice: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1089#1095#1077#1090#1091
+        DataBinding.FieldName = 'Amount_Invoice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Amount_Invoice_pay: TcxGridDBColumn
+        Caption = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1089#1095#1077#1090#1091
+        DataBinding.FieldName = 'Amount_Invoice_pay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1089#1095#1077#1090#1091
+        Width = 70
+      end
+      object isPay: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isPay'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+        Width = 70
+      end
+      object InvoiceKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvoiceKindName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
+      object ReceiptNumber_Invoice: TcxGridDBColumn
+        Caption = 'Inv No'
+        DataBinding.FieldName = 'ReceiptNumber_Invoice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+        Options.Editing = False
+        Width = 55
+      end
       object InvNumberFull_Invoice: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
         DataBinding.FieldName = 'InvNumberFull_Invoice'
@@ -486,32 +557,30 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object InvNumber_InvoiceCalc: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082' '#1089#1095#1077#1090' ('#1088#1072#1089#1095#1077#1090')'
-        DataBinding.FieldName = 'InvNumber_InvoiceCalc'
+      object InvNumber_Invoice: TcxGridDBColumn
+        Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+        DataBinding.FieldName = 'InvNumber_Invoice'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #8470' '#1076#1086#1082' '#1089#1095#1077#1090' ('#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099')'
         Width = 80
       end
-      object ReceiptNumber_Invoice: TcxGridDBColumn
-        Caption = 'Inv No'
-        DataBinding.FieldName = 'ReceiptNumber_Invoice'
-        Visible = False
+      object InvNumberFull_Invoice_find: TcxGridDBColumn
+        Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvNumberFull_Invoice_find'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090' ('#1087#1086#1080#1089#1082' '#1076#1083#1103' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1086#1087#1083#1072#1090#1077')'
         Options.Editing = False
-        Width = 55
+        Width = 70
       end
-      object isPay: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'isPay'
-        Visible = False
+      object InvoiceKindName_find: TcxGridDBColumn
+        Caption = '***'#1058#1080#1087' '#1089#1095#1077#1090#1072' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'InvoiceKindName_find'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090' ('#1087#1086#1080#1089#1082' '#1076#1083#1103' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1086#1087#1083#1072#1090#1077')'
+        Options.Editing = False
         Width = 70
       end
       object Comment_Invoice: TcxGridDBColumn
@@ -535,15 +604,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         VisibleForCustomization = False
         Width = 55
-      end
-      object InvoiceKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
-        DataBinding.FieldName = 'InvoiceKindName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 79
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1234,6 +1294,35 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Invoice_find'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_Invoice_find'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_Invoice_find'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumberFull_Invoice_find'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId_find'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvoiceKindId_find'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName_find'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvoiceKindName_find'
+          MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1569,10 +1658,10 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummPay'
+        Name = 'inSummDebet'
         Value = Null
         Component = FormParams
-        ComponentItem = 'SummPay'
+        ComponentItem = 'SummDebet'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1717,7 +1806,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummPay'
+        Name = 'SummDebet'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
