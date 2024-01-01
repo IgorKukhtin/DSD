@@ -411,6 +411,13 @@
           MultiSelectSeparator = ','
         end
         item
+          Name = 'SummDebet'
+          Value = Null
+          Component = ceAmountIn
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MovementId_parent'
           Value = '0'
           Component = GuidesParent
@@ -436,7 +443,7 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvNumber_Invoice_find'
+          Name = 'InvNumberFull_Invoice_find'
           Value = Null
           Component = GuidesInvoice
           ComponentItem = 'TextValue'

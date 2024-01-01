@@ -99,8 +99,8 @@ object ProductEditForm: TProductEditForm
       object cxLabel6: TcxLabel
         Left = 10
         Top = 330
-        Hint = #1053#1072#1095#1072#1083#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-        Caption = #1053#1072#1095#1072#1083#1086' '#1087#1088#1086#1080#1079#1074'.'
+        Hint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1089#1073#1086#1088#1082#1080
+        Caption = #1053#1072#1095#1072#1083#1086' '#1087#1083#1072#1085
         ParentShowHint = False
         ShowHint = True
       end
@@ -116,7 +116,7 @@ object ProductEditForm: TProductEditForm
         Left = 105
         Top = 330
         Hint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1090#1089#1103' '#1079#1072#1074#1077#1088#1096#1080#1090#1100' '#1089#1073#1086#1088#1082#1091' '#1083#1086#1076#1082#1080
-        Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
+        Caption = #1057#1073#1086#1088#1082#1072' '#1087#1083#1072#1085
         ParentShowHint = False
         ShowHint = True
       end
@@ -139,6 +139,7 @@ object ProductEditForm: TProductEditForm
       object edDateStart: TcxDateEdit
         Left = 10
         Top = 350
+        Hint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1089#1073#1086#1088#1082#1080
         EditValue = 42160d
         Properties.SaveTime = False
         Properties.ShowTime = False
@@ -3677,8 +3678,8 @@ object ProductEditForm: TProductEditForm
     ImageOptions.Images = dmMain.ImageList
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 56
-    Top = 337
+    Left = 64
+    Top = 273
     DockControlHeights = (
       0
       0
@@ -4526,12 +4527,12 @@ object ProductEditForm: TProductEditForm
     Aggregates = <>
     Params = <>
     Left = 24
-    Top = 328
+    Top = 296
   end
   object InvoiceDS: TDataSource
     DataSet = InvoiceCDS
     Left = 104
-    Top = 312
+    Top = 288
   end
   object dsdDBViewAddOnInvoice: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4610,8 +4611,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 176
-    Top = 328
+    Left = 144
+    Top = 232
   end
   object spMovementSetErasedInv: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Invoice'
@@ -4627,8 +4628,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 320
+    Left = 192
+    Top = 272
   end
   object spMovementUnCompleteInv: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Invoice'
@@ -4644,8 +4645,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 344
+    Left = 200
+    Top = 384
   end
   object spSelectInvoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_InvoiceByProduct'

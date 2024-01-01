@@ -126,6 +126,9 @@ type
     InvoiceKindName_find: TcxGridDBColumn;
     Amount_Invoice: TcxGridDBColumn;
     Amount_Invoice_pay: TcxGridDBColumn;
+    Amount_Order_pay: TcxGridDBColumn;
+    Amount_Invoice_find: TcxGridDBColumn;
+    Amount_Invoice_pay_find: TcxGridDBColumn;
   private
   public
   end;

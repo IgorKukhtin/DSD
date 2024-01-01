@@ -33,7 +33,6 @@ type
     ProductName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
-    PaidKindName: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
@@ -149,6 +148,7 @@ type
     bbInsert_Pay: TdxBarButton;
     bbInsert_Proforma: TdxBarButton;
     dxBarButton1: TdxBarButton;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
