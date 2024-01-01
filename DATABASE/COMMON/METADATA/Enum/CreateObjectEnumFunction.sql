@@ -1537,11 +1537,17 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SubjectDoc() RETURNS Integer AS
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Goods_GGProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_Goods_GGProperty' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Goods_GGProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Goods_GGProperty' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+----Загрузить из экскля Ячейки хранения (Партия учета)
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PartionCell() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PartionCell' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PartionCell() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PartionCell' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 28.12.23         * Загрузить из экскля Ячейки хранения (Партия учета)
  19.12.23         * Загрузка Аналитический классификатор 
  23.11.23         * Загрузка  Основания для перемещения 
  16.11.23         * Загрузка zc_Enum_ImportType_GoodsUKTZED2

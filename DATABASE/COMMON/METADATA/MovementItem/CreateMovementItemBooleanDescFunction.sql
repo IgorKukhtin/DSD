@@ -210,6 +210,28 @@ INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_PriceNalog', 'Сумма удержания сформирована на основании удержания налога по Ф2' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PriceNalog'); 
 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Close_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PartionCell_Close_1', 'Закончился остаток для Ячейка-1(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_1'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Close_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PartionCell_Close_2', 'Закончился остаток для Ячейка-2(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_2'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Close_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PartionCell_Close_3', 'Закончился остаток для Ячейка-3(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_3'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Close_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PartionCell_Close_4', 'Закончился остаток для Ячейка-4(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_4'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Close_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PartionCell_Close_5', 'Закончился остаток для Ячейка-5(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Close_5'); 
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.

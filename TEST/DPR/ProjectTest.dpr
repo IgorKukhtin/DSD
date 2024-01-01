@@ -453,7 +453,6 @@ uses
   CurrencyMovement in '..\..\Forms\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
   CurrencyJournal in '..\..\Forms\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
   BranchTest in '..\SOURCE\Objects\All\BranchTest.pas',
   JuridicalGroupTest in '..\SOURCE\Objects\All\JuridicalGroupTest.pas',
   GoodsPropertyTest in '..\SOURCE\Objects\All\GoodsPropertyTest.pas',
@@ -1478,7 +1477,12 @@ uses
   GoodsGroupProperty_Object in '..\..\Forms\Guides\GoodsGroupProperty_Object.pas' {GoodsGroupProperty_ObjectForm: TParentForm},
   GoodsGroupPropertyParentEdit in '..\..\Forms\Guides\GoodsGroupPropertyParentEdit.pas' {GoodsGroupPropertyParentEditForm: TParentForm},
   Report_WageWarehouseBranchDialog in '..\..\Forms\Report\Report_WageWarehouseBranchDialog.pas' {Report_WageWarehouseBranchDialogForm: TParentForm},
-  Report_WageWarehouseBranch in '..\..\Forms\Report\Report_WageWarehouseBranch.pas' {Report_WageWarehouseBranchForm: TParentForm};
+  Report_WageWarehouseBranch in '..\..\Forms\Report\Report_WageWarehouseBranch.pas' {Report_WageWarehouseBranchForm: TParentForm},
+  PartionCell in '..\..\Forms\Guides\PartionCell.pas' {PartionCellForm: TParentForm},
+  PartionCell_list in '..\..\Forms\Guides\PartionCell_list.pas' {PartionCell_listForm: TParentForm},
+  PartionCellEdit in '..\..\Forms\Guides\PartionCellEdit.pas' {PartionCellEditForm: TParentForm},
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  SendPartionCellEdit in '..\..\Forms\Document\SendPartionCellEdit.pas' {SendPartionCellEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

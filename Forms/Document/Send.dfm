@@ -2,8 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1172
-  ExplicitLeft = -295
-  ExplicitTop = -170
+  ExplicitTop = -27
   ExplicitWidth = 1188
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -493,9 +492,6 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -721,9 +717,6 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -891,6 +884,362 @@ inherited SendForm: TSendForm
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableViewChild
+        end
+      end
+    end
+    object cxTabSheet_PartionCell: TcxTabSheet
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
+      ImageIndex = 3
+      object cxGrid_PartionCell: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1172
+        Height = 516
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        ExplicitLeft = 32
+        ExplicitTop = -8
+        object cxGridDBTableView_PartionCell: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = PartionCellDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName_ch4
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object GoodsGroupNameFull_ch4: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object GoodsCode_ch4: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object GoodsName_ch4: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' / '#1054#1057
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actAssetGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 182
+          end
+          object GoodsKindName_ch4GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object MeasureName_ch4: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object Amount_ch4: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PartionCellName_1_ch4: TcxGridDBColumn
+            Caption = '1.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_1'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm1
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 159
+          end
+          object PartionCellName_2_ch4: TcxGridDBColumn
+            Caption = '2.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_2'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm2
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 166
+          end
+          object PartionCellName_3_ch4: TcxGridDBColumn
+            Caption = '3.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_3'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm3
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 166
+          end
+          object PartionCellName_4_ch4: TcxGridDBColumn
+            Caption = '4.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_4'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm4
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 166
+          end
+          object PartionCellName_5_ch4: TcxGridDBColumn
+            Caption = '5.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_5'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm5
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 166
+          end
+          object isPartionCell_Close_1_ch4: TcxGridDBColumn
+            Caption = '1.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 125
+          end
+          object isPartionCell_Close_2_ch4: TcxGridDBColumn
+            Caption = '2.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-2('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 125
+          end
+          object isPartionCell_Close_3_ch4: TcxGridDBColumn
+            Caption = '3.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-3('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 125
+          end
+          object isPartionCell_Close_4_ch4: TcxGridDBColumn
+            Caption = '4.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-4('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 125
+          end
+          object isPartionCell_Close_5_ch4: TcxGridDBColumn
+            Caption = '5.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-5('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 125
+          end
+          object PartionCell_Amount_1_ch4: TcxGridDBColumn
+            Caption = '1.3 '#1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'PartionCell_Amount_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1'
+            Options.Editing = False
+            Width = 130
+          end
+          object PartionCell_Amount_2_ch4: TcxGridDBColumn
+            Caption = '2.3 '#1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'PartionCell_Amount_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-2'
+            Options.Editing = False
+            Width = 130
+          end
+          object PartionCell_Amount_3_ch4: TcxGridDBColumn
+            Caption = '3.3 '#1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'PartionCell_Amount_3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-3'
+            Options.Editing = False
+            Width = 130
+          end
+          object PartionCell_Amount_4_ch4: TcxGridDBColumn
+            Caption = '4.3 '#1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'PartionCell_Amount_4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-4'
+            Options.Editing = False
+            Width = 130
+          end
+          object PartionCell_Amount_5_ch4: TcxGridDBColumn
+            Caption = '5.3 '#1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'PartionCell_Amount_5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-5'
+            Options.Editing = False
+            Width = 130
+          end
+          object PartionCell_Last_ch4: TcxGridDBColumn
+            Caption = #8470' '#1087#1086#1089#1083'. '#1079#1072#1087#1086#1083#1085'. '#1103#1095'.'
+            DataBinding.FieldName = 'PartionCell_Last'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1077#1088' '#1103#1095#1077#1081#1082#1080' '#1082#1086#1090#1086#1088#1072#1103' '#1079#1072#1082#1086#1085#1095#1080#1083#1072#1089#1100' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1080#1081' '#1088#1072#1079
+            Width = 116
+          end
+        end
+        object cxGridLevel_PartionCell: TcxGridLevel
+          GridView = cxGridDBTableView_PartionCell
         end
       end
     end
@@ -1087,7 +1436,7 @@ inherited SendForm: TSendForm
     Width = 153
   end
   object edIsAuto: TcxCheckBox [4]
-    Left = 179
+    Left = 180
     Top = 63
     Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
@@ -1173,6 +1522,9 @@ inherited SendForm: TSendForm
         end
         item
           StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelect_MI_PartionCell
         end>
       RefreshOnTabSetChanges = True
     end
@@ -1311,22 +1663,22 @@ inherited SendForm: TSendForm
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
     end
-    object actUpdateDetailDS: TdsdUpdateDataSet [13]
+    object actUpdatePartionCellDS: TdsdUpdateDataSet [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIDetail
+      StoredProc = spInsertUpdateMIPartionCell
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMIDetail
+          StoredProc = spInsertUpdateMIPartionCell
         end
         item
           StoredProc = spSelectDetail
         end>
-      Caption = 'actUpdateDetailDS'
-      DataSource = DetailDS
+      Caption = 'actUpdatePartionCellDS'
+      DataSource = PartionCellDS
     end
-    object actPrintNoGroup: TdsdPrintAction [15]
+    object actPrintNoGroup: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintNoGroup
@@ -1363,7 +1715,7 @@ inherited SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actPrint: TdsdPrintAction
+    inherited actPrint: TdsdPrintAction [15]
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -1389,6 +1741,158 @@ inherited SendForm: TSendForm
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
     end
+    object actUpdateDetailDS: TdsdUpdateDataSet [16]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIDetail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIDetail
+        end
+        item
+          StoredProc = spSelectDetail
+        end>
+      Caption = 'actUpdateDetailDS'
+      DataSource = DetailDS
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet [17]
+    end
+    object actOpenPartionCellForm1: TOpenChoiceForm [18]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id_l1'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellId_1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l1'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellName_1'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenPartionCellForm2: TOpenChoiceForm [19]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id_l2'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellId_2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l2'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellName_2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenPartionCellForm3: TOpenChoiceForm [20]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id_l3'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellId_3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l3'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellName_3'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenPartionCellForm4: TOpenChoiceForm [21]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id_l4'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellId_4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l4'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellName_4'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenPartionCellForm5: TOpenChoiceForm [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id_l5'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellId_5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_l5'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellName_5'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -1408,7 +1912,7 @@ inherited SendForm: TSendForm
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actReturnKindOpenForm: TOpenChoiceForm [21]
+    object actReturnKindOpenForm: TOpenChoiceForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1435,7 +1939,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actSubjectDocOpenForm: TOpenChoiceForm [22]
+    object actSubjectDocOpenForm: TOpenChoiceForm [28]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1462,7 +1966,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAssetChoiceForm: TOpenChoiceForm [23]
+    object actAssetChoiceForm: TOpenChoiceForm [29]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1489,7 +1993,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [24]
+    object actGoodsKindChoice: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1516,7 +2020,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAsset_twoChoiceForm: TOpenChoiceForm [25]
+    object actAsset_twoChoiceForm: TOpenChoiceForm [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1546,7 +2050,7 @@ inherited SendForm: TSendForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actAddMaskDetail: TdsdExecStoredProc [29]
+    object actAddMaskDetail: TdsdExecStoredProc [35]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -1617,6 +2121,7 @@ inherited SendForm: TSendForm
     end
     object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
       Category = 'Asset'
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
@@ -2570,6 +3075,71 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actUpdateMIPertionCell_edit: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet_PartionCell
+      MoveParams = <>
+      Enabled = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
+      ImageIndex = 1
+      FormName = 'TSendPartionCellEditForm'
+      FormNameParam.Value = 'TSendPartionCellEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'MovementItemId'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2683,6 +3253,10 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbPartionGoodsAssetChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIPertionCell_edit'
         end
         item
           Visible = True
@@ -2907,6 +3481,10 @@ inherited SendForm: TSendForm
     end
     object bbPartionGoodsAssetChoiceForm: TdxBarButton
       Action = actPartionGoodsAssetChoiceForm
+      Category = 0
+    end
+    object bbUpdateMIPertionCell_edit: TdxBarButton
+      Action = actUpdateMIPertionCell_edit
       Category = 0
     end
   end
@@ -4142,8 +4720,8 @@ inherited SendForm: TSendForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 486
-    Top = 513
+    Left = 478
+    Top = 537
   end
   object spSelectDetail: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Send_Detail'
@@ -4515,8 +5093,8 @@ inherited SendForm: TSendForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 1054
-    Top = 457
+    Left = 1030
+    Top = 505
   end
   object spSelectChild: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Send_Child'
@@ -4640,5 +5218,140 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 1088
     Top = 240
+  end
+  object PartionCellDS: TDataSource
+    DataSet = PartionCellCDS
+    Left = 808
+    Top = 576
+  end
+  object PartionCellCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 672
+    Top = 584
+  end
+  object spSelect_MI_PartionCell: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Send_PartionCell'
+    DataSet = PartionCellCDS
+    DataSets = <
+      item
+        DataSet = PartionCellCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 512
+  end
+  object DBViewAddOn_PartionCell: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_PartionCell
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 742
+    Top = 585
+  end
+  object spInsertUpdateMIPartionCell: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Send_PartionCell'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_1'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'PartionCellName_1'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_2'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'PartionCellName_2'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_3'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'PartionCellName_3'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_4'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'PartionCellName_4'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_5'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'PartionCellName_5'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 576
   end
 end

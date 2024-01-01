@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, ExternalLoad;
 
 type
   TPartionCellForm = class(TParentForm)
@@ -39,7 +39,7 @@ type
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
+    actUpdate1: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
@@ -51,11 +51,27 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    actOpenPartionCell_list: TdsdOpenForm;
+    bbOpenPartionCell_list: TdxBarButton;
+    actUpdate2: TdsdInsertUpdateAction;
+    actUpdate3: TdsdInsertUpdateAction;
+    actUpdate4: TdsdInsertUpdateAction;
+    actUpdate5: TdsdInsertUpdateAction;
+    actUpdate6: TdsdInsertUpdateAction;
+    bbUpdate2: TdxBarButton;
+    bbUpdate3: TdxBarButton;
+    bbUpdate4: TdxBarButton;
+    bbUpdate5: TdxBarButton;
+    bbUpdate6: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actDoLoad: TExecuteImportSettingsAction;
+    macStartLoad: TMultiAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

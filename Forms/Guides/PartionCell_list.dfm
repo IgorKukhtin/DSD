@@ -26,7 +26,6 @@ object PartionCell_listForm: TPartionCell_listForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 502
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,17 +52,18 @@ object PartionCell_listForm: TPartionCell_listForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = '1. '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 129
+        Width = 114
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -74,48 +74,8 @@ object PartionCell_listForm: TPartionCell_listForm
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
-      object Level: TcxGridDBColumn
-        Caption = #1059#1088#1086#1074#1077#1085#1100' '#1089#1090#1077#1083#1072#1078#1072
-        DataBinding.FieldName = 'Level'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Length: TcxGridDBColumn
-        Caption = #1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Length'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
-      end
-      object Width: TcxGridDBColumn
-        Caption = #1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Width'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object Height: TcxGridDBColumn
-        Caption = #1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
-        DataBinding.FieldName = 'Height'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
       object BoxCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
+        Caption = '2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -123,38 +83,85 @@ object PartionCell_listForm: TPartionCell_listForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
         Options.Editing = False
-        Width = 135
+        Width = 89
+      end
+      object Length: TcxGridDBColumn
+        Caption = '3. '#1044#1083#1080#1085#1072' '
+        DataBinding.FieldName = 'Length'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Width = 80
+      end
+      object Width: TcxGridDBColumn
+        Caption = '4. '#1064#1080#1088#1080#1085#1072' '
+        DataBinding.FieldName = 'Width'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 80
+      end
+      object Height: TcxGridDBColumn
+        Caption = '5. '#1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1089#1086#1090#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
+        Width = 80
       end
       object RowBoxCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Caption = '6. '#1071#1097'. '#1074' '#1088#1103#1076#1091
         DataBinding.FieldName = 'RowBoxCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 99
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Width = 92
       end
       object RowWidth: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Caption = '7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowWidth'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Width = 77
       end
       object RowHeight: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Caption = '8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
         DataBinding.FieldName = 'RowHeight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Width = 80
+      end
+      object Level: TcxGridDBColumn
+        Caption = '9. '#1059#1088#1086#1074#1077#1085#1100
+        DataBinding.FieldName = 'Level'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 80
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -162,7 +169,7 @@ object PartionCell_listForm: TPartionCell_listForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -254,7 +261,23 @@ object PartionCell_listForm: TPartionCell_listForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -307,6 +330,10 @@ object PartionCell_listForm: TPartionCell_listForm
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -448,6 +475,25 @@ object PartionCell_listForm: TPartionCell_listForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCell_list'
@@ -456,7 +502,15 @@ object PartionCell_listForm: TPartionCell_listForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 144
     Top = 104

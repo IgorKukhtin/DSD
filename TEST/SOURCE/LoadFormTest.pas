@@ -133,6 +133,7 @@ type
     procedure LoadPartionRemainsFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPairDayFormTest;
+    procedure LoadPartionCellFormTest;
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalFormTest;
@@ -1098,6 +1099,9 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionCellEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionCellEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
@@ -2086,6 +2090,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPairDayForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPairDayEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPairDayEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartionCellFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCell_listForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCell_listForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellEditForm');
 end;
 
 procedure TLoadFormTest.LoadReestrKindFormTest;

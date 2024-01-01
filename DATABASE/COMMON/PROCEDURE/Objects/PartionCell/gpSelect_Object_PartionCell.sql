@@ -5,11 +5,75 @@ DROP FUNCTION IF EXISTS gpSelect_Object_PartionCell (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartionCell(
     IN inSession     TVarChar            -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Level TFloat, Length TFloat, Width TFloat, Height TFloat
-             , BoxCount TFloat, RowBoxCount TFloat, RowWidth TFloat, RowHeight TFloat
-             , Comment TVarChar
-             , isErased boolean
+RETURNS TABLE (GroupName TVarChar
+             , Id_l1 Integer
+             , Id_l2 Integer
+             , Id_l3 Integer
+             , Id_l4 Integer
+             , Id_l5 Integer
+             , Id_l6 Integer
+                           
+             , Code_l1 Integer
+             , Code_l2 Integer
+             , Code_l3 Integer
+             , Code_l4 Integer
+             , Code_l5 Integer
+             , Code_l6 Integer            
+             
+             , Name_l1 TVarChar 
+             , Name_l2 TVarChar 
+             , Name_l3 TVarChar 
+             , Name_l4 TVarChar 
+             , Name_l5 TVarChar 
+             , Name_l6 TVarChar 
+             , Length_l1 TFloat 
+             , Length_l2 TFloat 
+             , Length_l3 TFloat 
+             , Length_l4 TFloat 
+             , Length_l5 TFloat 
+             , Length_l6 TFloat 
+             , Width_l1 TFloat 
+             , Width_l2 TFloat 
+             , Width_l3 TFloat 
+             , Width_l4 TFloat 
+             , Width_l5 TFloat 
+             , Width_l6 TFloat 
+             , Height_l1 TFloat
+             , Height_l2 TFloat 
+             , Height_l3 TFloat 
+             , Height_l4 TFloat 
+             , Height_l5 TFloat 
+             , Height_l6 TFloat 
+             , BoxCount_l1 TFloat 
+             , BoxCount_l2 TFloat 
+             , BoxCount_l3 TFloat 
+             , BoxCount_l4 TFloat 
+             , BoxCount_l5 TFloat 
+             , BoxCount_l6 TFloat 
+             , RowBoxCount_l1 TFloat 
+             , RowBoxCount_l2 TFloat 
+             , RowBoxCount_l3 TFloat 
+             , RowBoxCount_l4 TFloat 
+             , RowBoxCount_l5 TFloat 
+             , RowBoxCount_l6 TFloat 
+             , RowWidth_l1 TFloat 
+             , RowWidth_l2 TFloat 
+             , RowWidth_l3 TFloat 
+             , RowWidth_l4 TFloat 
+             , RowWidth_l5 TFloat 
+             , RowWidth_l6 TFloat
+             , RowHeight_l1 TFloat
+             , RowHeight_l2 TFloat
+             , RowHeight_l3 TFloat
+             , RowHeight_l4 TFloat
+             , RowHeight_l5 TFloat
+             , RowHeight_l6 TFloat
+             , Comment_l1 TVarChar
+             , Comment_l2 TVarChar
+             , Comment_l3 TVarChar
+             , Comment_l4 TVarChar
+             , Comment_l5 TVarChar
+             , Comment_l6 TVarChar
               )
 AS
 $BODY$
@@ -19,74 +83,92 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PartionCell());
 
       RETURN QUERY
-       SELECT
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
-           , Object.ValueData  AS Name
-           , ObjectFloat_Level.ValueData        ::TFloat  AS Level
-           , ObjectFloat_Length.ValueData       ::TFloat  AS Length 
-           , ObjectFloat_Width.ValueData        ::TFloat  AS Width
-           , ObjectFloat_Height.ValueData       ::TFloat  AS Height
-           , ObjectFloat_BoxCount.ValueData     ::TFloat  AS BoxCount
-           , ObjectFloat_RowBoxCount.ValueData  ::TFloat  AS RowBoxCount
-           , ObjectFloat_RowWidth.ValueData     ::TFloat  AS RowWidth
-           , ObjectFloat_RowHeight.ValueData    ::TFloat  AS RowHeight    
-           , ObjectString_Comment.ValueData     ::TVarChar AS Comment
+      WITH
+      tmpPartionCell AS (SELECT spSelect.* 
+                         FROM gpSelect_Object_PartionCell_list (FALSE, inSession) AS spSelect
+                         WHERE spSelect.Id > 0
+                         )
+ 
+       SELECT RIGHT (Object.Name,5) :: TVarChar AS GroupName
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Id ELSE 0 END) AS Id_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Id ELSE 0 END) AS Id_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Id ELSE 0 END) AS Id_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Id ELSE 0 END) AS Id_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Id ELSE 0 END) AS Id_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Id ELSE 0 END) AS Id_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Code ELSE 0 END) AS Code_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Code ELSE 0 END) AS Code_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Code ELSE 0 END) AS Code_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Code ELSE 0 END) AS Code_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Code ELSE 0 END) AS Code_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Code ELSE 0 END) AS Code_l6
 
-           , Object.isErased   AS isErased
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Name ELSE '' END)::TVarChar AS Name_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Name ELSE '' END)::TVarChar AS Name_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Name ELSE '' END)::TVarChar AS Name_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Name ELSE '' END)::TVarChar AS Name_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Name ELSE '' END)::TVarChar AS Name_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Name ELSE '' END)::TVarChar AS Name_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Length ELSE 0 END)::TFloat AS Length_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Length ELSE 0 END)::TFloat AS Length_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Length ELSE 0 END)::TFloat AS Length_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Length ELSE 0 END)::TFloat AS Length_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Length ELSE 0 END)::TFloat AS Length_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Length ELSE 0 END)::TFloat AS Length_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Width ELSE 0 END)::TFloat AS Width_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Width ELSE 0 END)::TFloat AS Width_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Width ELSE 0 END)::TFloat AS Width_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Width ELSE 0 END)::TFloat AS Width_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Width ELSE 0 END)::TFloat AS Width_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Width ELSE 0 END)::TFloat AS Width_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Height ELSE 0 END)::TFloat AS Height_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Height ELSE 0 END)::TFloat AS Height_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Height ELSE 0 END)::TFloat AS Height_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Height ELSE 0 END)::TFloat AS Height_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Height ELSE 0 END)::TFloat AS Height_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Height ELSE 0 END)::TFloat AS Height_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.BoxCount ELSE 0 END)::TFloat AS BoxCount_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.BoxCount ELSE 0 END)::TFloat AS BoxCount_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.BoxCount ELSE 0 END)::TFloat AS BoxCount_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.BoxCount ELSE 0 END)::TFloat AS BoxCount_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.BoxCount ELSE 0 END)::TFloat AS BoxCount_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.BoxCount ELSE 0 END)::TFloat AS BoxCount_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.RowBoxCount ELSE 0 END)::TFloat AS RowBoxCount_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.RowBoxCount ELSE 0 END)::TFloat AS RowBoxCount_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.RowBoxCount ELSE 0 END)::TFloat AS RowBoxCount_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.RowBoxCount ELSE 0 END)::TFloat AS RowBoxCount_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.RowBoxCount ELSE 0 END)::TFloat AS RowBoxCount_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.RowBoxCount ELSE 0 END)::TFloat AS RowBoxCount_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.RowWidth ELSE 0 END)::TFloat AS RowWidth_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.RowWidth ELSE 0 END)::TFloat AS RowWidth_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.RowWidth ELSE 0 END)::TFloat AS RowWidth_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.RowWidth ELSE 0 END)::TFloat AS RowWidth_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.RowWidth ELSE 0 END)::TFloat AS RowWidth_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.RowWidth ELSE 0 END)::TFloat AS RowWidth_l6
+           
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.RowHeight ELSE 0 END)::TFloat AS RowHeight_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.RowHeight ELSE 0 END)::TFloat AS RowHeight_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.RowHeight ELSE 0 END)::TFloat AS RowHeight_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.RowHeight ELSE 0 END)::TFloat AS RowHeight_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.RowHeight ELSE 0 END)::TFloat AS RowHeight_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.RowHeight ELSE 0 END)::TFloat AS RowHeight_l6
+               
+           , MAX (CASE WHEN Object.Level = 1 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l1
+           , MAX (CASE WHEN Object.Level = 2 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l2
+           , MAX (CASE WHEN Object.Level = 3 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l3
+           , MAX (CASE WHEN Object.Level = 4 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l4
+           , MAX (CASE WHEN Object.Level = 5 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l5
+           , MAX (CASE WHEN Object.Level = 6 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l6
 
-       FROM Object
-        LEFT JOIN ObjectString AS ObjectString_Comment
-                               ON ObjectString_Comment.ObjectId = Object.Id
-                              AND ObjectString_Comment.DescId = zc_ObjectString_PartionCell_Comment()
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_Level
-                              ON ObjectFloat_Level.ObjectId = Object.Id
-                             AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_Length
-                              ON ObjectFloat_Length.ObjectId = Object.Id
-                             AND ObjectFloat_Length.DescId = zc_ObjectFloat_PartionCell_Length()
-                
-        LEFT JOIN ObjectFloat AS ObjectFloat_Width
-                              ON ObjectFloat_Width.ObjectId = Object.Id
-                             AND ObjectFloat_Width.DescId = zc_ObjectFloat_PartionCell_Width()
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_Height
-                              ON ObjectFloat_Height.ObjectId = Object.Id
-                             AND ObjectFloat_Height.DescId = zc_ObjectFloat_PartionCell_Height()
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
-                              ON ObjectFloat_BoxCount.ObjectId = Object.Id
-                             AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_PartionCell_BoxCount()
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_RowBoxCount
-                              ON ObjectFloat_RowBoxCount.ObjectId = Object.Id
-                             AND ObjectFloat_RowBoxCount.DescId = zc_ObjectFloat_PartionCell_RowBoxCount()
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_RowWidth
-                              ON ObjectFloat_RowWidth.ObjectId = Object.Id
-                             AND ObjectFloat_RowWidth.DescId = zc_ObjectFloat_PartionCell_RowWidth()                             
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_RowHeight
-                              ON ObjectFloat_RowHeight.ObjectId = Object.Id
-                             AND ObjectFloat_RowHeight.DescId = zc_ObjectFloat_PartionCell_RowHeight()
-
-       WHERE Object.DescId = zc_Object_PartionCell()
-      UNION ALL
-       SELECT 0 AS Id
-            , 0 AS Code
-            , 'УДАЛИТЬ' :: TVarChar AS Name
-            , CAST (NULL as TFLOAT)  AS Level      
-            , CAST (NULL as TFLOAT)  AS Length     
-            , CAST (NULL as TFLOAT)  AS Width      
-            , CAST (NULL as TFLOAT)  AS Height     
-            , CAST (NULL as TFLOAT)  AS BoxCount    
-            , CAST (NULL as TFLOAT)  AS RowBoxCount
-            , CAST (NULL as TFLOAT)  AS RowWidth   
-            , CAST (NULL as TFLOAT)  AS RowHeight
-            , CAST (NULL as TVarChar) AS Comment
-            , FALSE                  AS isErased
+       FROM tmpPartionCell AS Object
+       GROUP BY RIGHT (Object.Name,5)
       ;
 
 
@@ -102,4 +184,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartionCell (zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_PartionCell (zfCalc_UserAdmin())

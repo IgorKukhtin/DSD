@@ -63,6 +63,8 @@ type
     RowWidth: TcxGridDBColumn;
     RowHeight: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

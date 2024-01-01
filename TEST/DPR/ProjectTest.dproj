@@ -1339,10 +1339,6 @@
 				<Form>SendJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Send.pas">
-				<Form>SendForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\BranchTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\GoodsPropertyTest.pas"/>
@@ -5168,6 +5164,26 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_WageWarehouseBranch.pas">
 				<Form>Report_WageWarehouseBranchForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartionCell.pas">
+				<Form>PartionCellForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartionCell_list.pas">
+				<Form>PartionCell_listForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartionCellEdit.pas">
+				<Form>PartionCellEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Send.pas">
+				<Form>SendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendPartionCellEdit.pas">
+				<Form>SendPartionCellEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
