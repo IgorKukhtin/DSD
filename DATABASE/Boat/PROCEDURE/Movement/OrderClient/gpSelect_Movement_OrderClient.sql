@@ -8,9 +8,9 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient (TDateTime, TDateTime, Int
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
-    IN inClientId      Integer  , 
-    IN inSummPay       TFloat   , --сумма оплаты
-    IN inIsErased      Boolean ,
+    IN inClientId      Integer   ,
+    IN inSummDebet     TFloat    , -- сумма оплаты
+    IN inIsErased      Boolean   ,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumber_all TVarChar
@@ -48,10 +48,21 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , ModelId Integer, ModelName TVarChar
              , CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
-             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, ReceiptNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice Integer, ReceiptNumber_Invoice Integer, Comment_Invoice TVarChar
              , InvoiceKindId Integer, InvoiceKindName  TVarChar
-             , isPay Boolean -- Оплачен счет - да/нетснят  
-             , MovementId_InvoiceCalc Integer, InvNumber_InvoiceCalc TVarChar
+               -- Итого Сумма по счету (у лодки)
+             , Amount_Invoice     TFloat
+               -- Итого Оплата по счету (у лодки)
+             , Amount_Invoice_pay TFloat
+               -- Итого Оплата по заказу
+             , Amount_Order_pay TFloat
+               -- Оплачен полностью счет (у лодки) - да/нет
+             , isPay Boolean
+               -- поиск для контрола
+             , MovementId_Invoice_find Integer, InvNumberFull_Invoice_find TVarChar
+             , InvoiceKindId_find Integer, InvoiceKindName_find TVarChar
+             , Amount_Invoice_find     TFloat
+             , Amount_Invoice_pay_find TFloat
 
              , Value_TaxKind TFloat, TaxKindName TVarChar, TaxKindName_info TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -155,7 +166,7 @@ BEGIN
                                                             AND ObjectDate_DateBegin.DescId   = zc_ObjectDate_Product_DateBegin()
 
                                    WHERE MovementLinkObject_From.ObjectId = inClientId
-                                     OR COALESCE (inClientId, 0) = 0
+                                      OR COALESCE (inClientId, 0) = 0
                                   )
             -- Проведенные Заказ производство и Производство-сборка
           , tmpMIFloat_MovementId AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
@@ -179,60 +190,48 @@ BEGIN
                                              , Movement.DescId
                                              , Object.DescId
                               )
-       /* --проведенные док. заказ производство
-        , tmpOrderInternal AS (SELECT DISTINCT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
-                               FROM MovementItemFloat AS MIFloat_MovementId
-                                    JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
-                                                     AND MovementItem.isErased = FALSE
-                                                     AND MovementItem.DescId = zc_MI_Master()
-
-                                    JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                               WHERE MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-                                 AND MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
-                               )
-          --проведенные zc_Movement_ProductionUnion
-        , tmpProductionUnion AS (SELECT DISTINCT Movement.ParentId AS MovementId_OrderClient
-                                 FROM Movement
-                                 WHERE Movement.DescId = zc_Movement_ProductionUnion()
-                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                                   AND Movement.ParentId IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
-                                )
-         */ 
-         
-         --оплаты счетов
-     , tmpMLM_BankAccount AS (SELECT MovementLinkMovement.MovementChildId
-                                   , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
-                                   , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut    
-                                   , SUM (COALESCE (MovementItem.Amount,0))                                    ::TFloat AS Amount
+            -- Все счета
+          , tmpMovement_Invoice AS (SELECT Movement.Id                    AS MovementId_Invoice
+                                         , Movement.ParentId              AS MovementId_OrderClient
+                                         , Movement.OperDate              AS OperDate
+                                         , MovementFloat_Amount.ValueData AS Amount
+                                    FROM Movement
+                                         -- Сумма по счету
+                                         INNER JOIN MovementFloat AS MovementFloat_Amount
+                                                                  ON MovementFloat_Amount.MovementId = Movement.Id
+                                                                 AND MovementFloat_Amount.DescId     = zc_MovementFloat_Amount()
+                                                                 AND MovementFloat_Amount.ValueData  <> 0
+                                    WHERE Movement.ParentId IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement.DescId   = zc_Movement_Invoice()
+                                   )
+       -- оплаты по ВСЕМ счетам
+     , tmpMovement_BankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
+                                        , SUM (MovementItem.Amount)            AS Amount
                               FROM MovementLinkMovement
-                                  INNER JOIN Movement AS Movement_BankAccount
-                                                      ON Movement_BankAccount.Id = MovementLinkMovement.MovementId
-                                                     AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()   ---<> zc_Enum_Status_Erased()
-                                                     AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
-                                                         AND MovementItem.DescId = zc_MI_Master()
-                                                         AND MovementItem.isErased = FALSE
-                                                         AND COALESCE (MovementItem.Amount,0) <> 0
-                              WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT Movement_OrderClient.MovementId_Invoice FROM Movement_OrderClient)
-                                AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                                   INNER JOIN Movement AS Movement_BankAccount
+                                                       ON Movement_BankAccount.Id       = MovementLinkMovement.MovementId
+                                                      AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()
+                                                      AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
+                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
+                                                          AND MovementItem.DescId     = zc_MI_Master()
+                                                          AND MovementItem.isErased   = FALSE
+                                                          AND MovementItem.Amount     <> 0
+                              WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement_Invoice.MovementId_Invoice FROM tmpMovement_Invoice)
+                                AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Invoice()
                               GROUP BY MovementLinkMovement.MovementChildId
-                              )
-    , tmpInvoicePay AS (SELECT tmp.MovementId_Invoice
-                             , MovementFloat_Amount.ValueData
-                             , tmpMLM_BankAccount.Amount
-                             , ((COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - (COALESCE (tmpMLM_BankAccount.AmountIn,0) ))
-                              - (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ) ::TFloat AS AmountPay_rem
-                        FROM (SELECT DISTINCT Movement_OrderClient.MovementId_Invoice FROM Movement_OrderClient) AS tmp
-                             LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                                     ON MovementFloat_Amount.MovementId = tmp.MovementId_Invoice
-                                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                             -- оплаты из документа BankAccount
-                             LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementChildId = tmp.MovementId_Invoice 
-                        WHERE  COALESCE (tmp.MovementId_Invoice,0) <> 0                     
-                        )
- 
+                             )
+       -- Остаток к оплате по ВСЕМ счетам
+    , tmpInvoicePay AS (SELECT tmpMovement_Invoice.MovementId_Invoice
+                             , tmpMovement_Invoice.MovementId_OrderClient
+                             , tmpMovement_Invoice.OperDate
+                             , tmpMovement_Invoice.Amount AS Amount_Invoice
+                             , tmpMovement_Invoice.Amount - COALESCE (tmpMovement_BankAccount.Amount, 0) AS Amount_Invoice_rem
+                             , COALESCE (tmpMovement_BankAccount.Amount, 0) AS Amount_pay
+                        FROM tmpMovement_Invoice
+                             -- Все оплаты
+                             LEFT JOIN tmpMovement_BankAccount ON tmpMovement_BankAccount.MovementId_Invoice = tmpMovement_Invoice.MovementId_Invoice
+                       )
 
         -- Результат
         SELECT Movement_OrderClient.Id
@@ -334,24 +333,70 @@ BEGIN
              , Object_Engine.ValueData                      AS EngineName
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
-             , Movement_Invoice.Id                          AS MovementId_Invoice
+             , Movement_Invoice.Id                             AS MovementId_Invoice
              , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber_Invoice.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
-             , Movement_Invoice.InvNumber                   AS InvNumber_Invoice
-             , MovementString_ReceiptNumber_Invoice.ValueData  AS ReceiptNumber_Invoice
-             , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice 
-             , Object_InvoiceKind.Id                        AS InvoiceKindId
-             , Object_InvoiceKind.ValueData                 AS InvoiceKindName 
-             
-             , CASE WHEN COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0 THEN TRUE ELSE FALSE END ::Boolean AS isPay  -- 
+             , zfConvert_StringToNumber (Movement_Invoice.InvNumber)                     AS InvNumber_Invoice
+             , zfConvert_StringToNumber (MovementString_ReceiptNumber_Invoice.ValueData) AS ReceiptNumber_Invoice
+             , MovementString_Comment_Invoice.ValueData        AS Comment_Invoice
+             , Object_InvoiceKind.Id                           AS InvoiceKindId
+             , Object_InvoiceKind.ValueData                    AS InvoiceKindName
 
-             , CASE WHEN (COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0)
-                   OR (COALESCE (Movement_Invoice.Id,0) = 0) 
-                    THEN 0 ELSE Movement_Invoice.Id
-               END                                                                                                                        ::Integer AS MovementId_InvoiceCalc
-             , CASE WHEN (COALESCE (Movement_Invoice.Id,0) <> 0 AND COALESCE (tmpInvoicePay.AmountPay_rem,0) <= 0)
-                   OR (COALESCE (Movement_Invoice.Id,0) = 0) 
-                    THEN '' ELSE Movement_Invoice.InvNumber
-               END                                                                                                                        ::TVarChar AS InvNumber_InvoiceCalc
+             , tmpInvoicePay.Amount_Invoice :: TFloat      AS Amount_Invoice
+             , tmpInvoicePay.Amount_pay     :: TFloat      AS Amount_Invoice_pay
+             , tmpOrder_pay.Amount          :: TFloat      AS Amount_Order_pay
+
+               -- Оплачен полностью счет (у лодки) - да/нет
+             , CASE WHEN Movement_Invoice.Id > 0 AND tmpInvoicePay.Amount_Invoice_rem = 0 THEN TRUE ELSE FALSE END ::Boolean AS isPay
+
+               -- нашли
+             , Movement_Invoice_find.Id  AS MovementId_Invoice_find
+             , zfCalc_InvNumber_two_isErased ('', Movement_Invoice_find.InvNumber, MovementString_ReceiptNumber_Invoice_find.ValueData, Movement_Invoice_find.OperDate, Movement_Invoice_find.StatusId) AS InvNumberFull_Invoice_find
+
+             , CASE -- если нашли
+                    WHEN Movement_Invoice_find.Id > 0
+                         THEN Object_InvoiceKind_find.Id
+
+                    -- если Итого оплата = сумме за лодку
+                    WHEN tmpOrder_pay.Amount + inSummDebet
+                       -- ИТОГО с учетом всех скидок и Транспорта, Сумма продажи с НДС
+                       = -- Сумма с НДС
+                         MovementFloat_TotalSummPVAT.ValueData
+                         -- минус откорректированная скидка
+                       - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData)
+                         -- плюс Транспорт
+                       + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData)
+
+                          --  Счет
+                         THEN zc_Enum_InvoiceKind_Pay()
+
+                    -- иначе предоплата
+                    ELSE zc_Enum_InvoiceKind_PrePay()
+
+               END :: Integer AS InvoiceKindId_find
+
+             , CASE -- если нашли
+                    WHEN Movement_Invoice_find.Id > 0
+                         THEN Object_InvoiceKind_find.ValueData
+
+                    -- если Итого оплата = сумме за лодку
+                    WHEN tmpOrder_pay.Amount + inSummDebet
+                         -- ИТОГО с учетом всех скидок и Транспорта, Сумма продажи с НДС
+                       = MovementFloat_TotalSummPVAT.ValueData
+                         -- минус откорректированная скидка
+                       - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData)
+                         -- плюс Транспорт
+                       + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData)
+
+                          --  Счет
+                          THEN lfGet_Object_ValueData_sh (zc_Enum_InvoiceKind_Pay())
+
+                    -- иначе предоплата
+                    ELSE lfGet_Object_ValueData_sh (zc_Enum_InvoiceKind_PrePay())
+
+               END :: TVarChar AS InvoiceKindName_find
+
+             , tmpInvoicePay_rem.Amount_Invoice :: TFloat      AS Amount_Invoice_find
+             , tmpInvoicePay_rem.Amount_pay     :: TFloat      AS Amount_Invoice_pay_find
 
              , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS Value_TaxKind
              , Object_TaxKind.ValueData                     AS TaxKindName
@@ -398,21 +443,54 @@ BEGIN
              LEFT JOIN Object AS Object_Product  ON Object_Product.Id  = Movement_OrderClient.ProductId
 
              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = Movement_OrderClient.MovementId_Invoice
-
              LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                       ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
                                      AND MovementString_Comment_Invoice.DescId     = zc_MovementString_Comment()
-
              LEFT JOIN MovementString AS MovementString_ReceiptNumber_Invoice
                                       ON MovementString_ReceiptNumber_Invoice.MovementId = Movement_Invoice.Id
                                      AND MovementString_ReceiptNumber_Invoice.DescId     = zc_MovementString_ReceiptNumber()
-
              LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                           ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
-                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-             LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId     
-             
+                                         AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+             LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
+
+             -- Итого оплаты за лодку
+             LEFT JOIN (SELECT tmpMovement_Invoice.MovementId_OrderClient
+                             , SUM (tmpMovement_BankAccount.Amount) AS Amount
+                        FROM tmpMovement_Invoice
+                             JOIN tmpMovement_BankAccount ON tmpMovement_BankAccount.MovementId_Invoice = tmpMovement_Invoice.MovementId_Invoice
+                        GROUP BY tmpMovement_Invoice.MovementId_OrderClient
+                       ) AS tmpOrder_pay
+                         ON tmpOrder_pay.MovementId_OrderClient = Movement_OrderClient.Id
+
+             -- Cчет (у лодки) + его Оплаты + Остаток к оплате
              LEFT JOIN tmpInvoicePay ON tmpInvoicePay.MovementId_Invoice = Movement_Invoice.Id
+                                 -- AND 1=0
+             -- Поискнеоплаченный счет
+             LEFT JOIN (SELECT tmpInvoicePay.MovementId_OrderClient
+                             , tmpInvoicePay.MovementId_Invoice
+                             , tmpInvoicePay.Amount_Invoice
+                             , tmpInvoicePay.Amount_pay
+                             , tmpInvoicePay.Amount_Invoice_rem
+                             , ROW_NUMBER() OVER (PARTITION BY tmpInvoicePay.MovementId_OrderClient ORDER BY tmpInvoicePay.OperDate ASC) AS Ord
+                        FROM tmpInvoicePay
+                        WHERE tmpInvoicePay.Amount_Invoice_rem > 0
+                       ) AS tmpInvoicePay_rem
+                         ON tmpInvoicePay_rem.MovementId_OrderClient = Movement_OrderClient.Id
+                        -- первый
+                        AND tmpInvoicePay_rem.Ord                    = 1
+                        -- если Остаток по счету = 0
+                        -- AND COALESCE (tmpInvoicePay.Amount_Invoice_rem, 0) = 0
+
+             LEFT JOIN Movement AS Movement_Invoice_find ON Movement_Invoice_find.Id = tmpInvoicePay_rem.MovementId_Invoice
+             LEFT JOIN MovementString AS MovementString_ReceiptNumber_Invoice_find
+                                      ON MovementString_ReceiptNumber_Invoice_find.MovementId = Movement_Invoice_find.Id
+                                     AND MovementString_ReceiptNumber_Invoice_find.DescId     = zc_MovementString_ReceiptNumber()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind_find
+                                          ON MovementLinkObject_InvoiceKind_find.MovementId = Movement_Invoice_find.Id
+                                         AND MovementLinkObject_InvoiceKind_find.DescId = zc_MovementLinkObject_InvoiceKind()
+             LEFT JOIN Object AS Object_InvoiceKind_find ON Object_InvoiceKind_find.Id = MovementLinkObject_InvoiceKind_find.ObjectId
+
 
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement_OrderClient.Id
@@ -561,4 +639,4 @@ $BODY$
 4) итого сумма скидки
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.10.2022', inEndDate:= '31.12.2023', inClientId:=0 , inSummPay:= 0 , inIsErased := true, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.10.2022', inEndDate:= '31.12.2023', inClientId:=0 , inSummDebet:= 0 , inIsErased := true, inSession:= zfCalc_UserAdmin())
