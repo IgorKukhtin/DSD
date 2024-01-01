@@ -14,7 +14,7 @@ BEGIN
                    WHEN inStatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
                    ELSE ''
               END
-           ||' '
+           ||''
            || inInvNumber
            || ' от ' || zfConvert_DateToString (inOperDate)
              );
