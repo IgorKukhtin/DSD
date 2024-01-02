@@ -8,25 +8,25 @@ inherited WagesJournalForm: TWagesJournalForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Wages
-  ExplicitWidth = 798
-  ExplicitHeight = 530
+  ExplicitWidth = 804
+  ExplicitHeight = 547
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 782
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 650
+    ExplicitWidth = 782
     ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 650
+      ExplicitWidth = 782
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 782
         Height = 434
-        ExplicitWidth = 650
+        ExplicitWidth = 782
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -126,7 +126,7 @@ inherited WagesJournalForm: TWagesJournalForm
   end
   inherited Panel: TPanel
     Width = 782
-    ExplicitWidth = 650
+    ExplicitWidth = 782
     inherited deStart: TcxDateEdit
       Properties.DisplayFormat = 'mmmm yyyy'
       ExplicitWidth = 118
@@ -186,6 +186,19 @@ inherited WagesJournalForm: TWagesJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actReport_Wages_Average: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1088#1077#1076#1085#1103#1103' '#1079#1072#1088#1087#1083#1072#1090#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1057#1088#1077#1076#1085#1103#1103' '#1079#1072#1088#1087#1083#1072#1090#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 16
+      FormName = 'TReport_Wages_AverageForm'
+      FormNameParam.Value = 'TReport_Wages_AverageForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Wages'
@@ -242,6 +255,10 @@ inherited WagesJournalForm: TWagesJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -283,6 +300,10 @@ inherited WagesJournalForm: TWagesJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Visible = ivAlways
       ImageIndex = 15
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actReport_Wages_Average
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

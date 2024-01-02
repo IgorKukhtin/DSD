@@ -1196,10 +1196,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsToCloseForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Wages_AverageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Wages_AverageForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsToCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsToCloseForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsOnUnitRemainsMarketingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsOnUnitRemainsMarketingDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnitRemainsMarketingDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsOnUnitRemainsMarketingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnitRemainsMarketingForm');
@@ -2540,8 +2543,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeChoiceForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeChoiceForm');
 
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));

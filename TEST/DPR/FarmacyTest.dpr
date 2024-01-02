@@ -1307,7 +1307,8 @@ uses
   Report_GoodsOnUnitRemainsMarketing in '..\..\FormsFarmacy\Report\Report_GoodsOnUnitRemainsMarketing.pas' {Report_GoodsOnUnitRemainsMarketingForm: TParentForm},
   ConvertRemainsJournal in '..\..\FormsFarmacy\Document\ConvertRemainsJournal.pas' {ConvertRemainsJournalForm: TParentForm},
   ConvertRemains in '..\..\FormsFarmacy\Document\ConvertRemains.pas' {ConvertRemainsForm: TParentForm},
-  Report_GoodsToClose in '..\..\FormsFarmacy\Report\Report_GoodsToClose.pas' {Report_GoodsToCloseForm: TParentForm};
+  Report_GoodsToClose in '..\..\FormsFarmacy\Report\Report_GoodsToClose.pas' {Report_GoodsToCloseForm: TParentForm},
+  Report_Wages_Average in '..\..\FormsFarmacy\Report\Report_Wages_Average.pas' {Report_Wages_AverageForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
