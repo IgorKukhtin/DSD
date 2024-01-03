@@ -1100,6 +1100,9 @@ end;
 procedure TLoadFormTest.LoadSendFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_DatePartionDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSend_DatePartionDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionCellEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionCellEditForm');
 

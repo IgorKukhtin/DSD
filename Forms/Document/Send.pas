@@ -220,6 +220,13 @@ type
     actUpdatePartionCellDS: TdsdUpdateDataSet;
     actUpdateMIPertionCell_edit: TdsdInsertUpdateAction;
     bbUpdateMIPertionCell_edit: TdxBarButton;
+    actUpdate_PartionGoodsDate: TdsdExecStoredProc;
+    ExecuteDialogUpdatePartionGoodsDate: TExecuteDialog;
+    actUpdatePartionGoodsDate: TdsdDataSetRefresh;
+    macUpdatePartionGoodsDate: TMultiAction;
+    spUpdateMI_PartionGoodsDate: TdsdStoredProc;
+    bbUpdatePartionGoodsDate: TdxBarButton;
+    actRefreshPartionCell: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
