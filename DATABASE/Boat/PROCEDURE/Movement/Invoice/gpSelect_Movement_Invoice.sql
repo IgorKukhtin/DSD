@@ -386,14 +386,23 @@ BEGIN
 
       , tmpData.VATPercent
 
-      -- оплата
+        -- оплата
       , tmpData.AmountIn_BankAccount
       , tmpData.AmountOut_BankAccount
       , tmpData.Amount_BankAccount
-      -- остаток по счету
-      , tmpData.AmountIn_rem
-      , tmpData.AmountOut_rem
-      , tmpData.Amount_rem
+        -- остаток по счету
+      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+                  THEN 0 
+             ELSE tmpData.AmountIn_rem
+        END :: TFloat AS AmountIn_rem
+      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+                  THEN 0 
+             ELSE tmpData.AmountOut_rem
+        END :: TFloat AS AmountOut_rem
+      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+                  THEN 0 
+             ELSE tmpData.Amount_rem
+        END :: TFloat AS Amount_rem
 
       , tmpData.ObjectId
       , tmpData.ObjectName

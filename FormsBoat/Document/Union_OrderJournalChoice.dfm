@@ -5,7 +5,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -134
   ExplicitWidth = 1044
   ExplicitHeight = 394
   PixelsPerInch = 96
@@ -139,23 +138,37 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           object DescName: TcxGridDBColumn [0]
             Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'DescName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           inherited colStatus: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' '#1047#1072#1082#1072#1079
             HeaderAlignmentHorz = taCenter
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'/'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 69
           end
           inherited colInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
             HeaderAlignmentHorz = taCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'/'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 76
           end
-          object InvNumberPartner: TcxGridDBColumn [3]
+          object InvNumber_Full: TcxGridDBColumn [3]
+            Caption = '***'#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumber_Full'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'/'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 44
+          end
+          object InvNumberPartner: TcxGridDBColumn [4]
             Caption = 'External Nr'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -165,8 +178,9 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'/'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
-            Width = 48
+            Width = 55
           end
           object OperDatePartner: TcxGridDBColumn
             Caption = 'External Dt'
@@ -174,6 +188,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'/'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 70
           end
           object ObjectName: TcxGridDBColumn
@@ -242,16 +257,17 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 100
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = '***Total LP ('#1088#1072#1089#1095#1077#1090')'
+            Caption = '***Total LP'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 
-              #1048#1058#1054#1043#1054' '#1088#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084 +
-              #1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+              #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' % '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' ' +
+              #1053#1044#1057
             Width = 80
           end
           object TotalSummVAT: TcxGridDBColumn
@@ -266,7 +282,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Width = 60
           end
           object TotalSummMVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            Caption = '*Total LP'
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -274,10 +290,11 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
             Width = 60
           end
           object TotalSummPVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Caption = '***Total LP + Vat'
             DataBinding.FieldName = 'TotalSummPVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -285,6 +302,9 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' % '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044 +
+              #1057
             Width = 60
           end
           object BasisWVAT_summ_transport: TcxGridDBColumn
@@ -460,16 +480,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 107
-          end
-          object InvNumber_Full: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'InvNumber_Full'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
-            Options.Editing = False
-            Width = 44
           end
         end
       end

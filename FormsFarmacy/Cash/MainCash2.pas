@@ -1237,8 +1237,12 @@ begin
     except
       if (CheckCDS.RecordCount > FCheckCDSRecNo) and (FCheckCDSRecNo >= 0) then CheckCDS.RecNo := FCheckCDSRecNo;
     end;
-    if Assigned(FCheckCDSBookmark) then CheckCDS.FreeBookmark(FCheckCDSBookmark);
+    try
+      if Assigned(FCheckCDSBookmark) then CheckCDS.FreeBookmark(FCheckCDSBookmark);
+    except
+    end;
   finally
+    CheckCDS.Filtered := False;
     CheckCDS.Filter := 'Amount > 0';
     CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
@@ -1946,13 +1950,14 @@ begin
   // очистить рецепт
   ClearReceipt1303;
 
-  CheckCDS.Filter := 'Amount > 0';
-  CheckCDS.Filtered := True;
-
+  RemainsCDS.Filtered := False;
   RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
   RemainsCDS.Filtered := True;
-
   while RemainsCDS.ControlsDisabled do RemainsCDS.EnableControls;
+
+  CheckCDS.Filtered := False;
+  CheckCDS.Filter := 'Amount > 0';
+  CheckCDS.Filtered := True;
   while CheckCDS.ControlsDisabled do CheckCDS.EnableControls;
 end;
 
@@ -6180,11 +6185,11 @@ begin
     end;
     MemData.Close;
   finally
+    CheckCDS_EnableControls;
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKINDID;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
-    CheckCDS_EnableControls;
     if nCheckId <> 0 then CheckCDS.Locate('GoodsId', nCheckId, []);
     difUpdate := True;
     Add_Log('Конец заполнения с Memdata');
@@ -6929,9 +6934,9 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS_EnableControls;
     RemainsCDS.Filtered := True;
     RemainsCDS.EnableControls;
-    CheckCDS_EnableControls;
   end;
   CalcTotalSumm;
 end;
@@ -10467,13 +10472,13 @@ begin
       ADiffCDS.Next;
     end;
   finally
+    CheckCDS_EnableControls;
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
     if nCheckId <> 0 then
       CheckCDS.Locate('GoodsId', nCheckId, []);
-    CheckCDS_EnableControls;
     Add_Log('Конец обновления остатков');
   end;
 end;
@@ -11029,13 +11034,18 @@ begin
   // очистить рецепт
   ClearReceipt1303;
 
-  CheckCDS.Filter := 'Amount > 0';
-  CheckCDS.Filtered := True;
+  MainGridDBTableView.DataController.Filter.Clear;
+  CheckGridDBTableView.DataController.Filter.Clear;
+  ExpirationDateView.DataController.Filter.Clear;
 
+  RemainsCDS.Filtered := False;
   RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
   RemainsCDS.Filtered := True;
-
   while RemainsCDS.ControlsDisabled do RemainsCDS.EnableControls;
+
+  CheckCDS.Filtered := False;
+  CheckCDS.Filter := 'Amount > 0';
+  CheckCDS.Filtered := True;
   while CheckCDS.ControlsDisabled do CheckCDS.EnableControls;
 end;
 
@@ -12122,13 +12132,13 @@ begin
       CheckCDS.Next;
     end;
   finally
+    CheckCDS_EnableControls;
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
     ExpirationDateCDS.Filter := oldFilterExpirationDate;
     ExpirationDateCDS.EnableControls;
-    CheckCDS_EnableControls;
     if AGoodsId <> 0 then CheckCDS.Locate('GoodsId', AGoodsId, []);
   end;
 end;
@@ -12208,11 +12218,11 @@ begin
       CheckCDS.First;
 
     finally
+      CheckCDS_EnableControls;
       RemainsCDS.Filtered := True;
       RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
       RemainsCDS.EnableControls;
-      CheckCDS_EnableControls;
     end;
   end else if ASaveCheck = True then
   begin
@@ -14935,12 +14945,12 @@ begin
     end;
 
   finally
+    CheckCDS_EnableControls;
     SalePromoGoodsCalcCDS.Filtered := False;
     SalePromoGoodsCalcCDS.Filter := '';
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
     SalePromoGoodsCDS.Filtered := False;
     SalePromoGoodsCDS.Filter := '';
-    CheckCDS_EnableControls;
   end;
 
 end;
@@ -15155,12 +15165,12 @@ begin
     UpdateSalePromoGoods;
 
   finally
+    CheckCDS_EnableControls;
     SalePromoGoodsCalcCDS.Filtered := False;
     SalePromoGoodsCalcCDS.Filter := '';
     if SalePromoGoodsCalcCDS.Active then SalePromoGoodsCalcCDS.Close;
     SalePromoGoodsCDS.Filtered := False;
     SalePromoGoodsCDS.Filter := '';
-    CheckCDS_EnableControls;
   end;
 
 end;

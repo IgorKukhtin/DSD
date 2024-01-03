@@ -49,7 +49,7 @@ RETURNS TABLE (Id              Integer
              , UnitName        TVarChar
 
              , InvNumberPartner TVarChar
-             , ReceiptNumber    TVarChar
+             , ReceiptNumber    Integer
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -406,7 +406,7 @@ BEGIN
       , tmpData.UnitName
 
       , tmpData.InvNumberPartner
-      , tmpData.ReceiptNumber
+      , zfConvert_StringToNumber (tmpData.ReceiptNumber) AS ReceiptNumber
       , tmpData.Comment
 
       , tmpData.InsertName

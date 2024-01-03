@@ -219,7 +219,7 @@ BEGIN
 
            , tmpInvoice_Params.PaidKindName        AS PaidKindName_Invoice
            , tmpInvoice_Params.UnitName            AS UnitName_Invoice
-           , zfConvert_StringToNumber (tmpInvoice_Params.ReceiptNumber) ::Integer AS ReceiptNumber_Invoice
+           , zfConvert_StringToNumber (tmpInvoice_Params.ReceiptNumber) AS ReceiptNumber_Invoice
            , tmpInvoice_Params.Comment             AS Comment_Invoice
            , tmpInvoice_Params.InvoiceKindName     AS InvoiceKindName
 

@@ -3,6 +3,7 @@
   ClientHeight = 569
   ClientWidth = 1121
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -227
   ExplicitWidth = 1137
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -222,7 +223,7 @@
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091
+            HeaderHint = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1087#1083#1072#1085')'
             Options.Editing = False
             Width = 70
           end
@@ -484,6 +485,14 @@
             Options.Editing = False
             Width = 80
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1089#1082#1083#1072#1076
             DataBinding.FieldName = 'UnitCode'
@@ -502,22 +511,13 @@
             Options.Editing = False
             Width = 101
           end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 95
-          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 52
+            Width = 55
           end
           object ProductCIN: TcxGridDBColumn
             Caption = 'CIN Nr.'
@@ -573,7 +573,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'/'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 110
           end
@@ -1451,6 +1451,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actShowErased: TBooleanStoredProcAction [9]
@@ -1824,6 +1825,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ItemDS
@@ -2012,6 +2014,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ItemDS
     end

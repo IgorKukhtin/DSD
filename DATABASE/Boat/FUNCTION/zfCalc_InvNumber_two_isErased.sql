@@ -7,9 +7,21 @@ RETURNS TVarChar
 AS
 $BODY$
 BEGIN
-      RETURN (CASE WHEN inInvNumber_two <> '' THEN '(*' || inInvNumber_two || ') ' ELSE '' END
-           || zfCalc_InvNumber_isErased (inDescName, inInvNumber, inOperDate, inStatusId)
+      RETURN (CASE WHEN inDescName <> '' THEN '' ||inDescName||' ' ELSE '' END
+           || '№ '
+           || CASE WHEN inStatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
+                   WHEN inStatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
+                   ELSE ''
+              END
+           ||''
+           || CASE WHEN inInvNumber_two <> '' THEN inInvNumber_two ELSE '*' || COALESCE (inInvNumber, '') END
+           || CASE WHEN inInvNumber_two <> '' THEN ' (*' || inInvNumber || ')' ELSE '' END
+           || ' от ' || zfConvert_DateToString (inOperDate)
              );
+
+      --RETURN (CASE WHEN inInvNumber_two <> '' THEN '(*' || inInvNumber_two || ') ' ELSE '' END
+      --     || zfCalc_InvNumber_isErased (inDescName, inInvNumber, inOperDate, inStatusId)
+      --       );
 
 END;
 $BODY$
@@ -23,4 +35,4 @@ $BODY$
 */
 
 -- тест
--- SELECT zfCalc_InvNumber_two_isErased ('', '123', '123', CURRENT_DATE, zc_Enum_Status_UnComplete())
+-- SELECT zfCalc_InvNumber_two_isErased ('', '123', '1234', CURRENT_DATE, zc_Enum_Status_UnComplete())

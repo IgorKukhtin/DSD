@@ -1,9 +1,8 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -63,7 +62,7 @@ BEGIN
      IF COALESCE (inMovementId_Invoice, 0) = 0
      THEN
          -- сохранили <Документ> + для inMovementId_Parent уствновится связь на этот inMovementId_Invoice
-         inMovementId_Invoice := lpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
+         inMovementId_Invoice := gpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
                                                                 , inParentId         := inMovementId_Parent                 ::Integer
                                                                 , inInvNumber        := NEXTVAL ('movement_Invoice_seq')    ::TVarChar
                                                                 , inOperDate         := inOperDate
@@ -71,7 +70,8 @@ BEGIN
                                                                   -- это св-во в Заказе
                                                                 , inVATPercent       := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Parent AND MF.DescId = zc_MovementFloat_VATPercent())
                                                                   -- 
-                                                                , inAmount           := vbAmount                            ::TFloat
+                                                                , inAmountIn         := CASE WHEN vbAmount > 0 THEN  1 * vbAmount ELSE 0 END
+                                                                , inAmountOut        := CASE WHEN vbAmount < 0 THEN -1 * vbAmount ELSE 0 END
                                                                 , inInvNumberPartner := ''                                  ::TVarChar
                                                                 , inReceiptNumber    := (1 + COALESCE ((SELECT MAX (zfConvert_StringToNumber (MovementString.ValueData))
                                                                                                         FROM MovementString
@@ -87,7 +87,7 @@ BEGIN
                                                                 , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
                                                                 , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
                                                                 , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END :: Integer
-                                                                , inUserId           := vbUserId
+                                                                , inSession          := inSession
                                                                  )
          FROM Object AS Object_Client
               LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
@@ -96,11 +96,11 @@ BEGIN
          WHERE Object_Client.Id = inMoneyPlaceId;
 
          -- проводим Документ
-         IF vbUserId = lpCheckRight (vbUserId :: TVarChar, zc_Enum_Process_Complete_Invoice())
+         /*IF vbUserId = lpCheckRight (vbUserId :: TVarChar, zc_Enum_Process_Complete_Invoice())
          THEN
               PERFORM lpComplete_Movement_Invoice (inMovementId := inMovementId_Invoice
                                                  , inUserId     := vbUserId);
-         END IF;
+         END IF;*/
 
      END IF;
      

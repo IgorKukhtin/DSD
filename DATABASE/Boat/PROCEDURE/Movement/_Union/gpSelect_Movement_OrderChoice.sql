@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumber
              , ProductCIN TVarChar
 
              , Comment TVarChar
-             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice TVarChar, ReceiptNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice Integer, ReceiptNumber_Invoice Integer, Comment_Invoice TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
 
@@ -177,10 +177,8 @@ BEGIN
 
              , Movement_Invoice.Id                            AS MovementId_Invoice
              , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber_Invoice.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
-               -- Поиск по этому номеру
-             , MovementString_ReceiptNumber_Invoice.ValueData  AS InvNumber_Invoice
-             -- , Movement_Invoice.InvNumber                     AS InvNumber_Invoice
-             , MovementString_ReceiptNumber_Invoice.ValueData AS ReceiptNumber_Invoice
+             , zfConvert_StringToNumber (Movement_Invoice.InvNumber)                     AS InvNumber_Invoice
+             , zfConvert_StringToNumber (MovementString_ReceiptNumber_Invoice.ValueData) AS ReceiptNumber_Invoice
              , MovementString_Comment_Invoice.ValueData       AS Comment_Invoice
 
              , Object_InfoMoney_View.InfoMoneyId

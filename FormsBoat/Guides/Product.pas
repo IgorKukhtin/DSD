@@ -252,9 +252,13 @@ type
     btnSetVisible_ProdOptItems: TcxButton;
     actSetVisible_ProdOptItems: TBooleanSetVisibleAction;
     cxLabel4: TcxLabel;
-    edSearchInvNumber_Invoice: TcxTextEdit;
-    InvNumber_Invoice: TcxGridDBColumn;
-    OperDate_Invoice: TcxGridDBColumn;
+    edSearchReceiptNumber_Invoice: TcxTextEdit;
+    InvNumberFull_Invoice: TcxGridDBColumn;
+    ReceiptNumber_Invoice: TcxGridDBColumn;
+    InvoiceKindName: TcxGridDBColumn;
+    OperDate_BankAccount: TcxGridDBColumn;
+    Amount_BankAccount: TcxGridDBColumn;
+    Amount_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

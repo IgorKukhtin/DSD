@@ -33,7 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , PaidKindName_Invoice TVarChar
              , UnitName_Invoice TVarChar
              , InvNumberPartner_Invoice TVarChar
-             , ReceiptNumber_Invoice TVarChar
+             , ReceiptNumber_Invoice Integer
              , Comment_Invoice TVarChar
              , InvoiceKindName TVarChar
 
@@ -240,7 +240,7 @@ BEGIN
            , tmpInvoice_Params.PaidKindName        AS PaidKindName_Invoice
            , tmpInvoice_Params.UnitName            AS UnitName_Invoice
            , tmpInvoice_Params.InvNumberPartner    AS InvNumberPartner_Invoice
-           , tmpInvoice_Params.ReceiptNumber       AS ReceiptNumber_Invoice
+           , zfConvert_StringToNumber (tmpInvoice_Params.ReceiptNumber) AS ReceiptNumber_Invoice
            , tmpInvoice_Params.Comment             AS Comment_Invoice
            , tmpInvoice_Params.InvoiceKindName     AS InvoiceKindName
 

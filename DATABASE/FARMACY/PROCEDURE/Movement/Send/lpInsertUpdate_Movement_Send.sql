@@ -51,6 +51,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     IF COALESCE (ioId, 0) = 0 AND CURRENT_DATE >= '01.01.2024' AND COALESCE(inToId, 0) <> 11299914 AND 
+        NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN 
+       RAISE EXCEPTION 'Ошибка. Создание перемещений запрещено..';             
+     END IF;    
+
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Send());
 
