@@ -17,6 +17,7 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
+    DECLARE vbOperDate TDateTime;
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
     DECLARE vbPriceWithVAT Boolean;
@@ -32,6 +33,8 @@ $BODY$
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
     
+    DECLARE vbIsGoodsCode Boolean;
+
     DECLARE vbWeighingCount TFloat;
 
     DECLARE vbOperDate_insert TDateTime;
@@ -70,8 +73,37 @@ BEGIN
                        );
 
 
+     -- Параметры - захардкодили
+     SELECT -- ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ"АРІТЕЙЛ"
+            CASE WHEN OH_JuridicalDetails_To.OKPO = '41135005'
+                      THEN TRUE
+                      ELSE FALSE
+            END AS isGoodsCode
+
+            INTO vbIsGoodsCode
+
+     FROM Movement
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                              ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
+                                                             AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                             AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+     WHERE Movement.Id     = inMovementId
+       AND Movement.DescId <> zc_Movement_SendOnPrice()
+     ;
+
      -- параметры из документа
-     SELECT Movement.DescId
+     SELECT Movement.OperDate
+          , Movement.DescId
           , Movement.StatusId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
@@ -82,7 +114,7 @@ BEGIN
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)   AS isLongUKTZED
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId
+            INTO vbOperDate, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId
                , vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
                , vbIsLongUKTZED
      FROM Movement
@@ -1068,6 +1100,13 @@ BEGIN
                                  AND tmpMI_Order.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                   ON ObjectString_Goods_BUH.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+            LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                 ON ObjectDate_BUH.ObjectId = tmpMI.GoodsId
+                                AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
+
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
@@ -1110,10 +1149,17 @@ BEGIN
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
 
        WHERE tmpMI.AmountPartner <> 0
-       ORDER BY CASE WHEN vbGoodsPropertyId = 83954 -- Метро
-                          THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))
-                     ELSE ''
-                END
+       ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
+                                              , 83963  -- Ашан
+                                              , 404076 -- Новус
+                                              , 83956  -- Фора
+                                               )
+                          THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
+                     ELSE '0'
+                END :: Integer
+              , CASE WHEN vbIsGoodsCode = TRUE THEN Object_Goods.ObjectCode ELSE 0 END
+              , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+              , Object_GoodsKind.ValueData
               , Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
 
