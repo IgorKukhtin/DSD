@@ -5600,6 +5600,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsOnJuridicalRemains: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084
+      FormName = 'TReport_GoodsOnJuridicalRemainsForm'
+      FormNameParam.Value = 'TReport_GoodsOnJuridicalRemainsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6475,6 +6486,9 @@
       end
       object N379: TMenuItem
         Action = actReport_BanToTransferTimeGoods
+      end
+      object N387: TMenuItem
+        Action = actReport_GoodsOnJuridicalRemains
       end
     end
     object N36: TMenuItem [5]

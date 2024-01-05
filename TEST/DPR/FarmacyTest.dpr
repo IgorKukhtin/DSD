@@ -1308,7 +1308,9 @@ uses
   ConvertRemainsJournal in '..\..\FormsFarmacy\Document\ConvertRemainsJournal.pas' {ConvertRemainsJournalForm: TParentForm},
   ConvertRemains in '..\..\FormsFarmacy\Document\ConvertRemains.pas' {ConvertRemainsForm: TParentForm},
   Report_GoodsToClose in '..\..\FormsFarmacy\Report\Report_GoodsToClose.pas' {Report_GoodsToCloseForm: TParentForm},
-  Report_Wages_Average in '..\..\FormsFarmacy\Report\Report_Wages_Average.pas' {Report_Wages_AverageForm: TParentForm};
+  Report_Wages_Average in '..\..\FormsFarmacy\Report\Report_Wages_Average.pas' {Report_Wages_AverageForm: TParentForm},
+  Report_GoodsOnJuridicalRemains in '..\..\FormsFarmacy\Report\Report_GoodsOnJuridicalRemains.pas' {Report_GoodsOnJuridicalRemainsForm: TParentForm},
+  Report_GoodsOnJuridicalRemainsDialog in '..\..\FormsFarmacy\Report\Report_GoodsOnJuridicalRemainsDialog.pas' {Report_GoodsOnJuridicalRemainsDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

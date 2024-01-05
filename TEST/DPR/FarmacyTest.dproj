@@ -4748,6 +4748,14 @@
 				<Form>Report_Wages_AverageForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsOnJuridicalRemains.pas">
+				<Form>Report_GoodsOnJuridicalRemainsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsOnJuridicalRemainsDialog.pas">
+				<Form>Report_GoodsOnJuridicalRemainsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
