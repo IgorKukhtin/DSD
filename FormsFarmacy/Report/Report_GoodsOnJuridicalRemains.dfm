@@ -1,30 +1,30 @@
 ﻿inherited Report_GoodsOnJuridicalRemainsForm: TReport_GoodsOnJuridicalRemainsForm
   Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084
   ClientHeight = 338
-  ClientWidth = 612
+  ClientWidth = 858
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 634
+  ExplicitWidth = 880
   ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 72
-    Width = 612
+    Width = 858
     Height = 266
     TabOrder = 3
-    ExplicitTop = 68
-    ExplicitWidth = 812
-    ExplicitHeight = 270
+    ExplicitTop = 72
+    ExplicitWidth = 731
+    ExplicitHeight = 266
     ClientRectBottom = 266
-    ClientRectRight = 612
+    ClientRectRight = 858
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 812
-      ExplicitHeight = 270
+      ExplicitWidth = 731
+      ExplicitHeight = 266
       inherited cxGrid: TcxGrid
-        Width = 612
+        Width = 858
         Height = 266
-        ExplicitWidth = 812
-        ExplicitHeight = 270
+        ExplicitWidth = 731
+        ExplicitHeight = 266
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -111,6 +111,21 @@
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaWithOutVAT
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountPD
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaWithVATPD
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -120,21 +135,29 @@
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object JuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'JuridicalCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
-          end
           object JuridicalName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1102#1088'. '#1083#1080#1094#1072
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 298
+            Width = 174
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 174
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 44
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -145,7 +168,17 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 90
+          end
+          object SummaWithOutVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaWithOutVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
@@ -155,16 +188,37 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 101
+            Width = 96
+          end
+          object AmountPD: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1089#1088'. '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'AmountPD'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object SummaWithVATPD: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057') '#1087#1088#1086#1089#1088'. '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'SummaWithVATPD'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 612
+    Width = 858
     Height = 46
-    ExplicitWidth = 812
+    ExplicitWidth = 731
     ExplicitHeight = 46
     inherited deStart: TcxDateEdit
       Left = 131

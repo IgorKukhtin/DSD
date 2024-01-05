@@ -241,7 +241,7 @@ BEGIN
     END IF;
 
     -- Сброс 5 категории через 30 дней
-    BEGIN
+    /*BEGIN
       IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
       THEN
           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PartionGoods_Cat_5(), ContainerLinkObject.ObjectId , False)
@@ -266,8 +266,64 @@ BEGIN
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run zc_ObjectBoolean_PartionGoods_Cat_5', True, text_var1::TVarChar, vbUserId);
-    END;
+    END;*/
     
+    -- Перевод в 5 категорию просрочки
+    BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
+      THEN
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PartionGoods_Cat_5(), ContainerPD.ObjectId , TRUE)
+        FROM (WITH tmpMovement AS (SELECT Movement.id
+                                   FROM Movement
+                                        INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                                  AND MovementBoolean_Deferred.ValueData = True
+                                   WHERE Movement.DescId = zc_Movement_Send()
+                                     AND Movement.StatusId = zc_Enum_Status_UnComplete())
+
+                 , tmpContainerDeferred AS (SELECT MIContainer.ContainerId
+                                                 , SUM(MIContainer.Amount)::TFloat  AS Amount    
+                                            FROM tmpMovement AS Movement
+
+                                                 INNER JOIN MovementItemContainer AS MIContainer
+                                                                                  ON MIContainer.MovementId = Movement.Id
+                                                                                 AND MIContainer.DescId = zc_MIContainer_CountPartionDate()
+                                            GROUP BY MIContainer.ContainerId
+                                            )
+                 , tmpContainerPD AS (SELECT DISTINCT ContainerLinkObject.ObjectId
+                                      FROM Container
+
+                                           LEFT JOIN tmpContainerDeferred AS ContainerDeferred
+                                                                          ON ContainerDeferred.ContainerId = Container.Id
+
+                                           LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                        AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                           LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                                ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                               AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+                                      WHERE Container.DescId = zc_Container_CountPartionDate()
+                                        AND Container.WhereObjectId IN (SELECT Id FROM gpSelect_Object_Unit_Active (inNotUnitId := 0, inSession := '3'))
+                                        AND COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()) <= CURRENT_DATE
+                                        AND Container.Amount - COALESCE (ContainerDeferred.Amount, 0) > 0)
+                                        
+              SELECT tmpContainerPD.ObjectId
+              FROM tmpContainerPD
+
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                           ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = tmpContainerPD.ObjectId
+                                          AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+                                          
+             WHERE COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE) AS ContainerPD;
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run SetPartionGoods_Cat_5', True, text_var1::TVarChar, vbUserId);
+    END;
+
     -- Простановка фиксированных сумм в ЗП
     BEGIN
       IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
