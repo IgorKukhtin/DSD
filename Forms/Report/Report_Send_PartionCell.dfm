@@ -192,7 +192,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 159
+            Width = 60
           end
           object PartionCellName_2_ch4: TcxGridDBColumn
             Caption = '2.1 '#1071#1095#1077#1081#1082#1072
@@ -207,7 +207,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 60
           end
           object PartionCellName_3_ch4: TcxGridDBColumn
             Caption = '3.1 '#1071#1095#1077#1081#1082#1072
@@ -222,7 +222,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 60
           end
           object PartionCellName_4_ch4: TcxGridDBColumn
             Caption = '4.1 '#1071#1095#1077#1081#1082#1072
@@ -237,7 +237,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 60
           end
           object PartionCellName_5_ch4: TcxGridDBColumn
             Caption = '5.1 '#1071#1095#1077#1081#1082#1072
@@ -252,7 +252,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 60
           end
           object PartionCellName_6_ch4: TcxGridDBColumn
             Caption = '6.1 '#1071#1095#1077#1081#1082#1072
@@ -267,7 +267,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-6 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 159
+            Width = 60
           end
           object PartionCellName_7_ch4: TcxGridDBColumn
             Caption = '7.1 '#1071#1095#1077#1081#1082#1072
@@ -283,7 +283,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 60
           end
           object PartionCellName_8_ch4: TcxGridDBColumn
             Caption = '8.1 '#1071#1095#1077#1081#1082#1072
@@ -298,7 +298,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-8 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 60
           end
           object PartionCellName_9_ch4: TcxGridDBColumn
             Caption = '9.1 '#1071#1095#1077#1081#1082#1072
@@ -313,7 +313,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-9 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 60
           end
           object PartionCellName_10_ch4: TcxGridDBColumn
             Caption = '10.1 '#1071#1095#1077#1081#1082#1072
@@ -328,6 +328,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-10 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 60
+          end
+          object PartionCellName_11_ch4: TcxGridDBColumn
+            Caption = #1055#1088'. '#1071#1095#1077#1081#1082#1080
+            DataBinding.FieldName = 'PartionCellName_11'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
             Width = 166
           end
         end
@@ -851,7 +860,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           Name = 'inPartionGoodsDate'
           Value = Null
           Component = FormParams
-          ComponentItem = 'PartionGoodsDate'
+          ComponentItem = 'inPartionGoodsDate'
           DataType = ftDateTime
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
@@ -1170,7 +1179,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartionGoodsDate'
+        Name = 'inPartionGoodsDate'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
@@ -1359,8 +1368,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       item
         Name = 'inPartionGoodsDate'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
+        Component = FormParams
+        ComponentItem = 'inPartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

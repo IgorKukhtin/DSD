@@ -30,6 +30,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionCellName_8   TVarChar
              , PartionCellName_9   TVarChar
              , PartionCellName_10  TVarChar
+             , PartionCellName_11  TVarChar
 
              , Amount TFloat, Amount_Weight TFloat
              )
@@ -57,7 +58,7 @@ BEGIN
 
                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                         AND Movement.DescId = zc_Movement_Send()
-                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                        AND Movement.StatusId = zc_Enum_Status_Erased() --zc_Enum_Status_Complete()
                         AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0)
                       )
 
@@ -84,27 +85,24 @@ BEGIN
                   AND MovementItem.isErased = FALSE
                )
     , tmpMI_LO AS (SELECT MovementItemLinkObject.*
+                        , ObjectFloat_Level.ValueData  ::TFloat  AS Level
                    FROM MovementItemLinkObject
+                    LEFT JOIN ObjectFloat AS ObjectFloat_Level
+                              ON ObjectFloat_Level.ObjectId = MovementItemLinkObject.ObjectId
+                             AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
                    WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
-                     AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind()
-                                                         , zc_MILinkObject_PartionCell_1()
+                     AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
                                                          , zc_MILinkObject_PartionCell_2()
                                                          , zc_MILinkObject_PartionCell_3()
                                                          , zc_MILinkObject_PartionCell_4()
                                                          , zc_MILinkObject_PartionCell_5()
                                                           )
                    )
-
-    , tmpMI_Float AS (SELECT *
-                      FROM MovementItemFloat
-                      WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
-                        AND MovementItemFloat.DescId IN (zc_MIFloat_PartionCell_Amount_1()
-                                                       , zc_MIFloat_PartionCell_Amount_2()
-                                                       , zc_MIFloat_PartionCell_Amount_3()
-                                                       , zc_MIFloat_PartionCell_Amount_4()
-                                                       , zc_MIFloat_PartionCell_Amount_5()
-                                                        )
-                      )
+     , tmpMI_LO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                              FROM MovementItemLinkObject
+                              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                                AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind())
+                              )
 
     , tmpMI_Date AS (SELECT *
                      FROM MovementItemDate
@@ -113,183 +111,95 @@ BEGIN
                      )
 
 
-    , tmpPartionCell AS (SELECT tmp.ObjectId
-                              , ROW_NUMBER() OVER(ORDER BY 1) AS Ord
-                         FROM (SELECT tmpMI_LO.ObjectId
-                               FROM tmpMI_LO
-                               WHERE tmpMI_LO.DescId = zc_MILinkObject_PartionCell_1() 
-                              UNION ALL
-                               SELECT tmpMI_LO.ObjectId
-                               FROM tmpMI_LO
-                               WHERE tmpMI_LO.DescId = zc_MILinkObject_PartionCell_2()
-                              UNION ALL
-                               SELECT tmpMI_LO.ObjectId
-                               FROM tmpMI_LO
-                               WHERE tmpMI_LO.DescId = zc_MILinkObject_PartionCell_3()
-                              UNION ALL
-                               SELECT tmpMI_LO.ObjectId
-                               FROM tmpMI_LO
-                               WHERE tmpMI_LO.DescId = zc_MILinkObject_PartionCell_4()
-                              UNION ALL
-                               SELECT tmpMI_LO.ObjectId
-                               FROM tmpMI_LO
-                               WHERE tmpMI_LO.DescId = zc_MILinkObject_PartionCell_5()
-                              ) AS tmp
-                         )
-    
-    , tmpData AS (SELECT Movement.Id AS MovementId
-                       , Movement.InvNumber   
-                       , Movement.OperDate
-                       , Movement.FromId
-                       , Movement.ToId
-                       
-                       , CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END AS MovementItemId
-                       , MovementItem.GoodsId
-                       , COALESCE (MILinkObject_GoodsKind.ObjectId,0)                             AS GoodsKindId
-                       
-                       , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime AS PartionGoodsDate
+    --все €чейки по всем док. и товарам  - группировка
+    , tmpData_All AS (SELECT CASE WHEN inIsPartion = FALSE THEN Movement.Id ELSE 0 END                       AS MovementId
+                           , CASE WHEN inIsPartion = FALSE THEN Movement.InvNumber ELSE '' END               AS InvNumber 
+                           , CASE WHEN inIsPartion = FALSE THEN Movement.OperDate ELSE NULL END :: TDateTime AS OperDate
+                           , CASE WHEN inIsPartion = FALSE THEN Movement.FromId ELSE 0 END                   AS FromId
+                           , CASE WHEN inIsPartion = FALSE THEN Movement.ToId ELSE 0 END                     AS ToId
+                           , CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId
+                           , MovementItem.GoodsId                                                            AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId,0)                                    AS GoodsKindId
+                           , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime        AS PartionGoodsDate    
+                           , Object_PartionCell.ValueData                                                    AS PartionCellName
+                           , SUM (MovementItem.Amount)                                                       AS Amount
+                           , ROW_NUMBER() OVER (PARTITION BY CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END
+                                                           , MovementItem.GoodsId
+                                                           , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                                                           , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
+                                                ORDER BY MIN (MILinkObject_PartionCell.Level)
+                                                 ) AS Ord                         
+                      FROM tmpMovement AS Movement
+                          INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                          
+                          LEFT JOIN tmpMI_Date AS MIDate_PartionGoods
+                                               ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
+                                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+              
+                          LEFT JOIN tmpMI_LO_GoodsKind AS MILinkObject_GoodsKind
+                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.MovementItemId
+                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+              
+                          LEFT JOIN tmpMI_LO AS MILinkObject_PartionCell
+                                             ON MILinkObject_PartionCell.MovementItemId = MovementItem.MovementItemId
+                          LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
+                         
+                      GROUP BY CASE WHEN inIsPartion = FALSE THEN Movement.Id ELSE 0 END 
+                            , CASE WHEN inIsPartion = FALSE THEN Movement.InvNumber ELSE '' END  
+                            , CASE WHEN inIsPartion = FALSE THEN Movement.OperDate ELSE NULL END
+                            , CASE WHEN inIsPartion = FALSE THEN Movement.FromId ELSE 0 END 
+                            , CASE WHEN inIsPartion = FALSE THEN Movement.ToId ELSE 0 END 
+                            , CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END 
+                            , MovementItem.GoodsId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                            , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)    
+                            , Object_PartionCell.ValueData
+                      )
 
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 1
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_1
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 2
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_2
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 3
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_3
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 4
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_4
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 5
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_5
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 6
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_6
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 7
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_7
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 8
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_8
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 9
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_9
-                       , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 10
-                              THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                              ELSE ''
-                         END AS PartionCellName_10
+    , tmpData AS (SELECT tmpData_All.MovementId
+                       , tmpData_All.InvNumber   
+                       , tmpData_All.OperDate
+                       , tmpData_All.FromId
+                       , tmpData_All.ToId
                        
-                       , SUM (MovementItem.Amount) AS Amount 
-                  FROM tmpMovement AS Movement
-                      INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
-                      
-                      LEFT JOIN tmpMI_Date AS MIDate_PartionGoods
-                                           ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
-                                          AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-          
-                      LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
-                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.MovementItemId
-                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-          
-                      LEFT JOIN tmpMI_LO AS MILinkObject_PartionCell_1
-                                         ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.MovementItemId
-                                        AND MILinkObject_PartionCell_1.DescId = zc_MILinkObject_PartionCell_1()
-                      LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MILinkObject_PartionCell_1.ObjectId
-          
-                      LEFT JOIN tmpMI_LO AS MILinkObject_PartionCell_2
-                                         ON MILinkObject_PartionCell_2.MovementItemId = MovementItem.MovementItemId
-                                        AND MILinkObject_PartionCell_2.DescId = zc_MILinkObject_PartionCell_2()
-                      LEFT JOIN Object AS Object_PartionCell_2 ON Object_PartionCell_2.Id = MILinkObject_PartionCell_2.ObjectId
-          
-                      LEFT JOIN tmpMI_LO AS MILinkObject_PartionCell_3
-                                         ON MILinkObject_PartionCell_3.MovementItemId = MovementItem.MovementItemId
-                                        AND MILinkObject_PartionCell_3.DescId = zc_MILinkObject_PartionCell_3()
-                      LEFT JOIN Object AS Object_PartionCell_3 ON Object_PartionCell_3.Id = MILinkObject_PartionCell_3.ObjectId
-          
-                      LEFT JOIN tmpMI_LO AS MILinkObject_PartionCell_4
-                                         ON MILinkObject_PartionCell_4.MovementItemId = MovementItem.MovementItemId
-                                        AND MILinkObject_PartionCell_4.DescId = zc_MILinkObject_PartionCell_4()
-                      LEFT JOIN Object AS Object_PartionCell_4 ON Object_PartionCell_4.Id = MILinkObject_PartionCell_4.ObjectId
-          
-                      LEFT JOIN tmpMI_LO AS MILinkObject_PartionCell_5
-                                         ON MILinkObject_PartionCell_5.MovementItemId = MovementItem.MovementItemId
-                                        AND MILinkObject_PartionCell_5.DescId = zc_MILinkObject_PartionCell_5()
-                      LEFT JOIN Object AS Object_PartionCell_5 ON Object_PartionCell_5.Id = MILinkObject_PartionCell_5.ObjectId
-          
-                      LEFT JOIN tmpPartionCell AS tmpPartionCell_1 ON tmpPartionCell_1.ObjectId = MILinkObject_PartionCell_1.ObjectId
-                      LEFT JOIN tmpPartionCell AS tmpPartionCell_2 ON tmpPartionCell_2.ObjectId = MILinkObject_PartionCell_2.ObjectId
-                      LEFT JOIN tmpPartionCell AS tmpPartionCell_3 ON tmpPartionCell_3.ObjectId = MILinkObject_PartionCell_3.ObjectId
-                      LEFT JOIN tmpPartionCell AS tmpPartionCell_4 ON tmpPartionCell_4.ObjectId = MILinkObject_PartionCell_4.ObjectId
-                      LEFT JOIN tmpPartionCell AS tmpPartionCell_5 ON tmpPartionCell_5.ObjectId = MILinkObject_PartionCell_5.ObjectId
-                       
-                  GROUP BY Movement.Id
-                         , Movement.InvNumber   
-                         , Movement.OperDate
-                         , Movement.FromId
-                         , Movement.ToId
-                         , CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END
-                         , MovementItem.GoodsId
-                         , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
-                         , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
+                       , tmpData_All.MovementItemId
+                       , tmpData_All.GoodsId
+                       , tmpData_All.GoodsKindId
+                       , tmpData_All.PartionGoodsDate    
+                       , SUM (tmpData_All.Amount) AS Amount
 
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 1
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 2
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 3
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 4
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 5
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 6
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 7
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 8
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 9
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
-                         , CASE WHEN COALESCE (tmpPartionCell_1.Ord, tmpPartionCell_2.Ord, tmpPartionCell_3.Ord, tmpPartionCell_4.Ord, tmpPartionCell_5.Ord) = 10
-                                THEN COALESCE (Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData, Object_PartionCell_1.ValueData)
-                                ELSE ''
-                           END
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_1
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_2
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 3  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_3
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 4  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_4
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 5  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_5
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 6  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_6
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 7  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_7
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 8  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_8
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 9  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_9
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 10 THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_10
+                       
+                       , STRING_AGG (CASE WHEN COALESCE (tmpData_All.Ord, 0) > 10  THEN tmpData_All.PartionCellName END, ';') AS PartionCellName_11
+                        
+                  FROM tmpData_All
+
+                  GROUP BY tmpData_All.MovementId
+                         , tmpData_All.InvNumber   
+                         , tmpData_All.OperDate
+                         , tmpData_All.FromId
+                         , tmpData_All.ToId
+                         
+                         , tmpData_All.MovementItemId
+                         , tmpData_All.GoodsId
+                         , tmpData_All.GoodsKindId
+                         , tmpData_All.PartionGoodsDate
                   )
 
     
        -- –езультат
        SELECT tmpData.MovementId
-            , tmpData.InvNumber
+            , tmpData.InvNumber ::TVarChar
             , tmpData.OperDate 
             , MovementDate_Insert.ValueData AS InsertDate
             , Object_Insert.ValueData       AS InsertName
@@ -317,6 +227,7 @@ BEGIN
             , tmpData.PartionCellName_8        :: TVarChar
             , tmpData.PartionCellName_9        :: TVarChar
             , tmpData.PartionCellName_10       :: TVarChar
+            , tmpData.PartionCellName_11       :: TVarChar
 
             , tmpData.Amount ::TFloat
             , (tmpData.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
