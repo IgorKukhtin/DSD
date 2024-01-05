@@ -20,6 +20,12 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- Проверка
+     IF COALESCE (inMovementId_OrderClient, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <Заказ Клиента> не установлено.';
+     END IF;
+
+     -- Проверка
      IF EXISTS (SELECT 1
                 FROM MovementItem
                      LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -36,6 +42,62 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Элемент <%> уже существует для <%>.', lfGet_Object_ValueData_article (inGoodsId), lfGet_Movement_Data (inMovementId_OrderClient);
      END IF;
+
+     -- Проверка
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                        AND Movement.DescId   = zc_Movement_OrderInternal()
+                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                     INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                  ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                 AND MIFloat_MovementId.ValueData      = inMovementId_OrderClient ::TFloat
+                WHERE MovementItem.MovementId <> inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.ObjectId   = inGoodsId
+                  AND MovementItem.isErased   = FALSE
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для узла <%> %уже сформирован документ <Заказ на Производство>.%№ <%> от <%>.'
+                       , lfGet_Object_ValueData_sh (inGoodsId)
+                       , CHR (13)
+                       , CHR (13)
+                       , (SELECT Movement.InvNumber
+                          FROM MovementItem
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.DescId   = zc_Movement_OrderInternal()
+                                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                               INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                            ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                           AND MIFloat_MovementId.ValueData      = inMovementId_OrderClient ::TFloat
+                          WHERE MovementItem.MovementId <> inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.ObjectId   = inGoodsId
+                            AND MovementItem.isErased   = FALSE
+                          ORDER BY MovementItem.Id
+                          LIMIT 1
+                         )
+                       , (SELECT zfConvert_DateToString (Movement.OperDate)
+                          FROM MovementItem
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.DescId   = zc_Movement_OrderInternal()
+                                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                               INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                            ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                           AND MIFloat_MovementId.ValueData      = inMovementId_OrderClient ::TFloat
+                          WHERE MovementItem.MovementId <> inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.ObjectId   = inGoodsId
+                            AND MovementItem.isErased   = FALSE
+                          ORDER BY MovementItem.Id
+                          LIMIT 1
+                         )
+                        ;
+     END IF;
+
 
      -- !Замена!
      IF inAmount = 0
