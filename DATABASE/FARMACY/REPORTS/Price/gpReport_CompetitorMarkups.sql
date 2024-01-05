@@ -68,7 +68,7 @@ BEGIN
                           AND MovementItem.DescId     = zc_MI_Child()
                           AND MovementItem.isErased  = false)
                           
-      SELECT ROW_NUMBER() OVER(ORDER BY Object_Competitor.ValueData) as ID
+      SELECT ROW_NUMBER() OVER(ORDER BY Object_Competitor.ValueData)::Integer as ID
            , tmpCompetitor.CompetitorId
            , Object_Competitor.ObjectCode          AS CompetitorCode
            , Object_Competitor.ValueData           AS CompetitorName
@@ -242,10 +242,10 @@ BEGIN
                  , tmpPrice.PriceMax                  AS PriceUnitMax
                  
                  , CASE WHEN COALESCE (tmpPrice.PriceMax, 0) > 0
-                        THEN (1.0 - tmpPrice.PriceMin / tmpPrice.PriceMax) * 100
+                        THEN (1.0 - tmpPrice.PriceMin / NULLIF(tmpPrice.PriceMax, 0)) * 100
                         ELSE 0 END::TFloat            AS DPriceUnit
                  , CASE WHEN CASE WHEN COALESCE (tmpPrice.PriceMax, 0) > 0
-                                  THEN (1.0 - tmpPrice.PriceMin / tmpPrice.PriceMax) * 100
+                                  THEN (1.0 - tmpPrice.PriceMin / NULLIF(tmpPrice.PriceMax, 0)) * 100
                                   ELSE 0 END > 3
                         THEN zc_Color_Yelow()
                         ELSE zc_Color_White() END     AS ColorDPriceUnit
@@ -351,7 +351,10 @@ BEGIN
                     AND MovementItem.DescId     = zc_MI_Child()
                     AND MovementItem.isErased   = false
                     AND MovementItem.Amount     > 0) AS T1
-           WHERE _tmpGoods.Id = T1.ParentId';
+           WHERE _tmpGoods.Id = T1.ParentId
+             AND _tmpGoods.JuridicalPriceMin <> 0
+             AND _tmpGoods.JuridicalPriceMax <> 0
+             AND _tmpGoods.PriceUnitMin <> 0';
         EXECUTE vbQueryText;
         
         IF COALESCE (vbMovementPrevId, 0) > 0
