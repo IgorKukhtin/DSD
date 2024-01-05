@@ -28,7 +28,6 @@ uses
 
 type
   TReport_GoodsOnJuridicalRemainsForm = class(TAncestorReportForm)
-    JuridicalCode: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     bbGoodsPartyReport: TdxBarButton;
     actRefreshPartionPrice: TdsdDataSetRefresh;
@@ -38,6 +37,11 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     dxBarButton1: TdxBarButton;
+    UnitName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
+    SummaWithOutVAT: TcxGridDBColumn;
+    AmountPD: TcxGridDBColumn;
+    SummaWithVATPD: TcxGridDBColumn;
   private
     { Private declarations }
   public
