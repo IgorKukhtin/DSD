@@ -80,8 +80,8 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbPapty: TcxCheckBox
-    Left = 241
-    Top = 28
+    Left = 250
+    Top = 27
     Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
     Properties.ReadOnly = False
     State = cbsChecked
@@ -130,34 +130,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsId'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsName'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupName'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitGroupId'
+        Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
@@ -165,7 +138,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitGroupName'
+        Name = 'UnitName'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'TextValue'
@@ -174,27 +147,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'LocationId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LocationName'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isPartner'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isPapty'
+        Name = 'isPaption'
         Value = Null
         Component = cbPapty
         DataType = ftBoolean

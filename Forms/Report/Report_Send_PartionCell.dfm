@@ -859,8 +859,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         item
           Name = 'inPartionGoodsDate'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'inPartionGoodsDate'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsDate'
           DataType = ftDateTime
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
@@ -1181,8 +1181,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       item
         Name = 'inPartionGoodsDate'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 296
@@ -1329,7 +1328,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     Top = 168
   end
   object spUpdateMI_PartionGoodsDate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Send_PartionGoodsDate'
+    StoredProcName = 'gpUpdate_MI_Send_PartionDate_byReport'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1368,8 +1367,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       item
         Name = 'inPartionGoodsDate'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'inPartionGoodsDate'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
