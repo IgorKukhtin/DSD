@@ -23,7 +23,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_QualityDoc());
      vbUserId:= lpGetUserBySession (inSession);
 
-
+     IF inMovementId > 0 THEN inMovementId:= 0; END IF;
+     
+     
      -- пытаемся найти по продаже
      IF inMovementId_Sale <> 0 AND COALESCE (inMovementId, 0) = 0
      THEN
