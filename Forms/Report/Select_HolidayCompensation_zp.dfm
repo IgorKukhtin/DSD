@@ -56,6 +56,11 @@ object Select_HolidayCompensation_zpForm: TSelect_HolidayCompensation_zpForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummHospOth
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -89,6 +94,11 @@ object Select_HolidayCompensation_zpForm: TSelect_HolidayCompensation_zpForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummHospOth
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -197,6 +207,15 @@ object Select_HolidayCompensation_zpForm: TSelect_HolidayCompensation_zpForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 90
+      end
+      object SummHospOth: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1093' ('#1088#1072#1089#1087#1088'.)'
+        DataBinding.FieldName = 'SummHospOth'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 90
       end
       object Summa: TcxGridDBColumn

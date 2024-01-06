@@ -362,6 +362,26 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         HeaderHint = #1050#1072#1083#1077#1085#1076#1072#1088#1085#1099#1077' '#1076#1085#1080' '#1084#1080#1085#1091#1089' '#1076#1085#1080' '#1086#1090#1087#1091#1089#1082#1072' - '#1079#1072' '#1075#1086#1076
         Width = 90
       end
+      object Day_Holiday_cl: TcxGridDBColumn
+        Caption = #1055#1088#1072#1079#1076#1085'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_Holiday_cl'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1072#1079#1076#1085#1080#1095#1085#1099#1093' '#1076#1085#1077#1081' '#1087#1086' '#1082#1072#1083#1077#1085#1076#1072#1088#1102' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Width = 90
+      end
+      object Day_Holiday_year_cl: TcxGridDBColumn
+        Caption = #1055#1088#1072#1079#1076#1085'. '#1076#1085#1077#1081' ('#1075#1086#1076')'
+        DataBinding.FieldName = 'Day_Holiday_year_cl'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1072#1079#1076#1085#1080#1095#1085#1099#1093' '#1076#1085#1077#1081' '#1087#1086' '#1082#1072#1083#1077#1085#1076#1072#1088#1102' - '#1079#1072' '#1075#1086#1076
+        Width = 90
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

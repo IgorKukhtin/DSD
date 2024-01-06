@@ -86,6 +86,8 @@ type
     Day_Hol_year: TcxGridDBColumn;
     Day_real_year: TcxGridDBColumn;
     Day_calendar_year: TcxGridDBColumn;
+    Day_Holiday_cl: TcxGridDBColumn;
+    Day_Holiday_year_cl: TcxGridDBColumn;
   private
   public
   end;

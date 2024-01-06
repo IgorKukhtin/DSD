@@ -79,6 +79,7 @@ type
     edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
     StatusCode: TcxGridDBColumn;
+    SummHospOth: TcxGridDBColumn;
   private
   public
   end;

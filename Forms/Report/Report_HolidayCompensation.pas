@@ -84,6 +84,8 @@ type
     Day_calendar_year: TcxGridDBColumn;
     actOpenFormZP: TdsdOpenForm;
     actOpenFormDay: TdsdOpenForm;
+    Day_Holiday_cl: TcxGridDBColumn;
+    Day_Holiday_year_cl: TcxGridDBColumn;
   private
   public
   end;
