@@ -5,7 +5,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -247
   ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -258,7 +257,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Width = 80
           end
           object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            Caption = #1058#1077#1082#1089#1090
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

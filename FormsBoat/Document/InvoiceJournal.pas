@@ -149,6 +149,7 @@ type
     bbInsert_Proforma: TdxBarButton;
     dxBarButton1: TdxBarButton;
     PaidKindName: TcxGridDBColumn;
+    Ord_ch4: TcxGridDBColumn;
   private
     { Private declarations }
   public

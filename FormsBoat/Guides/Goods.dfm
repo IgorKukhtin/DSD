@@ -1350,6 +1350,14 @@ object GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'BasisPrice_choice'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BasisPrice_choice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'EAN'
           Value = Null
           Component = ClientDataSet

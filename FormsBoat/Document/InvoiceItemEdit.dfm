@@ -219,6 +219,7 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
           Name = 'Code'
           Value = Null
           Component = edGoodsCode
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -226,24 +227,15 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
           Value = Null
           Component = edArticle
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'EKPrice'
+          Name = 'BasisPrice_choice'
           Value = Null
+          Component = ceOperPrice
           DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BasisPrice'
-          Value = Null
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EmpfPrice'
-          Value = Null
-          DataType = ftFloat
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -444,6 +436,7 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         Name = 'Code'
         Value = Null
         Component = edGoodsCode
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -451,6 +444,15 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         Value = Null
         Component = edArticle
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BasisPrice_choice'
+        Value = Null
+        Component = ceOperPrice
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 201

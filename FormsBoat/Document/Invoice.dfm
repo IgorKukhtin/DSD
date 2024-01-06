@@ -102,7 +102,7 @@
   object cxLabel10: TcxLabel [13]
     Left = 15
     Top = 349
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    Caption = #1058#1077#1082#1089#1090
   end
   object cxLabel9: TcxLabel [14]
     Left = 240

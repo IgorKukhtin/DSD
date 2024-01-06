@@ -316,6 +316,7 @@ type
     actSetVisible_Grid: TBooleanSetVisibleAction;
     cxButton1: TcxButton;
     mactCompleteMovement_andSave: TMultiAction;
+    Ord: TcxGridDBColumn;
   private
   public
   end;

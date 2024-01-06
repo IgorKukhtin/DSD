@@ -3,7 +3,6 @@
   ClientHeight = 569
   ClientWidth = 1121
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -227
   ExplicitWidth = 1137
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -486,7 +485,7 @@
             Width = 80
           end
           object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            Caption = #1058#1077#1082#1089#1090
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -981,6 +980,14 @@
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Ord_ch4: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'Ord'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object Comment_ch4: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -2093,6 +2100,14 @@
           Component = ItemCDS
           ComponentItem = 'Article'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice_choice'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'OperPrice'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
