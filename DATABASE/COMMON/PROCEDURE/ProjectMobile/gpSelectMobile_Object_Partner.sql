@@ -337,7 +337,7 @@ BEGIN
                   , Object_Partner.ValueData
                 --, ('(' ||COALESCE (Object_PriceList.ValueData, '') || ') ' ||Object_Partner.ValueData) :: TVarChar
                   , ObjectString_Partner_GUID.ValueData      AS GUID
-                  , ObjectString_Partner_ShortName.ValueData AS ShortName
+                  , (COALESCE (Object_PriceList.ValueData, '') || CASE WHEN ObjectString_Partner_ShortName.ValueData <> '' THEN ' *' || ObjectString_Partner_ShortName.ValueData ELSE '' END) :: TVarChar AS ShortName
                   , ObjectString_Partner_Address.ValueData   AS Address
                   , ObjectString_Partner_Address.ValueData   AS ShortAddress
                   , ObjectFloat_Partner_GPSN.ValueData       AS GPSN
@@ -476,7 +476,6 @@ BEGIN
                                                                                          , COALESCE (tmpContract_PriceList.PriceListId
                                                                                                    , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
                                                                                                              , zc_PriceList_Basis())))
-
              WHERE Object_Partner.DescId   = zc_Object_Partner()
                AND Object_Partner.isErased = FALSE
                -- AND (COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) = 4 or inSession <> '1839161')
