@@ -203,39 +203,44 @@ BEGIN
      THEN
          vbIsGoodsGroup:= TRUE;
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
-            SELECT DISTINCT MovementItem.ObjectId AS GoodsId FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId)
+            SELECT DISTINCT MovementItem.ObjectId AS GoodsId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+            FROM MovementItem
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
            ;
      -- !!!Œ„‡ÌË˜ÂÌËˇ ÔÓ ÚÓ‚‡‡Ï!!!
      ELSEIF vbGoodsGroupId > 0 AND vbIsGoodsGroupExc = TRUE
      THEN
          vbIsGoodsGroup:= TRUE;
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId)
             WITH tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect)
-            SELECT Object.Id AS GoodsId FROM Object LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Object.Id WHERE Object.DescId = zc_Object_Goods() AND tmpGoods.GoodsId IS NULL
+            SELECT Object.Id AS GoodsId, 0 AS GoodsKindId  FROM Object LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Object.Id WHERE Object.DescId = zc_Object_Goods() AND tmpGoods.GoodsId IS NULL
            ;
      -- !!!Œ„‡ÌË˜ÂÌËˇ ÔÓ ÚÓ‚‡‡Ï!!!
      ELSEIF vbGoodsGroupId > 0 AND vbIsGoodsGroupIn = TRUE
      THEN
          vbIsGoodsGroup:= TRUE;
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
-            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId)
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId  FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect
            ;
      ELSEIF EXISTS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup WHERE UnitId = vbUnitId) -- ÷≈’ ÍÓÎ·‡Ò‡+‰ÂÎ-Ò˚
        AND 1 <> EXTRACT (DAY FROM (vbOperDate :: Date + 1))
      THEN
          vbIsGoodsGroup:= TRUE;
          --
-         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
-            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1945)    AS lfSelect -- —Œ-Œ¡Ÿ¿ﬂ
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId)
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId FROM lfSelect_Object_Goods_byGoodsGroup (1945)    AS lfSelect -- —Œ-Œ¡Ÿ¿ﬂ
            UNION
-            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942)    AS lfSelect -- —Œ-›Ã”À‹—»»
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId  FROM lfSelect_Object_Goods_byGoodsGroup (1942)    AS lfSelect -- —Œ-›Ã”À‹—»»
            UNION
-            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (5064881) AS lfSelect -- —Œ-œŒ—ŒÀ
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId  FROM lfSelect_Object_Goods_byGoodsGroup (5064881) AS lfSelect -- —Œ-œŒ—ŒÀ
            UNION
-            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1938)    AS lfSelect -- —-œ≈–≈–¿¡Œ“ ¿
+            SELECT lfSelect.GoodsId, 0 AS GoodsKindId  FROM lfSelect_Object_Goods_byGoodsGroup (1938)    AS lfSelect -- —-œ≈–≈–¿¡Œ“ ¿
             WHERE vbUnitId <> 8447 -- ÷≈’ ÍÓÎ·‡ÒÌ˚È
            ;
 
@@ -356,7 +361,6 @@ BEGIN
 
                        FROM Movement
                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
-                            LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = MovementItem.ObjectId
 
                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                                  ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
@@ -436,6 +440,11 @@ BEGIN
                             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
                                                     ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
                                                    AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+
+                            LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = MovementItem.ObjectId
+                                                                  AND (_tmpGoods_Complete_Inventory.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+                                                                    OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
+                                                                      )
 
                        WHERE Movement.Id = inMovementId
                          AND Movement.DescId = zc_Movement_Inventory()
@@ -723,11 +732,17 @@ BEGIN
                                                                     AND CLO_AssetTo.DescId      = zc_ContainerLinkObject_AssetTo()*/
                                        LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                      ON CLO_PartionGoods.ContainerId = Container.Id
-                                                                    AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                                    AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
 
-                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = Container.ObjectId
+                                       LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                     ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                    AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
 
+                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = Container.ObjectId
+                                                                             AND (_tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
+                                                                               OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
+                                                                                 )
                                   WHERE CLO_Account.ContainerId IS NULL                  -- !!!Ú.Â. ·ÂÁ Ò˜ÂÚ‡ “‡ÌÁËÚ!!!
                                     AND COALESCE (Object_PartionGoods.ObjectCode, 0) = 0 -- !!!Ú.Â. ·ÂÁ Œ—!!!
                                     AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
@@ -849,8 +864,14 @@ BEGIN
                                        JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
                                        INNER JOIN ContainerLinkObject AS CLO_Goods
                                                                       ON CLO_Goods.ContainerId = Container.Id
-                                                                     AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = CLO_Goods.ObjectId
+                                                                     AND CLO_Goods.DescId      = zc_ContainerLinkObject_Goods()
+                                       LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                     ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                    AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = CLO_Goods.ObjectId
+                                                                             AND (_tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
+                                                                               OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
+                                                                                 )
                                   WHERE (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
                , tmpContainer AS (SELECT tmpContainerList.Id        AS ContainerId
