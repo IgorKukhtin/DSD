@@ -127,7 +127,7 @@
                           AND Container.WhereObjectId = inUnitID
                           AND Container.Amount > 0
                           AND ObjectDate_ExpirationDate.ValueData <= vbOperDate
-                          AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE)
+                          /*AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE*/)
          -- Содержиться в старом перемещении
        , tmpMovement AS (SELECT MovementItemMaster.ID                   AS MasterID
                               , MovementItemChild.ID                    AS ChildID

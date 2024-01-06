@@ -1481,8 +1481,11 @@ uses
   PartionCell in '..\..\Forms\Guides\PartionCell.pas' {PartionCellForm: TParentForm},
   PartionCell_list in '..\..\Forms\Guides\PartionCell_list.pas' {PartionCell_listForm: TParentForm},
   PartionCellEdit in '..\..\Forms\Guides\PartionCellEdit.pas' {PartionCellEditForm: TParentForm},
+  SendPartionCellEdit in '..\..\Forms\Document\SendPartionCellEdit.pas' {SendPartionCellEditForm: TParentForm},
+  Send_DatePartionDialog in '..\..\Forms\Document\Send_DatePartionDialog.pas' {Send_DatePartionDialogForm: TParentForm},
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
-  SendPartionCellEdit in '..\..\Forms\Document\SendPartionCellEdit.pas' {SendPartionCellEditForm: TParentForm};
+  Report_Send_PartionCell in '..\..\Forms\Report\Report_Send_PartionCell.pas' {Report_Send_PartionCellForm: TParentForm},
+  Report_Send_PartionCellDialog in '..\..\Forms\Report\Report_Send_PartionCellDialog.pas' {Report_Send_PartionCellDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

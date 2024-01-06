@@ -57,9 +57,13 @@ BEGIN
                           AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() --
                              )
                      )
+   
+   , tmpGoodsByGoodsKind_View AS (SELECT * FROM Object_GoodsByGoodsKind_View)
+    
    , tmpMI_Union AS  (SELECT tmpMI.OperDate
                            , tmpMI.GoodsId
                            , tmpMI.GoodsKindId
+                           , tmpMI.MeasureName
                            , tmpMI.Amount_Send_in
                            , tmpMI.Amount_Send_out
                            , tmpMI.Amount_Production
@@ -70,8 +74,13 @@ BEGIN
                           -- , tmpMI.UnitName_PersonalGroup
                            , tmpMI.MovementId
 
-                      FROM (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
-                                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                           , tmpMI.CountPackage_calc
+                           , tmpMI.WeightPackage_calc
+                           , tmpMI.WeightPackage_one
+                           , tmpMI.WeightTotal
+                      FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId 
+                                 , Object_Measure.ValueData                       AS MeasureName
                                  , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDatetime AS OperDate
                                  
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
@@ -83,7 +92,7 @@ BEGIN
                                                   THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS Amount_Send_in
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount_Send_out
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_Loss())
                                               AND MIContainer.IsActive       = FALSE
                                               AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork()
@@ -91,7 +100,7 @@ BEGIN
                                                 OR MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
                                                 OR MIContainer.MovementDescId = zc_Movement_Loss()
                                                   )
-                                                  THEN -1 * MIContainer.Amount
+                                                  THEN -1 * COALESCE (MIContainer.Amount,0)
                                              ELSE 0
                                         END) AS Amount_Production
                                  , SUM (COALESCE (MIFloat_CountPack.ValueData ,0)) AS CountPack
@@ -101,6 +110,24 @@ BEGIN
                                  --, STRING_AGG (DISTINCT CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END, '; ')      AS PersonalGroupName
                                  
                                  , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END MovementId
+
+           -- Кол-во Упаковок (пакетов)
+         , SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                     THEN CAST (((CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END)
+                               * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                              / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                ELSE 0
+           END) :: TFloat AS CountPackage_calc
+           -- Вес Упаковок (пакетов)
+         , SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                     THEN CAST (((CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END)
+                                * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                              / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                        * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                ELSE 0
+           END) :: TFloat AS WeightPackage_calc
+         , ObjectFloat_WeightPackage.ValueData                                                   AS WeightPackage_one
+         , ObjectFloat_WeightTotal.ValueData AS WeightTotal
                             FROM MovementItemContainer AS MIContainer
                                  LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                               ON MLO_DocumentKind.MovementId = MIContainer.MovementId
@@ -120,6 +147,30 @@ BEGIN
                                                      ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
                                                     AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
                                 LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
+
+                                 -- Товар и Вид товара
+                                LEFT JOIN tmpGoodsByGoodsKind_View AS Object_GoodsByGoodsKind_View
+                                                                   ON Object_GoodsByGoodsKind_View.GoodsId     = MIContainer.ObjectId_Analyzer
+                                                                  AND Object_GoodsByGoodsKind_View.GoodsKindId = COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                -- вес 1-ого пакета
+                                LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                                      ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                     AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+                                -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+                                LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                                      ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                     AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+                      
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                     ON ObjectLink_Goods_Measure.ObjectId = MIContainer.ObjectId_Analyzer
+                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                      
+                                -- вес 1 шт, только для штучного товара, ???почему??? = вес в упаковке
+                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                      ON ObjectFloat_Weight.ObjectId = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+ 
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
@@ -131,13 +182,17 @@ BEGIN
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN 0 ELSE COALESCE (Object_PersonalGroup.Id,0) END
                                    , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
+                                   , Object_Measure.ValueData
+                                   , ObjectFloat_WeightPackage.ValueData 
+                                   , ObjectFloat_WeightTotal.ValueData
                          UNION
                             SELECT MovementItem.ObjectId AS GoodsId 
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , Object_Measure.ValueData                      AS MeasureName
                                  , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN Movement.OperDate ELSE NULL END :: TDatetime AS OperDate
                           
-                                 , SUM (CASE WHEN MovementLinkObject_To.ObjectId = inUnitId   THEN MovementItem.Amount ELSE 0 END) AS Amount_Send_in
-                                 , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inUnitId THEN MovementItem.Amount ELSE 0 END) AS Amount_Send_out
+                                 , SUM (CASE WHEN MovementLinkObject_To.ObjectId = inUnitId   THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_Send_in
+                                 , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inUnitId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_Send_out
                                  , 0 AS Amount_Production
                                  , 0 AS CountPack
 
@@ -145,7 +200,25 @@ BEGIN
                                  , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END AS PersonalGroupName
 
                                  , CASE WHEN inisMovement = TRUE THEN Movement.Id ELSE 0 END MovementId
-                                     
+
+                                   -- Кол-во Упаковок (пакетов)
+                                 , SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                                  THEN CAST ( ((CASE WHEN MovementLinkObject_From.ObjectId = inUnitId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END)
+                                                             * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                           / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0) )
+                                             ELSE 0
+                                        END) :: TFloat AS CountPackage_calc
+                                   -- Вес Упаковок (пакетов)
+                                 , SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                                                  THEN CAST ( ((CASE WHEN MovementLinkObject_From.ObjectId = inUnitId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END)
+                                                             * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                           / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0) )
+                                                     * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                                             ELSE 0
+                                        END) :: TFloat AS WeightPackage_calc  
+                                 , ObjectFloat_WeightPackage.ValueData                                                   AS WeightPackage_one
+                                 , ObjectFloat_WeightTotal.ValueData AS WeightTotal
+           
                             FROM Movement 
                                  INNER JOIN MovementFloat AS MovementFloat_MovementDesc
                                                          ON MovementFloat_MovementDesc.MovementId = Movement.Id
@@ -180,6 +253,28 @@ BEGIN
                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+                                  -- Товар и Вид товара
+                                 LEFT JOIN tmpGoodsByGoodsKind_View AS Object_GoodsByGoodsKind_View
+                                                                    ON Object_GoodsByGoodsKind_View.GoodsId     = MovementItem.ObjectId
+                                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                 -- вес 1-ого пакета
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                                       ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+                                 -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                                       ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                 LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                       
+                                 -- вес 1 шт, только для штучного товара, ???почему??? = вес в упаковке
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                               
                             WHERE Movement.DescId IN (zc_Movement_WeighingProduction(), zc_Movement_WeighingPartner())
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
@@ -191,9 +286,13 @@ BEGIN
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN 0 ELSE COALESCE (Object_PersonalGroup.Id,0) END
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
                                    , CASE WHEN inisMovement = TRUE THEN Movement.Id ELSE 0 END
+                                   , Object_Measure.ValueData 
+                                   , ObjectFloat_WeightPackage.ValueData
+                                   , ObjectFloat_WeightTotal.ValueData
                            ) AS tmpMI
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                      )
+
            , tmpReceipt AS (SELECT tmpMI_Union.GoodsId
                                  , tmpMI_Union.GoodsKindId
                                  , MAX (Object_Receipt.Id) AS ReceiptId
@@ -282,28 +381,19 @@ BEGIN
          , (tmpMI_Union.Amount_Production * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Weight_Production
 
          , tmpMI_Union.CountPack                                                       :: TFloat AS CountPackage
-         , (tmpMI_Union.CountPack * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)) :: TFloat AS WeightPackage
-         , ObjectFloat_WeightPackage.ValueData                                                   AS WeightPackage_one
+         , (tmpMI_Union.CountPack * COALESCE (tmpMI_Union.WeightPackage_one, 0)) :: TFloat AS WeightPackage
+         , tmpMI_Union.WeightPackage_one                                                   AS WeightPackage_one
 
-           -- Кол-во Упаковок (пакетов)
-         , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                     THEN CAST ((tmpMI_Union.Amount_Send_out * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
-                              / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
-                ELSE 0
-           END :: TFloat AS CountPackage_calc
+         -- Кол-во Упаковок (пакетов)
+         , tmpMI_Union.CountPackage_calc :: TFloat AS CountPackage_calc
            -- Вес Упаковок (пакетов)
-         , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                     THEN CAST ((tmpMI_Union.Amount_Send_out * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
-                              / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
-                        * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
-                ELSE 0
-           END :: TFloat AS WeightPackage_calc
-
+         , tmpMI_Union.WeightPackage_calc :: TFloat AS WeightPackage_calc
+ 
          , ((tmpMI_Union.Amount_Send_out + tmpMI_Union.Amount_Production - tmpMI_Union.Amount_Send_in) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
            ) :: TFloat AS Weight_diff
 
            -- Вес в упаковке - GoodsByGoodsKind
-         , ObjectFloat_WeightTotal.ValueData AS WeightTotal
+         , tmpMI_Union.WeightTotal AS WeightTotal
          
          , tmpMI_Union.PersonalGroupId        ::Integer
          , tmpMI_Union.PersonalGroupName      ::TVarChar
@@ -325,18 +415,6 @@ BEGIN
           LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = COALESCE (tmpReceipt.GoodsId_basis, COALESCE (tmpReceipt_find.GoodsId_basis, tmpMI_Union.GoodsId))
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpMI_Union.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Union.GoodsKindId
-
-           -- Товар и Вид товара
-          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMI_Union.GoodsId
-                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMI_Union.GoodsKindId
-          -- вес 1-ого пакета
-          LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
-                                ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
-          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
-          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
-                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
-                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
 
           -- вес 1 шт, только для штучного товара, ???почему??? = вес в упаковке
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -370,6 +448,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.01.24         * 
  12.12.22         * inisUnComplete
  03.06.21         * inisMovement
  17.08.20         * inIsPersonalGroup
@@ -395,3 +474,4 @@ SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.11.2022', inEndDate:= '
 where goodsId = 6694203
 
 */
+

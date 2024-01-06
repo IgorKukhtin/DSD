@@ -110,6 +110,12 @@ BEGIN
                                  AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
     WHERE Movement.Id = inMovementId;
     
+    IF vbOperDate >= '01.01.2024' AND COALESCE(vbUnit_To, 0) <> 11299914 AND 
+       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN 
+      RAISE EXCEPTION 'Ошибка. Изменять статус перемещений с 1.01.2024 разрешено только администратору..';             
+    END IF;    
+
     IF vbisSendLoss = TRUE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN 
       RAISE EXCEPTION 'Ошибка. Распроводить перемещение с признаком <В полное списание> запрещено. Снимите признак <В полное списание>';     
