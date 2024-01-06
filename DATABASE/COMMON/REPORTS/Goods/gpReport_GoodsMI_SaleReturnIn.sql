@@ -110,11 +110,11 @@ BEGIN
 */
 
     -- !!!т.к. нельзя когда много данных в гриде!!!
-    IF inIsOLAP = TRUE AND inEndDate > (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable)
+    IF inIsOLAP = TRUE AND inEndDate > (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable WHERE SoldTable.OperDate < CURRENT_DATE)
        AND inStartDate <> inEndDate
        AND 1=0
     THEN
-        RAISE EXCEPTION 'Ошибка.Данные для отчета есть до <%>. Измените дату отчета до <%>.', zfConvert_DateToString ((SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable)), zfConvert_DateToString ((SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable));
+        RAISE EXCEPTION 'Ошибка.Данные для отчета есть до <%>. Измените дату отчета до <%>.', zfConvert_DateToString ((SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable)), zfConvert_DateToString ((SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable WHERE SoldTable.OperDate < CURRENT_DATE));
     END IF;
 
 
@@ -326,11 +326,11 @@ BEGIN
 
 
     IF inIsOLAP = TRUE -- AND vbUserId <> 5
-    AND EXISTS (SELECT 1 FROM SoldTable WHERE SoldTable.OperDate >= inStartDate)
+    AND EXISTS (SELECT 1 FROM SoldTable WHERE SoldTable.OperDate >= inStartDate AND SoldTable.OperDate < CURRENT_DATE)
    -- AND EXISTS (SELECT 1 FROM (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable) AS tmp WHERE inStartDate >= '01.07.2015' AND inEndDate <= tmp.OperDate)
     THEN
        -- нашли максимальную какая есть в olap
-       vbEndDate_olap:= (SELECT MAX (SoldTable.OperDate) FROM SoldTable WHERE SoldTable.OperDate >= inStartDate);
+       vbEndDate_olap:= (SELECT MAX (SoldTable.OperDate) FROM SoldTable WHERE SoldTable.OperDate >= inStartDate AND SoldTable.OperDate < CURRENT_DATE);
        -- если надо раньше, меняем дату для olap
        IF vbEndDate_olap > inEndDate THEN vbEndDate_olap:= inEndDate; END IF;
        --
@@ -634,7 +634,7 @@ BEGIN
     END IF;
 
 
- if vbUserId = 5 then     
+ if vbUserId = 5 AND 1=0 then     
      RAISE EXCEPTION 'Ошибка.<%> ', inIsDate;
  end if;
 

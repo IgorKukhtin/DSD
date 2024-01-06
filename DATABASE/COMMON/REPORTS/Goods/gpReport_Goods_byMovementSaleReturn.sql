@@ -1,4 +1,4 @@
--- FunctiON: gpReport_Goods_byMovementSaleReturn ()
+ -- FunctiON: gpReport_Goods_byMovementSaleReturn ()
 
 DROP FUNCTION IF EXISTS gpReport_Goods_byMovementSaleReturn (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 

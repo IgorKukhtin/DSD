@@ -1,6 +1,6 @@
 -- Function: gpSelect_HolidayCompensation_zp ()
 
-DROP FUNCTION IF EXISTS gpSelect_HolidayCompensation_zp (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_HolidayCompensation_zp (TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_HolidayCompensation_zp(
     IN inStartDate                 TDateTime, --дата начала периода
@@ -17,6 +17,7 @@ RETURNS TABLE(MovementId  Integer
             , MemberId    Integer, MemberCode  Integer, MemberName  TVarChar
             , SummService TFloat
             , SummHoliday TFloat
+            , SummHospOth TFloat
             , Summa       TFloat
             )
 AS
@@ -98,7 +99,8 @@ BEGIN
                                 , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
                                 , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS SummService
                                 , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0)) AS SummHoliday
-                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) AS Summa
+                                , SUM (COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS SummHospOth
+                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0) + COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS Summa
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -125,6 +127,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                             ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                                LEFT JOIN MovementItemFloat AS MIFloat_SummHospOth
+                                                            ON MIFloat_SummHospOth.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_SummHospOth.DescId = zc_MIFloat_SummHospOth()
                            WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0
                              AND (ObjectLink_Personal_PersonalServiceList.ChildObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId
@@ -132,6 +137,7 @@ BEGIN
                                   , Movement.InvNumber
                                   , Movement.OperDate
                                   , Movement.StatusId
+                                  , ObjectLink_Personal_PersonalServiceList.ChildObjectId
                            HAVING SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) <> 0
                            )
 
@@ -147,6 +153,7 @@ BEGIN
          , Object_Member.ValueData      AS MemberName
          , tmpPersonalService.SummService     :: TFloat
          , tmpPersonalService.SummHoliday     :: TFloat
+         , tmpPersonalService.SummHospOth     :: TFloat
          , tmpPersonalService.Summa           :: TFloat
     FROM tmpPersonalService
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpPersonalService.MemberId
@@ -164,4 +171,4 @@ $BODY$
  16.11.23         *
 */
 -- тест
---SELECT * FROM gpSelect_HolidayCompensation_zp(inStartDate := ('01.01.2023')::TDateTime , inUnitId := 8384 , inMemberId := 442269 , inPersonalServiceListId:=0,  inSession := '5');
+-- SELECT * FROM gpSelect_HolidayCompensation_zp(inStartDate := ('01.01.2024')::TDateTime , inUnitId := 8384 , inMemberId := 442269 , inPersonalServiceListId:=0,  inSession := '5');

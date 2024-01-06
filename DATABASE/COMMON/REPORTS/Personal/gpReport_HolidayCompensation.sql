@@ -24,10 +24,10 @@ RETURNS TABLE(MemberId Integer
             , Day_vacation           TFloat
             , Day_holiday            TFloat -- Дней отпуска ЗА ПЕРИОД
             , Day_diff               TFloat
-            
+
             , Day_hol_NoZp           TFloat    -- отпуск без сохр. по табелю
             , Day_holiday_NoZp       TFloat    -- отпуск без сохр. по док. отпуск
-            , Day_vacation_NoZp      TFloat 
+            , Day_vacation_NoZp      TFloat
             , Day_diff_NoZp          TFloat    --
 
             , AmountCompensation     TFloat
@@ -36,6 +36,8 @@ RETURNS TABLE(MemberId Integer
             , SummaCompensation_diff TFloat
             , Day_calendar           TFloat -- Рабоч. дней - ЗА ПЕРИОД
             , Day_calendar_year      TFloat -- Рабоч. дней - ЗА ГОД
+            , Day_Holiday_cl         TFloat -- Holiday дней - ЗА ПЕРИОД
+            , Day_Holiday_year_cl    TFloat -- Holiday дней - ЗА ГОД
             , Amount                 TFloat -- Сумма ЗП за период (Сумма Начислено + Отпускные)
             )
 AS
@@ -139,13 +141,16 @@ BEGIN
                        , tmp.isNotCompensation
                        , tmp.Day_vacation
                        , tmp.Day_holiday       -- использовано дней отпуска
-                       , tmp.Day_diff          -- не использовано дней отпуска 
+                       , tmp.Day_diff          -- не использовано дней отпуска
                        , tmp.Day_hol_NoZp
                        , tmp.Day_holiday_NoZp
                        , tmp.Day_vacation_NoZp
                        , tmp.Day_diff_NoZp
-                       , tmp.Day_calendar      -- Рабоч. дней
-                       , tmp.Day_calendar_year -- Рабоч. дней
+                       , tmp.Day_calendar        -- Рабоч. дней
+                       , tmp.Day_calendar_year   -- Рабоч. дней
+                       , tmp.Day_Holiday_cl      -- Holiday дней
+                       , tmp.Day_Holiday_year_cl -- Holiday дней
+
                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inPersonalServiceListId := inPersonalServiceListId, inisDetail:= FALSE, inSession:= inSession) AS tmp
                    )
 
@@ -158,7 +163,7 @@ BEGIN
                       AND MovementDate.DescId = zc_MIDate_ServiceDate()
                    )
   , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
-                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) AS Amount
+                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0) + COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS Amount
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -185,6 +190,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                             ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                                LEFT JOIN MovementItemFloat AS MIFloat_SummHospOth
+                                                            ON MIFloat_SummHospOth.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_SummHospOth.DescId = zc_MIFloat_SummHospOth()
                            WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0
                              AND (ObjectLink_Personal_PersonalServiceList.ChildObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId
@@ -249,9 +257,9 @@ BEGIN
            --отпуск без оплаты
          , tmpReport.Day_hol_NoZp     :: TFloat
          , tmpReport.Day_holiday_NoZp :: TFloat
-         , tmpReport.Day_vacation_NoZp:: TFloat     -- положено дней без сохр =  Положен отпуск, дней 
+         , tmpReport.Day_vacation_NoZp:: TFloat     -- положено дней без сохр =  Положен отпуск, дней
          , tmpReport.Day_diff_NoZp    :: TFloat     -- не использовано дней отпуска  без сохр
-         
+
            -- Ср. ЗП за день
          , CASE WHEN tmpReport.Day_calendar_year <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar_year ELSE 0 END :: TFloat AS AmountCompensation
            -- Сумма компенс. за неисп. отпуск
@@ -271,6 +279,9 @@ BEGIN
            -- Рабоч. дней
          , tmpReport.Day_calendar        :: TFloat
          , tmpReport.Day_calendar_year   :: TFloat
+           -- Рабоч. дней
+         , tmpReport.Day_Holiday_cl      :: TFloat
+         , tmpReport.Day_Holiday_year_cl :: TFloat
            -- Сумма ЗП за период
          , tmpPersonalService.Amount     :: TFloat
 
@@ -296,4 +307,4 @@ $BODY$
  25.12.18         *
 */
 -- тест
--- SELECT * FROM gpReport_HolidayCompensation(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 442269 , inPersonalServiceListId:=0,  inSession := '5');
+-- SELECT * FROM gpReport_HolidayCompensation(inStartDate := ('01.01.2024')::TDateTime , inUnitId := 8384 , inMemberId := 442269 , inPersonalServiceListId:=0,  inSession := '5');
