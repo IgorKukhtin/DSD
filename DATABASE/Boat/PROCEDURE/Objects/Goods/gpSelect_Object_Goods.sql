@@ -25,9 +25,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
                --
              , Feet TFloat, Metres TFloat
              , AmountMin TFloat, AmountRefer TFloat
+
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
+             , BasisPrice_choice TFloat
+
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
@@ -335,13 +338,28 @@ BEGIN
             , CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-              END ::TFloat  AS BasisPrice
+              END ::TFloat AS BasisPrice
 
               -- Цена продажи с НДС
             , CASE WHEN vbPriceWithVAT = FALSE
                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
-              END ::TFloat  AS BasisPriceWVAT
+              END ::TFloat AS BasisPriceWVAT
+              
+              -- Цена продажи без НДС - передается в грид
+            , CASE WHEN vbPriceWithVAT = FALSE AND tmpPriceBasis.ValuePrice > 0
+                   THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+                   WHEN vbPriceWithVAT = TRUE AND tmpPriceBasis.ValuePrice > 0
+                   THEN CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+
+                   -- Рекомендованная цена без НДС
+                   WHEN ObjectFloat_EmpfPrice.ValueData > 0
+                   THEN COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
+
+                   ELSE 0
+
+              END ::TFloat AS BasisPrice_choice
+              
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName

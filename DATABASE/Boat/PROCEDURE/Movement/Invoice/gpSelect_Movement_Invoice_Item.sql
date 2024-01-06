@@ -21,6 +21,7 @@ RETURNS TABLE (MovementId Integer
              , Summà_WVAT TFloat
              , Summà_VAT  TFloat
              , Comment    TVarChar
+             , Ord Integer
              , isErased   Boolean
              )
 AS
@@ -70,6 +71,7 @@ BEGIN
             , zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0), MovementFloat_VATPercent.ValueData) ::TFloat Summà_WVAT
             , (zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0),MovementFloat_VATPercent.ValueData) -  (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ::TFloat Summà_VAT 
             , MIString_Comment.ValueData      AS Comment
+            , ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) :: Integer AS Ord
             , MovementItem.isErased           AS isErased
 
        FROM tmpMovement AS Movement 
