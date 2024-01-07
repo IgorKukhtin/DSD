@@ -251,7 +251,7 @@ BEGIN
             , tmpData.PartionCellName_10       :: TVarChar
             , tmpData.PartionCellName_11       :: TVarChar
 
-            , tmpData.Amount ::TFloat
+            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData.Amount ELSE 0 END ::TFloat AS Amount
             , (tmpData.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
             , tmpData.Color_PartionGoodsDate ::Integer
      FROM tmpData 
