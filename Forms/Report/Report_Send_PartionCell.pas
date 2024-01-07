@@ -47,7 +47,7 @@ type
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
-    cbPaption: TcxCheckBox;
+    cbMovement: TcxCheckBox;
     actUpdateMainDS: TdsdUpdateDataSet;
     spUpdate_MI_Send_byReport: TdsdStoredProc;
     actRefreshPartion: TdsdDataSetRefresh;
@@ -56,6 +56,7 @@ type
     actUpdateMI_PartionGoodsDate: TdsdExecStoredProc;
     macUpdatePartionGoodsDate: TMultiAction;
     bbUpdatePartionGoodsDate: TdxBarButton;
+    Color_PartionGoodsDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

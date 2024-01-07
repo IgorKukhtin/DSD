@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpReport_Send_PartionCell (
     IN inStartDate         TDateTime ,
     IN inEndDate           TDateTime ,
     IN inUnitId            Integer   ,
-    IN inIsPartion         Boolean   ,
+    IN inIsMovement         Boolean   ,
     IN inSession           TVarChar    -- сесси€ пользовател€
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -32,7 +32,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionCellName_10  TVarChar
              , PartionCellName_11  TVarChar
 
-             , Amount TFloat, Amount_Weight TFloat
+             , Amount TFloat, Amount_Weight TFloat 
+             , Color_PartionGoodsDate Integer
              )
 AS
 $BODY$
@@ -40,11 +41,25 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
+     --если не выбрали подразделение выбираем из   8459
+     --переопредел€ем
+     IF COALESCE (inUnitId,0) = 0  
+     THEN
+         inUnitId := 8459;
+     END IF;
+     
      -- –езультат
      RETURN QUERY
+     WITH
+      --товары из 2-х групп
+       tmpGoods AS (SELECT lfSelect.GoodsId
+                    FROM lfSelect_Object_Goods_byGoodsGroup (1832) AS lfSelect
+                   UNION
+                    SELECT lfSelect.GoodsId
+                    FROM lfSelect_Object_Goods_byGoodsGroup (1979) AS lfSelect
+                   )
 
-     WITH 
-      tmpMovement AS (SELECT Movement.*
+    , tmpMovement AS (SELECT Movement.*
                            , MovementLinkObject_From.ObjectId AS FromId
                            , MovementLinkObject_To.ObjectId   AS ToId 
                       FROM Movement
@@ -58,7 +73,7 @@ BEGIN
 
                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                         AND Movement.DescId = zc_Movement_Send()
-                        AND Movement.StatusId = zc_Enum_Status_Erased() --zc_Enum_Status_Complete()
+                        AND Movement.StatusId = zc_Enum_Status_Complete() --zc_Enum_Status_Erased() --
                         AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0)
                       )
 
@@ -76,10 +91,11 @@ BEGIN
 
     , tmpMI AS (SELECT MovementItem.Id         AS MovementItemId
                      , MovementItem.MovementId AS MovementId
-                     , MovementItem.ObjectId 
-                     AS GoodsId
-                     , MovementItem.Amount   AS Amount
-                FROM MovementItem 
+                     , MovementItem.ObjectId   AS GoodsId
+                     , MovementItem.Amount     AS Amount
+                FROM MovementItem
+                     --ограничили товаром
+                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId 
                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                   AND MovementItem.DescId   = zc_MI_Master()
                   AND MovementItem.isErased = FALSE
@@ -112,23 +128,27 @@ BEGIN
 
 
     --все €чейки по всем док. и товарам  - группировка
-    , tmpData_All AS (SELECT CASE WHEN inIsPartion = FALSE THEN Movement.Id ELSE 0 END                       AS MovementId
-                           , CASE WHEN inIsPartion = FALSE THEN Movement.InvNumber ELSE '' END               AS InvNumber 
-                           , CASE WHEN inIsPartion = FALSE THEN Movement.OperDate ELSE NULL END :: TDateTime AS OperDate
-                           , CASE WHEN inIsPartion = FALSE THEN Movement.FromId ELSE 0 END                   AS FromId
-                           , CASE WHEN inIsPartion = FALSE THEN Movement.ToId ELSE 0 END                     AS ToId
-                           , CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId
+    , tmpData_All AS (SELECT CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END                       AS MovementId
+                           , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber ELSE '' END               AS InvNumber 
+                           , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END :: TDateTime AS OperDate
+                           , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END                   AS FromId
+                           --, CASE WHEN inIsMovement = TRUE THEN Movement.ToId ELSE 0 END                     AS ToId
+                           , Movement.ToId                    AS ToId
+                           , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId
                            , MovementItem.GoodsId                                                            AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId,0)                                    AS GoodsKindId
                            , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime        AS PartionGoodsDate    
                            , Object_PartionCell.ValueData                                                    AS PartionCellName
                            , SUM (MovementItem.Amount)                                                       AS Amount
-                           , ROW_NUMBER() OVER (PARTITION BY CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END
+                           , ROW_NUMBER() OVER (PARTITION BY CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END
                                                            , MovementItem.GoodsId
                                                            , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                                                            , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                                                 ORDER BY MIN (MILinkObject_PartionCell.Level)
-                                                 ) AS Ord                         
+                                                 ) AS Ord 
+                           , MAX (CASE WHEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) <> Movement.OperDate THEN 8435455
+                                       ELSE zc_Color_White()
+                                  END) AS Color_PartionGoodsDate                       
                       FROM tmpMovement AS Movement
                           INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
                           
@@ -145,16 +165,17 @@ BEGIN
                                              ON MILinkObject_PartionCell.MovementItemId = MovementItem.MovementItemId
                           LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
                          
-                      GROUP BY CASE WHEN inIsPartion = FALSE THEN Movement.Id ELSE 0 END 
-                            , CASE WHEN inIsPartion = FALSE THEN Movement.InvNumber ELSE '' END  
-                            , CASE WHEN inIsPartion = FALSE THEN Movement.OperDate ELSE NULL END
-                            , CASE WHEN inIsPartion = FALSE THEN Movement.FromId ELSE 0 END 
-                            , CASE WHEN inIsPartion = FALSE THEN Movement.ToId ELSE 0 END 
-                            , CASE WHEN inIsPartion = FALSE THEN MovementItem.MovementItemId ELSE 0 END 
-                            , MovementItem.GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
-                            , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)    
-                            , Object_PartionCell.ValueData
+                      GROUP BY CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END 
+                             , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber ELSE '' END  
+                             , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END
+                             , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END 
+                             --, CASE WHEN inIsMovement = TRUE THEN Movement.ToId ELSE 0 END  
+                             , Movement.ToId
+                             , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END 
+                             , MovementItem.GoodsId
+                             , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                             , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)    
+                             , Object_PartionCell.ValueData
                       )
 
     , tmpData AS (SELECT tmpData_All.MovementId
@@ -181,6 +202,7 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 10 THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_10
                        
                        , STRING_AGG (CASE WHEN COALESCE (tmpData_All.Ord, 0) > 10  THEN tmpData_All.PartionCellName END, ';') AS PartionCellName_11
+                       , MAX (tmpData_All.Color_PartionGoodsDate) AS Color_PartionGoodsDate
                         
                   FROM tmpData_All
 
@@ -231,7 +253,7 @@ BEGIN
 
             , tmpData.Amount ::TFloat
             , (tmpData.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
-            
+            , tmpData.Color_PartionGoodsDate ::Integer
      FROM tmpData 
 
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
@@ -250,7 +272,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ObjectId
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
@@ -272,4 +294,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Send_PartionCell (inStartDate:= '27.12.2023', inEndDate:= '04.01.2024', inUnitId:= 8451, inIsPartion:= false, inSession:= zfCalc_UserAdmin()); -- —клад –еализации
+-- SELECT * FROM gpReport_Send_PartionCell (inStartDate:= '27.12.2023', inEndDate:= '04.01.2024', inUnitId:= 8451, inIsMovement:= false, inSession:= zfCalc_UserAdmin()); -- —клад –еализации

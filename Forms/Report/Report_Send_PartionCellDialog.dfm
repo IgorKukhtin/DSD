@@ -67,7 +67,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
   object cxLabel3: TcxLabel
     Left = 11
     Top = 59
-    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
   end
   object cxLabel6: TcxLabel
     Left = 11
@@ -79,14 +79,13 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
-  object cbPapty: TcxCheckBox
-    Left = 250
+  object cbMovement: TcxCheckBox
+    Left = 244
     Top = 27
-    Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+    Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
     Properties.ReadOnly = False
-    State = cbsChecked
     TabOrder = 8
-    Width = 83
+    Width = 103
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -147,9 +146,9 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isPaption'
+        Name = 'isMovement'
         Value = Null
-        Component = cbPapty
+        Component = cbMovement
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

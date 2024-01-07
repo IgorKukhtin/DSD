@@ -36,7 +36,7 @@ type
     GuidesUnit: TdsdGuides;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cbPapty: TcxCheckBox;
+    cbMovement: TcxCheckBox;
   private
     { Private declarations }
   public

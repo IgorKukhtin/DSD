@@ -36,6 +36,11 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -51,6 +56,11 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -171,6 +181,17 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object Amount_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Amount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -339,6 +360,12 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 166
           end
+          object Color_PartionGoodsDate: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_PartionGoodsDate'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -375,7 +402,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       ExplicitTop = 4
     end
     object cxLabel8: TcxLabel
-      Left = 414
+      Left = 409
       Top = 4
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
     end
@@ -391,14 +418,13 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       TabOrder = 5
       Width = 210
     end
-    object cbPaption: TcxCheckBox
+    object cbMovement: TcxCheckBox
       Left = 765
       Top = 3
       Action = actRefreshPartion
       Properties.ReadOnly = False
-      State = cbsChecked
       TabOrder = 6
-      Width = 88
+      Width = 108
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -420,7 +446,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           'TextValue')
       end
       item
-        Component = cbPaption
+        Component = cbMovement
         Properties.Strings = (
           'Checked')
       end>
@@ -434,8 +460,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
-      Hint = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+      Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
@@ -559,9 +585,9 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isPaption'
+          Name = 'isMovement'
           Value = Null
-          Component = cbPaption
+          Component = cbMovement
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -934,9 +960,9 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPartion'
+        Name = 'inIsMovement'
         Value = Null
-        Component = cbPaption
+        Component = cbMovement
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1031,6 +1057,12 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = PartionGoodsDate
+        BackGroundValueColumn = Color_PartionGoodsDate
+        ColorValueList = <>
+      end>
     Left = 368
     Top = 240
   end
