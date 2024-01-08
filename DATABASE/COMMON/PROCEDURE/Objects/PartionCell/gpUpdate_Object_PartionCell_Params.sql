@@ -39,7 +39,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionCell_BoxCount(), inId_6, inBoxCount_6);
    
    -- сохранили протокол
-  -- PERFORM lpInsert_ObjectProtocol (inId_1, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId_1, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId_2, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId_3, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId_4, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId_5, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId_6, vbUserId);
 
 END;$BODY$
 
