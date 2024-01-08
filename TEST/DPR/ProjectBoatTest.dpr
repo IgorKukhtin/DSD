@@ -371,7 +371,9 @@ uses
   InvoiceItemEdit in '..\..\FormsBoat\Document\InvoiceItemEdit.pas' {InvoiceItemEditForm: TParentForm},
   InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
   Report_Boat_Assembly in '..\..\FormsBoat\Report\Report_Boat_Assembly.pas' {Report_Boat_AssemblyForm: TParentForm},
-  OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm};
+  OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm},
+  PartionCellEdit in '..\..\FormsBoat\Guides\PartionCellEdit.pas' {PartionCellEditForm: TParentForm},
+  PartionCell in '..\..\FormsBoat\Guides\PartionCell.pas' {PartionCellForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

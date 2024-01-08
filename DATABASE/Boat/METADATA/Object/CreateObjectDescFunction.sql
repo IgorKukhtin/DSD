@@ -356,10 +356,16 @@ CREATE OR REPLACE FUNCTION zc_Object_InvoiceKind() RETURNS Integer AS $BODY$BEGI
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_InvoiceKind', 'Тип Счета' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_InvoiceKind');
 
+CREATE OR REPLACE FUNCTION zc_Object_PartionCell() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PartionCell'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PartionCell', 'Ячейка хранения (Партия учета)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionCell');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.01.24         * zc_Object_PartionCell
  06.12.23         * zc_Object_InvoiceKind
  10.04.22         * zc_Object_GoodsArticle
  16.02.22         * zc_Object_MeasureCode
