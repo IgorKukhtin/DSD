@@ -42,7 +42,6 @@ object PartionCellForm: TPartionCellForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
@@ -55,6 +54,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object BoxCount_l1: TcxGridDBColumn
@@ -67,7 +67,6 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '1.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-        Options.Editing = False
         Width = 135
       end
       object Length_l1: TcxGridDBColumn
@@ -80,6 +79,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '1.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
         Width = 90
       end
       object Width_l1: TcxGridDBColumn
@@ -118,6 +118,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '1.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Options.Editing = False
         Width = 99
       end
       object RowWidth_l1: TcxGridDBColumn
@@ -130,6 +131,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '1.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Options.Editing = False
         Width = 90
       end
       object RowHeight_l1: TcxGridDBColumn
@@ -142,6 +144,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '1.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Options.Editing = False
         Width = 90
       end
       object Comment_l1: TcxGridDBColumn
@@ -151,6 +154,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object Name_l2: TcxGridDBColumn
@@ -159,6 +163,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object BoxCount_l2: TcxGridDBColumn
@@ -171,7 +176,6 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '2.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-        Options.Editing = False
         Width = 135
       end
       object Length_l2: TcxGridDBColumn
@@ -184,6 +188,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '2.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
         Width = 90
       end
       object Width_l2: TcxGridDBColumn
@@ -222,6 +227,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '2.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Options.Editing = False
         Width = 99
       end
       object RowWidth_l2: TcxGridDBColumn
@@ -234,6 +240,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '2.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Options.Editing = False
         Width = 90
       end
       object RowHeight_l2: TcxGridDBColumn
@@ -246,6 +253,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '2.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Options.Editing = False
         Width = 90
       end
       object Comment_l2: TcxGridDBColumn
@@ -255,6 +263,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object Name_l3: TcxGridDBColumn
@@ -263,6 +272,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object BoxCount_l3: TcxGridDBColumn
@@ -275,7 +285,6 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '3.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-        Options.Editing = False
         Width = 135
       end
       object Length_l3: TcxGridDBColumn
@@ -288,6 +297,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '3.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
         Width = 90
       end
       object Width_l3: TcxGridDBColumn
@@ -326,6 +336,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '3.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Options.Editing = False
         Width = 99
       end
       object RowWidth_l3: TcxGridDBColumn
@@ -338,6 +349,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '3.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Options.Editing = False
         Width = 90
       end
       object RowHeight_l3: TcxGridDBColumn
@@ -350,6 +362,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '3.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Options.Editing = False
         Width = 90
       end
       object Comment_l3: TcxGridDBColumn
@@ -359,6 +372,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object Name_l4: TcxGridDBColumn
@@ -367,6 +381,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object BoxCount_l4: TcxGridDBColumn
@@ -379,7 +394,6 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '4.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-        Options.Editing = False
         Width = 135
       end
       object Length_l4: TcxGridDBColumn
@@ -392,6 +406,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '4.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
         Width = 90
       end
       object Width_l4: TcxGridDBColumn
@@ -430,6 +445,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '4.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Options.Editing = False
         Width = 99
       end
       object RowWidth_l4: TcxGridDBColumn
@@ -442,6 +458,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '4.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Options.Editing = False
         Width = 90
       end
       object RowHeight_l4: TcxGridDBColumn
@@ -454,6 +471,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '4.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Options.Editing = False
         Width = 90
       end
       object Comment_l4: TcxGridDBColumn
@@ -463,6 +481,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object Name_l5: TcxGridDBColumn
@@ -471,6 +490,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object BoxCount_l5: TcxGridDBColumn
@@ -483,7 +503,6 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '5.2 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-        Options.Editing = False
         Width = 135
       end
       object Length_l5: TcxGridDBColumn
@@ -496,6 +515,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '5.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
         Width = 90
       end
       object Width_l5: TcxGridDBColumn
@@ -534,6 +554,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '5.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Options.Editing = False
         Width = 99
       end
       object RowWidth_l5: TcxGridDBColumn
@@ -546,6 +567,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '5.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Options.Editing = False
         Width = 90
       end
       object RowHeight_l5: TcxGridDBColumn
@@ -558,6 +580,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '5.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Options.Editing = False
         Width = 90
       end
       object Comment_l5: TcxGridDBColumn
@@ -567,6 +590,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object Name_l6: TcxGridDBColumn
@@ -575,6 +599,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
       object BoxCount_l6: TcxGridDBColumn
@@ -587,7 +612,6 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '6.2. '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 ('#1080#1090#1086#1075#1086' '#1074' '#1103#1095#1077#1081#1082#1077')'
-        Options.Editing = False
         Width = 135
       end
       object Length_l6: TcxGridDBColumn
@@ -600,6 +624,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '6.3 '#1044#1083#1080#1085#1072' '#1103#1095#1077#1081#1082#1080', '#1084#1084
+        Options.Editing = False
         Width = 90
       end
       object Width_l6: TcxGridDBColumn
@@ -638,6 +663,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '6.6 '#1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1074' '#1088#1103#1076#1091
+        Options.Editing = False
         Width = 99
       end
       object RowWidth_l6: TcxGridDBColumn
@@ -650,6 +676,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '6.7 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1075#1083#1091#1073#1080#1085#1072')'
+        Options.Editing = False
         Width = 90
       end
       object RowHeight_l6: TcxGridDBColumn
@@ -662,6 +689,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = '6.8 '#1050#1086#1083'-'#1074#1086' '#1088#1103#1076#1086#1074' ('#1074#1099#1089#1086#1090#1072')'
+        Options.Editing = False
         Width = 90
       end
       object Comment_l6: TcxGridDBColumn
@@ -671,6 +699,7 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
     end
@@ -701,8 +730,8 @@ object PartionCellForm: TPartionCellForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 480
+    Top = 120
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -884,8 +913,8 @@ object PartionCellForm: TPartionCellForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 112
+    Left = 368
+    Top = 120
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1282,6 +1311,18 @@ object PartionCellForm: TPartionCellForm
         end>
       Caption = 'actGetImportSetting'
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateParams
+      StoredProcList = <
+        item
+          StoredProc = spUpdateParams
+        end>
+      Caption = 'actUpdateRemains'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCell'
@@ -1376,8 +1417,8 @@ object PartionCellForm: TPartionCellForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 568
-    Top = 88
+    Left = 648
+    Top = 120
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1386,7 +1427,118 @@ object PartionCellForm: TPartionCellForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 504
-    Top = 136
+    Left = 432
+    Top = 216
+  end
+  object spUpdateParams: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PartionCell_Params'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId_1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id_l1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id_l2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_3'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id_l3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_4'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id_l4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_5'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id_l5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId_6'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id_l6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxCount_1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount_l1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxCount_2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount_l2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxCount_3'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount_l3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxCount_4'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount_l4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxCount_5'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount_l5'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxCount_6'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount_l6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 588
+    Top = 201
   end
 end

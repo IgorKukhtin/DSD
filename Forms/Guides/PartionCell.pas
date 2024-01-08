@@ -72,6 +72,8 @@ type
     macStartLoad: TMultiAction;
     actGetImportSetting: TdsdExecStoredProc;
     bbStartLoad: TdxBarButton;
+    spUpdateParams: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
