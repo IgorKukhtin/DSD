@@ -74,6 +74,18 @@ type
     bbStartLoad: TdxBarButton;
     spUpdateParams: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actProtocol1: TdsdOpenForm;
+    actProtocol2: TdsdOpenForm;
+    actProtocol3: TdsdOpenForm;
+    actProtocol4: TdsdOpenForm;
+    actProtocol5: TdsdOpenForm;
+    actProtocol6: TdsdOpenForm;
+    bbProtocol1: TdxBarButton;
+    bbProtocol2: TdxBarButton;
+    bbProtocol3: TdxBarButton;
+    bbProtocol4: TdxBarButton;
+    bbProtocol5: TdxBarButton;
+    bbProtocol6: TdxBarButton;
   private
     { Private declarations }
   public
