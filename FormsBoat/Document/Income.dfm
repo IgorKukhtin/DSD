@@ -831,6 +831,30 @@ object IncomeForm: TIncomeForm
             HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             Width = 70
           end
+          object PartionCellCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1103#1095'.'
+            DataBinding.FieldName = 'PartionCellCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionCellName: TcxGridDBColumn
+            Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'PartionCellName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 76
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -1294,9 +1318,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -3855,6 +3876,33 @@ object IncomeForm: TIncomeForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
       ImageIndex = 86
     end
+    object actOpenPartionCellForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4058,6 +4106,15 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'PartNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -5131,13 +5188,13 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 758
-    Top = 247
+    Left = 734
+    Top = 263
   end
   object CostDS: TDataSource
     DataSet = CostCDS
-    Left = 742
-    Top = 215
+    Left = 686
+    Top = 255
   end
   object CostCDS: TClientDataSet
     Aggregates = <>

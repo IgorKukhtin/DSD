@@ -49,7 +49,7 @@ object PartionCellForm: TPartionCellForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code_l1: TcxGridDBColumn
-        Caption = '1.1 '#1050#1086#1076' '#1103#1095'.'
+        Caption = '1.1 '#1050#1086#1076
         DataBinding.FieldName = 'Code_l1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -167,7 +167,7 @@ object PartionCellForm: TPartionCellForm
         Width = 90
       end
       object Code_l2: TcxGridDBColumn
-        Caption = '2.1 '#1050#1086#1076' '#1103#1095'.'
+        Caption = '2.1 '#1050#1086#1076
         DataBinding.FieldName = 'Code_l2'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
@@ -286,7 +286,7 @@ object PartionCellForm: TPartionCellForm
         Width = 90
       end
       object Code_l3: TcxGridDBColumn
-        Caption = '3.1 '#1050#1086#1076' '#1103#1095'.'
+        Caption = '3.1 '#1050#1086#1076
         DataBinding.FieldName = 'Code_l3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

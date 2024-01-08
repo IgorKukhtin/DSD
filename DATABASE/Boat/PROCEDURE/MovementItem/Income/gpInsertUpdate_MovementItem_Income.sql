@@ -4,6 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, In
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TVarChar, TVarChar, TVarChar
                                                            );
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TVarChar, TVarChar, TVarChar, TVarChar
+                                                           );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -23,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inOperPriceList       TFloat    , -- Цена продажи
     IN inEmpfPrice           TFloat    , -- Цена рекомендованная
     IN inPartNumber          TVarChar  , -- № по тех паспорту
+ INOUT ioPartionCellName     TVarChar  , -- код или название
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -37,7 +42,9 @@ $BODY$
    DECLARE vbToId         Integer;
    DECLARE vbOperDate     TDateTime;
    DECLARE vbTaxKindId    Integer;
-   DECLARE vbTaxKindValue TFloat;
+   DECLARE vbTaxKindValue TFloat;   
+   
+   DECLARE vbPartionCellId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
@@ -73,13 +80,55 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не определен Тип НДС.';
      END IF;
-
+      
      -- нашли
      IF COALESCE (ioId, 0) <> 0
      THEN
          vbOperPriceList_old:= (SELECT Object_PartionGoods.OperPriceList FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
      ELSE
          vbOperPriceList_old := inOperPriceList;
+     END IF;
+
+     --находим ячейку хранения, если нет такой создаем
+     IF COALESCE (ioPartionCellName, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+             --если не нашли ошибка
+             IF COALESCE (vbPartionCellId,0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не найдена ячейка с кодом <%>.', ioPartionCellName;
+             END IF;
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+             --если не нашли Создаем
+             IF COALESCE (vbPartionCellId,0) = 0
+             THEN
+                 --
+                 vbPartionCellId := gpInsertUpdate_Object_PartionCell (ioId	     := 0                                            ::Integer
+                                                                     , inCode    := lfGet_ObjectCode(0, zc_Object_PartionCell()) ::Integer
+                                                                     , inName    := TRIM (ioPartionCellName)                          ::TVarChar
+                                                                     , inLevel   := 0           ::TFloat
+                                                                     , inComment := ''          ::TVarChar
+                                                                     , inSession := inSession   ::TVarChar
+                                                                      );
+    
+             END IF;
+         END IF;
+         --
+         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId); 
+     ELSE 
+         vbPartionCellId := NULL ::Integer;
      END IF;
 
 
@@ -94,6 +143,7 @@ BEGIN
                                                , inOperPriceList
                                                , inPartNumber
                                                , inComment
+                                               , vbPartionCellId
                                                , vbUserId
                                                 );
 

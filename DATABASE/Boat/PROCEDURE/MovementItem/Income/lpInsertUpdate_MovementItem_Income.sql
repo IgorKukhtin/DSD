@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
     IN inAmount              TFloat    , -- Количество
     IN inOperPriceList       TFloat    , -- Цена продажи
     IN inPartNumber          TVarChar  , -- № по тех паспорту
-    IN inComment             TVarChar  ,
+    IN inComment             TVarChar  ,    
+    IN inPartionCellId       Integer   , -- 
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -31,6 +33,9 @@ BEGIN
      -- <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId); 
+     
      IF vbIsInsert = TRUE
      THEN
          -- сохранили связь с <>
@@ -52,6 +57,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.01.24         * inPartionCellId
  24.02.21         * PartNumber
  11.05.18         *
 */
