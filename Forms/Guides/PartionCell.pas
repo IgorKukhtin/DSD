@@ -86,6 +86,7 @@ type
     bbProtocol4: TdxBarButton;
     bbProtocol5: TdxBarButton;
     bbProtocol6: TdxBarButton;
+    Code_l1: TcxGridDBColumn;
   private
     { Private declarations }
   public

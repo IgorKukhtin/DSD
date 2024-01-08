@@ -48,6 +48,15 @@ object PartionCellForm: TPartionCellForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Code_l1: TcxGridDBColumn
+        Caption = '1.1 '#1050#1086#1076' '#1103#1095'.'
+        DataBinding.FieldName = 'Code_l1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '1.1 '#1050#1086#1076' '#1103#1095#1077#1081#1082#1080
+        Options.Editing = False
+        Width = 58
+      end
       object Name_l1: TcxGridDBColumn
         Caption = '1.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l1'
@@ -156,6 +165,16 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 90
+      end
+      object Code_l2: TcxGridDBColumn
+        Caption = '2.1 '#1050#1086#1076' '#1103#1095'.'
+        DataBinding.FieldName = 'Code_l2'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '2.1 '#1050#1086#1076' '#1103#1095#1077#1081#1082#1080
+        Options.Editing = False
+        Width = 55
       end
       object Name_l2: TcxGridDBColumn
         Caption = '2.1 '#1071#1095#1077#1081#1082#1072
@@ -266,6 +285,15 @@ object PartionCellForm: TPartionCellForm
         Options.Editing = False
         Width = 90
       end
+      object Code_l3: TcxGridDBColumn
+        Caption = '3.1 '#1050#1086#1076' '#1103#1095'.'
+        DataBinding.FieldName = 'Code_l3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '3.1 '#1050#1086#1076' '#1103#1095#1077#1081#1082#1080
+        Options.Editing = False
+        Width = 55
+      end
       object Name_l3: TcxGridDBColumn
         Caption = '3.1 '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name_l3'
@@ -374,6 +402,15 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 90
+      end
+      object Code_l4: TcxGridDBColumn
+        Caption = '4.1 '#1050#1086#1076' '#1103#1095'.'
+        DataBinding.FieldName = 'Code_l4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '4.1 '#1050#1086#1076' '#1103#1095#1077#1081#1082#1080
+        Options.Editing = False
+        Width = 55
       end
       object Name_l4: TcxGridDBColumn
         Caption = '4.1 '#1071#1095#1077#1081#1082#1072
@@ -493,6 +530,15 @@ object PartionCellForm: TPartionCellForm
         Options.Editing = False
         Width = 90
       end
+      object Code_l5: TcxGridDBColumn
+        Caption = '5.1 '#1050#1086#1076' '#1103#1095'.'
+        DataBinding.FieldName = 'Code_l5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '1.1 '#1050#1086#1076' '#1103#1095#1077#1081#1082#1080
+        Options.Editing = False
+        Width = 55
+      end
       object BoxCount_l5: TcxGridDBColumn
         Caption = '5.2.  '#1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount_l5'
@@ -592,6 +638,15 @@ object PartionCellForm: TPartionCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 90
+      end
+      object Code_l6: TcxGridDBColumn
+        Caption = '6.1 '#1050#1086#1076' '#1103#1095'.'
+        DataBinding.FieldName = 'Code_l6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '6.1 '#1050#1086#1076' '#1103#1095#1077#1081#1082#1080
+        Options.Editing = False
+        Width = 55
       end
       object Name_l6: TcxGridDBColumn
         Caption = '6.1 '#1071#1095#1077#1081#1082#1072
@@ -1309,7 +1364,8 @@ object PartionCellForm: TPartionCellForm
     object actOpenPartionCell_list: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actOpenPartionCell_list'
+      Caption = #1057#1087#1080#1089#1086#1082
+      Hint = #1057#1087#1080#1089#1086#1082
       ImageIndex = 26
       FormName = 'TPartionCell_listForm'
       FormNameParam.Value = 'TPartionCell_listForm'
