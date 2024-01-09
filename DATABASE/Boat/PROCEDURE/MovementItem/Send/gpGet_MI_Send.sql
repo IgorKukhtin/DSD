@@ -30,7 +30,8 @@ RETURNS TABLE (Id                 Integer
              , Amount             TFloat
              , AmountRemainsFrom  TFloat  
              , MovementId_OrderClient Integer
-             , InvNumberFull_OrderClient TVarChar
+             , InvNumberFull_OrderClient TVarChar 
+             , PartionCellId Integer, PartionCellName TVarChar
               )
 AS
 $BODY$
@@ -71,6 +72,7 @@ BEGIN
      , tmpMI AS (SELECT MI.ObjectId                                  AS GoodsId
                       , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                       , MIFloat_MovementId.ValueData      :: Integer AS MovementId_OrderClient
+                      , MILO_PartionCell.ObjectId                    AS PartionCellId
                       , SUM (MI.Amount)                              AS Amount
                  FROM MovementItem AS MI
                       LEFT JOIN MovementItemString AS MIString_PartNumber
@@ -78,7 +80,10 @@ BEGIN
                                                   AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                   ON MIFloat_MovementId.MovementItemId = MI.Id
-                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId() 
+                      LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                       ON MILO_PartionCell.MovementItemId = MI.Id
+                                                      AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                  WHERE MI.MovementId = inMovementId
                    AND MI.DescId     = zc_MI_Master()
                    AND MI.ObjectId   = inGoodsId
@@ -89,6 +94,7 @@ BEGIN
                  GROUP BY MI.ObjectId
                         , COALESCE (MIString_PartNumber.ValueData, '')
                         , MIFloat_MovementId.ValueData      :: Integer 
+                        , MILO_PartionCell.ObjectId 
                 )
 
            SELECT CASE WHEN COALESCE (inId,0) <> 0 THEN inId ELSE -1 END  :: Integer AS Id
@@ -111,7 +117,9 @@ BEGIN
 
               , Movement_OrderClient.Id                                   AS MovementId_OrderClient
               , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
-  
+
+              , Object_PartionCell.Id         AS PartionCellId
+              , Object_PartionCell.ValueData  AS PartionCellName  
            FROM Object AS Object_Goods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
                                AND tmpMI.PartNumber = COALESCE (inPartNumber,'')
@@ -138,7 +146,10 @@ BEGIN
                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = Object_Goods.Id
                                     AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
 
-                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
+                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient 
+
+                LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId
+
            WHERE Object_Goods.Id = inGoodsId
               AND inGoodsId <> 0 
           UNION
@@ -160,6 +171,8 @@ BEGIN
                 , 0  ::TFloat           AS AmountRemains
                 , inMovementId_OrderClient AS MovementId_OrderClient
                 , (SELECT zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId_OrderClient)::TVarChar AS InvNumberFull_OrderClient                
+                , 0    ::Integer        AS PartionCellId
+                , NULL::TVarChar        AS PartionCellName
            WHERE inGoodsId = 0
           ;
 
@@ -170,6 +183,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.01.24         *
  31.05.23         * add inId
  12.05.22         *
  08.04.22         *

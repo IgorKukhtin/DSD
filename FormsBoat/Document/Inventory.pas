@@ -190,6 +190,11 @@ type
     Price_find: TcxGridDBColumn;
     isPrice_diff: TcxGridDBColumn;
     isPrice_goods: TcxGridDBColumn;
+    cxLabel12: TcxLabel;
+    edPartionCell: TcxButtonEdit;
+    GuidesPartionCell: TdsdGuides;
+    spGetPartionCell_Name: TdsdStoredProc;
+    actGetPartionCell_Name: TdsdExecStoredProc;
   private
   public
   end;

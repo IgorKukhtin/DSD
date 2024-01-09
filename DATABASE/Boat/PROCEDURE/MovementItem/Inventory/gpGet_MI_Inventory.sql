@@ -1,10 +1,12 @@
 -- Function: gpGet_MI_Inventory()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Inventory (Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Inventory (Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Inventory(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
+    IN inPartionCellId     Integer    , --
     IN inPartNumber        TVarChar   , --
     IN inAmount            TFloat     , --
     IN inSession           TVarChar     -- сессия пользователя
@@ -20,6 +22,8 @@ RETURNS TABLE (Id                 Integer
              , GoodsGroupName     TVarChar
              , PartnerId          Integer
              , PartnerName        TVarChar
+             , PartionCellId      Integer
+             , PartionCellName    TVarChar
              , Price              TFloat
              , OperCount          TFloat
              , TotalCount         TFloat
@@ -65,10 +69,11 @@ BEGIN
                       GROUP BY Container.ObjectId
                              , COALESCE (MIString_PartNumber.ValueData, '')
                      )
-          , tmpMI AS (SELECT MI.ObjectId                                  AS GoodsId
-                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+          , tmpMI AS (SELECT MI.ObjectId                                   AS GoodsId
+                           , COALESCE (MIString_PartNumber.ValueData, '')  AS PartNumber 
+                           , MILO_PartionCell.ObjectId                     AS PartionCellId      --сохраненый или переданный из шапки документа
                            , MAX (MIFloat_MovementId.ValueData) :: Integer AS MovementId_OrderClient
-                           , SUM (MI.Amount)                              AS Amount
+                           , SUM (MI.Amount)                               AS Amount
                       FROM MovementItem AS MI
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MI.Id
@@ -76,6 +81,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                        ON MIFloat_MovementId.MovementItemId = MI.Id
                                                       AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+
+                           LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                            ON MILO_PartionCell.MovementItemId = MI.Id
+                                                           AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                       WHERE MI.MovementId = inMovementId
                         AND MI.DescId     = zc_MI_Master()
                         AND MI.ObjectId   = inGoodsId
@@ -83,7 +92,8 @@ BEGIN
                         AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                       GROUP BY MI.ObjectId
                              , COALESCE (MIString_PartNumber.ValueData, '')
-                             --, MIFloat_MovementId.ValueData :: Integer
+                             --, MIFloat_MovementId.ValueData :: Integer  
+                             , MILO_PartionCell.ObjectId
                      )
            SELECT -1                               :: Integer AS Id
                 , Object_Goods.Id                             AS GoodsId
@@ -96,6 +106,8 @@ BEGIN
                 , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                 , Object_Partner.ObjectCode                   AS PartnerId
                 , Object_Partner.ValueData                    AS PartnerName
+                , Object_PartionCell.Id                       AS PartionCellId
+                , Object_PartionCell.ValueData                AS PartionCellName
                 , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (vbOperDate, inGoodsId, vbUserId) AS lpGet) :: TFloat  AS Price
 
                 , COALESCE (inAmount, 1)                                          :: TFloat AS OperCount
@@ -132,7 +144,10 @@ BEGIN
                                        ON ObjectString_Article.ObjectId = Object_Goods.Id
                                       AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
-                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
+                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient 
+                
+                LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = CASE WHEN COALESCE (tmpMI.PartionCellId,0) = 0 THEN inPartionCellId ELSE tmpMI.PartionCellId END
+
            WHERE Object_Goods.Id = inGoodsId
              AND inGoodsId <> 0
 
@@ -147,7 +162,10 @@ BEGIN
                 , '' ::TVarChar         AS GoodsGroupNameFull
                 , '' ::TVarChar         AS GoodsGroupName
                 , 0                     AS PartnerId
-                , '' ::TVarChar         AS PartnerName
+                , '' ::TVarChar         AS PartnerName  
+                , inPartionCellId       AS PartionCellId
+                , (SELECT Object.ValueData FROM Object WHERE Object.Id = inPartionCellId) ::TVarChar AS PartionCellName
+                
                 , 0  ::TFloat           AS Price
 
                 , 1  ::TFloat           AS OperCount
@@ -168,6 +186,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.01.24         *
  14.05.23         *
  08.04.22         *
 */

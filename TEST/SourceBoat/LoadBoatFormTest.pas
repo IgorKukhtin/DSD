@@ -50,6 +50,7 @@ type
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderPartnerFormTest;
     procedure LoadPartionGoodsFormTest;
+    procedure LoadPartionCellFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPLZFormTest;
@@ -646,6 +647,14 @@ procedure TLoadFormTest.LoadPartionGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
+end;
+
+procedure TLoadFormTest.LoadPartionCellFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellEditForm');
 end;
 
  procedure TLoadFormTest.LoadPersonalFormTest;

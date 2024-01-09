@@ -317,6 +317,9 @@ type
     cxButton1: TcxButton;
     mactCompleteMovement_andSave: TMultiAction;
     Ord: TcxGridDBColumn;
+    PartionCellCode: TcxGridDBColumn;
+    PartionCellName: TcxGridDBColumn;
+    actOpenPartionCellForm: TOpenChoiceForm;
   private
   public
   end;

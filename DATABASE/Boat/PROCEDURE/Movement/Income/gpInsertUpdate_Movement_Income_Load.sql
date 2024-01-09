@@ -156,7 +156,8 @@ BEGIN
                                                               , inCountForPrice := 1            ::TFloat
                                                               , inOperPriceList := inOperPriceList
                                                               , inPartNumber    := '' -- !!!ОШИБКА - откуда здесь inPartNumber
-                                                              , inComment       := ''           ::TVarChar
+                                                              , inComment       := ''           ::TVarChar   
+                                                              , inPartionCellId := Null         ::Integer
                                                               , inUserId        := vbUserId     ::Integer
                                                               );
 

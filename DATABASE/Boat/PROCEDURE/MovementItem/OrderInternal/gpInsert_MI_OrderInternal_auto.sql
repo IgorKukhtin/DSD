@@ -46,7 +46,7 @@ BEGIN
    ;
 
     -- zc_MI_Master - текущее Перемещение
-    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Ord Integer, MovementId_order Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Ord Integer, MovementId_order Integer, PartionCellId Intege) ON COMMIT DROP;
     INSERT INTO _tmpMI_Master (Id, ObjectId, Ord, MovementId_order)
           SELECT MovementItem.Id
                , MovementItem.ObjectId
@@ -218,7 +218,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := COALESCE (_tmpMI_Master.Id, 0)
                                             , inMovementId             := inMovementId
                                             , inMovementId_OrderClient := COALESCE (tmp.MovementId_order, _tmpMI_Master.MovementId_order) :: Integer
-                                            , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)
+                                            , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)   
+                                            , inPartionCellId          := Null ::Integer
                                               -- кол-во резерв
                                             , inAmount                 := CASE WHEN _tmpMI_Master.ORD = 1 OR COALESCE (_tmpMI_Master.Id, 0) = 0 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
                                             , inOperPrice              := COALESCE (tmp.OperPrice, 0)

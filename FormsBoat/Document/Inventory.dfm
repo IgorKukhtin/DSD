@@ -232,6 +232,30 @@ object InventoryForm: TInventoryForm
             HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             Width = 100
           end
+          object PartionCellCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1103#1095'.'
+            DataBinding.FieldName = 'PartionCellCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionCellName: TcxGridDBColumn
+            Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'PartionCellName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 76
+          end
           object Amount: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Amount'
@@ -492,7 +516,7 @@ object InventoryForm: TInventoryForm
     end
     object cxLabel3: TcxLabel
       Left = 9
-      Top = 48
+      Top = 50
       Caption = #1057#1082#1083#1072#1076
     end
     object cxLabel11: TcxLabel
@@ -523,15 +547,15 @@ object InventoryForm: TInventoryForm
       Width = 160
     end
     object cxLabel16: TcxLabel
-      Left = 370
+      Left = 559
       Top = 139
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 370
+      Left = 559
       Top = 156
       TabOrder = 12
-      Width = 380
+      Width = 178
     end
     object Panel1: TPanel
       Left = 370
@@ -694,6 +718,22 @@ object InventoryForm: TInventoryForm
           21)
         Width = 125
       end
+    end
+    object cxLabel12: TcxLabel
+      Left = 375
+      Top = 139
+      Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+    end
+    object edPartionCell: TcxButtonEdit
+      Left = 376
+      Top = 156
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 17
+      Width = 177
     end
   end
   object FormParams: TdsdFormParams
@@ -1406,6 +1446,33 @@ object InventoryForm: TInventoryForm
         end>
       isShowModal = False
     end
+    object actOpenPartionCellForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1648,6 +1715,9 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGetPartionCell_Name
+        end
+        item
           Action = actGoodsItemGet3
         end
         item
@@ -1660,6 +1730,9 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGetPartionCell_Name
+        end
+        item
           Action = actGoodsItemGet2
         end
         item
@@ -1671,6 +1744,9 @@ object InventoryForm: TInventoryForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actGetPartionCell_Name
+        end
         item
           Action = actGoodsItemGet1
         end
@@ -1833,6 +1909,21 @@ object InventoryForm: TInventoryForm
           Value = Null
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellId'
+          Value = Null
+          Component = GuidesPartionCell
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellName'
+          Value = Null
+          Component = GuidesPartionCell
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -1859,6 +1950,9 @@ object InventoryForm: TInventoryForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actGetPartionCell_Name
+        end
         item
           Action = actAdd
         end
@@ -1960,6 +2054,21 @@ object InventoryForm: TInventoryForm
           Name = 'GoodsId'
           Value = '0'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellId'
+          Value = Null
+          Component = GuidesPartionCell
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellName'
+          Value = Null
+          Component = GuidesPartionCell
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -1975,6 +2084,17 @@ object InventoryForm: TInventoryForm
           StoredProc = spGet_dop3
         end>
       Caption = 'actGoodsItemGet3'
+    end
+    object actGetPartionCell_Name: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetPartionCell_Name
+      StoredProcList = <
+        item
+          StoredProc = spGetPartionCell_Name
+        end>
+      Caption = 'actGetPartionCell_Name'
     end
     object actGoodsItemGet2: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2295,6 +2415,15 @@ object InventoryForm: TInventoryForm
         ComponentItem = 'PartNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2660,8 +2789,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 551
-    Top = 160
+    Left = 575
+    Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     DataSets = <>
@@ -2773,8 +2902,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 288
+    Left = 736
+    Top = 280
   end
   object dsdDBViewAddOn0: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2992,7 +3121,7 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 592
+    Left = 608
     Top = 456
   end
   object EnterMoveNext1: TEnterMoveNext
@@ -3057,8 +3186,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 416
+    Left = 624
+    Top = 392
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
@@ -3141,5 +3270,67 @@ object InventoryForm: TInventoryForm
     PackSize = 1
     Left = 744
     Top = 432
+  end
+  object GuidesPartionCell: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartionCell
+    FormNameParam.Value = 'TPartionCellForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionCellForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 440
+    Top = 152
+  end
+  object spGetPartionCell_Name: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_PartionCell_Name'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPartionCellName'
+        Value = Null
+        Component = edPartionCell
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = 1.000000000000000000
+        Component = GuidesPartionCell
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = '0'
+        Component = GuidesPartionCell
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 472
   end
 end

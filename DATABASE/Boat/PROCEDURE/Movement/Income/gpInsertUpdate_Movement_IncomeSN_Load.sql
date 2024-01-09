@@ -154,7 +154,8 @@ BEGIN
                                                                , inCountForPrice := 1
                                                                , inOperPriceList := COALESCE (vbOperPriceList, 0)
                                                                , inPartNumber    := inPartNumber
-                                                               , inComment       := ''
+                                                               , inComment       := '' 
+                                                               , inPartionCellId := NULL ::Integer
                                                                , inUserId        := vbUserId
                                                                 );
 

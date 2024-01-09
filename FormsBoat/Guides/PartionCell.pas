@@ -1,4 +1,5 @@
-unit PartionCell;
+unit PartionCell
+;
 
 interface
 
@@ -22,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, ExternalLoad;
+  dxSkinXmas2008Blue;
 
 type
   TPartionCellForm = class(TParentForm)
@@ -39,7 +40,7 @@ type
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate1: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
@@ -51,42 +52,18 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actOpenPartionCell_list: TdsdOpenForm;
-    bbOpenPartionCell_list: TdxBarButton;
-    actUpdate2: TdsdInsertUpdateAction;
-    actUpdate3: TdsdInsertUpdateAction;
-    actUpdate4: TdsdInsertUpdateAction;
-    actUpdate5: TdsdInsertUpdateAction;
-    actUpdate6: TdsdInsertUpdateAction;
-    bbUpdate2: TdxBarButton;
-    bbUpdate3: TdxBarButton;
-    bbUpdate4: TdxBarButton;
-    bbUpdate5: TdxBarButton;
-    bbUpdate6: TdxBarButton;
-    spGetImportSettingId: TdsdStoredProc;
-    FormParams: TdsdFormParams;
-    actDoLoad: TExecuteImportSettingsAction;
-    macStartLoad: TMultiAction;
-    actGetImportSetting: TdsdExecStoredProc;
-    bbStartLoad: TdxBarButton;
-    spUpdateParams: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    actProtocol1: TdsdOpenForm;
-    actProtocol2: TdsdOpenForm;
-    actProtocol3: TdsdOpenForm;
-    actProtocol4: TdsdOpenForm;
-    actProtocol5: TdsdOpenForm;
-    actProtocol6: TdsdOpenForm;
-    bbProtocol1: TdxBarButton;
-    bbProtocol2: TdxBarButton;
-    bbProtocol3: TdxBarButton;
-    bbProtocol4: TdxBarButton;
-    bbProtocol5: TdxBarButton;
-    bbProtocol6: TdxBarButton;
-    Code_l1: TcxGridDBColumn;
+    Level: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    actProtocol: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public
