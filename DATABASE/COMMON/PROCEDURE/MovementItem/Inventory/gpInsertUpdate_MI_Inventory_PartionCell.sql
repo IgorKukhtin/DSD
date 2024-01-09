@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MI_Inventory_PartionCell()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_PartionCell (Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_PartionCell (Integer, Integer, TVarChar, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Inventory_PartionCell(
     IN inId                      Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
  INOUT ioPartionCellName_1       TVarChar   , -- 
     IN inisPartionCell_Close_1   Boolean    ,
+    IN inPartionGoodsDate        TDateTime , -- Дата партии
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS TVarChar
@@ -62,7 +64,14 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), inId, inisPartionCell_Close_1);
 
-
+     -- меняем параметр
+     IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
+     
+     -- сохранили свойство <Дата партии>
+     IF COALESCE (inPartionGoodsDate, zc_DateStart()) <> zc_DateStart() OR EXISTS (SELECT 1 FROM MovementItemDate AS MID WHERE MID.MovementItemId = inId AND MID.DescId = zc_MIDate_PartionGoods())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), inId, inPartionGoodsDate); 
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);

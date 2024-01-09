@@ -569,7 +569,6 @@ inherited InventoryForm: TInventoryForm
             Properties.UseNullString = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 84
           end
           object Amount_ch4: TcxGridDBColumn
@@ -3447,6 +3446,15 @@ inherited InventoryForm: TInventoryForm
         Component = PartionCellCDS
         ComponentItem = 'isPartionCell_Close_1'
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
