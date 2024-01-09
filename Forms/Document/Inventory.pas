@@ -137,6 +137,26 @@ type
     actDelete_bySendOnPrice: TdsdExecStoredProc;
     macDelete_bySendOnPrice: TMultiAction;
     bbDelete_bySendOnPrice: TdxBarButton;
+    cxTabSheet_PartionCell: TcxTabSheet;
+    cxGrid_PartionCell: TcxGrid;
+    cxGridDBTableView_PartionCell: TcxGridDBTableView;
+    GoodsGroupNameFull_ch4: TcxGridDBColumn;
+    GoodsCode_ch4: TcxGridDBColumn;
+    GoodsName_ch4: TcxGridDBColumn;
+    GoodsKindName_ch4GoodsKindName: TcxGridDBColumn;
+    MeasureName_ch4: TcxGridDBColumn;
+    PartionGoodsDate_ch4: TcxGridDBColumn;
+    Amount_ch4: TcxGridDBColumn;
+    PartionCellName_1_ch4: TcxGridDBColumn;
+    isPartionCell_Close_1_ch4: TcxGridDBColumn;
+    cxGridLevel_PartionCell: TcxGridLevel;
+    PartionCellCDS: TClientDataSet;
+    PartionCellDS: TDataSource;
+    DBViewAddOn_PartionCell: TdsdDBViewAddOn;
+    spSelect_MI_PartionCell: TdsdStoredProc;
+    spInsertUpdateMIPartionCell: TdsdStoredProc;
+    acrRefreshPartionCell: TdsdDataSetRefresh;
+    actUpdatePartionCellDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

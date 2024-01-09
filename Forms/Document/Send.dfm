@@ -2,7 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1172
-  ExplicitTop = -65
+  ExplicitTop = -42
   ExplicitWidth = 1188
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -5380,11 +5380,11 @@ inherited SendForm: TSendForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 742
-    Top = 585
+    Left = 758
+    Top = 553
   end
   object spInsertUpdateMIPartionCell: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Send_PartionCell'
+    StoredProcName = 'gpInsertUpdate_MI_Inventory_PartionCell'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5450,8 +5450,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 896
-    Top = 576
+    Left = 856
+    Top = 448
   end
   object spUpdateMI_PartionGoodsDate: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Send_PartionGoodsDate'

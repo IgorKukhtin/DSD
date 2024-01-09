@@ -399,6 +399,217 @@ inherited InventoryForm: TInventoryForm
         end
       end
     end
+    object cxTabSheet_PartionCell: TcxTabSheet
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
+      ImageIndex = 1
+      object cxGrid_PartionCell: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1020
+        Height = 448
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        ExplicitWidth = 1172
+        ExplicitHeight = 516
+        object cxGridDBTableView_PartionCell: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = PartionCellDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName_ch4
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object GoodsGroupNameFull_ch4: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object GoodsCode_ch4: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object GoodsName_ch4: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 224
+          end
+          object GoodsKindName_ch4GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object MeasureName_ch4: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object PartionGoodsDate_ch4: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            Properties.UseNullString = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object Amount_ch4: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PartionCellName_1_ch4: TcxGridDBColumn
+            Caption = '1.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_1'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 159
+          end
+          object isPartionCell_Close_1_ch4: TcxGridDBColumn
+            Caption = '1.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Width = 125
+          end
+        end
+        object cxGridLevel_PartionCell: TcxGridLevel
+          GridView = cxGridDBTableView_PartionCell
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
     Width = 1020
@@ -620,6 +831,19 @@ inherited InventoryForm: TInventoryForm
       ImageIndex = 39
     end
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_PartionCell
+        end>
       RefreshOnTabSetChanges = True
     end
     object macDelete_bySendOnPrice: TMultiAction [5]
@@ -1557,6 +1781,34 @@ inherited InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object acrRefreshPartionCell: TdsdDataSetRefresh
+      Category = 'PartionCell'
+      MoveParams = <>
+      StoredProc = spSelect_MI_PartionCell
+      StoredProcList = <
+        item
+          StoredProc = spSelect_MI_PartionCell
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object actUpdatePartionCellDS: TdsdUpdateDataSet
+      Category = 'PartionCell'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIPartionCell
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIPartionCell
+        end
+        item
+        end>
+      Caption = 'actUpdatePartionCellDS'
+      DataSource = PartionCellDS
     end
   end
   inherited MasterDS: TDataSource
@@ -3093,5 +3345,113 @@ inherited InventoryForm: TInventoryForm
       end>
     Left = 876
     Top = 8
+  end
+  object PartionCellCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 912
+    Top = 432
+  end
+  object PartionCellDS: TDataSource
+    DataSet = PartionCellCDS
+    Left = 968
+    Top = 408
+  end
+  object DBViewAddOn_PartionCell: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_PartionCell
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 918
+    Top = 385
+  end
+  object spSelect_MI_PartionCell: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Inventory_PartionCell'
+    DataSet = PartionCellCDS
+    DataSets = <
+      item
+        DataSet = PartionCellCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 480
+  end
+  object spInsertUpdateMIPartionCell: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Inventory_PartionCell'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_1'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'PartionCellName_1'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionCell_Close_1'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'isPartionCell_Close_1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 392
   end
 end
