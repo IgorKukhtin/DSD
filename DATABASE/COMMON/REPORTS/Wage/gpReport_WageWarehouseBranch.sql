@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpreport_wagewarehousebranch(
     IN inKoef_13 tfloat,
     IN inKoef_22 tfloat,
     IN inKoef_31 tfloat,
-    IN inKoef_31 tfloat,
+    IN inKoef_32 tfloat,
     IN inKoef_33 tfloat,
     IN inKoef_41 tfloat,
     IN inKoef_42 tfloat,
@@ -23,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpreport_wagewarehousebranch(
   RETURNS TABLE(operdate tdatetime, unitid integer, unitcode integer, unitname tvarchar
               , personalid integer, personalcode integer, personalname tvarchar
               , positionid integer, positioncode integer, positionname tvarchar
+              , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
               , branchname tvarchar
               , countmovement_1 tfloat
               , countmi_1 tfloat
@@ -86,6 +87,7 @@ BEGIN
                              , tmpReport.PositionId
                              , tmpReport.PositionCode
                              , tmpReport.PositionName
+                             , tmpReport.PositionLevelId, tmpReport.PositionLevelCode, tmpReport.PositionLevelName
                              , tmpReport.BranchName
                               --Комплектация
                              , SUM (CASE WHEN tmpReport.MovementDescId = zc_Movement_Sale() THEN COALESCE (tmpReport.CountMovement,0) ELSE 0 END) AS CountMovement_1
@@ -119,6 +121,7 @@ BEGIN
                                , tmpReport.PositionId
                                , tmpReport.PositionCode
                                , tmpReport.PositionName
+                               , tmpReport.PositionLevelId, tmpReport.PositionLevelCode, tmpReport.PositionLevelName
                                , tmpReport.BranchName
                         )
 
@@ -133,6 +136,7 @@ BEGIN
                  , tmpData.PositionId
                  , tmpData.PositionCode
                  , tmpData.PositionName
+                 , tmpData.PositionLevelId, tmpData.PositionLevelCode, tmpData.PositionLevelName
                  , tmpData.BranchName
                   --Комплектация
                  , tmpData.CountMovement_1                 ::TFloat

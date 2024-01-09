@@ -25,6 +25,7 @@ RETURNS TABLE (InvNumber TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
+             , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
 
              , MovementDescId Integer, MovementDescName TVarChar
              , BranchFromName TVarChar, BranchToName TVarChar
@@ -58,7 +59,7 @@ BEGIN
      RETURN QUERY
         WITH
         -- сотрудники
-        tmpPersonal_all AS (SELECT Object_Personal_View.MemberId, Object_Personal_View.PersonalId, Object_Personal_View.UnitId, Object_Personal_View.PositionId
+        tmpPersonal_all AS (SELECT Object_Personal_View.MemberId, Object_Personal_View.PersonalId, Object_Personal_View.UnitId, Object_Personal_View.PositionId, Object_Personal_View.PositionLevelId
                                  , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
                             FROM Object_Personal_View
                                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -69,7 +70,7 @@ BEGIN
                            )
         -- ѕользователи - и дл€ них сотрудники
       , tmpUser_findPersonal AS
-                           (SELECT lfSelect.MemberId, lfSelect.PersonalId, lfSelect.UnitId, lfSelect.PositionId
+                           (SELECT lfSelect.MemberId, lfSelect.PersonalId, lfSelect.UnitId, lfSelect.PositionId, lfSelect.PositionLevelId
                                  , COALESCE (lfSelect.BranchId, zc_Branch_Basis()) AS BranchId
                                  , ObjectLink_User_Member.ObjectId AS UserId
                             FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
@@ -210,6 +211,9 @@ BEGIN
               , tmp.PositionId
               , tmp.PositionCode
               , tmp.PositionName
+              , tmp.PositionLevelId
+              , tmp.PositionLevelCode
+              , tmp.PositionLevelName
 
               , tmp.MovementDescId          AS MovementDescId
               , MovementDesc.ItemName       AS MovementDescName
@@ -252,6 +256,9 @@ BEGIN
                    , Object_Position.Id         AS PositionId
                    , Object_Position.ObjectCode AS PositionCode
                    , Object_Position.ValueData  AS PositionName
+                   , Object_PositionLevel.Id         AS PositionLevelId
+                   , Object_PositionLevel.ObjectCode AS PositionLevelCode
+                   , Object_PositionLevel.ValueData  AS PositionLevelName
 
                    , CASE WHEN tmpMovement.CountPersonal > 0 THEN tmpMovement_all.TotalCount   / tmpMovement.CountPersonal :: TFloat ELSE tmpMovement_all.TotalCount   END AS TotalCount
                    , CASE WHEN tmpMovement.CountPersonal > 0 THEN tmpMovement_all.TotalCountKg / tmpMovement.CountPersonal :: TFloat ELSE tmpMovement_all.TotalCountKg END AS TotalCountKg
@@ -272,10 +279,12 @@ BEGIN
                    , tmpMovement_all.MovementDescId
 
               FROM tmpMovement_all
-                   INNER JOIN tmpPersonal_all          ON tmpPersonal_all.PersonalId = tmpMovement_all.PersonalId
-                   LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id             = tmpPersonal_all.UnitId
-                   LEFT JOIN Object AS Object_Personal ON Object_Personal.Id         = tmpPersonal_all.PersonalId
-                   LEFT JOIN Object AS Object_Position ON Object_Position.Id         = tmpPersonal_all.PositionId
+                   INNER JOIN tmpPersonal_all               ON tmpPersonal_all.PersonalId = tmpMovement_all.PersonalId
+                   LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id             = tmpPersonal_all.UnitId
+                   LEFT JOIN Object AS Object_Personal      ON Object_Personal.Id         = tmpPersonal_all.PersonalId
+                   LEFT JOIN Object AS Object_Position      ON Object_Position.Id         = tmpPersonal_all.PositionId
+                   LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id    = tmpPersonal_all.PositionLevelId
+                   
 
                    INNER JOIN tmpMovement ON tmpMovement.MovementId = tmpMovement_all.MovementId
                    INNER JOIN tmpMI       ON tmpMI.MovementId       = tmpMovement_all.MovementId
@@ -299,6 +308,9 @@ BEGIN
                    , Object_Position.Id         AS PositionId
                    , Object_Position.ObjectCode AS PositionCode
                    , Object_Position.ValueData  AS PositionName
+                   , Object_PositionLevel.Id         AS PositionLevelId
+                   , Object_PositionLevel.ObjectCode AS PositionLevelCode
+                   , Object_PositionLevel.ValueData  AS PositionLevelName
 
                    , 0 AS TotalCount
                    , 0 AS TotalCountKg
@@ -333,9 +345,10 @@ BEGIN
                     ) AS tmpMovement_all
                     LEFT JOIN tmpUser_findPersonal ON tmpUser_findPersonal.UserId = tmpMovement_all.UserId
 
-                    LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id             = tmpUser_findPersonal.UnitId
-                    LEFT JOIN Object AS Object_Personal ON Object_Personal.Id         = COALESCE (tmpUser_findPersonal.PersonalId, tmpMovement_all.UserId)
-                    LEFT JOIN Object AS Object_Position ON Object_Position.Id         = tmpUser_findPersonal.PositionId
+                    LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id             = tmpUser_findPersonal.UnitId
+                    LEFT JOIN Object AS Object_Personal      ON Object_Personal.Id         = COALESCE (tmpUser_findPersonal.PersonalId, tmpMovement_all.UserId)
+                    LEFT JOIN Object AS Object_Position      ON Object_Position.Id         = tmpUser_findPersonal.PositionId
+                    LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id    = tmpUser_findPersonal.PositionLevelId
 
                     INNER JOIN tmpMI       ON tmpMI.MovementId       = tmpMovement_all.MovementId
 
@@ -360,6 +373,9 @@ BEGIN
                    , Object_Position.Id         AS PositionId
                    , Object_Position.ObjectCode AS PositionCode
                    , Object_Position.ValueData  AS PositionName
+                   , Object_PositionLevel.Id         AS PositionLevelId
+                   , Object_PositionLevel.ObjectCode AS PositionLevelCode
+                   , Object_PositionLevel.ValueData  AS PositionLevelName
 
                    , 0 AS TotalCount
                    , 0 AS TotalCountKg
@@ -384,11 +400,12 @@ BEGIN
                    , tmpMovement_all.MovementDescId
 
               FROM tmpMovement_all
-                   INNER JOIN tmpPersonal_all          ON tmpPersonal_all.PersonalId = tmpMovement_all.PersonalId
+                   INNER JOIN tmpPersonal_all               ON tmpPersonal_all.PersonalId = tmpMovement_all.PersonalId
 
-                   LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id             = tmpPersonal_all.UnitId
-                   LEFT JOIN Object AS Object_Personal ON Object_Personal.Id         = tmpPersonal_all.PersonalId
-                   LEFT JOIN Object AS Object_Position ON Object_Position.Id         = tmpPersonal_all.PositionId
+                   LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id             = tmpPersonal_all.UnitId
+                   LEFT JOIN Object AS Object_Personal      ON Object_Personal.Id         = tmpPersonal_all.PersonalId
+                   LEFT JOIN Object AS Object_Position      ON Object_Position.Id         = tmpPersonal_all.PositionId
+                   LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id    = tmpPersonal_all.PositionLevelId
 
                    INNER JOIN tmpMI_all AS tmpMI ON tmpMI.MovementId       = tmpMovement_all.MovementId
 
@@ -441,6 +458,9 @@ BEGIN
                , tmp.PositionId
                , tmp.PositionCode
                , tmp.PositionName
+               , tmp.PositionLevelId
+               , tmp.PositionLevelCode
+               , tmp.PositionLevelName
                , Object_Branch.ValueData
                , tmp.FromId
                , tmp.ToId
@@ -469,4 +489,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.10.2019', inEndDate:= '31.10.2019', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.11.2019', inEndDate:= '02.11.2019', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsMonth:= True, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.11.2024', inEndDate:= '02.11.2024', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsMonth:= True, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())

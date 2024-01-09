@@ -82,11 +82,14 @@ BEGIN
          ) AS gpSelect
    ;
 
+   -- заменили
+   vb_Query_start:= COALESCE (vb_Query_start, CURRENT_TIMESTAMP);
+
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".
     -- Для этого нужно определить правую границу, которая будет удовлетворять такому условию.
        -- если найдена активная транзакция - для значения без timezone
-    IF vb_Count > 0
+    IF COALESCE (vb_Count, 0) > 0
     THEN
         -- замена, делаем задержку на 55 SEC
         vbId_End := (WITH tmp_tran AS (SELECT transaction_id, MAX (last_modified) AS last_m
