@@ -575,6 +575,7 @@ BEGIN
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isSchema_fozz
+           , (OH_JuridicalDetails_To.OKPO = '32490244') :: Boolean AS isDOCUMENTINVOICE_DRN
 
            , tmpTransportGoods.CarName
            , tmpTransportGoods.CarModelName
@@ -1176,4 +1177,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 16505428, inSession:= '1329039'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 27078112 , inSession:=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e'); -- FETCH ALL "<unnamed portal 1>";

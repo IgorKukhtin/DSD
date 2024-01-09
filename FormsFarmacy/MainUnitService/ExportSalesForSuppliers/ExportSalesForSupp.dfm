@@ -21,7 +21,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = tsDanhsonPharma
+    ActivePage = tsOptima
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -191,10 +191,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -212,8 +208,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0

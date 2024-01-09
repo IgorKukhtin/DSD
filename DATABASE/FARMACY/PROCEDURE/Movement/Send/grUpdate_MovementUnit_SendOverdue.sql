@@ -82,9 +82,7 @@
     END IF;
 
     -- Востанавливаем удаленные записи
-    PERFORM gpMovementItem_Send_SetUnerased (inMovementItemId        := MovementItem.Id,
-                                             inSession               := inSession)
-    FROM MovementItem
+    UPDATE MovementItem SET IsErased = False
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.IsErased = TRUE;
 
@@ -248,9 +246,7 @@
     END IF;
     
       -- Удалили записи Child с 0
-    PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItem.ID,
-                                           inSession               := inSession)
-    FROM MovementItem
+    UPDATE MovementItem SET IsErased = True
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId = zc_MI_Child()
       AND MovementItem.Amount = 0;
@@ -272,22 +268,25 @@
     HAVING COALESCE(SUM(tmpContainerOverdue.Amount), 0) <> MovementItem.Amount;
       
 
-      -- Отмечаем удаленным проданое мастеры
-    PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItemMaster.ID,
-                                           inSession               := inSession)
-    FROM MovementItem AS MovementItemMaster
+    -- Отмечаем удаленным проданое мастеры
+    UPDATE MovementItem SET IsErased = True
+    FROM (SELECT MovementItemMaster.ID
+          FROM MovementItem AS MovementItemMaster
 
-         LEFT JOIN MovementItem AS MovementItemChild
-                                ON MovementItemChild.MovementId = inMovementId
-                               AND MovementItemChild.ParentId = MovementItemMaster.Id
-                               AND MovementItemChild.DescId = zc_MI_Child()
-                               AND MovementItemChild.IsErased = FALSE
+               LEFT JOIN MovementItem AS MovementItemChild
+                                      ON MovementItemChild.MovementId = inMovementId
+                                     AND MovementItemChild.ParentId = MovementItemMaster.Id
+                                     AND MovementItemChild.DescId = zc_MI_Child()
+                                     AND MovementItemChild.IsErased = FALSE
 
-    WHERE MovementItemMaster.MovementId = inMovementId
-      AND MovementItemMaster.DescId = zc_MI_Master()
-      AND MovementItemMaster.IsErased = FALSE
-    GROUP BY MovementItemMaster.ID
-    HAVING COALESCE(SUM(MovementItemChild.Amount), 0) = 0;
+          WHERE MovementItemMaster.MovementId = inMovementId
+            AND MovementItemMaster.DescId = zc_MI_Master()
+            AND MovementItemMaster.IsErased = FALSE
+          GROUP BY MovementItemMaster.ID
+          HAVING COALESCE(SUM(MovementItemChild.Amount), 0) = 0) AS T1
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.Id = T1.Id
+      AND MovementItem.DescId = zc_MI_Master();
 
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (inMovementID);
@@ -311,4 +310,4 @@
 -- тест select * from grUpdate_MovementUnit_SendOverdue(inMovementID := 24847865 ,  inSession := '3');
 
 
-select * from grUpdate_MovementUnit_SendOverdue(inMovementID := 33683608 ,  inSession := '3');
+select * from grUpdate_MovementUnit_SendOverdue(inMovementID := 33683587 ,  inSession := '3');
