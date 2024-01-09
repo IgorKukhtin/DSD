@@ -26,8 +26,8 @@ BEGIN
     END IF;*/
 
     -- zc_MI_Master - текущее Перемещение
-    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Amount TFloat, MovementId_order Integer, PartNumber TVarChar, Comment TVarChar, OperPrice TFloat, CountForPrice TFloat) ON COMMIT DROP;
-    INSERT INTO _tmpMI_Master (Id, ObjectId, Amount, MovementId_order, PartNumber, Comment, OperPrice, CountForPrice)
+    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Amount TFloat, MovementId_order Integer, PartNumber TVarChar, Comment TVarChar, OperPrice TFloat, CountForPrice TFloat, PartionCellId Integer) ON COMMIT DROP;
+    INSERT INTO _tmpMI_Master (Id, ObjectId, Amount, MovementId_order, PartNumber, Comment, OperPrice, CountForPrice, PartionCellId)
           SELECT MovementItem.Id
                , MovementItem.ObjectId
                , MovementItem.Amount
@@ -36,6 +36,7 @@ BEGIN
                , MIString_Comment.ValueData              AS Comment
                , MIFloat_OperPrice.ValueData             AS OperPrice
                , MIFloat_CountForPrice.ValueData         AS CountForPrice
+               , MILO_PartionCell.ObjectId               AS PartionCellId
           FROM MovementItem
                -- MovementId заказ Клиента
                LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -143,6 +144,7 @@ BEGIN
                                             , inMovementId             := inMovementId
                                             , inMovementId_OrderClient := COALESCE (tmp.MovementId_order, _tmpMI_Master.MovementId_order) :: Integer
                                             , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)
+                                            , inPartionCellId          := _tmpMI_Master.PartionCellId ::Integer
                                             , inAmount                 := COALESCE (tmp.Amount, _tmpMI_Master.Amount)
                                             , inOperPrice              := COALESCE (tmp.OperPrice, 0)
                                             , inCountForPrice          := COALESCE (tmp.CountForPrice, 1)

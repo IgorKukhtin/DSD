@@ -619,6 +619,30 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 45
           end
+          object PartionCellCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1103#1095'.'
+            DataBinding.FieldName = 'PartionCellCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionCellName: TcxGridDBColumn
+            Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'PartionCellName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenPartionCellForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 76
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -3543,6 +3567,33 @@ object SendForm: TSendForm
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ImageIndex = 87
     end
+    object actOpenPartionCellForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionCellName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actCompleteMovement_andSave: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
@@ -3729,6 +3780,15 @@ object SendForm: TSendForm
         ComponentItem = 'PartNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -4318,6 +4378,15 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -4375,8 +4444,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 343
+    Left = 158
+    Top = 383
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS

@@ -46,18 +46,23 @@ BEGIN
    ;
 
     -- zc_MI_Master - текущее Перемещение
-    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Ord Integer, MovementId_order Integer) ON COMMIT DROP;
-    INSERT INTO _tmpMI_Master (Id, ObjectId, Ord, MovementId_order)
+    CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Ord Integer, MovementId_order Integer, PartionCellId Integer) ON COMMIT DROP;
+    INSERT INTO _tmpMI_Master (Id, ObjectId, Ord, MovementId_order, PartionCellId)
           SELECT MovementItem.Id
                , MovementItem.ObjectId
                  -- № п/п
                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id ASC) AS Ord 
                , MIFloat_MovementId.ValueData :: Integer AS MovementId_order
+               , MILO_PartionCell.ObjectId               AS PartionCellId
           FROM MovementItem
                -- ValueData - MovementId заказ Клиента
                LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                            ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                           AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+
+               LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                ON MILO_PartionCell.MovementItemId = MovementItem.Id
+                                               AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Master()
             AND MovementItem.isErased   = FALSE;
@@ -218,7 +223,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := COALESCE (_tmpMI_Master.Id, 0)
                                             , inMovementId             := inMovementId
                                             , inMovementId_OrderClient := COALESCE (tmp.MovementId_order, _tmpMI_Master.MovementId_order) :: Integer
-                                            , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)
+                                            , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)        
+                                            , inPartionCellId          := _tmpMI_Master.PartionCellId ::Integer
                                               -- кол-во резерв
                                             , inAmount                 := CASE WHEN _tmpMI_Master.ORD = 1 OR COALESCE (_tmpMI_Master.Id, 0) = 0 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
                                             , inOperPrice              := COALESCE (tmp.OperPrice, 0)
@@ -229,7 +235,7 @@ BEGIN
     FROM _tmpMI_Master
          -- привязываем существующие строки с новыми данными
          FULL JOIN (--группируем данные резерва
-                    SELECT _tmpReserve.ObjectId
+                    SELECT _tmpReserve.ObjectId              
                            -- неправильная цена, в партиях другая
                          , ObjectFloat_EKPrice.ValueData AS OperPrice
                          , 1 :: TFloat AS CountForPrice

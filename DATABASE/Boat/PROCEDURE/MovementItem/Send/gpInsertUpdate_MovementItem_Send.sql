@@ -9,6 +9,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -19,7 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN ioAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена со скидкой
     IN inCountForPrice       TFloat    , -- Цена за кол.
-    IN inPartNumber          TVarChar  , --№ по тех паспорту 
+    IN inPartNumber          TVarChar  , --№ по тех паспорту  
+ INOUT ioPartionCellName     TVarChar  , -- код или название
     IN inComment             TVarChar  , --
  INOUT ioIsOn                Boolean   , -- вкл
    OUT outIsErased           Boolean   , -- удален 
@@ -33,7 +35,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert Boolean;  
+   DECLARE vbPartionCellId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Send());
@@ -85,13 +88,57 @@ BEGIN
         inMovementId_OrderClient := inMovementId_OrderTop;
     END IF;
 
+     --находим ячейку хранения, если нет такой создаем
+     IF COALESCE (ioPartionCellName, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+             --если не нашли ошибка
+             IF COALESCE (vbPartionCellId,0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не найдена ячейка с кодом <%>.', ioPartionCellName;
+             END IF;
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+             --если не нашли Создаем
+             IF COALESCE (vbPartionCellId,0) = 0
+             THEN
+                 --
+                 vbPartionCellId := gpInsertUpdate_Object_PartionCell (ioId	     := 0                                            ::Integer
+                                                                     , inCode    := lfGet_ObjectCode(0, zc_Object_PartionCell()) ::Integer
+                                                                     , inName    := TRIM (ioPartionCellName)                     ::TVarChar
+                                                                     , inLevel   := 0           ::TFloat
+                                                                     , inComment := ''          ::TVarChar
+                                                                     , inSession := inSession   ::TVarChar
+                                                                      );
+    
+             END IF;
+         END IF;
+         --
+         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId); 
+     ELSE 
+         vbPartionCellId := NULL ::Integer;
+     END IF;
+
+
      -- сохранили <Элемент документа>
      SELECT tmp.ioId
             INTO ioId 
      FROM lpInsertUpdate_MovementItem_Send (ioId
                                           , inMovementId
                                           , inMovementId_OrderClient
-                                          , inGoodsId
+                                          , inGoodsId 
+                                          , vbPartionCellId  --inPartionCellId
                                           , ioAmount
                                           , inOperPrice
                                           , inCountForPrice
@@ -147,6 +194,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.01.24         *
  15.12.22         *
  16.09.21         *
  23.06.21         *

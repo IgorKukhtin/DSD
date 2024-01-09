@@ -117,7 +117,7 @@ BEGIN
                  --
                  vbPartionCellId := gpInsertUpdate_Object_PartionCell (ioId	     := 0                                            ::Integer
                                                                      , inCode    := lfGet_ObjectCode(0, zc_Object_PartionCell()) ::Integer
-                                                                     , inName    := TRIM (ioPartionCellName)                          ::TVarChar
+                                                                     , inName    := TRIM (ioPartionCellName)                     ::TVarChar
                                                                      , inLevel   := 0           ::TFloat
                                                                      , inComment := ''          ::TVarChar
                                                                      , inSession := inSession   ::TVarChar

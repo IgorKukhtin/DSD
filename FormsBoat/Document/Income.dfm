@@ -4982,6 +4982,15 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
