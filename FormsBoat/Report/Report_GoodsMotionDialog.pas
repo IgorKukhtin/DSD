@@ -54,6 +54,7 @@ type
     cxLabel15: TcxLabel;
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
+    cbisPartionCell: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -93,6 +93,8 @@ type
     cxLabel15: TcxLabel;
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
+    PartionCellName: TcxGridDBColumn;
+    cbisPartionCell: TcxCheckBox;
   private
     { Private declarations }
   public
