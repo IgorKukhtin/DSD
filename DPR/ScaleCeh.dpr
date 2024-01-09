@@ -120,7 +120,8 @@ uses
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
   EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
-  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  GuidePartionCell in '..\ScaleCeh\GuidePartionCell.pas' {GuidePartionCellForm};
 
 {$R *.res}
 
@@ -168,6 +169,7 @@ begin
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
 
   end
   else
@@ -208,6 +210,7 @@ begin
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TGuidePartionCellForm, GuidePartionCellForm);
 
   end;
   //

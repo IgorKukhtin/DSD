@@ -1074,7 +1074,7 @@ BEGIN
          -- Данные для - Кол-во строк в документе
        , tmpReport_PersonalComplete AS
        (SELECT *
-        FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsDetail:= FALSE, inSession:= inSession) AS gpReport
+        FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsMonth:= FALSE, inIsDetail:= FALSE, inisMovement:= FALSE, inSession:= inSession) AS gpReport
         WHERE EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()))
        )
        , tmpMovement_PersonalComplete AS
@@ -1083,6 +1083,7 @@ BEGIN
              , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
              , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
              , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+             , gpReport.PositionLevelId, gpReport.PositionLevelCode, gpReport.PositionLevelName
                -- Кол. строк (компл.)
              , SUM (COALESCE (gpReport.CountMI, 0))        :: TFloat AS CountMI
                -- Вес (компл.)
@@ -1102,6 +1103,7 @@ BEGIN
                , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
                , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+               , gpReport.PositionLevelId, gpReport.PositionLevelCode, gpReport.PositionLevelName
        )
          -- Данные для - WageWarehouseBranch
        , tmpWageWarehouseBranch AS (SELECT *
@@ -1137,6 +1139,7 @@ BEGIN
              , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
              , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
              , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+             , gpReport.PositionLevelId, gpReport.PositionLevelCode, gpReport.PositionLevelName
                -- Стикеровка
              , SUM (COALESCE (gpReport.TotalCountStick_2, 0)) :: TFloat AS TotalCountStick_2
                -- Взвешивание+документация
@@ -1167,6 +1170,7 @@ BEGIN
         GROUP BY gpReport.OperDate, gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
                , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+               , gpReport.PositionLevelId, gpReport.PositionLevelCode, gpReport.PositionLevelName
        )
 
          -- Данные для - Transport + Реестр Документов
@@ -1757,8 +1761,11 @@ BEGIN
       , Setting.UnitName
        ,tmpMovement_PersonalComplete.PositionId
        ,tmpMovement_PersonalComplete.PositionName
-       ,Object_PositionLevel.Id        AS PositionLevelId
-       ,Object_PositionLevel.ValueData AS PositionLevelName
+       ,tmpMovement_PersonalComplete.PositionLevelId
+       ,tmpMovement_PersonalComplete.PositionLevelName
+--       ,Object_PositionLevel.Id        AS PositionLevelId
+--       ,Object_PositionLevel.ValueData AS PositionLevelName
+
        ,Setting.Count_Member
        -- , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_Member) :: Integer AS Count_Member
        ,Setting.HoursPlan
@@ -1857,14 +1864,17 @@ BEGIN
                                                   OR tmpMovement_PersonalComplete.CountMovement <> 0
                                                     )
                                                 AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
+                                               AND (COALESCE (tmpMovement_PersonalComplete.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                                 OR Setting.isPositionLevel_all = TRUE
+                                                   )
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                               ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
                              AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
-         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
-                             AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
+         --LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+         --                     ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+         --                    AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
-         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+         -- LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
 
@@ -1877,8 +1887,11 @@ BEGIN
       , Setting.UnitName
        ,tmpMovement_PersonalComplete.PositionId
        ,tmpMovement_PersonalComplete.PositionName
-       ,Object_PositionLevel.Id        AS PositionLevelId
-       ,Object_PositionLevel.ValueData AS PositionLevelName
+       ,tmpMovement_PersonalComplete.PositionLevelId
+       ,tmpMovement_PersonalComplete.PositionLevelName
+--       ,Object_PositionLevel.Id        AS PositionLevelId
+--       ,Object_PositionLevel.ValueData AS PositionLevelName
+
        ,Setting.Count_Member
        -- , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_Member) :: Integer AS Count_Member
        ,Setting.HoursPlan
@@ -2019,14 +2032,17 @@ BEGIN
                                                  OR tmpMovement_PersonalComplete.TotalCountKg1_5   <> 0
                                                    )
                                                AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
+                                               AND (COALESCE (tmpMovement_PersonalComplete.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                                 OR Setting.isPositionLevel_all = TRUE
+                                                   )
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                               ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
                              AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
-         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
-                             AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
+--         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+--                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+--                             AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
-         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+--         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
     WHERE Setting.SelectKindId IN (-- Стикеровка
                                    zc_Enum_SelectKind_MI_MasterSh()

@@ -501,9 +501,11 @@ BEGIN
                              UNION
                               SELECT DISTINCT tmpMI_Summ.MovementItemId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0
                              )
-               , tmpMI_find AS (SELECT MovementItem.* FROM tmpMI_Id INNER JOIN MovementItem ON MovementItem.Id = tmpMI_Id.MovementItemId)
-      , tmpMID_PartionGoods AS (SELECT MID.* FROM tmpMI_Id INNER JOIN MovementItemDate AS MID ON MID.MovementItemId = tmpMI_Id.MovementItemId AND MID.DescId = zc_MIDate_PartionGoods())
-      , tmpMIS_PartionGoods AS (SELECT MIS.* FROM tmpMI_Id INNER JOIN MovementItemString AS MIS ON MIS.MovementItemId = tmpMI_Id.MovementItemId AND MIS.DescId = zc_MIString_PartionGoods())
+
+               , tmpMI_find AS (SELECT MovementItem.* FROM MovementItem WHERE MovementItem.Id IN (SELECT DISTINCT tmpMI_Id.MovementItemId FROM tmpMI_Id))
+      , tmpMID_PartionGoods AS (SELECT MID.* FROM MovementItemDate AS MID WHERE MID.MovementItemId IN (SELECT DISTINCT tmpMI_Id.MovementItemId FROM tmpMI_Id) AND MID.DescId = zc_MIDate_PartionGoods() AND MID.ValueData > zc_DateStart() LIMIT (SELECT COUNT(*) FROM tmpMI_Id))
+--    , tmpMID_PartionGoods AS (SELECT MID.* FROM tmpMI_Id JOIN MovementItemDate AS MID ON MID.MovementItemId = tmpMI_Id.MovementItemId AND MID.DescId = zc_MIDate_PartionGoods())
+      , tmpMIS_PartionGoods AS (SELECT MIS.* FROM MovementItemString AS MIS WHERE MIS.MovementItemId IN (SELECT DISTINCT tmpMI_Id.MovementItemId FROM tmpMI_Id) AND MIS.DescId = zc_MIString_PartionGoods())
 
       , tmpMIContainer_all AS (-- 1.1. Остатки кол-во
                                SELECT -1 AS MovementId
@@ -579,6 +581,7 @@ BEGIN
 
                                     LEFT JOIN tmpMI_find AS MovementItem ON MovementItem.Id = tmpMI_Count.MovementItemId
                                     LEFT JOIN tmpMID_PartionGoods AS MIDate_PartionGoods ON MIDate_PartionGoods.MovementItemId = tmpMI_Count.MovementItemId
+                                                                                        AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
                                     LEFT JOIN tmpMIS_PartionGoods AS MIString_PartionGoods ON MIString_PartionGoods.MovementItemId = tmpMI_Count.MovementItemId
 
                                     LEFT JOIN MovementString AS MovementString_PartionGoods
@@ -663,6 +666,7 @@ BEGIN
                                FROM tmpMI_Summ
                                     LEFT JOIN tmpMI_find AS MovementItem ON MovementItem.Id = tmpMI_Summ.MovementItemId
                                     LEFT JOIN tmpMID_PartionGoods AS MIDate_PartionGoods ON MIDate_PartionGoods.MovementItemId = tmpMI_Summ.MovementItemId
+                                                                                        AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
                                     LEFT JOIN tmpMIS_PartionGoods AS MIString_PartionGoods ON MIString_PartionGoods.MovementItemId = tmpMI_Summ.MovementItemId
                                     LEFT JOIN MovementString AS MovementString_PartionGoods
                                                              ON MovementString_PartionGoods.MovementId = tmpMI_Summ.MovementId

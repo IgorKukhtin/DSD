@@ -304,6 +304,7 @@ begin
 
            ParamByName('isKVK').asBoolean:= DataSet.FieldByName('isKVK').asBoolean;
            ParamByName('isAsset').asBoolean:= DataSet.FieldByName('isAsset').asBoolean;
+           ParamByName('isPartionCell').asBoolean:= DataSet.FieldByName('isPartionCell').asBoolean;
 
          end;
 

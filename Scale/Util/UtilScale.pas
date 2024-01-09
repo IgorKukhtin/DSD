@@ -138,6 +138,7 @@ type
   procedure Create_ParamsPersonalGroup(var Params:TParams);
   procedure Create_ParamsWorkProgress(var Params:TParams);
   procedure Create_ParamsArticleLoss(var Params:TParams);
+  procedure Create_ParamsPartionCell(var Params:TParams);
   procedure Create_ParamsAsset(var Params:TParams);
   procedure Create_ParamsGoodsLine(var Params:TParams);
   procedure Create_ParamsSubjectDoc(var Params:TParams);
@@ -348,6 +349,12 @@ begin
      ParamAdd(Params,'isLockStartWeighing',ftBoolean);
      ParamAdd(Params,'isListInventory',ftBoolean);
      ParamAdd(Params,'isCalc_Sh',ftBoolean);
+
+     ParamAdd(Params,'isPartionCell',ftBoolean);
+     ParamAdd(Params,'PartionCellId',ftInteger);
+     ParamAdd(Params,'PartionCellName',ftString);
+     ParamAdd(Params,'PartionCellInvNumber',ftString);
+
 
      ParamAdd(Params,'isAsset',ftBoolean);
      ParamAdd(Params,'AssetId',ftInteger);
@@ -642,6 +649,15 @@ begin
      ParamAdd(Params,'ArticleLossId', ftInteger);   //
      ParamAdd(Params,'ArticleLossCode', ftInteger); //
      ParamAdd(Params,'ArticleLossName', ftString);  //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsPartionCell(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'PartionCellId', ftInteger);   //
+     ParamAdd(Params,'PartionCellCode', ftInteger); //
+     ParamAdd(Params,'PartionCellName', ftString);  //
+     ParamAdd(Params,'InvNumber', ftString);  //
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsPersonal(var Params:TParams;idx:String);

@@ -126,6 +126,7 @@ begin
            ParamsMovement.ParamByName('isKVK').asBoolean                   := CDS.FieldByName('isKVK').asBoolean;
            ParamsMovement.ParamByName('isListInventory').asBoolean         := CDS.FieldByName('isListInventory').asBoolean;
            ParamsMovement.ParamByName('isAsset').asBoolean                 := CDS.FieldByName('isAsset').asBoolean;
+           ParamsMovement.ParamByName('isPartionCell').asBoolean           := CDS.FieldByName('isPartionCell').asBoolean;
            ParamsMovement.ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
            ParamsMovement.ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
 
@@ -417,6 +418,7 @@ begin
           ParamByName('isKVK').asBoolean                   := CDS.FieldByName('isKVK').asBoolean;
           ParamByName('isListInventory').asBoolean         := CDS.FieldByName('isListInventory').asBoolean;
           ParamByName('isAsset').asBoolean                 := CDS.FieldByName('isAsset').asBoolean;
+          ParamByName('isPartionCell').asBoolean           := CDS.FieldByName('isPartionCell').asBoolean;
           ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
           ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
 

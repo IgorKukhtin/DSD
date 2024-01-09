@@ -469,7 +469,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup, GuidePersonal, GuideAsset
+    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup, GuidePersonal, GuideAsset, GuidePartionCell
     ,IdIPWatch, LookAndFillSettings
     ,DialogBoxLight, DialogGoodsSeparate
     ,CommonData;
@@ -1283,6 +1283,16 @@ begin
           if ParamsMovement.ParamByName('MovementId').AsInteger<>0
           then DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
           //
+          ParamsMovement.ParamByName('AssetId').asInteger:= 0;
+          ParamsMovement.ParamByName('AssetName').asString:= '';
+          ParamsMovement.ParamByName('AssetInvNumber').asString:= '';
+          //
+          ParamsMovement.ParamByName('PartionCellId').asInteger:= 0;
+          ParamsMovement.ParamByName('PartionCellName').asString:= '';
+          ParamsMovement.ParamByName('PartionCellInvNumber').asString:= '';
+          //
+          EditAsset.Text:= '';
+          //
           WriteParamsMovement;
           //
           if MovementId_save <> 0 then
@@ -1843,31 +1853,54 @@ end;
 procedure TMainCehForm.EditAssetPropertiesButtonClick(Sender: TObject;  AButtonIndex: Integer);
 var lParams:TParams;
 begin
-     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE
-     then begin
-               ShowMessage ('Ошибка.Для данного документ нет выбора <Оборудование - 1>.');
-               exit;
-     end;
      //
-     Create_ParamsAsset(lParams);
-     lParams.ParamByName('Id').asInteger:=ParamsMovement.ParamByName('AssetId').asInteger;
-     lParams.ParamByName('Code').AsInteger:=0;
-     lParams.ParamByName('Name').asString:='';
-     lParams.ParamByName('InvNumber').asString:='';
-      //
-      if GuideAssetForm.Execute(lParams) then
-      begin
-           ParamsMovement.ParamByName('AssetId').AsInteger:=lParams.ParamByName('Id').AsInteger;
-           ParamsMovement.ParamByName('AssetCode').AsInteger:=lParams.ParamByName('Code').AsInteger;
-           ParamsMovement.ParamByName('AssetName').AsString:=lParams.ParamByName('Name').AsString;
-           ParamsMovement.ParamByName('AssetInvNumber').AsString:=lParams.ParamByName('InvNumber').AsString;
-           //
-           EditAsset.Text:= lParams.ParamByName('Name').AsString
-                     + ' ('+lParams.ParamByName('Code').AsString+')'
-                     + ' ('+lParams.ParamByName('InvNumber').AsString+')'
-                      ;
-      end;
-      lParams.Free;
+     if (ParamsMovement.ParamByName('isPartionCell').AsBoolean = TRUE)
+     then begin
+
+           Create_ParamsPartionCell(lParams);
+           lParams.ParamByName('PartionCellId').asInteger:=ParamsMovement.ParamByName('AssetId').asInteger;
+           lParams.ParamByName('PartionCellName').asString:='';
+           lParams.ParamByName('InvNumber').asString:='';
+            //
+            if GuidePartionCellForm.Execute(lParams) then
+            begin
+                 ParamsMovement.ParamByName('AssetId').AsInteger:=lParams.ParamByName('PartionCellId').AsInteger;
+                 ParamsMovement.ParamByName('PartionCellName').AsString:=lParams.ParamByName('PartionCellName').AsString;
+                 ParamsMovement.ParamByName('PartionCellInvNumber').AsString:=lParams.ParamByName('InvNumber').AsString;
+                 //
+                 EditAsset.Text:= lParams.ParamByName('InvNumber').AsString;
+            end;
+            lParams.Free;
+
+     end
+     else begin
+
+           if (ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE)
+           then begin
+                     ShowMessage ('Ошибка.Для данного документ нет выбора <Оборудование - 1>.');
+                     exit;
+           end;
+
+           Create_ParamsAsset(lParams);
+           lParams.ParamByName('Id').asInteger:=ParamsMovement.ParamByName('AssetId').asInteger;
+           lParams.ParamByName('Code').AsInteger:=0;
+           lParams.ParamByName('Name').asString:='';
+           lParams.ParamByName('InvNumber').asString:='';
+            //
+            if GuideAssetForm.Execute(lParams) then
+            begin
+                 ParamsMovement.ParamByName('AssetId').AsInteger:=lParams.ParamByName('Id').AsInteger;
+                 ParamsMovement.ParamByName('AssetCode').AsInteger:=lParams.ParamByName('Code').AsInteger;
+                 ParamsMovement.ParamByName('AssetName').AsString:=lParams.ParamByName('Name').AsString;
+                 ParamsMovement.ParamByName('AssetInvNumber').AsString:=lParams.ParamByName('InvNumber').AsString;
+                 //
+                 EditAsset.Text:= lParams.ParamByName('Name').AsString
+                           + ' ('+lParams.ParamByName('Code').AsString+')'
+                           + ' ('+lParams.ParamByName('InvNumber').AsString+')'
+                            ;
+            end;
+            lParams.Free;
+     end;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.EditAsset_twoPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
@@ -3124,6 +3157,16 @@ begin
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakTo)
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakFrom)
                             ;
+  //
+  if ParamsMovement.ParamByName('isPartionCell').asBoolean = TRUE
+  then begin
+        //AssetLabel.Caption:= 'Выбор Стелаж №';
+        AssetLabel.Caption:= 'Выбор Ячейка хранения №';
+  end
+  else begin
+        AssetLabel.Caption:= 'Оборудование - 1';
+  end;
+
   //
   if PanelArticleLoss.Visible = true
   then EditArticleLoss.Text:=ParamsMovement.ParamByName('ToName').asString;
