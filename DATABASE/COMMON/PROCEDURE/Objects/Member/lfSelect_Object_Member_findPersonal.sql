@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lfSelect_Object_Member_findPersonal(
     IN inSession          TVarChar  DEFAULT ''     -- сессия пользователя
 )
 RETURNS TABLE (MemberId Integer, PersonalId Integer
-             , UnitId   Integer, PositionId Integer
+             , UnitId   Integer, PositionId Integer, PositionLevelId Integer
              , BranchId Integer, PersonalServiceListId Integer
              , DateIn TDateTime, DateOut TDateTime
              , isDateOut  Boolean
@@ -25,12 +25,13 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-     WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId     AS MemberId
-                               , ObjectLink_Personal_Member.ObjectId          AS PersonalId
-                               , ObjectLink_Personal_Unit.ChildObjectId       AS UnitId
-                               , ObjectLink_Personal_Position.ChildObjectId   AS PositionId
-                               , ObjectLink_Unit_Branch.ChildObjectId         AS BranchId
-                               , ObjectLink_PersonalServiceList.ChildObjectId AS PersonalServiceListId
+     WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId         AS MemberId
+                               , ObjectLink_Personal_Member.ObjectId              AS PersonalId
+                               , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
+                               , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
+                               , ObjectLink_Personal_PositionLevel.ChildObjectId  AS PositionLevelId
+                               , ObjectLink_Unit_Branch.ChildObjectId             AS BranchId
+                               , ObjectLink_PersonalServiceList.ChildObjectId     AS PersonalServiceListId
                                , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
                                , COALESCE (ObjectBoolean_Main.ValueData, FALSE) AS isMain
                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
@@ -52,6 +53,9 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                     ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                    ON ObjectLink_Personal_PositionLevel.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
                                LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                                     ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
                                                    AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
@@ -79,6 +83,7 @@ BEGIN
           , tmpPersonal.PersonalId
           , tmpPersonal.UnitId
           , tmpPersonal.PositionId
+          , tmpPersonal.PositionLevelId
           , tmpPersonal.BranchId
           , tmpPersonal.PersonalServiceListId
           , tmpPersonal.DateIn
