@@ -14,9 +14,10 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbMovementId_find Integer;
+   DECLARE vbMovementId_find  Integer;
    DECLARE vbMovementId_begin Integer;
-   DECLARE vbMovementDescId Integer;
+   DECLARE vbMovementDescId   Integer;
+   DECLARE vbUnitId           Integer;
 
    DECLARE vbId_tmp Integer;
    DECLARE vbGoodsId_ReWork Integer;
@@ -52,6 +53,9 @@ BEGIN
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     -- определили
+     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+
      -- !!!определили параметр!!!
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN 
@@ -990,6 +994,11 @@ BEGIN
                                        THEN NULL
                                   WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
                                        THEN NULL
+                                  WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
+                                       AND 1=1
+                                       --AND vbUserId <> 5
+                                       THEN NULL
+
                                   ELSE MIDate_PartionGoods.ValueData
                              END AS PartionGoodsDate
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
@@ -1067,6 +1076,7 @@ BEGIN
                            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
