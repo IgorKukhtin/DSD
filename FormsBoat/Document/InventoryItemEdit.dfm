@@ -2,8 +2,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
-  ClientHeight = 306
-  ClientWidth = 424
+  ClientHeight = 297
+  ClientWidth = 423
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -257,7 +257,23 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 27
-    Width = 407
+    Width = 302
+  end
+  object cxLabel12: TcxLabel
+    Left = 320
+    Top = 199
+    Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+  end
+  object edPartionCell: TcxButtonEdit
+    Left = 320
+    Top = 222
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 29
+    Width = 95
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -408,6 +424,14 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = edPartionCell
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         DataType = ftString
@@ -451,6 +475,19 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionCellId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionCellName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 227
     Top = 48
@@ -473,6 +510,14 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionCellId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -614,9 +659,24 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionCellId'
+        Value = Null
+        Component = GuidesPartionCell
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionCellName'
+        Value = Null
+        Component = GuidesPartionCell
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
+    Left = 264
     Top = 52
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -966,5 +1026,35 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Left = 144
     Top = 192
+  end
+  object GuidesPartionCell: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartionCell
+    FormNameParam.Value = 'TPartionCellForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionCellForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 384
+    Top = 184
   end
 end

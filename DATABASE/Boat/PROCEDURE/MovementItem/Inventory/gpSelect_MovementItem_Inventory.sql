@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer
              , Ord Integer
              , isErased Boolean
              , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar, InvNumberFull_OrderClient TVarChar, OperDate_OrderClient TDateTime
-             , FromName TVarChar, ProductName TVarChar, CIN TVarChar
+             , FromName TVarChar, ProductName TVarChar, CIN TVarChar  
+             , PartionCellId Integer, PartionCellCode Integer, PartionCellName TVarChar
               )
 AS
 $BODY$
@@ -57,6 +58,7 @@ BEGIN
                            , COALESCE (MIString_Comment.ValueData,'')     AS Comment
                            , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                            , MILinkObject_Partner.ObjectId                AS PartnerId
+                           , MILO_PartionCell.ObjectId                    AS PartionCellId
                            , MovementItem.isErased
                            , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -80,6 +82,10 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+
+                          LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                           ON MILO_PartionCell.MovementItemId = MovementItem.Id
+                                                          AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                      )
 
           , tmpPL AS (SELECT Movement.Id            AS MovementId
@@ -221,6 +227,9 @@ BEGIN
            , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
            , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
 
+           , Object_PartionCell.Id         ::Integer  AS PartionCellId
+           , Object_PartionCell.ObjectCode ::Integer  AS PartionCellCode
+           , Object_PartionCell.ValueData  ::TVarChar AS PartionCellName
        FROM tmpMI
 
             LEFT JOIN tmpPL_item ON tmpPL_item.GoodsId     = tmpMI.GoodsId
@@ -231,6 +240,7 @@ BEGIN
                                 AND tmpPL_item_all.Ord_partner = 1
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId
 
             LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
                                  AND tmpProtocol.Ord            = 1
@@ -287,7 +297,8 @@ BEGIN
 
             LEFT JOIN ObjectString AS ObjectString_CIN
                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                  AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+                                  AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()  
+            
        ;
 
 END;
@@ -297,6 +308,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.01.24         *
  17.02.22         *
 */
 
