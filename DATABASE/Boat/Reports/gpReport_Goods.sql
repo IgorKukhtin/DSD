@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate        TDateTime ,
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inPartionId        Integer   ,
     IN inisPartNumber     Boolean  ,  -- по серийным номерам
     IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
-    IN inIsOrderClient    Boolean  ,  -- Заказ клиента №
+    IN inIsOrderClient    Boolean  ,  -- Заказ клиента № 
+    IN inisPartionCell    Boolean  ,  -- по ячейкам
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
@@ -25,7 +27,8 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , GoodsCode_parent Integer, GoodsName_parent TVarChar
               , PartnerName TVarChar
               , Article TVarChar, Article_all TVarChar
-              , PartNumber TVarChar
+              , PartNumber TVarChar 
+              , PartionCellName TVarChar
               , GoodsGroupNameFull TVarChar
               , GoodsGroupName TVarChar
               , MeasureName TVarChar
@@ -437,6 +440,14 @@ BEGIN
                     WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                     )
+
+    -- Ячейка хранения
+  , tmpMILO_PartionCell AS (SELECT *
+                            FROM MovementItemLinkObject
+                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
+                              AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell()
+                           )
+
     -- Заказ Клиента
   , tmpMIFloat_OrderClient AS (SELECT tmpList.MovementId_order
                                     , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
@@ -536,7 +547,9 @@ BEGIN
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.CostPrice))                         AS TotalSumm_cost_in
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.OperPrice_cost))                    AS TotalSummPrice_cost_in
 
-                        , STRING_AGG (DISTINCT MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
+                        , STRING_AGG (DISTINCT MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber 
+                         -- Ячейка
+                        , STRING_AGG (DISTINCT Object_PartionCell.ValueData, '; ')  ::TVarChar AS PartionCellName
 
                           --  OrderClient
                         , MIFloat_MovementId.InvNumberFull_OrderClient
@@ -686,7 +699,10 @@ BEGIN
                                                ON MIString_PartNumber.MovementItemId = tmpDataAll.PartionId
 
                          LEFT JOIN tmpMIFloat_OrderClient AS MIFloat_MovementId
-                                                            ON MIFloat_MovementId.MovementId_order = tmpDataAll.MovementId_order
+                                                          ON MIFloat_MovementId.MovementId_order = tmpDataAll.MovementId_order
+                         -- 
+                         LEFT JOIN tmpMILO_PartionCell AS MILO_PartionCell ON MILO_PartionCell.MovementItemId = tmpDataAll.PartionId
+                         LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILO_PartionCell.ObjectId  
                    GROUP BY tmpDataAll.MovementId
                           , tmpDataAll.InvNumber
                           , tmpDataAll.OperDate
@@ -721,7 +737,9 @@ BEGIN
                           , tmpDataAll.TaxKindValue
                           --, tmpDataAll.OperPriceList
                           --, tmpDataAll.PartnerId
-                          , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
+                          , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END 
+                          -- если нужно по ячейкам
+                          , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.ValueData ELSE '' END
                             --
                           , MIFloat_MovementId.InvNumberFull_OrderClient
                           , MIFloat_MovementId.FromName_OrderClient
@@ -771,7 +789,8 @@ BEGIN
         , Object_Partner.ValueData       AS PartnerName
         , ObjectString_Article.ValueData AS Article
         , zfCalc_Article_all (ObjectString_Article.ValueData)::TVarChar AS Article_all
-        , tmpDataAll.PartNumber ::TVarChar
+        , tmpDataAll.PartNumber          ::TVarChar
+        , tmpDataAll.PartionCellName     ::TVarChar
         , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , Object_Measure.ValueData       AS MeasureName
@@ -857,6 +876,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.01.24         *
  08.04.21         *
 */
 

@@ -261,6 +261,15 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Options.Editing = False
         Width = 180
       end
+      object PositionLevelName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'PositionLevelName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 113
+      end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1082#1086#1084#1087#1083'.)'
         DataBinding.FieldName = 'TotalCount'
@@ -477,7 +486,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Action = actIsDay
     Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
     Properties.ReadOnly = False
-    TabOrder = 7
+    TabOrder = 5
     Width = 109
   end
   object cbisMonth: TcxCheckBox

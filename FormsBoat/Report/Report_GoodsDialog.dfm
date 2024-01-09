@@ -169,6 +169,16 @@
     TabOrder = 18
     Width = 118
   end
+  object cbisPartionCell: TcxCheckBox
+    Left = 373
+    Top = 178
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 19
+    Width = 83
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -297,6 +307,14 @@
         Name = 'isOrderClient'
         Value = Null
         Component = cbOrderClient
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartionCell'
+        Value = Null
+        Component = cbisPartionCell
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

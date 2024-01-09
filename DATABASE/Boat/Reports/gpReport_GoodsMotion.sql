@@ -381,7 +381,7 @@ BEGIN
                               -- S/N
                               LEFT JOIN tmpMIString AS MIString_PartNumber
                                                     ON MIString_PartNumber.MovementItemId = tmpMIContainer_group.PartionId
-                              -- 
+                              -- Ячейка хранения
                               LEFT JOIN tmpMILO_PartionCell AS MILO_PartionCell ON MILO_PartionCell.MovementItemId = tmpMIContainer_group.PartionId
                               LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILO_PartionCell.ObjectId
 
@@ -676,6 +676,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpReport_GoodsMotion(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2023')::TDateTime , inUnitGroupId := 0, inGoodsId := 0 ,inPartionId := 0
-, inMovementId_OrderClient:= 0, inisPartNumber:=true, inIsPartion:=false, inIsPartner:=true, inIsOrderClient:=false, inisPartionCell:=false, inSession := '5');
+-- SELECT * FROM gpReport_GoodsMotion(inStartDate := ('02.12.2023')::TDateTime , inEndDate := ('03.03.2024')::TDateTime , inUnitGroupId := 0, inGoodsId := 0 ,inPartionId := 0 , inMovementId_OrderClient:= 0, inisPartNumber:=true, inIsPartion:=false, inIsPartner:=false, inIsOrderClient:=false, inisPartionCell:=true, inSession := '5');

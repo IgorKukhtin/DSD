@@ -1,31 +1,30 @@
 ﻿inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
   ClientHeight = 341
-  ClientWidth = 1071
+  ClientWidth = 1116
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1087
+  ExplicitWidth = 1132
   ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1071
+    Width = 1116
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1071
+    ExplicitWidth = 1116
     ExplicitHeight = 261
     ClientRectBottom = 261
-    ClientRectRight = 1071
+    ClientRectRight = 1116
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1071
+      ExplicitWidth = 1116
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1071
+        Width = 1116
         Height = 261
-        ExplicitLeft = 25
-        ExplicitWidth = 1071
+        ExplicitWidth = 1116
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -371,6 +370,15 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             Width = 100
+          end
+          object PartionCellName: TcxGridDBColumn
+            Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'PartionCellName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 106
           end
           object CostPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099
@@ -885,20 +893,18 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1071
+    Width = 1116
     Height = 54
-    ExplicitWidth = 1071
+    ExplicitWidth = 1116
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -1009,7 +1015,7 @@
       Width = 46
     end
     object cbOrderClient: TcxCheckBox
-      Left = 947
+      Left = 976
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470
@@ -1017,6 +1023,16 @@
       ShowHint = True
       TabOrder = 16
       Width = 120
+    end
+    object cbisPartionCell: TcxCheckBox
+      Left = 976
+      Top = 30
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 17
+      Width = 83
     end
   end
   object lbSearchArticle: TcxLabel [2]
@@ -1274,6 +1290,14 @@
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionCell'
+          Value = Null
+          Component = cbisPartionCell
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1498,6 +1522,14 @@
         Name = 'inisOrderClient'
         Value = Null
         Component = cbOrderClient
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionCell'
+        Value = Null
+        Component = cbisPartionCell
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

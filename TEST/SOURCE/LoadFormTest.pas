@@ -2460,7 +2460,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageWarehouseBranchForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageWarehouseBranchDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageWarehouseBranchDialogForm');
-  exit;
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_PartionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_PartionForm');
@@ -2879,13 +2879,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInNotOlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInNotOlapForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInDialogForm');
      exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_BUHForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_BUHForm');
   exit;
@@ -3044,7 +3044,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalDialogForm'));
@@ -3056,7 +3056,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Personal_MoneySummForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Personal_MoneySummForm');
   exit;
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
   exit;

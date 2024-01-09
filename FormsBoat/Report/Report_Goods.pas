@@ -93,6 +93,7 @@ type
     getMovementFormPartion: TdsdStoredProc;
     actOpenFormPartion: TdsdOpenForm;
     bbOpenDocumentPartion: TdxBarButton;
+    cbisPartionCell: TcxCheckBox;
   private
     { Private declarations }
   public

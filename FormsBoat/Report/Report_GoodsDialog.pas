@@ -50,6 +50,7 @@ type
     cbPartNumber: TcxCheckBox;
     cbPartion: TcxCheckBox;
     cbOrderClient: TcxCheckBox;
+    cbisPartionCell: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -961,7 +961,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionDialogForm');
-  exit;
+  //exit;
   {
    //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionPersonalForm'));
@@ -973,12 +973,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClientDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClientDialogForm');
    exit;
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));

@@ -295,6 +295,15 @@
         Options.Editing = False
         Width = 180
       end
+      object PositionLevelName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'PositionLevelName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 113
+      end
       object CountMovement_1: TcxGridDBColumn
         Caption = '1.1. '#1044#1086#1082#1091#1084#1077#1085#1090
         DataBinding.FieldName = 'CountMovement_1'
