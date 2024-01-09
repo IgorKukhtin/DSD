@@ -314,7 +314,8 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, UAECMRXML,
   Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
   IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
-  IdMultipartFormData, Xml.XMLDoc, Soap.EncdDecd, EUSignCP, EUSignCPOwnUI;
+  IdMultipartFormData, Xml.XMLDoc, Soap.EncdDecd, EUSignCP, EUSignCPOwnUI,
+  DOCUMENTINVOICE_DRN_XML;
 
 procedure Register;
 begin
@@ -3335,124 +3336,292 @@ end;
 procedure TEDI.INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
 var
   INVOICE: IXMLINVOICEType;
+  DOCUMENTINVOICE_DRN: DOCUMENTINVOICE_DRN_XML.IXMLDocumentInvoiceType;
   Stream: TStream;
   i: integer;
-  FileName: string;
+  FileName, lNumber: string;
+  AmountSummNoVAT_fozz: Double;
+  VATPercent_fozz: Integer;
+  cDS : Char;
 begin
-  INVOICE := NewINVOICE;
-  // Создать XML
-  INVOICE.DOCUMENTNAME := '380';
-  INVOICE.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  INVOICE.Date := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
-  INVOICE.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
-  INVOICE.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  INVOICE.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDateOrder').asDateTime);//!!!OperDateOrder!!!
-  INVOICE.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  INVOICE.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
-
-  INVOICE.GOODSTOTALAMOUNT :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
-    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-  INVOICE.POSITIONSAMOUNT :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSumm')
-    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-  INVOICE.VATSUM := StringReplace(FormatFloat('0.00',
-    HeaderDataSet.FieldByName('SummVAT').AsFloat),
-    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-  INVOICE.INVOICETOTALAMOUNT :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSumm')
-    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-  INVOICE.TAXABLEAMOUNT :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
-    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-  INVOICE.VAT := StringReplace(FormatFloat('0',
-    HeaderDataSet.FieldByName('VATPercent').AsFloat),
-    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-
-  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
-  then
-      INVOICE.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
-  INVOICE.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
-  INVOICE.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
-    ('DELIVERYPLACEGLNCode').asString;
-  INVOICE.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
-  INVOICE.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
-
-  with ItemsDataSet do
+  if HeaderDataSet.FieldByName('isDOCUMENTINVOICE_DRN').asBoolean = TRUE then
   begin
-    First;
-    i := 1;
-    while not Eof do
-    begin
-      with INVOICE.HEAD.POSITION.Add do
-      begin
-        POSITIONNUMBER := IntToStr(i);
-        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
-        PRODUCTIDBUYER := ItemsDataSet.FieldByName
-          ('ArticleGLN_Juridical').asString;
-        INVOICEUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
-        INVOICEDQUANTITY :=
-          StringReplace(FormatFloat('0.000',
-          ItemsDataSet.FieldByName('AmountPartner').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        UNITPRICE := StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        PRICEWITHVAT :=
-          StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        GROSSPRICE :=
-          StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        AMOUNT := StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        AMOUNTTYPE := '203';
-        TAX.FUNCTION_ := '7';
-        TAX.TAXTYPECODE := 'VAT';
-        TAX.TAXRATE := INVOICE.VAT;
-        TAX.TAXAMOUNT :=
-          StringReplace(FormatFloat('0.00',
-          ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat -
-          ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
-          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        TAX.CATEGORY := 'S';
-      end;
-      inc(i);
-      Next;
-    end;
-  end;
+    cDS := FormatSettings.DecimalSeparator;
+    try
+      FormatSettings.DecimalSeparator := '.';
+      // 1.2. Создать XML - fozzy - Price
+      AmountSummNoVAT_fozz:= 0;
+      VATPercent_fozz:= 0;
+      //
+      DOCUMENTINVOICE_DRN := DOCUMENTINVOICE_DRN_XML.NewDocumentInvoice;
+      // Номер повідомлення про відвантаження
+      DOCUMENTINVOICE_DRN.InvoiceHeader.InvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+      // Дата документа
+      DOCUMENTINVOICE_DRN.InvoiceHeader.InvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+      //Код типу документа: TN - накладна за кількістю
+      DOCUMENTINVOICE_DRN.InvoiceHeader.DocumentFunctionCode := 'DRN';
+      // Номер договору на поставку
+      DOCUMENTINVOICE_DRN.InvoiceHeader.ContractNumber := HeaderDataSet.FieldByName('ContractName').asString;
+      // Дата договору
+      DOCUMENTINVOICE_DRN.InvoiceHeader.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+      // Номер замовлення
+      DOCUMENTINVOICE_DRN.InvoiceReference.Order.BuyerOrderNumber := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+      // Дата замовлення
+      DOCUMENTINVOICE_DRN.InvoiceReference.Order.BuyerOrderDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+      // Номер документу-підстави (Накладної за кількістю)
+      //DOCUMENTINVOICE_DRN.InvoiceReference.Invoice.OriginalInvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+      // Дата складання документу-підстави (Накладної за кількістю)
+      //DOCUMENTINVOICE_DRN.InvoiceReference.Invoice.OriginalInvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
 
-  Stream := TMemoryStream.Create;
-  INVOICE.OwnerDocument.SaveToStream(Stream);
-  FileName := 'invoice_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + INVOICE.NUMBER + '.xml';
-  if FisEDISaveLocal then
-     try
-       INVOICE.OwnerDocument.SaveToFile(FDirectoryError + FileName);
-     except
-       INVOICE.OwnerDocument.SaveToFile(FileName);
-     end;
-  try
-    PutStreamToFTP(Stream, FileName, '/outbox');
-    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
-    begin
-      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
-      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
-      FUpdateEDIErrorState.Execute;
-      FInsertEDIEvents.ParamByName('inMovementId').Value :=
-        HeaderDataSet.FieldByName('EDIId').asInteger;
-      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Документ INVOICE отправлен на FTP';
-      FInsertEDIEvents.Execute;
+      // Глобальний номер розташування (GLN) контрагента - GLN покупця
+      if HeaderDataSet.FieldByName('BuyerGLNCode').asString <> ''
+      then DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.ILN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+      // Податковий ідентифікаційний номер - покупця
+      if HeaderDataSet.FieldByName('INN_To').asString <> ''
+      then DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.TaxID := HeaderDataSet.FieldByName('INN_To').asString;
+      // Код ЄДРПОУ - покупця
+      if HeaderDataSet.FieldByName('OKPO_To').asString <> ''
+      then DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_To').asString;
+      // Назва контрагента
+      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+
+
+      // Глобальний номер розташування (GLN) контрагента - GLN продавця
+      if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+      then DOCUMENTINVOICE_DRN.InvoiceParties.Seller.ILN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+      // Податковий ідентифікаційний номер - продавця
+      if HeaderDataSet.FieldByName('INN_From').asString <> ''
+      then DOCUMENTINVOICE_DRN.InvoiceParties.Seller.TaxID := HeaderDataSet.FieldByName('INN_From').asString;
+      // Код ЄДРПОУ - продавця
+      if HeaderDataSet.FieldByName('OKPO_From').asString <> ''
+      then DOCUMENTINVOICE_DRN.InvoiceParties.Seller.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_From').asString;
+      // Назва продавця
+      DOCUMENTINVOICE_DRN.InvoiceParties.Seller.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
+
+      // Глобальний номер розташування (GLN) контрагента - GLN Точка доставки
+      if HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString <> ''
+      then DOCUMENTINVOICE_DRN.InvoiceParties.DeliveryPoint.ILN := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+      // Юридична особа об’єкту доставки
+      DOCUMENTINVOICE_DRN.InvoiceParties.DeliveryPoint.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+      // Місто - Точка доставки
+      DOCUMENTINVOICE_DRN.InvoiceParties.DeliveryPoint.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
+      // Вулиця і номер будинку - Точка доставки
+      DOCUMENTINVOICE_DRN.InvoiceParties.DeliveryPoint.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
+      // Поштовий код - Точка доставки
+      //try DESADV_fozz_Price.InvoiceParties.DeliveryPoint.PostalCode := StrToInt(HeaderDataSet.FieldByName('PostalCode_To').asString);except end;
+
+      with ItemsDataSet do
+      begin
+        First;
+        i := 1;
+        while not Eof do
+        begin
+          with DOCUMENTINVOICE_DRN.InvoiceLines.Add do
+          begin
+            // Номер товарної позиції
+            LineItem.LineNumber := i;
+            // Штрихкод продукту
+            LineItem.EAN := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+            // Артикул в БД покупця
+            LineItem.BuyerItemCode := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+            // код УКТЗЕД
+            LineItem.ExternalItemCode := ItemsDataSet.FieldByName('GoodsCodeUKTZED').asString;
+            // Найменування товарної позиції
+            LineItem.ItemDescription := ItemsDataSet.FieldByName('GoodsName').asString;
+            // кількість, що поставляється
+            LineItem.InvoiceQuantity := ItemsDataSet.FieldByName('AmountPartner').AsFloat;
+            // BuyerUnitOfMeasure
+            LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
+
+            // Ціна однієї одиниці без ПДВ
+            LineItem.InvoiceUnitNetPrice := ItemsDataSet.FieldByName('PriceNoVAT').AsFloat;
+            // Ціна однієї одиниці без ПДВ
+            //LineItem.InvoiceUnitGrossPrice := ItemsDataSet.FieldByName('PriceWVAT').AsFloat;
+            // Ставка податку (ПДВ,%):
+            LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
+            LineItem.TaxCategoryCode := 'S';
+
+            // Сума з ПДВ
+            LineItem.GrossAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat;
+            // Сума податку
+            LineItem.TaxAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
+            // Сума без ПДВ
+            LineItem.NetAmount := ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
+            //
+            AmountSummNoVAT_fozz:= AmountSummNoVAT_fozz + ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
+            VATPercent_fozz:= ItemsDataSet.FieldByName('VATPercent').AsInteger;
+          end;
+          inc(i);
+          Next;
+        end;
+      end;
+      //
+      // Кількість рядків в документі
+      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalLines := i;
+      // Загальна сума без ПДВ
+      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalNetAmount := AmountSummNoVAT_fozz;
+      // Сума ПДВ
+      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalTaxAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100 - AmountSummNoVAT_fozz;
+      // Загальна сума з ПДВ
+      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalGrossAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100;
+
+
+      //
+      //
+      Stream := TMemoryStream.Create;
+      try
+        DOCUMENTINVOICE_DRN.OwnerDocument.SaveToStream(Stream);
+        lNumber:= DOCUMENTINVOICE_DRN.InvoiceHeader.InvoiceNumber;
+        //
+        FileName := 'DOCUMENTINVOICE_DRN_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
+        // !временно!
+//        if FisEDISaveLocal
+//        then
+           try
+             DOCUMENTINVOICE_DRN.OwnerDocument.SaveToFile(FileName)
+           except
+           end;
+        // здесь сохранили на ftp
+        PutStreamToFTP(Stream, FileName, '/outbox');
+        //
+        if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+        begin
+          FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+          FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+          FUpdateEDIErrorState.Execute;
+
+          FInsertEDIEvents.ParamByName('inMovementId').Value :=
+            HeaderDataSet.FieldByName('EDIId').asInteger;
+          FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+            'Документ DOCUMENTINVOICE отправлен на FTP';
+          FInsertEDIEvents.Execute;
+        end;
+      finally
+        Stream.Free;
+        //
+        DeleteFile(FileName);
+      end;
+    finally
+      FormatSettings.DecimalSeparator := cDS;
     end;
-  finally
-    Stream.Free;
+  end else
+  begin
+
+    INVOICE := NewINVOICE;
+    // Создать XML
+    INVOICE.DOCUMENTNAME := '380';
+    INVOICE.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+    INVOICE.Date := FormatDateTime('yyyy-mm-dd',
+      HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+    INVOICE.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+      HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+    INVOICE.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+    INVOICE.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+      HeaderDataSet.FieldByName('OperDateOrder').asDateTime);//!!!OperDateOrder!!!
+    INVOICE.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+    INVOICE.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
+      HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+
+    INVOICE.GOODSTOTALAMOUNT :=
+      StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
+      .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    INVOICE.POSITIONSAMOUNT :=
+      StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSumm')
+      .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    INVOICE.VATSUM := StringReplace(FormatFloat('0.00',
+      HeaderDataSet.FieldByName('SummVAT').AsFloat),
+      FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    INVOICE.INVOICETOTALAMOUNT :=
+      StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSumm')
+      .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    INVOICE.TAXABLEAMOUNT :=
+      StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
+      .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+    INVOICE.VAT := StringReplace(FormatFloat('0',
+      HeaderDataSet.FieldByName('VATPercent').AsFloat),
+      FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+    if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+    then
+        INVOICE.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+    INVOICE.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+    INVOICE.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+      ('DELIVERYPLACEGLNCode').asString;
+    INVOICE.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+    INVOICE.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
+
+    with ItemsDataSet do
+    begin
+      First;
+      i := 1;
+      while not Eof do
+      begin
+        with INVOICE.HEAD.POSITION.Add do
+        begin
+          POSITIONNUMBER := IntToStr(i);
+          PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+          PRODUCTIDBUYER := ItemsDataSet.FieldByName
+            ('ArticleGLN_Juridical').asString;
+          INVOICEUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+          INVOICEDQUANTITY :=
+            StringReplace(FormatFloat('0.000',
+            ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+            FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+          UNITPRICE := StringReplace(FormatFloat('0.00',
+            ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
+            FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+          PRICEWITHVAT :=
+            StringReplace(FormatFloat('0.00',
+            ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+            FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+          GROSSPRICE :=
+            StringReplace(FormatFloat('0.00',
+            ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+            FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+          AMOUNT := StringReplace(FormatFloat('0.00',
+            ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
+            FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+          AMOUNTTYPE := '203';
+          TAX.FUNCTION_ := '7';
+          TAX.TAXTYPECODE := 'VAT';
+          TAX.TAXRATE := INVOICE.VAT;
+          TAX.TAXAMOUNT :=
+            StringReplace(FormatFloat('0.00',
+            ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat -
+            ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
+            FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+          TAX.CATEGORY := 'S';
+        end;
+        inc(i);
+        Next;
+      end;
+    end;
+
+    Stream := TMemoryStream.Create;
+    INVOICE.OwnerDocument.SaveToStream(Stream);
+    FileName := 'invoice_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + INVOICE.NUMBER + '.xml';
+    if FisEDISaveLocal then
+       try
+         INVOICE.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+       except
+         INVOICE.OwnerDocument.SaveToFile(FileName);
+       end;
+    try
+      PutStreamToFTP(Stream, FileName, '/outbox');
+      if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+      begin
+        FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+        FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+        FUpdateEDIErrorState.Execute;
+        FInsertEDIEvents.ParamByName('inMovementId').Value :=
+          HeaderDataSet.FieldByName('EDIId').asInteger;
+        FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+          'Документ INVOICE отправлен на FTP';
+        FInsertEDIEvents.Execute;
+      end;
+    finally
+      Stream.Free;
+    end;
   end;
 end;
 

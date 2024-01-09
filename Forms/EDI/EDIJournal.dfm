@@ -1,27 +1,27 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE>'
   ClientHeight = 453
-  ClientWidth = 1362
+  ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1378
-  ExplicitHeight = 492
+  ExplicitWidth = 1390
+  ExplicitHeight = 509
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
-    Width = 1362
-    Height = 396
-    ExplicitTop = 57
+    Top = 66
+    Width = 1368
+    Height = 387
+    ExplicitTop = 66
     ExplicitWidth = 1362
-    ExplicitHeight = 396
-    ClientRectBottom = 396
-    ClientRectRight = 1362
+    ExplicitHeight = 387
+    ClientRectBottom = 387
+    ClientRectRight = 1368
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 396
+      ExplicitHeight = 387
       inherited cxGrid: TcxGrid
-        Width = 1362
+        Width = 1368
         Height = 209
         Align = alTop
         ExplicitWidth = 1362
@@ -470,24 +470,26 @@ inherited EDIJournalForm: TEDIJournalForm
       object Splitter: TcxSplitter
         Left = 0
         Top = 209
-        Width = 1362
+        Width = 1368
         Height = 5
         AlignSplitter = salTop
         Control = cxGrid
+        ExplicitWidth = 1362
       end
       object BottomPanel: TPanel
         Left = 0
         Top = 214
-        Width = 1362
-        Height = 182
+        Width = 1368
+        Height = 173
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitWidth = 1362
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
           Width = 953
-          Height = 182
+          Height = 173
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
@@ -766,11 +768,12 @@ inherited EDIJournalForm: TEDIJournalForm
         object cxProtocolGrid: TcxGrid
           Left = 957
           Top = 0
-          Width = 405
-          Height = 182
+          Width = 411
+          Height = 173
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
+          ExplicitWidth = 405
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -829,7 +832,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Left = 953
           Top = 0
           Width = 4
-          Height = 182
+          Height = 173
           Control = cxChildGrid
         end
       end
@@ -838,10 +841,11 @@ inherited EDIJournalForm: TEDIJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 1362
+    Width = 1368
     Height = 31
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1362
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -1007,9 +1011,9 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actUpdateEdiInvoiceTrue
         end>
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1057#1095#1077#1090
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1074' EXITE'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'/'#1056#1072#1089#1093'. '#1085#1072#1082#1083'. '#1045#1087#1080#1094#1077#1085#1090#1088'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1057#1095#1077#1090'/'#1056#1072#1089#1093'. '#1085#1072#1082#1083'. '#1045#1087#1080#1094#1077#1085#1090#1088
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'/'#1056#1072#1089#1093'. '#1085#1072#1082#1083'. '#1045#1087#1080#1094#1077#1085#1090#1088'> '#1074' EXITE'
     end
     object mactErrorEDI: TMultiAction [7]
       Category = 'EDI Load'
@@ -1843,7 +1847,7 @@ inherited EDIJournalForm: TEDIJournalForm
     DockControlHeights = (
       0
       0
-      26
+      35
       0)
     inherited Bar: TdxBar
       ItemLinks = <
