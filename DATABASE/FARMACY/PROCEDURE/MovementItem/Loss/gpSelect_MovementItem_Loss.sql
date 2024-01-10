@@ -21,6 +21,8 @@ $BODY$
   DECLARE vbUnitId Integer;
   DECLARE vbOperDate TDateTime;
   DECLARE vbOperDateEnd TDateTime;
+  DECLARE vbCat_5 TFloat;
+  DECLARE vbisCat_5 boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Loss());
@@ -29,19 +31,37 @@ BEGIN
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     --Определили подразделение для розничной цены и дату для остатка
     SELECT 
-        MovementLinkObject_Unit.ObjectId
-       ,Movement_Loss.OperDate 
+           MovementLinkObject_Unit.ObjectId
+         , Movement_Loss.OperDate 
+         , MovementLinkObject_ArticleLoss.ObjectId = 23653195
     INTO 
-        vbUnitId
-       ,vbOperDate
+         vbUnitId
+       , vbOperDate
+       , vbisCat_5
     FROM Movement AS Movement_Loss
         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement_Loss.Id
                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                     ON MovementLinkObject_ArticleLoss.MovementId = Movement_Loss.Id
+                                    AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
     WHERE Movement_Loss.Id = inMovementId;
     
     vbOperDateEnd :=  DATE_TRUNC('day',vbOperDate) + INTERVAL '1 DAY';
-    
+
+    SELECT COALESCE(ObjectFloat_CashSettings_Cat_5.ValueData, 0)                                 AS Cat_5
+    INTO vbCat_5
+    FROM Object AS Object_CashSettings
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Cat_5
+                               ON ObjectFloat_CashSettings_Cat_5.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Cat_5.DescId = zc_ObjectFloat_CashSettings_Cat_5()
+
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;    
+        
+    raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+
     
     IF inShowAll THEN
     -- Результат
@@ -116,7 +136,9 @@ BEGIN
                    )
                    
       , CurrPRICE AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                            , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat  AS Price
+                            , CASE WHEN vbisCat_5 = TRUE
+                                   THEN COALESCE (ObjectHistoryFloat_Price.ValueData * (100 - vbCat_5) / 100, 0)
+                                   ELSE COALESCE (ObjectHistoryFloat_Price.ValueData, 0) END :: TFloat  AS Price
                        FROM ObjectLink AS ObjectLink_Price_Unit
                             INNER JOIN ObjectLink AS Price_Goods
                                                   ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -298,7 +320,9 @@ BEGIN
                    )
 
       , CurrPRICE AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                            , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat  AS Price
+                            , CASE WHEN vbisCat_5 = TRUE
+                                   THEN COALESCE (ObjectHistoryFloat_Price.ValueData * (100 - vbCat_5) / 100, 0)
+                                   ELSE COALESCE (ObjectHistoryFloat_Price.ValueData, 0) END :: TFloat  AS Price
                        FROM ObjectLink AS ObjectLink_Price_Unit
                             INNER JOIN (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI) tmpGoods ON 1 = 1
                             INNER JOIN ObjectLink AS Price_Goods

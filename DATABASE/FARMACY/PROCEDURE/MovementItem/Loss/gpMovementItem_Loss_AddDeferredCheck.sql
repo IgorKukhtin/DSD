@@ -12,6 +12,10 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbComent TVarChar;
+   DECLARE vbUnitId Integer;
+   DECLARE vbOperDate TDateTime;
+   DECLARE vbCat_5  TFloat;
+   DECLARE vbisCat_5 boolean;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -43,7 +47,33 @@ BEGIN
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inMovementId, vbComent);
+    
+    --Определили подразделение для розничной цены и дату для остатка
+    SELECT MovementLinkObject_Unit.ObjectId
+         , Movement_Loss.OperDate 
+         , MovementLinkObject_ArticleLoss.ObjectId = 23653195
+    INTO vbUnitId, vbOperDate, vbisCat_5
+    FROM Movement AS Movement_Loss
+        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                      ON MovementLinkObject_Unit.MovementId = Movement_Loss.Id
+                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                     ON MovementLinkObject_ArticleLoss.MovementId = Movement_Loss.Id
+                                    AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+    WHERE Movement_Loss.Id = inMovementId;
+    
 
+    SELECT COALESCE(ObjectFloat_CashSettings_Cat_5.ValueData, 0)                                 AS Cat_5
+    INTO vbCat_5
+    FROM Object AS Object_CashSettings
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Cat_5
+                               ON ObjectFloat_CashSettings_Cat_5.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Cat_5.DescId = zc_ObjectFloat_CashSettings_Cat_5()
+
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;    
+    
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price()
                                             , lpInsertUpdate_MovementItem_Loss (ioId                 := COALESCE(MovementItemLoos.Id,0)
                                                                               , inMovementId         := inMovementId
@@ -51,13 +81,43 @@ BEGIN
                                                                               , inAmount             := MovementItemCheck.Amount
                                                                               , inUserId             := vbUserId)
                                             , MovementItemCheck.Price)  
-    FROM (SELECT MovementItemCheck.ObjectId
+    FROM (WITH CurrPRICE AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                                  , CASE WHEN vbisCat_5 = TRUE
+                                         THEN COALESCE (ObjectHistoryFloat_Price.ValueData * (100 - vbCat_5) / 100, 0)
+                                         ELSE COALESCE (ObjectHistoryFloat_Price.ValueData, 0) END :: TFloat  AS Price
+                             FROM ObjectLink AS ObjectLink_Price_Unit
+                                  INNER JOIN (SELECT DISTINCT tmpMI.ObjectId AS GoodsId 
+                                              FROM MovementItem AS tmpMI
+                                              WHERE tmpMI.MovementId = inCheckID
+                                                AND tmpMI.IsErased = False
+                                                AND tmpMI.DescId = zc_MI_Master()) tmpGoods ON 1 = 1
+                                  INNER JOIN ObjectLink AS Price_Goods
+                                                        ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                       AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                       AND Price_Goods.ChildObjectId = tmpGoods.GoodsId
+
+                                  -- получаем значения цены и НТЗ из истории значений на начало дня
+                                  LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                                          ON ObjectHistory_Price.ObjectId = Price_Goods.ObjectId
+                                                         AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                         AND vbOperDate >= ObjectHistory_Price.StartDate AND vbOperDate < ObjectHistory_Price.EndDate
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                                               ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                                              AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                             WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                               AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                            )
+    
+          SELECT MovementItemCheck.ObjectId
                , SUM(MovementItemCheck.Amount)  AS Amount
-               , MAX(MIFloat_Price.ValueData)   AS Price
+               , CASE WHEN vbisCat_5 = TRUE AND COALESCE(MAX(CurrPRICE.Price), 0) > 0
+                      THEN MAX(CurrPRICE.Price)
+                      ELSE MAX(MIFloat_Price.ValueData) END AS Price
           FROM MovementItem AS MovementItemCheck
                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                            ON MIFloat_Price.MovementItemId = MovementItemCheck.Id
                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()          
+               LEFT JOIN CurrPRICE ON CurrPRICE.GoodsId = MovementItemCheck.ObjectId
           WHERE MovementItemCheck.MovementId = inCheckID
           AND MovementItemCheck.IsErased = False
           AND MovementItemCheck.DescId = zc_MI_Master()
@@ -80,4 +140,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpMovementItem_Loss_AddDeferredCheck(inMovementId := 16461309 , inCheckID := 16357692 ,  inSession := '3');
+-- select * from gpMovementItem_Loss_AddDeferredCheck(inMovementId := 34457829 , inCheckID := 34458058 ,  inSession := '3');
