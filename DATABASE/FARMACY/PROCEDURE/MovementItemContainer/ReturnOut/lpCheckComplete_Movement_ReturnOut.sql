@@ -42,12 +42,12 @@ BEGIN
         AND 
         Object_Goods_View.NDSKindId <> vbNDSKindId;
 
-    IF COALESCE(vbGoodsId, 0) <> 0 AND NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpNeedComplete'))
+   /* IF COALESCE(vbGoodsId, 0) <> 0 
     THEN 
         SELECT ValueData INTO vbGoodsName 
         FROM Object WHERE Id = vbGoodsId;
         RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', vbGoodsName;
-    END IF;
+    END IF;*/
     
     --Проверяем, достаточно ли остатка партии для возврата
 /*    SELECT MIN(MovementItem_ReturnOut.ObjectId) INTO vbGoodsId

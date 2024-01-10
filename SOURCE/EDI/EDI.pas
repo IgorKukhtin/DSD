@@ -3398,6 +3398,11 @@ begin
       // Назва продавця
       DOCUMENTINVOICE_DRN.InvoiceParties.Seller.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
 
+      DOCUMENTINVOICE_DRN.InvoiceParties.Seller.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_From').asString;
+      DOCUMENTINVOICE_DRN.InvoiceParties.Seller.CityName := HeaderDataSet.FieldByName('CityName_From').asString;
+      DOCUMENTINVOICE_DRN.InvoiceParties.Seller.PostalCode := HeaderDataSet.FieldByName('PostalCode_From').asString;
+      DOCUMENTINVOICE_DRN.InvoiceParties.Seller.PhoneNumber := HeaderDataSet.FieldByName('Phone_From').asString;
+
       // Глобальний номер розташування (GLN) контрагента - GLN Точка доставки
       if HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString <> ''
       then DOCUMENTINVOICE_DRN.InvoiceParties.DeliveryPoint.ILN := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;

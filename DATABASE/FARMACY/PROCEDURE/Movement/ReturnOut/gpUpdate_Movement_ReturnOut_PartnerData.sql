@@ -30,10 +30,6 @@ BEGIN
     THEN
         PERFORM gpUnComplete_Movement_ReturnOut (inMovementId := inMovementId, inSession := inSession);
         vbNeedComplete := TRUE;
-        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpNeedComplete'))
-        THEN
-          CREATE TEMP TABLE _tmpNeedComplete (Id_from Integer) ON COMMIT DROP;
-        END IF;
     ELSE
         vbNeedComplete := FALSE;
     END IF;
