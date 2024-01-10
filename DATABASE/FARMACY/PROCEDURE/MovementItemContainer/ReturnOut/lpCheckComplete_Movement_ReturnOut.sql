@@ -42,7 +42,7 @@ BEGIN
         AND 
         Object_Goods_View.NDSKindId <> vbNDSKindId;
 
-    IF COALESCE(vbGoodsId, 0) <> 0 
+    IF COALESCE(vbGoodsId, 0) <> 0 AND NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpNeedComplete'))
     THEN 
         SELECT ValueData INTO vbGoodsName 
         FROM Object WHERE Id = vbGoodsId;

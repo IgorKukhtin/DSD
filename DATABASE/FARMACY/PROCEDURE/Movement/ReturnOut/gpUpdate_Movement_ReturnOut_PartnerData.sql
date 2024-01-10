@@ -1,7 +1,7 @@
 -- Function: gpUpdate_Movement_ReturnOut_PartnerData()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_ReturnOut_PartnerData(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>
@@ -30,6 +30,10 @@ BEGIN
     THEN
         PERFORM gpUnComplete_Movement_ReturnOut (inMovementId := inMovementId, inSession := inSession);
         vbNeedComplete := TRUE;
+        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpNeedComplete'))
+        THEN
+          CREATE TEMP TABLE _tmpNeedComplete (Id_from Integer) ON COMMIT DROP;
+        END IF;
     ELSE
         vbNeedComplete := FALSE;
     END IF;
