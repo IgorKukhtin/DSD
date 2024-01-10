@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpUpdate_MI_Income_Price (Integer, TFloat, TFloat, TFloa
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_Income_Price(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inAmount              TFloat    , -- 
+    IN inAmount              TFloat    , --
     IN inOperPrice_orig      TFloat    , -- Вх. цена без скидки
     IN inCountForPrice       TFloat    , -- Цена за кол.
  INOUT ioDiscountTax         TFloat    , -- % скидки
@@ -38,7 +38,7 @@ BEGIN
                                , inSummIn_old          := inSummIn_old
                                , inSession             := inUserId :: TVarChar
                                 ) AS gpGet;
-     
+
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice_orig(), inId, inOperPrice_orig);
@@ -67,4 +67,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

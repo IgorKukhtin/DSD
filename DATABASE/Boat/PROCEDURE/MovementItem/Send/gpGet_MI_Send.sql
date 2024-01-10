@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, Integer, TVarChar, TFlo
 DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Send(
-    IN inMovementId        Integer    , -- Ключ объекта <Документ>  
+    IN inMovementId        Integer    , -- Ключ объекта <Документ>
     IN inMovementId_OrderClient Integer, --докуметн заказ
     IN inId                Integer    , --
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
@@ -28,9 +28,9 @@ RETURNS TABLE (Id                 Integer
              , Price              TFloat
              , TotalCount         TFloat
              , Amount             TFloat
-             , AmountRemainsFrom  TFloat  
+             , AmountRemainsFrom  TFloat
              , MovementId_OrderClient Integer
-             , InvNumberFull_OrderClient TVarChar 
+             , InvNumberFull_OrderClient TVarChar
              , PartionCellId Integer, PartionCellName TVarChar
               )
 AS
@@ -80,7 +80,7 @@ BEGIN
                                                   AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                   ON MIFloat_MovementId.MovementItemId = MI.Id
-                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId() 
+                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                       LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
                                                        ON MILO_PartionCell.MovementItemId = MI.Id
                                                       AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
@@ -88,13 +88,13 @@ BEGIN
                    AND MI.DescId     = zc_MI_Master()
                    AND MI.ObjectId   = inGoodsId
                    AND MI.isErased   = FALSE
-                   AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'') 
+                   AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                    AND COALESCE (MIFloat_MovementId.ValueData,0)::Integer = COALESCE (inMovementId_OrderClient,0)
                    AND (MI.Id = inId OR inId = 0)
                  GROUP BY MI.ObjectId
                         , COALESCE (MIString_PartNumber.ValueData, '')
-                        , MIFloat_MovementId.ValueData      :: Integer 
-                        , MILO_PartionCell.ObjectId 
+                        , MIFloat_MovementId.ValueData      :: Integer
+                        , MILO_PartionCell.ObjectId
                 )
 
            SELECT CASE WHEN COALESCE (inId,0) <> 0 THEN inId ELSE -1 END  :: Integer AS Id
@@ -119,7 +119,7 @@ BEGIN
               , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
 
               , Object_PartionCell.Id         AS PartionCellId
-              , Object_PartionCell.ValueData  AS PartionCellName  
+              , Object_PartionCell.ValueData  AS PartionCellName
            FROM Object AS Object_Goods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
                                AND tmpMI.PartNumber = COALESCE (inPartNumber,'')
@@ -131,14 +131,14 @@ BEGIN
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-    
+
                 LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = ObjectLink_Goods_Partner.ChildObjectId
                 LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = ObjectLink_Goods_GoodsGroup.ChildObjectId
-    
+
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                       AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
-    
+
                 LEFT JOIN ObjectString AS ObjectString_Article
                                        ON ObjectString_Article.ObjectId = Object_Goods.Id
                                       AND ObjectString_Article.DescId = zc_ObjectString_Article()
@@ -146,12 +146,12 @@ BEGIN
                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = Object_Goods.Id
                                     AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
 
-                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient 
+                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
 
                 LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId
 
            WHERE Object_Goods.Id = inGoodsId
-              AND inGoodsId <> 0 
+              AND inGoodsId <> 0
           UNION
            SELECT -1         :: Integer AS Id
                 , 0                     AS GoodsId
@@ -170,7 +170,7 @@ BEGIN
                 , 1  :: TFloat          AS Amount
                 , 0  ::TFloat           AS AmountRemains
                 , inMovementId_OrderClient AS MovementId_OrderClient
-                , (SELECT zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId_OrderClient)::TVarChar AS InvNumberFull_OrderClient                
+                , (SELECT zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId_OrderClient)::TVarChar AS InvNumberFull_OrderClient
                 , 0    ::Integer        AS PartionCellId
                 , NULL::TVarChar        AS PartionCellName
            WHERE inGoodsId = 0

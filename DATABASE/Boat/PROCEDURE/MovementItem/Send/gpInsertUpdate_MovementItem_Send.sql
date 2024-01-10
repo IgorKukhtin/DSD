@@ -1,14 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_OrderClient()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_Send_BarCode (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode_PartNumber(Integer, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode_Amount(Integer, Integer, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode(Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
@@ -16,15 +7,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inMovementId_OrderClient Integer, -- Заказ Клиента
     IN inMovementId_OrderTop Integer, -- Заказ Клиента из шапки
-    IN inGoodsId             Integer   , -- Товары 
+    IN inGoodsId             Integer   , -- Товары
     IN ioAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена со скидкой
     IN inCountForPrice       TFloat    , -- Цена за кол.
-    IN inPartNumber          TVarChar  , --№ по тех паспорту  
+    IN inPartNumber          TVarChar  , --№ по тех паспорту
  INOUT ioPartionCellName     TVarChar  , -- код или название
     IN inComment             TVarChar  , --
  INOUT ioIsOn                Boolean   , -- вкл
-   OUT outIsErased           Boolean   , -- удален 
+   OUT outIsErased           Boolean   , -- удален
    OUT outMovementId_OrderClient Integer   , --
    OUT outInvNumber_OrderClient  TVarChar  ,
    OUT outProductName        TVarChar  ,
@@ -35,7 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;  
+   DECLARE vbIsInsert Boolean;
    DECLARE vbPartionCellId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -46,7 +37,7 @@ BEGIN
      IF ioId < 0
      THEN
              -- Проверка
-             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI 
+             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI
                                  LEFT JOIN MovementItemString AS MIString_PartNumber
                                                               ON MIString_PartNumber.MovementItemId = MI.Id
                                                              AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
@@ -66,7 +57,7 @@ BEGIN
                        AND MI.ObjectId = inGoodsId
                        AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                      );
-         -- 
+         --
          ioAmount:= ioAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0);
 
      END IF;
@@ -84,13 +75,13 @@ BEGIN
      ENd IF;
 
     IF COALESCE (inMovementId_OrderClient,0) = 0
-    THEN   
+    THEN
         inMovementId_OrderClient := inMovementId_OrderTop;
     END IF;
 
      --находим ячейку хранения, если нет такой создаем
      IF COALESCE (ioPartionCellName, '') <> '' THEN
-         -- !!!поиск ИД !!! 
+         -- !!!поиск ИД !!!
          --если ввели код ищем по коду, иначе по названию
          IF zfConvert_StringToNumber (ioPartionCellName) <> 0
          THEN
@@ -121,23 +112,23 @@ BEGIN
                                                                      , inComment := ''          ::TVarChar
                                                                      , inSession := inSession   ::TVarChar
                                                                       );
-    
+
              END IF;
          END IF;
          --
-         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId); 
-     ELSE 
+         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
          vbPartionCellId := NULL ::Integer;
      END IF;
 
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId
-            INTO ioId 
+            INTO ioId
      FROM lpInsertUpdate_MovementItem_Send (ioId
                                           , inMovementId
                                           , inMovementId_OrderClient
-                                          , inGoodsId 
+                                          , inGoodsId
                                           , vbPartionCellId  --inPartionCellId
                                           , ioAmount
                                           , inOperPrice
@@ -146,21 +137,21 @@ BEGIN
                                           , inComment
                                           , vbUserId
                                            ) AS tmp;
-     
+
      -- (разделила т.к. если внесут еще какие-то изменения в строку то ощибка что элемент удален)
      IF COALESCE (ioIsOn, FALSE) = FALSE
      THEN
-         -- ставим отметку об удалении 
+         -- ставим отметку об удалении
          outIsErased := gpMovementItem_Send_SetErased (ioId, inSession);
      ENd IF;
 
 
-     
+
      SELECT Movement_OrderClient.Id                                   AS MovementId_OrderClient
           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_OrderClient
           , Object_From.ValueData                                     AS FromName
           , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
-          , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN 
+          , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
    INTO outMovementId_OrderClient
       , outInvNumber_OrderClient
       , outFromName
@@ -171,12 +162,12 @@ BEGIN
                                        ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
- 
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                        ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
                                       AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
           LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
- 
+
           LEFT JOIN ObjectString AS ObjectString_CIN
                                  ON ObjectString_CIN.ObjectId = Object_Product.Id
                                 AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
@@ -188,8 +179,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

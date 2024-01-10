@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Income(
-    IN inId             Integer  , -- ключ 
+    IN inId             Integer  , -- ключ
     IN inMaskId         Integer  , -- добавить по маске
     IN inGoodsId        Integer  , -- ключ
     IN inSession        TVarChar   -- сессия пользователя
@@ -99,7 +99,7 @@ BEGIN
 
                , COALESCE (tmpMI.Amount, 1)                                        :: TFloat   AS Amount
                , CASE WHEN tmpMI.Id > 0 THEN tmpMI.Amount ELSE 0 END               :: TFloat   AS Amount_old
-               
+
                , COALESCE (tmpMI.OperPrice_orig, ObjectFloat_EKPrice.ValueData, 0) :: TFloat   AS OperPrice_orig
                , COALESCE (tmpMI.CountForPrice, 1)                                 :: TFloat   AS CountForPrice
                , COALESCE (tmpMI.DiscountTax, 0)                                   :: TFloat   AS DiscountTax

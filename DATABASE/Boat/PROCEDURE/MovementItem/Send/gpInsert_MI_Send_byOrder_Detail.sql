@@ -54,10 +54,10 @@ BEGIN
                --
                LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                            ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                          AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice() 
+                                          AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                          AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice() 
+                                          AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Master()
             AND MovementItem.isErased   = FALSE;
@@ -145,7 +145,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := COALESCE (_tmpMI_Master.Id, 0)
                                             , inMovementId             := inMovementId
                                             , inMovementId_OrderClient := COALESCE (_tmpOrder.MovementId_order, _tmpMI_Master.MovementId_order) :: Integer
-                                            , inGoodsId                := COALESCE (_tmpOrder.ObjectId, _tmpMI_Master.ObjectId)   
+                                            , inGoodsId                := COALESCE (_tmpOrder.ObjectId, _tmpMI_Master.ObjectId)
                                             , inPartionCellId          := _tmpMI_Master.PartionCellId ::Integer
                                             , inAmount                 := COALESCE (_tmpOrder.Amount, _tmpMI_Master.Amount)
                                             , inOperPrice              := COALESCE (_tmpOrder.OperPrice, _tmpMI_Master.OperPrice, 0)
@@ -162,7 +162,7 @@ BEGIN
                          , ObjectFloat_EKPrice.ValueData AS OperPrice
                          , 1 :: TFloat AS CountForPrice
                          , SUM (_tmpOrder.Amount) AS Amount
-                           -- Á‡Í‡Á ÍÎËÂÌÚ‡ 
+                           -- Á‡Í‡Á ÍÎËÂÌÚ‡
                          , _tmpOrder.MovementId_order
 
                     FROM _tmpOrder
@@ -190,8 +190,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

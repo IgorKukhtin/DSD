@@ -51,7 +51,7 @@ BEGIN
           SELECT MovementItem.Id
                , MovementItem.ObjectId
                  -- № п/п
-               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id ASC) AS Ord 
+               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id ASC) AS Ord
                , MIFloat_MovementId.ValueData :: Integer AS MovementId_order
                , MILO_PartionCell.ObjectId               AS PartionCellId
           FROM MovementItem
@@ -223,7 +223,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := COALESCE (_tmpMI_Master.Id, 0)
                                             , inMovementId             := inMovementId
                                             , inMovementId_OrderClient := COALESCE (tmp.MovementId_order, _tmpMI_Master.MovementId_order) :: Integer
-                                            , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)        
+                                            , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)
                                             , inPartionCellId          := _tmpMI_Master.PartionCellId ::Integer
                                               -- кол-во резерв
                                             , inAmount                 := CASE WHEN _tmpMI_Master.ORD = 1 OR COALESCE (_tmpMI_Master.Id, 0) = 0 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
@@ -235,23 +235,23 @@ BEGIN
     FROM _tmpMI_Master
          -- привязываем существующие строки с новыми данными
          FULL JOIN (--группируем данные резерва
-                    SELECT _tmpReserve.ObjectId              
+                    SELECT _tmpReserve.ObjectId
                            -- неправильная цена, в партиях другая
                          , ObjectFloat_EKPrice.ValueData AS OperPrice
                          , 1 :: TFloat AS CountForPrice
                          , SUM (COALESCE (_tmpReserve.Amount,0)) AS Amount
-                         --заказ клиента 
+                         --заказ клиента
                          , _tmpReserve.MovementId_order
                     FROM _tmpReserve
                          LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                ON ObjectFloat_EKPrice.ObjectId = _tmpReserve.ObjectId
                                               AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
                     GROUP BY _tmpReserve.ObjectId
-                           , ObjectFloat_EKPrice.ValueData 
+                           , ObjectFloat_EKPrice.ValueData
                            , _tmpReserve.MovementId_order
                     ) AS tmp ON tmp.ObjectId = _tmpMI_Master.objectId
                             AND tmp.MovementId_order = _tmpMI_Master.MovementId_order
-    ;   
+    ;
 
 /*zc_MI_Child - будут формироваться при проведении док
 
@@ -315,8 +315,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

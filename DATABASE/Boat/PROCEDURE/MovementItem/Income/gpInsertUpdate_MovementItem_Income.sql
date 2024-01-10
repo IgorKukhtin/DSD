@@ -2,10 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                          , TVarChar, TVarChar, TVarChar
-                                                           );
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer
-                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TVarChar, TVarChar, TVarChar, TVarChar
                                                            );
 
@@ -42,8 +38,8 @@ $BODY$
    DECLARE vbToId         Integer;
    DECLARE vbOperDate     TDateTime;
    DECLARE vbTaxKindId    Integer;
-   DECLARE vbTaxKindValue TFloat;   
-   
+   DECLARE vbTaxKindValue TFloat;
+
    DECLARE vbPartionCellId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -72,7 +68,7 @@ BEGIN
                               AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
      WHERE Movement.Id = inMovementId
     ;
-    
+
      vbTaxKindId:= CASE WHEN vbTaxKindId > 0 THEN vbTaxKindId ELSE zc_Enum_TaxKind_Basis() END;
 
      -- проверка если не нашли TaxKindId - выдается ошибка
@@ -80,7 +76,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не определен Тип НДС.';
      END IF;
-      
+
      -- нашли
      IF COALESCE (ioId, 0) <> 0
      THEN
@@ -91,7 +87,7 @@ BEGIN
 
      --находим ячейку хранения, если нет такой создаем
      IF COALESCE (ioPartionCellName, '') <> '' THEN
-         -- !!!поиск ИД !!! 
+         -- !!!поиск ИД !!!
          --если ввели код ищем по коду, иначе по названию
          IF zfConvert_StringToNumber (ioPartionCellName) <> 0
          THEN
@@ -122,12 +118,12 @@ BEGIN
                                                                      , inComment := ''          ::TVarChar
                                                                      , inSession := inSession   ::TVarChar
                                                                       );
-    
+
              END IF;
          END IF;
          --
-         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId); 
-     ELSE 
+         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
          vbPartionCellId := NULL ::Integer;
      END IF;
 
@@ -191,7 +187,7 @@ BEGIN
      -- дописали партию
      UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId AND PartionId IS NULL;
 
-  
+
      -- по ВСЕМ товарам исправили OperPriceList
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, inOperPriceList)
      FROM MovementItem
@@ -211,8 +207,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
