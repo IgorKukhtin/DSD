@@ -3434,30 +3434,16 @@ begin
             // Найменування товарної позиції
             LineItem.ItemDescription := ItemsDataSet.FieldByName('GoodsName').asString;
 
-            if (ItemsDataSet.FieldByName('MeasureName').asString = 'кг') and
-               (ItemsDataSet.FieldByName('AmountPartner').AsFloat < 1) then
-            begin
-              // кількість, що поставляється
-              LineItem.InvoiceQuantity := RoundTo(ItemsDataSet.FieldByName('AmountPartner').AsFloat * 1000, -2);
-              // BuyerUnitOfMeasure
-              LineItem.BuyerUnitOfMeasure := 'г';
+            // кількість, що поставляється
+            LineItem.InvoiceQuantity := ItemsDataSet.FieldByName('AmountPartner').AsFloat;
+            // BuyerUnitOfMeasure
+            LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
 
-              // Ціна однієї одиниці без ПДВ
-              LineItem.InvoiceUnitNetPrice := RoundTo(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat / 1000, -2);
-              // Ціна однієї одиниці з ПДВ
-              //LineItem.InvoiceUnitGrossPrice := RoundTo(ItemsDataSet.FieldByName('PriceWVAT').AsFloat / 1000, -2);
-            end else
-            begin
-              // кількість, що поставляється
-              LineItem.InvoiceQuantity := ItemsDataSet.FieldByName('AmountPartner').AsFloat;
-              // BuyerUnitOfMeasure
-              LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
+            // Ціна однієї одиниці без ПДВ
+            LineItem.InvoiceUnitNetPrice := ItemsDataSet.FieldByName('PriceNoVAT').AsFloat;
+            // Ціна однієї одиниці з ПДВ
+            //LineItem.InvoiceUnitGrossPrice := ItemsDataSet.FieldByName('PriceWVAT').AsFloat;
 
-              // Ціна однієї одиниці без ПДВ
-              LineItem.InvoiceUnitNetPrice := ItemsDataSet.FieldByName('PriceNoVAT').AsFloat;
-              // Ціна однієї одиниці з ПДВ
-              //LineItem.InvoiceUnitGrossPrice := ItemsDataSet.FieldByName('PriceWVAT').AsFloat;
-            end;
             // Ставка податку (ПДВ,%):
             LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
             LineItem.TaxCategoryCode := 'S';
