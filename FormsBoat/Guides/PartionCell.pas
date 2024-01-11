@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxContainer, cxLabel, cxTextEdit;
 
 type
   TPartionCellForm = class(TParentForm)
@@ -64,6 +64,11 @@ type
     bbShowAll: TdxBarButton;
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    edSearchName: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    FieldFilter_Article: TdsdFieldFilter;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

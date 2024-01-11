@@ -831,7 +831,7 @@ object GoodsForm: TGoodsForm
       Width = 115
     end
     object edSearchName: TcxTextEdit
-      Left = 560
+      Left = 564
       Top = 6
       TabOrder = 4
       DesignSize = (

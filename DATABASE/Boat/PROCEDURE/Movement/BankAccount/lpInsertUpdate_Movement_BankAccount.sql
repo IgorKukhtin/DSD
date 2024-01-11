@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
+/*
      -- проверка - свойство должно быть установлено
      IF COALESCE (inBankAccountId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не определено значение <Расчетный счет>.';
@@ -32,7 +33,7 @@ BEGIN
      IF COALESCE (inMovementId_Invoice, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не определено значение <Счет>.';
      END IF;
-
+      */
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, NULL, inUserId);
