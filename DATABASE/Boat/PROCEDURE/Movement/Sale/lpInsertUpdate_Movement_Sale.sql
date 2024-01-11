@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, Integer, TVarChar, TDateTime, Integer, Integer, Boolean, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
@@ -9,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому 
+    IN inToId                Integer   , -- Кому
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
     IN inComment             TVarChar  , -- Примечание
@@ -22,7 +21,7 @@ $BODY$
    DECLARE vbProductId Integer;
    DECLARE vbProductId_mi Integer;
    DECLARE vbMovementItemId Integer;
-   
+
 BEGIN
      -- Проверка
     /* IF COALESCE (inToId, 0) = 0
@@ -39,8 +38,8 @@ BEGIN
     AND COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
                                                  FROM ObjectLink AS OL_Client_TaxKind
                                                       LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
-                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId
+                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
                                                  WHERE OL_Client_TaxKind.ObjectId = inToId
                                                    AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
                                                 ), 0)
@@ -51,14 +50,14 @@ BEGIN
                        , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
                                                              FROM ObjectLink AS OL_Client_TaxKind
                                                                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
-                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId
+                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
                                                              WHERE OL_Client_TaxKind.ObjectId = inToId
                                                                AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
                                                             ), 0))
                         ;
      END IF;
-*/ 
+*/
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -101,7 +100,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);                                        
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 
      -----строки
@@ -125,7 +124,7 @@ BEGIN
             AND MovementItem.DescId = zc_MI_Master()
             AND MovementItem.isErased = FALSE
           ;
-     
+
           -- определяем признак Создание/Корректировка
           vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
           --если поменялась лодка удаляем чайлды
@@ -155,11 +154,10 @@ BEGIN
      WHERE tmp.DescId = zc_Object_Product();
 
      END IF;
-                                                      
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -1,6 +1,5 @@
 -- Function: gpGet_MI_Inventory_TotalCount()
 
-DROP FUNCTION IF EXISTS gpGet_MI_Inventory_TotalCount (Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Inventory_TotalCount (Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Inventory_TotalCount(

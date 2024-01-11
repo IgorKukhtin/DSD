@@ -1,26 +1,20 @@
 -- Function: gpInsertUpdate_MovementItem_Inventory()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer,Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer,Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                         Integer   , -- Ключ объекта <Документ>
     IN inMovementId_OrderClient             Integer   , -- Заказ Клиента
     IN inGoodsId                            Integer   , -- Товары
-    IN inPartionId                          Integer   , -- Партия  
+    IN inPartionId                          Integer   , -- Партия
     IN inPartnerId                          Integer   , -- поставщик
- INOUT ioAmount                             TFloat    , -- Количество 
+ INOUT ioAmount                             TFloat    , -- Количество
     IN inTotalCount                         TFloat    , -- Количество Итого
     IN inTotalCount_old                     TFloat    , -- Количество Итого
  INOUT ioPrice                              TFloat    , -- Цена
    OUT outAmountSumm                        TFloat    , -- Сумма расчетная
-    IN inPartNumber                         TVarChar  , --       
+    IN inPartNumber                         TVarChar  , --
  INOUT ioPartionCellName                    TVarChar  , -- код или название
     IN inComment                            TVarChar  , -- примечание
     IN inSession                            TVarChar    -- сессия пользователя
@@ -43,7 +37,7 @@ BEGIN
 
      --находим ячейку хранения, если нет такой создаем
      IF COALESCE (ioPartionCellName, '') <> '' THEN
-         -- !!!поиск ИД !!! 
+         -- !!!поиск ИД !!!
          --если ввели код ищем по коду, иначе по названию
          IF zfConvert_StringToNumber (ioPartionCellName) <> 0
          THEN
@@ -74,12 +68,12 @@ BEGIN
                                                                      , inComment := ''          ::TVarChar
                                                                      , inSession := inSession   ::TVarChar
                                                                       );
-    
+
              END IF;
          END IF;
          --
-         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId); 
-     ELSE 
+         ioPartionCellName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
          vbPartionCellId := NULL ::Integer;
      END IF;
 
@@ -114,4 +108,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

@@ -6,15 +6,15 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send(Integer, Integer, Integ
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ> 
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inMovementId_OrderClient Integer, -- Заказ Клиента
-    IN inGoodsId             Integer   , -- Комплектующие 
+    IN inGoodsId             Integer   , -- Комплектующие
     IN inPartionCellId       Integer   , --
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inPartNumber          TVarChar  , -- № по тех паспорту
-    IN inComment             TVarChar  , 
+    IN inComment             TVarChar  ,
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -45,7 +45,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId); 
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId);
 
 
      IF vbIsInsert = TRUE
@@ -54,7 +54,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, inUserId);
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
-   
+
      END IF;
 
      -- сохранили протокол
@@ -62,8 +62,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

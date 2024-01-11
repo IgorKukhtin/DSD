@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
@@ -10,8 +9,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
     IN inAmount              TFloat    , -- Количество
     IN inOperPriceList       TFloat    , -- Цена продажи
     IN inPartNumber          TVarChar  , -- № по тех паспорту
-    IN inComment             TVarChar  ,    
-    IN inPartionCellId       Integer   , -- 
+    IN inComment             TVarChar  ,
+    IN inPartionCellId       Integer   , --
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -34,8 +33,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId); 
-     
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId);
+
      IF vbIsInsert = TRUE
      THEN
          -- сохранили связь с <>
@@ -51,8 +50,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

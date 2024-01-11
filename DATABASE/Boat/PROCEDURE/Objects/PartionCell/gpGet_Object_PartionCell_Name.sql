@@ -1,6 +1,6 @@
 ﻿-- Function: gpGet_Object_PartionCell_Name()
 
-DROP FUNCTION IF EXISTS gpGet_Object_PartionCell_Name (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_PartionCell_Name (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_PartionCell_Name(
      IN inPartionCellName   TVarChar ,      -- 

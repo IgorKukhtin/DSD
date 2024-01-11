@@ -1,10 +1,10 @@
- -- Function: lpUpdate_MI_Income_Price()
+-- Function: lpUpdate_MI_Income_Price()
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_Income_Price (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_Income_Price(
     IN inId                  Integer   , --  люч объекта <Ёлемент документа>
-    IN inAmount              TFloat    , -- 
+    IN inAmount              TFloat    , --
     IN inOperPrice_orig      TFloat    , -- ¬х. цена без скидки
     IN inCountForPrice       TFloat    , -- ÷ена за кол.
  INOUT ioDiscountTax         TFloat    , -- % скидки
@@ -38,7 +38,7 @@ BEGIN
                                , inSummIn_old          := inSummIn_old
                                , inSession             := inUserId :: TVarChar
                                 ) AS gpGet;
-     
+
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice_orig(), inId, inOperPrice_orig);
@@ -51,7 +51,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummIn(), inId, ioSummIn);
 
-     RAISE EXCEPTION 'ќшибка.<%>', ioSummIn;
+     -- RAISE EXCEPTION 'ќшибка.<%>', ioSummIn;
 
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm ((SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inId));
@@ -67,4 +67,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

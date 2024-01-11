@@ -235,6 +235,11 @@ BEGIN
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
+IF vbUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>  <%>', vbGoodsPropertyId, lfGet_Object_ValueData_sh (vbGoodsPropertyId);
+END IF;
+
 
      -- !!!надо определить - есть ли скидка в цене!!!
      vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у Юр лица есть галка
@@ -1765,6 +1770,7 @@ BEGIN
                                               , 83963  -- Ашан
                                               , 404076 -- Новус
                                               , 83956  -- Фора
+                                              , 83957  -- Кишени
                                                )
                           THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
                      ELSE '0'
