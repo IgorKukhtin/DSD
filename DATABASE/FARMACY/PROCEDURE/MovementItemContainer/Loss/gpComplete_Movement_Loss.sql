@@ -18,19 +18,25 @@ $BODY$
   DECLARE vbAmount    TFloat;
   DECLARE vbSaldo     TFloat;
   DECLARE vbUnitId    Integer;
+  DECLARE vbisCat_5 boolean;
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
     SELECT Movement.OperDate           AS OperDate,
            Movement.InvNumber          AS InvNumber,
-           MovementLinkObject.ObjectId AS UnitId
+           MovementLinkObject.ObjectId AS UnitId, 
+           MovementLinkObject_ArticleLoss.ObjectId = 23653195
     INTO outOperDate
         ,vbInvNumber
         ,vbUnitId
+        ,vbisCat_5
     FROM Movement
         INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit()
-    WHERE MovementId = inMovementId;
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                     ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                    AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+    WHERE Movement.Id = inMovementId;
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
@@ -50,27 +56,53 @@ BEGIN
     END IF;
 
   --Проверка на то что бы не списали больше чем есть на остатке
-    WITH REMAINS AS ( --остатки на дату документа
+    WITH tmpContainerPD AS (SELECT Container.ParentId                                                           AS ContainerId 
+                             , (Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat AS Amount
+                        FROM Container
+
+                             INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                          AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                             INNER JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                      ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
+                                                     AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+                                                     AND ObjectBoolean_PartionGoods_Cat_5.ValueData = TRUE
+
+                             INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                  ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                 AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+                             LEFT JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
+                                                            AND date_trunc('day', MovementItemContainer.Operdate) > outOperDate
+
+                        WHERE Container.DescId = zc_Container_CountPartionDate()
+                          AND Container.WhereObjectId = vbUnitId
+                          AND COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()) <= outOperDate
+                        GROUP BY Container.Id, Container.Amount
+                        HAVING (Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0)) > 0),
+         REMAINS AS ( --остатки на дату документа
                                 SELECT 
                                     T0.ObjectId
                                    ,SUM(T0.Amount)::TFloat as Amount
                                 FROM(
                                         SELECT 
-                                            Container.Id 
-                                           ,Container.ObjectId --Товар
-                                           ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                                               Container.Id 
+                                             , Container.ObjectId --Товар
+                                             , CASE WHEN vbisCat_5 = TRUE
+                                                    THEN MAX(tmpContainerPD.Amount)
+                                                    ELSE (Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0)) END::TFloat AS Amount  --Тек. остаток - Движение после даты переучета
                                         FROM Container
                                             LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                                                 AND 
-                                                                                 (
-                                                                                    date_trunc('day', MovementItemContainer.Operdate) > outOperDate
-                                                                                 )
-                                            JOIN ContainerLinkObject AS CLI_Unit 
-                                                                     ON CLI_Unit.containerid = Container.Id
-                                                                    AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                    AND CLI_Unit.ObjectId = vbUnitId                                   
-                                        WHERE 
-                                            Container.DescID = zc_Container_Count()
+                                                                                 AND date_trunc('day', MovementItemContainer.Operdate) > outOperDate
+                                                                                 
+                                            LEFT JOIN (SELECT tmpContainerPD.ContainerId, 
+                                                              SUM(tmpContainerPD.Amount)   AS Amount
+                                                       FROM tmpContainerPD 
+                                                       GROUP BY tmpContainerPD.ContainerId 
+                                                       HAVING SUM(tmpContainerPD.Amount) > 0) AS tmpContainerPD ON tmpContainerPD.ContainerId = Container.Id  
+                                            
+                                        WHERE Container.DescID = zc_Container_Count()
+                                          AND Container.WhereObjectId = vbUnitId
                                         GROUP BY 
                                             Container.Id 
                                            ,Container.ObjectId
@@ -100,9 +132,10 @@ BEGIN
     
   IF (COALESCE(vbGoodsName,'') <> '') 
   THEN
-    RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во списания <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
+    RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во списания <%> больше, чем есть на остатке <%>%.', vbGoodsName, vbAmount, vbSaldo, 
+          CASE WHEN vbisCat_5 = TRUE THEN ' Проверьте возможно товар 5 категории отложен в перемещении.' ELSE '' END;
   END IF;
-  
+
     -- Проверить, что бы не было переучета позже даты документа
 
     /*IF EXISTS(SELECT 1
@@ -152,3 +185,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpComplete_Movement_Loss (inMovementId:= 29207, inIsCurrentData:= TRUe, inSession:= '2')
+
+-- select * from gpComplete_Movement_Loss(inmovementid := 34457829 , inIsCurrentData := 'False' ,  inSession := '3');

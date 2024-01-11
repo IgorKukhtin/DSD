@@ -94,7 +94,9 @@ BEGIN
     END IF;
 
     vbSumma := COALESCE(Round((
-                         SELECT SUM (COALESCE (Round(MovementFloat_TotalSumm.ValueData, 2), 0) - COALESCE(MovementFloat_SummaFund.ValueData, 0))
+                         SELECT SUM (CASE WHEN MovementLinkObject_ArticleLoss.ObjectId = 23653195
+                                          THEN COALESCE (Round(MovementFloat_TotalSummSale.ValueData, 2), 0)
+                                          ELSE COALESCE (Round(MovementFloat_TotalSumm.ValueData, 2), 0) - COALESCE(MovementFloat_SummaFund.ValueData, 0) END)
                          FROM Movement
 
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -112,10 +114,13 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                       ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                                      ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
                          WHERE Movement.OperDate BETWEEN date_trunc('month', inOperDate) AND date_trunc('month', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                            AND Movement.DescId = zc_Movement_Loss()
                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                           AND MovementLinkObject_ArticleLoss.ObjectId = 13892113), 2), 0);
+                           AND MovementLinkObject_ArticleLoss.ObjectId IN (13892113, 23653195)), 2), 0);
 
      -- сохранили свойство <ѕолное списание>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeMonth(), vbId, - vbSumma);
