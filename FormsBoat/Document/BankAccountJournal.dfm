@@ -4,7 +4,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -605,8 +604,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Properties.Strings = (
           'Date')
       end>
+    Top = 51
   end
   inherited ActionList: TActionList
+    Left = 87
+    Top = 50
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 16433
       FormName = 'TBankAccountMovementForm'
@@ -1004,17 +1006,71 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 80
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 44927d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting_csv: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_csv'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object mactStartLoad_csv: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_csv
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
+      ImageIndex = 41
+      WithoutNext = True
+    end
   end
   inherited MasterDS: TDataSource
-    Top = 115
+    Left = 40
+    Top = 163
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 8
+    Top = 163
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
     Top = 131
   end
   inherited BarManager: TdxBarManager
-    Left = 128
-    Top = 131
+    Left = 48
+    Top = 51
     DockControlHeights = (
       0
       0
@@ -1066,7 +1122,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbOpenInvoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad'
         end
         item
           Visible = True
@@ -1120,7 +1184,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Visible = ivAlways
       ImageIndex = 58
     end
-    object bb: TdxBarButton
+    object bbOpenInvoiceForm: TdxBarButton
       Action = actOpenInvoiceForm
       Category = 0
     end
@@ -1131,6 +1195,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Visible = ivAlways
       ImageIndex = 55
     end
+    object bbStartLoad: TdxBarButton
+      Action = mactStartLoad_csv
+      Category = 0
+    end
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 120
+    Top = 56
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1268,5 +1340,37 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     CheckBoxList = <>
     Left = 984
     Top = 128
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TBankAccountJournalForm;zc_Object_ImportSetting_BankAccount_csv'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 160
   end
 end

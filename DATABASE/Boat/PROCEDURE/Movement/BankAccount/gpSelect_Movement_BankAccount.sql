@@ -38,8 +38,29 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , InvoiceKindName TVarChar
 
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
-              )
+             , UpdateName TVarChar, UpdateDate TDateTime  
+             --
+             , String_1     TVarChar  --Bezeichnung Auftragskonto;                           имя счета заказа;
+             , String_2     TVarChar  --IBAN Auftragskonto;                                  счет заказа IBAN;
+             , String_3     TVarChar  --BIC Auf3ragskonto;                                   счет заказа BIC;
+             , String_4     TVarChar  --Bankname Auftragskonto;                              Счет заказа на имя банка;
+             , TDateTime_5  TVarChar  --Buchungstag;                                         день бронирования;
+              --Movement - OperDate - 6TVarChar  --Valutadatum;                                         дата валютирования;
+             , String_7     TVarChar  --Name Zahlungsbeteiligter;                            наименование плательщика;
+             , String_8     TVarChar  --IBAN Zahlungsbeteiligter;                            сторона платежа IBAN;
+             , String_9     TVarChar  --BIC (SWIFT-Code)Zahlungsbeteiligter;                 BIC (код SWIFT) стороны платежа;
+             , String_10    TVarChar  --Buchungstext;                                        текст бронирования;
+              --zc_MIString_Comment - 11TVarChar  --Verwendungszweck;                                    Цель использования;
+             --zc_MI_Master.Amount - 12TVarChar  --Betrag;                                              Количество;
+             , String_13    TVarChar  --Waehrung;                                            Валюта;
+             , TFloat_14    TVarChar  --Saldo nach Buchung;                                  баланс после бронирования;
+             , String_15    TVarChar  --Bemerkung;                                           Примечание;
+             , String_16    TVarChar  --Kategorie;                                           Категория;
+             , String_17    TVarChar  --Steuerrelevant;                                      Налоговый релевантный;
+             , String_18    TVarChar  --Glaeubiger ID;                                       идентификатор кредитора;
+             , String_19    TVarChar  --Mandatsreferenz                                      Ссылка на мандат
+              )   
+              
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -77,6 +98,38 @@ BEGIN
                                                                          ON MLM_Invoice.MovementId = tmp.MovementId
                                                                         AND MLM_Invoice.DescId     = zc_MovementLinkMovement_Invoice()
                                     )
+      --
+      , tmpMovementString AS (SELECT MovementString.*
+                              FROM MovementString
+                              WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementString.DescId IN (zc_MovementString_1()
+                                                            , zc_MovementString_2()
+                                                            , zc_MovementString_3()
+                                                            , zc_MovementString_4()
+                                                            , zc_MovementString_7()
+                                                            , zc_MovementString_8()
+                                                            , zc_MovementString_9()
+                                                            , zc_MovementString_10()
+                                                            , zc_MovementString_13()
+                                                            , zc_MovementString_15()
+                                                            , zc_MovementString_16()
+                                                            , zc_MovementString_17()
+                                                            , zc_MovementString_18()
+                                                            , zc_MovementString_19()
+                                                            )
+                              )
+      , tmpMovementFloat AS (SELECT MovementFloat.*
+                             FROM MovementFloat
+                             WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                               AND MovementFloat.DescId IN (zc_MovementFloat_14())
+                             )
+      , tmpMovementDate AS (SELECT MovementDate.*
+                                FROM MovementDate
+                                WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                  AND MovementDate.DescId IN (zc_MovementDate_5())
+                                )
+
+
         -- данные Invoice
       , tmpInvoice_Params AS (SELECT tmp.MovementId_Invoice                              AS MovementId_Invoice
                                    , MovementFloat_Amount.ValueData            :: TFloat AS Amount
@@ -226,7 +279,25 @@ BEGIN
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
-           , MovementDate_Update.ValueData        AS UpdateDate
+           , MovementDate_Update.ValueData        AS UpdateDate  
+           
+           --
+           , MovementString_1.ValueData   ::TVarChar AS String_1
+           , MovementString_2.ValueData   ::TVarChar AS String_2
+           , MovementString_3.ValueData   ::TVarChar AS String_3
+           , MovementString_4.ValueData   ::TVarChar AS String_4
+           , MovementDate_5.ValueData     ::TVarChar AS TDateTime_5
+           , MovementString_7.ValueData   ::TVarChar AS String_7
+           , MovementString_8.ValueData   ::TVarChar AS String_8
+           , MovementString_9.ValueData   ::TVarChar AS String_9
+           , MovementString_1.ValueData   ::TVarChar AS String_10
+           , MovementString_1.ValueData   ::TVarChar AS String_13
+           , MovementFloat_14.ValueData   ::TVarChar AS TFloat_14
+           , MovementString_1.ValueData   ::TVarChar AS String_15
+           , MovementString_1.ValueData   ::TVarChar AS String_16
+           , MovementString_1.ValueData   ::TVarChar AS String_17
+           , MovementString_1.ValueData   ::TVarChar AS String_18
+           , MovementString_1.ValueData   ::TVarChar AS String_19
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -293,6 +364,56 @@ BEGIN
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+            --
+            LEFT JOIN tmpMovementString AS MovementString_1
+                                        ON MovementString_1.MovementId = Movement.Id
+                                       AND MovementString_1.DescId = zc_MovementString_1()
+            LEFT JOIN tmpMovementString AS MovementString_2
+                                        ON MovementString_2.MovementId = Movement.Id
+                                       AND MovementString_2.DescId = zc_MovementString_2()
+            LEFT JOIN tmpMovementString AS MovementString_3
+                                        ON MovementString_3.MovementId = Movement.Id
+                                       AND MovementString_3.DescId = zc_MovementString_3()
+            LEFT JOIN tmpMovementString AS MovementString_4
+                                        ON MovementString_4.MovementId = Movement.Id
+                                       AND MovementString_4.DescId = zc_MovementString_4()
+            LEFT JOIN tmpMovementString AS MovementString_7
+                                        ON MovementString_7.MovementId = Movement.Id
+                                       AND MovementString_7.DescId = zc_MovementString_7()
+            LEFT JOIN tmpMovementString AS MovementString_8
+                                        ON MovementString_8.MovementId = Movement.Id
+                                       AND MovementString_8.DescId = zc_MovementString_8()
+            LEFT JOIN tmpMovementString AS MovementString_9
+                                        ON MovementString_9.MovementId = Movement.Id
+                                       AND MovementString_9.DescId = zc_MovementString_9()
+            LEFT JOIN tmpMovementString AS MovementString_10
+                                        ON MovementString_10.MovementId = Movement.Id
+                                       AND MovementString_10.DescId = zc_MovementString_10()
+            LEFT JOIN tmpMovementString AS MovementString_13
+                                        ON MovementString_13.MovementId = Movement.Id
+                                       AND MovementString_13.DescId = zc_MovementString_13()
+            LEFT JOIN tmpMovementString AS MovementString_15
+                                        ON MovementString_15.MovementId = Movement.Id
+                                       AND MovementString_15.DescId = zc_MovementString_15()
+            LEFT JOIN tmpMovementString AS MovementString_16
+                                        ON MovementString_16.MovementId = Movement.Id
+                                       AND MovementString_16.DescId = zc_MovementString_16()
+            LEFT JOIN tmpMovementString AS MovementString_17
+                                        ON MovementString_17.MovementId = Movement.Id
+                                       AND MovementString_17.DescId = zc_MovementString_17()
+            LEFT JOIN tmpMovementString AS MovementString_18
+                                        ON MovementString_18.MovementId = Movement.Id
+                                       AND MovementString_18.DescId = zc_MovementString_18()
+            LEFT JOIN tmpMovementString AS MovementString_19
+                                        ON MovementString_19.MovementId = Movement.Id
+                                       AND MovementString_19.DescId = zc_MovementString_19()
+
+            LEFT JOIN tmpMovementDate AS MovementDate_5
+                                      ON MovementDate_5.MovementId = Movement.Id
+                                     AND MovementDate_5.DescId = zc_MovementDate_5()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_14
+                                       ON MovementFloat_14.MovementId = Movement.Id
+                                      AND MovementFloat_14.DescId = zc_MovementFloat_14()
         ;
 
 END;
@@ -302,6 +423,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.01.24         *
  03.02.21         *
 */
 
