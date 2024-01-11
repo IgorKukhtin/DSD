@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, ExternalLoad;
+  Vcl.StdCtrls, cxButtons, ExternalLoad, cxSplitter;
 
 type
   TBankAccountJournalForm = class(TAncestorJournal_boatForm)
@@ -93,6 +93,30 @@ type
     String_19: TcxGridDBColumn;
     TDateTime_5: TcxGridDBColumn;
     TFloat_14: TcxGridDBColumn;
+    cxSplitter_Bottom_Child: TcxSplitter;
+    cxGrid_Child: TcxGrid;
+    cxGridDBTableView_child: TcxGridDBTableView;
+    ReceiptLevelName_ch3: TcxGridDBColumn;
+    GoodsCode_ch3: TcxGridDBColumn;
+    Article_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    ProdColorName_goods_ch3: TcxGridDBColumn;
+    Amount_ch3: TcxGridDBColumn;
+    AmountReserv_ch3: TcxGridDBColumn;
+    AmountSend_ch3: TcxGridDBColumn;
+    ProdOptionsName_ch3: TcxGridDBColumn;
+    ProdColorPatternName_ch3: TcxGridDBColumn;
+    Comment_goods_ch3: TcxGridDBColumn;
+    ColorPatternName_ch3: TcxGridDBColumn;
+    UnitName_ch3: TcxGridDBColumn;
+    ForCount_ch3: TcxGridDBColumn;
+    isErased_ch3: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    actDBViewAddOnChild: TdsdDBViewAddOn;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    spSelectMI_Child: TdsdStoredProc;
   private
     { Private declarations }
   public
