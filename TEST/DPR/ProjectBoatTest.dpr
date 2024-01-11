@@ -373,7 +373,8 @@ uses
   Report_Boat_Assembly in '..\..\FormsBoat\Report\Report_Boat_Assembly.pas' {Report_Boat_AssemblyForm: TParentForm},
   OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm},
   PartionCellEdit in '..\..\FormsBoat\Guides\PartionCellEdit.pas' {PartionCellEditForm: TParentForm},
-  PartionCell in '..\..\FormsBoat\Guides\PartionCell.pas' {PartionCellForm: TParentForm};
+  PartionCell in '..\..\FormsBoat\Guides\PartionCell.pas' {PartionCellForm: TParentForm},
+  DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

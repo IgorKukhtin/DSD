@@ -1662,7 +1662,7 @@ object IncomeForm: TIncomeForm
     end
     object btnInsertAction: TcxButton
       Left = 223
-      Top = 5
+      Top = 4
       Width = 105
       Height = 25
       Action = mactInsertAction

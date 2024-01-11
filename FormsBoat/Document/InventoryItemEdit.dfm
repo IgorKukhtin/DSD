@@ -260,7 +260,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Width = 302
   end
   object cxLabel12: TcxLabel
-    Left = 320
+    Left = 323
     Top = 199
     Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
   end
