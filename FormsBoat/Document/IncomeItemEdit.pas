@@ -72,6 +72,9 @@ type
     EnterMoveNext: TEnterMoveNext;
     btnGoodsChoiceForm: TcxButton;
     actGoodsChoiceForm: TOpenChoiceForm;
+    GuidesPartionCell: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edPartionCell: TcxButtonEdit;
   private
     { Private declarations }
   public

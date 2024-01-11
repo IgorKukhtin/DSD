@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , OperPriceList  TFloat
              , EmpfPrice      TFloat
              , PartNumber     TVarChar
+             , PartionCellId Integer, PartionCellName TVarChar
              , Comment        TVarChar
               )
 AS
@@ -107,7 +108,9 @@ BEGIN
                , COALESCE (tmpMI.SummIn, 0)                                        :: TFloat   AS SummIn
                , COALESCE (tmpMI.OperPriceList, tmpPriceBasis.ValuePrice, 0)       :: TFloat   AS OperPriceList
                , COALESCE (tmpMI.EmpfPrice, ObjectFloat_EmpfPrice.ValueData, 0)    :: TFloat   AS EmpfPrice
-               , tmpMI.PartNumber                                                  :: TVarChar AS PartNumber
+               , tmpMI.PartNumber                                                  :: TVarChar AS PartNumber 
+               , Object_PartionCell.Id                                             :: Integer  AS PartionCellId
+               , Object_PartionCell.ValueData                                      :: TVarChar AS PartionCellName
                , tmpMI.Comment                                                     :: TVarChar AS Comment
            FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.Id > 0
@@ -124,6 +127,11 @@ BEGIN
                 LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                       ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
                                      AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
+
+                LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                 ON MILO_PartionCell.MovementItemId = tmpMI.Id
+                                                AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
+                LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILO_PartionCell.ObjectId
                ;
 END;
 $BODY$
