@@ -77,6 +77,22 @@ type
     actGetImportSetting_csv: TdsdExecStoredProc;
     mactStartLoad_csv: TMultiAction;
     bbStartLoad: TdxBarButton;
+    String_1: TcxGridDBColumn;
+    String_2: TcxGridDBColumn;
+    String_3: TcxGridDBColumn;
+    String_4: TcxGridDBColumn;
+    String_7: TcxGridDBColumn;
+    String_8: TcxGridDBColumn;
+    String_9: TcxGridDBColumn;
+    String_10: TcxGridDBColumn;
+    String_13: TcxGridDBColumn;
+    String_15: TcxGridDBColumn;
+    String_16: TcxGridDBColumn;
+    String_17: TcxGridDBColumn;
+    String_18: TcxGridDBColumn;
+    String_19: TcxGridDBColumn;
+    TDateTime_5: TcxGridDBColumn;
+    TFloat_14: TcxGridDBColumn;
   private
     { Private declarations }
   public

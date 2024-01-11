@@ -25,17 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount_csv_Load(
     IN inString_18            TVarChar  , --
     IN inString_19            TVarChar  , --
     IN inSession              TVarChar    -- сессия пользователя
-)   
-
-
-d(inString_1 := 'Kontokorrent-/Girokonto' , inString_2 := 'DE56390601800154560009' , inString_3 := 'GENODED1AAC' , inString_4 := 'Aachener Bank eG'
-, inTDateTime_5 := ('11.01.2024')::TDateTime , inOperDate := ('11.01.2024')::TDateTime , inOperDate := ('11.01.2024')::TDateTime 
-, inString_7 := 'Weigel-Erbe Steuerber. GmbH' , inString_8 := 'DE11360200300007321791' , inString_9 := 'NBAGDE3EXXX' , inString_10 := 'Retouren' 
-, inComment := 'RETURN/REFUND, Retoure SEPA Lastschrift vom 07.12.2023, Rueckgabegrund: AM04 Deckung ungenГјgend EREF: 2312041325-0000074 CRED: DE87ZZZ00001081311 IBAN: DE11360200300007321791 BIC: NBAGDE3E'
-, inAmount := 672.35 , inString_13 := 'EUR' , inTFloat_14 := -4870.33 
-, inString_15 := '' , inString_16 := 'Sonstiges' , inString_17 := '' , inString_18 := '' , inString_19 := '' ,  inSession := '5');
-
-                           
+)                         
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -109,45 +99,45 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     vbMovementId:= lpInsertUpdate_Movement_BankAccount (ioId                   := COALESCE (vbMovementId,0)
+     vbMovementId:= lpInsertUpdate_Movement_BankAccount (ioId                   := COALESCE (vbMovementId,0)::Integer
                                                        , inInvNumber            := CASE WHEN COALESCE (vbMovementId,0) = 0 THEN CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar) ELSE vbInvNumber END ::TVarChar
-                                                       , inInvNumberPartner     := NULL ::TVarChar
-                                                       , inOperDate             := inOperDate
-                                                       , inAmount               := inAmount
-                                                       , inBankAccountId        := 0
-                                                       , inMoneyPlaceId         := 0
-                                                       , inMovementId_Invoice   := 0
-                                                       , inComment              := inComment
-                                                       , inUserId               := vbUserId
+                                                       , inInvNumberPartner     := NULL        ::TVarChar
+                                                       , inOperDate             := inOperDate  ::TDateTime
+                                                       , inAmount               := inAmount    ::TFloat
+                                                       , inBankAccountId        := 33325       ::Integer       --     "34567890"     "Erste Bank"        "EUR"
+                                                       , inMoneyPlaceId         := 0           ::Integer
+                                                       , inMovementId_Invoice   := 0           ::Integer
+                                                       , inComment              := inComment   ::TVarChar
+                                                       , inUserId               := vbUserId    ::Integer
                                                         );
                                                 
      --и сохраняем остальные загрузочные параметры
      -- сохранили
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_1(), vbMovementId, inString_1);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_2(), vbMovementId, inString_2);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_3(), vbMovementId, inString_3);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_4(), vbMovementId, inString_4);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_7(), vbMovementId, inString_7);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_8(), vbMovementId, inString_8);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_9(), vbMovementId, inString_9);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_10(), vbMovementId, inString_10);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_13(), vbMovementId, inString_13);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_15(), vbMovementId, inString_15);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_16(), vbMovementId, inString_16);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_17(), vbMovementId, inString_17);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_18(), vbMovementId, inString_18);
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_19(), vbMovementId, inString_19); 
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_1(), vbMovementId, TRIM (inString_1));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_2(), vbMovementId, TRIM (inString_2));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_3(), vbMovementId, TRIM (inString_3));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_4(), vbMovementId, TRIM (inString_4));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_7(), vbMovementId, TRIM (inString_7));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_8(), vbMovementId, TRIM (inString_8));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_9(), vbMovementId, TRIM (inString_9));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_10(), vbMovementId, TRIM (inString_10));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_13(), vbMovementId, TRIM (inString_13));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_15(), vbMovementId, TRIM (inString_15));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_16(), vbMovementId, TRIM (inString_16));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_17(), vbMovementId, TRIM (inString_17));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_18(), vbMovementId, TRIM (inString_18));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_19(), vbMovementId, TRIM (inString_19)); 
      --
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_5(), vbMovementId, inTDateTime_5);
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_14(), vbMovementId, inTFloat_14);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_5(), vbMovementId, inTDateTime_5::TDateTime);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_14(), vbMovementId, inTFloat_14::TFloat);
      
      -- 5.3. проводим Документ
-     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount())
+    /* IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount())
      THEN
           PERFORM lpComplete_Movement_BankAccount (inMovementId := vbMovementId
                                                  , inUserId     := vbUserId);
      END IF;
-
+    */
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -447,6 +447,147 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 78
           end
+          object String_1: TcxGridDBColumn
+            Caption = 'Bezeichnung Auftragskonto'
+            DataBinding.FieldName = 'String_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1080#1084#1103' '#1089#1095#1077#1090#1072' '#1079#1072#1082#1072#1079#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object String_2: TcxGridDBColumn
+            Caption = 'IBAN Auftragskonto'
+            DataBinding.FieldName = 'String_2'
+            HeaderHint = #1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' IBAN'
+            Options.Editing = False
+            Width = 70
+          end
+          object String_3: TcxGridDBColumn
+            Caption = 'BIC Auf3ragskonto'
+            DataBinding.FieldName = 'String_3'
+            HeaderHint = #1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' BIC'
+            Options.Editing = False
+            Width = 70
+          end
+          object String_4: TcxGridDBColumn
+            Caption = 'Bankname Auftragskonto'
+            DataBinding.FieldName = 'String_4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' '#1085#1072' '#1080#1084#1103' '#1073#1072#1085#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object String_7: TcxGridDBColumn
+            Caption = 'Name Zahlungsbeteiligter'
+            DataBinding.FieldName = 'String_7'
+            FooterAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object String_8: TcxGridDBColumn
+            Caption = 'IBAN Zahlungsbeteiligter'
+            DataBinding.FieldName = 'String_8'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1090#1086#1088#1086#1085#1072' '#1087#1083#1072#1090#1077#1078#1072' IBAN'
+            Options.Editing = False
+            Width = 70
+          end
+          object String_9: TcxGridDBColumn
+            Caption = 'BIC (SWIFT-Code)Zahlungsbeteiligter'
+            DataBinding.FieldName = 'String_9'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'BIC ('#1082#1086#1076' SWIFT) '#1089#1090#1086#1088#1086#1085#1099' '#1087#1083#1072#1090#1077#1078#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object String_10: TcxGridDBColumn
+            Caption = 'Buchungstext'
+            DataBinding.FieldName = 'String_10'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1090#1077#1082#1089#1090' '#1073#1088#1086#1085#1080#1088#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object String_13: TcxGridDBColumn
+            Caption = 'Waehrung'
+            DataBinding.FieldName = 'String_13'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1072#1083#1102#1090#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object String_15: TcxGridDBColumn
+            Caption = 'Bemerkung'
+            DataBinding.FieldName = 'String_15'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object String_16: TcxGridDBColumn
+            Caption = 'Kategorie'
+            DataBinding.FieldName = 'String_16'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object String_17: TcxGridDBColumn
+            Caption = 'Steuerrelevant'
+            DataBinding.FieldName = 'String_17'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1088#1077#1083#1077#1074#1072#1085#1090#1085#1099#1081
+            Options.Editing = False
+            Width = 70
+          end
+          object String_18: TcxGridDBColumn
+            Caption = 'Glaeubiger ID'
+            DataBinding.FieldName = 'String_18'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1080#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1088#1077#1076#1080#1090#1086#1088#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object String_19: TcxGridDBColumn
+            Caption = 'Mandatsreferenz'
+            DataBinding.FieldName = 'String_19'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1089#1099#1083#1082#1072' '#1085#1072' '#1084#1072#1085#1076#1072#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object TDateTime_5: TcxGridDBColumn
+            Caption = 'Buchungstag'
+            DataBinding.FieldName = 'TDateTime_5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1077#1085#1100' '#1073#1088#1086#1085#1080#1088#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
+          object TFloat_14: TcxGridDBColumn
+            Caption = 'Saldo nach Buchung'
+            DataBinding.FieldName = 'TFloat_14'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1073#1072#1083#1072#1085#1089' '#1087#1086#1089#1083#1077' '#1073#1088#1086#1085#1080#1088#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -1013,15 +1154,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
       ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <
-        item
-          Name = 'inOperDate'
-          Value = 44927d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
+      ExternalParams = <>
     end
     object actGetImportSetting_csv: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
