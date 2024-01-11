@@ -106,7 +106,7 @@ BEGIN
                 , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                 , Object_GoodsGroup.Id                        AS GoodsGroupId
                 , Object_GoodsGroup.ValueData                 AS GoodsGroupName
-                , Object_Partner.ObjectCode                   AS PartnerId
+                , Object_Partner.Id                           AS PartnerId
                 , Object_Partner.ValueData                    AS PartnerName
                 , 1  :: TFloat                                AS CountForPrice
                 , 0  :: TFloat                                AS Price

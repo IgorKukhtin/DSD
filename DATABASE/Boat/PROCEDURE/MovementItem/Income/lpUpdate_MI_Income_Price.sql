@@ -1,4 +1,4 @@
- -- Function: lpUpdate_MI_Income_Price()
+-- Function: lpUpdate_MI_Income_Price()
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_Income_Price (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
@@ -51,7 +51,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummIn(), inId, ioSummIn);
 
-     RAISE EXCEPTION 'Ошибка.<%>', ioSummIn;
+     -- RAISE EXCEPTION 'Ошибка.<%>', ioSummIn;
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm ((SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inId));
