@@ -1,7 +1,7 @@
 -- Function: gpUpdate_Movement_ReturnOut_PartnerData()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData (Integer, TVarChar, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_ReturnOut_PartnerData(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>

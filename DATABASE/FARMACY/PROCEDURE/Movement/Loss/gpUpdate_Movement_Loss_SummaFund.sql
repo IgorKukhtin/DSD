@@ -110,7 +110,7 @@ BEGIN
     PERFORM gpSelect_Calculation_Retail_FundUsed(inSession);
 
     --Пересчет полного списания в зарплате
-    IF COALESCE(vbArticleLossId, 0) = 13892113
+    IF COALESCE(vbArticleLossId, 0) IN (13892113, 23653195)
     THEN
       PERFORM gpInsertUpdate_MovementItem_WagesFullCharge (vbUnitId, vbOperDate, inSession); 
     END IF;

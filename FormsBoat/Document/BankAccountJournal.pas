@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons;
+  Vcl.StdCtrls, cxButtons, ExternalLoad;
 
 type
   TBankAccountJournalForm = class(TAncestorJournal_boatForm)
@@ -50,7 +50,7 @@ type
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
     actRefreshStart: TdsdDataSetRefresh;
-    bb: TdxBarButton;
+    bbOpenInvoiceForm: TdxBarButton;
     bbUpdateMoneyPlace: TdxBarButton;
     actOpenInvoiceForm: TdsdOpenForm;
     InfoMoneyGroupName_Invoice: TcxGridDBColumn;
@@ -72,6 +72,11 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
     InvoiceKindName: TcxGridDBColumn;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting_csv: TdsdExecStoredProc;
+    mactStartLoad_csv: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

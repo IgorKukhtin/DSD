@@ -43,11 +43,14 @@ $BODY$
     DECLARE vbIsProcess_BranchIn Boolean;
 
     DECLARE vbStoreKeeperName TVarChar;
+    
+    DECLARE vbPartneFromId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+     vbPartneFromId := 258612;
 
      -- параметры
      vbOperDate_insert:= (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1);
@@ -582,6 +585,22 @@ BEGIN
 
            , vbOperDate_insert AS OperDate_insert
            , CASE WHEN vbWeighingCount > 0 THEN vbWeighingCount ELSE 1 END :: Integer AS WeighingCount
+           
+           , Object_Street_View_From.PostalCode     AS PostalCode_From
+
+           , COALESCE(ObjectString_CityKind_ShortName_From.ValueData||' ', '')||
+             COALESCE (Object_Street_View_From.CityName, '')    AS CityName_From
+
+           , COALESCE(ObjectString_StreetKind_ShortName_From.ValueData||' ', '')||
+             Object_Street_View_From.Name|| 
+                              CASE WHEN COALESCE (ObjectString_HouseNumber_From.ValueData, '') <> ''
+                                        THEN ' буд.' || COALESCE (ObjectString_HouseNumber_From.ValueData, '')
+                                   ELSE ''
+                              END ||
+                              CASE WHEN COALESCE (ObjectString_CaseNumber_From.ValueData, '') <> ''
+                                        THEN ' корп.' || COALESCE (ObjectString_CaseNumber_From.ValueData, '')
+                                   ELSE ''
+                              END  AS StreetName_From
 
        FROM tmpMovement AS Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
@@ -826,6 +845,31 @@ BEGIN
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+                                                                  
+            LEFT JOIN ObjectString AS ObjectString_HouseNumber_From
+                                   ON ObjectString_HouseNumber_From.ObjectId = vbPartneFromId
+                                  AND ObjectString_HouseNumber_From.DescId = zc_ObjectString_Partner_HouseNumber()
+            LEFT JOIN ObjectString AS ObjectString_CaseNumber_From
+                                   ON ObjectString_CaseNumber_From.ObjectId = vbPartneFromId
+                                  AND ObjectString_CaseNumber_From.DescId = zc_ObjectString_Partner_CaseNumber()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Street_From
+                                 ON ObjectLink_Partner_Street_From.ObjectId = vbPartneFromId
+                                AND ObjectLink_Partner_Street_From.DescId = zc_ObjectLink_Partner_Street()
+            LEFT JOIN Object_Street_View AS Object_Street_View_From
+                                         ON Object_Street_View_From.Id = ObjectLink_Partner_Street_From.ChildObjectId
+            LEFT JOIN ObjectString AS ObjectString_StreetKind_ShortName_From
+                                   ON ObjectString_StreetKind_ShortName_From.ObjectId = Object_Street_View_From.StreetKindId
+                                  AND ObjectString_StreetKind_ShortName_From.DescId = zc_ObjectString_StreetKind_ShortName()
+                                  AND ObjectString_StreetKind_ShortName_From.ValueData <> ''
+
+            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind_From
+                                 ON ObjectLink_City_CityKind_From.ObjectId = Object_Street_View_From.CityId
+                                AND ObjectLink_City_CityKind_From.DescId = zc_ObjectLink_City_CityKind()
+            LEFT JOIN ObjectString AS ObjectString_CityKind_ShortName_From
+                                   ON ObjectString_CityKind_ShortName_From.ObjectId = ObjectLink_City_CityKind_From.ChildObjectId
+                                  AND ObjectString_CityKind_ShortName_From.DescId = zc_ObjectString_CityKind_ShortName()
+                                  AND ObjectString_CityKind_ShortName_From.ValueData <> ''
 
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -1178,3 +1222,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 27078112 , inSession:=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e'); -- FETCH ALL "<unnamed portal 1>";
+
+select * from gpSelect_Movement_Sale_EDI(inMovementId := 27080288 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

@@ -1,28 +1,28 @@
 inherited ReturnOutJournalForm: TReturnOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 469
-  ClientWidth = 831
+  ClientWidth = 784
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 847
-  ExplicitHeight = 508
+  ExplicitWidth = 806
+  ExplicitHeight = 525
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 831
+    Width = 784
     Height = 412
     TabOrder = 3
-    ExplicitWidth = 831
+    ExplicitWidth = 784
     ExplicitHeight = 412
     ClientRectBottom = 412
-    ClientRectRight = 831
+    ClientRectRight = 784
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 831
+      ExplicitWidth = 784
       ExplicitHeight = 412
       inherited cxGrid: TcxGrid
-        Width = 831
+        Width = 784
         Height = 412
-        ExplicitWidth = 831
+        ExplicitWidth = 784
         ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -321,8 +321,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 831
-    ExplicitWidth = 831
+    Width = 784
+    ExplicitWidth = 784
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -1029,6 +1029,70 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085'"'
       ImageIndex = 79
     end
+    object mactEditPartnerDataFilter: TMultiAction
+      Category = 'PartnerData'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actPartnerDataDialogFilter
+      ActionList = <
+        item
+          Action = actUpdateReturnOut_PartnerDataFilter
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 47
+    end
+    object actPartnerDataDialogFilter: TExecuteDialog
+      Category = 'PartnerData'
+      MoveParams = <>
+      Caption = 'actPartnerDataDialogFilter'
+      FormName = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.Value = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumberPartner'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberPartnerFilter'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OperDatePartnerFilter'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AdjustingOurDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AdjustingOurDateFilter'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateReturnOut_PartnerDataFilter: TdsdExecStoredProc
+      Category = 'PartnerData'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateReturnOut_PartnerDataFilter
+      StoredProcList = <
+        item
+          StoredProc = spUpdateReturnOut_PartnerDataFilter
+        end>
+      Caption = 'actUpdateReturnOut_PartnerDataFilter'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1199,7 +1263,19 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbEditPartnerDataFilter'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSendData'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1267,6 +1343,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     end
     object bbtUpdate_isDeferred_Revert: TdxBarButton
       Action = mactUpdate_isDeferred_Revert
+      Category = 0
+    end
+    object bbEditPartnerDataFilter: TdxBarButton
+      Action = mactEditPartnerDataFilter
       Category = 0
     end
   end
@@ -1407,6 +1487,24 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Name = 'FileDirectory'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberPartnerFilter'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartnerFilter'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AdjustingOurDateFilter'
+        Value = Null
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1551,7 +1649,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 416
+    Left = 368
     Top = 400
   end
   object spPUSHInfo: TdsdStoredProc
@@ -1643,5 +1741,49 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     PackSize = 1
     Left = 312
     Top = 307
+  end
+  object spUpdateReturnOut_PartnerDataFilter: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_PartnerData'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberPartnerFilter'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDatePartnerFilter'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAdjustingOurDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AdjustingOurDateFilter'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 368
   end
 end
