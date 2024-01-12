@@ -155,7 +155,7 @@ BEGIN
                 WHEN MovementDescId = zc_Movement_BankAccount()
                      THEN Object_PersonalServiceList_master.ValueData
                 WHEN COALESCE (Object_PersonalServiceList_master.Id, 0) <> COALESCE (Object_PersonalServiceList_parent.Id, 0)
-                     THEN COALESCE (Object_PersonalServiceList_master.ValueData, '???') || ' - ' || COALESCE (Object_PersonalServiceList_parent.ValueData, '???')
+                     THEN 'ош-(' || MI_Master.Id :: TVarChar || ')' || COALESCE (Object_PersonalServiceList_master.ValueData, '???') || ' - ' || COALESCE (Object_PersonalServiceList_parent.ValueData, '???')
                 ELSE Object_PersonalServiceList_parent.ValueData
            END :: TVarChar AS PersonalServiceListName_parent
 
