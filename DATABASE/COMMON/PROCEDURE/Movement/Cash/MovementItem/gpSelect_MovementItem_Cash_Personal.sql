@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , MoneyPlaceId Integer, MoneyPlaceName TVarChar, ServiceDate_mp TDateTime
+
              , Amount TFloat
              , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummAvCardSecond TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummMinus TFloat, SummFine TFloat, SummAdd TFloat, SummHoliday TFloat, SummHosp TFloat
@@ -140,6 +142,8 @@ BEGIN
                            , MILinkObject_Unit.ObjectId               AS UnitId
                            , MILinkObject_Position.ObjectId           AS PositionId
                            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
+                           , MILinkObject_MoneyPlace.ObjectId         AS MoneyPlaceId
+                           , MIDate_ServiceDate.ValueData             AS ServiceDate_mp
                            , MovementItem.isErased
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -156,6 +160,16 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+
+                           LEFT JOIN MovementItem AS MI_Master
+                                                  ON MI_Master.MovementId = inMovementId
+                                                 AND MI_Master.DescId     = zc_MI_Master()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                            ON MILinkObject_MoneyPlace.MovementItemId = MI_Master.Id
+                                                           AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                           LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                                      ON MIDate_ServiceDate.MovementItemId = MI_Master.Id
+                                                     AND MIDate_ServiceDate.DescId         = zc_MIDate_ServiceDate()
                      )
           , tmpMI AS (SELECT tmpMI_Child.MovementItemId
                            , tmpMI_Child.Amount
@@ -163,6 +177,8 @@ BEGIN
                            , tmpMI_Child.UnitId
                            , tmpMI_Child.PositionId
                            , tmpMI_Child.InfoMoneyId
+                           , tmpMI_Child.MoneyPlaceId
+                           , tmpMI_Child.ServiceDate_mp
                            , tmpMI_Child.isErased
                       FROM tmpMI_Child
 
@@ -173,6 +189,8 @@ BEGIN
                            , MILinkObject_Unit.ObjectId               AS UnitId
                            , MILinkObject_Position.ObjectId           AS PositionId
                            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
+                           , MILinkObject_MoneyPlace.ObjectId         AS MoneyPlaceId
+                           , MIDate_ServiceDate.ValueData             AS ServiceDate_mp
                            , MovementItem.isErased
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -192,6 +210,9 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                           LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                                      ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                                     AND MIDate_ServiceDate.DescId         = zc_MIDate_ServiceDate()
                            LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = inMovementId
                       WHERE tmpMI_Child.MovementId IS NULL
                      )
@@ -744,6 +765,8 @@ BEGIN
                              )
                 , tmpData AS (SELECT tmpMI.MovementItemId
                                    , tmpMI.Amount
+                                   , tmpMI.MoneyPlaceId
+                                   , tmpMI.ServiceDate_mp
                                    , tmpService.SummService
                                    , tmpService.SummToPay_cash
                                    , tmpService.SummToPay
@@ -813,6 +836,11 @@ BEGIN
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
             , View_InfoMoney.InfoMoneyName_all
+            
+            , Object_MoneyPlace.Id                      AS MoneyPlaceId
+            , Object_MoneyPlace.ValueData               AS MoneyPlaceName
+            , tmpData.ServiceDate_mp                    AS ServiceDate_mp
+            
 
             , tmpData.Amount           :: TFloat AS Amount
             , tmpData.SummService      :: TFloat AS SummService
@@ -890,6 +918,9 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpData.PositionId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpData.InfoMoneyId
+            
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = tmpData.MoneyPlaceId
+            
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpData.PersonalId

@@ -78,7 +78,7 @@ BEGIN
                     
            , MovementItem.Amount
 
-           , COALESCE (MIDate_ServiceDate.ValueData, Movement.OperDate) AS ServiceDate
+           , COALESCE (MD_ServiceDate.ValueData, MIDate_ServiceDate.ValueData, Movement.OperDate) AS ServiceDate
            , MIString_Comment.ValueData        AS Comment
 
            , Object_Cash.Id                    AS CashId
@@ -118,6 +118,9 @@ BEGIN
             LEFT JOIN Movement AS MovementPersonalService 
                                ON MovementPersonalService.Id = Movement.ParentId
                               AND MovementPersonalService.DescId IN (zc_Movement_PersonalService(), zc_Movement_PersonalTransport())
+            LEFT JOIN MovementDate AS MD_ServiceDate
+                                   ON MD_ServiceDate.MovementId = MovementPersonalService.Id
+                                  AND MD_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                          ON MovementLinkObject_PersonalServiceList.MovementId = COALESCE (MovementPersonalService.Id, Movement.Id)
