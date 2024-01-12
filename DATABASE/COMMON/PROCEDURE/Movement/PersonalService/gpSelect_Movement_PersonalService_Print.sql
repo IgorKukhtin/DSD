@@ -395,9 +395,11 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
                                                        ON MIFloat_SummAvCardSecond.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()
+                                                    --AND 1=0
                            LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
                                                        ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
+                                                    --AND 1=0
 
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
                                                        ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
@@ -901,7 +903,8 @@ BEGIN
             , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
             , tmpAll.SummPhone              :: TFloat AS SummPhone
 
-            , ( 1 * COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0)) :: TFloat AS Amount_avance
+--            , ( 1 * COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0)) :: TFloat AS Amount_avance
+            , case when vbUserId = 5 and 1=0 then tmpAll.SummAvance else COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0) end :: TFloat AS Amount_avance
             , (-1 * tmpMIContainer_pay.Amount_avance_ret)  :: TFloat AS Amount_avance_ret
             , tmpMIContainer_pay.Amount_service :: TFloat AS Amount_pay_service
             , tmpAll.WorkTimeHoursOne_child ::TFloat

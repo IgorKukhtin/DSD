@@ -151,6 +151,8 @@ BEGIN
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND (MovementLinkObject_Personal.ObjectId = inPersonalId OR tmpUser_findPersonal.PersonalId = inPersonalId OR inPersonalId = 0)
                               AND (COALESCE (tmpUser_findPersonal.BranchId, zc_Branch_Basis()) = inBranchId OR inBranchId = 0)
+                              -- !!!временное решение!!!
+                              AND Movement.ParentId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
                            )
         -- “олько если выборка была дл€ одного inPersonalId, надо дот€нуть остальных дл€ пропорции
       , tmpMovement_add AS (SELECT MovementLinkObject_Personal.MovementId

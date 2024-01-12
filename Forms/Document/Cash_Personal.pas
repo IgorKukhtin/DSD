@@ -112,6 +112,8 @@ type
     AmountCardSecond_avance: TcxGridDBColumn;
     actReport_Open: TdsdOpenForm;
     bbReport_Open: TdxBarButton;
+    MoneyPlaceName: TcxGridDBColumn;
+    ServiceDate_mp: TcxGridDBColumn;
   private
     { Private declarations }
   public

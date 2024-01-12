@@ -844,7 +844,7 @@ end if;
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- םאנ. 200
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- ÍÀÐ
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- םאנ.
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333

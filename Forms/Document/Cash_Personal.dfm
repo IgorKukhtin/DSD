@@ -801,6 +801,28 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
+          object MoneyPlaceName: TcxGridDBColumn
+            Caption = '*** '#1042#1077#1076#1086#1084#1086#1089#1090#1100'('#1082#1072#1089#1089#1072')'
+            DataBinding.FieldName = 'MoneyPlaceName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1074#1077#1088#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object ServiceDate_mp: TcxGridDBColumn
+            Caption = '*** '#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' ('#1082#1072#1089#1089#1072')'
+            DataBinding.FieldName = 'ServiceDate_mp'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm yyyy'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1074#1077#1088#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
