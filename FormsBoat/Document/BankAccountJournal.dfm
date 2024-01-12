@@ -1885,10 +1885,18 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end>
     Params = <
       item
-        Name = 'inMovementId'
-        Value = '0'
-        Component = MasterCDS
-        ComponentItem = 'Id'
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
