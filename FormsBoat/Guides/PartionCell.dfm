@@ -2,8 +2,8 @@ object PartionCellForm: TPartionCellForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
-  ClientHeight = 376
-  ClientWidth = 647
+  ClientHeight = 367
+  ClientWidth = 660
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object PartionCellForm: TPartionCellForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 647
-    Height = 350
+    Width = 660
+    Height = 341
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 902
+    ExplicitWidth = 647
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -96,6 +97,27 @@ object PartionCellForm: TPartionCellForm
       GridView = cxGridDBTableView
     end
   end
+  object edSearchName: TcxTextEdit
+    Left = 417
+    Top = 178
+    TabOrder = 5
+    DesignSize = (
+      140
+      21)
+    Width = 140
+  end
+  object lbSearchName: TcxLabel
+    Left = 444
+    Top = 205
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -158,6 +180,22 @@ object PartionCellForm: TPartionCellForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbInsert'
@@ -267,6 +305,20 @@ object PartionCellForm: TPartionCellForm
     object bbProtocol: TdxBarButton
       Action = actProtocol
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = lbSearchName
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edSearchName
     end
   end
   object ActionList: TActionList
@@ -528,5 +580,18 @@ object PartionCellForm: TPartionCellForm
     PropertiesCellList = <>
     Left = 136
     Top = 224
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = clName
+    ColumnList = <
+      item
+        Column = clName
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 456
+    Top = 96
   end
 end

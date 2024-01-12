@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, ExternalLoad;
+  Vcl.StdCtrls, cxButtons, ExternalLoad, cxSplitter;
 
 type
   TBankAccountJournalForm = class(TAncestorJournal_boatForm)
@@ -77,6 +77,39 @@ type
     actGetImportSetting_csv: TdsdExecStoredProc;
     mactStartLoad_csv: TMultiAction;
     bbStartLoad: TdxBarButton;
+    String_1: TcxGridDBColumn;
+    String_2: TcxGridDBColumn;
+    String_3: TcxGridDBColumn;
+    String_4: TcxGridDBColumn;
+    String_7: TcxGridDBColumn;
+    String_8: TcxGridDBColumn;
+    String_9: TcxGridDBColumn;
+    String_10: TcxGridDBColumn;
+    String_13: TcxGridDBColumn;
+    String_15: TcxGridDBColumn;
+    String_16: TcxGridDBColumn;
+    String_17: TcxGridDBColumn;
+    String_18: TcxGridDBColumn;
+    String_19: TcxGridDBColumn;
+    TDateTime_5: TcxGridDBColumn;
+    TFloat_14: TcxGridDBColumn;
+    cxSplitter_Bottom_Child: TcxSplitter;
+    cxGrid_Child: TcxGrid;
+    cxGridDBTableView_child: TcxGridDBTableView;
+    ItemName_ch2: TcxGridDBColumn;
+    ObjectName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    InvNumber_Invoice_Full_ch2: TcxGridDBColumn;
+    ReceiptNumber_Invoice_ch2: TcxGridDBColumn;
+    Comment_ch2: TcxGridDBColumn;
+    InvoiceKindName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    actDBViewAddOnChild: TdsdDBViewAddOn;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    spSelectMI_Child: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -26,7 +26,6 @@ object Goods_limitForm: TGoods_limitForm
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 480
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -690,7 +689,7 @@ object Goods_limitForm: TGoods_limitForm
   object edSearchName: TcxTextEdit
     Left = 345
     Top = 322
-    TabOrder = 10
+    TabOrder = 9
     DesignSize = (
       140
       21)
@@ -703,9 +702,6 @@ object Goods_limitForm: TGoods_limitForm
     Height = 41
     Align = alBottom
     TabOrder = 11
-    ExplicitLeft = -120
-    ExplicitTop = 335
-    ExplicitWidth = 1102
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -1809,7 +1805,7 @@ object Goods_limitForm: TGoods_limitForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 352
+    Left = 360
     Top = 240
   end
 end

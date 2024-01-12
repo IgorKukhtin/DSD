@@ -74,7 +74,9 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     GuidesPartionCell: TdsdGuides;
     cxLabel11: TcxLabel;
-    edPartionCell: TcxButtonEdit;
+    edPartionCell: TcxTextEdit;
+    actPartionCellChoiceForm: TOpenChoiceForm;
+    btnPartionCellChoice: TcxButton;
   private
     { Private declarations }
   public

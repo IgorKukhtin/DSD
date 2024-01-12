@@ -2,7 +2,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 288
+  ClientHeight = 333
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object cxButtonOK: TcxButton
-    Left = 208
-    Top = 250
+    Left = 114
+    Top = 295
     Width = 90
     Height = 25
     Action = actInsertUpdate
@@ -32,8 +32,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     TabOrder = 6
   end
   object cxButtonCancel: TcxButton
-    Left = 325
-    Top = 250
+    Left = 269
+    Top = 295
     Width = 90
     Height = 25
     Action = actFormClose
@@ -289,25 +289,31 @@ object IncomeItemEditForm: TIncomeItemEditForm
     TabOrder = 30
   end
   object cxLabel11: TcxLabel
-    Left = 151
+    Left = 148
     Top = 190
-    Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+    Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085'.'
   end
-  object edPartionCell: TcxButtonEdit
+  object edPartionCell: TcxTextEdit
     Left = 148
     Top = 207
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
+    Hint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
     TabOrder = 32
-    Width = 79
+    Width = 80
+  end
+  object btnPartionCellChoice: TcxButton
+    Left = 230
+    Top = 250
+    Width = 150
+    Height = 25
+    Action = actPartionCellChoiceForm
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 33
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 208
-    Top = 164
+    Left = 136
+    Top = 108
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -412,6 +418,36 @@ object IncomeItemEditForm: TIncomeItemEditForm
           Value = Null
           Component = ceEmpfPrice
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPartionCellChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1071#1095#1077#1081#1082#1091' '#1093#1088#1072#1085#1077#1085#1080#1103
+      ImageIndex = 7
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesPartionCell
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = edPartionCell
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -826,8 +862,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'PartionCellName'
         Value = Null
-        Component = GuidesPartionCell
-        ComponentItem = 'TextValue'
+        Component = edPartionCell
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1211,6 +1246,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Control = cePartNumber
       end
       item
+        Control = edPartionCell
+      end
+      item
         Control = cxButtonOK
       end>
     Left = 336
@@ -1218,7 +1256,6 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object GuidesPartionCell: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPartionCell
     FormNameParam.Value = 'TPartionCellForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1243,7 +1280,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 212
-    Top = 169
+    Left = 148
+    Top = 233
   end
 end

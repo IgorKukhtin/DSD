@@ -686,7 +686,7 @@ begin
               TClientDataSet(FDataSet).Append;
 
               for J := 1 to Cols do
-                if Copy(Excel.Cells[I, J].Formula, 1, 1) = '=' then
+                if (Copy(Excel.Cells[I, J].Formula, 1, 1) = '=') or (Copy(Excel.Cells[I, J].Text, 1, 1) = '#')  then
                   TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value
                 else TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Text;
 

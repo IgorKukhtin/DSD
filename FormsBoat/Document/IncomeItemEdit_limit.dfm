@@ -2,7 +2,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' ***'#1055#1088#1080#1093#1086#1076
-  ClientHeight = 288
+  ClientHeight = 330
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object cxButtonOK: TcxButton
-    Left = 210
-    Top = 250
+    Left = 123
+    Top = 297
     Width = 90
     Height = 25
     Action = actInsertUpdate
@@ -32,8 +32,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     TabOrder = 6
   end
   object cxButtonCancel: TcxButton
-    Left = 322
-    Top = 250
+    Left = 290
+    Top = 297
     Width = 90
     Height = 25
     Action = actFormClose
@@ -257,7 +257,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     Left = 241
     Top = 207
     TabOrder = 27
-    Width = 270
+    Width = 271
   end
   object cxLabel16: TcxLabel
     Left = 241
@@ -287,20 +287,26 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     TabOrder = 30
   end
   object cxLabel11: TcxLabel
-    Left = 151
+    Left = 148
     Top = 190
-    Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+    Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085'.'
   end
-  object edPartionCell: TcxButtonEdit
+  object edPartionCell: TcxTextEdit
     Left = 148
     Top = 207
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
+    Hint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
     TabOrder = 32
     Width = 80
+  end
+  object btnPartionCellChoice: TcxButton
+    Left = 230
+    Top = 250
+    Width = 150
+    Height = 25
+    Action = actPartionCellChoiceForm
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 33
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -335,6 +341,36 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       ImageIndex = 52
+    end
+    object actPartionCellChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1071#1095#1077#1081#1082#1091' '#1093#1088#1072#1085#1077#1085#1080#1103
+      ImageIndex = 7
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesPartionCell
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = edPartionCell
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actRefresh_Price: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -815,17 +851,9 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartionCellId'
-        Value = Null
-        Component = GuidesPartionCell
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PartionCellName'
         Value = Null
-        Component = GuidesPartionCell
-        ComponentItem = 'TextValue'
+        Component = edPartionCell
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1149,8 +1177,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 229
-    Top = 94
+    Left = 261
+    Top = 86
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -1170,8 +1198,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         Control = ceSummIn
       end>
     Action = actRefresh_Price
-    Left = 296
-    Top = 180
+    Left = 384
+    Top = 164
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -1209,6 +1237,9 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         Control = cePartNumber
       end
       item
+        Control = edPartionCell
+      end
+      item
         Control = cxButtonOK
       end>
     Left = 336
@@ -1216,7 +1247,6 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
   end
   object GuidesPartionCell: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPartionCell
     FormNameParam.Value = 'TPartionCellForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1241,7 +1271,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 212
-    Top = 169
+    Left = 204
+    Top = 97
   end
 end

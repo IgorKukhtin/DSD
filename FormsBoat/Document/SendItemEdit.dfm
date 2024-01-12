@@ -170,7 +170,7 @@ object SendItemEditForm: TSendItemEditForm
     Left = 8
     Top = 222
     TabOrder = 16
-    Width = 407
+    Width = 271
   end
   object cxLabel9: TcxLabel
     Left = 8
@@ -213,6 +213,22 @@ object SendItemEditForm: TSendItemEditForm
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 200
+  end
+  object cxLabel12: TcxLabel
+    Left = 290
+    Top = 202
+    Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+  end
+  object edPartionCell: TcxButtonEdit
+    Left = 290
+    Top = 222
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 25
+    Width = 126
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -300,6 +316,12 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderTop'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = GuidesGoods
@@ -335,6 +357,14 @@ object SendItemEditForm: TSendItemEditForm
         Component = edPartNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = edPartionCell
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -560,6 +590,21 @@ object SendItemEditForm: TSendItemEditForm
         Name = 'InvNumberFull_OrderClient'
         Value = Null
         Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionCellId'
+        Value = Null
+        Component = GuidesPartionCell
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionCellName'
+        Value = Null
+        Component = GuidesPartionCell
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -800,6 +845,9 @@ object SendItemEditForm: TSendItemEditForm
         Control = edPartNumber
       end
       item
+        Control = edPartionCell
+      end
+      item
         Control = cxButtonOK
       end>
     Left = 320
@@ -930,5 +978,35 @@ object SendItemEditForm: TSendItemEditForm
       end>
     Left = 288
     Top = 56
+  end
+  object GuidesPartionCell: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartionCell
+    FormNameParam.Value = 'TPartionCellForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionCellForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 355
+    Top = 232
   end
 end

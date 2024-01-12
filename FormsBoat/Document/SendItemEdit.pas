@@ -65,6 +65,9 @@ type
     cxLabel15: TcxLabel;
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edPartionCell: TcxButtonEdit;
+    GuidesPartionCell: TdsdGuides;
   private
     { Private declarations }
   public

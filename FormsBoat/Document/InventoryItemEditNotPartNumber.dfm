@@ -1043,7 +1043,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 384
-    Top = 184
+    Left = 376
+    Top = 144
   end
 end
