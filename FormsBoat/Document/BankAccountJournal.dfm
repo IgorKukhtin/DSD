@@ -25,7 +25,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       inherited cxGrid: TcxGrid
         Width = 1213
         Height = 371
-        ExplicitTop = 2
         ExplicitWidth = 1213
         ExplicitHeight = 371
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -595,6 +594,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object InvNumber_Invoice_child: TcxGridDBColumn
             Caption = #1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             DataBinding.FieldName = 'InvNumber_Invoice_child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
@@ -714,6 +715,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
@@ -722,6 +725,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Ord_ch2: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object ItemName_ch2: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
@@ -745,6 +756,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1083#1099' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080
+            Options.Editing = False
             Width = 212
           end
           object Amount_ch2: TcxGridDBColumn
@@ -764,7 +776,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            Options.Editing = False
             Width = 100
           end
           object InvoiceKindName_ch2: TcxGridDBColumn
@@ -779,10 +790,16 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object InvNumber_Invoice_Full_ch2: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice_Full'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceDetailChoiceForm_Child
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
             Width = 200
           end
           object ReceiptNumber_Invoice_ch2: TcxGridDBColumn
@@ -968,13 +985,22 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited ActionList: TActionList
     Left = 87
     Top = 50
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+    end
     object actRefreshChild: TdsdDataSetRefresh [3]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectMI_Child
+      StoredProc = spSelectChild
       StoredProcList = <
         item
-          StoredProc = spSelectMI_Child
+          StoredProc = spSelectChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -987,7 +1013,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelectMI_Child
+          StoredProc = spSelectChild
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction
@@ -1210,6 +1236,18 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Hint = 'actMasterPost'
       DataSource = MasterDS
     end
+    object actUpdateDataSetChild: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = ChildDS
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -1240,6 +1278,58 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actInvoiceDetailChoiceForm_Child: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'acInvoiceJournalDetailChoiceForm'
+      FormName = 'TInvoiceJournalChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'InvNumber_Invoice_Full'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'MovementId_Invoice'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterClientId'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterClientName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'InvoiceKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1316,7 +1406,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 49220
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1327,7 +1416,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelectMI_Child
+          StoredProc = spSelectChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1345,8 +1434,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
+      DataSource = ChildDS
     end
     object actOpenInvoiceForm: TdsdOpenForm
       Category = 'OpenForm'
@@ -1424,7 +1513,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       isShowModal = False
       ActionType = acUpdate
       DataSource = ChildDS
-      DataSetRefresh = actRefreshChild
+      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object mactSetUnErasedItem: TMultiAction
@@ -1440,7 +1529,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 49220
     end
     object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1534,6 +1622,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Name = 'inParentId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementItemId'
           ParamType = ptInput
@@ -1541,6 +1630,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Name = 'inMovementId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -1548,7 +1638,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       isShowModal = False
       DataSource = ChildDS
-      DataSetRefresh = actRefreshChild
+      DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object actSetUnErasedItem: TdsdUpdateErased
@@ -1565,6 +1655,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
+      DataSource = ChildDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1805,7 +1896,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Category = 0
     end
     object bbSetUnErasedItem: TdxBarButton
-      Action = actSetUnErasedItem
+      Action = mactSetUnErasedItem
       Category = 0
     end
   end
@@ -1826,6 +1917,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_BankAccount'
+    Left = 24
+    Top = 304
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
@@ -1989,12 +2082,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 396
+    Left = 388
     Top = 471
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 342
+    Left = 318
     Top = 471
   end
   object actDBViewAddOnChild: TdsdDBViewAddOn
@@ -2024,7 +2117,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 240
+    Left = 216
     Top = 472
   end
   object spInsertUpdateMIChild: TdsdStoredProc
@@ -2041,6 +2134,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
@@ -2049,50 +2150,18 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_invoice'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'MovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inObjectId'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReceiptLevelId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'ReceiptLevelId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inColorPatternId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'ColorPatternId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProdColorPatternId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'ProdColorPatternId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProdOptionsId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'ProdOptionsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2101,82 +2170,21 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Comment'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountReserv'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'AmountReserv'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountSend'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'AmountSend'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioForCount'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'ForCount'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisChangeReceipt'
-        Value = False
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 102
-    Top = 471
-  end
-  object spSelectMI_Child: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_BankAccount_Child'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = Null
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = Null
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 24
     Top = 471
   end
   object spErasedMIChild: TdsdStoredProc
@@ -2198,6 +2206,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2225,10 +2234,47 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 720
     Top = 480
+  end
+  object spSelectChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_BankAccount_Child'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 44927d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 44927d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 307
   end
 end

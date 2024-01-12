@@ -109,7 +109,6 @@ type
     ChildDS: TDataSource;
     actDBViewAddOnChild: TdsdDBViewAddOn;
     spInsertUpdateMIChild: TdsdStoredProc;
-    spSelectMI_Child: TdsdStoredProc;
     actInsert_Child: TdsdInsertUpdateAction;
     actUpdate_Child: TdsdInsertUpdateAction;
     bbInsert_Child: TdxBarButton;
@@ -129,6 +128,10 @@ type
     InvNumber_Invoice_child: TcxGridDBColumn;
     bbSetErasedItem: TdxBarButton;
     bbSetUnErasedItem: TdxBarButton;
+    Ord_ch2: TcxGridDBColumn;
+    actUpdateDataSetChild: TdsdUpdateDataSet;
+    actInvoiceDetailChoiceForm_Child: TOpenChoiceForm;
+    spSelectChild: TdsdStoredProc;
   private
     { Private declarations }
   public

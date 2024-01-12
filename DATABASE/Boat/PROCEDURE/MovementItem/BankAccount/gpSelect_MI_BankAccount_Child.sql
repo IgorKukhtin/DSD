@@ -16,7 +16,8 @@ RETURNS TABLE (MovementId Integer
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
              , ReceiptNumber_Invoice Integer, InvoiceKindName TVarChar
              , InsertName TVarChar, InsertDate TDateTime 
-             , isErased Boolean
+             , isErased Boolean 
+             , Ord Integer
               )   
               
 AS
@@ -88,6 +89,8 @@ BEGIN
            , MIDate_Insert.ValueData     AS InsertDate 
            
            , tmpMI_Child.isErased  ::Boolean AS isErased
+           
+           , ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY Movement.Id, tmpMI_Child.Id) ::Integer AS Ord
        FROM tmpMovement AS Movement
             INNER JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
             
