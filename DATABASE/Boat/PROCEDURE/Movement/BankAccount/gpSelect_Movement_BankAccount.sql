@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
     IN inIsErased                 Boolean ,
     IN inSession                  TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
               -- Счет
-             , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar, InvNumber_Invoice_child TVarChar
               -- Заказ Клиента / Заказ Поставщику
              , MovementId_parent Integer, InvNumberFull_parent TVarChar, InvNumber_parent TVarChar, MovementDescName_parent TVarChar
                --
@@ -207,10 +207,27 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                            GROUP BY tmp.MovementId_Invoice
-                          )
+                          )  
+       --все чайды
+      , tmpMI_Child AS (SELECT MovementItem.ParentId
+                             , MovementItem.MovementId
+                             , STRING_AGG (Movement_Invoice.InvNumber, '; ') AS InvNumber_Invoice
+                        FROM MovementItem
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MIFloat_MovementId.ValueData ::Integer
+                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)    
+                          AND MovementItem.DescId = zc_MI_Child()
+                          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE) 
+                        GROUP BY MovementItem.ParentId
+                               , MovementItem.MovementId
+                        )
+
        -- Результат
        SELECT
              Movement.Id
+           , MovementItem.Id AS MovementItemId
            , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
            , MovementString_InvNumberPartner.ValueData :: TVarChar AS InvNumberPartner
            , Movement.OperDate
@@ -231,7 +248,8 @@ BEGIN
 
            , Movement_Invoice.Id AS MovementId_Invoice
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, tmpInvoice_Params.ReceiptNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
-           , Movement_Invoice.InvNumber        AS InvNumber_Invoice
+           , Movement_Invoice.InvNumber        AS InvNumber_Invoice 
+           , tmpMI_Child.InvNumber_Invoice ::TVarChar AS InvNumber_Invoice_child
              -- Заказ Клиента / Заказ Поставщику
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
@@ -363,7 +381,10 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Update
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+            
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
+                                 AND tmpMI_Child.ParentId = MovementItem.Id
             --
             LEFT JOIN tmpMovementString AS MovementString_1
                                         ON MovementString_1.MovementId = Movement.Id

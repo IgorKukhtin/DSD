@@ -1295,6 +1295,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas"/>
+			<DCCReference Include="..\..\FormsBoat\Document\BankAccountMovementChild.pas">
+				<Form>BankAccountMovementChildForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
