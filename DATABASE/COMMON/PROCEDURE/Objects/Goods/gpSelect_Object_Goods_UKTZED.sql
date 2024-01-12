@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
+             , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
@@ -86,6 +87,10 @@ BEGIN
             , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
             , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
 
+            , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+            , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+            , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+            , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
 
             , Object_Measure.Id               AS MeasureId
             , Object_Measure.ValueData        AS MeasureName
@@ -208,6 +213,16 @@ BEGIN
                                    AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
              LEFT JOIN tmpTaxAction ON tmpTaxAction.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                                  ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+             LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                  ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                                 AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+             LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
+
        WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20500(), zc_Enum_InfoMoneyDestination_30200())
           OR Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101()
                                                  , zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102()
@@ -223,6 +238,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 
  09.11.23         *
  06.01.17         * add CodeUKTZED
 */

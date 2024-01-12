@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxCheckBox, dxSkinsdxBarPainter,
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, ExternalLoad;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, ExternalLoad,
+  cxButtonEdit;
 
 type
   TGoods_UKTZEDForm = class(TParentForm)
@@ -79,6 +80,7 @@ type
     actGetImportSetting_UKTZEDnewByCode: TdsdExecStoredProc;
     macStartLoad_UKTZEDnewByCode: TMultiAction;
     bbStartLoad_UKTZEDnewByCode: TdxBarButton;
+    actChoiceGoodsGroupProperty: TOpenChoiceForm;
   private
     { Private declarations }
   public

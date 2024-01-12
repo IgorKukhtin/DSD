@@ -251,6 +251,32 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Options.Editing = False
         Width = 70
       end
+      object GoodsGroupPropertyName: TcxGridDBColumn
+        Caption = ' '#9#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '
+        DataBinding.FieldName = 'GoodsGroupPropertyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceGoodsGroupProperty
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 2'
+        Width = 112
+      end
+      object GoodsGroupPropertyName_Parent: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088')'
+        DataBinding.FieldName = 'GoodsGroupPropertyName_Parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
+        Options.Editing = False
+        Width = 100
+      end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
@@ -674,6 +700,48 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1086#1076' '#1059#1050#1058#1047' '#1085#1072' '#1076#1072#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
     end
+    object actChoiceGoodsGroupProperty: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'AssetForm'
+      FormName = 'TGoodsGroupPropertyForm'
+      FormNameParam.Value = 'TGoodsGroupPropertyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupPropertyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupPropertyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupPropertyId_Parent'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupPropertyName_Parent'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_UKTZED'
@@ -692,8 +760,8 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 65496
-    Top = 120
+    Left = 40
+    Top = 112
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
@@ -781,6 +849,14 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Component = ClientDataSet
         ComponentItem = 'DateUKTZED_new'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupPropertyId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsGroupPropertyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

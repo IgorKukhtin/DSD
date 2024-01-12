@@ -3,13 +3,15 @@
 DROP FUNCTION IF EXISTS gpUpdateObject_Goods_UKTZED (Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateObject_Goods_UKTZED (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateObject_Goods_UKTZED (Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateObject_Goods_UKTZED (Integer, TVarChar, TVarChar, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdateObject_Goods_UKTZED (Integer, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateObject_Goods_UKTZED (Integer, TVarChar, TVarChar, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateObject_Goods_UKTZED(
     IN inId                  Integer   , -- Ключ объекта <товар>
     IN inUKTZED              TVarChar  , -- код товара по УКТ ЗЕД  
     IN inCodeUKTZED_new      TVarChar  , --
-    IN inDateUKTZED_new      TDateTime , --
+    IN inDateUKTZED_new      TDateTime , -- 
+    IN inGoodsGroupPropertyId Integer, 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -28,6 +30,9 @@ BEGIN
      -- сохранили свойство
      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_UKTZED_new(), inId, inDateUKTZED_new);
 
+     -- сохранили связь с < Аналитический классификатор>              
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupProperty(), inId, inGoodsGroupPropertyId);
+
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (inId, vbUserId, FALSE);
   
@@ -38,6 +43,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.01.24         *
  09.11.23         *
  13.07.17         *
  10.03.17         *
