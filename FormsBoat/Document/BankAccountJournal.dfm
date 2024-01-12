@@ -15,17 +15,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     TabOrder = 3
     ExplicitTop = 56
     ExplicitWidth = 1213
-    ExplicitHeight = 259
+    ExplicitHeight = 496
     ClientRectBottom = 496
     ClientRectRight = 1213
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1213
-      ExplicitHeight = 259
+      ExplicitHeight = 496
       inherited cxGrid: TcxGrid
         Width = 1213
         Height = 371
-        ExplicitLeft = 3
-        ExplicitTop = -6
         ExplicitWidth = 1213
         ExplicitHeight = 371
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -461,6 +459,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object String_2: TcxGridDBColumn
             Caption = 'IBAN Auftragskonto'
             DataBinding.FieldName = 'String_2'
+            Visible = False
             HeaderHint = #1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' IBAN'
             Options.Editing = False
             Width = 70
@@ -600,7 +599,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid_Child
-        ExplicitTop = 363
       end
       object cxGrid_Child: TcxGrid
         Left = 0
@@ -609,7 +607,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Height = 117
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 377
         object cxGridDBTableView_child: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -662,17 +659,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountReserv_ch3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_ch3
+              Column = Amount_ch2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSend_ch3
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -690,22 +685,20 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = GoodsName_ch3
+              Column = ObjectName_ch2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountReserv_ch3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_ch3
+              Column = Amount_ch2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSend_ch3
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -720,34 +713,17 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object ReceiptLevelName_ch3: TcxGridDBColumn
-            Caption = 'Level'
-            DataBinding.FieldName = 'ReceiptLevelName'
+          object ItemName_ch2: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 103
           end
-          object GoodsCode_ch3: TcxGridDBColumn
-            Caption = 'Interne Nr'
-            DataBinding.FieldName = 'GoodsCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Article_ch3: TcxGridDBColumn
-            Caption = 'Artikel Nr'
-            DataBinding.FieldName = 'Article'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object GoodsName_ch3: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1083#1099
-            DataBinding.FieldName = 'GoodsName'
+          object ObjectName_ch2: TcxGridDBColumn
+            Caption = 'Lieferanten / Kunden'
+            DataBinding.FieldName = 'ObjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -760,109 +736,56 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1083#1099' '#1076#1083#1103' '#1089#1073#1086#1088#1082#1080
-            Width = 200
+            Width = 212
           end
-          object ProdColorName_goods_ch3: TcxGridDBColumn
-            Caption = 'Farbe'
-            DataBinding.FieldName = 'ProdColorName_goods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object Amount_ch3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+          object Amount_ch2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 8
             Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1096#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
             Width = 70
           end
-          object AmountReserv_ch3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074
-            DataBinding.FieldName = 'AmountReserv'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.########;-,0.########; ;'
-            Visible = False
+          object Comment_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountSend_ch3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' /'#1087#1077#1088#1077#1084#1077#1097'.'
-            DataBinding.FieldName = 'AmountSend'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.########;-,0.########; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' /'#1087#1077#1088#1077#1084#1077#1097'.'
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             Options.Editing = False
             Width = 100
           end
-          object ProdOptionsName_ch3: TcxGridDBColumn
-            Caption = #1054#1087#1094#1080#1103
-            DataBinding.FieldName = 'ProdOptionsName'
+          object InvoiceKindName_ch2: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvoiceKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object InvNumber_Invoice_Full_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'InvNumber_Invoice_Full'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 200
           end
-          object ProdColorPatternName_ch3: TcxGridDBColumn
-            Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
-            DataBinding.FieldName = 'ProdColorPatternName'
-            Visible = False
+          object ReceiptNumber_Invoice_ch2: TcxGridDBColumn
+            Caption = 'Inv No'
+            DataBinding.FieldName = 'ReceiptNumber_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 120
           end
-          object Comment_goods_ch3: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
-            DataBinding.FieldName = 'Comment_goods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-            Options.Editing = False
-            Width = 100
-          end
-          object ColorPatternName_ch3: TcxGridDBColumn
-            Caption = #1064#1072#1073#1083#1086#1085
-            DataBinding.FieldName = 'ColorPatternName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1064#1072#1073#1083#1086#1085' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
-            Options.Editing = False
-            Width = 58
-          end
-          object UnitName_ch3: TcxGridDBColumn
-            Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
-            DataBinding.FieldName = 'UnitName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 108
-          end
-          object ForCount_ch3: TcxGridDBColumn
-            DataBinding.FieldName = 'ForCount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object isErased_ch3: TcxGridDBColumn
+          object isErased_ch2: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -960,7 +883,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 315
     object btnInsert: TcxButton
       Left = 42
       Top = 7
@@ -1852,17 +1774,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParentId'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = '0'
-        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1973,7 +1887,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       item
         Name = 'inMovementId'
         Value = '0'
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
