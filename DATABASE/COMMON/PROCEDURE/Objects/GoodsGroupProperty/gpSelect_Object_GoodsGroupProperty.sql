@@ -27,7 +27,15 @@ $BODY$BEGIN
                              AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
    WHERE Object.DescId = zc_Object_GoodsGroupProperty()
-     AND COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId,0) <> 0
+     AND COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId,0) <> 0   
+  UNION
+   SELECT 
+          0        AS Id 
+        , 0        AS Code
+        , '”ƒ¿À»“‹' ::TVarChar AS Name  
+        , 0        ::Integer  AS ParentId
+        , '' ::TVarChar AS ParentName
+        , FALSE         AS isErased
    ;
   
 END;$BODY$

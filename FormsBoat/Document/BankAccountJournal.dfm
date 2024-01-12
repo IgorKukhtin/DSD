@@ -1509,6 +1509,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           ComponentItem = 'MovementItemId'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1634,6 +1639,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
           MultiSelectSeparator = ','
         end>
       isShowModal = False
