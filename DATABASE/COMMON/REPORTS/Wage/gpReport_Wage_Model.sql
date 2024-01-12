@@ -1078,7 +1078,7 @@ AS  (SELECT
             ) AS Movement_Sheet
        )
          -- Данные для - Кол-во строк в документе
-       , tmpReport_PersonalComplete AS
+       /*, tmpReport_PersonalComplete AS
        (SELECT *
         FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsMonth:= FALSE, inIsDetail:= FALSE, inisMovement:= FALSE, inSession:= inSession) AS gpReport
         WHERE EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()))
@@ -1110,7 +1110,7 @@ AS  (SELECT
                , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
                , gpReport.PositionLevelId, gpReport.PositionLevelCode, gpReport.PositionLevelName
-       )
+       )*/
          -- Данные для - WageWarehouseBranch
        , tmpWageWarehouseBranch AS (SELECT *
                                     FROM gpReport_WageWarehouseBranch (inStartDate   := inStartDate
@@ -1146,6 +1146,10 @@ AS  (SELECT
              , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
              , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
              , gpReport.PositionLevelId, gpReport.PositionLevelCode, gpReport.PositionLevelName
+               -- Комплектация
+             , SUM (COALESCE (gpReport.CountMovement_1, 0))  :: TFloat AS CountMovement_1
+             , SUM (COALESCE (gpReport.CountMI_1, 0))        :: TFloat AS CountMI_1
+             , SUM (COALESCE (gpReport.TotalCountKg_1, 0))   :: TFloat AS TotalCountKg_1
                -- Стикеровка
              , SUM (COALESCE (gpReport.TotalCountStick_2, 0)) :: TFloat AS TotalCountStick_2
                -- Взвешивание+документация
@@ -1816,59 +1820,64 @@ AS  (SELECT
        , 0 :: Integer AS Count_MemberInDay
        , CASE -- Вес (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_PersonalComplete.TotalCountKg_1
               -- Кол. строк (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
-                    THEN tmpMovement_PersonalComplete.CountMI
+                    THEN tmpMovement_PersonalComplete.CountMI_1
               -- Кол. Документов (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_PersonalComplete.CountMovement_1
               ELSE 0
          END :: TFloat AS Gross
+
        , CASE -- Вес (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_PersonalComplete.TotalCountKg_1
               -- Кол. строк (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
-                    THEN tmpMovement_PersonalComplete.CountMI
+                    THEN tmpMovement_PersonalComplete.CountMI_1
               -- Кол. Документов (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_PersonalComplete.CountMovement_1
               ELSE 0
          END :: TFloat AS GrossOnOneMember
+
        , (CASE -- Вес (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_PersonalComplete.TotalCountKg_1
               -- Кол. строк (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
-                    THEN tmpMovement_PersonalComplete.CountMI
+                    THEN tmpMovement_PersonalComplete.CountMI_1
               -- Кол. Документов (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_PersonalComplete.CountMovement_1
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS Amount
+
        , (CASE -- Вес (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
-                    THEN tmpMovement_PersonalComplete.TotalCountKg
+                    THEN tmpMovement_PersonalComplete.TotalCountKg_1
               -- Кол. строк (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
-                    THEN tmpMovement_PersonalComplete.CountMI
+                    THEN tmpMovement_PersonalComplete.CountMI_1
               -- Кол. Документов (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
-                    THEN tmpMovement_PersonalComplete.CountMovement
+                    THEN tmpMovement_PersonalComplete.CountMovement_1
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
 
        , 0 :: TFloat AS KoeffHoursWork_car
 
     FROM Setting_Wage_1 AS Setting
-         INNER JOIN tmpMovement_PersonalComplete ON ((tmpMovement_PersonalComplete.UnitId = Setting.FromId AND Setting.FromId > 0)
-                                                  OR (tmpMovement_PersonalComplete.UnitId = Setting.UnitId AND Setting.UnitId > 0 AND COALESCE (Setting.FromId, 0) = 0))
-                                                AND (tmpMovement_PersonalComplete.CountMI       <> 0
-                                                  OR tmpMovement_PersonalComplete.TotalCountKg  <> 0
-                                                  OR tmpMovement_PersonalComplete.CountMovement <> 0
-                                                    )
-                                                AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
+         INNER JOIN tmpMovement_WarehouseBranch AS tmpMovement_PersonalComplete
+                                                ON ((tmpMovement_PersonalComplete.UnitId = Setting.FromId AND Setting.FromId > 0)
+                                                     OR (tmpMovement_PersonalComplete.UnitId = Setting.UnitId AND Setting.UnitId > 0 AND COALESCE (Setting.FromId, 0) = 0)
+                                                   )
+                                               AND (tmpMovement_PersonalComplete.CountMI_1       <> 0
+                                                 OR tmpMovement_PersonalComplete.TotalCountKg_1  <> 0
+                                                 OR tmpMovement_PersonalComplete.CountMovement_1 <> 0
+                                                   )
+                                               AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
                                                AND (COALESCE (tmpMovement_PersonalComplete.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
                                                  OR Setting.isPositionLevel_all = TRUE
                                                    )
