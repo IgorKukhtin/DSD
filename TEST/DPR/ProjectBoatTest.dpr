@@ -374,7 +374,8 @@ uses
   OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm},
   PartionCellEdit in '..\..\FormsBoat\Guides\PartionCellEdit.pas' {PartionCellEditForm: TParentForm},
   PartionCell in '..\..\FormsBoat\Guides\PartionCell.pas' {PartionCellForm: TParentForm},
-  DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas';
+  DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
+  BankAccountMovementChild in '..\..\FormsBoat\Document\BankAccountMovementChild.pas' {BankAccountMovementChildForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

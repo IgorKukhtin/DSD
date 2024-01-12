@@ -4,6 +4,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -24,6 +25,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       inherited cxGrid: TcxGrid
         Width = 1213
         Height = 371
+        ExplicitTop = 2
         ExplicitWidth = 1213
         ExplicitHeight = 371
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -108,6 +110,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object BankAccountName: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
             DataBinding.FieldName = 'BankAccountName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -589,6 +592,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 70
           end
+          object InvNumber_Invoice_child: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            DataBinding.FieldName = 'InvNumber_Invoice_child'
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
       object cxSplitter_Bottom_Child: TcxSplitter
@@ -959,6 +968,28 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited ActionList: TActionList
     Left = 87
     Top = 50
+    object actRefreshChild: TdsdDataSetRefresh [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI_Child
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI_Child
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectMI_Child
+        end>
+    end
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 16433
       FormName = 'TBankAccountMovementForm'
@@ -1272,19 +1303,50 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       isShowModal = True
     end
+    object mactSetErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetErasedItem
+        end
+        item
+          Action = actRefreshChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 2
+      ShortCut = 49220
+    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelect
       StoredProcList = <
         item
+          StoredProc = spSelect
         end
         item
-          StoredProc = spSelect
+          StoredProc = spSelectMI_Child
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actSetErasedItem: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
     end
     object actOpenInvoiceForm: TdsdOpenForm
       Category = 'OpenForm'
@@ -1323,6 +1385,62 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdate_Child: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 1
+      FormName = 'TBankAccountMovementChildForm'
+      FormNameParam.Value = 'TBankAccountMovementChildForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inParentId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = ChildDS
+      DataSetRefresh = actRefreshChild
+      IdFieldName = 'Id'
+    end
+    object mactSetUnErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetUnErasedItem
+        end
+        item
+          Action = actRefreshChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 49220
     end
     object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1397,6 +1515,57 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actInsert_Child: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 0
+      FormName = 'TBankAccountMovementChildForm'
+      FormNameParam.Value = 'TBankAccountMovementChildForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inParentId'
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = ChildDS
+      DataSetRefresh = actRefreshChild
+      IdFieldName = 'Id'
+    end
+    object actSetUnErasedItem: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -1422,41 +1591,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbsView'
         end
         item
           Visible = True
@@ -1464,7 +1603,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenInvoiceForm'
+          ItemName = 'bbsDoc'
         end
         item
           Visible = True
@@ -1472,7 +1611,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad'
+          ItemName = 'bbDetail'
         end
         item
           Visible = True
@@ -1480,7 +1619,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbsLoadForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1497,10 +1640,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     object bbAddBonus: TdxBarButton
@@ -1539,6 +1678,134 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     object bbStartLoad: TdxBarButton
       Action = mactStartLoad_csv
+      Category = 0
+    end
+    object bbInsert_Child: TdxBarButton
+      Action = actInsert_Child
+      Category = 0
+    end
+    object bbUpdate_Child: TdxBarButton
+      Action = actUpdate_Child
+      Category = 0
+    end
+    object bbsView: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 83
+      LargeImageIndex = 83
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end>
+    end
+    object dxBarSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbsDoc: TdxBarSubItem
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenInvoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end>
+    end
+    object bbDetail: TdxBarSubItem
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 7
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert_Child'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Child'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedItem'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedItem'
+        end>
+    end
+    object bbsLoadForm: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 41
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbStartLoad'
+        end>
+    end
+    object bbSetErasedItem: TdxBarButton
+      Action = mactSetErasedItem
+      Category = 0
+    end
+    object bbSetUnErasedItem: TdxBarButton
+      Action = actSetUnErasedItem
       Category = 0
     end
   end
@@ -1718,7 +1985,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   object ChildCDS: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ParentId'
-    MasterFields = 'Id'
+    MasterFields = 'MovementItemId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
@@ -1757,8 +2024,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 200
-    Top = 480
+    Left = 240
+    Top = 472
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_BankAccount_Child'
@@ -1911,5 +2178,57 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 24
     Top = 471
+  end
+  object spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMI_BankAccount_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 480
+  end
+  object spUnErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMI_BankAccount_SetUnErased'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 480
   end
 end

@@ -110,6 +110,25 @@ type
     actDBViewAddOnChild: TdsdDBViewAddOn;
     spInsertUpdateMIChild: TdsdStoredProc;
     spSelectMI_Child: TdsdStoredProc;
+    actInsert_Child: TdsdInsertUpdateAction;
+    actUpdate_Child: TdsdInsertUpdateAction;
+    bbInsert_Child: TdxBarButton;
+    bbUpdate_Child: TdxBarButton;
+    bbsView: TdxBarSubItem;
+    dxBarSeparator: TdxBarSeparator;
+    bbsDoc: TdxBarSubItem;
+    bbDetail: TdxBarSubItem;
+    bbsLoadForm: TdxBarSubItem;
+    spErasedMIChild: TdsdStoredProc;
+    spUnErasedMIChild: TdsdStoredProc;
+    actSetUnErasedItem: TdsdUpdateErased;
+    mactSetUnErasedItem: TMultiAction;
+    actSetErasedItem: TdsdUpdateErased;
+    mactSetErasedItem: TMultiAction;
+    actRefreshChild: TdsdDataSetRefresh;
+    InvNumber_Invoice_child: TcxGridDBColumn;
+    bbSetErasedItem: TdxBarButton;
+    bbSetUnErasedItem: TdxBarButton;
   private
     { Private declarations }
   public

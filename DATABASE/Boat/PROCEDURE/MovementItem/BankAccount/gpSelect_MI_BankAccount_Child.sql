@@ -15,7 +15,8 @@ RETURNS TABLE (MovementId Integer
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, ItemName TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
              , ReceiptNumber_Invoice Integer, InvoiceKindName TVarChar
-             , InsertName TVarChar, InsertDate TDateTime
+             , InsertName TVarChar, InsertDate TDateTime 
+             , isErased Boolean
               )   
               
 AS
@@ -84,7 +85,9 @@ BEGIN
            , Object_InvoiceKind.ValueData      AS InvoiceKindName
 
            , Object_Insert.ValueData     AS InsertName
-           , MIDate_Insert.ValueData     AS InsertDate
+           , MIDate_Insert.ValueData     AS InsertDate 
+           
+           , tmpMI_Child.isErased  ::Boolean AS isErased
        FROM tmpMovement AS Movement
             INNER JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
             
@@ -93,7 +96,7 @@ BEGIN
             
             LEFT JOIN tmpMIFloat AS MIFloat_MovementId
                                  ON MIFloat_MovementId.MovementItemId = tmpMI_Child.Id
-                                --AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId
+                                --AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MIFloat_MovementId.MovementId_Invoice
             --номер счета
             LEFT JOIN MovementString AS MovementString_ReceiptNumber
