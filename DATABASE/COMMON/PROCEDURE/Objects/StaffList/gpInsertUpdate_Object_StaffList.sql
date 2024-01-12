@@ -28,7 +28,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- проверка прав
-   IF NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_StaffList())
+   IF vbUserId <> 5 AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_StaffList())
    THEN
         RAISE EXCEPTION 'Ошибка.%Нет прав корректировать = <%>.'
                       , CHR (13)

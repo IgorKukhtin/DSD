@@ -487,7 +487,10 @@ BEGIN
                                                       AND MovementItemContainer.DescId         = zc_MIContainer_Count()
                                                       AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                       AND COALESCE (MovementItemContainer.AccountId, 0) <> zc_Enum_Account_110101()
+                                                      -- !!!временное решение!!!
+                                                      AND MovementItemContainer.MovementId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
                                                     --AND (MovementItemContainer.MovementId = 15479819 OR inSession <> '5')
+
                       LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
                                                                                     AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
                       LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
@@ -671,6 +674,9 @@ BEGIN
                                    INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
                                                                    AND MovementItemContainer.DescId         = zc_MIContainer_Count()
                                                                    AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                                   -- !!!временное решение!!!
+                                                                   AND MovementItemContainer.MovementId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
+
                                    LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
                                    LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                              ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
