@@ -266,6 +266,7 @@
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
