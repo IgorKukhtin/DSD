@@ -603,12 +603,14 @@ BEGIN
                              AND Container.DescId  = zc_Container_CountAsset()
                                 )
                          )
+     -- остаток с учетом движения
    , tmpContainer_rem AS (SELECT tmpContainer_list.ContainerId
                                , tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_rem
                           FROM tmpContainer_list
                                LEFT JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.ContainerId = tmpContainer_list.ContainerId
-                                                              AND MIContainer.OperDate   >= vbOperDate
+                                                              -- !!!на конец дня
+                                                              AND MIContainer.OperDate    > vbOperDate
                           GROUP BY tmpContainer_list.ContainerId, tmpContainer_list.Amount
                           HAVING tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) > 0
                          )
@@ -776,12 +778,12 @@ BEGIN
              LEFT JOIN tmpContainer_res AS tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
        ;
 
-IF inMovementId = 25588338 AND 1=0
+IF inMovementId = 27161178 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.<%>  %   %'
-                                   , (select _tmpItemChild.OperCount from _tmpItemChild where _tmpItemChild.MovementItemId_Parent = 262115160)
-                                   , (select _tmpItemChild.OperCountCount from _tmpItemChild where _tmpItemChild.MovementItemId_Parent = 262115160)
-                                   , (select count(*) from _tmpItemChild where _tmpItemChild.ContainerId_GoodsFrom = 4983449)
+                                   , (select _tmpItemChild.OperCount from _tmpItemChild where _tmpItemChild.MovementItemId_Parent = 278625370 )
+                                   , (select _tmpItemChild.OperCountCount from _tmpItemChild where _tmpItemChild.MovementItemId_Parent = 278625370 )
+                                   , (select count(*) from _tmpItemChild where _tmpItemChild.ContainerId_GoodsFrom = 278625370)
                                     ;
 end if;
 

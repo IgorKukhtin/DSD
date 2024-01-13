@@ -98,8 +98,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end
       object cbRemovingPrograms: TcxCheckBox
         Left = 20
-        Top = 108
-        Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+        Top = 107
+        Hint = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084
         Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084
         ParentShowHint = False
         ShowHint = True
@@ -562,6 +562,16 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Top = 494
         Hint = #1056#1072#1079#1073#1080#1074#1082#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1089#1091#1084#1084#1077
         Caption = #1056#1072#1079#1073#1080#1074#1082#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1089#1091#1084#1084#1077
+      end
+      object cbBansSEND: TcxCheckBox
+        Left = 20
+        Top = 127
+        Hint = #1041#1083#1086#1082#1080#1088#1086#1074#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1089' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084#1080
+        Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1089' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084#1080
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 73
+        Width = 226
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -1543,6 +1553,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBansSEND'
+        Value = Null
+        Component = cbBansSEND
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 696
@@ -2036,6 +2054,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = ceSmashSumSend
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBansSEND'
+        Value = Null
+        Component = cbBansSEND
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

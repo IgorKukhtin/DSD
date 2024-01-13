@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
                                                            TFloat, TFloat, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, 
                                                            Boolean, TVarChar, Boolean, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TFloat, 
-                                                           Boolean, TFloat, TVarChar);
+                                                           Boolean, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -81,6 +81,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     
     IN inisLegalEntitiesSUN         Boolean   ,     -- Перемещения по юр. лицам
     IN inSmashSumSend               TFloat    ,     -- Разбивка перемещений по сумме
+
+    IN inisBansSEND                 Boolean   ,     -- Блокировка работы с перемещениями
 
     IN inSession                    TVarChar        -- сессия пользователя
 )
@@ -251,6 +253,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUA(), vbID, inisOnlyColdSUA);
    -- Отмена запретов по всем СУН
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_CancelBansSUN(), vbID, inisCancelBansSUN);
+
+   -- Блокировка работы с перемещениями
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BansSEND(), vbID, inisBansSEND);
 
     -- Анти ТОП моб. прил. Количество сотрудников для отображения
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AntiTOPMP_Count(), vbID, inAntiTOPMP_Count);

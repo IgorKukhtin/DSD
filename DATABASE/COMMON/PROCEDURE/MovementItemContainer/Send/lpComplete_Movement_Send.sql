@@ -494,21 +494,22 @@ BEGIN
    , tmpContainer_rem AS (SELECT tmpMIContainer.ContainerId
                                , tmpMIContainer.GoodsId
                                , SUM (tmpMIContainer.Amount_rem) AS Amount_rem
-                          FROM (-- остаток на начало дня
+                          FROM (-- остаток на конец дня
                                 SELECT tmpContainer_list.ContainerId
                                      , tmpContainer_list.GoodsId
                                      , tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_rem
                                 FROM tmpContainer_list
                                      LEFT JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.ContainerId = tmpContainer_list.ContainerId
-                                                                    AND MIContainer.OperDate   >= vbOperDate
+                                                                    -- !!!на конец дня
+                                                                    AND MIContainer.OperDate    > vbOperDate
                                 -- только если партии НЕТ
                                 WHERE tmpContainer_list.PartionGoods = ''
 
                                 GROUP BY tmpContainer_list.ContainerId, tmpContainer_list.GoodsId, tmpContainer_list.Amount
                                 HAVING tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) > 0
 
-                               UNION ALL
+                             /*UNION ALL
                                 -- добавить приход за 1 день
                                 SELECT tmpContainer_list.ContainerId
                                      , tmpContainer_list.GoodsId
@@ -520,8 +521,7 @@ BEGIN
                                                                      AND MIContainer.Amount      > 0
                                 -- только если партии НЕТ
                                 WHERE tmpContainer_list.PartionGoods = ''
-
-                                GROUP BY tmpContainer_list.ContainerId, tmpContainer_list.GoodsId
+                                GROUP BY tmpContainer_list.ContainerId, tmpContainer_list.GoodsId*/
 
                                UNION ALL
                                 -- МИНУС если партию уже подставили

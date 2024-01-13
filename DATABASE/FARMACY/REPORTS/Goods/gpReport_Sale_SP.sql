@@ -926,25 +926,31 @@ BEGIN
            , tmpMovDetails.AccounterName
            , tmpMovDetails.INN
            , tmpMovDetails.NumberVAT
-           , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
+           , CASE WHEN tmpMovDetails.JuridicalId = 2886776  -- оо кейнтюпл
                   THEN 'UA083077700000026008711126473'  
-                  WHEN tmpMovDetails.JuridicalId = 472115  
-                  THEN 'UA443077700000026006711126475' 
-                  WHEN tmpMovDetails.JuridicalId = 1311462 
-                   AND Object_PartnerMedical.Id = 4474556 
-                  THEN 'UA833077700000026002711126394' 
-                  WHEN tmpMovDetails.JuridicalId = 3457711 
-                   AND Object_PartnerMedical.Id = 4474556 
-                  THEN 'UA313077700000026003711126326' 
-                  WHEN tmpMovDetails.JuridicalId = 1311462  
-                   AND Object_PartnerMedical.Id = 4212299 
-                  THEN 'UA833077700000026002711126394' 
-                  WHEN tmpMovDetails.JuridicalId = 393038   
-                   AND Object_PartnerMedical.Id = 4474509  
-                  THEN 'UA553223130000026001000030333' 
-                  WHEN tmpMovDetails.JuridicalId = 6608394   
-                   AND Object_PartnerMedical.Id = 3751525  
+                  WHEN tmpMovDetails.JuridicalId = 4721154  -- рнб юяма-2  
+                  THEN 'UA093052990000026000050593496' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4
+                   AND Object_PartnerMedical.Id = 4474556   -- ймо  "джоляд ╧9" длп
+                  THEN 'UA153052990000026007050594993' 
+                  WHEN tmpMovDetails.JuridicalId = 3457711  -- рнб нПУЁДЕЪ-тЮПЛ
+                   AND Object_PartnerMedical.Id = 4474556   -- ймо  "джоляд ╧9" длп 
+                  THEN 'UA533052990000026000050591443' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4  
+                   AND Object_PartnerMedical.Id = 4212299   -- ймо  "джоляд ╧11" длп
+                  THEN 'UA153052990000026007050594993' 
+                  WHEN tmpMovDetails.JuridicalId = 393038   -- рнб юяма
+                   AND Object_PartnerMedical.Id = 4474509   -- ймо  "джоляд ╧8" длп
+                  THEN 'UA093052990000026000050563426' 
+                  WHEN tmpMovDetails.JuridicalId = 6608394  -- рнб чютюпл  
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп
                   THEN 'UA493223130000026006000037643' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4  
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп
+                  THEN 'UA153052990000026007050594993' 
+                  WHEN tmpMovDetails.JuridicalId = 393052   -- тно ьЮОЁПН ╡.н.
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп
+                  THEN 'UA923052990000026003050585304' 
                   ELSE tmpMovDetails.BankAccount END ::TVarChar
            , tmpMovDetails.Phone
            , tmpMovDetails.MainName
@@ -952,45 +958,57 @@ BEGIN
            , tmpMovDetails.Decision
            , tmpMovDetails.DecisionDate
            , tmpMovDetails.License
-           , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
+           , CASE WHEN tmpMovDetails.JuridicalId = 2886776  -- оо кейнтюпл
                   THEN 'юр "ю_аюмй"'  
-                  WHEN tmpMovDetails.JuridicalId = 472115  
-                  THEN 'юр "ю-аюмй"' 
-                  WHEN tmpMovDetails.JuridicalId = 1311462 
-                   AND Object_PartnerMedical.Id = 4474556 
-                  THEN 'юр "ю-аюмй"' 
-                  WHEN tmpMovDetails.JuridicalId = 3457711 
-                   AND Object_PartnerMedical.Id = 4474556 
-                  THEN 'юр "ю-аюмй"' 
-                  WHEN tmpMovDetails.JuridicalId = 1311462  
-                   AND Object_PartnerMedical.Id = 4212299 
-                  THEN 'юр "ю-аюмй"' 
-                  WHEN tmpMovDetails.JuridicalId = 393038   
-                   AND Object_PartnerMedical.Id = 4474509  
-                  THEN 'AT "сЙПЕЙЯЁЛАЮМЙ"' 
-                  WHEN tmpMovDetails.JuridicalId = 6608394   
-                   AND Object_PartnerMedical.Id = 3751525  
+                  WHEN tmpMovDetails.JuridicalId = 472115   -- рнб юяма-2    
+                  THEN 'юр йа "оПХБЮРАЮМЙ"' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4
+                   AND Object_PartnerMedical.Id = 4474556   -- ймо  "джоляд ╧9" длп 
+                  THEN 'юр йа "оПХБЮРАЮМЙ"' 
+                  WHEN tmpMovDetails.JuridicalId = 3457711  -- рнб нПУЁДЕЪ-тЮПЛ 
+                   AND Object_PartnerMedical.Id = 4474556   -- ймо  "джоляд ╧9" длп 
+                  THEN 'юр йа "оПХБЮРАЮМЙ"' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4 
+                   AND Object_PartnerMedical.Id = 4212299   -- ймо  "джоляд ╧11" длп 
+                  THEN 'юр йа "оПХБЮРАЮМЙ"' 
+                  WHEN tmpMovDetails.JuridicalId = 393038   -- рнб юяма   
+                   AND Object_PartnerMedical.Id = 4474509   -- ймо  "джоляд ╧8" длп  
+                  THEN 'юр йа "оПХБЮРАЮМЙ"' 
+                  WHEN tmpMovDetails.JuridicalId = 6608394  -- рнб чютюпл     
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп  
                   THEN 'юр "сЙПЕЙЯЁЛАЮМЙ"' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4  
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп
+                  THEN 'юр йа "оПХБЮРАЮМЙ"' 
+                  WHEN tmpMovDetails.JuridicalId = 393052   -- тно ьЮОЁПН ╡.н.
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп
+                  THEN 'юр йа "оПХБЮРАЮМЙ"' 
                   ELSE tmpMovDetails.BankName END ::TVarChar
-           , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
+           , CASE WHEN tmpMovDetails.JuridicalId = 2886776  -- оо кейнтюпл 
                   THEN '370770'  
-                  WHEN tmpMovDetails.JuridicalId = 472115  
-                  THEN '370770' 
-                  WHEN tmpMovDetails.JuridicalId = 1311462 
-                   AND Object_PartnerMedical.Id = 4474556 
-                  THEN '307770' 
-                  WHEN tmpMovDetails.JuridicalId = 3457711 
-                   AND Object_PartnerMedical.Id = 4474556 
-                  THEN '307770' 
-                  WHEN tmpMovDetails.JuridicalId = 1311462  
-                   AND Object_PartnerMedical.Id = 4212299 
-                  THEN '307770' 
-                  WHEN tmpMovDetails.JuridicalId = 393038   
-                   AND Object_PartnerMedical.Id = 4474509  
+                  WHEN tmpMovDetails.JuridicalId = 472115   -- рнб юяма-2  
+                  THEN '305299' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4 
+                   AND Object_PartnerMedical.Id = 4474556   -- ймо  "джоляд ╧9" длп 
+                  THEN '305299' 
+                  WHEN tmpMovDetails.JuridicalId = 3457711  -- рнб нПУЁДЕЪ-тЮПЛ 
+                   AND Object_PartnerMedical.Id = 4474556   -- ймо  "джоляд ╧9" длп 
+                  THEN '305299' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4  
+                   AND Object_PartnerMedical.Id = 4212299   -- ймо  "джоляд ╧11" длп 
+                  THEN '305299' 
+                  WHEN tmpMovDetails.JuridicalId = 393038   -- рнб юяма    
+                   AND Object_PartnerMedical.Id = 4474509   -- ймо  "джоляд ╧8" длп  
+                  THEN '305299' 
+                  WHEN tmpMovDetails.JuridicalId = 6608394  -- рнб чютюпл     
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп  
                   THEN '322313' 
-                  WHEN tmpMovDetails.JuridicalId = 6608394   
-                   AND Object_PartnerMedical.Id = 3751525  
-                  THEN '322313' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  -- рнб юяма-4  
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп
+                  THEN '305299' 
+                  WHEN tmpMovDetails.JuridicalId = 393052   -- тно ьЮОЁПН ╡.н.
+                   AND Object_PartnerMedical.Id = 3751525   -- ймо  "джоляд ╧5" длп
+                  THEN '305299' 
                   ELSE tmpMovDetails.MFO END      ::TVarChar
 
            , Object_PartnerMedicalJuridical.ValueData AS PartnerMedical_JuridicalName
@@ -1193,4 +1211,3 @@ $BODY$
 
 
 select * from gpReport_Sale_SP(inStartDate := ('01.09.2023')::TDateTime , inEndDate := ('30.09.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
-

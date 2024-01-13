@@ -24,6 +24,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbisBansSEND Boolean;
 BEGIN
      -- проверка
      IF COALESCE ((SELECT MovementBoolean_Deferred.ValueData FROM MovementBoolean  AS MovementBoolean_Deferred
@@ -51,7 +52,16 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
-     IF COALESCE (ioId, 0) = 0 AND CURRENT_DATE >= '01.01.2024' AND COALESCE(inToId, 0) <> 11299914 AND 
+     SELECT COALESCE(ObjectBoolean_CashSettings_BansSEND.ValueData, FALSE)   AS isBansSEND
+     INTO vbisBansSEND
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BansSEND
+                                  ON ObjectBoolean_CashSettings_BansSEND.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_BansSEND.DescId = zc_ObjectBoolean_CashSettings_BansSEND()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
+
+     IF COALESCE (ioId, 0) = 0 AND CURRENT_DATE >= '01.01.2024' AND COALESCE(inToId, 0) <> 11299914 AND COALESCE (vbisBansSEND, FALSE) = TRUE AND
         NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN 
        RAISE EXCEPTION 'Ошибка. Создание перемещений запрещено..';             

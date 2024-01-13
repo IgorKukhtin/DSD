@@ -61,7 +61,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isCancelBansSUN Boolean, isLegalEntitiesSUN Boolean
              , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_CountAward Integer, AntiTOPMP_SumFine TFloat, AntiTOPMP_MinProcAward TFloat
              , UnitDeferredId Integer, UnitDeferredName TVarChar
-             , CourseReport TFloat, SmashSumSend TFloat
+             , CourseReport TFloat, SmashSumSend TFloat, isBansSEND Boolean
              ) AS
 $BODY$
 BEGIN
@@ -147,6 +147,7 @@ BEGIN
         , ObjectFloat_CashSettings_CourseReport.ValueData                          AS CourseReport
         , ObjectFloat_CashSettings_SmashSumSend.ValueData                          AS SmashSumSend
         
+        , COALESCE(ObjectBoolean_CashSettings_BansSEND.ValueData, FALSE)   AS isBansSEND
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -266,6 +267,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_LegalEntitiesSUN
                                 ON ObjectBoolean_CashSettings_LegalEntitiesSUN.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_LegalEntitiesSUN.DescId = zc_ObjectBoolean_CashSettings_LegalEntitiesSUN()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BansSEND
+                                ON ObjectBoolean_CashSettings_BansSEND.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_BansSEND.DescId = zc_ObjectBoolean_CashSettings_BansSEND()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id
