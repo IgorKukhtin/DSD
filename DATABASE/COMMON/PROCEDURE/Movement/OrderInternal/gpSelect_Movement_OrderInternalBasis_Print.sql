@@ -325,6 +325,7 @@ BEGIN
                                                                            AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0 OR tmpMI.AmountSend <> 0 OR tmpMI.AmountPartner <> 0 OR tmpMI.AmountPartnerPrior <> 0 OR tmpMI.AmountPartnerSecond <> 0 -- OR tmpMI.Amount_calc <> 0
           OR tmpMI.AmountRemains <> 0
+          OR tmpMI.AmountSendOut <> 0
        ;
     RETURN NEXT Cursor2;
 
