@@ -21,6 +21,7 @@ $BODY$
   DECLARE vbisNotDisplaySUN Boolean;
   DECLARE vbInsertDate TDateTime;
   DECLARE vbisSendLoss Boolean;
+  DECLARE vbisBansSEND Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Send());
@@ -37,6 +38,14 @@ BEGIN
       END IF;
     END IF;
     
+    SELECT COALESCE(ObjectBoolean_CashSettings_BansSEND.ValueData, FALSE)   AS isBansSEND
+    INTO vbisBansSEND
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BansSEND
+                                 ON ObjectBoolean_CashSettings_BansSEND.ObjectId = Object_CashSettings.Id 
+                                AND ObjectBoolean_CashSettings_BansSEND.DescId = zc_ObjectBoolean_CashSettings_BansSEND()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
     
 /*
     IF EXISTS (select 
@@ -110,7 +119,7 @@ BEGIN
                                  AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
     WHERE Movement.Id = inMovementId;
     
-    IF vbOperDate >= '01.01.2024' AND COALESCE(vbUnit_To, 0) <> 11299914 AND 
+    IF vbOperDate >= '01.01.2024' AND COALESCE(vbUnit_To, 0) <> 11299914 AND COALESCE (vbisBansSEND, FALSE) = TRUE AND 
        NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN 
       RAISE EXCEPTION 'Ошибка. Изменять статус перемещений с 1.01.2024 разрешено только администратору..';             

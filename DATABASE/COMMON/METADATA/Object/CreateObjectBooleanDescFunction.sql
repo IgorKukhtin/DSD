@@ -1446,10 +1446,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_LegalEntitiesSUN() RETU
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_LegalEntitiesSUN', 'Перемещения по юр. лицам' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_LegalEntitiesSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_BansSEND() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_BansSEND'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_BansSEND', 'Блокировка работы с перемещениями' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_BansSEND');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 13.01.24                                                                                                          * zc_ObjectBoolean_CashSettings_BansSEND
  05.12.23                                                                                                          * zc_ObjectBoolean_CashSettings_LegalEntitiesSUN
  02.09.23         * zc_ObjectBoolean_StickerFile_70
  22.05.23         * zc_ObjectBoolean_GoodsGroup_Asset
