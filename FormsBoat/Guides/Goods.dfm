@@ -1006,17 +1006,8 @@ object GoodsForm: TGoodsForm
           ItemName = 'bbInsertMask'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -1025,6 +1016,14 @@ object GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -1818,8 +1817,8 @@ object GoodsForm: TGoodsForm
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
       ImageIndex = 40
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'

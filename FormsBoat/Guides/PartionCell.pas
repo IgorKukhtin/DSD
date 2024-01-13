@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
@@ -55,9 +55,9 @@ type
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     Level: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
@@ -66,7 +66,7 @@ type
     bbProtocol: TdxBarButton;
     edSearchName: TcxTextEdit;
     lbSearchName: TcxLabel;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_Name: TdsdFieldFilter;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
   private

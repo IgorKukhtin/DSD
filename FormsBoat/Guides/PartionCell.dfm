@@ -1,9 +1,9 @@
 object PartionCellForm: TPartionCellForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
   ClientHeight = 367
-  ClientWidth = 660
+  ClientWidth = 666
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,13 @@ object PartionCellForm: TPartionCellForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 660
+    Width = 666
     Height = 341
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 647
-    ExplicitHeight = 350
+    ExplicitWidth = 660
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,14 +50,6 @@ object PartionCellForm: TPartionCellForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Level: TcxGridDBColumn
-        Caption = #1059#1088#1086#1074#1077#1085#1100
-        DataBinding.FieldName = 'Level'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 173
-      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -66,6 +57,14 @@ object PartionCellForm: TPartionCellForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
+      end
+      object Level: TcxGridDBColumn
+        Caption = #1059#1088#1086#1074#1077#1085#1100
+        DataBinding.FieldName = 'Level'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 173
       end
       object clName: TcxGridDBColumn
         Caption = #1071#1095#1077#1081#1082#1072
@@ -109,7 +108,7 @@ object PartionCellForm: TPartionCellForm
   object lbSearchName: TcxLabel
     Left = 444
     Top = 205
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+    Caption = #1071#1095#1077#1081#1082#1072' : '
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
@@ -217,7 +216,14 @@ object PartionCellForm: TPartionCellForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbShowAll'
         end
@@ -227,7 +233,7 @@ object PartionCellForm: TPartionCellForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbChoice'
         end
         item
           Visible = True
@@ -252,11 +258,6 @@ object PartionCellForm: TPartionCellForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -289,10 +290,9 @@ object PartionCellForm: TPartionCellForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
@@ -328,10 +328,10 @@ object PartionCellForm: TPartionCellForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -447,7 +447,7 @@ object PartionCellForm: TPartionCellForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
       DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -462,21 +462,21 @@ object PartionCellForm: TPartionCellForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
@@ -509,7 +509,7 @@ object PartionCellForm: TPartionCellForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCell_list'
     DataSet = ClientDataSet
     DataSets = <
@@ -546,11 +546,11 @@ object PartionCellForm: TPartionCellForm
     Left = 96
     Top = 176
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
     Top = 200
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -581,7 +581,7 @@ object PartionCellForm: TPartionCellForm
     Left = 136
     Top = 224
   end
-  object FieldFilter_Article: TdsdFieldFilter
+  object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchName
     DataSet = ClientDataSet
     Column = clName

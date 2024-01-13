@@ -25,8 +25,6 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = -96
-    ExplicitTop = 139
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -352,7 +350,7 @@ object ClientForm: TClientForm
     Width = 897
     Height = 41
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 2
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -508,13 +506,8 @@ object ClientForm: TClientForm
           ItemName = 'bbSetUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -526,7 +519,19 @@ object ClientForm: TClientForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -579,9 +584,7 @@ object ClientForm: TClientForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
       ShowCaption = False
     end

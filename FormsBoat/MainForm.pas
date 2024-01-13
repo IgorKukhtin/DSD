@@ -317,6 +317,7 @@ type
     cxButton2: TcxButton;
     actPartionCell: TdsdOpenForm;
     miPartionCell: TMenuItem;
+    miGoodsGroup_all: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private

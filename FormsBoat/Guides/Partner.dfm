@@ -26,8 +26,6 @@ object PartnerForm: TPartnerForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 309
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -360,7 +358,7 @@ object PartnerForm: TPartnerForm
     Width = 1102
     Height = 41
     Align = alBottom
-    TabOrder = 5
+    TabOrder = 3
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -411,7 +409,6 @@ object PartnerForm: TPartnerForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitTop = -14
     object lbSearchName: TcxLabel
       Left = 10
       Top = 6
@@ -517,13 +514,8 @@ object PartnerForm: TPartnerForm
           ItemName = 'bbSetUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -532,6 +524,10 @@ object PartnerForm: TPartnerForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -548,6 +544,10 @@ object PartnerForm: TPartnerForm
         item
           Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -600,9 +600,7 @@ object PartnerForm: TPartnerForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -892,10 +890,10 @@ object PartnerForm: TPartnerForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1072#1088#1090#1085#1077#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1072#1088#1090#1085#1077#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1072#1088#1090#1085#1077#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
     end
     object actFormClose: TdsdFormClose

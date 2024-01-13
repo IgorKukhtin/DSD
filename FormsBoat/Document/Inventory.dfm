@@ -253,7 +253,7 @@ object InventoryForm: TInventoryForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            HeaderHint = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
             Width = 76
           end
           object Amount: TcxGridDBColumn
@@ -720,9 +720,9 @@ object InventoryForm: TInventoryForm
       end
     end
     object cxLabel12: TcxLabel
-      Left = 375
+      Left = 376
       Top = 139
-      Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+      Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
     end
     object edPartionCell: TcxButtonEdit
       Left = 376
@@ -1476,8 +1476,8 @@ object InventoryForm: TInventoryForm
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'>'
       ImageIndex = 40
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'

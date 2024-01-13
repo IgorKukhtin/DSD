@@ -1,9 +1,9 @@
 object PartionCellEditForm: TPartionCellEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
   ClientHeight = 239
-  ClientWidth = 322
+  ClientWidth = 363
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,36 +12,36 @@ object PartionCellEditForm: TPartionCellEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 10
     Top = 78
     TabOrder = 0
-    Width = 296
+    Width = 344
   end
   object cxLabel1: TcxLabel
     Left = 10
     Top = 58
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = #1071#1095#1077#1081#1082#1072
   end
   object cxButton1: TcxButton
-    Left = 43
-    Top = 192
-    Width = 75
+    Left = 66
+    Top = 186
+    Width = 90
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actInsertUpdate
     Default = True
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 187
-    Top = 192
-    Width = 75
+    Left = 210
+    Top = 186
+    Width = 90
     Height = 25
-    Action = dsdFormClose
+    Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     TabOrder = 3
@@ -76,13 +76,13 @@ object PartionCellEditForm: TPartionCellEditForm
     Properties.UseDisplayFormatWhenEditing = True
     ShowHint = True
     TabOrder = 7
-    Width = 159
+    Width = 207
   end
   object ceComment: TcxTextEdit
     Left = 10
     Top = 135
     TabOrder = 8
-    Width = 296
+    Width = 344
   end
   object cxLabel9: TcxLabel
     Left = 12
@@ -90,9 +90,10 @@ object PartionCellEditForm: TPartionCellEditForm
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 144
     Top = 168
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -105,7 +106,7 @@ object PartionCellEditForm: TPartionCellEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdate: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -115,10 +116,12 @@ object PartionCellEditForm: TPartionCellEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
-    object dsdFormClose: TdsdFormClose
+    object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -129,7 +132,7 @@ object PartionCellEditForm: TPartionCellEditForm
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -169,7 +172,7 @@ object PartionCellEditForm: TPartionCellEditForm
     Left = 280
     Top = 150
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
@@ -188,7 +191,7 @@ object PartionCellEditForm: TPartionCellEditForm
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -240,8 +243,8 @@ object PartionCellEditForm: TPartionCellEditForm
     Left = 224
     Top = 86
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 48
-    Top = 158
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 72
+    Top = 118
   end
 end

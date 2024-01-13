@@ -494,7 +494,7 @@ inherited MainForm: TMainForm
     object actPartionCell: TdsdOpenForm [16]
       Category = '10_'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1071#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+      Caption = #1071#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103
       FormName = 'TPartionCellForm'
       FormNameParam.Value = 'TPartionCellForm'
       FormNameParam.DataType = ftString
@@ -2076,11 +2076,14 @@ inherited MainForm: TMainForm
       end
     end
     inherited miGuide: TMenuItem
-      object miGoodsGroup: TMenuItem
-        Action = actGoodsGroup
-      end
-      object miGoodsGroupList: TMenuItem
-        Action = actGoodsGroup_List
+      object miGoodsGroup_all: TMenuItem
+        Caption = #1043#1088#1091#1087#1087#1099' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
+        object miGoodsGroup: TMenuItem
+          Action = actGoodsGroup
+        end
+        object miGoodsGroupList: TMenuItem
+          Action = actGoodsGroup_List
+        end
       end
       object miGoods: TMenuItem
         Action = actGoods
@@ -2113,13 +2116,13 @@ inherited MainForm: TMainForm
       object miUnit: TMenuItem
         Action = actUnit
       end
+      object miPartionCell: TMenuItem
+        Action = actPartionCell
+      end
       object miPriceList: TMenuItem
         Action = actPriceList
         Enabled = False
         Visible = False
-      end
-      object miPartionCell: TMenuItem
-        Action = actPartionCell
       end
       object miLine10_2: TMenuItem
         Caption = '-'

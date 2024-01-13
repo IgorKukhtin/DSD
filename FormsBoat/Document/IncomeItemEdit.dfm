@@ -2,7 +2,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 333
+  ClientHeight = 291
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object cxButtonOK: TcxButton
-    Left = 114
-    Top = 295
+    Left = 295
+    Top = 250
     Width = 90
     Height = 25
     Action = actInsertUpdate
@@ -32,8 +32,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     TabOrder = 6
   end
   object cxButtonCancel: TcxButton
-    Left = 269
-    Top = 295
+    Left = 400
+    Top = 250
     Width = 90
     Height = 25
     Action = actFormClose
@@ -119,14 +119,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Width = 80
   end
   object cxLabel10: TcxLabel
-    Left = 438
-    Top = 234
+    Left = 487
+    Top = 227
     Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
     Visible = False
   end
   object ceCountForPrice: TcxCurrencyEdit
-    Left = 439
-    Top = 249
+    Left = 487
+    Top = 234
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -278,9 +278,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = 'S/N'
   end
   object btnGoodsChoiceForm: TcxButton
-    Left = 20
+    Left = 8
     Top = 250
-    Width = 150
+    Width = 120
     Height = 25
     Hint = #1042#1099#1073#1086#1088' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
     Action = actGoodsChoiceForm
@@ -291,7 +291,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object cxLabel11: TcxLabel
     Left = 148
     Top = 190
-    Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085'.'
+    Caption = #1071#1095#1077#1081#1082#1072
   end
   object edPartionCell: TcxTextEdit
     Left = 148
@@ -301,9 +301,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Width = 80
   end
   object btnPartionCellChoice: TcxButton
-    Left = 230
+    Left = 143
     Top = 250
-    Width = 150
+    Width = 120
     Height = 25
     Action = actPartionCellChoiceForm
     ParentShowHint = False
