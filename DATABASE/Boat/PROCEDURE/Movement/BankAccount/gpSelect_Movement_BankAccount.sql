@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
 RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
-             , AmountOut TFloat
+             , AmountOut TFloat 
+             , AmountChild_diff TFloat
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
@@ -21,7 +22,8 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , MovementId_parent Integer, InvNumberFull_parent TVarChar, InvNumber_parent TVarChar, MovementDescName_parent TVarChar
                --
              , Amount_Invoice TFloat
-             , Amount_diff TFloat
+             , Amount_diff TFloat 
+             
              , isDiff Boolean
 
              , ObjectName_Invoice TVarChar
@@ -211,12 +213,17 @@ BEGIN
        --все чайды
       , tmpMI_Child AS (SELECT MovementItem.ParentId
                              , MovementItem.MovementId
-                             , STRING_AGG (Movement_Invoice.InvNumber, '; ') AS InvNumber_Invoice
+                             , STRING_AGG (zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId), '; ') AS InvNumber_Invoice 
+                             , SUM (COALESCE (MovementItem.Amount, 0)) AS Amount
                         FROM MovementItem
                              LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                         AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MIFloat_MovementId.ValueData ::Integer
+                             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MIFloat_MovementId.ValueData ::Integer     
+
+                             LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                                      ON MovementString_ReceiptNumber.MovementId = Movement_Invoice.Id
+                                                     AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
                         WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)    
                           AND MovementItem.DescId = zc_MI_Child()
                           AND (MovementItem.isErased = FALSE OR inIsErased = TRUE) 
@@ -235,7 +242,9 @@ BEGIN
            , Object_Status.ValueData    AS StatusName
 
            , CASE WHEN MovementItem.Amount > 0 THEN  1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountOut
+           , CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountOut  
+           , (MovementItem.Amount - COALESCE (tmpMI_Child.Amount,0)) ::TFloat AS AmountChild_diff
+
 
            , MIString_Comment.ValueData        AS Comment
            , MovementItem.ObjectId             AS BankAccountId

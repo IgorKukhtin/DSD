@@ -375,7 +375,8 @@ uses
   PartionCellEdit in '..\..\FormsBoat\Guides\PartionCellEdit.pas' {PartionCellEditForm: TParentForm},
   PartionCell in '..\..\FormsBoat\Guides\PartionCell.pas' {PartionCellForm: TParentForm},
   DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
-  BankAccountMovementChild in '..\..\FormsBoat\Document\BankAccountMovementChild.pas' {BankAccountMovementChildForm: TParentForm};
+  BankAccountMovementChild in '..\..\FormsBoat\Document\BankAccountMovementChild.pas' {BankAccountMovementChildForm: TParentForm},
+  BankAccountPdfEdit in '..\..\FormsBoat\Guides\BankAccountPdfEdit.pas' {BankAccountPdfEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

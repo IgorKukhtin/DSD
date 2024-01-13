@@ -25,7 +25,7 @@
   end
   object cxLabel1: TcxLabel [3]
     Left = 147
-    Top = 5
+    Top = 8
     Caption = #1044#1072#1090#1072
   end
   object ceOperDate: TcxDateEdit [4]
@@ -281,6 +281,13 @@
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountChild_diff'
+        Value = Null
+        Component = ceAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 248
     Top = 156
@@ -363,6 +370,15 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'inMovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AmountChild_diff'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

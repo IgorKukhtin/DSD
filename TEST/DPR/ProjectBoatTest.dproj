@@ -1299,6 +1299,10 @@
 				<Form>BankAccountMovementChildForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\BankAccountPdfEdit.pas">
+				<Form>BankAccountPdfEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

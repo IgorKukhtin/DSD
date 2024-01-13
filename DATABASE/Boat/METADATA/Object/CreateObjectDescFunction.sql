@@ -360,11 +360,22 @@ CREATE OR REPLACE FUNCTION zc_Object_PartionCell() RETURNS Integer AS $BODY$BEGI
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PartionCell', 'Ячейка хранения (Партия учета)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionCell');
 
+CREATE OR REPLACE FUNCTION zc_Object_BankAccountPdf() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BankAccountPdf'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_BankAccountPdf', 'Расчетный счет, скан документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BankAccountPdf');
+
+CREATE OR REPLACE FUNCTION zc_Object_PhotoTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PhotoTag'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PhotoTag', 'Категория Фото' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PhotoTag');
+
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.01.24         * zc_Object_BankAccountPdf
+                    zc_Object_PhotoTag
  08.01.24         * zc_Object_PartionCell
  06.12.23         * zc_Object_InvoiceKind
  10.04.22         * zc_Object_GoodsArticle

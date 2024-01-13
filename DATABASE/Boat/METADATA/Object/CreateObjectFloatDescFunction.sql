@@ -207,7 +207,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionCell_Level() RETURNS Integer AS
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_PartionCell_Level', zc_Object_PartionCell(), ' Уровень стелажа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_Level');
 
-     
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_BankAccountPdf_MovmentItemId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BankAccountPdf_MovmentItemId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_BankAccountPdf_MovmentItemId', zc_Object_BankAccountPdf(), '  документ Расчетный счет, приход/расход' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BankAccountPdf_MovmentItemId');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
