@@ -172,6 +172,7 @@ type
     cbLegalEntitiesSUN: TcxCheckBox;
     ceSmashSumSend: TcxCurrencyEdit;
     cxLabel49: TcxLabel;
+    cbBansSEND: TcxCheckBox;
   private
     { Private declarations }
   public

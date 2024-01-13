@@ -41,6 +41,7 @@ $BODY$
   DECLARE vResortAddCount   Integer;
   DECLARE vbisSendLoss      Boolean;
   DECLARE vbisSendLossFrom  Boolean;
+  DECLARE vbisBansSEND Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -139,7 +140,16 @@ BEGIN
 
     WHERE Movement.Id = inMovementId;
     
-    IF outOperDate >= '01.01.2024' AND COALESCE(vbUnit_To, 0) <> 11299914 AND 
+    SELECT COALESCE(ObjectBoolean_CashSettings_BansSEND.ValueData, FALSE)   AS isBansSEND
+    INTO vbisBansSEND
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BansSEND
+                                 ON ObjectBoolean_CashSettings_BansSEND.ObjectId = Object_CashSettings.Id 
+                                AND ObjectBoolean_CashSettings_BansSEND.DescId = zc_ObjectBoolean_CashSettings_BansSEND()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
+
+    IF outOperDate >= '01.01.2024' AND COALESCE(vbUnit_To, 0) <> 11299914 AND COALESCE (vbisBansSEND, FALSE) = TRUE AND 
        NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN 
       RAISE EXCEPTION 'Ошибка. Изменять статус перемещений с 1.01.2024 разрешено только администратору..';             
