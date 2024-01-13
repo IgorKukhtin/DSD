@@ -304,6 +304,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountPdfEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountPdfEditForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountMovementFormTest;

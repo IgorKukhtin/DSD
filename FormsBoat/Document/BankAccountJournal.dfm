@@ -985,6 +985,52 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited ActionList: TActionList
     Left = 87
     Top = 50
+    object actOpenFormPdfEdit: TdsdOpenForm [0]
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 60
+      FormName = 'TBankAccountPdfEditForm'
+      FormNameParam.Value = 'TBankAccountPdfEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovmentItemId'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     inherited actShowErased: TBooleanStoredProcAction
       StoredProcList = <
         item
@@ -994,7 +1040,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           StoredProc = spSelectChild
         end>
     end
-    object actRefreshChild: TdsdDataSetRefresh [3]
+    object actRefreshChild: TdsdDataSetRefresh [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectChild
@@ -1005,6 +1051,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -1434,6 +1481,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -1620,6 +1668,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inMovementItemId'
           Value = Null
           ParamType = ptInput
@@ -1642,8 +1695,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Id'
+          Name = 'AmountChild_diff'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountChild_diff'
+          DataType = ftFloat
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1725,6 +1782,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormPdfEdit'
         end
         item
           Visible = True
@@ -1907,6 +1968,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     object bbSetUnErasedItem: TdxBarButton
       Action = mactSetUnErasedItem
+      Category = 0
+    end
+    object bbOpenFormPdfEdit: TdxBarButton
+      Action = actOpenFormPdfEdit
       Category = 0
     end
   end

@@ -228,7 +228,7 @@
     Width = 259
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 116
+    Top = 156
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 96

@@ -1,10 +1,12 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_MI_BankAccount_Child (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_BankAccount_Child (Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_BankAccount_Child(
     IN inMovementId        Integer  , -- ключ Документа 
-    IN inMovementItemId    Integer  ,     
+    IN inMovementItemId    Integer  ,            
+    IN inAmount            TFloat   ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
@@ -37,7 +39,7 @@ BEGIN
               , 0            AS ObjectId
               , ''::TVarChar AS ObjectName
               , ''::TVarChar AS Comment
-              , 0 ::TFloat   AS Amount
+              , inAmount ::TFloat AS Amount
               , 0            AS MovementId_Invoice
               , ''::TVarChar AS InvNumber_Invoice_Full
               --, NULL :: Integer AS ReceiptNumber_Invoice

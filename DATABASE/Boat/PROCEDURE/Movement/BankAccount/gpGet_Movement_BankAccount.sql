@@ -174,7 +174,7 @@ BEGIN
                           AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
         LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
-       WHERE Movement.Id =  inMovementId_Value;
+       WHERE Movement.Id = inMovementId_Value;
 
    END IF;
 

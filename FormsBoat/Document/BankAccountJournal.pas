@@ -132,6 +132,8 @@ type
     actUpdateDataSetChild: TdsdUpdateDataSet;
     actInvoiceDetailChoiceForm_Child: TOpenChoiceForm;
     spSelectChild: TdsdStoredProc;
+    actOpenFormPdfEdit: TdsdOpenForm;
+    bbOpenFormPdfEdit: TdxBarButton;
   private
     { Private declarations }
   public
