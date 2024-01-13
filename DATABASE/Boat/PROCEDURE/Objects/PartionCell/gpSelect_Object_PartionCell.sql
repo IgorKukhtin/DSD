@@ -37,13 +37,14 @@ BEGIN
 
        WHERE Object.DescId = zc_Object_PartionCell() 
          AND (Object.isErased = FALSE OR inisErased = TRUE)
-      UNION ALL
+
+      /*UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
             , 'УДАЛИТЬ' :: TVarChar   AS Name
             , CAST (NULL as TFLOAT)   AS Level      
             , CAST (NULL as TVarChar) AS Comment
-            , FALSE                   AS isErased
+            , FALSE                   AS isErased*/
       ;
 
 
