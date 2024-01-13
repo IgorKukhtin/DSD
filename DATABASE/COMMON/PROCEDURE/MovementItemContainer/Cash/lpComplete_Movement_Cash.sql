@@ -12,11 +12,36 @@ $BODY$
    DECLARE vbServiceDate TDateTime;
    DECLARE vbOperDate_currency TDateTime;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbMovementId_parent     Integer;
    DECLARE vbPositionId Integer;
    DECLARE vbSumm_diff TFloat;
 BEGIN
+     --
+     vbMovementId_parent:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);
+     --
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_parent AND Movement.DescId = zc_Movement_PersonalService())
+     THEN
+         -- определили
+         vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_parent AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+         -- определили <Месяц начислений:
+         vbServiceDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_parent AND MD.DescId = zc_MovementDate_ServiceDate());
+
+         --
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), inMovementId, vbPersonalServiceListId);
+
+         --
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), MovementItem.Id, vbPersonalServiceListId)
+               , lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), MovementItem.Id, vbServiceDate)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId = zc_MI_Master();
+         
+
+     END IF;
+
+
      -- определили <Месяц начислений:
-     vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId) AND MovementDate.DescId = zc_MovementDate_ServiceDate());
+     vbServiceDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_parent AND MD.DescId = zc_MovementDate_ServiceDate());
      
      -- определили 
    --vbOperDate_currency:= DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)); -- + INTERVAL '1 MONTH';
@@ -310,7 +335,9 @@ BEGIN
 
              , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
-             , CASE WHEN MI_Child.Id > 0
+             , CASE /*WHEN inMovementId = 27161581 
+                         THEN MILinkObject_MoneyPlace.ObjectId*/
+                    WHEN MI_Child.Id > 0
                          THEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, ObjectLink_PersonalServiceList_two.ChildObjectId, MILinkObject_MoneyPlace.ObjectId, 0)
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
                END AS PersonalServiceListId
@@ -1115,7 +1142,7 @@ BEGIN
      END IF; -- !!!Курсовая разница!!!
 
      -- Проверка
-     IF inUserId = 5 AND 1=1
+     IF inUserId = 5 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Admin vbSumm_diff = <%> '
                         , vbSumm_diff
