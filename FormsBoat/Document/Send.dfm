@@ -2997,6 +2997,28 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inMovementId_OrderClient'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inId'
+          Value = '-1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inPartNumber'
           Value = Null
           Component = edPartNumber
@@ -3078,6 +3100,14 @@ object SendForm: TSendForm
           ComponentItem = 'GoodsId'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_OrderClient'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -3129,6 +3159,14 @@ object SendForm: TSendForm
           Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_OrderClient'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

@@ -422,6 +422,12 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 323
     Top = 62
@@ -436,6 +442,22 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -585,6 +607,13 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
         Value = Null
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
