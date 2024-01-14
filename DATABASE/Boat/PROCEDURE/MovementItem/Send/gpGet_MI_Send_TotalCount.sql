@@ -1,9 +1,8 @@
--- Function: gpGet_MI_Inventory_TotalCount()
+-- Function: gpGet_MI_Send_TotalCount()
 
-DROP FUNCTION IF EXISTS gpGet_MI_Inventory_TotalCount (Integer, Integer, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_MI_Inventory_TotalCount (Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Send_TotalCount (Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_MI_Inventory_TotalCount(
+CREATE OR REPLACE FUNCTION gpGet_MI_Send_TotalCount(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>
     IN inMovementItemId    Integer    ,
     IN inGoodsId           Integer    ,
@@ -11,29 +10,28 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Inventory_TotalCount(
     IN inOperCount         TFloat     , --
    OUT outTotalCount       TFloat     , --
    OUT outAmountRemains    TFloat     , --
-   OUT outAmountDiff       TFloat     , --
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId   Integer;
-  DECLARE vbAmount   TFloat;
-  DECLARE vbUnitId   Integer;
   DECLARE vbOperDate TDateTime;
+  DECLARE vbUnitId   Integer;
+  DECLARE vbAmount   TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
 
      -- Данные для остатков
-     SELECT Movement.OperDate, MLO_Unit.ObjectId
+     /*SELECT Movement.OperDate, MLO_From.ObjectId
             INTO vbOperDate, vbUnitId
      FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_Unit
-                                       ON MLO_Unit.MovementId = inMovementId
-                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
-     WHERE Movement.Id = inMovementId;
+          LEFT JOIN MovementLinkObject AS MLO_From
+                                       ON MLO_From.MovementId = inMovementId
+                                      AND MLO_From.DescId     = zc_MovementLinkObject_From()
+     WHERE Movement.Id = inMovementId;*/
 
 
      --
@@ -48,25 +46,26 @@ BEGIN
                              AND MovementItem.isErased   = FALSE
                              -- без этого элемента
                              AND MovementItem.Id         <> COALESCE (inMovementItemId, 0)
-                             AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                             -- + ВСЕ S/N
+                             -- AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                            ), 0);
+     -- Остаток
      outAmountRemains:= COALESCE ((SELECT SUM (Container.Amount)
                                    FROM Container
                                         LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                      ON MIString_PartNumber.MovementItemId = Container.PartionId
                                                                     AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
-                                   WHERE Container.WhereObjectId = vbUnitId
+                                   WHERE Container.WhereObjectId = zc_Unit_Sklad() -- Всегда для этого Склада
                                      AND Container.DescId        = zc_Container_Count()
+                                     -- для ОДНОГО товара
                                      AND Container.ObjectId      = inGoodsId
-                                     AND COALESCE (MIString_PartNumber.ValueData, '') = COALESCE (inPartNumber,'')
+                                     -- + ВСЕ S/N
+                                     -- AND COALESCE (MIString_PartNumber.ValueData, '') = COALESCE (inPartNumber,'')
                                    GROUP BY Container.ObjectId
-                                          , COALESCE (MIString_PartNumber.ValueData, '')
                                   ), 0);
 
      --
      outTotalCount := COALESCE (inOperCount, 0) + vbAmount;
-     --
-     outAmountDiff:= outTotalCount - outAmountRemains;
 
 END;
 $BODY$

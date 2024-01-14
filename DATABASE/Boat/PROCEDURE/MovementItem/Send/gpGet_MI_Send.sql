@@ -6,10 +6,10 @@ DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, Integer, Integer, TVarC
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Send(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>
-    IN inMovementId_OrderClient Integer, --докуметн заказ
+    IN inMovementId_OrderClient Integer,-- докуметн заказ
     IN inId                Integer    , --
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
-    IN inPartNumber        TVarChar   , --
+    IN inPartNumber        TVarChar   , -- S/N
     IN inAmount            TFloat     , --
     IN inSession           TVarChar     -- сессия пользователя
 )
@@ -51,29 +51,30 @@ BEGIN
                                       AND MLO_From.DescId     = zc_MovementLinkObject_From()
      WHERE Movement.Id = inMovementId;
 
-       -- Результат
-       RETURN QUERY
-       WITH
-       tmpRemains AS (SELECT Container.ObjectId                           AS GoodsId
-                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                           , SUM (Container.Amount)                       AS Remains
-                      FROM Container
-                           LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                        ON MIString_PartNumber.MovementItemId = Container.PartionId
-                                                       AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
-                      WHERE Container.WhereObjectId = vbUnitId
-                        AND Container.DescId        = zc_Container_Count()
-                        AND Container.ObjectId      = inGoodsId
-                        AND COALESCE (MIString_PartNumber.ValueData, '') = COALESCE (inPartNumber,'')
-                      GROUP BY Container.ObjectId
-                             , COALESCE (MIString_PartNumber.ValueData, '')
-                     )
-
-     , tmpMI AS (SELECT MI.ObjectId                                  AS GoodsId
+     -- Результат
+     RETURN QUERY
+       WITH -- Итого остаток
+            tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
+                                , SUM (Container.Amount) AS Remains
+                           FROM Container
+                                LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                             ON MIString_PartNumber.MovementItemId = Container.PartionId
+                                                            AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                           WHERE Container.WhereObjectId = zc_Unit_Sklad() -- Всегда для этого Склада
+                             AND Container.DescId        = zc_Container_Count()
+                             -- для ОДНОГО товара
+                             AND Container.ObjectId      = inGoodsId
+                             -- + ВСЕ S/N
+                             --AND COALESCE (MIString_PartNumber.ValueData, '') = COALESCE (inPartNumber,'')
+                           GROUP BY Container.ObjectId
+                          )
+       -- все перемещения
+     , tmpMI AS (SELECT MI.Id                                        AS Id
+                      , MI.ObjectId                                  AS GoodsId
                       , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                       , MIFloat_MovementId.ValueData      :: Integer AS MovementId_OrderClient
                       , MILO_PartionCell.ObjectId                    AS PartionCellId
-                      , SUM (MI.Amount)                              AS Amount
+                      , MI.Amount                                    AS Amount
                  FROM MovementItem AS MI
                       LEFT JOIN MovementItemString AS MIString_PartNumber
                                                    ON MIString_PartNumber.MovementItemId = MI.Id
@@ -86,54 +87,70 @@ BEGIN
                                                       AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                  WHERE MI.MovementId = inMovementId
                    AND MI.DescId     = zc_MI_Master()
-                   AND MI.ObjectId   = inGoodsId
                    AND MI.isErased   = FALSE
-                   AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
-                   AND COALESCE (MIFloat_MovementId.ValueData,0)::Integer = COALESCE (inMovementId_OrderClient,0)
-                   AND (MI.Id = inId OR inId = 0)
-                 GROUP BY MI.ObjectId
-                        , COALESCE (MIString_PartNumber.ValueData, '')
-                        , MIFloat_MovementId.ValueData      :: Integer
-                        , MILO_PartionCell.ObjectId
+                   -- для ОДНОГО товара
+                   AND MI.ObjectId   = inGoodsId
+                   -- + ВСЕ S/N
+                   --AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                   -- + Заказ
+                   --AND COALESCE (MIFloat_MovementId.ValueData,0)::Integer = COALESCE (inMovementId_OrderClient,0)
                 )
+           -- Результат
+           SELECT CASE WHEN inId <> 0 THEN tmpMI.Id ELSE -1 END :: Integer AS Id
+                , Object_Goods.Id                                AS GoodsId
+                , Object_Goods.ObjectCode                        AS GoodsCode
+                , Object_Goods.ValueData                         AS GoodsName
+                , ObjectString_Article.ValueData                 AS Article
+                , COALESCE (tmpMI.PartNumber, TRIM(inPartNumber), '')    ::TVarChar AS PartNumber
+                , ObjectString_Goods_GoodsGroupFull.ValueData    AS GoodsGroupNameFull
+                , Object_GoodsGroup.Id                           AS GoodsGroupId
+                , Object_GoodsGroup.ValueData                    AS GoodsGroupName
+                , Object_Partner.Id                              AS PartnerId
+                , Object_Partner.ValueData                       AS PartnerName
+                , 1  :: TFloat                                   AS CountForPrice
+                , 0  :: TFloat                                   AS Price
+                , (CASE WHEN tmpMI.Id > 0 THEN 0 ELSE COALESCE (inAmount, 1) END + COALESCE (tmpMI_sum.Amount, 0)) :: TFloat AS TotalCount
+                , COALESCE (tmpMI.Amount, inAmount, 1) :: TFloat AS Amount
 
-           SELECT CASE WHEN COALESCE (inId,0) <> 0 THEN inId ELSE -1 END  :: Integer AS Id
-                , Object_Goods.Id                             AS GoodsId
-                , Object_Goods.ObjectCode                     AS GoodsCode
-                , Object_Goods.ValueData                      AS GoodsName
-                , ObjectString_Article.ValueData              AS Article
-                , COALESCE (TRIM(inPartNumber),'')    ::TVarChar AS PartNumber
-                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-                , Object_GoodsGroup.Id                        AS GoodsGroupId
-                , Object_GoodsGroup.ValueData                 AS GoodsGroupName
-                , Object_Partner.Id                           AS PartnerId
-                , Object_Partner.ValueData                    AS PartnerName
-                , 1  :: TFloat                                AS CountForPrice
-                , 0  :: TFloat                                AS Price
-                , (/*COALESCE (inAmount,1) +*/ COALESCE (tmpMI.Amount, 0)) :: TFloat AS TotalCount
-                , COALESCE (inAmount,1)             :: TFloat AS Amount
+                , COALESCE (tmpRemains.Remains, 0)     :: TFloat AS AmountRemainsFrom
 
-                , COALESCE (tmpRemains.Remains, 0)                         :: TFloat AS AmountRemainsFrom
+                , Movement_OrderClient.Id                                   AS MovementId_OrderClient
+                , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
 
-              , Movement_OrderClient.Id                                   AS MovementId_OrderClient
-              , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+                , Object_PartionCell.Id         AS PartionCellId
+                , Object_PartionCell.ValueData  AS PartionCellName
 
-              , Object_PartionCell.Id         AS PartionCellId
-              , Object_PartionCell.ValueData  AS PartionCellName
            FROM Object AS Object_Goods
-                LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
-                               AND tmpMI.PartNumber = COALESCE (inPartNumber,'')
+
+                -- один элемент
+                LEFT JOIN tmpMI ON tmpMI.GoodsId = Object_Goods.Id
+                               AND tmpMI.Id      = inId
+
+                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = COALESCE (tmpMI.MovementId_OrderClient, inMovementId_OrderClient)
+
+                LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId
+
+                -- Итого сделано перемещений
+                LEFT JOIN (SELECT SUM (tmpMI.Amount) AS Amount
+                           FROM tmpMI
+                           -- все элементы
+                           -- WHERE tmpMI.Id <> COALESCE (inId, 0)
+                          ) AS tmpMI_sum
+                            ON tmpMI_sum.Amount > 0
+
+
+                -- Итого остаток
+                LEFT JOIN tmpRemains ON tmpRemains.GoodsId  = Object_Goods.Id
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
                                      ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
-                                    AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
+                                    AND ObjectLink_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
+                LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
 
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-
-                LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = ObjectLink_Goods_Partner.ChildObjectId
-                LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -141,17 +158,11 @@ BEGIN
 
                 LEFT JOIN ObjectString AS ObjectString_Article
                                        ON ObjectString_Article.ObjectId = Object_Goods.Id
-                                      AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                      AND ObjectString_Article.DescId   = zc_ObjectString_Article()
 
-                LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = Object_Goods.Id
-                                    AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
-
-                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
-
-                LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId
 
            WHERE Object_Goods.Id = inGoodsId
-              AND inGoodsId <> 0
+             AND inGoodsId <> 0
           UNION
            SELECT -1         :: Integer AS Id
                 , 0                     AS GoodsId

@@ -38,8 +38,8 @@ BEGIN
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
              , CAST ('' AS TVarChar)     AS InvNumberInvoice
-             , 0                         AS FromId
-             , CAST ('' AS TVarChar)     AS FromName
+             , Object_Unit.Id            AS FromId
+             , Object_Unit.ValueData     AS FromName
              , 0                         AS ToId
              , CAST ('' AS TVarChar)     AS ToName
 
@@ -57,6 +57,7 @@ BEGIN
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = zc_Unit_Sklad()
           ;
 
      ELSE

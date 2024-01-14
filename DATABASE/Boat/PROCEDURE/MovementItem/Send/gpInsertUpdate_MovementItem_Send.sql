@@ -63,7 +63,7 @@ BEGIN
      END IF;
 
      -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
+     vbIsInsert:= COALESCE (ioId, 0) <= 0;
 
      -- замена
      IF vbIsInsert = TRUE THEN ioIsOn:= TRUE; END IF;
