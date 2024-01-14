@@ -235,6 +235,7 @@ object InventoryForm: TInventoryForm
           object PartionCellCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1103#1095'.'
             DataBinding.FieldName = 'PartionCellCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103

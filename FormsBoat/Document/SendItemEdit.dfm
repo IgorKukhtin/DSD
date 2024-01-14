@@ -1,7 +1,7 @@
 object SendItemEditForm: TSendItemEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'-1'
   ClientHeight = 296
   ClientWidth = 424
   Color = clBtnFace
@@ -113,7 +113,7 @@ object SendItemEditForm: TSendItemEditForm
   object cxLabel4: TcxLabel
     Left = 290
     Top = 152
-    Caption = #1048#1058#1054#1043#1054' :'
+    Caption = #1048#1058#1054#1043#1054' '#1056#1072#1089#1093#1086#1076':'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clWindowText
@@ -167,13 +167,13 @@ object SendItemEditForm: TSendItemEditForm
     Width = 95
   end
   object edComment: TcxTextEdit
-    Left = 8
+    Left = 113
     Top = 222
     TabOrder = 16
-    Width = 271
+    Width = 302
   end
   object cxLabel9: TcxLabel
-    Left = 8
+    Left = 113
     Top = 202
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
@@ -194,8 +194,8 @@ object SendItemEditForm: TSendItemEditForm
   end
   object cxLabel7: TcxLabel
     Left = 290
-    Top = 99
-    Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.) '#1086#1090' '#1082#1086#1075#1086
+    Top = 102
+    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1057#1082#1083#1072#1076':'
   end
   object cxLabel15: TcxLabel
     Left = 218
@@ -215,12 +215,12 @@ object SendItemEditForm: TSendItemEditForm
     Width = 200
   end
   object cxLabel12: TcxLabel
-    Left = 290
+    Left = 8
     Top = 202
     Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
   end
   object edPartionCell: TcxButtonEdit
-    Left = 290
+    Left = 8
     Top = 222
     Properties.Buttons = <
       item
@@ -228,11 +228,12 @@ object SendItemEditForm: TSendItemEditForm
         Kind = bkEllipsis
       end>
     TabOrder = 25
-    Width = 126
+    Width = 92
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Top = 219
+    Left = 24
+    Top = 67
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -850,11 +851,11 @@ object SendItemEditForm: TSendItemEditForm
       item
         Control = cxButtonOK
       end>
-    Left = 320
-    Top = 214
+    Left = 296
+    Top = 182
   end
   object spGet_TotalCount: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Inventory_TotalCount'
+    StoredProcName = 'gpGet_MI_Send_TotalCount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -863,6 +864,14 @@ object SendItemEditForm: TSendItemEditForm
         Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'inMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -896,10 +905,17 @@ object SendItemEditForm: TSendItemEditForm
         Component = ceTotalCount
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountRemains'
+        Value = Null
+        Component = ceAmountRemainsFrom
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 112
-    Top = 192
+    Left = 128
+    Top = 120
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = '0'
@@ -1006,7 +1022,7 @@ object SendItemEditForm: TSendItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 355
-    Top = 232
+    Left = 27
+    Top = 200
   end
 end

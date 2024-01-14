@@ -855,6 +855,14 @@ object InventoryItemEdit_limitForm: TInventoryItemEdit_limitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = GuidesGoods

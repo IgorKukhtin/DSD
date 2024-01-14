@@ -246,12 +246,12 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     Width = 95
   end
   object cxLabel15: TcxLabel
-    Left = 8
+    Left = 113
     Top = 199
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
   end
   object edOrderClient: TcxButtonEdit
-    Left = 9
+    Left = 114
     Top = 222
     Properties.Buttons = <
       item
@@ -263,7 +263,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     Width = 301
   end
   object edPartionCell: TcxButtonEdit
-    Left = 321
+    Left = 8
     Top = 222
     Properties.Buttons = <
       item
@@ -274,7 +274,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     Width = 95
   end
   object cxLabel12: TcxLabel
-    Left = 320
+    Left = 7
     Top = 199
     Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
   end
@@ -903,6 +903,14 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'inMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

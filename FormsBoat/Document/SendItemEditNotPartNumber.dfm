@@ -113,7 +113,7 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
   object cxLabel4: TcxLabel
     Left = 292
     Top = 152
-    Caption = #1048#1058#1054#1043#1054' :'
+    Caption = #1048#1058#1054#1043#1054' '#1056#1072#1089#1093#1086#1076':'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clWindowText
@@ -169,13 +169,13 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
     Width = 95
   end
   object edComment: TcxTextEdit
-    Left = 8
+    Left = 113
     Top = 222
     TabOrder = 16
-    Width = 271
+    Width = 305
   end
   object cxLabel9: TcxLabel
-    Left = 8
+    Left = 113
     Top = 202
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
@@ -197,15 +197,15 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
   object cxLabel7: TcxLabel
     Left = 292
     Top = 102
-    Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.) '#1086#1090' '#1082#1086#1075#1086
+    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1057#1082#1083#1072#1076':'
   end
   object cxLabel12: TcxLabel
-    Left = 292
+    Left = 8
     Top = 202
     Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
   end
   object edPartionCell: TcxButtonEdit
-    Left = 292
+    Left = 8
     Top = 222
     Properties.Buttons = <
       item
@@ -213,7 +213,7 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
         Kind = bkEllipsis
       end>
     TabOrder = 23
-    Width = 126
+    Width = 95
   end
   object cxLabel15: TcxLabel
     Left = 218
@@ -859,7 +859,7 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
     Top = 206
   end
   object spGet_TotalCount: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Inventory_TotalCount'
+    StoredProcName = 'gpGet_MI_Send_TotalCount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -868,6 +868,14 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
         Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'inMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -901,10 +909,17 @@ object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
         Component = ceTotalCount
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountRemains'
+        Value = Null
+        Component = ceAmountRemainsFrom
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 112
-    Top = 192
+    Left = 72
+    Top = 224
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = '0'

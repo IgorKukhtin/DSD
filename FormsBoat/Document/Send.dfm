@@ -503,6 +503,7 @@ object SendForm: TSendForm
             Width = 120
           end
           object EAN: TcxGridDBColumn
+            Caption = 'E'#1040'N'
             DataBinding.FieldName = 'EAN'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -515,7 +516,6 @@ object SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = 'EAN'
             Width = 106
           end
           object GoodsCode: TcxGridDBColumn
@@ -622,6 +622,7 @@ object SendForm: TSendForm
           object PartionCellCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1103#1095'.'
             DataBinding.FieldName = 'PartionCellCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1103#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -1773,6 +1774,16 @@ object SendForm: TSendForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = actSetVisible_Grid
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = actSetVisible_PanelScan
+        Properties.Strings = (
+          'Value')
+      end
       item
         Component = cxGridChild
         Properties.Strings = (
@@ -3682,8 +3693,8 @@ object SendForm: TSendForm
         item
           Component = PanelScan_all
         end>
-      HintTrue = #1057#1082#1088#1099#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1088#1077#1078#1080#1084' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1077#1078#1080#1084' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
       CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
       ImageIndexTrue = 31
