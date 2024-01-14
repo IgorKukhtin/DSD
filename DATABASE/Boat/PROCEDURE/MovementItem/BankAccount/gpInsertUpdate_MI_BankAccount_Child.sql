@@ -15,15 +15,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_BankAccount_Child(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId            Integer;
-   DECLARE vbIsInsert          Boolean;
+   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Invoice());
      vbUserId := lpGetUserBySession (inSession);
-
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MI_BankAccount_Child (ioId
@@ -34,10 +30,7 @@ BEGIN
                                                 , inAmount
                                                 , inComment
                                                 , vbUserId
-                                                );
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+                                                 );
 
 END;
 $BODY$

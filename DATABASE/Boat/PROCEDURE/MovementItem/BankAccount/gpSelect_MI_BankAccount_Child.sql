@@ -15,11 +15,11 @@ RETURNS TABLE (MovementId Integer
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, ItemName TVarChar
              , MovementId_Invoice Integer, OperDate_Invoice TDateTime, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
              , ReceiptNumber_Invoice Integer, InvoiceKindName TVarChar
-             , InsertName TVarChar, InsertDate TDateTime 
-             , isErased Boolean 
+             , InsertName TVarChar, InsertDate TDateTime
+             , isErased Boolean
              , Ord Integer
-              )   
-              
+              )
+
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -47,7 +47,7 @@ BEGIN
         --все чайды
       , tmpMI_Child AS (SELECT MovementItem.*
                         FROM MovementItem
-                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)    
+                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           AND MovementItem.DescId = zc_MI_Child()
                           AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                         )
@@ -79,7 +79,7 @@ BEGIN
            , Object_Object.ValueData       AS ObjectName
            , ObjectDesc.ItemName
 
-           , Movement_Invoice.Id           AS MovementId_Invoice   
+           , Movement_Invoice.Id           AS MovementId_Invoice
            , Movement_Invoice.OperDate     AS OperDate_Invoice
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
            , Movement_Invoice.InvNumber        AS InvNumber_Invoice
@@ -87,17 +87,17 @@ BEGIN
            , Object_InvoiceKind.ValueData      AS InvoiceKindName
 
            , Object_Insert.ValueData     AS InsertName
-           , MIDate_Insert.ValueData     AS InsertDate 
-           
+           , MIDate_Insert.ValueData     AS InsertDate
+
            , tmpMI_Child.isErased  ::Boolean AS isErased
-           
+
            , ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY Movement.Id, tmpMI_Child.Id) ::Integer AS Ord
        FROM tmpMovement AS Movement
             INNER JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
-            
+
             LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpMI_Child.ObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
-            
+
             LEFT JOIN tmpMIFloat AS MIFloat_MovementId
                                  ON MIFloat_MovementId.MovementItemId = tmpMI_Child.Id
                                 --AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
@@ -111,7 +111,7 @@ BEGIN
                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
                                         AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
             LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
-                                                
+
             LEFT JOIN tmpMIString AS MIString_Comment
                                   ON MIString_Comment.MovementItemId = tmpMI_Child.Id
                                  AND MIString_Comment.DescId = zc_MIString_Comment()

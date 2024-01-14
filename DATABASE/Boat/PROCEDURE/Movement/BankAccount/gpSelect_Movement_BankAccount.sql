@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
 RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
-             , AmountOut TFloat 
+             , AmountOut TFloat
              , AmountChild_diff TFloat
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
@@ -22,8 +22,8 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , MovementId_parent Integer, InvNumberFull_parent TVarChar, InvNumber_parent TVarChar, MovementDescName_parent TVarChar
                --
              , Amount_Invoice TFloat
-             , Amount_diff TFloat 
-             
+             , Amount_diff TFloat
+
              , isDiff Boolean
 
              , ObjectName_Invoice TVarChar
@@ -40,7 +40,7 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , InvoiceKindName TVarChar
 
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime  
+             , UpdateName TVarChar, UpdateDate TDateTime
              --
              , String_1     TVarChar  --Bezeichnung Auftragskonto;                           имя счета заказа;
              , String_2     TVarChar  --IBAN Auftragskonto;                                  счет заказа IBAN;
@@ -61,8 +61,8 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , String_17    TVarChar  --Steuerrelevant;                                      Налоговый релевантный;
              , String_18    TVarChar  --Glaeubiger ID;                                       идентификатор кредитора;
              , String_19    TVarChar  --Mandatsreferenz                                      Ссылка на мандат
-              )   
-              
+              )
+
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -209,24 +209,24 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                            GROUP BY tmp.MovementId_Invoice
-                          )  
+                          )
        --все чайды
       , tmpMI_Child AS (SELECT MovementItem.ParentId
                              , MovementItem.MovementId
-                             , STRING_AGG (zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId), '; ') AS InvNumber_Invoice 
+                             , STRING_AGG (zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId), '; ') AS InvNumber_Invoice
                              , SUM (COALESCE (MovementItem.Amount, 0)) AS Amount
                         FROM MovementItem
                              LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                         AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MIFloat_MovementId.ValueData ::Integer     
+                             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MIFloat_MovementId.ValueData ::Integer
 
                              LEFT JOIN MovementString AS MovementString_ReceiptNumber
                                                       ON MovementString_ReceiptNumber.MovementId = Movement_Invoice.Id
                                                      AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
-                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)    
+                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           AND MovementItem.DescId = zc_MI_Child()
-                          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE) 
+                          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                         GROUP BY MovementItem.ParentId
                                , MovementItem.MovementId
                         )
@@ -242,7 +242,7 @@ BEGIN
            , Object_Status.ValueData    AS StatusName
 
            , CASE WHEN MovementItem.Amount > 0 THEN  1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountOut  
+           , CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountOut
            , (MovementItem.Amount - COALESCE (tmpMI_Child.Amount,0)) ::TFloat AS AmountChild_diff
 
 
@@ -257,7 +257,7 @@ BEGIN
 
            , Movement_Invoice.Id AS MovementId_Invoice
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, tmpInvoice_Params.ReceiptNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
-           , Movement_Invoice.InvNumber        AS InvNumber_Invoice 
+           , Movement_Invoice.InvNumber        AS InvNumber_Invoice
            , tmpMI_Child.InvNumber_Invoice ::TVarChar AS InvNumber_Invoice_child
              -- Заказ Клиента / Заказ Поставщику
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
@@ -306,8 +306,8 @@ BEGIN
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
-           , MovementDate_Update.ValueData        AS UpdateDate  
-           
+           , MovementDate_Update.ValueData        AS UpdateDate
+
            --
            , MovementString_1.ValueData   ::TVarChar AS String_1
            , MovementString_2.ValueData   ::TVarChar AS String_2
@@ -390,8 +390,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Update
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
-            
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+
             LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
                                  AND tmpMI_Child.ParentId = MovementItem.Id
             --

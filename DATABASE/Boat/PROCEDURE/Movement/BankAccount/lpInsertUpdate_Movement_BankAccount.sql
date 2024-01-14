@@ -81,6 +81,21 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
+
+     -- сохранили
+     IF 1 >= (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+     THEN
+         PERFORM lpInsertUpdate_MI_BankAccount_Child (ioId                  := COALESCE ((SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
+                                                    , inParentId            := vbMovementItemId
+                                                    , inMovementId          := ioId
+                                                    , inMovementId_invoice  := inMovementId_Invoice
+                                                    , inObjectId            := CASE WHEN inMoneyPlaceId > 0 THEN inMoneyPlaceId ELSE inBankAccountId END
+                                                    , inAmount              := inAmount
+                                                    , inComment             := ''
+                                                    , inUserId              := inUserId
+                                                     );
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
