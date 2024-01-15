@@ -100,8 +100,8 @@ BEGIN
                                                                          ON MLM_Invoice.MovementId = tmp.MovementId
                                                                         AND MLM_Invoice.DescId     = zc_MovementLinkMovement_Invoice()
                                     )
-      --
-      , tmpMovementString AS (SELECT MovementString.*
+      --   
+      , tmpMovementString AS (SELECT MovementString.MovementId, MovementString.DescId, LEFT (MovementString.ValueData, 127) :: TVarChar AS ValueData
                               FROM MovementString
                               WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                 AND MovementString.DescId IN (zc_MovementString_1()
@@ -246,7 +246,7 @@ BEGIN
            , (MovementItem.Amount - COALESCE (tmpMI_Child.Amount,0)) ::TFloat AS AmountChild_diff
 
 
-           , MIString_Comment.ValueData        AS Comment
+           , LEFT (MIString_Comment.ValueData, 127) :: TVarChar AS Comment
            , MovementItem.ObjectId             AS BankAccountId
            , Object_BankAccount.ValueData      AS BankAccountName
            , Object_Bank.ValueData             AS BankName
