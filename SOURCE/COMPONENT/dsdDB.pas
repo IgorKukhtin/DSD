@@ -931,7 +931,7 @@ begin
      if Component is TcxDateEdit then begin
         if (Component as TcxDateEdit).Date = -700000 then
            (Component as TcxDateEdit).Date := Date;
-        Result := (Component as TcxDateEdit).Date;
+        Result := (Component as TcxDateEdit).CurrentDate;
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
