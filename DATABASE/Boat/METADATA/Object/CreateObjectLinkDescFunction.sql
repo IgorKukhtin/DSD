@@ -483,7 +483,7 @@ SELECT 'zc_ObjectLink_ReceiptGoodsChild_GoodsChild', 'Комплектующие если по факт
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccountPdf_DocTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BankAccountPdf_DocTag'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_BankAccountPdf_DocTag', 'Категория Документация', zc_Object_BankAccountPdf(), zc_Object_DocTag() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BankAccountPdf_PhotoTag');
+SELECT 'zc_ObjectLink_BankAccountPdf_DocTag', 'Категория Документация', zc_Object_BankAccountPdf(), zc_Object_DocTag() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BankAccountPdf_DocTag');
 
 
 /*-------------------------------------------------------------------------------
