@@ -1786,10 +1786,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormPdfEdit'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1950,6 +1946,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedItem'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormPdfEdit'
         end>
     end
     object bbsLoadForm: TdxBarSubItem

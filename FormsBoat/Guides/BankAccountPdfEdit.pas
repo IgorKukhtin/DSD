@@ -79,18 +79,7 @@ type
     MultiActionInsertPhoto: TMultiAction;
     actInsertPhoto: TdsdExecStoredProc;
     actDeletePhoto: TdsdExecStoredProc;
-    PanelPhoto: TPanel;
-    Image3: TcxImage;
-    Image2: TcxImage;
-    Image1: TcxImage;
-    spGetPhoto_panel: TdsdStoredProc;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
     DBViewAddOn: TdsdDBViewAddOn;
-    cxGrid1DBTableView1: TcxGridDBTableView;
-    cxGrid1Level1: TcxGridLevel;
-    cxGrid1: TcxGrid;
-    cxGrid1DBTableView1Column1: TcxGridDBColumn;
     dsdUpdateDataSetDoc: TdsdUpdateDataSet;
     OpenChoiceFormDocTag: TOpenChoiceForm;
     InsertRecordDoc: TInsertRecord;
@@ -104,6 +93,17 @@ type
     ceObject: TcxButtonEdit;
     GuidesObject: TdsdGuides;
     edInvNumber: TcxTextEdit;
+    spUpdate_BankAccountPdf: TdsdStoredProc;
+    spDocumentSelect2: TdsdStoredProc;
+    dsdDBViewAddOnDoc: TdsdDBViewAddOn;
+    ClientDataSetDoc: TClientDataSet;
+    DataSourceDoc: TDataSource;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    DocTagName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxRightSplitter: TcxSplitter;
   private
     { Private declarations }
   public
