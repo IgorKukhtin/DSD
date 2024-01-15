@@ -26,9 +26,9 @@
     TabOrder = 3
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
-      Top = 339
+      Top = 327
       Width = 519
-      Height = 189
+      Height = 201
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -68,15 +68,15 @@
       Left = 0
       Top = 0
       Width = 519
-      Height = 32
+      Height = 26
       Align = dalTop
       BarManager = BarManager
     end
     object dxBarDockControl3: TdxBarDockControl
       Left = 0
-      Top = 307
+      Top = 301
       Width = 519
-      Height = 32
+      Height = 26
       Align = dalTop
       BarManager = BarManager
     end
@@ -141,7 +141,7 @@
     end
     object Panel1: TPanel
       Left = 0
-      Top = 32
+      Top = 26
       Width = 519
       Height = 275
       Align = alTop
@@ -694,9 +694,6 @@
     object Child: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1091#1079#1083#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
@@ -792,6 +789,7 @@
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 248
     Top = 80
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -826,6 +824,7 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -837,6 +836,7 @@
           StoredProc = spInsertUpdate
         end>
       Caption = #1054#1082
+      ImageIndex = 80
     end
     object dsdUpdateDataSetDoc: TdsdUpdateDataSet
       Category = 'Doc'
@@ -2230,7 +2230,7 @@
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -18
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (

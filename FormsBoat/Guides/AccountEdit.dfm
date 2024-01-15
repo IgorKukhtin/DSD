@@ -28,7 +28,7 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 62
+    Left = 68
     Top = 356
     Width = 75
     Height = 25
@@ -38,7 +38,7 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 240
+    Left = 233
     Top = 356
     Width = 75
     Height = 25
@@ -137,6 +137,7 @@
     Width = 209
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 16
     Top = 32
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -157,6 +158,7 @@
     object dsdFormClose1: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -168,6 +170,7 @@
           StoredProc = spInsertUpdate
         end>
       Caption = #1054#1082
+      ImageIndex = 80
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -414,8 +417,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
-    Top = 64
+    Left = 24
+    Top = 88
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 65528

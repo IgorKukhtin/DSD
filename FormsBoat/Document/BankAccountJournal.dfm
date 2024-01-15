@@ -477,6 +477,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object String_3: TcxGridDBColumn
             Caption = '3. BIC Auf3ragskonto'
             DataBinding.FieldName = 'String_3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = '3. '#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' BIC'
             Options.Editing = False
             Width = 70

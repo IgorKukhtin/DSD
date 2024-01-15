@@ -17,7 +17,7 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 72
+    Left = 57
     Top = 279
     Width = 75
     Height = 25
@@ -27,7 +27,7 @@
     TabOrder = 6
   end
   object cxButton2: TcxButton
-    Left = 176
+    Left = 199
     Top = 279
     Width = 75
     Height = 25
@@ -158,6 +158,7 @@
     Width = 305
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 200
     Top = 166
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -178,6 +179,7 @@
     object dsdFormClose1: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -189,6 +191,7 @@
           StoredProc = spInsertUpdate
         end>
       Caption = #1054#1082
+      ImageIndex = 80
     end
   end
   object spInsertUpdate: TdsdStoredProc

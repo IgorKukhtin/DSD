@@ -29,7 +29,7 @@ object CountryEditForm: TCountryEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 152
+    Top = 157
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object CountryEditForm: TCountryEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 152
+    Top = 157
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -73,6 +73,7 @@ object CountryEditForm: TCountryEditForm
     Width = 273
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 240
     Top = 8
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -98,10 +99,12 @@ object CountryEditForm: TCountryEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
   end
   object spInsertUpdate: TdsdStoredProc

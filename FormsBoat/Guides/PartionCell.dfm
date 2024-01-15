@@ -3,7 +3,7 @@ object PartionCellForm: TPartionCellForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
   ClientHeight = 367
-  ClientWidth = 666
+  ClientWidth = 780
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object PartionCellForm: TPartionCellForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 666
-    Height = 341
+    Width = 780
+    Height = 300
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 660
+    ExplicitWidth = 666
+    ExplicitHeight = 341
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -116,6 +117,57 @@ object PartionCellForm: TPartionCellForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 326
+    Width = 780
+    Height = 41
+    Align = alBottom
+    TabOrder = 7
+    ExplicitLeft = -1
+    object btnInsert: TcxButton
+      Left = 317
+      Top = 6
+      Width = 100
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 443
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 11
+      Top = 6
+      Width = 90
+      Height = 25
+      Action = dsdChoiceGuides
+      TabOrder = 2
+    end
+    object btnSetErased: TcxButton
+      Left = 568
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = dsdSetErased
+      TabOrder = 3
+    end
+    object btnFormClose: TcxButton
+      Left = 129
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -445,7 +497,7 @@ object PartionCellForm: TPartionCellForm
           ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 80
       DataSource = DataSource
@@ -507,6 +559,12 @@ object PartionCellForm: TPartionCellForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

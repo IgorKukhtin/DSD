@@ -2,7 +2,7 @@ object PartionCellEditForm: TPartionCellEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 239
+  ClientHeight = 227
   ClientWidth = 363
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -91,8 +91,8 @@ object PartionCellEditForm: TPartionCellEditForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 144
-    Top = 168
+    Left = 176
+    Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>

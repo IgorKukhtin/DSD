@@ -23,7 +23,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxContainer, cxLabel, cxTextEdit;
+  dxSkinXmas2008Blue, cxContainer, cxLabel, cxTextEdit, Vcl.Menus, Vcl.StdCtrls,
+  cxButtons, Vcl.ExtCtrls;
 
 type
   TPartionCellForm = class(TParentForm)
@@ -69,6 +70,13 @@ type
     FieldFilter_Name: TdsdFieldFilter;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public

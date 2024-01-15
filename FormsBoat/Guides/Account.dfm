@@ -20,12 +20,13 @@ object AccountForm: TAccountForm
     Left = 0
     Top = 26
     Width = 910
-    Height = 356
+    Height = 315
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 356
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -162,6 +163,57 @@ object AccountForm: TAccountForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel_btn: TPanel
+    Left = 0
+    Top = 341
+    Width = 910
+    Height = 41
+    Align = alBottom
+    TabOrder = 5
+    ExplicitTop = 347
+    object btnInsert: TcxButton
+      Left = 485
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actInsert
+      TabOrder = 0
+    end
+    object btnUpdate: TcxButton
+      Left = 611
+      Top = 7
+      Width = 100
+      Height = 25
+      Action = actUpdate
+      TabOrder = 1
+    end
+    object btnChoiceGuides: TcxButton
+      Left = 148
+      Top = 7
+      Width = 90
+      Height = 25
+      Action = dsdChoiceGuides
+      TabOrder = 2
+    end
+    object btnSetErased: TcxButton
+      Left = 736
+      Top = 6
+      Width = 100
+      Height = 25
+      Action = dsdSetErased
+      TabOrder = 3
+    end
+    object btnFormClose: TcxButton
+      Left = 266
+      Top = 6
+      Width = 90
+      Height = 25
+      Action = actFormClose
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
     end
   end
   object DataSource: TDataSource
@@ -485,9 +537,9 @@ object AccountForm: TAccountForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
+      ImageIndex = 80
     end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -566,6 +618,12 @@ object AccountForm: TAccountForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1057#1095#1077#1090#1072' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
       WithoutNext = True
+    end
+    object actFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1084#1077#1085#1072
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc

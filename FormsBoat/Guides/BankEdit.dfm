@@ -84,6 +84,7 @@ object BankEditForm: TBankEditForm
     Width = 273
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 176
     Top = 8
     object actDataSetRefresh: TdsdDataSetRefresh
@@ -109,10 +110,12 @@ object BankEditForm: TBankEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'Ok'
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      ImageIndex = 52
     end
   end
   object spInsertUpdate: TdsdStoredProc

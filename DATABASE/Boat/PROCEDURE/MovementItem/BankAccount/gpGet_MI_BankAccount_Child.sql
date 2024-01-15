@@ -36,8 +36,8 @@ BEGIN
               , Movement.InvNumber AS InvNumber
               , MovementString_InvNumberPartner.ValueData :: TVarChar AS InvNumberPartner
               , Movement.OperDate  AS OperDate
-              , 0            AS ObjectId
-              , ''::TVarChar AS ObjectName
+              , Object_MoneyPlace.Id                   AS ObjectId
+              , Object_MoneyPlace.ValueData ::TVarChar AS ObjectName
               , ''::TVarChar AS Comment
               , inAmount ::TFloat AS Amount
               , 0            AS MovementId_Invoice
@@ -49,6 +49,13 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
 
          WHERE Movement.Id = inMovementId 
          ;

@@ -350,7 +350,8 @@ object ClientForm: TClientForm
     Width = 897
     Height = 41
     Align = alBottom
-    TabOrder = 2
+    TabOrder = 1
+    ExplicitTop = 338
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -377,7 +378,7 @@ object ClientForm: TClientForm
     end
     object btnSetErased: TcxButton
       Left = 736
-      Top = 7
+      Top = 6
       Width = 100
       Height = 25
       Action = actSetErased
@@ -385,7 +386,7 @@ object ClientForm: TClientForm
     end
     object btnFormClose: TcxButton
       Left = 266
-      Top = 7
+      Top = 6
       Width = 90
       Height = 25
       Action = actFormClose
