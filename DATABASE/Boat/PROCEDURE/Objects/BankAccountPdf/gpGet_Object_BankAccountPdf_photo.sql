@@ -30,7 +30,7 @@ BEGIN
                             AND Object_BankAccountPdf.isErased = FALSE
                         )
 
-       SELECT tmpPhoto.MovmentItemId                    AS Id
+       SELECT tmpPhoto.MovmentItemId                   AS Id
             , ObjectBlob_BankAccountPdf_Data.ValueData AS Image1
            
       FROM tmpPhoto

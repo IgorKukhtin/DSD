@@ -69,7 +69,7 @@
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
         Height = 142
-        Properties.Caption = #1060#1086#1090#1086
+        Properties.Caption = #1057#1082#1072#1085
         Properties.HeaderAlignmentHorz = taCenter
         Properties.HeaderAlignmentVert = vaCenter
         Properties.ImageIndex = 28
@@ -126,6 +126,8 @@
         Align = alLeft
         Properties.ReadOnly = True
         TabOrder = 2
+        ExplicitLeft = 0
+        ExplicitTop = 6
         Height = 180
         Width = 170
       end
@@ -170,7 +172,7 @@
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 7
+    TabOrder = 6
     Width = 120
   end
   object cxLabel3: TcxLabel
@@ -185,7 +187,7 @@
     ParentShowHint = False
     Properties.ReadOnly = True
     ShowHint = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 182
   end
   object cxLabel6: TcxLabel
@@ -202,7 +204,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 182
   end
   object edInvNumber: TcxTextEdit
@@ -704,8 +706,8 @@
     Top = 272
   end
   object ActionList1: TActionList
-    Left = 453
-    Top = 421
+    Left = 645
+    Top = 429
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>

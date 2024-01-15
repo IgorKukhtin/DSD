@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Object_BankAccountPdf(Integer, TVarChar, Integer, TBlob, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccountPdf(Integer, TVarChar, Integer, Integer, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccountPdf(Integer, TVarChar, Integer, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccountPdf(
  INOUT ioId                        Integer   , -- ключ объекта
     IN inPhotoName                 TVarChar  , --
     IN inMovmentItemId             Integer   , --  
-    IN inPhotoTagId                Integer   ,
+    --IN inPhotoTagId                Integer   ,
     IN inBankAccountPdfData        TBlob     , -- Файл
     IN inSession                   TVarChar    -- сессия пользователя
 )
@@ -45,7 +46,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_BankAccountPdf_Data(), ioId, inBankAccountPdfData);
 
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_BankAccountPdf_PhotoTag(), ioId, inPhotoTagId);  
+   --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_BankAccountPdf_PhotoTag(), ioId, inPhotoTagId);  
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_BankAccountPdf_MovmentItemId(), ioId, inMovmentItemId);
 

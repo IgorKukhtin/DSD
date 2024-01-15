@@ -317,14 +317,14 @@ BEGIN
            , MovementString_7.ValueData   ::TVarChar AS String_7
            , MovementString_8.ValueData   ::TVarChar AS String_8
            , MovementString_9.ValueData   ::TVarChar AS String_9
-           , MovementString_1.ValueData   ::TVarChar AS String_10
-           , MovementString_1.ValueData   ::TVarChar AS String_13
+           , MovementString_10.ValueData   ::TVarChar AS String_10
+           , MovementString_13.ValueData   ::TVarChar AS String_13
            , MovementFloat_14.ValueData   ::TVarChar AS TFloat_14
-           , MovementString_1.ValueData   ::TVarChar AS String_15
-           , MovementString_1.ValueData   ::TVarChar AS String_16
-           , MovementString_1.ValueData   ::TVarChar AS String_17
-           , MovementString_1.ValueData   ::TVarChar AS String_18
-           , MovementString_1.ValueData   ::TVarChar AS String_19
+           , MovementString_15.ValueData   ::TVarChar AS String_15
+           , MovementString_16.ValueData   ::TVarChar AS String_16
+           , MovementString_17.ValueData   ::TVarChar AS String_17
+           , MovementString_18.ValueData   ::TVarChar AS String_18
+           , MovementString_19.ValueData   ::TVarChar AS String_19
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
