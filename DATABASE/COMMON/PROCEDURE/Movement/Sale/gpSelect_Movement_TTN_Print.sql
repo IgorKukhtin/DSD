@@ -30,6 +30,7 @@ $BODY$
     DECLARE vbOperDate_find TDateTime;
     DECLARE vbFromId_find Integer;
     DECLARE vbToId_find Integer;
+    DECLARE vbJuridicalId_zamovn Integer;
 
     DECLARE vbOperDate_Begin1 TDateTime;
     DECLARE vbMovementDescId Integer;
@@ -76,16 +77,22 @@ BEGIN
                  WHEN Movement.DescId = zc_Movement_ReturnIn() THEN COALESCE (ObjectLink_Partner_Juridical_From.ChildObjectId, Object_From.Id)
                  ELSE COALESCE (View_Contract.JuridicalBasisId, Object_From.Id)
             END AS FromId_find
+            
 
           , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() 
                  WHEN Movement.DescId = zc_Movement_ReturnIn() THEN COALESCE (View_Contract.JuridicalBasisId, Object_To.Id)
                  ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
             END AS ToId_find
 
+          , CASE WHEN Movement.DescId = zc_Movement_Sale() AND Object_Route.ValueData ILIKE 'самов%' THEN COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
+                 ELSE 0
+            END AS JuridicalId_zamovn
+
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
                , vbOperDate_find
                , vbFromId_find
                , vbToId_find
+               , vbJuridicalId_zamovn
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -127,6 +134,13 @@ BEGIN
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
@@ -283,6 +297,13 @@ BEGIN
                   AND vbOperDate_find >= OH_JuridicalDetails_car.StartDate
                   AND vbOperDate_find <  OH_JuridicalDetails_car.EndDate
                   )
+            , t4 AS (SELECT *
+                     FROM ObjectHistory_JuridicalDetails_ViewByDate
+                   AS OH_JuridicalDetails_car
+                   WHERE OH_JuridicalDetails_car.JuridicalId = vbJuridicalId_zamovn
+                  AND vbOperDate_find >= OH_JuridicalDetails_car.StartDate
+                  AND vbOperDate_find <  OH_JuridicalDetails_car.EndDate
+                  )
 
             , tmpOH_Juridical_Basis AS (SELECT *
                                         FROM ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails
@@ -309,7 +330,12 @@ BEGIN
            , Object_From.ValueData AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
 
-           , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN OH_JuridicalDetails_From.FullName ELSE OH_JuridicalDetails_To.FullName END AS JuridicalName_Basis             --Замовник Алан
+           , CASE WHEN vbJuridicalId_zamovn > 0
+                       THEN OH_JuridicalDetails_zamovn.FullName
+                  WHEN vbMovementDescId <> zc_Movement_ReturnIn()
+                       THEN OH_JuridicalDetails_From.FullName
+                  ELSE OH_JuridicalDetails_To.FullName
+             END AS JuridicalName_Basis             --Замовник Алан
 
            , OH_JuridicalDetails_To.FullName   AS JuridicalName_To
           
@@ -567,6 +593,12 @@ BEGIN
                    ON OH_JuridicalDetails_car.JuridicalId = vbJuricalId_car
                   AND vbOperDate_find >= OH_JuridicalDetails_car.StartDate
                   AND vbOperDate_find <  OH_JuridicalDetails_car.EndDate
+
+            LEFT JOIN t4
+                   AS OH_JuridicalDetails_zamovn
+                   ON OH_JuridicalDetails_zamovn.JuridicalId = vbJuridicalId_zamovn
+                  AND vbOperDate_find >= OH_JuridicalDetails_zamovn.StartDate
+                  AND vbOperDate_find <  OH_JuridicalDetails_zamovn.EndDate
 
             LEFT JOIN tmpOH_Juridical_Basis AS OH_Juridical_Basis ON vbMovementDescId = zc_Movement_ReturnIn()
 
