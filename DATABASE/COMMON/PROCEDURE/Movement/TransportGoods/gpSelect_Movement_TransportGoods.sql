@@ -52,7 +52,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                        UNION
                         SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -90,7 +90,7 @@ BEGIN
            , Object_CarTrailer.ValueData     AS CarTrailerName
            , Object_PersonalDriver.ValueData AS PersonalDriverName
            , Object_CarJuridical.Valuedata   AS CarJuridicalName
-              
+
            , Object_Member1.ValueData AS MemberName1
            , Object_Member2.ValueData AS MemberName2
            , Object_Member3.ValueData AS MemberName3
@@ -98,7 +98,7 @@ BEGIN
            , Object_Member5.ValueData AS MemberName5
            , Object_Member6.ValueData AS MemberName6
            , Object_Member7.ValueData AS MemberName7
- 
+
            , Object_From.Id                       AS FromId
            , Object_From.ValueData                AS FromName
            , Object_To.Id                         AS ToId
@@ -122,7 +122,7 @@ BEGIN
 
            , Movement_Transport_reestr.InvNumber        AS InvNumber_Transport_reestr
            , Movement_Transport_reestr.OperDate         AS OperDate_Transport_reestr
-           
+
 
            , Movement_Transport.Id                     AS MovementId_Transport
            , Movement_Transport.InvNumber              AS InvNumber_Transport
@@ -130,7 +130,7 @@ BEGIN
            , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
            , Object_PersonalDriver_Transport.ValueData AS PersonalDriverName_Transport
            , Object_Car_Transport.ValueData            AS CarName_Transport
-           
+
            , CASE WHEN Object_Car.DescId = zc_Object_Car() THEN FALSE ELSE TRUE END ::Boolean AS isExternal --свои (нет) или сторонние авто (Да)
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
@@ -145,23 +145,18 @@ BEGIN
                                      ON MovementString_InvNumberMark.MovementId =  Movement.Id
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
-                                         ON MovementLinkObject_Route.MovementId = Movement.Id
-                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel                                            -- авто 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel                                            -- авто
                                  ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN ObjectLink AS ObjectLink_CarExternal_CarModel                                    -- авто стороннее
-                                 ON ObjectLink_CarExternal_CarModel.ObjectId = Object_Car.Id             
+                                 ON ObjectLink_CarExternal_CarModel.ObjectId = Object_Car.Id
                                 AND ObjectLink_CarExternal_CarModel.DescId = zc_ObjectLink_CarExternal_CarModel()
 
-            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = COALESCE(ObjectLink_Car_CarModel.ChildObjectId, ObjectLink_CarExternal_CarModel.ChildObjectId) 
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = COALESCE(ObjectLink_Car_CarModel.ChildObjectId, ObjectLink_CarExternal_CarModel.ChildObjectId)
 
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
                                  ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
@@ -187,16 +182,16 @@ BEGIN
                                 AND ObjectLink_CarExternal_Juridical.DescId = zc_ObjectLink_CarExternal_Juridical()
 
             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit                                                           -- подразделение авто
-                                 ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id                 
+                                 ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical                                                     -- юр.лицо подразделения авто
-                             ON ObjectLink_Unit_Juridical.ObjectId =  ObjectLink_Car_Unit.ChildObjectId    
+                             ON ObjectLink_Unit_Juridical.ObjectId =  ObjectLink_Car_Unit.ChildObjectId
                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract                                                      --  подразделение  Договор (перевыставление затрат)
-                                 ON ObjectLink_Unit_Contract.ObjectId = ObjectLink_Car_Unit.ChildObjectId  
+                                 ON ObjectLink_Unit_Contract.ObjectId = ObjectLink_Car_Unit.ChildObjectId
                                 AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                 ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId 
+                                 ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
 
             LEFT JOIN Object AS Object_CarJuridical ON Object_CarJuridical.Id = COALESCE(ObjectLink_Car_Juridical.ChildObjectId, COALESCE(ObjectLink_CarExternal_Juridical.ChildObjectId, COALESCE(ObjectLink_Unit_Juridical.ChildObjectId, COALESCE(ObjectLink_Contract_Juridical.ChildObjectId,0))) )
@@ -238,7 +233,7 @@ BEGIN
             LEFT JOIN Object AS Object_Member7 ON Object_Member7.Id = MovementLinkObject_Member7.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
-                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id 
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
@@ -253,7 +248,7 @@ BEGIN
             LEFT JOIN Object AS Object_Car_Transport ON Object_Car_Transport.Id = MovementLinkObject_Car_Transport.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
-                                           ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
                                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -289,16 +284,25 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement_Sale.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
             -- реестр
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.MovementId = Movement.Id
                                    AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-            LEFT JOIN MovementItem AS MI_reestr 
+            LEFT JOIN MovementItem AS MI_reestr
                                    ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                   AND MI_reestr.isErased = FALSE
             LEFT JOIN Movement AS Movement_reestr ON Movement_reestr.Id = MI_reestr.MovementId
             LEFT JOIN Object AS Object_Status_reestr ON Object_Status_reestr.Id = Movement_reestr.StatusId
-            
+
             LEFT JOIN MovementLinkObject AS MLO_Car_reestr
                                          ON MLO_Car_reestr.MovementId = Movement_reestr.Id
                                         AND MLO_Car_reestr.DescId = zc_MovementLinkObject_Car()
@@ -332,7 +336,7 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
       ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
