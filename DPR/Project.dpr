@@ -115,7 +115,10 @@ uses
   UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
   EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
   EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
-  DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas';
+  DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
+  PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
