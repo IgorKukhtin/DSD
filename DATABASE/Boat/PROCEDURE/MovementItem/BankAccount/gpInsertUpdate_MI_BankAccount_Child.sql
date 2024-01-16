@@ -26,7 +26,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Invoice());
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALinInvNumberESCE (inMovementId_invoice,0) = 0
+     IF COALESCE (inMovementId_invoice,0) = 0
      THEN
           -- сохранили <Документ>
         vbInvNumber := NEXTVAL ('movement_Invoice_seq')    :: TVarChar;

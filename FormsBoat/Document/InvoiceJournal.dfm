@@ -2517,8 +2517,8 @@
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 708
-    Top = 262
+    Left = 756
+    Top = 246
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'
@@ -2751,8 +2751,8 @@
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 812
-    Top = 225
+    Left = 820
+    Top = 233
   end
   object PrintReturnCDS: TClientDataSet
     Aggregates = <>

@@ -13,7 +13,7 @@ RETURNS TABLE (MovementId Integer
              , Amount TFloat
              , Comment TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, ItemName TVarChar
-             , MovementId_Invoice Integer, OperDate_Invoice TDateTime, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
+             , MovementId_Invoice Integer, ParentId_Invoice Integer, OperDate_Invoice TDateTime, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
              , ReceiptNumber_Invoice Integer, InvoiceKindName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isErased Boolean
@@ -84,6 +84,7 @@ BEGIN
            , ObjectDesc.ItemName
 
            , Movement_Invoice.Id           AS MovementId_Invoice
+           , Movement_Invoice.ParentId     AS ParentId_Invoice
            , Movement_Invoice.OperDate     AS OperDate_Invoice
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
            , Movement_Invoice.InvNumber        AS InvNumber_Invoice

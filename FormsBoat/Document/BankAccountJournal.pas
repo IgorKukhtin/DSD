@@ -138,6 +138,15 @@ type
     cxButton2: TcxButton;
     cxButton3: TcxButton;
     cxButton4: TcxButton;
+    actPrintInvoice: TdsdPrintAction;
+    actInvoiceReportName: TdsdExecStoredProc;
+    mactPrint_Invoice: TMultiAction;
+    spSelectPrint_Invoice: TdsdStoredProc;
+    spGetReportName_invoice: TdsdStoredProc;
+    bbtPrint_Invoice: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintReturnCDS: TClientDataSet;
+    PrintOptionCDS: TClientDataSet;
   private
     { Private declarations }
   public
