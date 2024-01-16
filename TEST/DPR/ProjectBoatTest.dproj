@@ -1303,8 +1303,8 @@
 				<Form>BankAccountPdfEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
 			<DCCReference Include="..\..\SOURCE\Pdfium\PdfiumCore.pas"/>
+			<DCCReference Include="..\..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
 			<DCCReference Include="..\..\SOURCE\Pdfium\PdfiumLib.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

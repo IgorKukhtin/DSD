@@ -377,8 +377,8 @@ uses
   DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   BankAccountMovementChild in '..\..\FormsBoat\Document\BankAccountMovementChild.pas' {BankAccountMovementChildForm: TParentForm},
   BankAccountPdfEdit in '..\..\FormsBoat\Guides\BankAccountPdfEdit.pas' {BankAccountPdfEditForm: TParentForm},
-  PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas';
 
 {$R *.res}
