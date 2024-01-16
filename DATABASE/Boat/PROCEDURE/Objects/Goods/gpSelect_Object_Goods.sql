@@ -264,8 +264,8 @@ BEGIN
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
               --
-            , SUBSTRING (Object_Goods.ValueData, 1, 128) :: TVarChar AS Name
-            , SUBSTRING (zfCalc_GoodsName_all (ObjectString_Article.ValueData, SUBSTRING (Object_Goods.ValueData, 1, 128)), 1, 128) :: TVarChar AS Name_all
+            , Object_Goods.ValueData              AS Name
+            , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) AS Name_all
               --
             , ObjectString_Article.ValueData      AS Article
             , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
@@ -297,12 +297,12 @@ BEGIN
                    ELSE ''
               END :: TVarChar AS ModelName_calc
               --
-            , ObjectString_EAN.ValueData          AS EAN
-            , ObjectString_ASIN.ValueData         AS ASIN
-            , ObjectString_MatchCode.ValueData    AS MatchCode
-            , ObjectString_FeeNumber.ValueData    AS FeeNumber
+            , ObjectString_EAN.ValueData            AS EAN
+            , ObjectString_ASIN.ValueData           AS ASIN
+            , ObjectString_MatchCode.ValueData      AS MatchCode
+            , ObjectString_FeeNumber.ValueData      AS FeeNumber
             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-            , SUBSTRING (ObjectString_Comment.ValueData, 1, 128) :: TVarChar AS Comment
+            , ObjectString_Comment.ValueData        AS Comment
 
             , ObjectDate_PartnerDate.ValueData  :: TDateTime AS PartnerDate
 
