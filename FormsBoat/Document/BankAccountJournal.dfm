@@ -12,19 +12,19 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited PageControl: TcxPageControl
     Top = 56
     Width = 1213
-    Height = 496
+    Height = 464
     TabOrder = 3
     ExplicitTop = 56
     ExplicitWidth = 1213
     ExplicitHeight = 496
-    ClientRectBottom = 496
+    ClientRectBottom = 464
     ClientRectRight = 1213
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1213
       ExplicitHeight = 496
       inherited cxGrid: TcxGrid
         Width = 1213
-        Height = 371
+        Height = 339
         ExplicitWidth = 1213
         ExplicitHeight = 371
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -605,20 +605,22 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end
       object cxSplitter_Bottom_Child: TcxSplitter
         Left = 0
-        Top = 371
+        Top = 339
         Width = 1213
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid_Child
+        ExplicitTop = 371
       end
       object cxGrid_Child: TcxGrid
         Left = 0
-        Top = 379
+        Top = 347
         Width = 1213
         Height = 117
         Align = alBottom
         TabOrder = 2
+        ExplicitTop = 379
         object cxGridDBTableView_child: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -906,15 +908,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   object Panel_btn: TPanel [2]
     Left = 0
-    Top = 552
+    Top = 520
     Width = 1213
-    Height = 41
+    Height = 73
     Align = alBottom
     TabOrder = 6
     object btnInsert: TcxButton
-      Left = 42
-      Top = 7
-      Width = 101
+      Left = 32
+      Top = 6
+      Width = 111
       Height = 25
       Action = actInsert
       TabOrder = 0
@@ -922,7 +924,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     object btnUpdate: TcxButton
       Left = 159
       Top = 7
-      Width = 101
+      Width = 106
       Height = 25
       Action = actUpdate
       TabOrder = 1
@@ -960,6 +962,38 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
+    end
+    object cxButton1: TcxButton
+      Left = 32
+      Top = 46
+      Width = 111
+      Height = 25
+      Action = actInsert_Child
+      TabOrder = 6
+    end
+    object cxButton2: TcxButton
+      Left = 159
+      Top = 47
+      Width = 106
+      Height = 25
+      Action = actUpdate_Child
+      TabOrder = 7
+    end
+    object cxButton3: TcxButton
+      Left = 303
+      Top = 46
+      Width = 151
+      Height = 25
+      Action = mactSetErasedItem
+      TabOrder = 8
+    end
+    object cxButton4: TcxButton
+      Left = 460
+      Top = 46
+      Width = 150
+      Height = 25
+      Action = mactSetUnErasedItem
+      TabOrder = 9
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1451,7 +1485,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Action = actRefreshChild
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1095#1077#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
     end
@@ -1580,7 +1614,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Action = actRefreshChild
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1095#1077#1090
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
     end
@@ -1922,7 +1956,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
     end
     object bbDetail: TdxBarSubItem
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      Caption = #1057#1095#1077#1090#1072
       Category = 0
       Visible = ivAlways
       ImageIndex = 7

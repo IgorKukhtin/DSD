@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , Comment TVarChar
              , Amount TFloat
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar
-             , InvoiceKindId    Integer, InvoiceKindName  TVarChar
+             , InvoiceKindId Integer, InvoiceKindName  TVarChar
+             , Amount_Invoice TFloat
              )
 AS
 $BODY$
@@ -44,7 +45,8 @@ BEGIN
               , ''::TVarChar AS InvNumber_Invoice_Full
               --, NULL :: Integer AS ReceiptNumber_Invoice
               , 0            AS InvoiceKindId
-              , ''::TVarChar AS InvoiceKindName
+              , ''::TVarChar AS InvoiceKindName 
+              , 0 ::TFloat   AS Amount_Invoice
          FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -78,7 +80,8 @@ BEGIN
            --, zfConvert_StringToNumber (MovementString_ReceiptNumber.ValueData) ::Integer AS ReceiptNumber_Invoice
 
            , Object_InvoiceKind.Id             AS InvoiceKindId
-           , Object_InvoiceKind.ValueData      AS InvoiceKindName
+           , Object_InvoiceKind.ValueData      AS InvoiceKindName 
+           , MovementFloat_Amount.ValueData ::TFloat AS Amount_Invoice
 
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
@@ -107,7 +110,11 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
                                         AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
-            LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
+            LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId  
+            -- Сумма счета
+            LEFT JOIN tmpMovementFloat AS MovementFloat_Amount
+                                       ON MovementFloat_Amount.MovementId = Movement_Invoice.Id
+                                      AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
        WHERE Movement.Id = inMovementId;
 
       END IF;

@@ -178,6 +178,7 @@
   object edAmount_invoice: TcxCurrencyEdit [22]
     Left = 287
     Top = 130
+    EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 22
@@ -514,9 +515,25 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_invoice'
         Value = Null
         Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -533,6 +550,14 @@
         Name = 'inamount'
         Value = 0.000000000000000000
         Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount_invoice'
+        Value = Null
+        Component = edAmount_invoice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -654,6 +679,13 @@
         Component = GuidesInvoiceKind
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount_invoice'
+        Value = Null
+        Component = edAmount_invoice
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -811,9 +843,8 @@
       item
         Name = 'AmountIn'
         Value = Null
-        Component = ceAmount
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -834,11 +865,15 @@
       item
         Name = 'MovementId_parent'
         Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_parent'
         Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -856,9 +891,16 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn'
+        Value = 0.000000000000000000
+        Component = edAmount_invoice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 212
-    Top = 151
+    Left = 60
+    Top = 119
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -871,8 +913,8 @@
     ActionItemList = <
       item
       end>
-    Left = 88
-    Top = 112
+    Left = 208
+    Top = 48
   end
   object GuidesInvoiceKind: TdsdGuides
     KeyField = 'Id'
@@ -899,7 +941,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 200
+    Left = 192
     Top = 119
   end
   object GuidesParent: TdsdGuides
