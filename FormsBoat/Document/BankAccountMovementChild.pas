@@ -45,6 +45,25 @@ type
     cxLabel9: TcxLabel;
     edInvoiceKind: TcxButtonEdit;
     GuidesInvoiceKind: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edParent: TcxButtonEdit;
+    GuidesParent: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edAmount_invoice: TcxCurrencyEdit;
+    actGuidesParentChoiceForm: TOpenChoiceForm;
+    bbGuidesParentChoiceForm: TcxButton;
+    spGet_PrePay: TdsdStoredProc;
+    spGet_Pay: TdsdStoredProc;
+    spGet_Proforma: TdsdStoredProc;
+    spGet_Service: TdsdStoredProc;
+    actGet_PrePay: TdsdExecStoredProc;
+    actGet_Pay: TdsdExecStoredProc;
+    actGet_Proforma: TdsdExecStoredProc;
+    actGet_Service: TdsdExecStoredProc;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
   private
     { Private declarations }
   public

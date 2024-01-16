@@ -11,7 +11,8 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
      Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage,
-     cxGridChartView, cxGridDBChartView, cxDropDownEdit, cxCheckListBox, cxCurrencyEdit
+     cxGridChartView, cxGridDBChartView, cxDropDownEdit, cxCheckListBox, cxCurrencyEdit,
+     PdfiumCtrl, dxBar, dxBarExtItems, cxBarEditItem, cxSpinEdit, cxRadioGroup
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -258,9 +259,58 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    // Имя поля отвечающее за отображение признака Удален
+    // Имя поля с данными
     property FieldName: string read FFieldName write FFieldName;
     property Image: TcxImage read FImage write FImage;
+  end;
+
+  TViewDocumentParam = class(TPersistent)
+  private
+     FPDFScaleMode : TPdfControlScaleMode;
+     FPDFZoomPercentage  : Integer;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    // Имя поля с данными
+    property PDFScaleMode: TPdfControlScaleMode read FPDFScaleMode write FPDFScaleMode default smFitAuto;
+    property PDFZoomPercentage: Integer read FPDFZoomPercentage write FPDFZoomPercentage default 100;
+  end;
+
+  // Отображение документ на указаном контроле
+  TViewDocument = class(TCollectionItem)
+  private
+    FFieldName : String;
+    FControl: TWinControl;
+    FPdfCtrl: TPdfControl;
+    FisFocused: Boolean;
+
+    FBarManager: TdxBarManager;
+    FBarManagerBar: TdxBar;
+    FBarStatic: TdxBarStatic;
+    FBarButtonPrev: TdxBarButton;
+    FBarButtonNext: TdxBarButton;
+    FBarButtonPrint: TdxBarButton;
+    FBarRadioGroup: TcxBarEditItem;
+    FBarSpinEdit: TcxBarEditItem;
+
+    procedure OnPrevClick(Sender: TObject);
+    procedure OnNextClick(Sender: TObject);
+    procedure OnPrintDocumentClick(Sender: TObject);
+    procedure OnPageChange(Sender: TObject);
+    procedure OnScaleChange(Sender: TObject);
+    procedure OnPaint(Sender: TObject);
+    procedure OnZoomChange(Sender: TObject);
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    procedure ShowPDF(AMemoryStream: TMemoryStream);
+    procedure Clear;
+  published
+    // Имя поля с данными
+    property FieldName: string read FFieldName write FFieldName;
+    property Control: TWinControl read FControl write FControl;
+    property isFocused: Boolean read FisFocused write FisFocused default False;
   end;
 
   // Поля для отрисовки графика при движении по гриду
@@ -367,6 +417,7 @@ type
     FPropertiesCellList: TCollection;
     FSummaryItemList: TOwnedCollection;
     FShowFieldImageList: TOwnedCollection;
+    FViewDocumentList: TOwnedCollection;
     FChartList: TOwnedCollection;
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
     FSearchAsFilter: boolean;
@@ -379,6 +430,7 @@ type
     FFilterLoadFile: boolean;
     FOnGetFilterValues : TcxGridGetFilterValuesEvent;
     FOnUserFiltering : TcxGridUserFilteringEvent;
+    FViewDocumentParam : TViewDocumentParam;
 
     procedure TableViewFocusedItemChanged(Sender: TcxCustomGridTableView;
                         APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
@@ -459,6 +511,10 @@ type
     property SummaryItemList: TOwnedCollection read FSummaryItemList write FSummaryItemList;
     // Отображение изображений в TcxImage
     property ShowFieldImageList: TOwnedCollection read FShowFieldImageList write FShowFieldImageList;
+    // Отображение содержимое документа на контроле
+    property ViewDocumentList: TOwnedCollection read FViewDocumentList write FViewDocumentList;
+    // Парвметры для отображения содержимое документа на контроле
+    property ViewDocumentParam : TViewDocumentParam read FViewDocumentParam write FViewDocumentParam;
     // Поиск как фильтр
     property SearchAsFilter: boolean read FSearchAsFilter write SetSearchAsFilter default true;
     // При установке в True сохраняется цвет шрифта и фон для выделенной строчки
@@ -1575,7 +1631,7 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, ADODB, RegularExpressions,
      dxCore, cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
-     cxGeometry, dxBar, cxButtonEdit, cxDBEdit,
+     cxGeometry, cxButtonEdit, cxDBEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
      cxMemo, cxMaskEdit, dsdException, Soap.EncdDecd, SimpleGauge;
@@ -1778,6 +1834,7 @@ begin
   FPropertiesCellList := TCollection.Create(TPropertiesCell);
   FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
   FShowFieldImageList := TOwnedCollection.Create(Self, TShowFieldImage);
+  FViewDocumentList := TOwnedCollection.Create(Self, TViewDocument);
   FChartList := TOwnedCollection.Create(Self, TdsdChartView);
 
   SearchAsFilter := true;
@@ -1787,6 +1844,10 @@ begin
   FGroupIndex := -1;
   FFilterSelectAll := False;
   FFilterLoadFile := False;
+
+  FViewDocumentParam := TViewDocumentParam.Create;
+  FViewDocumentParam.PDFScaleMode := TPdfControlScaleMode.smFitAuto;
+  FViewDocumentParam.PDFZoomPercentage := 100;
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -1917,12 +1978,17 @@ begin
 end;
 
 procedure TdsdDBViewAddOn.OnBeforeOpen(ADataSet: TDataSet);
+var Item: TCollectionItem;
 begin
   if Assigned(FBeforeOpen) then
      FBeforeOpen(ADataSet);
   if Assigned(Self.View) then
      if Assigned(Self.View.Control) then
         TcxGrid(Self.View.Control).BeginUpdate;
+  for Item in ShowFieldImageList do
+    if Assigned(TShowFieldImage(Item).Image) then TShowFieldImage(Item).Image.Clear;
+
+  for Item in ViewDocumentList do TViewDocument(Item).Clear;
 end;
 
 procedure TdsdDBViewAddOn.OnColumnHeaderClick(Sender: TcxGridTableView;
@@ -2337,6 +2403,8 @@ begin
   FreeAndNil(FSummaryItemList);
   FreeAndNil(FShowFieldImageList);
   FreeAndNil(FChartList);
+  FreeAndNil(FViewDocumentList);
+  FreeAndNil(FViewDocumentParam);
   FMemoryStream.Free;
   inherited;
 end;
@@ -2588,11 +2656,12 @@ begin
   if View.DataController.IsDataLoading then Exit;
 
   for Item in ShowFieldImageList do
+  begin
+    if Assigned(TShowFieldImage(Item).Image) then TShowFieldImage(Item).Image.Clear;
     if (TShowFieldImage(Item).FieldName <> '') and Assigned(TShowFieldImage(Item).Image)  and
        Assigned(DataSet.FindField(TShowFieldImage(Item).FieldName)) then
     try
       try
-        TShowFieldImage(Item).Image.Clear;
         if Length(DataSet.FieldByName(TShowFieldImage(Item).FieldName).AsString) <= 4 then Continue;
 
         Data := ReConvertConvert(DataSet.FieldByName(TShowFieldImage(Item).FieldName).AsString);
@@ -2629,6 +2698,39 @@ begin
       end;
     except
     end;
+  end;
+
+  for Item in ViewDocumentList do
+  begin
+    TViewDocument(Item).Clear;
+    if (TViewDocument(Item).FieldName <> '') and Assigned(TViewDocument(Item).Control)  and
+       Assigned(DataSet.FindField(TViewDocument(Item).FieldName)) then
+    try
+      try
+        if Assigned(TViewDocument(Item).FPdfCtrl) then FreeAndNil(TViewDocument(Item).FPdfCtrl);
+        if Length(DataSet.FieldByName(TViewDocument(Item).FieldName).AsString) <= 4 then Continue;
+
+        Data := ReConvertConvert(DataSet.FieldByName(TViewDocument(Item).FieldName).AsString);
+        Ext := trim(Copy(Data, 1, 255));
+        Ext := AnsiLowerCase(ExtractFileExt(Ext));
+        Delete(Ext, 1, 1);
+
+        if 'pdf' = Ext then
+        begin
+          Data := Copy(Data, 256, maxint);
+          Len := Length(Data);
+          FMemoryStream.WriteBuffer(Data[1],  Len);
+          FMemoryStream.Position := 0;
+
+          TViewDocument(Item).ShowPDF(FMemoryStream);
+
+        end;
+      finally
+        FMemoryStream.Clear;
+      end;
+    except
+    end;
+  end;
 
   for i := 0 to FChartList.Count - 1 do
     if TdsdChartView(FChartList.Items[I]).FChartCDS.Active then
@@ -6459,6 +6561,246 @@ begin
   inherited;
 end;
 
+{ TViewDocumentParam }
+
+procedure TViewDocumentParam.Assign(Source: TPersistent);
+begin
+  if Source is TViewDocumentParam then
+    with TViewDocumentParam(Source) do
+    begin
+      Self.FPDFScaleMode := PDFScaleMode;
+      Self.FPDFZoomPercentage := PDFZoomPercentage;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+
+{ TViewDocument }
+
+procedure TViewDocument.Assign(Source: TPersistent);
+begin
+  if Source is TShowFieldImage then
+    with TViewDocument(Source) do
+    begin
+      Self.FFieldName := FieldName;
+      Self.FControl := Control;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+constructor TViewDocument.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FFieldName := '';
+  FControl := Nil;
+  FPdfCtrl := Nil;
+  FisFocused := False;
+end;
+
+destructor TViewDocument.Destroy;
+begin
+  inherited;
+end;
+
+procedure TViewDocument.ShowPDF(AMemoryStream: TMemoryStream);
+  var Rect1, Rect2 : TRect;
+begin
+  if not Assigned(FControl) then Exit;
+  try
+    FPdfCtrl := TPdfControl.Create(FControl.Owner);
+    FPdfCtrl.Parent := FControl;
+    FPdfCtrl.Align := alClient;
+    FPdfCtrl.SendToBack;
+    FPdfCtrl.Color := clGray;
+    FPdfCtrl.ChangePageOnMouseScrolling := True;
+    FPdfCtrl.AllowUserTextSelection := False;
+    FPdfCtrl.SmoothScroll := True;
+
+    FBarManager := TdxBarManager.Create(FControl);
+    FBarManager.NotDocking := [dsNone, dsLeft, dsTop, dsRight, dsBottom];
+    FBarManagerBar := FBarManager.AddToolBar;
+
+    FBarButtonPrev := TdxBarButton(FBarManager.AddItem(TdxBarButton));
+    FBarButtonPrev.Caption := '  <  ';
+    FBarButtonPrev.OnClick := OnPrevClick;
+    FBarManagerBar.ItemLinks.Add(FBarButtonPrev);
+
+    FBarStatic := TdxBarStatic(FBarManager.AddItem(TdxBarStatic));
+    FBarManagerBar.ItemLinks.Add(FBarStatic);
+
+    FBarButtonNext := TdxBarButton(FBarManager.AddItem(TdxBarButton));
+    FBarButtonNext.Caption := '  >  ';
+    FBarButtonNext.OnClick := OnNextClick;
+    FBarManagerBar.ItemLinks.Add(FBarButtonNext);
+
+    FBarManagerBar.ItemLinks.Add(FBarManager.AddItem(TdxBarStatic));
+
+    FBarButtonPrint := TdxBarButton(FBarManager.AddItem(TdxBarButton));;
+    FBarButtonPrint.Caption := ' Печать ';
+    FBarButtonPrint.OnClick := OnPrintDocumentClick;
+    FBarManagerBar.ItemLinks.Add(FBarButtonPrint);
+
+    FBarManagerBar.ItemLinks.Add(FBarManager.AddItem(TdxBarStatic));
+
+    FBarRadioGroup := TcxBarEditItem(FBarManager.AddItem(TcxBarEditItem));
+    FBarRadioGroup.PropertiesClass := TcxRadioGroupProperties;
+    TcxRadioGroupProperties(FBarRadioGroup.Properties).Columns := 3;
+    with TcxRadioGroupProperties(FBarRadioGroup.Properties).Items.Add do
+    begin
+      Caption := 'По ширине ';
+      Value := 1;
+    end;
+    with TcxRadioGroupProperties(FBarRadioGroup.Properties).Items.Add do
+    begin
+      Caption := 'По высоте ';
+      Value := 2;
+    end;
+    with TcxRadioGroupProperties(FBarRadioGroup.Properties).Items.Add do
+    begin
+      Caption := 'Масштаб ';
+      Value := 3;
+    end;
+    TcxRadioGroupProperties(FBarRadioGroup.Properties).OnChange := OnScaleChange;
+    if TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode > smFitAuto then
+      FBarRadioGroup.EditValue := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode;
+    FBarManagerBar.ItemLinks.Add(FBarRadioGroup);
+
+    FBarManagerBar.ItemLinks.Add(FBarManager.AddItem(TdxBarStatic));
+
+    FBarSpinEdit := TcxBarEditItem(FBarManager.AddItem(TcxBarEditItem));
+    FBarSpinEdit.PropertiesClass := TcxSpinEditProperties;
+    FBarSpinEdit.Caption := 'Масштаб: ';
+    TcxSpinEditProperties(FBarSpinEdit.Properties).MaxValue := 10000;
+    TcxSpinEditProperties(FBarSpinEdit.Properties).MinValue := 1;
+    TcxSpinEditProperties(FBarSpinEdit.Properties).Increment := 5;
+    TcxSpinEditProperties(FBarSpinEdit.Properties).ValueType := vtInt;
+    FBarSpinEdit.Width := 70;
+    FBarSpinEdit.ShowCaption := True;
+    TcxSpinEditProperties(FBarSpinEdit.Properties).OnChange := OnZoomChange;
+    FBarSpinEdit.Enabled := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode = smZoom;
+    FBarSpinEdit.EditValue := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage;
+    FBarManagerBar.ItemLinks.Add(FBarSpinEdit);
+
+    FPdfCtrl.OnPageChange := OnPageChange;
+    FPdfCtrl.OnPaint := OnPaint;
+
+    FPdfCtrl.LoadFromStream(AMemoryStream);
+
+    if TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode = smFitAuto then
+    begin
+      Rect1 := FPdfCtrl.GetPageRect;
+      Rect2 := FPdfCtrl.ClientRect;
+      if ((Rect2.Right - Rect2.Left) = 0) OR ((Rect2.Bottom - Rect2.Top) = 0) then
+        FPdfCtrl.ScaleMode := smFitAuto
+      else if ((Rect1.Right - Rect1.Left) / (Rect2.Right - Rect2.Left)) >
+              ((Rect1.Bottom - Rect1.Top) / (Rect2.Bottom - Rect2.Top)) then
+      begin
+        FPdfCtrl.ScaleMode := smFitWidth;
+        FBarRadioGroup.EditValue := 1;
+      end
+      else
+      begin
+        FPdfCtrl.ScaleMode := smFitHeight;
+        FBarRadioGroup.EditValue := 2;
+      end;
+
+      TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode := FPdfCtrl.ScaleMode;
+    end else
+    begin
+      FPdfCtrl.ScaleMode := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode;
+      FBarRadioGroup.EditValue := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode;
+
+      FBarSpinEdit.Enabled := FPdfCtrl.ScaleMode = smZoom;
+      if FBarSpinEdit.Enabled then FPdfCtrl.ZoomPercentage := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage;
+    end;
+
+    if FisFocused then TForm(FControl.Owner).ActiveControl := FPdfCtrl;
+  except
+    Clear;
+  end;
+end;
+
+procedure TViewDocument.Clear;
+begin
+  if Assigned(FPdfCtrl) then FreeAndNil(FPdfCtrl);
+  if Assigned(FBarManager) then FreeAndNil(FBarManager);
+end;
+
+procedure TViewDocument.OnPrevClick(Sender: TObject);
+begin
+  if not Assigned(FPdfCtrl) then Exit;
+  FPdfCtrl.GotoPrevPage;
+end;
+
+procedure TViewDocument.OnNextClick(Sender: TObject);
+begin
+  if not Assigned(FPdfCtrl) then Exit;
+  FPdfCtrl.GotoNextPage;
+end;
+
+procedure TViewDocument.OnPrintDocumentClick(Sender: TObject);
+begin
+  if not Assigned(FPdfCtrl) then Exit;
+  if not Assigned(FBarManager) then Exit;
+  TPdfDocumentVclPrinter.PrintDocument(FPdfCtrl.Document, ExtractFileName(FPdfCtrl.Document.FileName));
+end;
+
+procedure TViewDocument.OnPageChange(Sender: TObject);
+begin
+  if not Assigned(FPdfCtrl) then Exit;
+  if not Assigned(FBarManager) then Exit;
+  FBarStatic.Caption := IntToStr(FPdfCtrl.PageIndex + 1) + ' из ' + IntToStr(FPdfCtrl.PageCount);
+  FBarButtonPrev.Enabled := (FPdfCtrl.PageCount > 1) and (FPdfCtrl.PageIndex > 0);
+  FBarButtonNext.Enabled := (FPdfCtrl.PageCount > 1) and (FPdfCtrl.PageIndex < (FPdfCtrl.PageCount - 1));
+end;
+
+procedure TViewDocument.OnScaleChange(Sender: TObject);
+begin
+  if not Assigned(FPdfCtrl) then Exit;
+  if not Assigned(FBarManager) then Exit;
+
+  case FBarRadioGroup.CurEditValue of
+    1 : FPdfCtrl.ScaleMode := smFitWidth;
+    2 : FPdfCtrl.ScaleMode := smFitHeight;
+    3 : FPdfCtrl.ScaleMode := smZoom;
+  end;
+  FBarRadioGroup.EditValue := FBarRadioGroup.CurEditValue;
+  TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFScaleMode := FPdfCtrl.ScaleMode;
+
+  FBarSpinEdit.Enabled := FPdfCtrl.ScaleMode = smZoom;
+  if FBarSpinEdit.Enabled then
+  begin
+    FBarSpinEdit.EditValue := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage;
+    FPdfCtrl.ZoomPercentage := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage;
+  end;
+
+  TForm(FControl.Owner).ActiveControl := FPdfCtrl;
+end;
+
+procedure TViewDocument.OnPaint(Sender: TObject);
+begin
+  if not Assigned(FPdfCtrl) then Exit;
+  if not Assigned(FBarManager) then Exit;
+
+  TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage := FPdfCtrl.ZoomPercentage;
+  FBarSpinEdit.EditValue := FPdfCtrl.ZoomPercentage;
+end;
+
+procedure TViewDocument.OnZoomChange(Sender: TObject);
+begin
+  if not Assigned(FPdfCtrl) then Exit;
+  if not Assigned(FBarManager) then Exit;
+
+  if FPdfCtrl.ScaleMode = smZoom then
+  begin
+    TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage := FBarSpinEdit.CurEditValue;
+    FPdfCtrl.ZoomPercentage := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage;
+    FBarSpinEdit.EditValue := TdsdDBViewAddOn(Collection.Owner).ViewDocumentParam.PDFZoomPercentage;
+  end;
+end;
+
 { TdsdPropertiesСhange }
 
 procedure TdsdPropertiesСhange.Assign(Source: TPersistent);
@@ -6508,6 +6850,7 @@ begin
       (FComponent as TcxTextEdit).Properties.Assign(FEditRepository.Items[FIndexProperties - 1].Properties);
   end;
 end;
+
 
 { TTemplateColumn }
 

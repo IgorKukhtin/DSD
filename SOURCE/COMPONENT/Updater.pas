@@ -472,6 +472,12 @@ begin
        if GetFilePlatfotm64(ParamStr(0))
        then FileWriteString(ExtractFilePath(ParamStr(0)) + 'ssleay32.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('ssleay64.dll'), ''))
        else FileWriteString(ExtractFilePath(ParamStr(0)) + 'ssleay32.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('ssleay32.dll'), ''));
+    //1.3. pdfium.dll грузим - для просмотра PDF
+    if (gc_ProgramName = 'ProjectBoat.exe') and (not FileExists(ExtractFilePath(ParamStr(0)) + 'pdfium.dll'))
+    then
+       if GetFilePlatfotm64(ParamStr(0))
+       then FileWriteString(ExtractFilePath(ParamStr(0)) + 'pdfium.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('pdfium64.dll'), ''))
+       else FileWriteString(ExtractFilePath(ParamStr(0)) + 'pdfium.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('pdfium32.dll'), ''));
 
   except
     on E: Exception do

@@ -134,6 +134,10 @@ type
     spSelectChild: TdsdStoredProc;
     actOpenFormPdfEdit: TdsdOpenForm;
     bbOpenFormPdfEdit: TdxBarButton;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
   private
     { Private declarations }
   public

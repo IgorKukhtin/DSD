@@ -167,7 +167,7 @@
   end
   object cxLabel4: TcxLabel [22]
     Left = 287
-    Top = 168
+    Top = 166
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object edParent: TcxButtonEdit [23]
