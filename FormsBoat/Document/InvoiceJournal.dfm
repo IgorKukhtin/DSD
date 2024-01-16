@@ -797,7 +797,7 @@
     end
     object cxButton7: TcxButton
       Left = 10
-      Top = 42
+      Top = 39
       Width = 95
       Height = 25
       Action = actInsert_Proforma
