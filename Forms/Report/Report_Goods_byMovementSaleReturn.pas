@@ -87,6 +87,48 @@ type
     actPivotToExcel: TdsdGridToExcel;
     bbPivotToExcel: TdxBarButton;
     bbDetailToExcel: TdxBarButton;
+    tsMainTest: TcxTabSheet;
+    tsPivotTest: TcxTabSheet;
+    cxGrid_PG4: TcxGrid;
+    cxGridDBTableView_PG4: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    cxGridDBColumn3: TcxGridDBColumn;
+    cxGridDBColumn4: TcxGridDBColumn;
+    cxGridDBColumn5: TcxGridDBColumn;
+    cxGridDBColumn6: TcxGridDBColumn;
+    cxGridDBColumn7: TcxGridDBColumn;
+    cxGridDBColumn8: TcxGridDBColumn;
+    cxGridDBColumn9: TcxGridDBColumn;
+    cxGridDBColumn10: TcxGridDBColumn;
+    cxGridDBColumn11: TcxGridDBColumn;
+    cxGridLevel_PG4: TcxGridLevel;
+    DBViewAddOnPG4: TdsdDBViewAddOn;
+    PG4CDS: TClientDataSet;
+    PG4DS: TDataSource;
+    cxGridPG5: TcxGrid;
+    cxGridDBTableView_PG5: TcxGridDBTableView;
+    cxGridDBColumn12: TcxGridDBColumn;
+    cxGridDBColumn13: TcxGridDBColumn;
+    cxGridDBColumn14: TcxGridDBColumn;
+    cxGridDBColumn15: TcxGridDBColumn;
+    cxGridDBColumn16: TcxGridDBColumn;
+    cxGridDBColumn17: TcxGridDBColumn;
+    cxGridDBColumn18: TcxGridDBColumn;
+    cxGridDBColumn19: TcxGridDBColumn;
+    cxGridDBColumn20: TcxGridDBColumn;
+    cxGridDBColumn21: TcxGridDBColumn;
+    cxGridDBColumn22: TcxGridDBColumn;
+    cxGridDBColumn23: TcxGridDBColumn;
+    cxGridDBColumn24: TcxGridDBColumn;
+    cxGridDBColumn25: TcxGridDBColumn;
+    cxGridDBColumn26: TcxGridDBColumn;
+    cxGridDBColumn27: TcxGridDBColumn;
+    cxGridDBColumn28: TcxGridDBColumn;
+    cxGridLevelPG5: TcxGridLevel;
+    PG5CDS: TClientDataSet;
+    PG5DS: TDataSource;
+    DBViewAddOnPG5: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

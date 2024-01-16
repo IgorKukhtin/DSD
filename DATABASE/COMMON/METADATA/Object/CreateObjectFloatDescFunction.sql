@@ -1328,6 +1328,9 @@ INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_PartionCell_RowHeight', zc_Object_PartionCell(), ' Кол-во рядов (высота)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionCell_RowHeight');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsGroupProperty_ColorReport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsGroupProperty_ColorReport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsGroupProperty(), 'zc_ObjectFloat_GoodsGroupProperty_ColorReport', 'Цвет текста в "отчет по отгрузке"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsGroupProperty_ColorReport');
 
 
      

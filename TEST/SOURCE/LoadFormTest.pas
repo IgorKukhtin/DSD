@@ -2456,13 +2456,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageWarehouseBranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageWarehouseBranchForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageWarehouseBranchDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageWarehouseBranchDialogForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_PartionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_PartionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_PartionDialogForm'));
@@ -2771,13 +2771,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCost_DifferenceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCost_DifferenceForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementSaleReturnForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementSaleReturnForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementSaleReturnDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementSaleReturnDialogForm');
   //exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementRealForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementRealForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementRealDialogForm'));
