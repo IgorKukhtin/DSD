@@ -26,7 +26,8 @@ uses
   cxInplaceContainer, dxBar, Vcl.ExtCtrls, dxBarExtItems, cxClasses, Document,
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter;
+  cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter, cxGridBandedTableView,
+  cxGridDBBandedTableView;
 
 type
   TProductDocumentPhotoEditForm = class(TParentForm)
@@ -54,12 +55,8 @@ type
     Document: TDocument;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;
-    cxDBVerticalGrid: TcxDBVerticalGrid;
-    colFileName: TcxDBEditorRow;
     dxBarDockControl1: TdxBarDockControl;
     dxBarDockControl3: TdxBarDockControl;
-    cxDBVerticalGrid1: TcxDBVerticalGrid;
-    cxDBEditorRow1: TcxDBEditorRow;
     PhotoCDS: TClientDataSet;
     PhotoDS: TDataSource;
     Photo: TDocument;
@@ -109,13 +106,7 @@ type
     dsdDBViewAddOnDoc: TdsdDBViewAddOn;
     Panel1: TPanel;
     cxGrid2: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    DocTagName: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    ClientDataSetDoc: TClientDataSet;
-    DataSourceDoc: TDataSource;
-    spDocumentSelect2: TdsdStoredProc;
     spUpdate_ProductDocument: TdsdStoredProc;
     dsdUpdateDataSetDoc: TdsdUpdateDataSet;
     cxRightSplitter: TcxSplitter;
@@ -127,6 +118,26 @@ type
     cxLabel19: TcxLabel;
     edModel: TcxButtonEdit;
     GuidesModel: TdsdGuides;
+    PanelMain: TPanel;
+    PanelView: TPanel;
+    PanelDocView: TPanel;
+    cxGrid2DBBandedTableView1: TcxGridDBBandedTableView;
+    DocFileName: TcxGridDBBandedColumn;
+    DocDocTagName: TcxGridDBBandedColumn;
+    DocComment: TcxGridDBBandedColumn;
+    PanelPhotoList: TPanel;
+    cxGrid3: TcxGrid;
+    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    PhFileName: TcxGridDBBandedColumn;
+    cxGridLevel2: TcxGridLevel;
+    cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    DocumentSaveAction: TDocumentSaveAction;
+    bbDocumentSave: TdxBarButton;
+    PhotoSaveAction: TDocumentSaveAction;
+    bbPhotoSaveAction: TdxBarButton;
+    cxButton3: TcxButton;
+    actSetVisiblePanelPhoto: TBooleanSetVisibleAction;
   private
     { Private declarations }
   public
