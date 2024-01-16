@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Boat - Document / Photo>'
   ClientHeight = 651
-  ClientWidth = 863
+  ClientWidth = 972
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -63,231 +63,6 @@
     TabOrder = 5
     Width = 182
   end
-  object Panel: TPanel
-    Left = 208
-    Top = 0
-    Width = 655
-    Height = 651
-    Align = alRight
-    BevelOuter = bvNone
-    TabOrder = 6
-    object cxDBVerticalGrid: TcxDBVerticalGrid
-      Left = 0
-      Top = 327
-      Width = 655
-      Height = 142
-      Align = alClient
-      Images = dmMain.ImageList
-      LayoutStyle = lsMultiRecordView
-      OptionsView.RowHeaderWidth = 109
-      OptionsView.RowHeight = 60
-      OptionsView.ValueWidth = 104
-      OptionsData.Editing = False
-      OptionsData.Appending = False
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Inserting = False
-      Navigator.Buttons.CustomButtons = <>
-      Styles.Header = dmMain.cxHeaderStyle
-      TabOrder = 0
-      DataController.DataSource = PhotoDS
-      Version = 1
-      object colFileName: TcxDBEditorRow
-        Options.CanAutoHeight = False
-        Height = 142
-        Properties.Caption = #1060#1086#1090#1086
-        Properties.HeaderAlignmentHorz = taCenter
-        Properties.HeaderAlignmentVert = vaCenter
-        Properties.ImageIndex = 28
-        Properties.EditPropertiesClassName = 'TcxLabelProperties'
-        Properties.EditProperties.Alignment.Horz = taCenter
-        Properties.EditProperties.Alignment.Vert = taVCenter
-        Properties.EditProperties.WordWrap = True
-        Properties.DataBinding.FieldName = 'FileName'
-        Properties.Options.Editing = False
-        ID = 0
-        ParentID = -1
-        Index = 0
-        Version = 1
-      end
-    end
-    object dxBarDockControl1: TdxBarDockControl
-      Left = 0
-      Top = 0
-      Width = 655
-      Height = 26
-      Align = dalTop
-      BarManager = BarManager
-    end
-    object dxBarDockControl3: TdxBarDockControl
-      Left = 0
-      Top = 301
-      Width = 655
-      Height = 26
-      Align = dalTop
-      BarManager = BarManager
-    end
-    object PanelPhoto: TPanel
-      Left = 0
-      Top = 469
-      Width = 655
-      Height = 182
-      Align = alBottom
-      Caption = 'PanelPhoto'
-      ShowCaption = False
-      TabOrder = 3
-      object Image3: TcxImage
-        Left = 341
-        Top = 1
-        Align = alLeft
-        Properties.ReadOnly = True
-        TabOrder = 0
-        Height = 180
-        Width = 170
-      end
-      object Image2: TcxImage
-        Left = 171
-        Top = 1
-        Align = alLeft
-        Properties.ReadOnly = True
-        TabOrder = 1
-        Height = 180
-        Width = 170
-      end
-      object Image1: TcxImage
-        Left = 1
-        Top = 1
-        Align = alLeft
-        Properties.ReadOnly = True
-        TabOrder = 2
-        Height = 180
-        Width = 170
-      end
-      object cxGrid1: TcxGrid
-        Left = 85
-        Top = 54
-        Width = 330
-        Height = 107
-        TabOrder = 3
-        Visible = False
-        object cxGrid1DBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          object cxGrid1DBTableView1Column1: TcxGridDBColumn
-            DataBinding.FieldName = 'Id'
-            Width = 60
-          end
-        end
-        object cxGrid1Level1: TcxGridLevel
-          GridView = cxGrid1DBTableView1
-        end
-      end
-    end
-    object Panel1: TPanel
-      Left = 0
-      Top = 26
-      Width = 655
-      Height = 275
-      Align = alTop
-      Caption = 'Panel1'
-      TabOrder = 4
-      object cxGrid2: TcxGrid
-        Left = 440
-        Top = 1
-        Width = 214
-        Height = 273
-        Align = alRight
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSourceDoc
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsData.CancelOnExit = False
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.GroupByBox = False
-          object DocTagName: TcxGridDBColumn
-            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1080
-            DataBinding.FieldName = 'DocTagName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = OpenChoiceFormDocTag
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Width = 117
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            Width = 90
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-      object cxDBVerticalGrid1: TcxDBVerticalGrid
-        Left = 1
-        Top = 1
-        Width = 435
-        Height = 273
-        Align = alClient
-        Images = dmMain.ImageList
-        LayoutStyle = lsMultiRecordView
-        OptionsView.RowHeaderWidth = 109
-        OptionsView.RowHeight = 60
-        OptionsView.ValueWidth = 104
-        OptionsData.Editing = False
-        OptionsData.Appending = False
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Inserting = False
-        Navigator.Buttons.CustomButtons = <>
-        Styles.Header = dmMain.cxHeaderStyle
-        TabOrder = 0
-        DataController.DataSource = DocumentDS
-        ExplicitLeft = -1
-        ExplicitTop = 6
-        Version = 1
-        object cxDBEditorRow1: TcxDBEditorRow
-          Options.CanAutoHeight = False
-          Height = 142
-          Properties.Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-          Properties.HeaderAlignmentHorz = taCenter
-          Properties.HeaderAlignmentVert = vaCenter
-          Properties.ImageIndex = 28
-          Properties.EditPropertiesClassName = 'TcxLabelProperties'
-          Properties.EditProperties.Alignment.Horz = taCenter
-          Properties.EditProperties.Alignment.Vert = taVCenter
-          Properties.EditProperties.WordWrap = True
-          Properties.DataBinding.FieldName = 'FileName'
-          Properties.Options.Editing = False
-          ID = 0
-          ParentID = -1
-          Index = 0
-          Version = 1
-        end
-      end
-      object cxRightSplitter: TcxSplitter
-        Left = 436
-        Top = 1
-        Width = 4
-        Height = 273
-        AlignSplitter = salRight
-        Control = cxGrid2
-      end
-    end
-  end
   object cxLabel18: TcxLabel
     Left = 12
     Top = 58
@@ -297,7 +72,7 @@
     Left = 12
     Top = 76
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 182
   end
   object cxLabel19: TcxLabel
@@ -314,12 +89,299 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 9
     Width = 182
   end
+  object PanelMain: TPanel
+    Left = 216
+    Top = 0
+    Width = 756
+    Height = 651
+    Align = alRight
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Caption = 'PanelMain'
+    ShowCaption = False
+    TabOrder = 10
+    object Panel: TPanel
+      Left = 1
+      Top = 1
+      Width = 232
+      Height = 649
+      Align = alLeft
+      BevelOuter = bvNone
+      TabOrder = 0
+      object dxBarDockControl1: TdxBarDockControl
+        Left = 0
+        Top = 0
+        Width = 232
+        Height = 26
+        Align = dalTop
+        BarManager = BarManager
+      end
+      object dxBarDockControl3: TdxBarDockControl
+        Left = 0
+        Top = 301
+        Width = 232
+        Height = 26
+        Align = dalTop
+        BarManager = BarManager
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 26
+        Width = 232
+        Height = 275
+        Align = alTop
+        Caption = 'Panel1'
+        TabOrder = 2
+        object cxGrid2: TcxGrid
+          Left = 1
+          Top = 19
+          Width = 226
+          Height = 255
+          Align = alClient
+          TabOrder = 0
+          object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = DocumentDS
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            OptionsView.Header = False
+            OptionsView.BandHeaders = False
+            Bands = <
+              item
+              end>
+            object DocFileName: TcxGridDBBandedColumn
+              Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+              DataBinding.FieldName = 'FileName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+              Position.BandIndex = 0
+              Position.ColIndex = 0
+              Position.RowIndex = 0
+            end
+            object DocDocTagName: TcxGridDBBandedColumn
+              Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1080
+              DataBinding.FieldName = 'DocTagName'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Action = OpenChoiceFormDocTag
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 70
+              Position.BandIndex = 0
+              Position.ColIndex = 0
+              Position.RowIndex = 1
+            end
+            object DocComment: TcxGridDBBandedColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+              DataBinding.FieldName = 'Comment'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 70
+              Position.BandIndex = 0
+              Position.ColIndex = 1
+              Position.RowIndex = 1
+            end
+          end
+          object cxGridLevel1: TcxGridLevel
+            GridView = cxGrid2DBBandedTableView1
+          end
+        end
+        object cxRightSplitter: TcxSplitter
+          Left = 227
+          Top = 19
+          Width = 4
+          Height = 255
+          AlignSplitter = salRight
+          Control = cxGrid2
+        end
+        object cxLabel2: TcxLabel
+          Left = 1
+          Top = 1
+          Align = alTop
+          Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -12
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taCenter
+          AnchorX = 116
+        end
+      end
+      object PanelPhotoList: TPanel
+        Left = 0
+        Top = 327
+        Width = 232
+        Height = 322
+        Align = alClient
+        Caption = 'PanelPhotoList'
+        ShowCaption = False
+        TabOrder = 3
+        object cxGrid3: TcxGrid
+          Left = 1
+          Top = 19
+          Width = 230
+          Height = 302
+          Align = alClient
+          TabOrder = 0
+          object cxGridDBBandedTableView1: TcxGridDBBandedTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = PhotoDS
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsData.CancelOnExit = False
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            OptionsView.Header = False
+            OptionsView.BandHeaders = False
+            Bands = <
+              item
+              end>
+            object PhFileName: TcxGridDBBandedColumn
+              Caption = #1060#1072#1081#1083
+              DataBinding.FieldName = 'FileName'
+              Options.Editing = False
+              Position.BandIndex = 0
+              Position.ColIndex = 0
+              Position.RowIndex = 0
+            end
+          end
+          object cxGridLevel2: TcxGridLevel
+            GridView = cxGridDBBandedTableView1
+          end
+        end
+        object cxLabel3: TcxLabel
+          Left = 1
+          Top = 1
+          Align = alTop
+          Caption = #1060#1086#1090#1086
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -12
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taCenter
+          AnchorX = 116
+        end
+      end
+    end
+    object PanelView: TPanel
+      Left = 233
+      Top = 1
+      Width = 522
+      Height = 649
+      Align = alClient
+      Caption = 'PanelView'
+      ShowCaption = False
+      TabOrder = 1
+      object PanelDocView: TPanel
+        Left = 1
+        Top = 1
+        Width = 520
+        Height = 489
+        Align = alClient
+        Caption = 'PanelDocView'
+        ShowCaption = False
+        TabOrder = 0
+      end
+      object PanelPhoto: TPanel
+        Left = 1
+        Top = 490
+        Width = 520
+        Height = 158
+        Align = alBottom
+        Caption = 'PanelPhoto'
+        ShowCaption = False
+        TabOrder = 1
+        object Image3: TcxImage
+          Left = 341
+          Top = 1
+          Align = alLeft
+          Properties.ReadOnly = True
+          TabOrder = 0
+          Height = 156
+          Width = 170
+        end
+        object Image2: TcxImage
+          Left = 171
+          Top = 1
+          Align = alLeft
+          Properties.ReadOnly = True
+          TabOrder = 1
+          Height = 156
+          Width = 170
+        end
+        object Image1: TcxImage
+          Left = 1
+          Top = 1
+          Align = alLeft
+          Properties.ReadOnly = True
+          TabOrder = 2
+          Height = 156
+          Width = 170
+        end
+        object cxGrid1: TcxGrid
+          Left = 85
+          Top = 54
+          Width = 330
+          Height = 107
+          TabOrder = 3
+          Visible = False
+          object cxGrid1DBTableView1: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = DataSource
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            object cxGrid1DBTableView1Column1: TcxGridDBColumn
+              DataBinding.FieldName = 'Id'
+              Width = 60
+            end
+          end
+          object cxGrid1Level1: TcxGridLevel
+            GridView = cxGrid1DBTableView1
+          end
+        end
+      end
+    end
+  end
+  object cxButton3: TcxButton
+    Left = 10
+    Top = 575
+    Width = 186
+    Height = 25
+    Action = actSetVisiblePanelPhoto
+    ModalResult = 8
+    TabOrder = 15
+  end
   object ActionList: TActionList
-    Left = 288
-    Top = 64
+    Images = dmMain.ImageList
+    Left = 104
+    Top = 432
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -330,9 +392,6 @@
         end
         item
           StoredProc = spDocumentSelect
-        end
-        item
-          StoredProc = spDocumentSelect2
         end
         item
           StoredProc = spPhotoSelect
@@ -365,12 +424,9 @@
       StoredProcList = <
         item
           StoredProc = spUpdate_ProductDocument
-        end
-        item
-          StoredProc = spDocumentSelect2
         end>
       Caption = 'actUpdateDataSetDoc'
-      DataSource = DataSourceDoc
+      DataSource = DocumentDS
     end
     object OpenChoiceFormDocTag: TOpenChoiceForm
       Category = 'Doc'
@@ -385,14 +441,14 @@
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSetDoc
+          Component = DocumentCDS
           ComponentItem = 'DocTagId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSetDoc
+          Component = DocumentCDS
           ComponentItem = 'DocTagName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -403,7 +459,6 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      View = cxGridDBTableView1
       Action = OpenChoiceFormDocTag
       Params = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'/'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -599,8 +654,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 40
+    Left = 16
+    Top = 432
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Product'
@@ -672,6 +727,16 @@
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = actSetVisiblePanelPhoto
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = dsdDBViewAddOnDoc
+        Properties.Strings = (
+          'ViewDocumentParam')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -720,8 +785,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 72
+    Left = 384
+    Top = 64
   end
   object spDocumentSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProductDocument'
@@ -740,19 +805,19 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
+    Left = 408
     Top = 136
   end
   object DocumentDS: TDataSource
     DataSet = DocumentCDS
-    Left = 376
-    Top = 184
+    Left = 288
+    Top = 200
   end
   object DocumentCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 376
-    Top = 136
+    Left = 296
+    Top = 128
   end
   object spDeleteDocument: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_ProductDocument'
@@ -768,7 +833,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 552
+    Left = 584
     Top = 40
   end
   object spGetDocument: TdsdStoredProc
@@ -790,28 +855,28 @@
   end
   object Document: TDocument
     GetBlobProcedure = spGetDocument
-    Left = 360
-    Top = 48
+    Left = 288
+    Top = 56
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 483
-    Top = 332
+    Left = 99
+    Top = 364
   end
   object PhotoCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 592
-    Top = 352
+    Left = 264
+    Top = 432
   end
   object PhotoDS: TDataSource
     DataSet = PhotoCDS
-    Left = 592
-    Top = 296
+    Left = 264
+    Top = 376
   end
   object Photo: TDocument
     GetBlobProcedure = spGetPhoto
-    Left = 784
-    Top = 320
+    Left = 408
+    Top = 376
   end
   object spGetPhoto: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ProductPhoto'
@@ -827,8 +892,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 792
-    Top = 376
+    Left = 408
+    Top = 440
   end
   object spDeletePhoto: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_ProductPhoto'
@@ -844,8 +909,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 808
-    Top = 440
+    Left = 344
+    Top = 520
   end
   object spPhotoSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProductPhoto'
@@ -864,8 +929,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 720
-    Top = 312
+    Left = 344
+    Top = 376
   end
   object spInsertPhoto: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ProductPhoto'
@@ -905,12 +970,13 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
-    Top = 392
+    Left = 256
+    Top = 512
   end
   object ActionList1: TActionList
-    Left = 453
-    Top = 421
+    Images = dmMain.ImageList
+    Left = 21
+    Top = 365
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -998,9 +1064,6 @@
       StoredProcList = <
         item
           StoredProc = spDocumentSelect
-        end
-        item
-          StoredProc = spDocumentSelect2
         end>
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -1016,6 +1079,14 @@
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
       ImageIndex = 60
     end
+    object PhotoSaveAction: TDocumentSaveAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Document = Photo
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1060#1086#1090#1086
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1060#1086#1090#1086
+      ImageIndex = 8
+    end
     object DocumentOpenAction: TDocumentOpenAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1023,6 +1094,14 @@
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 60
+    end
+    object DocumentSaveAction: TDocumentSaveAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Document = Document
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 8
     end
     object MultiActionInsertPhoto: TMultiAction
       Category = 'DSDLib'
@@ -1100,11 +1179,25 @@
         end>
       Caption = 'spInserUpdateGoods'
     end
+    object actSetVisiblePanelPhoto: TBooleanSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Components = <
+        item
+          Component = PanelPhoto
+        end>
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1087#1072#1085#1077#1083#1100' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1081
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1072#1085#1077#1083#1100' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1081
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1087#1072#1085#1077#1083#1100' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1081
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1072#1085#1077#1083#1100' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1081
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -1114,9 +1207,10 @@
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 376
+    Left = 344
     Top = 435
     DockControlHeights = (
       0
@@ -1157,6 +1251,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPhotoSaveAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPhotoRefresh'
         end
         item
@@ -1174,7 +1276,7 @@
       CaptionButtons = <>
       DockControl = dxBarDockControl1
       DockedDockControl = dxBarDockControl1
-      DockedLeft = 1
+      DockedLeft = 0
       DockedTop = 0
       FloatLeft = 868
       FloatTop = 151
@@ -1196,6 +1298,14 @@
         item
           Visible = True
           ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDocumentSave'
         end
         item
           Visible = True
@@ -1260,6 +1370,14 @@
       Category = 0
       ImageIndex = 1
     end
+    object bbDocumentSave: TdxBarButton
+      Action = DocumentSaveAction
+      Category = 0
+    end
+    object bbPhotoSaveAction: TdxBarButton
+      Action = PhotoSaveAction
+      Category = 0
+    end
   end
   object spGetPhoto_panel: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Product_photo'
@@ -1278,18 +1396,18 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 568
+    Left = 568
+    Top = 536
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 808
+    Left = 776
     Top = 528
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 752
+    Left = 688
     Top = 528
   end
   object DBViewAddOn: TdsdDBViewAddOn
@@ -1317,13 +1435,14 @@
         FieldName = 'Image3'
         Image = Image3
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 792
-    Top = 592
+    Left = 904
+    Top = 528
   end
   object dsdDBViewAddOnDoc: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGrid2DBBandedTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -1333,57 +1452,16 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    ShowFieldImageList = <
+    ShowFieldImageList = <>
+    ViewDocumentList = <
       item
-        FieldName = 'Image1'
-        Image = Image1
-      end
-      item
-        FieldName = 'Image2'
-        Image = Image2
-      end
-      item
-        FieldName = 'Image3'
-        Image = Image3
+        FieldName = 'DocumentData'
+        Control = PanelDocView
+        isFocused = True
       end>
     PropertiesCellList = <>
-    Left = 736
-    Top = 96
-  end
-  object ClientDataSetDoc: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'Id'
-    MasterFields = 'Id'
-    MasterSource = DocumentDS
-    PacketRecords = 0
-    Params = <>
-    Left = 736
-    Top = 144
-  end
-  object DataSourceDoc: TDataSource
-    DataSet = ClientDataSetDoc
-    Left = 776
-    Top = 152
-  end
-  object spDocumentSelect2: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProductDocument'
-    DataSet = ClientDataSetDoc
-    DataSets = <
-      item
-        DataSet = ClientDataSetDoc
-      end>
-    Params = <
-      item
-        Name = 'inProductId'
-        Value = Null
-        Component = dsdFormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 640
-    Top = 144
+    Left = 496
+    Top = 120
   end
   object spUpdate_ProductDocument: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_ProductDocument'
@@ -1401,7 +1479,7 @@
       item
         Name = 'inDocTagId'
         Value = Null
-        Component = ClientDataSetDoc
+        Component = DocumentCDS
         ComponentItem = 'DocTagId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1409,15 +1487,15 @@
       item
         Name = 'inComment'
         Value = ''
-        Component = ClientDataSetDoc
+        Component = DocumentCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 664
-    Top = 64
+    Left = 408
+    Top = 256
   end
   object GuidesModel: TdsdGuides
     KeyField = 'Id'

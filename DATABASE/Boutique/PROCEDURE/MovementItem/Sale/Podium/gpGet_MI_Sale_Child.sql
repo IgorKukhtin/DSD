@@ -49,6 +49,11 @@ RETURNS TABLE (Id Integer
              , isEUR               Boolean
              , isCard              Boolean
              , isDiscount          Boolean
+             , isGRNOld            Boolean
+             , isUSDOld            Boolean
+             , isEUROld            Boolean
+             , isCardOld           Boolean
+             , isDiscountOld       Boolean
               )
 AS
 $BODY$
@@ -339,6 +344,12 @@ BEGIN
            , CASE WHEN 1=1 AND tmpMI.AmountCard    <> 0 THEN TRUE ELSE FALSE END AS isCard
            , CASE WHEN 1=1 AND vbAmountDiscount_GRN <> 0 THEN inIsDiscount ELSE FALSE END AS isDiscount
 
+           , CASE WHEN 1=1 AND tmpMI.AmountGRN      > 0 THEN TRUE ELSE FALSE END AS isGRNOld
+           , CASE WHEN 1=1 AND tmpMI.AmountUSD     <> 0 THEN TRUE ELSE FALSE END AS isUSDOld
+           , CASE WHEN 1=1 AND tmpMI.AmountEUR     <> 0 THEN TRUE ELSE FALSE END AS isEUROld
+           , CASE WHEN 1=1 AND tmpMI.AmountCard    <> 0 THEN TRUE ELSE FALSE END AS isCardOld
+           , CASE WHEN 1=1 AND vbAmountDiscount_GRN <> 0 THEN inIsDiscount ELSE FALSE END AS isDiscountOld
+
        FROM tmpMI
             LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = vbCurrencyId_Client
             ;
@@ -355,3 +366,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inIsGRN:= FALSE, inIsUSD:= FALSE, inIsEUR:= FALSE, inIsCard:= FALSE, inSession:= zfCalc_UserAdmin());
+
