@@ -1486,7 +1486,10 @@ uses
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
   Report_Send_PartionCell in '..\..\Forms\Report\Report_Send_PartionCell.pas' {Report_Send_PartionCellForm: TParentForm},
   Report_Send_PartionCellDialog in '..\..\Forms\Report\Report_Send_PartionCellDialog.pas' {Report_Send_PartionCellDialogForm: TParentForm},
-  DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas';
+  DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
+  PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

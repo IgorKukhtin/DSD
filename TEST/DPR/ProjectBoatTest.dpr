@@ -376,7 +376,10 @@ uses
   PartionCell in '..\..\FormsBoat\Guides\PartionCell.pas' {PartionCellForm: TParentForm},
   DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   BankAccountMovementChild in '..\..\FormsBoat\Document\BankAccountMovementChild.pas' {BankAccountMovementChildForm: TParentForm},
-  BankAccountPdfEdit in '..\..\FormsBoat\Guides\BankAccountPdfEdit.pas' {BankAccountPdfEditForm: TParentForm};
+  BankAccountPdfEdit in '..\..\FormsBoat\Guides\BankAccountPdfEdit.pas' {BankAccountPdfEditForm: TParentForm},
+  PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
