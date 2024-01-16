@@ -841,13 +841,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountIn'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'MasterClientId'
         Value = Null
         Component = GuidesObject

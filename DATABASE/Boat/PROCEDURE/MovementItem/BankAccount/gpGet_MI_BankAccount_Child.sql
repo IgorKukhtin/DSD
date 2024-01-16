@@ -112,9 +112,9 @@ BEGIN
                                         AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
             LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId  
             -- Сумма счета
-            LEFT JOIN tmpMovementFloat AS MovementFloat_Amount
-                                       ON MovementFloat_Amount.MovementId = Movement_Invoice.Id
-                                      AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                    ON MovementFloat_Amount.MovementId = Movement_Invoice.Id
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
        WHERE Movement.Id = inMovementId;
 
       END IF;
