@@ -4,14 +4,14 @@ DROP FUNCTION IF EXISTS gpGet_MI_BankAccount_Child (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_BankAccount_Child (Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_BankAccount_Child(
-    IN inMovementId        Integer  , -- ключ Документа 
-    IN inMovementItemId    Integer  ,            
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementItemId    Integer  ,
     IN inAmount            TFloat   ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
-             , ObjectId Integer, ObjectName TVarChar  
-             , Comment TVarChar   
+             , ObjectId Integer, ObjectName TVarChar
+             , Comment TVarChar
              , Amount TFloat
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar
              , InvoiceKindId    Integer, InvoiceKindName  TVarChar
@@ -28,7 +28,7 @@ BEGIN
      THEN
           RAISE EXCEPTION 'Ошибка.Документ не сохранен';
      END IF;
-     
+
      IF COALESCE (inMovementItemId,0) = 0
      THEN
      RETURN QUERY
@@ -49,7 +49,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-            
+
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
@@ -57,7 +57,7 @@ BEGIN
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
 
-         WHERE Movement.Id = inMovementId 
+         WHERE Movement.Id = inMovementId
          ;
      ELSE
      RETURN QUERY
@@ -66,11 +66,11 @@ BEGIN
            , Movement.InvNumber AS InvNumber
            , MovementString_InvNumberPartner.ValueData :: TVarChar AS InvNumberPartner
            , Movement.OperDate  AS OperDate
- 
+
            , Object_Object.Id              AS ObjectId
            , Object_Object.ValueData       AS ObjectName
            , MIString_Comment.ValueData    AS Comment
-           
+
            , MovementItem.Amount  ::TFloat AS Amount
 
            , Movement_Invoice.Id AS MovementId_Invoice
@@ -88,9 +88,9 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Child()
                                    AND MovementItem.Id = inMovementItemId
-            
-            LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId 
-                     
+
+            LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -111,10 +111,10 @@ BEGIN
        WHERE Movement.Id = inMovementId;
 
       END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -123,4 +123,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_BankAccount_Child (inMovementId:= 271, inMovementItemId := 0 , inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_BankAccount_Child (inMovementId:= 271, inMovementItemId:= 0 , inAmount:= 0, inSession:= zfCalc_UserAdmin());

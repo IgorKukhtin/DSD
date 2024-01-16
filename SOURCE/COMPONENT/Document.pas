@@ -19,11 +19,27 @@ type
     function GetData: string;
     function GetName: string;
     procedure OpenDocument;
+    procedure SaveDocument;
   published
     property GetBlobProcedure: TdsdStoredProc read FBlobProcedure write FBlobProcedure;
   end;
 
   TDocumentOpenAction =  class(TdsdCustomAction)
+  private
+    FDocument: TDocument;
+  protected
+    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  published
+    property Document: TDocument read FDocument write FDocument;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+    property SecondaryShortCuts;
+  end;
+
+  TDocumentSaveAction =  class(TdsdCustomAction)
   private
     FDocument: TDocument;
   protected
@@ -53,6 +69,7 @@ procedure Register;
 begin
    RegisterComponents('DSDComponent', [TDocument]);
    RegisterActions('DSDLib', [TDocumentOpenAction], TDocumentOpenAction);
+   RegisterActions('DSDLib', [TDocumentSaveAction], TDocumentSaveAction);
 end;
 
 
@@ -141,9 +158,48 @@ begin
      if TempDir <> '' then
         TempDir := TempDir + '\';
      Data := ReConvertConvert(FBlobProcedure.Execute);
+     if Copy(Data, 1, 255) = '' then Exit;
      FileName := trim(TempDir + Copy(Data, 1, 255));
      FileWriteString(FileName, Copy(Data, 256, maxint));
      ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil, SW_SHOWNORMAl);
+  end;
+end;
+
+procedure TDocument.SaveDocument;
+var TempDir: string;
+    FullFileName, Ext: string;
+    Data: AnsiString;
+begin
+  if (csWriting in Owner.ComponentState) or (csDesigning in Owner.ComponentState) then
+     exit;
+
+  if Assigned(FBlobProcedure) then begin
+     Data := ReConvertConvert(FBlobProcedure.Execute);
+     FullFileName := trim(TempDir + Copy(Data, 1, 255));
+     if FullFileName = '' then Exit;
+
+     Ext := AnsiLowerCase(ExtractFileExt(FullFileName));
+     with TSaveDialog.Create(nil) do
+     try
+       Options := [ofFileMustExist, ofOverwritePrompt];
+       if Ext <> '' then
+       begin
+         Delete(Ext, 1, 1);
+         Filter := 'Файл ' + AnsiUpperCase(Ext) + '|*.' + Ext + '|Все файлы|*.*';
+         DefaultExt := Ext;
+       end else Filter := '|Все файлы|*.*';
+       Title := 'Укажите файл для сохранения';
+       FileName := FullFileName;
+
+       if Execute then
+       begin
+         FullFileName := FileName;
+         FileWriteString(FullFileName, Copy(Data, 256, maxint));
+       end;
+     finally
+       Free;
+     end;
+
   end;
 end;
 
@@ -168,9 +224,31 @@ begin
             FDocument := nil;
 end;
 
+{ TDocumentOpenAction }
+
+function TDocumentSaveAction.LocalExecute: boolean;
+begin
+  if Assigned(FDocument) then
+     FDocument.SaveDocument
+end;
+
+procedure TDocumentSaveAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then
+         if AComponent = FDocument then
+            FDocument := nil;
+end;
+
 initialization
   Classes.RegisterClass(TDocument);
   Classes.RegisterClass(TDocumentOpenAction);
+  Classes.RegisterClass(TDocumentSaveAction);
   EnvironmentStrings := TStringList.Create;
   GetEnvironmentStrings(EnvironmentStrings);
 
