@@ -53,9 +53,24 @@ BEGIN
      ELSE
      -- 1.1. - 10100 Мясное сырье
      IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+     THEN
+          -- замена для цех колбасный + цех с/к + цех деликатесов + цех тушенка + ирна склады хранения + ирна цех колбасный
+          IF inOperDate < '01.01.2024' AND inUnitId IN (8447    -- ЦЕХ ковбасних виробів
+                                                      , 8449    -- Цех сирокопчених ковбас
+                                                      , 8448    -- Дільниця делікатесів
+                                                      , 2790412 -- ЦЕХ Тушенка
+                                                        --
+                                                      , 8020711 -- ЦЕХ колбасный (Ирна)
+                                                      , 8020708 -- Склад МИНУСОВКА (Ирна)
+                                                      , 8020709 -- Склад ОХЛАЖДЕНКА (Ирна)
+                                                      , 8020710 -- Участок мясного сырья (Ирна)
+                                                       )
+          THEN inGoodsKindId:= 0;
+          END IF;
+         
           -- 0)Товар 1)Подразделение 2)!Партия товара! 3)Вид товара - не всегда 4)Счет - не всегда
           -- 0)Товар 1)Физ. лицо (МО) 2)!Партия товара! 3)Вид товара - не всегда 4)Счет - не всегда
-     THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+          vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId
                                                  , inJuridicalId_basis := NULL
