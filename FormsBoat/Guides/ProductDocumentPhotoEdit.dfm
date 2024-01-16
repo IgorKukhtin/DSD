@@ -256,6 +256,8 @@
         Styles.Header = dmMain.cxHeaderStyle
         TabOrder = 0
         DataController.DataSource = DocumentDS
+        ExplicitLeft = -1
+        ExplicitTop = 6
         Version = 1
         object cxDBEditorRow1: TcxDBEditorRow
           Options.CanAutoHeight = False
@@ -1355,13 +1357,13 @@
     MasterSource = DocumentDS
     PacketRecords = 0
     Params = <>
-    Left = 720
+    Left = 736
     Top = 144
   end
   object DataSourceDoc: TDataSource
     DataSet = ClientDataSetDoc
     Left = 776
-    Top = 144
+    Top = 152
   end
   object spDocumentSelect2: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProductDocument'
@@ -1380,8 +1382,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
-    Top = 192
+    Left = 640
+    Top = 144
   end
   object spUpdate_ProductDocument: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_ProductDocument'
@@ -1414,8 +1416,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 608
-    Top = 152
+    Left = 664
+    Top = 64
   end
   object GuidesModel: TdsdGuides
     KeyField = 'Id'
