@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxButtonEdit;
 
 type
   TGoodsGroupProperty_ObjectForm = class(TParentForm)
@@ -56,6 +57,11 @@ type
     actInsert: TdsdInsertUpdateAction;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    edColorReport_text: TcxGridDBColumn;
+    actChoiceFormColor: TOpenChoiceForm;
+    spUpdate_ColorReport: TdsdStoredProc;
+    ColorReport: TcxGridDBColumn;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

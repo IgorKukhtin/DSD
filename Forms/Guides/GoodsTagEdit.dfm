@@ -182,7 +182,7 @@ object GoodsTagEditForm: TGoodsTagEditForm
       end
       item
         Name = 'inColorReport'
-        Value = 0
+        Value = 0.000000000000000000
         Component = ColorReportGuides
         ComponentItem = 'Key'
         DataType = ftFloat
@@ -360,7 +360,7 @@ object GoodsTagEditForm: TGoodsTagEditForm
         MultiSelectSeparator = ','
       end>
     Left = 56
-    Top = 144
+    Top = 160
   end
   object ColorBgReportGuides: TdsdGuides
     KeyField = 'Id'
@@ -387,7 +387,7 @@ object GoodsTagEditForm: TGoodsTagEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 152
+    Left = 192
+    Top = 160
   end
 end

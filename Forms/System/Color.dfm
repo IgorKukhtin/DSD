@@ -3,7 +3,7 @@ inherited ColorForm: TColorForm
   ClientHeight = 323
   ClientWidth = 434
   ExplicitWidth = 450
-  ExplicitHeight = 361
+  ExplicitHeight = 362
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -95,12 +95,14 @@ inherited ColorForm: TColorForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ColorValue'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ColorName'
           DataType = ftString

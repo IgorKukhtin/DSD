@@ -1489,7 +1489,7 @@ uses
   DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
-  PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas';
+  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

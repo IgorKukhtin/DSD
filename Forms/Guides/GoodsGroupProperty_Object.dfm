@@ -2,8 +2,8 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' ('#1059#1088#1086#1074#1077#1085#1100' 1)>'
-  ClientHeight = 311
-  ClientWidth = 608
+  ClientHeight = 302
+  ClientWidth = 562
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 608
-    Height = 285
+    Width = 562
+    Height = 276
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 651
+    ExplicitWidth = 608
+    ExplicitHeight = 285
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -39,7 +40,6 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -73,6 +73,28 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object edColorReport_text: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+        DataBinding.FieldName = 'ColorReport_text'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormColor
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object ColorReport: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorReport'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -377,6 +399,45 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
         end>
       isShowModal = False
     end
+    object actChoiceFormColor: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ColorForm'
+      FormName = 'TColorForm'
+      FormNameParam.Value = 'TColorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ColorReport'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ColorReport_text'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ColorReport
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ColorReport
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsGroupProperty_Parent'
@@ -433,7 +494,12 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = edColorReport_text
+        ValueColumn = ColorReport
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <
       item
         Column = Code
@@ -447,5 +513,31 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
     PropertiesCellList = <>
     Left = 48
     Top = 216
+  end
+  object spUpdate_ColorReport: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsGroupProperty_ColorReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inColorReport'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'ColorReport'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 128
   end
 end

@@ -197,6 +197,14 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormGoodsGroupProperty'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -266,6 +274,10 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
     end
     object bbUpdateGroup: TdxBarButton
       Action = actUpdateGroup
+      Category = 0
+    end
+    object bbOpenFormGoodsGroupProperty: TdxBarButton
+      Action = actOpenFormGoodsGroupProperty
       Category = 0
     end
   end
@@ -407,6 +419,19 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actOpenFormGoodsGroupProperty: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1074#1077#1090#1072' '#1090#1077#1082#1089#1090#1072' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1074#1077#1090#1072' '#1090#1077#1082#1089#1090#1072' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 26
+      FormName = 'TGoodsGroupProperty_ObjectForm'
+      FormNameParam.Value = 'TGoodsGroupProperty_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'

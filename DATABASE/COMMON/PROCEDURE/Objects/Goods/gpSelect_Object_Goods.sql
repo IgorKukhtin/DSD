@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name_RUS TVarChar
-             , Name_BUH TVarChar, Date_BUH TDateTime
+             , Name_BUH TVarChar, Name_Scale TVarChar, Date_BUH TDateTime
              , BasisCode Integer
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
@@ -62,6 +62,7 @@ BEGIN
             , ObjectString_Goods_ShortName.ValueData :: TVarChar AS ShortName
             , COALESCE (zfCalc_Text_replace (ObjectString_Goods_RUS.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_RUS
             , COALESCE (zfCalc_Text_replace (ObjectString_Goods_BUH.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_BUH
+            , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
             , ObjectDate_BUH.ValueData       :: TDateTime AS Date_BUH
 
             , ObjectFloat_ObjectCode_Basis.ValueData ::Integer AS BasisCode
@@ -176,6 +177,9 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                     ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+             LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                    ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
 
              LEFT JOIN ObjectString AS ObjectString_Goods_ShortName
                                     ON ObjectString_Goods_ShortName.ObjectId = Object_Goods.Id
@@ -291,6 +295,7 @@ BEGIN
             , ''                  :: TVarChar AS ShortName
             , ''                  :: TVarChar AS Name_RUS
             , ''                  :: TVarChar AS Name_BUH
+            , ''                  :: TVarChar AS Name_Scale
             , NULL                :: TDateTime AS Date_BUH
 
             , 0                   :: Integer  AS BasisCode
@@ -363,6 +368,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.01.24         *
  19.12.23         *
  22.05.23         *
  30.06.22         *

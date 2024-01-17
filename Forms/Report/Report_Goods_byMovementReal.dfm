@@ -14,7 +14,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     Width = 894
     Height = 248
     TabOrder = 3
-    Properties.ActivePage = tsPivot
     ExplicitTop = 80
     ExplicitWidth = 894
     ExplicitHeight = 248
@@ -1962,7 +1961,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
   inherited ActionList: TActionList
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
-      Enabled = False
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -2146,6 +2144,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       Category = 'DSDLib'
       TabSheet = tsPivot
       MoveParams = <>
+      Enabled = False
       Grid = cxGridPivot
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'

@@ -159,6 +159,12 @@ type
     actGetImportSetting_GGProperty: TdsdExecStoredProc;
     macStartLoad_GGProperty: TMultiAction;
     bbStartLoad_GGProperty: TdxBarButton;
+    spUpdate_Scale: TdsdStoredProc;
+    actUpdate_Scale: TdsdExecStoredProc;
+    ExecuteDialog_Scale: TExecuteDialog;
+    macUpdate_Name_Scale: TMultiAction;
+    bbUpdate_Name_Scale: TdxBarButton;
+    Name_Scale: TcxGridDBColumn;
   private
     { Private declarations }
   public

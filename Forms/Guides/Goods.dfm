@@ -26,6 +26,7 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -194,6 +195,11 @@ object GoodsForm: TGoodsForm
         HeaderHint = #1044#1072#1090#1072' '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1073#1091#1093#1075'.)'
         Options.Editing = False
         Width = 102
+      end
+      object Name_Scale: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
+        DataBinding.FieldName = 'Name_Scale'
+        Options.Editing = False
       end
       object isNameOrig: TcxGridDBColumn
         Caption = #1055#1086#1082#1072#1079'. '#1088#1077#1072#1083'. '#1085#1072#1079#1074'.'
@@ -783,6 +789,10 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Name_Scale'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -827,6 +837,10 @@ object GoodsForm: TGoodsForm
     end
     object bbStartLoad_GGProperty: TdxBarButton
       Action = macStartLoad_GGProperty
+      Category = 0
+    end
+    object bbUpdate_Name_Scale: TdxBarButton
+      Action = macUpdate_Name_Scale
       Category = 0
     end
   end
@@ -1067,6 +1081,84 @@ object GoodsForm: TGoodsForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object macUpdate_Name_Scale: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialog_Scale
+        end
+        item
+          Action = actUpdate_Scale
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' Scale'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' Scale'
+      ImageIndex = 77
+    end
+    object ExecuteDialog_Scale: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' Scale'
+      ImageIndex = 77
+      FormName = 'TGoods_ScaleDialogForm'
+      FormNameParam.Value = 'TGoods_ScaleDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inName_Scale'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Name_Scale'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inName_Scale'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_Scale'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Scale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_Scale
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Scale
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' Scale'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' Scale'
+      ImageIndex = 77
     end
     object actUpdateisPartionSumm: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2142,5 +2234,31 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 968
     Top = 136
+  end
+  object spUpdate_Scale: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_Scale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_Scale'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Name_Scale'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 291
   end
 end

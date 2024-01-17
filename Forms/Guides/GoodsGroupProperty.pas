@@ -59,6 +59,8 @@ type
     ParentName: TcxGridDBColumn;
     actUpdateGroup: TdsdInsertUpdateAction;
     bbUpdateGroup: TdxBarButton;
+    actOpenFormGoodsGroupProperty: TdsdOpenForm;
+    bbOpenFormGoodsGroupProperty: TdxBarButton;
   private
     { Private declarations }
   public

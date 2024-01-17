@@ -221,6 +221,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_ShortName() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_ShortName', zc_Object_Goods(), 'Название сокращенное' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Scale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Scale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_Scale', zc_Object_Goods(), 'Название товара(для приложения Scale)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Scale');
 
 
 -- zc_Object_GoodsPropertyValue
