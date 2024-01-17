@@ -5985,12 +5985,12 @@ begin
       with UAECMR.ECMR.SpecifiedSupplyChainConsignment.IncludedSupplyChainConsignmentItem.Add do
       begin
         SequenceNumeric := ListDataSet.RecNo;
-        InvoiceAmount.CurrencyID := 'UAH';
-        InvoiceAmount.NodeValue := RoundTo(ListDataSet.FieldByName('AmountSummWVAT').AsCurrency, -2);
+//        InvoiceAmount.CurrencyID := 'UAH';
+//        InvoiceAmount.NodeValue := RoundTo(ListDataSet.FieldByName('AmountSummWVAT').AsCurrency, -2);
         GrossWeightMeasure.UnitCode := 'KGM';
         GrossWeightMeasure.NodeValue := RoundTo(ListDataSet.FieldByName('TotalWeight_BruttoKg').AsCurrency, -2);
-        TariffQuantity.UnitCode := 'UAH';
-        TariffQuantity.NodeValue := RoundTo(ListDataSet.FieldByName('pricenovat').AsCurrency, -2);
+//        TariffQuantity.UnitCode := 'UAH';
+//        TariffQuantity.NodeValue := RoundTo(ListDataSet.FieldByName('pricenovat').AsCurrency, -2);
         TransportLogisticsPackage.ItemQuantity := ListDataSet.FieldByName('Amount_Weight').AsFloat;
         TransportLogisticsPackage.Type_ := ListDataSet.FieldByName('MeasureName').AsString;
         //GlobalID.SchemeAgencyID := '” “«≈ƒ';

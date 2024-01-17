@@ -44,15 +44,19 @@ BEGIN
                              AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False
                              AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = False
                            )
-         , tmpUnit AS (SELECT Object_Unit.Id AS UnitId
-                       FROM Object AS Object_Unit
+         , tmpUnit AS (SELECT Object_Unit_View.Id AS UnitId
+                       FROM Object_Unit_View 
                             INNER JOIN ObjectBoolean AS ObjectBoolean_Unit_TechnicalRediscount
-                                                    ON ObjectBoolean_Unit_TechnicalRediscount.ObjectId = Object_Unit.Id
+                                                    ON ObjectBoolean_Unit_TechnicalRediscount.ObjectId = Object_Unit_View.Id
                                                    AND ObjectBoolean_Unit_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
                                                    AND ObjectBoolean_Unit_TechnicalRediscount.ValueData = True
-                            LEFT JOIN tmpMovement ON tmpMovement.UnitId = Object_Unit.Id
-                       WHERE Object_Unit.DescId = zc_Object_Unit()
-                         AND Object_Unit.isErased = False
+                            LEFT JOIN tmpMovement ON tmpMovement.UnitId = Object_Unit_View.Id
+                       WHERE Object_Unit_View.isErased = False
+                         AND COALESCE (Object_Unit_View.ParentId, 0) <> 377612
+                         AND Object_Unit_View.Id <> 389328
+                         AND Object_Unit_View.Name NOT ILIKE 'Зачинена%'
+                         AND COALESCE (Object_Unit_View.ParentId, 0) IN 
+                             (SELECT DISTINCT U.Id FROM Object_Unit_View AS U WHERE U.isErased = False AND COALESCE (U.ParentId, 0) = 0) 
                          AND COALESCE (tmpMovement.Id, 0) = 0
                       )
 
