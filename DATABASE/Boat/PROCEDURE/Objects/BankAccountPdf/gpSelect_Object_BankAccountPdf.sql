@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccountPdf(
 RETURNS TABLE (Id Integer
              , FileName TVarChar
              , DocTagId Integer, DocTagName TVarChar
-             , Comment TVarChar) AS
+             , Comment TVarChar
+              )
+AS
 $BODY$
 BEGIN
 
@@ -41,8 +43,7 @@ BEGIN
           
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
