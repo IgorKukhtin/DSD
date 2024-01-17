@@ -2,10 +2,12 @@
 
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_Scale (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_Scale (Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Goods_Scale(
     IN inId                Integer   , -- Ключ объекта <товар>
     IN inName_Scale        TVarChar  , -- 
+    IN inisCheck           Boolean   , --нужнали проверка Да/нет  что значение уже заполнено 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -30,6 +32,16 @@ BEGIN
          --RETURN;
      END IF;
 
+     IF COALESCE (inisCheck, FALSE) = TRUE
+     THEN
+         IF TRIM (COALESCE ((SELECT OS.ValueDate FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_Scale() AND OS.ObjectId = inId),'')) <> '' 
+         THEN
+             RAISE EXCEPTION 'Ошибка.Наименование (Scale) уже заполнено.';
+             --RETURN;                                                     
+         END IF;
+         
+     END IF;
+     
      -- сохранили свойство <Название для Scale>
      PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Scale(), inId, inName_Scale);
 

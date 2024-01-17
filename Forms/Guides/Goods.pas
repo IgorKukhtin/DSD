@@ -165,6 +165,15 @@ type
     macUpdate_Name_Scale: TMultiAction;
     bbUpdate_Name_Scale: TdxBarButton;
     Name_Scale: TcxGridDBColumn;
+    spUpdate_ScaleByGrid: TdsdStoredProc;
+    actUpdate_ScaleGrid: TdsdExecStoredProc;
+    mactUpdate_ScaleGrid_list: TMultiAction;
+    mactUpdate_ScaleGrid: TMultiAction;
+    bbUpdate_ScaleGrid: TdxBarButton;
+    spGetImportSettingId_Name: TdsdStoredProc;
+    actGetImportSettingId_Name: TdsdExecStoredProc;
+    mactLoad_Name: TMultiAction;
+    bbStartLoad_Name: TdxBarButton;
   private
     { Private declarations }
   public

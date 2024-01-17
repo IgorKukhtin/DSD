@@ -3,7 +3,7 @@ object GoodsForm: TGoodsForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
-  ClientWidth = 1081
+  ClientWidth = 1105
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object GoodsForm: TGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1081
+    Width = 1105
     Height = 378
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1081
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -791,7 +792,19 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_Name_Scale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_ScaleGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Name'
         end
         item
           Visible = True
@@ -845,11 +858,49 @@ object GoodsForm: TGoodsForm
       Action = macUpdate_Name_Scale
       Category = 0
     end
+    object bbUpdate_ScaleGrid: TdxBarButton
+      Action = mactUpdate_ScaleGrid
+      Category = 0
+    end
+    object bbStartLoad_Name: TdxBarButton
+      Action = mactLoad_Name
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 136
     Top = 96
+    object actGetImportSettingId_Name: TdsdExecStoredProc
+      Category = 'Scale'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Name
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Name
+        end>
+      Caption = 'actGetImportSetting_Goods_Name'
+    end
+    object mactLoad_Name: TMultiAction
+      Category = 'Scale'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId_Name
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1053#1086#1074#1099#1093' '#1053#1072#1079#1074#1072#1085#1080#1081' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1082#1086#1076' / '#1085#1086#1074#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')?'
+      InfoAfterExecute = #1053#1086#1074#1099#1077' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1086#1074#1099#1077' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1082#1086#1076' / '#1085#1086#1074#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103' '#1053#1086#1074#1099#1077' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 74
+    end
     object actGetImportSetting_Goods_BUH: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -859,7 +910,7 @@ object GoodsForm: TGoodsForm
         item
           StoredProc = spGetImportSettingId_buh
         end>
-      Caption = 'actGetImportSetting_Goods_Price'
+      Caption = 'actGetImportSetting_Goods_Name'
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -875,6 +926,31 @@ object GoodsForm: TGoodsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object mactUpdate_ScaleGrid_list: TMultiAction
+      Category = 'Scale'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_ScaleGrid
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactUpdate_ScaleGrid_list'
+      ImageIndex = 27
+    end
+    object actUpdate_ScaleGrid: TdsdExecStoredProc
+      Category = 'Scale'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_ScaleByGrid
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ScaleByGrid
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' Scale'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' Scale'
+      ImageIndex = 27
+    end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -889,6 +965,22 @@ object GoodsForm: TGoodsForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
+    end
+    object mactUpdate_ScaleGrid: TMultiAction
+      Category = 'Scale'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdate_ScaleGrid_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'  '#1053#1072#1079#1074#1072#1085#1080#1077' (Scale) = '#1053#1072#1079#1074#1072#1085#1080#1077'?'
+      InfoAfterExecute = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale) '#1079#1072#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' (Scale) = '#1053#1072#1079#1074#1072#1085#1080#1077
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' (Scale) = '#1053#1072#1079#1074#1072#1085#1080#1077
+      ImageIndex = 27
     end
     object macStartLoad_BUH: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1085,7 +1177,7 @@ object GoodsForm: TGoodsForm
       IdFieldName = 'Id'
     end
     object macUpdate_Name_Scale: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Scale'
       MoveParams = <>
       ActionList = <
         item
@@ -1099,7 +1191,7 @@ object GoodsForm: TGoodsForm
       ImageIndex = 77
     end
     object ExecuteDialog_Scale: TExecuteDialog
-      Category = 'DSDLib'
+      Category = 'Scale'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -1149,7 +1241,7 @@ object GoodsForm: TGoodsForm
       OpenBeforeShow = True
     end
     object actUpdate_Scale: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Scale'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -2258,9 +2350,81 @@ object GoodsForm: TGoodsForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCheck'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 832
     Top = 291
+  end
+  object spUpdate_ScaleByGrid: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_Scale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_Scale'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCheck'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 275
+  end
+  object spGetImportSettingId_Name: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 168
   end
 end
