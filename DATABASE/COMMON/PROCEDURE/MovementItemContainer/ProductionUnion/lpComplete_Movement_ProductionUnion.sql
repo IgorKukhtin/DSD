@@ -929,7 +929,17 @@ end if;
 
                                                -- Упаковка Мяса (тоже ПФ-ГП)
                                                WHEN vbIsPartionDate_Unit_To      = TRUE
-                                                AND (vbIsPartionGoodsKind_Unit_To = TRUE
+                                                AND ((vbIsPartionGoodsKind_Unit_To = TRUE
+                                                     AND vbUnitId_To NOT IN (8447    -- ЦЕХ ковбасних виробів
+                                                                           , 8449    -- Цех сирокопчених ковбас
+                                                                           , 8448    -- Дільниця делікатесів
+                                                                           , 2790412 -- ЦЕХ Тушенка
+                                                                             --
+                                                                           , 8020711 -- ЦЕХ колбасный (Ирна)
+                                                                           , 8020708 -- Склад МИНУСОВКА (Ирна)
+                                                                           , 8020709 -- Склад ОХЛАЖДЕНКА (Ирна)
+                                                                           , 8020710 -- Участок мясного сырья (Ирна)
+                                                                            ))
                                                      -- ИЛИ это группа - ЦЕХ колбаса+дел-сы
                                                      OR (EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
                                                      -- select * from Object where DescId = zc_Object_Goods() and ObjectCode = 1256
@@ -1020,6 +1030,10 @@ end if;
         OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
         OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
      ;
+
+--  RAISE EXCEPTION 'Ошибка.<%>', (select _tmpItem_pr.PartionGoodsId from _tmpItem_pr);
+-- select * from objectDate where objectId = 80132
+
 
 IF inMovementId = 25575925  AND 1=0
 THEN
