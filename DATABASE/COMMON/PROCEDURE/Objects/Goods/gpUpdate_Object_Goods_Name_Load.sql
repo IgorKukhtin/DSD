@@ -50,9 +50,9 @@ BEGIN
      END IF;
      
     -- сохранили новое название
-    --PERFORM lpInsertUpdate_Object (vbGoodsId, zc_Object_Goods(), inGoodsCode, inGoodsName_new);
+    PERFORM lpInsertUpdate_Object (vbGoodsId, zc_Object_Goods(), inGoodsCode, inGoodsName_new);
      
-       RAISE EXCEPTION 'Ошибка.Новое Название <%> для Товара с Кодом = <%> .', inGoodsName_new, inGoodsCode;
+    -- RAISE EXCEPTION 'Ошибка.Новое Название <%> для Товара с Кодом = <%> .', inGoodsName_new, inGoodsCode;
        
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId, FALSE);
