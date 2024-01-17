@@ -230,7 +230,7 @@ BEGIN
                                                       , inInfoMoneyId  := 0
                                                       , inIsPartner    := FALSE
                                                       , inIsTradeMark  := FALSE
-                                                      , inIsGoods      := TRUE
+                                                      , inIsGoods      := TRUE                
                                                       , inIsGoodsKind  := TRUE
                                                       , inIsContract   := FALSE
                                                       , inIsOLAP       := TRUE
