@@ -104,6 +104,7 @@ BEGIN
                                                                     , 6646   -- 5008;"ЯЗЫК СВИН. ВАРЕН.делик"
                                                                     , 7129   -- 5011;"ЯЗЫК СВИН. ВАРЕН.колб."
                                                                     , 712542 -- 2359;"МЯСО ГОЛОВ СВ в шкуре варен."
+                                                                    , 3011   -- 1500;САЛО ХРЕБЕТ-посол Укр.с/ц
                                                                      )), 0);
    -- определяется
    vbMeasureId_master:= (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = inGoodsId AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure());

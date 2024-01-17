@@ -26,7 +26,8 @@ uses
   cxInplaceContainer, dxBar, Vcl.ExtCtrls, dxBarExtItems, cxClasses, Document,
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter;
+  cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter, cxGridBandedTableView,
+  cxGridDBBandedTableView;
 
 type
   TBankAccountPdfEditForm = class(TParentForm)
@@ -43,26 +44,19 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;
-    cxDBVerticalGrid: TcxDBVerticalGrid;
-    colFileName: TcxDBEditorRow;
     dxBarDockControl3: TdxBarDockControl;
-    PhotoCDS: TClientDataSet;
-    PhotoDS: TDataSource;
-    Photo: TDocument;
-    spGetPhoto: TdsdStoredProc;
-    spDeletePhoto: TdsdStoredProc;
-    spPhotoSelect: TdsdStoredProc;
-    spInsertPhoto: TdsdStoredProc;
+    DocumentCDS: TClientDataSet;
+    DocumentDS: TDataSource;
+    Document: TDocument;
+    spGetDocument: TdsdStoredProc;
+    spDeleteDocument: TdsdStoredProc;
+    spDocumentSelect: TdsdStoredProc;
+    spInsertDocument: TdsdStoredProc;
     ActionList1: TActionList;
     actRefresh: TdsdDataSetRefresh;
     FormClose: TdsdFormClose;
     InsertUpdateGuides: TdsdInsertUpdateGuides;
-    actInsertDocument: TdsdExecStoredProc;
-    DocumentRefresh: TdsdDataSetRefresh;
-    DocumentOpenAction: TDocumentOpenAction;
-    MultiActionInsertDocument: TMultiAction;
     spInserUpdateGoods: TdsdExecStoredProc;
-    actDeleteDocument: TdsdExecStoredProc;
     BarManager: TdxBarManager;
     BarManagerBar1: TdxBar;
     bbAddDocument: TdxBarButton;
@@ -74,11 +68,11 @@ type
     bbSetErasedContractCondition: TdxBarButton;
     bbPhotoOpenAction: TdxBarButton;
     bbDeleteDocument: TdxBarButton;
-    PhotoRefresh: TdsdDataSetRefresh;
-    PhotoOpenAction: TDocumentOpenAction;
-    MultiActionInsertPhoto: TMultiAction;
-    actInsertPhoto: TdsdExecStoredProc;
-    actDeletePhoto: TdsdExecStoredProc;
+    DocumentRefresh: TdsdDataSetRefresh;
+    DocumentOpenAction: TDocumentOpenAction;
+    MultiActionInsertDocument: TMultiAction;
+    actInsertDocument: TdsdExecStoredProc;
+    actDeleteDocument: TdsdExecStoredProc;
     DBViewAddOn: TdsdDBViewAddOn;
     dsdUpdateDataSetDoc: TdsdUpdateDataSet;
     OpenChoiceFormDocTag: TOpenChoiceForm;
@@ -94,16 +88,17 @@ type
     GuidesObject: TdsdGuides;
     edInvNumber: TcxTextEdit;
     spUpdate_BankAccountPdf: TdsdStoredProc;
-    spDocumentSelect2: TdsdStoredProc;
-    dsdDBViewAddOnDoc: TdsdDBViewAddOn;
-    ClientDataSetDoc: TClientDataSet;
-    DataSourceDoc: TDataSource;
-    cxGrid2: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    DocTagName: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
     cxRightSplitter: TcxSplitter;
+    Panel1: TPanel;
+    cxGrid2: TcxGrid;
+    cxGrid2DBBandedTableView1: TcxGridDBBandedTableView;
+    DocFileName: TcxGridDBBandedColumn;
+    DocDocTagName: TcxGridDBBandedColumn;
+    DocComment: TcxGridDBBandedColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    cxLabel1: TcxLabel;
+    PanelDocView: TPanel;
   private
     { Private declarations }
   public

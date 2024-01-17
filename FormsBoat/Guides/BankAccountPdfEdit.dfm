@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1089#1082#1072#1085' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'>'
-  ClientHeight = 362
-  ClientWidth = 863
+  ClientHeight = 343
+  ClientWidth = 867
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -38,117 +38,152 @@
     TabOrder = 1
   end
   object Panel: TPanel
-    Left = 208
+    Left = 215
     Top = 0
-    Width = 655
-    Height = 362
+    Width = 652
+    Height = 343
     Align = alRight
+    Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 504
-    object cxDBVerticalGrid: TcxDBVerticalGrid
-      Left = 0
-      Top = 26
-      Width = 437
-      Height = 336
-      Align = alClient
-      Images = dmMain.ImageList
-      LayoutStyle = lsMultiRecordView
-      OptionsView.RowHeaderWidth = 109
-      OptionsView.RowHeight = 60
-      OptionsView.ValueWidth = 104
-      OptionsData.Editing = False
-      OptionsData.Appending = False
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Inserting = False
-      Navigator.Buttons.CustomButtons = <>
-      Styles.Header = dmMain.cxHeaderStyle
-      TabOrder = 0
-      DataController.DataSource = PhotoDS
-      ExplicitLeft = -6
-      ExplicitWidth = 655
-      Version = 1
-      object colFileName: TcxDBEditorRow
-        Options.CanAutoHeight = False
-        Height = 142
-        Properties.Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-        Properties.HeaderAlignmentHorz = taCenter
-        Properties.HeaderAlignmentVert = vaCenter
-        Properties.ImageIndex = 28
-        Properties.EditPropertiesClassName = 'TcxLabelProperties'
-        Properties.EditProperties.Alignment.Horz = taCenter
-        Properties.EditProperties.Alignment.Vert = taVCenter
-        Properties.EditProperties.WordWrap = True
-        Properties.DataBinding.FieldName = 'FileName'
-        Properties.Options.Editing = False
-        ID = 0
-        ParentID = -1
-        Index = 0
-        Version = 1
-      end
-    end
+    ExplicitLeft = 208
+    ExplicitWidth = 655
+    ExplicitHeight = 362
     object dxBarDockControl3: TdxBarDockControl
       Left = 0
       Top = 0
-      Width = 655
+      Width = 652
       Height = 26
       Align = dalTop
       BarManager = BarManager
-    end
-    object cxGrid2: TcxGrid
-      Left = 441
-      Top = 26
-      Width = 214
-      Height = 336
-      Align = alRight
-      TabOrder = 2
-      ExplicitLeft = 440
-      ExplicitTop = 1
-      ExplicitHeight = 273
-      object cxGridDBTableView1: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = DataSourceDoc
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        OptionsData.CancelOnExit = False
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Inserting = False
-        OptionsView.ColumnAutoWidth = True
-        OptionsView.GroupByBox = False
-        object DocTagName: TcxGridDBColumn
-          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1080
-          DataBinding.FieldName = 'DocTagName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = OpenChoiceFormDocTag
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          Width = 117
-        end
-        object Comment: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-          DataBinding.FieldName = 'Comment'
-          Width = 90
-        end
-      end
-      object cxGridLevel1: TcxGridLevel
-        GridView = cxGridDBTableView1
-      end
+      ExplicitWidth = 655
     end
     object cxRightSplitter: TcxSplitter
-      Left = 437
+      Left = 648
       Top = 26
       Width = 4
-      Height = 336
+      Height = 317
       AlignSplitter = salRight
-      Control = cxGrid2
-      ExplicitLeft = 0
+      ExplicitLeft = 437
+      ExplicitHeight = 336
+    end
+    object Panel1: TPanel
+      Left = 0
+      Top = 26
+      Width = 249
+      Height = 317
+      Align = alLeft
+      Caption = 'Panel1'
+      TabOrder = 2
+      object cxGrid2: TcxGrid
+        Left = 1
+        Top = 19
+        Width = 243
+        Height = 297
+        Align = alClient
+        TabOrder = 0
+        ExplicitLeft = 0
+        ExplicitTop = 25
+        object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DocumentDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
+          OptionsView.Header = False
+          OptionsView.BandHeaders = False
+          Bands = <
+            item
+            end>
+          object DocFileName: TcxGridDBBandedColumn
+            Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+            DataBinding.FieldName = 'FileName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object DocDocTagName: TcxGridDBBandedColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1080
+            DataBinding.FieldName = 'DocTagName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenChoiceFormDocTag
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object DocComment: TcxGridDBBandedColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 1
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGrid2DBBandedTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 244
+        Top = 19
+        Width = 4
+        Height = 297
+        AlignSplitter = salRight
+        Control = cxGrid2
+        ExplicitLeft = -3
+        ExplicitHeight = 255
+      end
+      object cxLabel1: TcxLabel
+        Left = 1
+        Top = 1
+        Align = alTop
+        Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -12
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        Properties.Alignment.Horz = taCenter
+        ExplicitWidth = 653
+        AnchorX = 125
+      end
+    end
+    object PanelDocView: TPanel
+      Left = 249
+      Top = 26
+      Width = 399
+      Height = 317
+      Align = alClient
+      Caption = 'PanelDocView'
+      ShowCaption = False
+      TabOrder = 3
+      ExplicitLeft = 1
+      ExplicitTop = 1
+      ExplicitWidth = 520
+      ExplicitHeight = 489
     end
   end
   object Код: TcxLabel
@@ -200,7 +235,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 182
   end
   object edInvNumber: TcxTextEdit
@@ -224,7 +259,7 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spPhotoSelect
+          StoredProc = spDocumentSelect
         end
         item
         end>
@@ -255,11 +290,9 @@
       StoredProcList = <
         item
           StoredProc = spUpdate_BankAccountPdf
-        end
-        item
         end>
       Caption = 'actUpdateDataSetDoc'
-      DataSource = DataSourceDoc
+      DataSource = DocumentDS
     end
     object OpenChoiceFormDocTag: TOpenChoiceForm
       Category = 'Doc'
@@ -274,15 +307,11 @@
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSetDoc
-          ComponentItem = 'DocTagId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSetDoc
-          ComponentItem = 'DocTagName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -474,8 +503,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 304
+    Left = 136
+    Top = 288
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -484,9 +513,14 @@
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovmentItemId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
-    Left = 696
-    Top = 80
+    Left = 656
+    Top = 160
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_BankAccount'
@@ -585,6 +619,11 @@
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = DBViewAddOn
+        Properties.Strings = (
+          'ViewDocumentParam')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -596,26 +635,26 @@
     Top = 224
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 387
-    Top = 220
+    Left = 307
+    Top = 204
   end
-  object PhotoCDS: TClientDataSet
+  object DocumentCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 488
-    Top = 32
+    Top = 40
   end
-  object PhotoDS: TDataSource
-    DataSet = PhotoCDS
+  object DocumentDS: TDataSource
+    DataSet = DocumentCDS
     Left = 488
-    Top = 80
+    Top = 120
   end
-  object Photo: TDocument
-    GetBlobProcedure = spGetPhoto
+  object Document: TDocument
+    GetBlobProcedure = spGetDocument
     Left = 488
     Top = 216
   end
-  object spGetPhoto: TdsdStoredProc
+  object spGetDocument: TdsdStoredProc
     StoredProcName = 'gpGet_Object_BankAccountPdf'
     DataSets = <>
     OutputType = otBlob
@@ -623,16 +662,16 @@
       item
         Name = 'inBankAccountPdfId'
         Value = Null
-        Component = PhotoCDS
+        Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 80
+    Left = 232
+    Top = 120
   end
-  object spDeletePhoto: TdsdStoredProc
+  object spDeleteDocument: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_BankAccountPdf'
     DataSets = <>
     OutputType = otResult
@@ -640,21 +679,21 @@
       item
         Name = 'inId'
         Value = Null
-        Component = PhotoCDS
+        Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 32
+    Left = 240
+    Top = 56
   end
-  object spPhotoSelect: TdsdStoredProc
+  object spDocumentSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_BankAccountPdf'
-    DataSet = PhotoCDS
+    DataSet = DocumentCDS
     DataSets = <
       item
-        DataSet = PhotoCDS
+        DataSet = DocumentCDS
       end>
     Params = <
       item
@@ -666,10 +705,10 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 152
+    Left = 360
+    Top = 56
   end
-  object spInsertPhoto: TdsdStoredProc
+  object spInsertDocument: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_BankAccountPdf'
     DataSets = <>
     OutputType = otResult
@@ -683,7 +722,7 @@
       item
         Name = 'inPhotoname'
         Value = ''
-        Component = Photo
+        Component = Document
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
@@ -700,19 +739,19 @@
       item
         Name = 'inBankAccountPdfData'
         Value = '789C535018D10000F1E01FE1'
-        Component = Photo
+        Component = Document
         ComponentItem = 'Data'
         DataType = ftBlob
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 152
+    Left = 360
+    Top = 128
   end
   object ActionList1: TActionList
-    Left = 789
-    Top = 45
+    Left = 653
+    Top = 61
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -722,7 +761,7 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spPhotoSelect
+          StoredProc = spDocumentSelect
         end
         item
         end>
@@ -749,89 +788,42 @@
         end>
       Caption = #1054#1082
     end
-    object actInsertPhoto: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertPhoto
-      StoredProcList = <
-        item
-          StoredProc = spInsertPhoto
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
-      ImageIndex = 0
-    end
     object actInsertDocument: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spInsertDocument
       StoredProcList = <
         item
+          StoredProc = spInsertDocument
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 0
-    end
-    object PhotoRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spPhotoSelect
-      StoredProcList = <
-        item
-          StoredProc = spPhotoSelect
-        end
-        item
-          StoredProc = spDocumentSelect2
-        end>
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
     object DocumentRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spDocumentSelect
       StoredProcList = <
         item
+          StoredProc = spDocumentSelect
         end
         item
         end>
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object PhotoOpenAction: TDocumentOpenAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Document = Photo
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
-      ImageIndex = 60
-    end
     object DocumentOpenAction: TDocumentOpenAction
       Category = 'DSDLib'
       MoveParams = <>
+      Document = Document
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 60
-    end
-    object MultiActionInsertPhoto: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertPhoto
-        end
-        item
-          Action = PhotoRefresh
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
-      ImageIndex = 0
     end
     object MultiActionInsertDocument: TMultiAction
       Category = 'DSDLib'
@@ -847,31 +839,17 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 0
     end
-    object actDeletePhoto: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spDeletePhoto
-      StoredProcList = <
-        item
-          StoredProc = spDeletePhoto
-        end
-        item
-          StoredProc = spPhotoSelect
-        end
-        item
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086
-      ImageIndex = 2
-      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086'?'
-    end
     object actDeleteDocument: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spDeleteDocument
       StoredProcList = <
         item
+          StoredProc = spDeleteDocument
+        end
+        item
+          StoredProc = spDocumentSelect
         end
         item
         end>
@@ -895,7 +873,7 @@
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -907,7 +885,7 @@
     ImageOptions.Images = dmMain.ImageList
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 248
+    Left = 232
     Top = 203
     DockControlHeights = (
       0
@@ -961,12 +939,19 @@
       WholeRow = False
     end
     object bbAddDocument: TdxBarButton
-      Action = MultiActionInsertDocument
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Visible = ivAlways
+      ImageIndex = 0
     end
     object bbRefreshDoc: TdxBarButton
-      Action = DocumentRefresh
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Category = 0
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Visible = ivAlways
+      ImageIndex = 4
+      ShortCut = 116
     end
     object bbStatic: TdxBarStatic
       Caption = '   '
@@ -977,28 +962,34 @@
       ShowCaption = False
     end
     object bbOpenDocument: TdxBarButton
-      Action = DocumentOpenAction
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Visible = ivAlways
+      ImageIndex = 60
     end
     object bbInsertCondition: TdxBarButton
-      Action = MultiActionInsertPhoto
+      Action = MultiActionInsertDocument
       Category = 0
     end
     object bbPhotoRefresh: TdxBarButton
-      Action = PhotoRefresh
+      Action = DocumentRefresh
       Category = 0
     end
     object bbSetErasedContractCondition: TdxBarButton
-      Action = actDeletePhoto
+      Action = actDeleteDocument
       Category = 0
     end
     object bbPhotoOpenAction: TdxBarButton
-      Action = PhotoOpenAction
+      Action = DocumentOpenAction
       Category = 0
     end
     object bbDeleteDocument: TdxBarButton
-      Action = actDeleteDocument
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Visible = ivAlways
+      ImageIndex = 2
     end
     object bb: TdxBarButton
       Action = InsertRecordDoc
@@ -1008,6 +999,7 @@
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGrid2DBBandedTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -1029,9 +1021,15 @@
       item
         FieldName = 'Image3'
       end>
+    ViewDocumentList = <
+      item
+        FieldName = 'DocumentData'
+        Control = PanelDocView
+        isFocused = True
+      end>
     PropertiesCellList = <>
-    Left = 728
-    Top = 200
+    Left = 576
+    Top = 208
   end
   object GuidesObject: TdsdGuides
     KeyField = 'Id'
@@ -1130,15 +1128,15 @@
       item
         Name = 'inid'
         Value = Null
-        Component = ClientDataSetDoc
-        ComponentItem = 'Id'
+        Component = DocumentCDS
+        ComponentItem = 'id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inDocTagId'
         Value = Null
-        Component = ClientDataSetDoc
+        Component = DocumentCDS
         ComponentItem = 'DocTagId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1146,74 +1144,14 @@
       item
         Name = 'inComment'
         Value = Null
-        Component = ClientDataSetDoc
+        Component = DocumentCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 592
-    Top = 248
-  end
-  object spDocumentSelect2: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_BankAccountPdf'
-    DataSet = ClientDataSetDoc
-    DataSets = <
-      item
-        DataSet = ClientDataSetDoc
-      end>
-    Params = <
-      item
-        Name = 'inProductId'
-        Value = Null
-        Component = dsdFormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 656
-    Top = 160
-  end
-  object dsdDBViewAddOnDoc: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    ShowFieldImageList = <
-      item
-        FieldName = 'Image1'
-      end
-      item
-        FieldName = 'Image2'
-      end
-      item
-        FieldName = 'Image3'
-      end>
-    PropertiesCellList = <>
-    Left = 736
-    Top = 96
-  end
-  object ClientDataSetDoc: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'Id'
-    MasterFields = 'Id'
-    PacketRecords = 0
-    Params = <>
-    Left = 736
-    Top = 240
-  end
-  object DataSourceDoc: TDataSource
-    DataSet = ClientDataSetDoc
-    Left = 776
-    Top = 152
+    Left = 584
+    Top = 264
   end
 end

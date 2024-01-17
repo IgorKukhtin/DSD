@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccountPdf(
 RETURNS TABLE (Id Integer
              , FileName TVarChar
              , DocTagId Integer, DocTagName TVarChar
-             , Comment TVarChar) AS
+             , Comment TVarChar
+             , DocumentData TBlob) AS
 $BODY$
 BEGIN
 
@@ -23,6 +24,7 @@ BEGIN
           , Object_DocTag.Id                AS DocTagId
           , Object_DocTag.ValueData         AS DocTagName
           , ObjectString_Comment.ValueData  AS Comment
+          , ObjectBlob_Data.ValueData       AS DocumentData
      FROM Object AS Object_BankAccountPdf
           JOIN ObjectFloat AS ObjectFloat_BankAccountPdf_MovmentItemId
                            ON ObjectFloat_BankAccountPdf_MovmentItemId.ObjectId = Object_BankAccountPdf.Id
@@ -36,6 +38,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_BankAccountPdf.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_BankAccountPdf_Comment()
+
+          LEFT JOIN ObjectBlob AS ObjectBlob_Data
+                               ON ObjectBlob_Data.ObjectId = Object_BankAccountPdf.Id
+                              AND ObjectBlob_Data.DescId = zc_ObjectBlob_BankAccountPdf_Data()
                                 
      WHERE Object_BankAccountPdf.DescId = zc_Object_BankAccountPdf(); 
           
@@ -51,4 +57,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_BankAccountPdf (0,'2')
+-- SELECT * FROM gpSelect_Object_BankAccountPdf (557216,'2')
