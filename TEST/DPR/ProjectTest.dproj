@@ -5202,6 +5202,10 @@
 			<DCCReference Include="..\..\SOURCE\Pdfium\PdfiumCore.pas"/>
 			<DCCReference Include="..\..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
 			<DCCReference Include="..\..\SOURCE\Pdfium\PdfiumLib.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Goods_ScaleDialog.pas">
+				<Form>Goods_ScaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

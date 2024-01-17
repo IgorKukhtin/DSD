@@ -1489,7 +1489,8 @@ uses
   DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
-  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas';
+  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas',
+  Goods_ScaleDialog in '..\..\Forms\Guides\Goods_ScaleDialog.pas' {Goods_ScaleDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

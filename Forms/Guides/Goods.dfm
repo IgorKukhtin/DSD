@@ -26,7 +26,6 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -199,7 +198,10 @@ object GoodsForm: TGoodsForm
       object Name_Scale: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
         DataBinding.FieldName = 'Name_Scale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 80
       end
       object isNameOrig: TcxGridDBColumn
         Caption = #1055#1086#1082#1072#1079'. '#1088#1077#1072#1083'. '#1085#1072#1079#1074'.'

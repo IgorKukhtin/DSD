@@ -600,11 +600,14 @@ end;
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ScaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_ScaleDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupProperty_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupProperty_ObjectForm');
-  exit;
+ // exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyEditForm');
@@ -615,11 +618,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-  // exit;
-
+   exit;
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
@@ -628,7 +631,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
+  TsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_WeightTareDialogForm'));
