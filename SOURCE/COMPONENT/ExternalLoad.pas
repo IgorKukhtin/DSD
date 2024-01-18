@@ -820,44 +820,60 @@ var i: integer;
     C: Char;
     Code: SmallInt;
   begin
-    Result := '';
-
-    for C in S do
+    if dsdProject = prBoat then
     begin
-      Code := Ord(C);
+      Result := S;
 
-      if Code = 39 then
-        Result := Result + '`'
-      else if Code = 188 then
-        Result := Result + '1/4'
-      else if Code = 189 then
-        Result := Result + '1/2'
-      else if Code = 190 then
-        Result := Result + '3/4'
-      else if dsdProject = prFarmacy then
+      Result := ReplaceStr(Result, #$00c3#$00BC, #$00FC);
+      Result := ReplaceStr(Result, #$0413#$0458, #$00FC);
+
+      Result := ReplaceStr(Result, #$00c3#$0153, #$00DC);
+      Result := ReplaceStr(Result, #$0413#$045A, #$00DC);
+
+      if POS(#$0413, Result) > 0 then
+        Result := Result;
+
+    end else
+    begin
+      Result := '';
+
+      for C in S do
       begin
-        if ((Code = 822) or (Code = -4051)) then
-          Result := Result + '-'
-        else if ((Code = 945) or (Code = 593) or (Code = -3999)) then
-          Result := Result + 'a'
-        else if (Code = 946) then
-          Result := Result + 'b'
-        else if (Code = 947) then
-          Result := Result + 'y'
-        else if (Code = 216) then
-          Result := Result + 'D'
-        else if (Code = 231) then
-          Result := Result + 'c'
-        else if (Code = 350) then
-          Result := Result + 'S'
-        else if ((Code = 180) or (Code = 769) or (Code = 8125) or (Code = 700) or (Code = 8217)) then
+        Code := Ord(C);
+
+        if Code = 39 then
           Result := Result + '`'
-//      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
-//        Result := Result  + C
-        else Result := Result + C;
-      end
-      else
-        Result := Result + C;
+        else if Code = 188 then
+          Result := Result + '1/4'
+        else if Code = 189 then
+          Result := Result + '1/2'
+        else if Code = 190 then
+          Result := Result + '3/4'
+        else if dsdProject = prFarmacy then
+        begin
+          if ((Code = 822) or (Code = -4051)) then
+            Result := Result + '-'
+          else if ((Code = 945) or (Code = 593) or (Code = -3999)) then
+            Result := Result + 'a'
+          else if (Code = 946) then
+            Result := Result + 'b'
+          else if (Code = 947) then
+            Result := Result + 'y'
+          else if (Code = 216) then
+            Result := Result + 'D'
+          else if (Code = 231) then
+            Result := Result + 'c'
+          else if (Code = 350) then
+            Result := Result + 'S'
+          else if ((Code = 180) or (Code = 769) or (Code = 8125) or (Code = 700) or (Code = 8217)) then
+            Result := Result + '`'
+  //      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
+  //        Result := Result  + C
+          else Result := Result + C;
+        end
+        else
+          Result := Result + C;
+      end;
     end;
   end;
 
@@ -970,8 +986,10 @@ begin
                       begin
                         if VarIsNULL(Field.Value) then
                           vParamValue := ''
-                        else
-                          vParamValue := Trim(AdaptStr(Field.Value));
+                        else if StoredProc.Params.Items[i].DataType = ftString then
+                          vParamValue := Copy(Trim(AdaptStr(Field.Value)), 1, 255)
+                        else vParamValue := Trim(AdaptStr(Field.Value));
+
                         if bJSON then
                           AddParamToJSON(cParamName, vParamValue, TImportSettingsItems(Items[i]).Param.DataType)
                         else
@@ -1201,7 +1219,7 @@ class function TImportSettingsFactory.GetDefaultByFieldType(
   FieldType: TFieldType): OleVariant;
 begin
   case FieldType of
-    ftString: result := '';
+    ftString, ftWideString: result := '';
     ftInteger, ftFloat: result := 0;
     ftBoolean: result := true;
     ftDateTime: result := Date;

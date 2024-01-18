@@ -4,26 +4,27 @@ inherited ImportTypeForm: TImportTypeForm
   ClientWidth = 939
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 955
-  ExplicitHeight = 377
+  ExplicitWidth = 961
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 939
-    Height = 313
+    Height = 307
+    ExplicitTop = 32
     ExplicitWidth = 939
-    ExplicitHeight = 313
-    ClientRectBottom = 313
+    ExplicitHeight = 307
+    ClientRectBottom = 307
     ClientRectRight = 939
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 939
-      ExplicitHeight = 313
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 345
-        Height = 313
+        Height = 307
         Align = alLeft
         ExplicitWidth = 345
-        ExplicitHeight = 313
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -82,12 +83,10 @@ inherited ImportTypeForm: TImportTypeForm
         Left = 348
         Top = 0
         Width = 591
-        Height = 313
+        Height = 307
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 468
-        ExplicitWidth = 471
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -138,7 +137,8 @@ inherited ImportTypeForm: TImportTypeForm
               'ftDateTime'
               'ftFloat'
               'ftInteger'
-              'ftString')
+              'ftString'
+              'ftWideString')
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 124
@@ -159,9 +159,8 @@ inherited ImportTypeForm: TImportTypeForm
         Left = 345
         Top = 0
         Width = 3
-        Height = 313
+        Height = 307
         Control = cxGrid
-        ExplicitLeft = 465
       end
     end
   end
@@ -334,7 +333,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      26
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -566,10 +565,14 @@ inherited ImportTypeForm: TImportTypeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 512
     Top = 192
   end
