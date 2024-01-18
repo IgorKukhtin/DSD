@@ -830,8 +830,14 @@ var i: integer;
       Result := ReplaceStr(Result, #$00c3#$0153, #$00DC);
       Result := ReplaceStr(Result, #$0413#$045A, #$00DC);
 
-      if POS(#$0413, Result) > 0 then
-        Result := Result;
+      Result := ReplaceStr(Result, #$00c3#$00A4, #$00E4);
+      Result := ReplaceStr(Result, #$0413#$00A4, #$00E4);
+
+      Result := ReplaceStr(Result, #$00c3#$201E, #$00C4);
+      Result := ReplaceStr(Result, #$0413#$201E, #$00C4);
+
+//      if POS(#$0413, Result) > 0 then
+//        Result := Result;
 
     end else
     begin
