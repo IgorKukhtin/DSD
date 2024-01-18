@@ -21,7 +21,7 @@ BEGIN
 
 
      -- проверка прав пользователя на вызов процедуры
-     IF 1=1 AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Scale())
+     IF 1=0 AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Scale())
      THEN
          RAISE EXCEPTION 'Ошибка.Нет Прав на изменение <Название для приложения Scale>.';
      END IF;
