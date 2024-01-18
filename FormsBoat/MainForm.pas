@@ -318,6 +318,8 @@ type
     actPartionCell: TdsdOpenForm;
     miPartionCell: TMenuItem;
     miGoodsGroup_all: TMenuItem;
+    actBankAccountChildJournal: TdsdOpenForm;
+    N3: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private
