@@ -15,7 +15,7 @@ RETURNS TABLE (MovementId Integer
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, ItemName TVarChar
 
              , MovementId_Invoice Integer, ParentId_Invoice Integer, OperDate_Invoice TDateTime, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
-             , ReceiptNumber_Invoice Integer, InvoiceKindName TVarChar, ObjectName_invoice TVarChar
+             , ReceiptNumber_Invoice Integer, InvoiceKindId Integer, InvoiceKindName TVarChar, ObjectName_invoice TVarChar
              , Amount_Invoice TFloat
              , InfoMoneyId_Invoice Integer, InfoMoneyCode_Invoice Integer, InfoMoneyGroupName_Invoice TVarChar, InfoMoneyDestinationName_Invoice TVarChar, InfoMoneyName_Invoice TVarChar, InfoMoneyName_all_Invoice TVarChar
 
@@ -99,6 +99,7 @@ BEGIN
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
            , Movement_Invoice.InvNumber                     AS InvNumber_Invoice
            , zfConvert_StringToNumber (MovementString_ReceiptNumber.ValueData) ::Integer AS ReceiptNumber_Invoice
+           , Object_InvoiceKind.Id                          AS InvoiceKindId
            , Object_InvoiceKind.ValueData                   AS InvoiceKindName
            , Object_Object_invoice.ValueData                AS ObjectName_invoice
            , ABS (MovementFloat_Amount.ValueData) :: TFloat AS Amount_invoice

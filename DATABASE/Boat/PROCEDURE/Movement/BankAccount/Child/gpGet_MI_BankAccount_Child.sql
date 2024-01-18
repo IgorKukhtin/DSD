@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , Amount TFloat
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar
              , InvoiceKindId Integer, InvoiceKindName  TVarChar
-             , Amount_Invoice TFloat
+             , Amount_Invoice TFloat    
+             , MovementDesc_Parent Integer, InvNumberFull_parent TVarChar
              )
 AS
 $BODY$
@@ -46,7 +47,9 @@ BEGIN
               --, NULL :: Integer AS ReceiptNumber_Invoice
               , 0            AS InvoiceKindId
               , ''::TVarChar AS InvoiceKindName 
-              , 0 ::TFloat   AS Amount_Invoice
+              , 0 ::TFloat   AS Amount_Invoice 
+              , 0             AS MovementId_parent 
+              , '' ::TVarChar AS InvNumberFull_parent
          FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -82,7 +85,9 @@ BEGIN
            , Object_InvoiceKind.Id             AS InvoiceKindId
            , Object_InvoiceKind.ValueData      AS InvoiceKindName 
            , MovementFloat_Amount.ValueData ::TFloat AS Amount_Invoice
-
+           -- Заказ Клиента / Заказ Поставщику
+           , Movement_Parent.Id             ::Integer  AS MovementId_parent
+           , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -115,6 +120,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId = Movement_Invoice.Id
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+
+            -- Parent для Movement_Invoice - Документ Заказ или ПРиход
+            LEFT JOIN Movement AS Movement_Parent
+                               ON Movement_Parent.Id = Movement_Invoice.ParentId
+                              AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+            LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
        WHERE Movement.Id = inMovementId;
 
       END IF;

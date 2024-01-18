@@ -26,7 +26,8 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       inherited cxGrid: TcxGrid
         Width = 1189
         Height = 464
-        ExplicitWidth = 1213
+        ExplicitTop = 4
+        ExplicitWidth = 1189
         ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -680,7 +681,8 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     end
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 16433
-      FormName = 'TBankAccountMovementForm'
+      FormName = 'TBankAccountChildForm'
+      FormNameParam.Value = 'TBankAccountChildForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -701,6 +703,12 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         end
         item
           Name = 'inMovementId_parent'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId_child'
           Value = Null
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -744,7 +752,8 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TBankAccountMovementForm'
+      FormName = 'TBankAccountChildForm'
+      FormNameParam.Value = 'TBankAccountChildForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -1678,7 +1687,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     end
   end
   inherited PopupMenu: TPopupMenu
-    Left = 120
+    Left = 136
     Top = 56
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -1902,7 +1911,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 728
+    Left = 744
     Top = 368
   end
   object spSelectPrint_Invoice: TdsdStoredProc

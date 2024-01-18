@@ -975,6 +975,14 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'InvNumberFull_parent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_parent'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
