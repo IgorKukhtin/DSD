@@ -137,7 +137,6 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     cxButton3: TcxButton;
-    cxButton4: TcxButton;
     actPrintInvoice: TdsdPrintAction;
     actInvoiceReportName: TdsdExecStoredProc;
     mactPrint_Invoice: TMultiAction;
@@ -147,6 +146,16 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintReturnCDS: TClientDataSet;
     PrintOptionCDS: TClientDataSet;
+    cxButton4: TcxButton;
+    cxButton5: TcxButton;
+    ObjectName_invoice_ch2: TcxGridDBColumn;
+    Amount_invoice_ch2: TcxGridDBColumn;
+    InvNumberFull_parent_ch2: TcxGridDBColumn;
+    MovementDescName_parent_ch2: TcxGridDBColumn;
+    ProductName_Invoice_ch2: TcxGridDBColumn;
+    ProductCIN_Invoice_ch2: TcxGridDBColumn;
+    InfoMoneyName_Invoice_ch2: TcxGridDBColumn;
+    InfoMoneyName_all_Invoice_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

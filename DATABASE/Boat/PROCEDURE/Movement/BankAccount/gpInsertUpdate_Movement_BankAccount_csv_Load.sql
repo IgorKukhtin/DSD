@@ -4,6 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount_csv_Load (TVarChar,T
                                                                     , TVarChar,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TFloat
                                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount_csv_Load (TVarChar,TVarChar, TVarChar, TVarChar, TDateTime, TDateTime
+                                                                    , TVarChar,TVarChar, TVarChar, TVarChar, Text, TFloat, TVarChar, TFloat
+                                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount_csv_Load(
     IN inString_1             TVarChar  , -- 
     IN inString_2             TVarChar  , --
@@ -15,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount_csv_Load(
     IN inString_8             TVarChar  , --
     IN inString_9             TVarChar  , --
     IN inString_10            TVarChar  , --
-    IN inComment              TVarChar  , --   11
+    IN inComment              Text      , --   11
     IN inAmount               TFloat    , --   12 
     IN inString_13            TVarChar  , --
     IN inTFloat_14            TFloat  , --
