@@ -17,12 +17,12 @@ $BODY$
     DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Goods_Name_BUH());
-     --vbUserId:= lpGetUserBySession (inSession);
+     --vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Goods_Name_BUH());
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      -- проверка прав пользователя на вызов процедуры
-     IF 1=1 AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Name_BUH())
+     IF 1=0 AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Name_BUH())
      THEN
          RAISE EXCEPTION 'Ошибка.Нет Прав на изменение <Название бухгалтерское>.';
      END IF;

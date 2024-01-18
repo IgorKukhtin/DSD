@@ -75,6 +75,8 @@ END IF;
      -- 1.1. - 10100 Мясное сырье
      IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
      THEN 
+          -- IF 1=1 THEN inGoodsKindId:= 0; END IF;
+
           -- замена для цех колбасный + цех с/к + цех деликатесов + цех тушенка + ирна склады хранения + ирна цех колбасный
           IF inOperDate < '01.01.2024' AND inUnitId IN (8447    -- ЦЕХ ковбасних виробів
                                                       , 8449    -- Цех сирокопчених ковбас
