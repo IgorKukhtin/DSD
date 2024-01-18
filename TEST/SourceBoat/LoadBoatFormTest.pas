@@ -311,6 +311,8 @@ end;
 
 procedure TLoadFormTest.LoadBankAccountMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountChildJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountChildJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementChildForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementChildForm');

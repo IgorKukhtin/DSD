@@ -379,7 +379,8 @@ uses
   BankAccountPdfEdit in '..\..\FormsBoat\Guides\BankAccountPdfEdit.pas' {BankAccountPdfEditForm: TParentForm},
   PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
-  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas';
+  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas',
+  BankAccountChildJournal in '..\..\FormsBoat\Document\BankAccountChildJournal.pas' {BankAccountChildJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
