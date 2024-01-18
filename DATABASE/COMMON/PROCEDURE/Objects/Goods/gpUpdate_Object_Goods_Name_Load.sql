@@ -44,7 +44,7 @@ BEGIN
      END IF;
 
      --проверка что Название (Scale) уже заполнено, т.е. предыдущее название товара перенесено в Название (Scale)
-     IF TRIM (COALESCE ((SELECT OS.ValueDate FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_Scale() AND OS.ObjectId = vbGoodsId),'')) = '' 
+     IF TRIM (COALESCE ( (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_Scale() AND OS.ObjectId = vbGoodsId),'')) = '' 
      THEN
           RAISE EXCEPTION 'Ошибка.Название (Scale) не заполнено для Товара с Кодом = <%> .', inGoodsCode;
      END IF;
@@ -53,7 +53,12 @@ BEGIN
     PERFORM lpInsertUpdate_Object (vbGoodsId, zc_Object_Goods(), inGoodsCode, inGoodsName_new);
      
     -- RAISE EXCEPTION 'Ошибка.Новое Название <%> для Товара с Кодом = <%> .', inGoodsName_new, inGoodsCode;
-       
+     
+    IF vbUserId  = 9457  
+    THEN
+         RAISE EXCEPTION 'ОК. <%>', inGoodsName_new;
+    END IF;
+    
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId, FALSE);
 

@@ -20,12 +20,6 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- проверка прав пользователя на вызов процедуры
-     IF 1=0 AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Scale())
-     THEN
-         RAISE EXCEPTION 'Ошибка.Нет Прав на изменение <Название для приложения Scale>.';
-     END IF;
-
      IF COALESCE (inId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Элемент справочника не выбран.';
@@ -34,7 +28,7 @@ BEGIN
 
      IF COALESCE (inisCheck, FALSE) = TRUE
      THEN
-         IF TRIM (COALESCE ((SELECT OS.ValueDate FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_Scale() AND OS.ObjectId = inId),'')) <> '' 
+         IF TRIM (COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_Scale() AND OS.ObjectId = inId),'')) <> '' 
          THEN
              RAISE EXCEPTION 'Ошибка.Наименование (Scale) уже заполнено.';
              --RETURN;                                                     
