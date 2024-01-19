@@ -146,9 +146,6 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPivot: TcxGrid
         Left = 0
         Top = 0
@@ -157,7 +154,6 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitTop = 2
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -463,9 +459,6 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -1462,9 +1455,6 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     object tsMainTest: TcxTabSheet
       Caption = #1043#1055' - '#1090#1077#1089#1090
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid_PG4: TcxGrid
         Left = 0
         Top = 0
@@ -1473,7 +1463,6 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitTop = 2
         object cxGridDBTableView_PG4: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PG4DS
@@ -1607,9 +1596,6 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     object tsPivotTest: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072' - '#1090#1077#1089#1090
       ImageIndex = 4
-      ExplicitTop = 26
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPG5: TcxGrid
         Left = 0
         Top = 0
@@ -1618,7 +1604,6 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitTop = 2
         object cxGridDBTableView_PG5: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PG5DS
@@ -2419,6 +2404,69 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint_test: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' -'#1058#1077#1089#1090
+      Hint = #1055#1077#1095#1072#1090#1100' -'#1058#1077#1089#1090
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PG4CDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NumLine'
+        end
+        item
+          DataSet = PG5CDS
+          UserName = 'frxDBDChild'
+          IndexFieldNames = 'NumLine'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupGPName'
+          Value = ''
+          Component = GoodsGroupGPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReportName'
+          Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1055#1086' '#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1055#1086' '#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2640,6 +2688,14 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
         end
         item
           Visible = True
+          ItemName = 'bbPrint_test'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2663,12 +2719,9 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
       Action = actPrint
       Category = 0
     end
-    object bb: TdxBarButton
-      Caption = #1055#1077#1095#1072#1090#1100
+    object bbPrint_test: TdxBarButton
+      Action = actPrint_test
       Category = 0
-      Hint = #1055#1077#1095#1072#1090#1100
-      Visible = ivAlways
-      ImageIndex = 16
     end
     object bbPivotToExcel: TdxBarButton
       Action = actPivotToExcel
@@ -2871,6 +2924,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 496
     Top = 176
@@ -2905,6 +2959,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 673
     Top = 376
@@ -2927,6 +2982,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 208
     Top = 464
@@ -2973,6 +3029,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 408
     Top = 456

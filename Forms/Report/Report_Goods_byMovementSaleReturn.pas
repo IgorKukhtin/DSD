@@ -56,7 +56,7 @@ type
     bbPrint: TdxBarButton;
     isTop: TcxGridDBColumn;
     chisTop: TcxGridDBColumn;
-    bb: TdxBarButton;
+    bbPrint_test: TdxBarButton;
     ColorRecord: TcxGridDBColumn;
     chColorRecord: TcxGridDBColumn;
     NumLine: TcxGridDBColumn;
@@ -129,6 +129,7 @@ type
     PG5CDS: TClientDataSet;
     PG5DS: TDataSource;
     DBViewAddOnPG5: TdsdDBViewAddOn;
+    actPrint_test: TdsdPrintAction;
   private
     { Private declarations }
   public

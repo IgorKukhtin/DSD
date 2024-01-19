@@ -674,7 +674,7 @@ begin
 
         while Excel.Cells[1, Cols + 1].Text <> '' do Inc(Cols);
 
-        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 255);
+        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideMemo, 0);
         TClientDataSet(FDataSet).CreateDataSet;
 
         with TGaugeFactory.GetGauge('Получение данных из файла экселя', 1, Rows - FStartRecord) do begin
