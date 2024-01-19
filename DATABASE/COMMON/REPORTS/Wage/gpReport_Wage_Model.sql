@@ -1078,10 +1078,12 @@ AS  (SELECT
             ) AS Movement_Sheet
        )
          -- Данные для - Кол-во строк в документе
-       /*, tmpReport_PersonalComplete AS
+       , tmpReport_PersonalComplete AS
        (SELECT *
         FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsMonth:= FALSE, inIsDetail:= FALSE, inisMovement:= FALSE, inSession:= inSession) AS gpReport
         WHERE EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()))
+          -- Розподільчий комплекс
+          AND inUnitId = 8459
        )
        , tmpMovement_PersonalComplete AS
        (SELECT gpReport.OperDate
@@ -1110,10 +1112,11 @@ AS  (SELECT
                , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
                , gpReport.PositionLevelId, gpReport.PositionLevelCode, gpReport.PositionLevelName
-       )*/
+       )
          -- Данные для - WageWarehouseBranch
        , tmpWageWarehouseBranch AS (SELECT *
                                     FROM gpReport_WageWarehouseBranch (inStartDate   := inStartDate
+
                                                                      , inEndDate     := inEndDate
                                                                      , inPersonalId  := 0
                                                                      , inPositionId  := 0
@@ -1138,7 +1141,9 @@ AS  (SELECT
                                                                                              THEN '-123'
                                                                                              ELSE inSession
                                                                                         END
-                                                                      ))
+                                                                      )
+                                    WHERE inUnitId <> 8459
+                                   )
        , tmpMovement_WarehouseBranch AS
        (SELECT gpReport.OperDate
              , DATE_PART ('ISODOW', gpReport.OperDate)  AS OperDate_num
@@ -1763,7 +1768,134 @@ AS  (SELECT
                                       )
 
    UNION ALL
-    -- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
+    -- 1.1. Розподільчий комплекс - Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
+    SELECT
+        Setting.StaffListId
+      , 0 :: Integer AS DocumentKindId
+      , Setting.UnitId
+      , Setting.UnitName
+       ,tmpMovement_PersonalComplete.PositionId
+       ,tmpMovement_PersonalComplete.PositionName
+       ,tmpMovement_PersonalComplete.PositionLevelId
+       ,tmpMovement_PersonalComplete.PositionLevelName
+--       ,Object_PositionLevel.Id        AS PositionLevelId
+--       ,Object_PositionLevel.ValueData AS PositionLevelName
+       ,Setting.Count_Member
+       -- , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_Member) :: Integer AS Count_Member
+       ,Setting.HoursPlan
+       ,Setting.HoursDay
+       , Object_PersonalGroup.Id        AS PersonalGroupId
+       , Object_PersonalGroup.ValueData AS PersonalGroupName
+       ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
+       ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
+       ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
+       ,0 :: TFloat  AS SUM_MemberHours
+       ,0 :: TFloat  AS SheetWorkTime_Amount
+       ,0 :: Integer AS Ord_SheetWorkTime
+       ,Setting.ServiceModelId
+       ,Setting.ServiceModelCode
+       ,Setting.ServiceModelName
+       ,Setting.Price
+       ,Setting.FromId
+       ,Setting.FromName
+       ,Setting.ToId
+       ,Setting.ToName
+       ,Setting.MovementDescId
+       ,Setting.MovementDescName
+       ,Setting.SelectKindId
+       ,Setting.SelectKindName
+       ,Setting.Ratio
+       ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromCode
+       ,Setting.ModelServiceItemChild_FromDescId
+       ,Setting.ModelServiceItemChild_FromName
+       ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToCode
+       ,Setting.ModelServiceItemChild_ToDescId
+       ,Setting.ModelServiceItemChild_ToName
+
+       ,Setting.StorageLineId_From, Setting.StorageLineName_From
+       ,Setting.StorageLineId_To, Setting.StorageLineName_To
+
+       ,Setting.GoodsKind_FromId, Setting.GoodsKind_FromName, Setting.GoodsKindComplete_FromId, Setting.GoodsKindComplete_FromName
+       ,Setting.GoodsKind_ToId, Setting.GoodsKind_ToName, Setting.GoodsKindComplete_ToId, Setting.GoodsKindComplete_ToName
+
+       , tmpMovement_PersonalComplete.OperDate AS OperDate
+       , 0 :: Integer AS Count_Day
+       , 0 :: Integer AS Count_MemberInDay
+       , CASE -- Вес (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg
+              -- Кол. строк (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
+                    THEN tmpMovement_PersonalComplete.CountMI
+              -- Кол. Документов (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
+                    THEN tmpMovement_PersonalComplete.CountMovement
+              ELSE 0
+         END :: TFloat AS Gross
+       , CASE -- Вес (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg
+              -- Кол. строк (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
+                    THEN tmpMovement_PersonalComplete.CountMI
+              -- Кол. Документов (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
+                    THEN tmpMovement_PersonalComplete.CountMovement
+              ELSE 0
+         END :: TFloat AS GrossOnOneMember
+       , (CASE -- Вес (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg
+              -- Кол. строк (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
+                    THEN tmpMovement_PersonalComplete.CountMI
+              -- Кол. Документов (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
+                    THEN tmpMovement_PersonalComplete.CountMovement
+              ELSE 0
+         END * Setting.Ratio * Setting.Price) :: TFloat AS Amount
+       , (CASE -- Вес (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
+                    THEN tmpMovement_PersonalComplete.TotalCountKg
+              -- Кол. строк (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MI_MasterCount()
+                    THEN tmpMovement_PersonalComplete.CountMI
+              -- Кол. Документов (компл.)
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementCount()
+                    THEN tmpMovement_PersonalComplete.CountMovement
+              ELSE 0
+         END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
+
+       , 0 :: TFloat AS KoeffHoursWork_car
+
+    FROM Setting_Wage_1 AS Setting
+         INNER JOIN tmpMovement_PersonalComplete ON ((tmpMovement_PersonalComplete.UnitId = Setting.FromId AND Setting.FromId > 0)
+                                                  OR (tmpMovement_PersonalComplete.UnitId = Setting.UnitId AND Setting.UnitId > 0 AND COALESCE (Setting.FromId, 0) = 0))
+                                                AND (tmpMovement_PersonalComplete.CountMI       <> 0
+                                                  OR tmpMovement_PersonalComplete.TotalCountKg  <> 0
+                                                  OR tmpMovement_PersonalComplete.CountMovement <> 0
+                                                    )
+                                                AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
+                                              --AND (COALESCE (tmpMovement_PersonalComplete.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                              --  OR Setting.isPositionLevel_all = TRUE
+                                              --    )
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                              ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                             AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                             AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
+         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+
+    WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
+      -- Розподільчий комплекс
+      AND inUnitId = 8459
+
+   UNION ALL
+    -- 1.2. WageWarehouseBranch - Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
     SELECT
         Setting.StaffListId
       , 0 :: Integer AS DocumentKindId
@@ -1891,9 +2023,11 @@ AS  (SELECT
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
+      -- Розподільчий комплекс
+      AND inUnitId <> 8459
 
    UNION ALL
-    -- Данные для - WageWarehouseBranch
+    -- 1.3. Данные для - WageWarehouseBranch
     SELECT
         Setting.StaffListId
       , 0 :: Integer AS DocumentKindId
