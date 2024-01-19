@@ -20,6 +20,32 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_MovmentItemCondition());
 
    RETURN QUERY
+     WITH tmpProduct AS (SELECT MovementItem_OrderClient.ObjectId AS ProductId
+                         FROM MovementItem
+                              JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                           AND Movement.DescId   = zc_Movement_BankAccount()
+                              INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                              INNER JOIN Movement AS Movement_Invoice
+                                                  ON Movement_Invoice.Id       = MIFloat_MovementId.ValueData :: Integer
+                                                 AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
+                                                 AND Movement_Invoice.DescId   = zc_Movement_Invoice()
+                              INNER JOIN Movement AS Movement_OrderClient
+                                                  ON Movement_OrderClient.Id       = Movement_Invoice.ParentId
+                                                 AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased()
+                                                 AND Movement_OrderClient.DescId   = zc_Movement_OrderClient()
+                              INNER JOIN MovementItem AS MovementItem_OrderClient
+                                                      ON MovementItem_OrderClient.MovementId  = Movement_OrderClient.Id
+                                                     AND MovementItem_OrderClient.DescId      = zc_MI_Master()
+                                                     AND MovementItem_OrderClient.isErased    = FALSE
+
+                         WHERE MovementItem.Id       = inMovmentItemId
+                           AND MovementItem.DescId   = zc_MI_Child()
+                           AND MovementItem.isErased = FALSE
+                         LIMIT 1
+                        )
      SELECT
             Object_BankAccountPdf.Id        AS Id
           , Object_BankAccountPdf.ValueData AS FileName
@@ -45,7 +71,37 @@ BEGIN
                                ON ObjectBlob_Data.ObjectId = Object_BankAccountPdf.Id
                               AND ObjectBlob_Data.DescId = zc_ObjectBlob_BankAccountPdf_Data()
 
-     WHERE Object_BankAccountPdf.DescId = zc_Object_BankAccountPdf();
+     WHERE Object_BankAccountPdf.DescId = zc_Object_BankAccountPdf()
+
+    UNION ALL
+     SELECT
+            Object_ProductDocument.Id        AS Id
+          , Object_ProductDocument.ValueData AS FileName
+          , Object_DocTag.Id                 AS DocTagId
+          , Object_DocTag.ValueData          AS DocTagName
+          , ObjectString_Comment.ValueData   AS Comment
+          , ObjectBlob_Data.ValueData        AS DocumentData
+
+     FROM Object AS Object_ProductDocument
+          JOIN ObjectLink AS ObjectLink_ProductDocument_Product
+                          ON ObjectLink_ProductDocument_Product.ObjectId = Object_ProductDocument.Id
+                         AND ObjectLink_ProductDocument_Product.DescId   = zc_ObjectLink_ProductDocument_Product()
+          JOIN tmpProduct ON tmpProduct.ProductId = ObjectLink_ProductDocument_Product.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_DocTag
+                               ON ObjectLink_DocTag.ObjectId = Object_ProductDocument.Id
+                              AND ObjectLink_DocTag.DescId = zc_ObjectLink_ProductDocument_DocTag()
+          LEFT JOIN Object AS Object_DocTag ON Object_DocTag.Id = ObjectLink_DocTag.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_ProductDocument.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ProductDocument_Comment()
+
+          LEFT JOIN ObjectBlob AS ObjectBlob_Data
+                               ON ObjectBlob_Data.ObjectId = Object_ProductDocument.Id
+                              AND ObjectBlob_Data.DescId = zc_ObjectBlob_ProductDocument_Data()
+     WHERE Object_ProductDocument.DescId = zc_Object_ProductDocument()
+    ;
 
 END;
 $BODY$
