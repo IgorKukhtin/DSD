@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar
              , InvoiceKindId Integer, InvoiceKindName  TVarChar
              , Amount_Invoice TFloat    
-             , MovementDesc_Parent Integer, InvNumberFull_parent TVarChar
+             , MovementId_parent Integer, InvNumberFull_parent TVarChar
              )
 AS
 $BODY$
@@ -49,7 +49,7 @@ BEGIN
               , ''::TVarChar AS InvoiceKindName 
               , 0 ::TFloat   AS Amount_Invoice 
               , 0             AS MovementId_parent 
-              , '' ::TVarChar AS InvNumberFull_parent
+              , NULL ::TVarChar AS InvNumberFull_parent
          FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
