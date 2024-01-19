@@ -99,6 +99,14 @@ type
     cxSplitter1: TcxSplitter;
     cxLabel1: TcxLabel;
     PanelDocView: TPanel;
+    cxLabel15: TcxLabel;
+    ceInvoice: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edInvoiceKind: TcxButtonEdit;
+    GuidesInvoiceKind: TdsdGuides;
+    GuidesInvoice: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public
