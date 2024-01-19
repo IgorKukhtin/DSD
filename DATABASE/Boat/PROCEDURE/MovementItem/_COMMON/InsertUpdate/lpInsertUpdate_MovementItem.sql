@@ -58,6 +58,13 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
          END IF;
 
+     ELSEIF vbMovementDescId = zc_Movement_BankAccount() AND inDescId = zc_MI_Child()
+     THEN
+          IF vbStatusId = zc_Enum_Status_Erased() 
+          THEN
+              RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
+          END IF;
+
      ELSEIF vbStatusId <> zc_Enum_Status_UnComplete() 
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
