@@ -92,6 +92,7 @@ type
     AmountPartner_all: TcxGridDBColumn;
     AmountSend: TcxGridDBColumn;
     actPrintScan: TdsdPrintAction;
+    GoodsName_old: TcxGridDBColumn;
   private
     { Private declarations }
   public
