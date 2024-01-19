@@ -198,28 +198,28 @@
     Width = 120
   end
   object cxLabel3: TcxLabel
-    Left = 12
-    Top = 95
+    Left = 99
+    Top = 8
     Caption = 'External Nr'
   end
   object edInvNumberPartner: TcxTextEdit
-    Left = 12
-    Top = 116
+    Left = 100
+    Top = 26
     Hint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1074#1085#1077#1096#1085#1080#1081')'
     ParentShowHint = False
     Properties.ReadOnly = True
     ShowHint = True
     TabOrder = 8
-    Width = 182
+    Width = 94
   end
   object cxLabel6: TcxLabel
     Left = 12
-    Top = 143
+    Top = 100
     Caption = 'Lieferanten / Kunden'
   end
   object ceObject: TcxButtonEdit
     Left = 12
-    Top = 163
+    Top = 119
     Properties.Buttons = <
       item
         Default = True
@@ -235,16 +235,16 @@
     Properties.ReadOnly = True
     TabOrder = 14
     Text = '0'
-    Width = 182
+    Width = 77
   end
   object cxLabel15: TcxLabel
     Left = 12
-    Top = 200
+    Top = 143
     Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
   end
   object ceInvoice: TcxButtonEdit
     Left = 12
-    Top = 221
+    Top = 161
     Properties.Buttons = <
       item
         Default = True
@@ -256,12 +256,12 @@
   end
   object cxLabel9: TcxLabel
     Left = 12
-    Top = 250
+    Top = 188
     Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
   end
   object edInvoiceKind: TcxButtonEdit
     Left = 12
-    Top = 269
+    Top = 206
     ParentFont = False
     Properties.Buttons = <
       item
@@ -276,20 +276,76 @@
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 18
-    Width = 182
+    Width = 106
   end
   object cxLabel5: TcxLabel
     Left = 12
-    Top = 297
+    Top = 229
     Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
   end
   object ceAmount: TcxCurrencyEdit
     Left = 12
-    Top = 317
+    Top = 248
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
     TabOrder = 20
+    Width = 182
+  end
+  object cxLabel4: TcxLabel
+    Left = 124
+    Top = 188
+    Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
+  end
+  object edAmount_invoice: TcxCurrencyEdit
+    Left = 127
+    Top = 206
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 22
+    Width = 67
+  end
+  object cxLabel7: TcxLabel
+    Left = 12
+    Top = 317
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+  end
+  object edParent: TcxButtonEdit
+    Left = 12
+    Top = 334
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 182
+  end
+  object ceInfoMoneyName_invoice: TcxTextEdit
+    Left = 12
+    Top = 290
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 182
+  end
+  object cxLabel8: TcxLabel
+    Left = 12
+    Top = 273
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+  end
+  object cxLabel10: TcxLabel
+    Left = 12
+    Top = 361
+    Caption = 'Boat'
+  end
+  object ceBoat: TcxTextEdit
+    Left = 12
+    Top = 378
+    Properties.ReadOnly = True
+    TabOrder = 28
     Width = 182
   end
   object ActionList: TActionList
@@ -696,10 +752,46 @@
         Component = ceAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount_invoice'
+        Value = Null
+        Component = edAmount_invoice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_invoice'
+        Value = Null
+        Component = ceInfoMoneyName_invoice
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName_Invoice'
+        Value = Null
+        Component = ceBoat
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 14
-    Top = 440
+    Left = 22
+    Top = 384
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1270,8 +1362,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 247
+    Left = 16
+    Top = 191
   end
   object GuidesInvoice: TdsdGuides
     KeyField = 'Id'
@@ -1385,5 +1477,131 @@
       end>
     Left = 100
     Top = 207
+  end
+  object GuidesParent: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edParent
+    DisableGuidesOpen = True
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientId'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientName'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummDebet'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = '0'
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = ''
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice_find'
+        Value = '0'
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_Invoice_find'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId_find'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName_find'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 77
+    Top = 359
   end
 end

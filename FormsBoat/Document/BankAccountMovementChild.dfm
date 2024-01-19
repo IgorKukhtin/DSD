@@ -74,8 +74,8 @@
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [10]
-    Left = 6
-    Top = 229
+    Left = 8
+    Top = 232
     TabOrder = 6
     Width = 438
   end
@@ -172,7 +172,7 @@
   end
   object cxLabel2: TcxLabel [21]
     Left = 287
-    Top = 110
+    Top = 107
     Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
   end
   object edAmount_invoice: TcxCurrencyEdit [22]
