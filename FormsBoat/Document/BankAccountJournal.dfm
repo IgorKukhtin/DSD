@@ -5,8 +5,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -336
-  ExplicitTop = -105
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -2683,10 +2681,26 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'MovementId_parent'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_invoice'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'MovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceKindId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'InvoiceKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2703,6 +2717,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount_invoice'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Amount_invoice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
