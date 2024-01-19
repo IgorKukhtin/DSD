@@ -234,6 +234,7 @@ type
     mactUpdateMaskReturnOut: TMultiAction;
     bbUpdateMaskReturnOut: TdxBarButton;
     bbUpdateMaskSend: TdxBarButton;
+    GoodsName_old: TcxGridDBColumn;
   private
   public
   end;

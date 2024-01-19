@@ -227,6 +227,7 @@ type
     spUpdateMI_PartionGoodsDate: TdsdStoredProc;
     bbUpdatePartionGoodsDate: TdxBarButton;
     actRefreshPartionCell: TdsdDataSetRefresh;
+    GoodsName_old: TcxGridDBColumn;
   private
     { Private declarations }
   public
