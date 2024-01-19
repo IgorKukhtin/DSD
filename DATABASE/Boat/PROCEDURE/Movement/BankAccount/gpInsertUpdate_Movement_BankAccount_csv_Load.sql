@@ -40,6 +40,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
 
+     -- проверка
+     IF LENGTH (inComment)  > 255
+     THEN
+        RAISE EXCEPTION 'Ошибка. len = %   %', LENGTH (inComment) , inComment;
+     END IF;
+
+
 /*
      -- проверка
      IF COALESCE (inBankAccountId, 0) = 0
@@ -125,6 +132,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_8(), vbMovementId, TRIM (inString_8));
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_9(), vbMovementId, TRIM (inString_9));
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_10(), vbMovementId, TRIM (inString_10));
+     -- Примечание (Цель использования)
+     PERFORM lpInsertUpdate_MovementBlob (zc_MovementBlob_11(), vbMovementId, inComment);
+     --
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_13(), vbMovementId, TRIM (inString_13));
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_15(), vbMovementId, TRIM (inString_15));
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_16(), vbMovementId, TRIM (inString_16));

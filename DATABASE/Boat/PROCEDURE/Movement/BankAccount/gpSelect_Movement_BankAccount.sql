@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , MoneyPlaceId Integer, MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
               -- Счет
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar, InvNumber_Invoice TVarChar
-             
+
              , InvNumber_Invoice_child TVarChar
              , ReceiptNumber_Invoice_child TVarChar
              , InvoiceKindName_child TVarChar
@@ -67,7 +67,7 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , String_8     TVarChar  --IBAN Zahlungsbeteiligter;                            сторона платежа IBAN;
              , String_9     TVarChar  --BIC (SWIFT-Code)Zahlungsbeteiligter;                 BIC (код SWIFT) стороны платежа;
              , String_10    TVarChar  --Buchungstext;                                        текст бронирования;
-              --zc_MIString_Comment - 11TVarChar  --Verwendungszweck;                                    Цель использования;
+             , Blob_11      Text      --Verwendungszweck;                                    Цель использования;
              --zc_MI_Master.Amount - 12TVarChar  --Betrag;                                              Количество;
              , String_13    TVarChar  --Waehrung;                                            Валюта;
              , TFloat_14    TVarChar  --Saldo nach Buchung;                                  баланс после бронирования;
@@ -332,7 +332,7 @@ BEGIN
            , CASE WHEN MovementItem.Amount <> COALESCE (tmpMI_Child.Amount,0) THEN TRUE ELSE FALSE END ::Boolean AS isError
 
 
-           , MIString_Comment.ValueData        AS Comment
+           , (CASE WHEN LENGTH (MovementBlob_11.ValueData) > 0 THEN '(' || LENGTH (MovementBlob_11.ValueData) :: TVarChar || ') - ' ELSE '' END || MIString_Comment.ValueData) :: TVarChar AS Comment
            , MovementItem.ObjectId             AS BankAccountId
            , Object_BankAccount.ValueData      AS BankAccountName
            , Object_Bank.ValueData             AS BankName
@@ -406,14 +406,15 @@ BEGIN
            , MovementString_7.ValueData   ::TVarChar AS String_7
            , MovementString_8.ValueData   ::TVarChar AS String_8
            , MovementString_9.ValueData   ::TVarChar AS String_9
-           , MovementString_10.ValueData   ::TVarChar AS String_10
-           , MovementString_13.ValueData   ::TVarChar AS String_13
+           , MovementString_10.ValueData  ::TVarChar AS String_10
+           , MovementBlob_11.ValueData    ::Text     AS Blob_11
+           , MovementString_13.ValueData  ::TVarChar AS String_13
            , MovementFloat_14.ValueData   ::TVarChar AS TFloat_14
-           , MovementString_15.ValueData   ::TVarChar AS String_15
-           , MovementString_16.ValueData   ::TVarChar AS String_16
-           , MovementString_17.ValueData   ::TVarChar AS String_17
-           , MovementString_18.ValueData   ::TVarChar AS String_18
-           , MovementString_19.ValueData   ::TVarChar AS String_19
+           , MovementString_15.ValueData  ::TVarChar AS String_15
+           , MovementString_16.ValueData  ::TVarChar AS String_16
+           , MovementString_17.ValueData  ::TVarChar AS String_17
+           , MovementString_18.ValueData  ::TVarChar AS String_18
+           , MovementString_19.ValueData  ::TVarChar AS String_19
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -508,6 +509,11 @@ BEGIN
             LEFT JOIN tmpMovementString AS MovementString_10
                                         ON MovementString_10.MovementId = Movement.Id
                                        AND MovementString_10.DescId = zc_MovementString_10()
+
+            LEFT JOIN MovementBlob AS MovementBlob_11
+                                   ON MovementBlob_11.MovementId = Movement.Id
+                                  AND MovementBlob_11.DescId = zc_MovementBlob_11()
+
             LEFT JOIN tmpMovementString AS MovementString_13
                                         ON MovementString_13.MovementId = Movement.Id
                                        AND MovementString_13.DescId = zc_MovementString_13()
