@@ -127,7 +127,17 @@ BEGIN
       ;
      ELSE
 
-     RETURN QUERY
+     RETURN QUERY 
+       WITH
+      
+      -- ÷àéä
+       tmpMI_Child AS (SELECT MovementItem.*
+                       FROM MovementItem
+                       WHERE MovementItem.MovementId = inMovementId_Value
+                         AND MovementItem.Id = inMovementItemId_child
+                         AND MovementItem.DescId = zc_MI_Child()
+                       )
+
        SELECT
              Movement.Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
@@ -182,11 +192,10 @@ BEGIN
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
             ---Ñhild------         
-            INNER JOIN MovementItem AS tmpMI_Child
-                                    ON tmpMI_Child.MovementId = Movement.Id
-                                   AND tmpMI_Child.ParentId = MovementItem.Id
-                                   AND tmpMI_Child.DescId = zc_MI_Child()
-                                   AND tmpMI_Child.id = inMovementItemId_child
+            LEFT JOIN tmpMI_Child AS tmpMI_Child
+                                  ON tmpMI_Child.MovementId = Movement.Id
+                                 AND tmpMI_Child.ParentId = MovementItem.Id
+                                 AND tmpMI_Child.DescId = zc_MI_Child()
 
             LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpMI_Child.ObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId

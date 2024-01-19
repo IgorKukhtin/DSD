@@ -540,7 +540,7 @@
         Name = 'inMovementItemId_child'
         Value = Null
         Component = FormParams
-        ComponentItem = 'MovementItemId_child'
+        ComponentItem = 'inMovementItemId_child'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
