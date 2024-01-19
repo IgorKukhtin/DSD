@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , PartionGoodsDate TDateTime
              , Amount TFloat, Count TFloat, HeadCount TFloat
@@ -109,7 +109,7 @@ BEGIN
                                                           AND ObjectLink_Storage.DescId   = zc_ObjectLink_PartionGoods_Storage()
                                       -- модель
                                       LEFT JOIN ObjectLink AS ObjectLink_PartionModel
-                                                           ON ObjectLink_PartionModel.ObjectId = Object_PartionGoods.Id		        
+                                                           ON ObjectLink_PartionModel.ObjectId = Object_PartionGoods.Id
                                                           AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_PartionModel()
 
                                       LEFT JOIN ObjectFloat AS ObjectFloat_Price
@@ -134,7 +134,7 @@ BEGIN
 
        --данные из документов заказа по резерву для текущего документа
       , tmpOrderExternalChild AS (SELECT tmp.GoodsId
-                                       , tmp.GoodsKindId 
+                                       , tmp.GoodsKindId
                                        , SUM (COALESCE (tmp.AmountSecond,0)) AS AmountSecond
                                   FROM gpSelect_MI_OrderExternalChild_bySend (inMovementId, inIsErased, inSession) AS tmp
                                   GROUP BY tmp.GoodsId
@@ -162,10 +162,11 @@ BEGIN
 
        -- Результат
        SELECT
-             0                          AS Id
-           , tmpGoods.GoodsId           AS GoodsId
-           , tmpGoods.GoodsCode         AS GoodsCode
-           , tmpGoods.GoodsName         AS GoodsName
+             0                                           AS Id
+           , tmpGoods.GoodsId                            AS GoodsId
+           , tmpGoods.GoodsCode                          AS GoodsCode
+           , tmpGoods.GoodsName                          AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -174,7 +175,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
            , COALESCE (tmpRemains.PartionGoodsId, NULL)   :: Integer  AS PartionGoodsId
-           , COALESCE (tmpRemains.PartionGoodsName, NULL) :: TVarChar AS PartionGoods  
+           , COALESCE (tmpRemains.PartionGoodsName, NULL) :: TVarChar AS PartionGoods
            , '' ::TVarChar              AS PartNumber
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -192,7 +193,7 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS AssetName
            , CAST (NULL AS Integer)     AS AssetId_two
            , CAST (NULL AS Integer)     AS AssetCode_two
-           , CAST (NULL AS TVarChar)    AS AssetName_two           
+           , CAST (NULL AS TVarChar)    AS AssetName_two
            , CAST (NULL AS TVarChar)    AS UnitName
            , CAST (NULL AS Integer)     AS StorageId
            , CAST (NULL AS TVarChar)    AS StorageName
@@ -200,9 +201,9 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS PartionModelName
            , CAST (NULL AS TFloat)      AS Price
 
-           , tmpRemains.Amount   :: TFloat AS AmountRemains   
+           , tmpRemains.Amount   :: TFloat AS AmountRemains
 
-           , CAST (NULL AS TFloat)      AS Amount_child_sec --итого резерв для заявок 
+           , CAST (NULL AS TFloat)      AS Amount_child_sec --итого резерв для заявок
            , CAST (NULL AS TFloat)      AS Amount_diff      --разница перемещения с резервом
 
            , FALSE                      AS isErased
@@ -254,6 +255,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -275,10 +279,11 @@ BEGIN
 
       UNION ALL
        SELECT
-             MovementItem.Id                      AS Id
-           , Object_Goods.Id                      AS GoodsId
-           , Object_Goods.ObjectCode              AS GoodsCode
-           , Object_Goods.ValueData               AS GoodsName
+             MovementItem.Id                             AS Id
+           , Object_Goods.Id                             AS GoodsId
+           , Object_Goods.ObjectCode                     AS GoodsCode
+           , Object_Goods.ValueData                      AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -299,7 +304,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
-           
+
            , Object_Asset.Id                       AS AssetId
            , Object_Asset.ObjectCode               AS AssetCode
            , Object_Asset.ValueData                AS AssetName
@@ -318,12 +323,12 @@ BEGIN
 
            , tmpRemains.Amount :: TFloat           AS AmountRemains
 
-           , tmpReserv.AmountSecond :: TFloat AS Amount_child_sec --итого резерв для заявок 
+           , tmpReserv.AmountSecond :: TFloat AS Amount_child_sec --итого резерв для заявок
            , (COALESCE (tmpReserv.AmountSecond,0) - COALESCE (MovementItem.Amount,0))  ::TFloat AS Amount_diff
 
            , MovementItem.isErased                 AS isErased
            , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
-           
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -394,6 +399,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -414,7 +422,7 @@ BEGIN
             LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
 
             LEFT JOIN tmpOrderExternalChild AS tmpReserv
-                                            ON tmpReserv.GoodsId = MovementItem.ObjectId 
+                                            ON tmpReserv.GoodsId = MovementItem.ObjectId
                                            AND tmpReserv.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = MovementItem.ObjectId
@@ -432,12 +440,12 @@ BEGIN
                                  , MIDate_PartionGoods.ValueData                 AS PartionGoodsDate
                                  , MIFloat_CountPack.ValueData                   AS Count
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
-                                 , MIString_PartionGoods.ValueData               AS PartionGoods 
+                                 , MIString_PartionGoods.ValueData               AS PartionGoods
                                  , MIString_PartNumber.ValueData :: TVarChar     AS PartNumber
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MILO_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_Complete
                                  , COALESCE (MILinkObject_PartionGoods.ObjectId,0) AS PartionGoodsId
-                                 , MILinkObject_Storage.ObjectId                   AS StorageId 
+                                 , MILinkObject_Storage.ObjectId                   AS StorageId
                                  , MILinkObject_PartionModel.ObjectId              AS PartionModelId
                                  , MILinkObject_Asset.ObjectId                     AS AssetId
                                  , MILinkObject_Asset_two.ObjectId                 AS AssetId_two
@@ -571,7 +579,7 @@ BEGIN
 
        --данные из документов заказа по резерву для текущего документа
       , tmpOrderExternalChild AS (SELECT tmp.GoodsId
-                                       , tmp.GoodsKindId 
+                                       , tmp.GoodsKindId
                                        , SUM (COALESCE (tmp.AmountSecond,0)) AS AmountSecond
                                   FROM gpSelect_MI_OrderExternalChild_bySend (inMovementId, inIsErased, inSession) AS tmp
                                   GROUP BY tmp.GoodsId
@@ -598,10 +606,11 @@ BEGIN
 
        -- Результат
        SELECT
-             tmpMI_Goods.MovementItemId         AS Id
-           , Object_Goods.Id                    AS GoodsId
-           , Object_Goods.ObjectCode            AS GoodsCode
-           , Object_Goods.ValueData             AS GoodsName
+             tmpMI_Goods.MovementItemId                  AS Id
+           , Object_Goods.Id                             AS GoodsId
+           , Object_Goods.ObjectCode                     AS GoodsCode
+           , Object_Goods.ValueData                      AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -637,12 +646,12 @@ BEGIN
            , CASE WHEN tmpMI_Goods.StorageId IS NULL AND tmpMIContainer.StorageId > 0 THEN '***Только для партии расхода: ' || Object_Storage.ValueData ELSE Object_Storage.ValueData END :: TVarChar AS StorageName
            , Object_PartionModel.Id             AS PartionModelId
            , Object_PartionModel.ValueData      AS PartionModelName
-           
+
            , tmpMIContainer.Price               AS Price
 
            , tmpRemains.Amount :: TFloat        AS AmountRemains
 
-           , tmpReserv.AmountSecond :: TFloat AS Amount_child_sec --итого резерв для заявок 
+           , tmpReserv.AmountSecond :: TFloat AS Amount_child_sec --итого резерв для заявок
            , (COALESCE (tmpReserv.AmountSecond,0) - COALESCE (tmpMI_Goods.Amount,0))  ::TFloat AS Amount_diff
 
            , tmpMI_Goods.isErased               AS isErased
@@ -668,6 +677,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

@@ -216,6 +216,15 @@ object GuideGoodsForm: TGuideGoodsForm
           HeaderAlignmentVert = vaCenter
           Width = 100
         end
+        object GoodsName_new: TcxGridDBColumn
+          Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'GoodsName_new'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object GoodsKindName: TcxGridDBColumn
           Caption = #1042#1080#1076
           DataBinding.FieldName = 'GoodsKindName'
@@ -1545,6 +1554,7 @@ object GuideGoodsForm: TGuideGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 408
     Top = 392

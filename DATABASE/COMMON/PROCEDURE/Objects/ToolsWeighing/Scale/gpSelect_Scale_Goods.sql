@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_new TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, GoodsKindId_list TVarChar, GoodsKindId_max Integer, GoodsKindCode_max Integer, GoodsKindName_max TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , ChangePercentAmount TFloat
@@ -487,7 +487,10 @@ BEGIN
             SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                  , Object_Goods.Id             AS GoodsId
                  , Object_Goods.ObjectCode     AS GoodsCode
-                 , Object_Goods.ValueData      AS GoodsName
+
+                 , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN ObjectString_Goods_Scale.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
+                 , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN Object_Goods.ValueData             ELSE ''                     END :: TVarChar AS GoodsName_new
+
                  , Object_GoodsKind.Id         AS GoodsKindId
                  , Object_GoodsKind.ObjectCode AS GoodsKindCode
                  , Object_GoodsKind.ValueData  AS GoodsKindName
@@ -593,7 +596,10 @@ BEGIN
 
                  LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                         ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
-                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                       AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+                 LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                        ON ObjectString_Goods_Scale.ObjectId = tmpMI.GoodsId
+                                       AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                        ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
@@ -688,7 +694,10 @@ BEGIN
            SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                 , tmpGoods.GoodsId            AS GoodsId
                 , tmpGoods.GoodsCode          AS GoodsCode
-                , tmpGoods.GoodsName          AS GoodsName
+
+                , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN ObjectString_Goods_Scale.ValueData ELSE tmpGoods.GoodsName END :: TVarChar AS GoodsName
+                , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN tmpGoods.GoodsName                 ELSE ''                 END :: TVarChar AS GoodsName_new
+
                 , tmpGoods.GoodsKindId                   AS GoodsKindId
                 , Object_GoodsKind.ObjectCode            AS GoodsKindCode
                 , Object_GoodsKind.ValueData :: TVarChar AS GoodsKindName
@@ -759,7 +768,10 @@ BEGIN
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
-                                      AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                      AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+                LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                       ON ObjectString_Goods_Scale.ObjectId = tmpGoods.GoodsId
+                                      AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                      ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -1336,7 +1348,10 @@ BEGIN
            SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                 , tmpGoods.GoodsId            AS GoodsId
                 , tmpGoods.GoodsCode          AS GoodsCode
-                , tmpGoods.GoodsName          AS GoodsName
+
+                , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN ObjectString_Goods_Scale.ValueData ELSE tmpGoods.GoodsName END :: TVarChar AS GoodsName
+                , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN tmpGoods.GoodsName                 ELSE ''                 END :: TVarChar AS GoodsName_new
+
                 , 0                           AS GoodsKindId
                 , 0                           AS GoodsKindCode
                 , tmpGoods.GoodsKindName_list :: TVarChar AS GoodsKindName
@@ -1415,6 +1430,9 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                       ON ObjectString_Goods_Scale.ObjectId = tmpGoods.GoodsId
+                                      AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                      ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId

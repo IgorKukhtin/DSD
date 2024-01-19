@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, Integer, Integer, I
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_BankAccount(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inMovementId_Value  Integer   ,  
+    IN inMovementId_Value  Integer   ,
     IN inMovementId_Invoice   Integer   ,
     IN inMovementId_parent Integer   ,
     IN inMoneyPlaceId      Integer   ,
@@ -68,23 +68,29 @@ BEGIN
            , tmpBankAccount.BankName                           AS BankName
            , Object_MoneyPlace.Id                              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData                       AS MoneyPlaceName
-           
+
            , Movement_Invoice.Id                               AS MovementId_Invoice
-           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+           , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData          AS Comment_Invoice
-           
+
            , Object_InvoiceKind.Id                             AS InvoiceKindId
            , Object_InvoiceKind.ValueData                      AS InvoiceKindName
-                       
+
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = inMovementId_Invoice
-            
+
+            -- тип счета
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
             LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = COALESCE (MovementLinkObject_InvoiceKind.ObjectId, zc_Enum_InvoiceKind_PrePay())
+
+            -- Официальный номер документа Счет
+            LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                     ON MovementString_ReceiptNumber.MovementId = Movement_Invoice.Id
+                                    AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
 
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                      ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
@@ -119,7 +125,7 @@ BEGIN
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
 
            , Movement_Invoice.Id               AS MovementId_Invoice
-           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+           , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
 
            , Object_InvoiceKind.Id             AS InvoiceKindId
@@ -137,10 +143,16 @@ BEGIN
                                           AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementChildId
 
+            -- тип счета
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
             LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = COALESCE (MovementLinkObject_InvoiceKind.ObjectId, zc_Enum_InvoiceKind_PrePay())
+
+            -- Официальный номер документа Счет
+            LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                     ON MovementString_ReceiptNumber.MovementId = Movement_Invoice.Id
+                                    AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
 
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                      ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
@@ -181,7 +193,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

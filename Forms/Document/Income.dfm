@@ -514,6 +514,16 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
+          object GoodsName_old: TcxGridDBColumn
+            Caption = '***'#1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName_old'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1088#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+            Options.Editing = False
+            Width = 100
+          end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
@@ -802,6 +812,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -2633,6 +2646,7 @@ object IncomeForm: TIncomeForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337

@@ -1,4 +1,5 @@
 -- Function: gpSelect_MovementItem_ReturnOut()
+
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnOut(
@@ -7,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnOut(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, MeasureName TVarChar             
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
+             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountPartner TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
@@ -39,13 +40,14 @@ BEGIN
      RETURN QUERY
        WITH tmpPrice AS (SELECT tmp.GoodsId
                               , tmp.GoodsKindId
-                              , tmp.ValuePrice 
+                              , tmp.ValuePrice
                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
        SELECT
-             0                          AS Id
-           , tmpGoods.GoodsId           AS GoodsId
-           , tmpGoods.GoodsCode         AS GoodsCode
-           , tmpGoods.GoodsName         AS GoodsName
+             0                                           AS Id
+           , tmpGoods.GoodsId                            AS GoodsId
+           , tmpGoods.GoodsCode                          AS GoodsCode
+           , tmpGoods.GoodsName                          AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData     AS MeasureName
 
@@ -69,7 +71,7 @@ BEGIN
                   , ObjectLink_Goods_InfoMoney.ChildObjectId                          AS InfoMoneyId
              FROM Object AS Object_Goods
                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
@@ -101,18 +103,21 @@ BEGIN
                               AND tmpPrice.GoodsKindId IS NULL
             LEFT JOIN tmpPrice AS tmpPrice_kind
                                ON tmpPrice_kind.GoodsId = tmpGoods.GoodsId
-                               ON COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
+                              AND COALESCE (tmpPrice_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-  
+
        WHERE tmpMI.GoodsId IS NULL
          AND (COALESCE (tmpPrice_kind.ValueData, tmpPrice.ValuePrice) <> 0 OR vbPriceListId IS NULL)
       UNION ALL
@@ -121,6 +126,7 @@ BEGIN
            , Object_Goods.Id          		 	 AS GoodsId
            , Object_Goods.ObjectCode  		 	 AS GoodsCode
            , Object_Goods.ValueData   		 	 AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -180,9 +186,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-                                  
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             ;
@@ -196,6 +205,7 @@ BEGIN
            , Object_Goods.Id          			 AS GoodsId
            , Object_Goods.ObjectCode  			 AS GoodsCode
            , Object_Goods.ValueData   			 AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -254,9 +264,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-                                  
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -267,8 +280,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

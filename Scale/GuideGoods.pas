@@ -156,6 +156,7 @@ type
     EditPriceIncome: TcxCurrencyEdit;
     Price_Income_from: TcxGridDBColumn;
     Price_Income_to: TcxGridDBColumn;
+    GoodsName_new: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -767,13 +768,17 @@ begin
        //if (AnsiUpperCase(EditGoodsName.Text) = AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))
        // and (fGoodsName_equal)
 
-       if  (pos(AnsiUpperCase(EditGoodsName.Text),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
+       if  ((pos(AnsiUpperCase(EditGoodsName.Text),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
+          or(pos(AnsiUpperCase(EditGoodsName.Text),AnsiUpperCase(DataSet.FieldByName('GoodsName_new').AsString))>0)
+           )
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
        then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
      else
          if (fEnterGoodsKindCode)and(trim(GoodsName_FilterValue)<>'')
          then
-             if  (pos(AnsiUpperCase(GoodsName_FilterValue),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
+             if  ((pos(AnsiUpperCase(GoodsName_FilterValue),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
+                or(pos(AnsiUpperCase(GoodsName_FilterValue),AnsiUpperCase(DataSet.FieldByName('GoodsName_new').AsString))>0)
+                  )
               and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
              then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
          //else if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false

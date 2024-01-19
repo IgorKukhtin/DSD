@@ -90,6 +90,7 @@ type
     mactUpdateMaskIncome: TMultiAction;
     bbUpdateMaskSend: TdxBarButton;
     bbUpdateMaskIncome: TdxBarButton;
+    GoodsName_old: TcxGridDBColumn;
   private
     { Private declarations }
   public
