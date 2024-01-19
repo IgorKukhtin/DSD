@@ -5,6 +5,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -737,6 +738,19 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 70
           end
+          object Blob_11: TcxGridDBColumn
+            Caption = '11. Verwendungszweck'
+            DataBinding.FieldName = 'Blob_11'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1062#1077#1083#1100' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103')'
+            Width = 100
+          end
           object String_13: TcxGridDBColumn
             Caption = '13. Waehrung'
             DataBinding.FieldName = 'String_13'
@@ -882,6 +896,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_invoice_ch2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -918,6 +937,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ReceiptNumber_Invoice_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_invoice_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -2555,13 +2579,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchInvNumber_OrderClient
     DataSet = MasterCDS
-    Column = InvNumber_parent
+    Column = InvNumber_parent_child
     ColumnList = <
       item
-        Column = InvNumber_parent
+        Column = InvNumber_parent_child
       end
       item
-        Column = ReceiptNumber_Invoice
+        Column = ReceiptNumber_Invoice_child
         TextEdit = edSearch_ReceiptNumber_Invoice
       end
       item

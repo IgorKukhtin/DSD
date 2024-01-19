@@ -14,6 +14,10 @@ CREATE OR REPLACE FUNCTION zc_MovementBlob_Info3() RETURNS integer AS $BODY$BEGI
 INSERT INTO MovementBLOBDesc (Code ,itemname)
    SELECT 'zc_MovementBlob_Info3','Информация 3' WHERE NOT EXISTS (SELECT * FROM MovementBlobDesc WHERE Code = 'zc_MovementBlob_Info3');
 
+CREATE OR REPLACE FUNCTION zc_MovementBlob_11() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBlobDesc WHERE Code = 'zc_MovementBlob_11'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementBLOBDesc (Code ,itemname)
+   SELECT 'zc_MovementBlob_11','Примечание (Цель использования)' WHERE NOT EXISTS (SELECT * FROM MovementBlobDesc WHERE Code = 'zc_MovementBlob_11');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

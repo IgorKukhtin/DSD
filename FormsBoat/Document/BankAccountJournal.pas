@@ -167,6 +167,7 @@ type
     InfoMoneyName_all_child: TcxGridDBColumn;
     InvNumberFull_parent_child: TcxGridDBColumn;
     InvNumber_parent_child: TcxGridDBColumn;
+    Blob_11: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -6716,7 +6716,7 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 11, 
                                                                 inName          := 'inComment', 
-                                                                inParamType     := 'ftString', 
+                                                                inParamType     := 'ftWideString', 
                                                                 inUserParamName := 'Цель использования',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
