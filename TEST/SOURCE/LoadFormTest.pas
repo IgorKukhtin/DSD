@@ -2780,7 +2780,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementSaleReturnForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementSaleReturnDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementSaleReturnDialogForm');
-  //exit;
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementRealForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementRealForm');
