@@ -5,7 +5,6 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = 1
   ExplicitWidth = 1205
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -16,17 +15,16 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     Height = 464
     TabOrder = 3
     ExplicitTop = 56
-    ExplicitWidth = 1213
+    ExplicitWidth = 1189
     ExplicitHeight = 464
     ClientRectBottom = 464
     ClientRectRight = 1189
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1213
+      ExplicitWidth = 1189
       ExplicitHeight = 464
       inherited cxGrid: TcxGrid
         Width = 1189
         Height = 464
-        ExplicitTop = 4
         ExplicitWidth = 1189
         ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -407,7 +405,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
   inherited Panel: TPanel
     Width = 1189
     Height = 30
-    ExplicitWidth = 1213
+    ExplicitWidth = 1189
     ExplicitHeight = 30
     object lbSearchArticle: TcxLabel
       Left = 408
@@ -486,7 +484,6 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     Height = 73
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1213
     object btnInsert: TcxButton
       Left = 387
       Top = 10
@@ -775,6 +772,22 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementItemId_child'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId_child'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
     end

@@ -99,6 +99,23 @@ type
     cxSplitter1: TcxSplitter;
     cxLabel1: TcxLabel;
     PanelDocView: TPanel;
+    cxLabel15: TcxLabel;
+    ceInvoice: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edInvoiceKind: TcxButtonEdit;
+    GuidesInvoiceKind: TdsdGuides;
+    GuidesInvoice: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceAmount: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    edAmount_invoice: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    edParent: TcxButtonEdit;
+    GuidesParent: TdsdGuides;
+    ceInfoMoneyName_invoice: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    cxLabel10: TcxLabel;
+    ceBoat: TcxTextEdit;
   private
     { Private declarations }
   public

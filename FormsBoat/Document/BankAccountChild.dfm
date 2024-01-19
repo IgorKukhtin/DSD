@@ -515,6 +515,12 @@
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_child'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 228
@@ -676,7 +682,7 @@
         Name = 'inMovementItemId_child'
         Value = Null
         Component = FormParams
-        ComponentItem = 'MovementItemId_child'
+        ComponentItem = 'inMovementItemId_child'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -729,6 +735,13 @@
         Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = ceAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

@@ -1243,6 +1243,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 16433
       FormName = 'TBankAccountMovementForm'
+      FormNameParam.Value = 'TBankAccountMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -1278,6 +1279,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Value = Null
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Value = Null
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
@@ -1307,6 +1313,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TBankAccountMovementForm'
+      FormNameParam.Value = 'TBankAccountMovementForm'
       GuiParams = <
         item
           Name = 'Id'
