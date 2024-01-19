@@ -156,6 +156,17 @@ type
     ProductCIN_Invoice_ch2: TcxGridDBColumn;
     InfoMoneyName_Invoice_ch2: TcxGridDBColumn;
     InfoMoneyName_all_Invoice_ch2: TcxGridDBColumn;
+    AmountChild: TcxGridDBColumn;
+    isError: TcxGridDBColumn;
+    AmountChild_diff: TcxGridDBColumn;
+    Amount_Invoice_all: TcxGridDBColumn;
+    Amount_Pay_all: TcxGridDBColumn;
+    ReceiptNumber_Invoice_child: TcxGridDBColumn;
+    InvoiceKindName_child: TcxGridDBColumn;
+    InfoMoneyName_child: TcxGridDBColumn;
+    InfoMoneyName_all_child: TcxGridDBColumn;
+    InvNumberFull_parent_child: TcxGridDBColumn;
+    InvNumber_parent_child: TcxGridDBColumn;
   private
     { Private declarations }
   public
