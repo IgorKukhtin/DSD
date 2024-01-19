@@ -5,7 +5,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -195,14 +194,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 80
           end
           object AmountChild: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+            Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1072#1084
             DataBinding.FieldName = 'AmountChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
             Options.Editing = False
             Width = 80
           end
