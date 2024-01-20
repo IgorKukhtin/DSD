@@ -21,6 +21,8 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       inherited cxGrid: TcxGrid
         Width = 669
         Height = 380
+        ExplicitLeft = 168
+        ExplicitTop = 3
         ExplicitWidth = 669
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView

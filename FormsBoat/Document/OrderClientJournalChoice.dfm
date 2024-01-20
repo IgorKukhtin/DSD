@@ -664,6 +664,26 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Options.Editing = False
         Width = 95
       end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 80
+      end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1055' '#1057#1090#1072#1090#1100#1103
+        Options.Editing = False
+        Width = 80
+      end
       object BarCode: TcxGridDBColumn
         DataBinding.FieldName = 'BarCode'
         Visible = False
@@ -1403,6 +1423,21 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           ComponentItem = 'Amount_Invoice_find'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1741,7 +1776,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Name = 'inSummDebet'
         Value = Null
         Component = FormParams
-        ComponentItem = 'SummDebet'
+        ComponentItem = 'MasterSummDebet'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1766,11 +1801,11 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Action = actUpdate
     end
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -1887,7 +1922,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummDebet'
+        Name = 'MasterSummDebet'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput

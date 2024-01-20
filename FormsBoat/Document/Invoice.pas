@@ -66,7 +66,7 @@ type
     edTaxKind: TcxButtonEdit;
     GuidesTaxKind: TdsdGuides;
     btnGoodsChoiceForm: TcxButton;
-    actObjectChoiceForm: TOpenChoiceForm;
+    actGuidesObjectChoiceForm: TOpenChoiceForm;
     btnGuidesParentChoiceForm: TcxButton;
     actGuidesParentChoiceForm: TOpenChoiceForm;
     cbAuto: TcxCheckBox;

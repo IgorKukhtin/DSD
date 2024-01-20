@@ -5,7 +5,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -247
   ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -525,35 +524,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   inherited ActionList: TActionList
     Left = 239
     Top = 114
-    object mactUpdateMoneyPlace: TMultiAction [3]
-      Category = 'Update'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actChoiceMoneyPlace
-        end
-        item
-          Action = actUpdateMoneyPlace
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
-      ImageIndex = 55
-    end
-    object actUpdateMoneyPlace: TdsdDataSetRefresh [5]
-      Category = 'Update'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateContract'
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 55
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
       ShortCut = 0
@@ -595,8 +565,8 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
       ShortCut = 0
-      FormName = 'TInvoiceForm'
-      FormNameParam.Value = 'TInvoiceForm'
+      FormName = 'err'
+      FormNameParam.Value = 'err'
       GuiParams = <
         item
           Name = 'Id'
@@ -645,103 +615,29 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object actChoiceMoneyPlace: TOpenChoiceForm [18]
-      Category = 'Update'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'JuridicalChoice'
-      ImageIndex = 55
-      FormName = 'TMoneyPlace_ObjectForm'
-      FormNameParam.Value = 'TMoneyPlace_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'MoneyPlaceId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MoneyPlaceName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
+    inherited mactSimpleReCompleteList: TMultiAction
+      Enabled = False
     end
-    object actChoiceContract: TOpenChoiceForm [19]
-      Category = 'Update'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractChoice'
-      ImageIndex = 24
-      FormName = 'TContractChoiceForm'
-      FormNameParam.Value = 'TContractChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MasterJuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MoneyPlaceId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MoneyPlaceName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ContractName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
+    inherited mactSimpleCompleteList: TMultiAction
+      Enabled = False
     end
-    object actUpdateContract: TdsdDataSetRefresh [23]
-      Category = 'Update'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateContract'
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 24
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
+    inherited mactSimpleUncompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSimpleErasedList: TMultiAction
+      Enabled = False
+    end
+    inherited spReCompete: TdsdExecStoredProc
+      Enabled = False
+    end
+    inherited spCompete: TdsdExecStoredProc
+      Enabled = False
+    end
+    inherited spUncomplete: TdsdExecStoredProc
+      Enabled = False
+    end
+    inherited spErased: TdsdExecStoredProc
+      Enabled = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -836,76 +732,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
-    end
-    object actInvoiceJournalDetailChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'acInvoiceJournalDetailChoiceForm'
-      FormName = 'TInvoiceJournalDetailChoiceForm'
-      FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'InvNumber_Full'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumber_Invoice'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId_Invoice'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MoneyPlaceId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MoneyPlaceName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Comment'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Comment_Invoice'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object mactUpdateContract: TMultiAction
-      Category = 'Update'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actChoiceContract
-        end
-        item
-          Action = actUpdateContract
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
-      ImageIndex = 43
     end
     object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1235,6 +1061,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
+        Action = actChoiceGuides
       end>
   end
   inherited PopupMenu: TPopupMenu
@@ -1252,12 +1079,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       item
         Component = GuidesObject
       end>
-  end
-  inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Invoice'
-  end
-  inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Invoice'
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Invoice'
@@ -1309,7 +1130,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Invoice'
     Left = 464
     Top = 128
   end

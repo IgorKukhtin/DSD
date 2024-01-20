@@ -63,6 +63,8 @@ type
     cxLabel10: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
+    actGuidesObjectChoiceForm: TOpenChoiceForm;
+    btnGuidesObjectChoiceForm: TcxButton;
   private
     { Private declarations }
   public

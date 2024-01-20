@@ -1,22 +1,22 @@
 ﻿inherited BankAccountMovementForm: TBankAccountMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 490
-  ClientWidth = 463
-  ExplicitWidth = 469
-  ExplicitHeight = 519
+  ClientHeight = 517
+  ClientWidth = 457
+  ExplicitWidth = 463
+  ExplicitHeight = 546
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 121
-    Top = 453
-    ExplicitLeft = 121
-    ExplicitTop = 453
+    Left = 225
+    Top = 448
+    ExplicitLeft = 225
+    ExplicitTop = 448
   end
   inherited bbCancel: TcxButton
-    Left = 257
-    Top = 453
-    ExplicitLeft = 257
-    ExplicitTop = 453
+    Left = 345
+    Top = 448
+    ExplicitLeft = 345
+    ExplicitTop = 448
   end
   object Код: TcxLabel [2]
     Left = 8
@@ -57,8 +57,15 @@
   object ceAmountIn: TcxCurrencyEdit [7]
     Left = 8
     Top = 80
+    ParentFont = False
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 5
     Width = 120
   end
@@ -70,8 +77,15 @@
   object ceAmountOut: TcxCurrencyEdit [9]
     Left = 147
     Top = 80
+    ParentFont = False
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 6
     Width = 120
   end
@@ -160,8 +174,8 @@
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object bbGuidesInvoiceChoiceForm: TcxButton [21]
-    Left = 31
-    Top = 418
+    Left = 22
+    Top = 448
     Width = 180
     Height = 25
     Action = actGuidesInvoiceChoiceForm
@@ -170,8 +184,8 @@
     TabOrder = 21
   end
   object bbGuidesParentChoiceForm: TcxButton [22]
-    Left = 257
-    Top = 418
+    Left = 22
+    Top = 480
     Width = 180
     Height = 25
     Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
@@ -206,7 +220,7 @@
   end
   object cxLabel5: TcxLabel [25]
     Left = 8
-    Top = 311
+    Top = 310
     Caption = #1058#1077#1082#1089#1090
   end
   object cmText: TcxMemo [26]
@@ -237,8 +251,15 @@
     Left = 287
     Top = 237
     EditValue = 0.000000000000000000
+    ParentFont = False
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 29
     Width = 159
   end
@@ -259,6 +280,16 @@
     Properties.ReadOnly = True
     TabOrder = 31
     Width = 259
+  end
+  object btnGuidesObjectChoiceForm: TcxButton [32]
+    Left = 22
+    Top = 416
+    Width = 180
+    Height = 25
+    Action = actGuidesObjectChoiceForm
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 32
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 331
@@ -319,17 +350,9 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AmountOut'
+          Name = 'Amount_Invoice'
           Value = Null
-          Component = ceAmountOut
-          DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AmountIn'
-          Value = Null
-          Component = ceAmountIn
+          Component = edAmount_invoice
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -457,41 +480,17 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MasterClientId'
-          Value = ''
-          Component = GuidesObject
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterClientName'
-          Value = ''
-          Component = GuidesObject
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SummDebet'
+          Name = 'InfoMoneyId'
           Value = Null
-          Component = ceAmountIn
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId_parent'
-          Value = '0'
-          Component = GuidesParent
+          Component = GuidesInfoMoney
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvNumber_parent'
-          Value = ''
-          Component = GuidesParent
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = GuidesInfoMoney
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -529,6 +528,119 @@
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount_Invoice_find'
+          Value = Null
+          Component = edAmount_invoice
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterClientId'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterClientName'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterSummDebet'
+          Value = Null
+          Component = ceAmountIn
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGuidesObjectChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
+      Hint = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
+      ImageIndex = 7
+      FormName = 'TUnion_ClientPartnerForm'
+      FormNameParam.Value = 'TUnion_ClientPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuidesObject
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_order'
+          Value = Null
+          Component = GuidesParent
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_order'
+          Value = Null
+          Component = GuidesParent
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_invoice'
+          Value = Null
+          Component = GuidesInvoice
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_invoice'
+          Value = Null
+          Component = GuidesInvoice
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount_Invoice'
+          Value = Null
+          Component = edAmount_invoice
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -656,6 +768,14 @@
         Name = 'inInvoiceKindId'
         Value = Null
         Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1235,25 +1355,20 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MasterClientId'
-        Value = ''
-        Component = GuidesObject
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MasterClientName'
-        Value = ''
-        Component = GuidesObject
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SummDebet'
-        Value = Null
-        Component = ceAmountIn
-        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1294,6 +1409,29 @@
         Name = 'Amount_Invoice_find'
         Value = Null
         Component = edAmount_invoice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSummDebet'
+        Value = Null
+        Component = ceAmountIn
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

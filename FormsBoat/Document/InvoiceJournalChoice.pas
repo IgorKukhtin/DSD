@@ -49,14 +49,7 @@ type
     bbPrint1: TdxBarButton;
     UnitCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
-    mactUpdateContract: TMultiAction;
-    actUpdateContract: TdsdDataSetRefresh;
-    actChoiceContract: TOpenChoiceForm;
-    actChoiceMoneyPlace: TOpenChoiceForm;
-    actUpdateMoneyPlace: TdsdDataSetRefresh;
-    mactUpdateMoneyPlace: TMultiAction;
     actChoiceGuides: TdsdChoiceGuides;
     bbb: TdxBarButton;
     bbExecuteDialog: TdxBarButton;

@@ -62,8 +62,8 @@ type
     bbStatic: TdxBarStatic;
     actGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
@@ -129,6 +129,8 @@ type
     Amount_Order_pay: TcxGridDBColumn;
     Amount_Invoice_find: TcxGridDBColumn;
     Amount_Invoice_pay_find: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
   public
   end;
