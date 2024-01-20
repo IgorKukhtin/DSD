@@ -1395,6 +1395,14 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvoiceKindName_find'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount_Invoice_find'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Amount_Invoice_find'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

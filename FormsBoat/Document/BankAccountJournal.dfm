@@ -900,6 +900,16 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_invoice_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Pay_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_diff_ch2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -941,6 +951,16 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_invoice_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Pay_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_diff_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1000,8 +1020,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
-            Width = 120
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            Width = 89
           end
           object Amount_invoice_ch2: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1057#1095#1077#1090
@@ -1012,6 +1032,29 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
+            Options.Editing = False
+            Width = 89
+          end
+          object Amount_Pay_ch2: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091
+            DataBinding.FieldName = 'Amount_Pay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091
+            Options.Editing = False
+            Width = 89
+          end
+          object Amount_diff_ch2: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091
+            DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
           end
@@ -1048,7 +1091,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
+            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
             Width = 120
           end
           object InvNumber_Invoice_Full_ch2: TcxGridDBColumn

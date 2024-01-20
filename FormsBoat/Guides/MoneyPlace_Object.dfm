@@ -47,7 +47,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 400
+            Width = 200
           end
           object ItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -55,7 +55,61 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 174
+            Width = 100
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object InfoMoneyName_all: TcxGridDBColumn
+            Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TaxKind_Value: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKind_Value'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TaxKindName_Info: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKindName_Info'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TaxKindName_Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKindName_Comment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -142,24 +196,17 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MovementId_order'
+          Name = 'InfoMoneyId'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvNumber_order'
+          Name = 'InfoMoneyName_all'
           Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId_invoice'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber_invoice'
-          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -176,6 +223,34 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Component = MasterCDS
           ComponentItem = 'InvoiceKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_order'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_order'
+          Value = ''
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_invoice'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_invoice'
+          Value = ''
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount_Invoice'
+          Value = 0.000000000000000000
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
     end

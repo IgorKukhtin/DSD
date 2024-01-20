@@ -5,6 +5,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -247
   ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -48,6 +49,11 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
               Format = ',0.00##'
               Kind = skSum
               Column = AmountOut
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_Invoice
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -76,6 +82,11 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ObjectName
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_Invoice
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -166,7 +177,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
           object AmountOut: TcxGridDBColumn
             Caption = 'Kredit'
@@ -177,7 +188,19 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 70
+          end
+          object Amount_Invoice: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'Amount_Invoice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
@@ -200,9 +223,9 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 128
           end
-          object DescName: TcxGridDBColumn
+          object ObjectDescName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'DescName'
+            DataBinding.FieldName = 'ObjectDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -339,9 +362,9 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 109
           end
-          object DescName_parent: TcxGridDBColumn
+          object MovementDescName_parent: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'DescName_parent'
+            DataBinding.FieldName = 'MovementDescName_parent'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -944,6 +967,14 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'AmountOut'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountOut'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'AmountIn'
           Value = Null
           Component = MasterCDS
@@ -952,10 +983,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AmountOut'
+          Name = 'Amount_Invoice'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AmountOut'
+          ComponentItem = 'Amount_Invoice'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end

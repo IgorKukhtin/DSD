@@ -56,6 +56,7 @@ type
     btnUpdate: TcxButton;
     btnComplete: TcxButton;
     btnFormClose: TcxButton;
+    NameAll: TcxGridDBColumn;
   private
     { Private declarations }
   public

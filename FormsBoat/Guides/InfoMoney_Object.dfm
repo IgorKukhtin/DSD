@@ -25,7 +25,6 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -81,9 +80,19 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         Width = 150
       end
+      object NameAll: TcxGridDBColumn
+        Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'NameAll'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '***'#1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Width = 80
+      end
       object UnitName: TcxGridDBColumn
         Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
         DataBinding.FieldName = 'UnitName'
+        Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -112,8 +121,6 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitLeft = -179
-    ExplicitWidth = 853
     object btnUpdate: TcxButton
       Left = 359
       Top = 6
@@ -307,6 +314,14 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue_all'
+          Value = Null
+          Component = MasterCDS
           ComponentItem = 'NameAll'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -324,6 +339,13 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyDestinationName'
           MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
@@ -415,6 +437,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 304
     Top = 152

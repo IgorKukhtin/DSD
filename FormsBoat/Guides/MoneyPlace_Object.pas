@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel;
+  Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel,
+  cxCurrencyEdit;
 
 type
   TMoneyPlace_ObjectForm = class(TAncestorEnum_boatForm)
@@ -37,6 +38,12 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
+    InfoMoneyName: TcxGridDBColumn;
+    TaxKind_Value: TcxGridDBColumn;
+    TaxKindName: TcxGridDBColumn;
+    TaxKindName_Info: TcxGridDBColumn;
+    TaxKindName_Comment: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

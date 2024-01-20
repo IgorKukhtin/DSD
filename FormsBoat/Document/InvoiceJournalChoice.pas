@@ -40,7 +40,7 @@ type
     InfoMoneyDestinationName: TcxGridDBColumn;
     InvNumber_Full: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    DescName: TcxGridDBColumn;
+    ObjectDescName: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
@@ -76,6 +76,7 @@ type
     cxLabel3: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_InvNumber: TdsdFieldFilter;
+    Amount_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

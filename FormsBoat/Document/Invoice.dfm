@@ -321,7 +321,7 @@
     Width = 148
   end
   object ceComment: TcxMemo [38]
-    Left = 16
+    Left = 15
     Top = 369
     TabOrder = 38
     Height = 74
@@ -332,12 +332,12 @@
     Top = 319
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 159
-    Top = 167
+    Left = 335
+    Top = 375
   end
   inherited ActionList: TActionList
     Left = 269
-    Top = 118
+    Top = 374
     object actGetPrepay: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -372,8 +372,8 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1042#1099#1073#1088#1072#1090#1100' Lieferanten / Kunden'
-      Hint = #1042#1099#1073#1088#1072#1090#1100' Lieferanten / Kunden'
+      Caption = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
+      Hint = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
       ImageIndex = 7
       FormName = 'TUnion_ClientPartnerForm'
       FormNameParam.Value = 'TUnion_ClientPartnerForm'
@@ -708,7 +708,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 47
-    Top = 335
+    Top = 359
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Invoice'
@@ -841,8 +841,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 327
-    Top = 219
+    Left = 207
+    Top = 363
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice'
@@ -1087,8 +1087,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 0
+    Left = 152
+    Top = 360
   end
   object GuidesObject: TdsdGuides
     KeyField = 'Id'
@@ -1145,21 +1145,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PaidKindId'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'TaxKindId'
         Value = Null
         Component = GuidesTaxKind
@@ -1203,9 +1188,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 107
-    Top = 160
+    Left = 341
+    Top = 168
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -1231,8 +1231,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 231
-    Top = 253
+    Left = 151
+    Top = 221
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1285,8 +1285,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 63
-    Top = 234
+    Left = 343
+    Top = 218
   end
   object GuidesProduct: TdsdGuides
     KeyField = 'Id'
@@ -1358,8 +1358,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 115
-    Top = 354
+    Left = 307
+    Top = 298
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1369,8 +1369,8 @@
       item
         Component = GuidesObject
       end>
-    Left = 56
-    Top = 72
+    Left = 112
+    Top = 344
   end
   object spGetPlanDate: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice_PlanDate'
@@ -1401,8 +1401,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 56
+    Left = 232
+    Top = 24
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -1544,8 +1544,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 155
-    Top = 298
+    Left = 347
+    Top = 274
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -1574,8 +1574,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 117
-    Top = 210
+    Left = 341
+    Top = 114
   end
   object GuidesInvoiceKind: TdsdGuides
     KeyField = 'Id'
@@ -1601,7 +1601,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 346
+    Left = 338
     Top = 65
   end
   object spGetPrepay: TdsdStoredProc
@@ -1633,7 +1633,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 424
+    Left = 104
+    Top = 392
   end
 end

@@ -168,6 +168,8 @@ type
     InvNumberFull_parent_child: TcxGridDBColumn;
     InvNumber_parent_child: TcxGridDBColumn;
     Blob_11: TcxGridDBColumn;
+    Amount_Pay_ch2: TcxGridDBColumn;
+    Amount_diff_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -83,6 +83,7 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public
