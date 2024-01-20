@@ -40,13 +40,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
 
-     -- проверка
-     IF LENGTH (inComment)  > 255
-     THEN
-        RAISE EXCEPTION 'Ошибка. len = %   %', LENGTH (inComment) , inComment;
-     END IF;
-
-
 /*
      -- проверка
      IF COALESCE (inBankAccountId, 0) = 0
