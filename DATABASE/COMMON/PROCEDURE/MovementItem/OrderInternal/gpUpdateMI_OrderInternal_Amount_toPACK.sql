@@ -764,8 +764,11 @@ end if;
              WHILE vbNumber <= inNumber
              LOOP
                  UPDATE _tmpMI_Child SET AmountResult = _tmpMI_Child.AmountResult + tmpResult.Amount_result
-                 FROM (WITH -- сумма - сколько уже распределили
-                            tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete     AS GoodsId_master
+                 FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
+                            tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
+                                                          )
+                            -- сумма - сколько уже распределили
+                          , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete     AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete AS GoodsKindId_master
                                                 , SUM (_tmpMI_Child.AmountResult)   AS AmountResult
                                            FROM _tmpMI_Child
@@ -806,6 +809,7 @@ end if;
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
@@ -842,10 +846,12 @@ end if;
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- нар.
                                                OR _tmpGoods_delik.GoodsId IS NULL
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
@@ -854,6 +860,7 @@ end if;
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                 ))
                                          )
 
@@ -941,7 +948,10 @@ end if;
              WHILE vbNumber <= inNumber
              LOOP
                  UPDATE _tmpMI_Child SET AmountSecondResult = _tmpMI_Child.AmountSecondResult + tmpResult.Amount_result
-                 FROM (WITH -- сумма - сколько уже распределили
+                 FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
+                            tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
+                                                          )
+                          , -- сумма - сколько уже распределили
                             tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete         AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete     AS GoodsKindId_master
                                                 , SUM (_tmpMI_Child.AmountSecondResult) AS AmountResult
@@ -983,6 +993,7 @@ end if;
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1015,10 +1026,12 @@ end if;
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
                                                OR _tmpGoods_delik.GoodsId IS NULL
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (-- 6899005 -- нар. 200
@@ -1027,6 +1040,7 @@ end if;
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                 ))
 
                                          )
@@ -1113,8 +1127,11 @@ end if;
              WHILE vbNumber <= inNumber
              LOOP
                  UPDATE _tmpMI_Child SET AmountNextResult = _tmpMI_Child.AmountNextResult + tmpResult.Amount_result
-                 FROM (WITH -- сумма - сколько уже распределили
-                            tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete         AS GoodsId_master
+                 FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
+                            tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
+                                                          )
+                            -- сумма - сколько уже распределили
+                          , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete         AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete     AS GoodsKindId_master
                                                 , SUM (_tmpMI_Child.AmountNextResult)   AS AmountResult
                                            FROM _tmpMI_Child
@@ -1155,6 +1172,7 @@ end if;
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1186,10 +1204,12 @@ end if;
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
                                                OR _tmpGoods_delik.GoodsId IS NULL
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
@@ -1198,6 +1218,7 @@ end if;
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                 ))
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
@@ -1306,8 +1327,11 @@ end if;
                                                                             THEN _tmpMI_Child.AmountNextSecondResult + tmpResult.Amount_result
                                                                        ELSE _tmpMI_Child.AmountNextSecondResult
                                                                   END
-                 FROM (WITH -- сумма - сколько уже распределили
-                            tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete             AS GoodsId_master
+                 FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
+                            tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
+                                                          )
+                            -- сумма - сколько уже распределили
+                          , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete             AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete         AS GoodsKindId_master
                                                 , SUM (_tmpMI_Child.AmountNextSecondResult) AS AmountResult
                                            FROM _tmpMI_Child
@@ -1348,6 +1372,7 @@ end if;
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1379,10 +1404,12 @@ end if;
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
                                                OR _tmpGoods_delik.GoodsId IS NULL
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (-- 6899005 -- нар. 200
@@ -1391,6 +1418,7 @@ end if;
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
+                                               OR tmpGoods_PackOrder_noLimit.GoodsId > 0
                                                 ))
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
