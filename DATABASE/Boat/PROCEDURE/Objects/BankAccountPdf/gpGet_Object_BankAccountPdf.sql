@@ -1,5 +1,6 @@
 ﻿-- Function: gpGet_Object_BankAccountPdf()
 
+DROP FUNCTION IF EXISTS gpGet_Object_BankAccountPdf_photo (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_BankAccountPdf(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_BankAccountPdf(

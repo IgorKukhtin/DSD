@@ -34,4 +34,4 @@ ALTER FUNCTION gpGetConstName(TVarChar, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- select gpGetConstName('zc_Enum_GlobalConst_ConnectParam', ''), gpGetConstName('zc_Enum_GlobalConst_ConnectReportParam', '')
+-- select gpGetConstName('zc_Enum_GlobalConst_ConnectParam', '')

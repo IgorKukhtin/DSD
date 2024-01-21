@@ -327,7 +327,7 @@ BEGIN
              -- Разница с Child
            , (MovementItem.Amount - COALESCE (tmpMI_Child.Amount,0)) ::TFloat AS AmountChild_diff
              -- Сумма Оплаты - Child
-           , tmpMI_Child.Amount ::TFloat AS AmountChild
+           , ABS (tmpMI_Child.Amount) ::TFloat AS AmountChild
              --
            , CASE WHEN MovementItem.Amount <> COALESCE (tmpMI_Child.Amount,0) THEN TRUE ELSE FALSE END ::Boolean AS isError
 
@@ -370,16 +370,18 @@ BEGIN
 
            , CASE WHEN COALESCE (tmpMI_Child.Amount_Invoice, 0) <> COALESCE (tmpInvoice_pay.Summ, 0)
                   THEN TRUE
+                  WHEN COALESCE (tmpMI_Child.Amount_Invoice, 0) = 0 AND COALESCE (tmpInvoice_pay.Summ, 0) = 0
+                  THEN TRUE
                   ELSE FALSE
              END ::Boolean AS isDiff
 
-           , tmpInvoice_Params.ObjectName          AS ObjectName_Invoice
-           , tmpInvoice_Params.DescName_object     AS ObjectDescName_Invoice
-           , tmpInvoice_Params.InfoMoneyCode       AS InfoMoneyCode_Invoice
-           , tmpInvoice_Params.InfoMoneyGroupName  AS InfoMoneyGroupName_Invoice
+           , tmpInvoice_Params.ObjectName               AS ObjectName_Invoice
+           , tmpInvoice_Params.DescName_object          AS ObjectDescName_Invoice
+           , tmpInvoice_Params.InfoMoneyCode            AS InfoMoneyCode_Invoice
+           , tmpInvoice_Params.InfoMoneyGroupName       AS InfoMoneyGroupName_Invoice
            , tmpInvoice_Params.InfoMoneyDestinationName AS InfoMoneyDestinationName_Invoice
-           , tmpInvoice_Params.InfoMoneyName       AS InfoMoneyName_Invoice
-           , tmpInvoice_Params.InfoMoneyName_all   AS InfoMoneyName_all_Invoice
+           , tmpInvoice_Params.InfoMoneyName            AS InfoMoneyName_Invoice
+           , tmpInvoice_Params.InfoMoneyName_all        AS InfoMoneyName_all_Invoice
 
            , Object_Product.ObjectCode                                                       AS ProductCode_Invoice
            , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName_Invoice

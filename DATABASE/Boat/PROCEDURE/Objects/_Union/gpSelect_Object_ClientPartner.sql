@@ -37,7 +37,8 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyId
           , Object_InfoMoney_View.InfoMoneyCode
           , Object_InfoMoney_View.InfoMoneyName
-          , Object_InfoMoney_View.InfoMoneyName_all
+          , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName_all
+        --, Object_InfoMoney_View.InfoMoneyName_all
           , Object_InfoMoney_View.InfoMoneyGroupId
           , Object_InfoMoney_View.InfoMoneyGroupCode
           , Object_InfoMoney_View.InfoMoneyGroupName

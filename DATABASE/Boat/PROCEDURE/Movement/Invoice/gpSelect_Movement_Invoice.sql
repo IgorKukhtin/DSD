@@ -27,10 +27,14 @@ RETURNS TABLE (Id               Integer
                -- без НДС
              , AmountIn_NotVAT  TFloat
              , AmountOut_NotVAT TFloat
-               -- НДС
+               -- Сумма НДС
              , AmountIn_VAT     TFloat
              , AmountOut_VAT    TFloat
 
+               -- Сумма счета (для выбора в гриде)
+             , Amount_Invoice   TFloat
+
+               -- % НДС
              , VATPercent       TFloat
 
                -- оплата
@@ -62,7 +66,7 @@ RETURNS TABLE (Id               Integer
              , InvNumberPartner TVarChar
                -- Официальный номер квитанции - Quittung Nr
              , ReceiptNumber    Integer
-               -- 
+               --
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -219,7 +223,8 @@ BEGIN
                        , Object_InfoMoney_View.InfoMoneyId
                        , Object_InfoMoney_View.InfoMoneyCode
                        , Object_InfoMoney_View.InfoMoneyName
-                       , Object_InfoMoney_View.InfoMoneyName_all
+                       , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName_all
+                     --, Object_InfoMoney_View.InfoMoneyName_all
 
                        , Object_InfoMoney_View.InfoMoneyGroupId
                        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -380,10 +385,14 @@ BEGIN
         -- без НДС
       , tmpData.AmountIn_NotVAT
       , tmpData.AmountOut_NotVAT
-        -- НДС
+        -- Сумма НДС
       , tmpData.AmountIn_VAT
       , tmpData.AmountOut_VAT
 
+        -- Сумма счета (для выбора в гриде)
+      , CASE WHEN tmpData.AmountIn > 0 THEN tmpData.AmountIn ELSE tmpData.AmountOut END :: TFloat AS Amount_Invoice
+
+        -- % НДС
       , tmpData.VATPercent
 
         -- оплата
@@ -392,15 +401,15 @@ BEGIN
       , tmpData.Amount_BankAccount
         -- остаток по счету
       , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
-                  THEN 0 
+                  THEN 0
              ELSE tmpData.AmountIn_rem
         END :: TFloat AS AmountIn_rem
       , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
-                  THEN 0 
+                  THEN 0
              ELSE tmpData.AmountOut_rem
         END :: TFloat AS AmountOut_rem
       , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
-                  THEN 0 
+                  THEN 0
              ELSE tmpData.Amount_rem
         END :: TFloat AS Amount_rem
 

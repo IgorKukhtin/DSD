@@ -44,6 +44,8 @@ CREATE OR REPLACE FUNCTION zc_Color_Pink() RETURNS Integer AS $BODY$BEGIN RETURN
 -- CREATE OR REPLACE FUNCTION zfCalc_UserAdmin() RETURNS .....;
 CREATE OR REPLACE FUNCTION zc_Measure_Sh() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectParam()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*
 -- Значения для эти ф-ций будут сформированы в Load_PostgreSqlBoutique, или !!!руками значения =0!!!
 CREATE OR REPLACE FUNCTION zc_PriceList_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

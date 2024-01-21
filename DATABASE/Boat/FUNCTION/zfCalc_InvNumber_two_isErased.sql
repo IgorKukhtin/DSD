@@ -15,8 +15,8 @@ BEGIN
               END
            ||''
            || CASE WHEN inInvNumber_two <> '' THEN inInvNumber_two ELSE '*' || COALESCE (inInvNumber, '') END
-           || CASE WHEN inInvNumber_two <> '' THEN ' (*' || inInvNumber || ')' ELSE '' END
            || ' от ' || zfConvert_DateToString (inOperDate)
+           || CASE WHEN inInvNumber_two <> '' THEN ' (*' || inInvNumber || ')' ELSE '' END
              );
 
       --RETURN (CASE WHEN inInvNumber_two <> '' THEN '(*' || inInvNumber_two || ') ' ELSE '' END

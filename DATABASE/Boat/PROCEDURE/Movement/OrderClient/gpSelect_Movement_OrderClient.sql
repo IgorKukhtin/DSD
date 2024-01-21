@@ -65,6 +65,10 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , Amount_Invoice_pay_find TFloat
 
              , Value_TaxKind TFloat, TaxKindName TVarChar, TaxKindName_info TVarChar
+
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , StateText TVarChar, StateColor Integer
@@ -335,8 +339,8 @@ BEGIN
 
              , Movement_Invoice.Id                             AS MovementId_Invoice
              , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber_Invoice.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumberFull_Invoice
-             , zfConvert_StringToNumber (Movement_Invoice.InvNumber)                     AS InvNumber_Invoice
-             , zfConvert_StringToNumber (MovementString_ReceiptNumber_Invoice.ValueData) AS ReceiptNumber_Invoice
+             , CASE WHEN Movement_Invoice.Id IS NULL THEN NULL ELSE zfConvert_StringToNumber (Movement_Invoice.InvNumber)                     END :: Integer AS InvNumber_Invoice
+             , CASE WHEN Movement_Invoice.Id IS NULL THEN NULL ELSE zfConvert_StringToNumber (MovementString_ReceiptNumber_Invoice.ValueData) END :: Integer AS ReceiptNumber_Invoice
              , MovementString_Comment_Invoice.ValueData        AS Comment_Invoice
              , Object_InvoiceKind.Id                           AS InvoiceKindId
              , Object_InvoiceKind.ValueData                    AS InvoiceKindName
@@ -357,9 +361,9 @@ BEGIN
                          THEN Object_InvoiceKind_find.Id
 
                     -- если Итого оплата = сумме за лодку
-                    WHEN tmpOrder_pay.Amount + inSummDebet
+                    WHEN COALESCE (tmpOrder_pay.Amount, 0) + inSummDebet
                        -- ИТОГО с учетом всех скидок и Транспорта, Сумма продажи с НДС
-                       = -- Сумма с НДС
+                      >= -- Сумма с НДС
                          MovementFloat_TotalSummPVAT.ValueData
                          -- минус откорректированная скидка
                        - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData)
@@ -379,9 +383,9 @@ BEGIN
                          THEN Object_InvoiceKind_find.ValueData
 
                     -- если Итого оплата = сумме за лодку
-                    WHEN tmpOrder_pay.Amount + inSummDebet
+                    WHEN COALESCE (tmpOrder_pay.Amount, 0) + inSummDebet
                          -- ИТОГО с учетом всех скидок и Транспорта, Сумма продажи с НДС
-                       = MovementFloat_TotalSummPVAT.ValueData
+                      >= MovementFloat_TotalSummPVAT.ValueData
                          -- минус откорректированная скидка
                        - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData)
                          -- плюс Транспорт
@@ -401,6 +405,14 @@ BEGIN
              , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) :: TFloat AS Value_TaxKind
              , Object_TaxKind.ValueData                     AS TaxKindName
              , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
+
+             , Object_InfoMoney_View.InfoMoneyId
+             , Object_InfoMoney_View.InfoMoneyCode
+             , Object_InfoMoney_View.InfoMoneyName
+             , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName_all
+           --, Object_InfoMoney_View.InfoMoneyName_all
+             , Object_InfoMoney_View.InfoMoneyGroupName
+             , Object_InfoMoney_View.InfoMoneyDestinationName
 
              , Object_Insert.ValueData                      AS InsertName
              , MovementDate_Insert.ValueData                AS InsertDate
@@ -463,10 +475,10 @@ BEGIN
                        ) AS tmpOrder_pay
                          ON tmpOrder_pay.MovementId_OrderClient = Movement_OrderClient.Id
 
-             -- Cчет (у лодки) + его Оплаты + Остаток к оплате
+             -- Cчет (у заказа) + его Оплаты + Остаток к оплате
              LEFT JOIN tmpInvoicePay ON tmpInvoicePay.MovementId_Invoice = Movement_Invoice.Id
                                  -- AND 1=0
-             -- Поискнеоплаченный счет
+             -- Поиск неоплаченный счет
              LEFT JOIN (SELECT tmpInvoicePay.MovementId_OrderClient
                              , tmpInvoicePay.MovementId_Invoice
                              , tmpInvoicePay.Amount_Invoice
@@ -491,6 +503,16 @@ BEGIN
                                          AND MovementLinkObject_InvoiceKind_find.DescId = zc_MovementLinkObject_InvoiceKind()
              LEFT JOIN Object AS Object_InvoiceKind_find ON Object_InvoiceKind_find.Id = MovementLinkObject_InvoiceKind_find.ObjectId
 
+
+             -- Найдем статью: 1) неоплаченный счет 2) счет у заказа
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
+                                          ON MovementLinkObject_InfoMoney.MovementId = COALESCE (Movement_Invoice_find.Id, Movement_Invoice.Id)
+                                         AND MovementLinkObject_InfoMoney.DescId     = zc_MovementLinkObject_InfoMoney()
+             -- Найдем статью у клиента
+             LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                                  ON ObjectLink_InfoMoney.ObjectId = Movement_OrderClient.FromId
+                                 AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Client_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (MovementLinkObject_InfoMoney.ObjectId, ObjectLink_InfoMoney.ChildObjectId)
 
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement_OrderClient.Id
