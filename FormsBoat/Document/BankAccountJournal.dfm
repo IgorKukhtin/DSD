@@ -1202,7 +1202,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     ExplicitHeight = 30
     object lbSearchArticle: TcxLabel
       Left = 408
-      Top = 4
+      Top = 6
       Hint = #1055#1086#1080#1089#1082' '#1076#1083#1103' '#1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
       Caption = #1055#1086#1080#1089#1082' Inv No '#1089#1095#1077#1090':'
       ParentFont = False

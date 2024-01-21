@@ -358,7 +358,7 @@ object PartnerForm: TPartnerForm
     Width = 1102
     Height = 41
     Align = alBottom
-    TabOrder = 3
+    TabOrder = 2
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -410,9 +410,9 @@ object PartnerForm: TPartnerForm
     Align = alTop
     TabOrder = 6
     object lbSearchName: TcxLabel
-      Left = 10
+      Left = 14
       Top = 6
-      Caption = 'Lieferanten: '
+      Caption = #1055#1086#1080#1089#1082' Lieferanten:'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -422,13 +422,13 @@ object PartnerForm: TPartnerForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 104
+      Left = 144
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        200
         21)
-      Width = 140
+      Width = 200
     end
   end
   object DataSource: TDataSource
@@ -978,6 +978,7 @@ object PartnerForm: TPartnerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

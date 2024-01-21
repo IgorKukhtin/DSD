@@ -3,7 +3,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 492
-  ClientWidth = 1055
+  ClientWidth = 1134
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1055
+    Width = 1134
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1055
     object deStart: TcxDateEdit
       Left = 90
       Top = 5
@@ -55,12 +56,12 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel6: TcxLabel
-      Left = 797
+      Left = 843
       Top = 6
       Caption = 'Kunden:'
     end
     object edClient: TcxButtonEdit
-      Left = 842
+      Left = 889
       Top = 5
       Properties.Buttons = <
         item
@@ -71,9 +72,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Width = 191
     end
     object cxLabel3: TcxLabel
-      Left = 388
+      Left = 384
       Top = 4
-      Caption = #8470' '#1079#1072#1082#1072#1079':'
+      Caption = #1055#1086#1080#1089#1082' '#8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -83,7 +84,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Style.IsFontAssigned = True
     end
     object edInvNumber_OrderClient: TcxTextEdit
-      Left = 455
+      Left = 497
       Top = 5
       TabOrder = 7
       DesignSize = (
@@ -92,7 +93,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Width = 120
     end
     object cxLabel4: TcxLabel
-      Left = 581
+      Left = 623
       Top = 4
       Caption = 'Inv No '#1089#1095#1077#1090':'
       ParentFont = False
@@ -104,7 +105,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Style.IsFontAssigned = True
     end
     object edSearch_ReceiptNumber_Invoice: TcxTextEdit
-      Left = 665
+      Left = 707
       Top = 5
       TabOrder = 9
       DesignSize = (
@@ -116,12 +117,13 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1055
+    Width = 1134
     Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1055
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -333,6 +335,97 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object isPay: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085
+        DataBinding.FieldName = 'isPay'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+        Width = 70
+      end
+      object isInvoice_oth: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'isInvoice_oth'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1081#1076#1077#1085' '#1076#1088#1091#1075#1086#1081' '#1089#1095#1077#1090' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 55
+      end
+      object InvoiceKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvoiceKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
+      object ReceiptNumber_Invoice: TcxGridDBColumn
+        Caption = 'Inv No'
+        DataBinding.FieldName = 'ReceiptNumber_Invoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+        Options.Editing = False
+        Width = 55
+      end
+      object InvNumberFull_Invoice: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+        DataBinding.FieldName = 'InvNumberFull_Invoice'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object InvNumber_Invoice: TcxGridDBColumn
+        Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+        DataBinding.FieldName = 'InvNumber_Invoice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object Amount_Invoice: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1089#1095#1077#1090#1091
+        DataBinding.FieldName = 'Amount_Invoice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Amount_Invoice_pay: TcxGridDBColumn
+        Caption = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1089#1095#1077#1090#1091
+        DataBinding.FieldName = 'Amount_Invoice_pay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1089#1095#1077#1090#1091
+        Width = 70
+      end
+      object Amount_Order_pay: TcxGridDBColumn
+        Caption = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1091
+        DataBinding.FieldName = 'Amount_Order_pay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1047#1072#1082#1072#1079#1091' '#1050#1083#1080#1077#1085#1090#1072
+        Width = 70
+      end
       object DateBegin: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
         DataBinding.FieldName = 'DateBegin'
@@ -528,91 +621,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Options.Editing = False
         Width = 200
       end
-      object Amount_Invoice: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1089#1095#1077#1090#1091
-        DataBinding.FieldName = 'Amount_Invoice'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object Amount_Invoice_pay: TcxGridDBColumn
-        Caption = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1089#1095#1077#1090#1091
-        DataBinding.FieldName = 'Amount_Invoice_pay'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1089#1095#1077#1090#1091
-        Width = 70
-      end
-      object Amount_Order_pay: TcxGridDBColumn
-        Caption = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1091
-        DataBinding.FieldName = 'Amount_Order_pay'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1047#1072#1082#1072#1079#1091' '#1050#1083#1080#1077#1085#1090#1072
-        Width = 70
-      end
-      object isPay: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'isPay'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1095#1077#1090' '#1086#1087#1083#1072#1095#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-        Width = 70
-      end
-      object InvoiceKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
-        DataBinding.FieldName = 'InvoiceKindName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 79
-      end
-      object ReceiptNumber_Invoice: TcxGridDBColumn
-        Caption = 'Inv No'
-        DataBinding.FieldName = 'ReceiptNumber_Invoice'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
-        Options.Editing = False
-        Width = 55
-      end
-      object InvNumberFull_Invoice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
-        DataBinding.FieldName = 'InvNumberFull_Invoice'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 120
-      end
-      object InvNumber_Invoice: TcxGridDBColumn
-        Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
-        DataBinding.FieldName = 'InvNumber_Invoice'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
       object InvNumberFull_Invoice_find: TcxGridDBColumn
         Caption = '***'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090' ('#1087#1086#1080#1089#1082')'
         DataBinding.FieldName = 'InvNumberFull_Invoice_find'
@@ -656,7 +664,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Width = 70
       end
       object Comment_Invoice: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
+        Caption = #1058#1077#1082#1089#1090' '#1057#1095#1077#1090
         DataBinding.FieldName = 'Comment_Invoice'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -705,10 +713,11 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   object Panel_btn: TPanel
     Left = 0
     Top = 451
-    Width = 1055
+    Width = 1134
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitWidth = 1055
     object btnFormClose: TcxButton
       Left = 607
       Top = 7
@@ -2053,7 +2062,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 488
-    Top = 72
+    Left = 464
+    Top = 40
   end
 end

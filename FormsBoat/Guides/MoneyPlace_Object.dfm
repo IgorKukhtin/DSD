@@ -1,28 +1,26 @@
 inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientHeight = 480
-  ClientWidth = 669
-  ExplicitWidth = 685
+  ClientWidth = 759
+  ExplicitWidth = 775
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 669
+    Width = 759
     Height = 380
     ExplicitTop = 59
     ExplicitWidth = 669
     ExplicitHeight = 380
     ClientRectBottom = 380
-    ClientRectRight = 669
+    ClientRectRight = 759
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 669
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
-        Width = 669
+        Width = 759
         Height = 380
-        ExplicitLeft = 168
-        ExplicitTop = 3
         ExplicitWidth = 669
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -49,7 +47,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 200
+            Width = 300
           end
           object ItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -65,7 +63,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 110
           end
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -129,10 +127,11 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   object Panel_btn: TPanel [1]
     Left = 0
     Top = 439
-    Width = 669
+    Width = 759
     Height = 41
     Align = alBottom
     TabOrder = 5
+    ExplicitWidth = 669
     object btnFormClose: TcxButton
       Left = 381
       Top = 7
@@ -153,14 +152,15 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   object Panel2: TPanel [2]
     Left = 0
     Top = 0
-    Width = 669
+    Width = 759
     Height = 33
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 669
     object lbSearchName: TcxLabel
       Left = 6
       Top = 6
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -170,13 +170,13 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 80
+      Left = 125
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        200
         21)
-      Width = 140
+      Width = 200
     end
   end
   inherited ActionList: TActionList

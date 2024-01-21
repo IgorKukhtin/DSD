@@ -182,7 +182,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Width = 1065
     Height = 41
     Align = alBottom
-    TabOrder = 3
+    TabOrder = 2
     object btnFormClose: TcxButton
       Left = 423
       Top = 7
@@ -218,9 +218,9 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Align = alTop
     TabOrder = 6
     object lbSearchName: TcxLabel
-      Left = 10
+      Left = 11
       Top = 6
-      Caption = 'Lieferanten / Kunden: '
+      Caption = #1055#1086#1080#1089#1082' Lieferanten / Kunden:'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -230,13 +230,13 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 160
+      Left = 205
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        200
         21)
-      Width = 140
+      Width = 200
     end
   end
   object DataSource: TDataSource

@@ -351,7 +351,6 @@ object ClientForm: TClientForm
     Height = 41
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 338
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -403,9 +402,9 @@ object ClientForm: TClientForm
     Align = alTop
     TabOrder = 6
     object lbSearchName: TcxLabel
-      Left = 10
+      Left = 9
       Top = 6
-      Caption = 'Kunden: '
+      Caption = #1055#1086#1080#1089#1082' Kunden:'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -415,13 +414,13 @@ object ClientForm: TClientForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 72
+      Left = 112
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        200
         21)
-      Width = 140
+      Width = 200
     end
   end
   object DataSource: TDataSource
@@ -947,6 +946,7 @@ object ClientForm: TClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

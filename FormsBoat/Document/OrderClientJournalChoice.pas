@@ -131,6 +131,7 @@ type
     Amount_Invoice_pay_find: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    isInvoice_oth: TcxGridDBColumn;
   private
   public
   end;

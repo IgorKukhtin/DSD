@@ -571,8 +571,8 @@
       Caption = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
       Hint = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
       ImageIndex = 7
-      FormName = 'TUnion_ClientPartnerForm'
-      FormNameParam.Value = 'TUnion_ClientPartnerForm'
+      FormName = 'TMoneyPlace_ObjectForm'
+      FormNameParam.Value = 'TMoneyPlace_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
