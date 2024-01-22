@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Production (
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Name_Scale TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , PartionGoods TVarChar
@@ -77,13 +78,15 @@ BEGIN
           UNION
            SELECT Object.Id AS UnitId FROM Object WHERE inUnitId = 0 AND Object.DescId = zc_Object_Unit()
           )
+
     -- –ÂÁÛÎ¸Ú‡Ú
     SELECT Object_GoodsGroup.Id                       AS GoodsGroupId
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
-         , Object_Goods.ValueData                     AS GoodsName
+         , Object_Goods.ValueData                     AS GoodsName 
+         , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
          , Object_GoodsKind.ValueData                 AS GoodsKindName
          , Object_Measure.ValueData                   AS MeasureName
          , Object_TradeMark.ValueData                 AS TradeMarkName
@@ -233,6 +236,9 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+          LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                 ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
   ;
 
 END;
@@ -243,6 +249,7 @@ ALTER FUNCTION gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boole
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.01.24         *
  17.02.20         * add SubjectDocName
  06.08.15                                        * all
  21.08.14         *

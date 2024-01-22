@@ -21,9 +21,9 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, DescName TVarChar
              , SubjectDocName  TVarChar
              , PartionGoods TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Name_Scale TVarChar, GoodsKindName TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
-             , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildGoodsKindName TVarChar
+             , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildName_Scale TVarChar, ChildGoodsKindName TVarChar
              , ChildAmount TFloat, ChildSumm TFloat
              , AmountDel TFloat
              , MainPrice TFloat, ChildPrice TFloat
@@ -210,7 +210,8 @@ BEGIN
            , Object_GoodsGroup.ValueData AS GoodsGroupName
            , Object_Goods.Id             AS GoodsId
            , Object_Goods.ObjectCode     AS GoodsCode
-           , Object_Goods.ValueData      AS GoodsName  
+           , Object_Goods.ValueData      AS GoodsName
+           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale  
            , Object_GoodsKind.ValueData  AS GoodsKindName
            
            , tmpOperationGroup.OperCount :: TFloat AS Amount
@@ -221,7 +222,8 @@ BEGIN
            
            , Object_GoodsGroupChild.ValueData AS ChildGoodsGroupName 
            , Object_GoodsChild.ObjectCode     AS ChildGoodsCode
-           , Object_GoodsChild.ValueData      AS ChildGoodsName
+           , Object_GoodsChild.ValueData      AS ChildGoodsName 
+           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_ScaleChild.ValueData, CHR (39), '`' ), '') :: TVarChar AS ChildName_Scale
            , Object_GoodsKindChild.ValueData  AS ChildGoodsKindName
            
            , tmpOperationGroup.OperCount_out  :: TFloat AS ChildAmount
@@ -338,6 +340,13 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsGroupChild.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroupChild ON Object_GoodsGroupChild.Id = ObjectLink_Goods_GoodsGroupChild.ChildObjectId
 
+             LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                    ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
+             LEFT JOIN ObjectString AS ObjectString_Goods_ScaleChild
+                                    ON ObjectString_Goods_ScaleChild.ObjectId = Object_GoodsChild.Id
+                                   AND ObjectString_Goods_ScaleChild.DescId = zc_ObjectString_Goods_Scale()
+
              LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
              LEFT JOIN Object AS Object_PartionGoodsChild ON Object_PartionGoodsChild.Id = tmpOperationGroup.PartionGoodsId_out
 
@@ -380,6 +389,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.01.24         *
  21.01.23         *
  29.03.22         * isClosed
  17.02.20         * add SubjectDocName

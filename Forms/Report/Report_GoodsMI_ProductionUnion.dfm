@@ -114,6 +114,7 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
           object isPeresort: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090'.'
             DataBinding.FieldName = 'isPeresort'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -187,6 +188,15 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 64
+          end
+          object Name_Scale: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale) ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'Name_Scale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
@@ -283,6 +293,15 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 64
+          end
+          object ChildName_Scale: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale) ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'Name_Scale_child'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object ChildPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'

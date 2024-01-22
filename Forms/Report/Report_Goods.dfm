@@ -458,6 +458,15 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Name_Scale: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
+            DataBinding.FieldName = 'Name_Scale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'

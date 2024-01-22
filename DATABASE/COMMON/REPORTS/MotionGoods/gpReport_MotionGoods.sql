@@ -26,6 +26,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , NormInDays_gk TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Name_Scale TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar
              , MeasureName TVarChar
              , Weight TFloat, CountForWeight TFloat, WeightTare TFloat
@@ -686,6 +687,7 @@ BEGIN
         , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)                 AS GoodsId
         , Object_Goods.ObjectCode        AS GoodsCode
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
+        , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CASE WHEN Object_GoodsKind.ValueData          <> '' THEN Object_GoodsKind.ValueData
                WHEN Object_GoodsKind_complete.ValueData <> '' THEN Object_GoodsKind_complete.ValueData
@@ -986,6 +988,10 @@ BEGIN
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+        LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                               ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                              AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                               ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -1067,6 +1073,7 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.01.24         *
  09.08.22         *  NormInDays_gk
  18.12.19         *
  14.11.18         *

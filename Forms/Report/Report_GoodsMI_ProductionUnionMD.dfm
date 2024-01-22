@@ -191,6 +191,15 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
+          object Name_Scale: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale) ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'Name_Scale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object HeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
@@ -269,6 +278,8 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 312
+        ExplicitTop = -420
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -403,6 +414,15 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 64
+          end
+          object ChildName_Scale: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale) ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'Name_Scale_child'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object ChildAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'

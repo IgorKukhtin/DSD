@@ -749,6 +749,15 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         Options.Editing = False
         Width = 120
       end
+      object Name_Scale: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
+        DataBinding.FieldName = 'Name_Scale'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object PartionGoodsDate: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
         DataBinding.FieldName = 'PartionGoodsDate'
@@ -3633,6 +3642,7 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 456
     Top = 392

@@ -25,7 +25,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     Height = 590
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -735,6 +734,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 120
+      end
+      object Name_Scale: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
+        DataBinding.FieldName = 'Name_Scale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object PartionGoodsDate: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
@@ -3620,6 +3627,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 456
     Top = 392

@@ -24,7 +24,9 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , CarCode Integer, CarName TVarChar
               , ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
-              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar
+              , GoodsCode Integer, GoodsName TVarChar
+              , Name_Scale TVarChar
+              , GoodsKindName TVarChar, GoodsKindName_complete TVarChar
               , PartionGoods TVarChar
               , StorageId Integer, StorageName TVarChar
               , PartionModelId Integer, PartionModelName TVarChar
@@ -217,6 +219,7 @@ BEGIN
 
         , gpReport.GoodsCode
         , gpReport.GoodsName
+        , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
         , gpReport.GoodsKindName
         , gpReport.GoodsKindName_complete
         , gpReport.PartionGoods ::TVarChar
@@ -1082,6 +1085,8 @@ BEGIN
                         , Object_Unit.ValueData             AS UnitName_partion
                         , Object_Branch.ValueData           AS BranchName_partion
                         , ObjectString_PartNumber.ValueData AS PartNumber_partion
+                        
+                        , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -1137,7 +1142,11 @@ BEGIN
 
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
                         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (tmpMIContainer_group.GoodsKindId, tmpMILO_GoodsKind.ObjectId)
-                
+ 
+                        LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                               ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                              AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
+               
                         LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
                         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
                         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpMIContainer_group.LocationId
@@ -1199,6 +1208,7 @@ BEGIN
                         LEFT JOIN tmpProtocol ON tmpProtocol.MovementId =  tmpMIContainer_group.MovementId
                         LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId =  tmpMIContainer_group.MovementId
                         
+                        
                    )
 
    -- –≈«”À‹“¿“
@@ -1230,6 +1240,7 @@ BEGIN
 
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
+        , tmpDataAll.Name_Scale          ::TVarChar
         , tmpDataAll.GoodsKindName
         , tmpDataAll.GoodsKindName_complete
         , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionGoods ELSE NULL END ::TVarChar AS PartionGoods
@@ -1327,6 +1338,7 @@ BEGIN
         , tmpDataAll.PaidKindName
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
+        , tmpDataAll.Name_Scale
         , tmpDataAll.GoodsKindName
         , tmpDataAll.GoodsKindName_complete
         , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionGoods ELSE NULL END
@@ -1375,6 +1387,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.01.24         *
  03.12.21         *
  29.03.20         * add zc_Movement_SendAsset()
  02.03.20         *

@@ -20,9 +20,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnionMD (
 RETURNS SETOF refcursor
 /*
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, DescName TVarChar
-             , PartionGoods  TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
+             , PartionGoods  TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, Name_Scale TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
-             , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
+             , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar, ChildName_Scale TVarChar
              , ChildAmount TFloat, ChildSumm TFloat
              , ChildPrice TFloat
              )
@@ -289,6 +289,7 @@ BEGIN
            , COALESCE (Object_Goods.Id,0)                       AS GoodsId
            , Object_Goods.ObjectCode                            AS GoodsCode
            , Object_Goods.ValueData                             AS GoodsName
+           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
            , tmpOperationGroup.Amount :: TFloat                 AS Amount
            , tmpOperationGroup.HeadCount :: TFloat              AS HeadCount
            , tmpOperationGroup.Summ :: TFloat                   AS Summ
@@ -398,6 +399,10 @@ BEGIN
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN MovementDesc ON MovementDesc.Id = tmpOperationGroup.MovementDescId
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                    ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
 
       ORDER BY
               tmpOperationGroup.InvNumber
@@ -595,6 +600,7 @@ BEGIN
            , Object_GoodsGroupChild.ValueData                       AS ChildGoodsGroupName
            , Object_GoodsChild.ObjectCode                           AS ChildGoodsCode
            , Object_GoodsChild.ValueData                            AS ChildGoodsName
+           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_ScaleChild.ValueData, CHR (39), '`' ), '') :: TVarChar AS ChildName_Scale
            , tmpOperationGroup.ChildAmount  :: TFloat               AS ChildAmount
            , tmpOperationGroup.ChildSumm :: TFloat                  AS ChildSumm
 
@@ -728,6 +734,11 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = tmpOperationGroup.ChildGoodsId
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_ScaleChild
+                                    ON ObjectString_Goods_ScaleChild.ObjectId = Object_GoodsChild.Id
+                                   AND ObjectString_Goods_ScaleChild.DescId = zc_ObjectString_Goods_Scale()
+
        ;
 
      RETURN NEXT Cursor2;
@@ -741,6 +752,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.01.24         *
  21.01.23         *
  18.11.19         *
  04.12.14                                                       *

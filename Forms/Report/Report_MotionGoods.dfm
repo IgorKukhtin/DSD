@@ -947,6 +947,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 120
       end
+      object Name_Scale: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
+        DataBinding.FieldName = 'Name_Scale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object NormInDays_gk: TcxGridDBColumn
         Caption = '***'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093
         DataBinding.FieldName = 'NormInDays_gk'
@@ -4757,6 +4765,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 456
     Top = 392
