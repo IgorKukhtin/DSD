@@ -227,7 +227,7 @@
     Left = 12
     Top = 26
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Text = '0'
     Width = 77
   end
@@ -245,7 +245,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 182
   end
   object cxLabel9: TcxLabel
@@ -269,7 +269,7 @@
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 16
+    TabOrder = 15
     Width = 106
   end
   object cxLabel5: TcxLabel
@@ -283,7 +283,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 18
+    TabOrder = 17
     Width = 182
   end
   object cxLabel4: TcxLabel
@@ -298,7 +298,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 19
     Width = 67
   end
   object cxLabel7: TcxLabel
@@ -315,14 +315,14 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 22
+    TabOrder = 21
     Width = 182
   end
   object ceInfoMoneyName_invoice: TcxTextEdit
     Left = 12
     Top = 290
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 23
     Width = 182
   end
   object cxLabel8: TcxLabel
@@ -1029,7 +1029,8 @@
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
-      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090'?'
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1057#1082#1072#1085' '#1044#1086#1082#1091#1084#1077#1085#1090#1072'?'
+      InfoAfterExecute = #1057#1082#1072#1085' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085'.'
     end
     object spInserUpdateGoods: TdsdExecStoredProc
       Category = 'DSDLib'
