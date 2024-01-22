@@ -790,6 +790,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -817,13 +818,13 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -854,13 +855,13 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -870,11 +871,11 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
-      DataSource = DataSource
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -884,11 +885,11 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
       Status = mtUncomplete
-      DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -898,11 +899,11 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
       Status = mtDelete
-      DataSource = DataSource
     end
     object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleReCompleteList
@@ -919,6 +920,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleCompleteList
@@ -935,6 +937,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleUncompleteList
@@ -951,6 +954,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleErasedList
@@ -1173,7 +1177,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
         end>
       Caption = #1042#1099#1073#1088#1072#1090#1100
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 7
+      ImageIndex = 80
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
@@ -1310,11 +1314,11 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     Left = 848
     Top = 296
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -1323,7 +1327,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
       end>
     ActionItemList = <
       item
-        Action = actUpdate
+        Action = actChoiceGuides
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1334,6 +1338,7 @@ object ProductionUnionMasterChoiceForm: TProductionUnionMasterChoiceForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

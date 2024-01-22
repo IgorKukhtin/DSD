@@ -5,7 +5,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -247
   ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -570,6 +569,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       Enabled = False
@@ -589,6 +589,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
@@ -611,15 +612,19 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited mactReCompleteList: TMultiAction
       Enabled = False
@@ -1090,6 +1095,11 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     OnDblClickActionList = <
       item
         Action = actChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = actChoiceGuides
+        ShortCut = 13
       end>
   end
   inherited PopupMenu: TPopupMenu

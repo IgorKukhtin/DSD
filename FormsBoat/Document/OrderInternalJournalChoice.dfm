@@ -832,6 +832,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -859,13 +860,13 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -896,13 +897,13 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -912,11 +913,11 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 77
       Status = mtComplete
-      DataSource = DataSource
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -926,11 +927,11 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
       Status = mtUncomplete
-      DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -940,7 +941,6 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 52
       Status = mtDelete
-      DataSource = DataSource
     end
     object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -1425,11 +1425,11 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     Left = 72
     Top = 328
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -1438,7 +1438,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
       end>
     ActionItemList = <
       item
-        Action = actUpdate
+        Action = actChoiceGuides
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1449,6 +1449,7 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

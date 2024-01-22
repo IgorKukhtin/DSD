@@ -118,7 +118,6 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 59
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -709,10 +708,10 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -859,6 +858,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -868,11 +868,11 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
       Status = mtUncomplete
-      DataSource = DataSource
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -882,11 +882,11 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 77
       Status = mtComplete
-      DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -896,7 +896,6 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 52
       Status = mtDelete
-      DataSource = DataSource
     end
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -946,6 +945,23 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 52
     end
+    object mactReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Enabled = False
+      ActionList = <
+        item
+          Action = actSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 77
+    end
     object spCompete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -971,10 +987,10 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1140,22 +1156,6 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
         end>
       isShowModal = True
     end
-    object actReCompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleReCompleteList
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      ImageIndex = 12
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -1218,7 +1218,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
         item
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1315,7 +1315,6 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -1352,7 +1351,6 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -1363,7 +1361,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       ImageIndex = 87
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_byInvoice'
     DataSet = ClientDataSet
     DataSets = <
@@ -1436,7 +1434,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
       Caption = '-'
     end
     object N1: TMenuItem
-      Action = actReCompleteList
+      Action = mactReCompleteList
     end
     object N10: TMenuItem
       Action = mactCompleteList
@@ -1486,18 +1484,15 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     Left = 72
     Top = 320
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 200
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end>
+    ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
@@ -1506,6 +1501,7 @@ object IncomeJournalByInvoiceForm: TIncomeJournalByInvoiceForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 184
     Top = 224

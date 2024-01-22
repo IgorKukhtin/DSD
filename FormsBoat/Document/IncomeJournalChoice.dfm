@@ -455,23 +455,29 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       Enabled = False
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
+      DataSource = nil
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       Enabled = False
+      DataSource = nil
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
+      DataSource = nil
     end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited mactReCompleteList: TMultiAction
       Enabled = False

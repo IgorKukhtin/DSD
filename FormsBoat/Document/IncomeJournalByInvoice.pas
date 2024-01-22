@@ -38,7 +38,7 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
@@ -61,8 +61,8 @@ type
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
@@ -82,7 +82,7 @@ type
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
     actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
+    mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     dsdChoiceGuides: TdsdChoiceGuides;

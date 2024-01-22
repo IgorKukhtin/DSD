@@ -35,7 +35,6 @@ type
     AmountIn: TcxGridDBColumn;
     AmountOut: TcxGridDBColumn;
     InvNumberParent: TcxGridDBColumn;
-    actInsertProfitLossService: TdsdInsertUpdateAction;
     bbAddBonus: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -44,12 +43,8 @@ type
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     spUpdate_isCopy: TdsdStoredProc;
-    actIsCopy: TdsdExecStoredProc;
     bbisCopy: TdxBarButton;
-    mactInsertProfitLossService: TMultiAction;
-    actIsCopyTrue: TdsdExecStoredProc;
     actMasterPost: TDataSetPost;
-    mactIsCopy: TMultiAction;
     ExecuteDialog: TExecuteDialog;
     InvNumber_Invoice_Full: TcxGridDBColumn;
     Comment: TcxGridDBColumn;

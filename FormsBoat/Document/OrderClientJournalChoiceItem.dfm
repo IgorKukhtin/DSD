@@ -947,7 +947,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -1500,11 +1499,11 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       Action = actUpdate
     end
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -1513,6 +1512,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
       end>
     ActionItemList = <
       item
+        Action = actChoiceGuides
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1527,6 +1527,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

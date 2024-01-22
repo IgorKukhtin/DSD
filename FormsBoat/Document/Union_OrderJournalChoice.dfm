@@ -684,6 +684,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       Enabled = False
@@ -702,6 +703,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
@@ -723,15 +725,19 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
+      DataSource = nil
     end
     inherited mactReCompleteList: TMultiAction
       Enabled = False
@@ -1543,6 +1549,11 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
+      end>
+    ActionItemList = <
+      item
+        Action = actChoiceGuides
+        ShortCut = 13
       end>
   end
   inherited PeriodChoice: TPeriodChoice
