@@ -46,7 +46,6 @@
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 343
     object dxBarDockControl3: TdxBarDockControl
       Left = 0
       Top = 0
@@ -61,7 +60,6 @@
       Width = 4
       Height = 461
       AlignSplitter = salRight
-      ExplicitHeight = 317
     end
     object Panel1: TPanel
       Left = 0
@@ -71,7 +69,6 @@
       Align = alLeft
       Caption = 'Panel1'
       TabOrder = 2
-      ExplicitHeight = 317
       object cxGrid2: TcxGrid
         Left = 1
         Top = 19
@@ -79,7 +76,6 @@
         Height = 441
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 297
         object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DocumentDS
@@ -147,7 +143,6 @@
         Height = 441
         AlignSplitter = salRight
         Control = cxGrid2
-        ExplicitHeight = 297
       end
       object cxLabel1: TcxLabel
         Left = 1
@@ -174,7 +169,6 @@
       Caption = 'PanelDocView'
       ShowCaption = False
       TabOrder = 3
-      ExplicitHeight = 317
     end
   end
   object Код: TcxLabel
@@ -233,7 +227,7 @@
     Left = 12
     Top = 26
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 12
     Text = '0'
     Width = 77
   end
@@ -251,7 +245,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 16
+    TabOrder = 14
     Width = 182
   end
   object cxLabel9: TcxLabel
@@ -275,7 +269,7 @@
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 18
+    TabOrder = 16
     Width = 106
   end
   object cxLabel5: TcxLabel
@@ -289,7 +283,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 18
     Width = 182
   end
   object cxLabel4: TcxLabel
@@ -304,7 +298,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 22
+    TabOrder = 20
     Width = 67
   end
   object cxLabel7: TcxLabel
@@ -321,14 +315,14 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 22
     Width = 182
   end
   object ceInfoMoneyName_invoice: TcxTextEdit
     Left = 12
     Top = 290
     Properties.ReadOnly = True
-    TabOrder = 25
+    TabOrder = 24
     Width = 182
   end
   object cxLabel8: TcxLabel
@@ -790,8 +784,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 22
-    Top = 384
+    Left = 70
+    Top = 392
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -811,11 +805,11 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 153
-    Top = 75
+    Top = 59
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 224
-    Top = 320
+    Left = 264
+    Top = 304
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 307
@@ -994,9 +988,8 @@
         end
         item
         end>
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 4
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1004,9 +997,8 @@
       Category = 'DSDLib'
       MoveParams = <>
       Document = Document
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1082#1072#1085
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 60
     end
     object MultiActionInsertDocument: TMultiAction
       Category = 'DSDLib'
@@ -1018,9 +1010,8 @@
         item
           Action = DocumentRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 0
     end
     object actDeleteDocument: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1036,9 +1027,8 @@
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 2
       QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090'?'
     end
     object spInserUpdateGoods: TdsdExecStoredProc
@@ -1089,7 +1079,15 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1300,8 +1298,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 161
+    Left = 144
+    Top = 105
   end
   object spUpdate_BankAccountPdf: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_BankAccountPdf'
@@ -1362,8 +1360,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 16
-    Top = 191
+    Left = 72
+    Top = 175
   end
   object GuidesInvoice: TdsdGuides
     KeyField = 'Id'
@@ -1475,8 +1473,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 100
-    Top = 207
+    Left = 148
+    Top = 151
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -1601,7 +1599,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 77
-    Top = 359
+    Left = 141
+    Top = 319
   end
 end
