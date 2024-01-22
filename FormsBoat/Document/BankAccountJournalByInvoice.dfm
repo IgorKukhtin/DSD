@@ -696,6 +696,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TBankAccountMovementForm'
@@ -720,6 +721,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TBankAccountMovementForm'
@@ -746,30 +748,38 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      DataSource = nil
     end
-    inherited mactSetErasedList: TMultiAction [12]
-      Enabled = False
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    inherited actComplete: TdsdChangeMovementStatus
+      DataSource = nil
     end
-    inherited actSetErased: TdsdChangeMovementStatus [13]
+    inherited actUnComplete: TdsdChangeMovementStatus
+      DataSource = nil
     end
-    inherited mactReCompleteList: TMultiAction [14]
+    inherited actSetErased: TdsdChangeMovementStatus
+      DataSource = nil
+    end
+    inherited mactReCompleteList: TMultiAction
       Enabled = False
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    inherited mactCompleteList: TMultiAction [15]
+    inherited mactCompleteList: TMultiAction
       Enabled = False
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    inherited mactUnCompleteList: TMultiAction [16]
+    inherited mactUnCompleteList: TMultiAction
       Enabled = False
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1084#1077#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
       InfoAfterExecute = #1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1086#1090#1084#1077#1085#1080#1083#1086#1089#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
     object actChoiceMoneyPlace: TOpenChoiceForm [18]
       Category = 'Update'
@@ -977,116 +987,6 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
       Caption = 'actMasterPost'
       Hint = 'actMasterPost'
       DataSource = MasterDS
-    end
-    object mactIsCopy: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actIsCopy
-        end
-        item
-          Action = actMasterPost
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
-    end
-    object actIsCopy: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'isCopy'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'isCopy'
-          FromParam.DataType = ftBoolean
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'isCopy'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'isCopy'
-          ToParam.DataType = ftBoolean
-          ToParam.MultiSelectSeparator = ','
-        end>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isCopy
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isCopy
-        end>
-      Caption = 'actIsCopy'
-    end
-    object mactInsertProfitLossService: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actIsCopyTrue
-        end
-        item
-          Action = actMasterPost
-        end
-        item
-          Action = actInsertProfitLossService
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
-      ImageIndex = 27
-    end
-    object actIsCopyTrue: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'isCopy'
-          FromParam.Value = False
-          FromParam.DataType = ftBoolean
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'isCopy'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'isCopy'
-          ToParam.DataType = ftBoolean
-          ToParam.MultiSelectSeparator = ','
-        end>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isCopy
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isCopy
-        end>
-      Caption = 'actIsCopyTrue'
-    end
-    object actInsertProfitLossService: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actInsertProfitLossService'
-      FormName = 'TProfitLossServiceForm'
-      FormNameParam.Value = 'TProfitLossServiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '-1'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementId_Value'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      IdFieldName = 'Id'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1367,8 +1267,11 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
         end>
     end
     object bbAddBonus: TdxBarButton
-      Action = mactInsertProfitLossService
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      Visible = ivAlways
+      ImageIndex = 27
     end
     object bbPrint: TdxBarButton
       Action = actPrint
@@ -1380,8 +1283,11 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
       ShortCut = 16465
     end
     object bbisCopy: TdxBarButton
-      Action = mactIsCopy
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
+      Visible = ivAlways
+      ImageIndex = 58
     end
     object bb: TdxBarButton
       Action = macUpdateContract

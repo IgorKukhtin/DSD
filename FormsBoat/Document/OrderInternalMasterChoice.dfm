@@ -622,8 +622,8 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 72
-    Top = 160
+    Left = 104
+    Top = 128
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -823,7 +823,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -860,7 +859,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -876,7 +874,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
-      DataSource = DataSource
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -890,7 +887,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
       Status = mtUncomplete
-      DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -904,11 +900,11 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 13
       Status = mtDelete
-      DataSource = DataSource
     end
     object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleReCompleteList
@@ -925,6 +921,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleCompleteList
@@ -941,6 +938,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleUncompleteList
@@ -957,6 +955,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = mactSimpleErasedList
@@ -1324,11 +1323,11 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     Left = 72
     Top = 328
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -1337,7 +1336,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       end>
     ActionItemList = <
       item
-        Action = actUpdate
+        Action = actChoiceGuides
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1348,6 +1347,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

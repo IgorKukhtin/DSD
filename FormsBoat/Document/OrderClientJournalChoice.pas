@@ -131,6 +131,7 @@ type
     InfoMoneyName: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     isInvoice_oth: TcxGridDBColumn;
+    miUpdate: TMenuItem;
   private
   public
   end;

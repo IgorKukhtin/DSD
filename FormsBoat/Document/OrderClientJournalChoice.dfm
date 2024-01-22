@@ -1153,7 +1153,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -1803,6 +1802,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Images = dmMain.ImageList
     Left = 136
     Top = 64
+    object miUpdate: TMenuItem
+      Action = actUpdate
+    end
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
@@ -1817,6 +1819,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       end>
     ActionItemList = <
       item
+        Action = actChoiceGuides
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList

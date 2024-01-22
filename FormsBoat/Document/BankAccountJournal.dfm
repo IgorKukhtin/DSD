@@ -234,7 +234,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -246,7 +246,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 70
           end
@@ -258,18 +258,16 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' '#1080' '#1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1085#1080#1084' ('#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077', '#1076#1077#1090#1072#1083#1100#1085#1086')'
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 70
           end
           object isDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085'. ('#1076#1072'/'#1085#1077#1090')'
+            Caption = #1050' '#1086#1087#1083'. ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1045#1089#1090#1100' '#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084#1099' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' '#1080' '#1089#1091#1084#1084#1072' '#1087#1086'  '#1042#1089#1077#1084' '#1054#1087#1083#1072#1090#1072#1084' ('#1076#1072'/'#1085 +
-              #1077#1090')'
+            HeaderHint = #1045#1089#1090#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 55
           end
@@ -966,8 +964,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
-          OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
@@ -2732,6 +2728,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'InfoMoneyId_Invoice'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
