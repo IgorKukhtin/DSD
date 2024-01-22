@@ -8,17 +8,19 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InvoiceKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , Enum TVarChar
-             , isErased Boolean) AS
-$BODY$BEGIN
-
+             , isErased Boolean
+              )
+AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InvoiceKind());
 
-   RETURN QUERY 
-       SELECT 
-             Object.Id                      AS Id 
+   RETURN QUERY
+       SELECT
+             Object.Id                      AS Id
            , Object.ObjectCode              AS Code
-           , Object.ValueData               AS Name 
+           , Object.ValueData               AS Name
            , ObjectString_Comment.ValueData AS Comment
            , ObjectString_Enum.ValueData    AS Enum
            , Object.isErased                AS isErased
@@ -28,20 +30,21 @@ $BODY$BEGIN
                                   AND ObjectString_Comment.DescId = zc_ObjectString_InvoiceKind_Comment()
 
             LEFT JOIN ObjectString AS ObjectString_Enum
-                                   ON ObjectString_Enum.ObjectId = Object.Id 
+                                   ON ObjectString_Enum.ObjectId = Object.Id
                                   AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
        WHERE Object.DescId = zc_Object_InvoiceKind()
-      UNION ALL
+
+      /*UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
             , 'УДАЛИТЬ' :: TVarChar AS Name
             , ''        :: TVarChar AS Comment
             , ''        :: TVarChar AS Enum
-            , FALSE                 AS isErased
+            , FALSE                 AS isErased*/
      ;
-  
+
 END;$BODY$
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -92,8 +92,8 @@ BEGIN
         -- или изменили Заказ
         OR NOT EXISTS (SELECT 1 FROM Movement WHERE  Movement.Id = inMovementId_Invoice AND Movement.ParentId = inMovementId_Parent)
        )
-       -- если НЕТ Child
-       AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+       -- если Child один или его нет
+       AND 1 >= (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
      THEN
          -- сохранили <Документ> + для inMovementId_Parent уствновится связь на этот inMovementId_Invoice
          inMovementId_Invoice := gpInsertUpdate_Movement_Invoice (ioId               := inMovementId_Invoice
