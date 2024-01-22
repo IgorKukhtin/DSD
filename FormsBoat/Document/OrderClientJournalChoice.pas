@@ -99,7 +99,6 @@ type
     bbChoiceGuides: TdxBarButton;
     BarCode: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
-    miUpdate: TMenuItem;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
     StateText: TcxGridDBColumn;

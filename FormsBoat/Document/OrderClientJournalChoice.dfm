@@ -24,7 +24,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1055
     object deStart: TcxDateEdit
       Left = 90
       Top = 5
@@ -123,7 +122,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1055
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -717,7 +715,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1055
     object btnFormClose: TcxButton
       Left = 607
       Top = 7
@@ -1129,8 +1126,8 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TOrderClientForm'
-      FormNameParam.Value = 'TOrderClientForm'
+      FormName = 'del_TOrderClientForm'
+      FormNameParam.Value = 'del_TOrderClientForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1806,9 +1803,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     Images = dmMain.ImageList
     Left = 136
     Top = 64
-    object miUpdate: TMenuItem
-      Action = actUpdate
-    end
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
