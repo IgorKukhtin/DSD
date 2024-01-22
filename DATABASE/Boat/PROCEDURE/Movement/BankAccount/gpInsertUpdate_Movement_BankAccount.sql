@@ -127,11 +127,9 @@ BEGIN
                                                                 , inUnitId           := NULL                                ::Integer
                                                                 , inInfoMoneyId      := inInfoMoneyId
                                                                 , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
-                                                                , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END :: Integer
+                                                                , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END
                                                                 , inSession          := inSession
-                                                                 )
-         FROM Object AS Object_Client
-         WHERE Object_Client.Id = inMoneyPlaceId;
+                                                                 );
 
          -- проводим Документ
          /*IF vbUserId = lpCheckRight (vbUserId :: TVarChar, zc_Enum_Process_Complete_Invoice())

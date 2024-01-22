@@ -45,10 +45,10 @@ BEGIN
      END IF;
 
      -- проверка
-     IF COALESCE (inMovementId_Invoice, 0) = 0 AND COALESCE (inMovementId_Parent, 0) = 0
+     /*IF COALESCE (inMovementId_Invoice, 0) = 0 AND COALESCE (inMovementId_Parent, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.Не выбран документ Счет.';
-     END IF;
+     END IF;*/
 
 
      -- !!!очень важный расчет!!!

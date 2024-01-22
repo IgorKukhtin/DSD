@@ -74,7 +74,7 @@ BEGIN
 
            , Movement_Invoice.Id                               AS MovementId_Invoice
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
-           , ''                                   :: Text      AS Comment_Invoice
+           , ''                                   :: TVarChar  AS Comment_Invoice
 
            , Object_InvoiceKind.Id                             AS InvoiceKindId
            , Object_InvoiceKind.ValueData                      AS InvoiceKindName
@@ -85,6 +85,7 @@ BEGIN
 
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
 
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = inMoneyPlaceId

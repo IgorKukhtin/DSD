@@ -303,7 +303,7 @@
   object cxLabel8: TcxLabel [33]
     Left = 287
     Top = 104
-    Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1074#1099#1087#1080#1089#1082#1077
+    Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1074#1099#1087#1080#1089#1082#1077' '#1073#1072#1085#1082#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 113
@@ -376,6 +376,7 @@
           Value = Null
           Component = GuidesParent
           ComponentItem = 'Key'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -384,6 +385,7 @@
           Component = GuidesParent
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -391,6 +393,7 @@
           Value = Null
           Component = GuidesInvoiceKind
           ComponentItem = 'Key'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -399,6 +402,7 @@
           Component = GuidesInvoiceKind
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -466,11 +470,68 @@
           MultiSelectSeparator = ','
         end
         item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Invoice_find'
+          Value = Null
+          Component = GuidesInvoice
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_Invoice_find'
+          Value = Null
+          Component = GuidesInvoice
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId_find'
+          Value = Null
+          Component = GuidesInvoiceKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName_find'
+          Value = Null
+          Component = GuidesInvoiceKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount_Invoice_find'
+          Value = Null
+          Component = edAmount_invoice
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MasterClientId'
           Value = ''
           Component = GuidesObject
           ComponentItem = 'Key'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -479,7 +540,13 @@
           Component = GuidesObject
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterSummDebet'
+          Value = Null
+          Component = ceAmount
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -567,7 +634,7 @@
     StoredProcName = 'gpInsertUpdate_MI_BankAccount_Child'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'ioId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'inMovementItemId'
@@ -623,7 +690,15 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inamount'
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
         Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat
@@ -639,7 +714,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'incomment'
+        Name = 'inComment'
         Value = ''
         Component = ceComment
         DataType = ftString
@@ -941,7 +1016,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 400
-    Top = 119
+    Top = 167
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
