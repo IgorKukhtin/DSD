@@ -1,10 +1,10 @@
- -- Function: gpUpdate_Object_Goods_Name_Load()
+ -- Function: gpUpdate_Object_Goods_ScaleName_Load()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_Name_Load (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_ScaleName_Load (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Object_Goods_Name_Load(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_Goods_ScaleName_Load(
     IN inGoodsCode           Integer   , -- Код объекта <Товар> 
-    IN inGoodsName_new       TVarChar  , -- новое название
+    IN inName_Scale           TVarChar  , -- новое название
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Void
@@ -40,22 +40,15 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не найден Товар с Код = <%> .', inGoodsCode;
      END IF;
 
-     --проверка что Название (Scale) уже заполнено, т.е. предыдущее название товара перенесено в Название (Scale)
-     IF TRIM (COALESCE ( (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_Scale() AND OS.ObjectId = vbGoodsId),'')) = '' 
+
+     -- сохранили свойство <Название для Scale>
+     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Scale(), vbGoodsId, inName_Scale);
+          
+     IF vbUserId  = 9457  
      THEN
-          RAISE EXCEPTION 'Ошибка.Название (Scale) не заполнено для Товара с Кодом = <%> .', inGoodsCode;
+          RAISE EXCEPTION 'ОК. <%>', inName_Scale;
      END IF;
      
-    -- сохранили новое название
-    PERFORM lpInsertUpdate_Object (vbGoodsId, zc_Object_Goods(), inGoodsCode, inGoodsName_new);
-     
-    -- RAISE EXCEPTION 'Ошибка.Новое Название <%> для Товара с Кодом = <%> .', inGoodsName_new, inGoodsCode;
-     
-    IF vbUserId  = 9457  
-    THEN
-         RAISE EXCEPTION 'ОК. <%>', inGoodsName_new;
-    END IF;
-    
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId, FALSE);
 
@@ -66,7 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 17.01.24         *
+ 22.01.24         *
 */
 
 -- тест

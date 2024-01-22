@@ -174,6 +174,10 @@ type
     actGetImportSettingId_Name: TdsdExecStoredProc;
     mactLoad_Name: TMultiAction;
     bbStartLoad_Name: TdxBarButton;
+    spGetImportSettingId_Scale: TdsdStoredProc;
+    actGetImportSettingId_Scale: TdsdExecStoredProc;
+    mactLoad_Scale: TMultiAction;
+    bbLoad_Scale: TdxBarButton;
   private
     { Private declarations }
   public
