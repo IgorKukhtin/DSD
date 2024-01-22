@@ -170,9 +170,9 @@ BEGIN
                                    INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
                                                           AND MovementItem.DescId   = zc_MI_Child()
                                                           AND MovementItem.isErased = FALSE
-                                INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MovementItem.MovementId
-                                                                           AND Movement_BankAccount.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
-                                                                           AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
+                                   INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MovementItem.MovementId
+                                                                              AND Movement_BankAccount.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
+                                                                              AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
                               GROUP BY tmp.MovementId_Invoice
                              )
     --
