@@ -65,6 +65,18 @@ type
     GuidesInfoMoney: TdsdGuides;
     actGuidesObjectChoiceForm: TOpenChoiceForm;
     btnGuidesObjectChoiceForm: TcxButton;
+    actGet_Pay: TdsdExecStoredProc;
+    actGet_Proforma: TdsdExecStoredProc;
+    actGet_Service: TdsdExecStoredProc;
+    actGet_PrePay: TdsdExecStoredProc;
+    spGet_PrePay: TdsdStoredProc;
+    spGet_Pay: TdsdStoredProc;
+    spGet_Proforma: TdsdStoredProc;
+    spGet_Service: TdsdStoredProc;
+    btnGet_PrePay: TcxButton;
+    btnGet_Pay: TcxButton;
+    btnGet_Proforma: TcxButton;
+    btnGet_Service: TcxButton;
   private
     { Private declarations }
   public

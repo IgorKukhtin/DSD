@@ -40,7 +40,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     bbisCopy: TdxBarButton;
     actMasterPost: TDataSetPost;
@@ -49,7 +48,6 @@ type
     Comment: TcxGridDBColumn;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
-    actRefreshStart: TdsdDataSetRefresh;
     bbOpenInvoiceForm: TdxBarButton;
     bbUpdateMoneyPlace: TdxBarButton;
     actOpenInvoiceForm: TdsdOpenForm;
@@ -70,7 +68,6 @@ type
     cxLabel4: TcxLabel;
     edSearchInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
-    actChoiceGuides: TdsdChoiceGuides;
     InvoiceKindName: TcxGridDBColumn;
     spGetImportSettingId: TdsdStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
@@ -107,7 +104,7 @@ type
     cxGridLevel3: TcxGridLevel;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
-    actDBViewAddOnChild: TdsdDBViewAddOn;
+    DBViewAddOnChild: TdsdDBViewAddOn;
     spInsertUpdateMIChild: TdsdStoredProc;
     actInsert_Child: TdsdInsertUpdateAction;
     actUpdate_Child: TdsdInsertUpdateAction;
@@ -134,9 +131,9 @@ type
     spSelectChild: TdsdStoredProc;
     actOpenFormPdfEdit: TdsdOpenForm;
     bbOpenFormPdfEdit: TdxBarButton;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
-    cxButton3: TcxButton;
+    btnInsert_Child: TcxButton;
+    btnUpdate_Child: TcxButton;
+    btnSetErasedItem: TcxButton;
     actPrintInvoice: TdsdPrintAction;
     actInvoiceReportName: TdsdExecStoredProc;
     mactPrint_Invoice: TMultiAction;
@@ -146,8 +143,8 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintReturnCDS: TClientDataSet;
     PrintOptionCDS: TClientDataSet;
-    cxButton4: TcxButton;
-    cxButton5: TcxButton;
+    btntPrint_Invoice: TcxButton;
+    btnOpenFormPdfEdit: TcxButton;
     ObjectName_invoice_ch2: TcxGridDBColumn;
     Amount_invoice_ch2: TcxGridDBColumn;
     InvNumberFull_parent_ch2: TcxGridDBColumn;
@@ -170,6 +167,11 @@ type
     Blob_11: TcxGridDBColumn;
     Amount_Pay_ch2: TcxGridDBColumn;
     Amount_diff_ch2: TcxGridDBColumn;
+    btnOpenInvoiceForm: TcxButton;
+    cxButton1: TcxButton;
+    mactSetErasedInvoice: TMultiAction;
+    actSetErasedInvoice: TdsdUpdateErased;
+    spErasedMIChild_Invoice: TdsdStoredProc;
   private
     { Private declarations }
   public

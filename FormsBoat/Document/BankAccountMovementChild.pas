@@ -19,7 +19,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo;
 
 type
   TBankAccountMovementChildForm = class(TAncestorEditDialog_boatForm)
@@ -39,7 +39,6 @@ type
     GuidesInvoice: TdsdGuides;
     cxLabel18: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
-    GuidesFiller: TGuidesFiller;
     actGuidesInvoiceChoiceForm: TOpenChoiceForm;
     bbGuidesInvoiceChoiceForm: TcxButton;
     cxLabel9: TcxLabel;
@@ -60,10 +59,17 @@ type
     actGet_Pay: TdsdExecStoredProc;
     actGet_Proforma: TdsdExecStoredProc;
     actGet_Service: TdsdExecStoredProc;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
-    cxButton3: TcxButton;
-    cxButton4: TcxButton;
+    btnGet_PrePay: TcxButton;
+    btnGet_Pay: TcxButton;
+    btnGet_Proforma: TcxButton;
+    btnGet_Service: TcxButton;
+    cxLabel5: TcxLabel;
+    cmText: TcxMemo;
+    cxLabel3: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
+    ceAmount_pay: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

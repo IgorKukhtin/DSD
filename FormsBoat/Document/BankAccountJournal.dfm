@@ -2,9 +2,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 593
   ClientWidth = 1213
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -105
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -201,7 +201,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -214,7 +214,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1072' '#1087#1083#1072#1090#1077#1078#1072' '#1080' '#1089#1091#1084#1084#1099' '#1074' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1072' '#1087#1083#1072#1090#1077#1078#1072' '#1080' '#1089#1091#1084#1084#1099' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1072#1084
             Options.Editing = False
             Width = 80
           end
@@ -223,7 +223,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'isError'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1089#1091#1084#1084#1099' '#1087#1083#1072#1090#1077#1078#1072' '#1080' '#1089#1091#1084#1084#1099' '#1074' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+            HeaderHint = #1053#1077#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1089#1091#1084#1084#1099' '#1087#1083#1072#1090#1077#1078#1072' '#1080' '#1089#1091#1084#1084#1099' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1072#1084
             Options.Editing = False
             Width = 55
           end
@@ -235,7 +235,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1080#1079' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080')'
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -247,7 +247,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1080#1079' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080')'
+            HeaderHint = #1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 70
           end
@@ -259,7 +259,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' '#1080' '#1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1085#1080#1084' ('#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1080#1079' '#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1080')'
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' '#1080' '#1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1085#1080#1084' ('#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077', '#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 70
           end
@@ -269,7 +269,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 
-              #1045#1089#1090#1100' '#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084#1072' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' '#1080' '#1089#1091#1084#1084#1072' '#1087#1086'  '#1042#1089#1077#1084' '#1054#1087#1083#1072#1090#1072#1084' ('#1076#1072'/'#1085 +
+              #1045#1089#1090#1100' '#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084#1099' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' '#1080' '#1089#1091#1084#1084#1072' '#1087#1086'  '#1042#1089#1077#1084' '#1054#1087#1083#1072#1090#1072#1084' ('#1076#1072'/'#1085 +
               #1077#1090')'
             Options.Editing = False
             Width = 55
@@ -305,7 +305,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'InfoMoneyName_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 120
           end
@@ -315,7 +315,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -324,7 +324,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'ReceiptNumber_Invoice_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -334,7 +334,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1042#1089#1077' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 150
           end
@@ -343,7 +343,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'InvoiceKindName_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -352,7 +352,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'InvNumberFull_parent_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 150
           end
@@ -362,7 +362,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -1278,7 +1278,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Align = alBottom
     TabOrder = 6
     object btnInsert: TcxButton
-      Left = 387
+      Left = 491
       Top = 10
       Width = 78
       Height = 25
@@ -1286,7 +1286,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 469
+      Left = 575
       Top = 10
       Width = 78
       Height = 25
@@ -1294,15 +1294,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 1
     end
     object btnComplete: TcxButton
-      Left = 387
+      Left = 491
       Top = 41
-      Width = 160
+      Width = 162
       Height = 25
       Action = actComplete
       TabOrder = 2
     end
     object btnUnComplete: TcxButton
-      Left = 557
+      Left = 659
       Top = 10
       Width = 143
       Height = 25
@@ -1310,7 +1310,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 557
+      Left = 659
       Top = 41
       Width = 143
       Height = 25
@@ -1318,7 +1318,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 4
     end
     object btnFormClose: TcxButton
-      Left = 777
+      Left = 833
       Top = 41
       Width = 153
       Height = 25
@@ -1327,31 +1327,33 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ShowHint = True
       TabOrder = 5
     end
-    object cxButton1: TcxButton
-      Left = 12
+    object btnInsert_Child: TcxButton
+      Left = 10
       Top = 10
-      Width = 108
+      Width = 110
       Height = 25
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
       Action = actInsert_Child
       TabOrder = 6
     end
-    object cxButton2: TcxButton
-      Left = 12
+    object btnUpdate_Child: TcxButton
+      Left = 10
       Top = 41
-      Width = 108
+      Width = 110
       Height = 25
       Action = actUpdate_Child
       TabOrder = 7
     end
-    object cxButton3: TcxButton
+    object btnSetErasedItem: TcxButton
       Left = 247
       Top = 41
-      Width = 108
+      Width = 110
       Height = 25
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1057#1095#1077#1090
       Action = mactSetErasedItem
       TabOrder = 8
     end
-    object cxButton4: TcxButton
+    object btntPrint_Invoice: TcxButton
       Left = 126
       Top = 10
       Width = 115
@@ -1359,13 +1361,30 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Action = mactPrint_Invoice
       TabOrder = 9
     end
-    object cxButton5: TcxButton
+    object btnOpenFormPdfEdit: TcxButton
       Left = 126
       Top = 41
       Width = 115
       Height = 25
       Action = actOpenFormPdfEdit
       TabOrder = 10
+    end
+    object btnOpenInvoiceForm: TcxButton
+      Left = 247
+      Top = 10
+      Width = 110
+      Height = 25
+      Action = actOpenInvoiceForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1095#1077#1090
+      TabOrder = 11
+    end
+    object cxButton1: TcxButton
+      Left = 363
+      Top = 41
+      Width = 110
+      Height = 25
+      Action = mactSetErasedInvoice
+      TabOrder = 12
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1472,6 +1491,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
       ShortCut = 16433
       FormName = 'TBankAccountMovementForm'
       GuiParams = <
@@ -1537,6 +1557,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
       FormName = 'TBankAccountMovementForm'
       GuiParams = <
         item
@@ -1561,6 +1582,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
     end
     inherited mactReCompleteList: TMultiAction
       Enabled = False
@@ -1629,54 +1659,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint1: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProcList = <>
-      Caption = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
-      Hint = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
-      ImageIndex = 16
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDItems'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
-      ReportNameParam.Value = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1847,227 +1829,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       isShowModal = True
     end
-    object mactSetErasedItem: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSetErasedItem
-        end
-        item
-          Action = actRefreshChild
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1095#1077#1090
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ImageIndex = 2
-    end
-    object actRefreshStart: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectChild
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actSetErasedItem: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedMIChild
-      StoredProcList = <
-        item
-          StoredProc = spErasedMIChild
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = ChildDS
-    end
-    object actOpenInvoiceForm: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      ImageIndex = 28
-      FormName = 'TInvoiceForm'
-      FormNameParam.Value = 'TInvoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'MovementId_Invoice'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          Component = actShowErased
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actUpdate_Child: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1095#1077#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
-      ImageIndex = 1
-      FormName = 'TBankAccountMovementChildForm'
-      FormNameParam.Value = 'TBankAccountMovementChildForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementItemId'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inParentId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementItemId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = ChildDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object mactSetUnErasedItem: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSetUnErasedItem
-        end
-        item
-          Action = actRefreshChild
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1095#1077#1090
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-    end
-    object actChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          ComponentItem = 'Id'
-          DataType = ftString
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          ComponentItem = 'InvNumber'
-          DataType = ftString
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = Null
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 80
-    end
-    object actDoLoad: TExecuteImportSettingsAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ImportSettingsId.Value = '0'
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingId'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <>
-    end
-    object actGetImportSetting_csv: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingId
-        end>
-      Caption = 'actGetImportSetting_csv'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072
-    end
-    object mactStartLoad_csv: TMultiAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSetting_csv
-        end
-        item
-          Action = actDoLoad
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1091#1102' '#1074#1099#1087#1080#1089#1082#1091' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
-      InfoAfterExecute = #1041#1072#1085#1082#1086#1074#1089#1082#1072#1103' '#1074#1099#1087#1080#1089#1082#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1041#1072#1085#1082#1086#1074#1089#1082#1091#1102' '#1074#1099#1087#1080#1089#1082#1091' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1041#1072#1085#1082#1086#1074#1089#1082#1091#1102' '#1074#1099#1087#1080#1089#1082#1091' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
-      ImageIndex = 41
-      WithoutNext = True
-    end
     object actInsert_Child: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1091#1084#1084#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 0
       FormName = 'TBankAccountMovementChildForm'
       FormNameParam.Value = 'TBankAccountMovementChildForm'
@@ -2115,6 +1881,93 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actUpdate_Child: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 1
+      FormName = 'TBankAccountMovementChildForm'
+      FormNameParam.Value = 'TBankAccountMovementChildForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inParentId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = ChildDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object mactSetErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetErasedItem
+        end
+        item
+          Action = actRefreshChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1057#1091#1084#1084#1091
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 2
+    end
+    object actSetErasedItem: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+    end
+    object mactSetUnErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetUnErasedItem
+        end
+        item
+          Action = actRefreshChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1091#1084#1084#1091
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 8
+    end
     object actSetUnErasedItem: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -2125,11 +1978,117 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
+    end
+    object mactSetErasedInvoice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetErasedInvoice
+        end
+        item
+          Action = actRefreshChild
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1095#1077#1090' '#1080' '#1057#1091#1084#1084#1091' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 30
+    end
+    object actSetErasedInvoice: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIChild_Invoice
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild_Invoice
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+    end
+    object actOpenInvoiceForm: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
+      ImageIndex = 28
+      FormName = 'TInvoiceForm'
+      FormNameParam.Value = 'TInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'MovementId_Invoice'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actGetImportSetting_csv: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_csv'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object mactStartLoad_csv: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_csv
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1091#1102' '#1074#1099#1087#1080#1089#1082#1091' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
+      InfoAfterExecute = #1041#1072#1085#1082#1086#1074#1089#1082#1072#1103' '#1074#1099#1087#1080#1089#1082#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1041#1072#1085#1082#1086#1074#1089#1082#1091#1102' '#1074#1099#1087#1080#1089#1082#1091' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1041#1072#1085#1082#1086#1074#1089#1082#1091#1102' '#1074#1099#1087#1080#1089#1082#1091' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
+      ImageIndex = 41
+      WithoutNext = True
     end
     object actPrintInvoice: TdsdPrintAction
       Category = 'Print'
@@ -2321,8 +2280,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Category = 0
     end
     object bbPrint1: TdxBarButton
-      Action = actPrint1
+      Caption = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
       Category = 0
+      Hint = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
+      Visible = ivAlways
+      ImageIndex = 16
       ShortCut = 16465
     end
     object bbisCopy: TdxBarButton
@@ -2500,21 +2462,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Left = 120
     Top = 56
   end
-  inherited RefreshDispatcher: TRefreshDispatcher
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-      end>
-  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_BankAccount'
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_BankAccount'
-    Left = 24
-    Top = 304
+    Left = 64
+    Top = 296
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
@@ -2634,7 +2588,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Column = MoneyPlaceName
         TextEdit = edSearchMoneyPlaceName
       end>
-    ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 984
     Top = 128
@@ -2686,7 +2639,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Left = 318
     Top = 471
   end
-  object actDBViewAddOnChild: TdsdDBViewAddOn
+  object DBViewAddOnChild: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView_child
     OnDblClickActionList = <
@@ -2714,8 +2667,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 216
-    Top = 472
+    Left = 224
+    Top = 448
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_BankAccount_Child'
@@ -2832,8 +2785,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 616
-    Top = 480
+    Left = 528
+    Top = 464
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMI_BankAccount_SetUnErased'
@@ -2979,5 +2932,31 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Params = <>
     Left = 876
     Top = 286
+  end
+  object spErasedMIChild_Invoice: TdsdStoredProc
+    StoredProcName = 'gpMI_BankAccount_Invoice_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 432
   end
 end
