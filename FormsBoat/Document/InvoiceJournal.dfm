@@ -1519,6 +1519,10 @@
           MultiSelectSeparator = ','
         end>
     end
+    inherited actSetErased: TdsdChangeMovementStatus
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1091#1076#1072#1083#1077#1085
+    end
     inherited mactReCompleteList: TMultiAction
       Enabled = False
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
@@ -2611,6 +2615,7 @@
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 59
     Top = 401

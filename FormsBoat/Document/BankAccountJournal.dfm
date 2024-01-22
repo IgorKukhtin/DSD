@@ -4,7 +4,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -105
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -252,7 +251,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 70
           end
           object Amount_diff: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084
             DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1591,6 +1590,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'> '#1091#1076#1072#1083#1077#1085
     end
     inherited mactReCompleteList: TMultiAction
       Enabled = False
@@ -1951,6 +1952,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -1978,6 +1980,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -2008,6 +2011,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end

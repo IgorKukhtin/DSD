@@ -502,13 +502,6 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Comment'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'ClientId'
           Value = ''
           Component = GuidesObject
@@ -589,7 +582,6 @@
           Value = ''
           Component = GuidesObject
           ComponentItem = 'Key'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -598,7 +590,6 @@
           Component = GuidesObject
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
