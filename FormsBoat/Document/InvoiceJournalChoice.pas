@@ -33,7 +33,6 @@ type
     ProductName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
-    PaidKindName: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
@@ -47,7 +46,6 @@ type
     bbPrint: TdxBarButton;
     InfoMoneyName_all: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
-    UnitCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     actUpdateDataSet: TdsdUpdateDataSet;
     actChoiceGuides: TdsdChoiceGuides;
@@ -70,6 +68,8 @@ type
     edInvNumber_OrderClient: TcxTextEdit;
     FieldFilter_InvNumber: TdsdFieldFilter;
     Amount_Invoice: TcxGridDBColumn;
+    Amount_BankAccount: TcxGridDBColumn;
+    Amount_rem: TcxGridDBColumn;
   private
     { Private declarations }
   public

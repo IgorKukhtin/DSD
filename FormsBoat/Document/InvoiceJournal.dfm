@@ -3,6 +3,7 @@
   ClientHeight = 569
   ClientWidth = 1121
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -227
   ExplicitWidth = 1137
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -324,7 +325,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end

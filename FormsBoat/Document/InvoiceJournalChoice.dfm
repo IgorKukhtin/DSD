@@ -5,6 +5,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -247
   ExplicitWidth = 1157
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -53,6 +54,16 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
               Format = ',0.00##'
               Kind = skSum
               Column = Amount_Invoice
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_rem
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -86,6 +97,16 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
               Format = ',0.00##'
               Kind = skSum
               Column = Amount_Invoice
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_rem
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -201,6 +222,30 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 70
           end
+          object Amount_BankAccount: TcxGridDBColumn
+            Caption = 'Total (Payment)'
+            DataBinding.FieldName = 'Amount_BankAccount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_rem: TcxGridDBColumn
+            Caption = 'Total (balance)'
+            DataBinding.FieldName = 'Amount_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
@@ -210,7 +255,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 60
           end
           object ObjectName: TcxGridDBColumn
@@ -247,6 +291,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 70
           end
           object InfoMoneyDestinationName: TcxGridDBColumn
@@ -257,6 +302,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 70
           end
           object InfoMoneyName: TcxGridDBColumn
@@ -286,15 +332,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 95
           end
-          object UnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1082#1083#1072#1076
-            DataBinding.FieldName = 'UnitCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
           object UnitName: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
             DataBinding.FieldName = 'UnitName'
@@ -303,15 +340,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
-          end
-          object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
           end
           object ProductCIN: TcxGridDBColumn
             Caption = 'CIN Nr.'
