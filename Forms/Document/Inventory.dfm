@@ -252,6 +252,16 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 60
           end
+          object GoodsName_old: TcxGridDBColumn
+            Caption = '***'#1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName_old'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1088#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+            Options.Editing = False
+            Width = 100
+          end
           object AssetName: TcxGridDBColumn
             Caption = #1054#1089#1085'. '#1089#1088#1077#1076#1089#1090#1074#1086
             DataBinding.FieldName = 'AssetName'
@@ -402,6 +412,9 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -3378,6 +3391,7 @@ inherited InventoryForm: TInventoryForm
         DataSummaryItemIndex = 5
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 918
     Top = 385

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , HeadCount TFloat, Count TFloat
@@ -85,6 +85,7 @@ BEGIN
            , tmpGoods.GoodsId
            , tmpGoods.GoodsCode
            , tmpGoods.GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -160,6 +161,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
@@ -191,6 +195,7 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -316,7 +321,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-                                  
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -407,6 +415,7 @@ BEGIN
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData            AS MeasureName
 
@@ -528,6 +537,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
                                   
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
@@ -595,6 +607,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 22.01.24         * GoodsName_old
  27.05.23         *
  02.12.19         * цена с учетом вида товара
  19.12.18         *

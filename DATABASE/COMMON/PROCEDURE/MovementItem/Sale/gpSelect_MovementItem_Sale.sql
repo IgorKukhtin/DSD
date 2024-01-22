@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
              , GoodsGroupNameFull TVarChar
              , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat
              , ChangePercentAmount TFloat, TotalPercentAmount TFloat, ChangePercent TFloat
@@ -400,7 +400,8 @@ BEGIN
            , 0                          AS LineNum
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
-           , tmpGoods.GoodsName         AS GoodsName
+           , tmpGoods.GoodsName         AS GoodsName  
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , CAST (NULL AS TFloat)      AS Amount
@@ -558,6 +559,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
+
             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpGoods.GoodsId
                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpGoods.GoodsKindId
        WHERE tmpMI.GoodsId IS NULL
@@ -576,6 +581,7 @@ BEGIN
                   ELSE Object_Goods.ValueData
              END AS GoodsName
 
+           , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , tmpMI_Goods.Amount                     AS Amount
@@ -703,6 +709,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI_Goods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                   ON ObjectString_Goods_Scale.ObjectId = tmpMI_Goods.GoodsId
+                                  AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI_Goods.MovementId_Promo
 
@@ -963,6 +972,7 @@ BEGIN
                                      ELSE Object_Goods.ValueData
                                 END AS GoodsName
 
+                              , ObjectString_Goods_Scale.ValueData          AS GoodsName_old
                               , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
                               , tmpMI_Goods.Amount                     AS Amount
@@ -1095,6 +1105,9 @@ BEGIN
                                LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                                       ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI_Goods.GoodsId
                                                      AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                               LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                                      ON ObjectString_Goods_Scale.ObjectId = tmpMI_Goods.GoodsId
+                                                     AND ObjectString_Goods_Scale.DescId   = zc_ObjectString_Goods_Scale()
 
                                LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = COALESCE (tmpPromo.MovementId, tmpMI_Goods.MovementId_Promo)
 
@@ -1156,6 +1169,7 @@ BEGIN
            , tmpResult.GoodsId
            , tmpResult.GoodsCode
            , tmpResult.GoodsName
+           , tmpResult.GoodsName_old ::TVarChar
            , tmpResult.GoodsGroupNameFull
 
            , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.Amount ELSE 0 END :: TFloat AS Amount
@@ -1236,6 +1250,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.01.24         * GoodsName_old
  30.09.22         * GoodsReal
  26.07.22         * add Count
  30.03.22         *

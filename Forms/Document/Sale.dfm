@@ -575,6 +575,16 @@ inherited SaleForm: TSaleForm
           inherited colIsErased: TcxGridDBColumn
             Width = 25
           end
+          object GoodsName_old: TcxGridDBColumn
+            Caption = '***'#1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName_old'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1088#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
     end
