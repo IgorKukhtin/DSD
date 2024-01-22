@@ -74,6 +74,7 @@
     Top = 170
     Properties.Buttons = <
       item
+        Action = actGuidesObjectChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
@@ -243,6 +244,7 @@
     Top = 272
     Properties.Buttons = <
       item
+        Action = mactGuidesParentChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
@@ -1093,117 +1095,12 @@
   object GuidesObject: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
-    FormNameParam.Value = 'TUnion_ClientPartnerForm'
+    FormNameParam.Value = 'del_TUnion_ClientPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnion_ClientPartnerForm'
+    FormName = 'del_TUnion_ClientPartnerForm'
     PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'DayCalendar'
-        Value = ''
-        Component = FormParams
-        ComponentItem = 'DayCalendar'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TaxKind_Value'
-        Value = Null
-        Component = edVATPercent
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TaxKindId'
-        Value = Null
-        Component = GuidesTaxKind
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TaxKindName'
-        Value = Null
-        Component = GuidesTaxKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProductId'
-        Value = Null
-        Component = GuidesProduct
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProductName'
-        Value = Null
-        Component = GuidesProduct
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_order'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_order'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 341
     Top = 168
   end
@@ -1358,8 +1255,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 307
-    Top = 298
+    Left = 339
+    Top = 314
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1408,144 +1305,14 @@
     KeyField = 'Id'
     LookupControl = ceParent
     Key = '0'
-    FormNameParam.Value = 'TUnion_OrderJournalChoiceForm'
+    FormNameParam.Value = 'del_TUnion_OrderJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnion_OrderJournalChoiceForm'
+    FormName = 'del_TUnion_OrderJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterObjectId'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterObjectName'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSumm_debet'
-        Value = Null
-        Component = ceAmountIn
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSumm_credit'
-        Value = Null
-        Component = ceAmountOut
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectId'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectName'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TaxKindId'
-        Value = Null
-        Component = GuidesTaxKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TaxKindName'
-        Value = Null
-        Component = GuidesTaxKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProductId'
-        Value = Null
-        Component = GuidesProduct
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProductName'
-        Value = Null
-        Component = GuidesProduct
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 347
-    Top = 274
+    Params = <>
+    Left = 339
+    Top = 266
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
