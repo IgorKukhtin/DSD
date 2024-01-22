@@ -73,6 +73,9 @@ type
     NormInDays: TcxGridDBColumn;
     Value1_gk: TcxGridDBColumn;
     Value11_gk: TcxGridDBColumn;
+    spUpdate_PackOrder: TdsdStoredProc;
+    actUpdate_PackOrder: TdsdDataSetRefresh;
+    bbUpdate_PackOrder: TdxBarButton;
   private
     { Private declarations }
   public

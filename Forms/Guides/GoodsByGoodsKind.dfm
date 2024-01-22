@@ -1577,6 +1577,22 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actUpdate_PackOrder: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_PackOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PackOrder
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 85
+      RefreshOnTabSetChanges = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1619,6 +1635,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         item
           Visible = True
           ItemName = 'bbUpdateNewQuality'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PackOrder'
         end
         item
           Visible = True
@@ -1691,6 +1715,10 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     end
     object bbStartLoadGoodsKindNew: TdxBarButton
       Action = macStartLoadGoodsKindNew
+      Category = 0
+    end
+    object bbUpdate_PackOrder: TdxBarButton
+      Action = actUpdate_PackOrder
       Category = 0
     end
   end
@@ -2102,5 +2130,47 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     PackSize = 1
     Left = 664
     Top = 272
+  end
+  object spUpdate_PackOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_isPackOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPackOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsPackOrder'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 264
   end
 end

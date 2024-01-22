@@ -29,7 +29,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isNewQuality Boolean
              , isTop Boolean
              , isNotPack Boolean
-             , isRK Boolean
+             , isRK Boolean     
+             , isPackOrder Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
              , GoodsSubSendId Integer, GoodsSubSendCode Integer, GoodsSubSendName TVarChar, MeasureSubSendName TVarChar
@@ -204,8 +205,9 @@ BEGIN
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
            , COALESCE (ObjectBoolean_NewQuality.ValueData, False)      AS isNewQuality
            , COALESCE (ObjectBoolean_Top.ValueData, False)             AS isTop
-           , COALESCE (ObjectBoolean_NotPack.ValueData, False) ::Boolean AS isNotPack
-           , COALESCE (ObjectBoolean_RK.ValueData, FALSE)      ::Boolean AS isRK
+           , COALESCE (ObjectBoolean_NotPack.ValueData, False)   ::Boolean AS isNotPack
+           , COALESCE (ObjectBoolean_RK.ValueData, FALSE)        ::Boolean AS isRK      
+           , COALESCE (ObjectBoolean_PackOrder.ValueData, False) ::Boolean AS isPackOrder
 
            , Object_GoodsSub.Id               AS GoodsSubId
            , Object_GoodsSub.ObjectCode       AS GoodsSubCode
@@ -394,6 +396,10 @@ BEGIN
                                     ON ObjectBoolean_RK.ObjectId = Object_GoodsByGoodsKind_View.Id
                                    AND ObjectBoolean_RK.DescId = zc_ObjectBoolean_GoodsByGoodsKind_RK()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PackOrder
+                                    ON ObjectBoolean_PackOrder.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                   AND ObjectBoolean_PackOrder.DescId = zc_ObjectBoolean_GoodsByGoodsKind_PackOrder()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -552,6 +558,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.01.24        * isPackOrder
  20.12.22        * GoodsKindNew
  07.12.22        * isRK
  30.09.22        * GoodsReal

@@ -327,6 +327,15 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Options.Editing = False
             Width = 90
           end
+          object isPackOrder: TcxGridDBColumn
+            Caption = #1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095'. '#1085#1072' '#1091#1087#1072#1082
+            DataBinding.FieldName = 'isPackOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'.'
+            Options.Editing = False
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -574,6 +583,23 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end>
       isShowModal = False
     end
+    object actUpdate_PackOrder: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_PackOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PackOrder
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 85
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     object actUpdateNewQuality: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -582,8 +608,8 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         item
           StoredProc = spUpdateNewQuality
         end>
-      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 77
       ShortCut = 16505
       RefreshOnTabSetChanges = True
@@ -597,8 +623,8 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         item
           StoredProc = spUpdate_Top_Yes
         end>
-      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
-      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
       ImageIndex = 79
     end
     object actUpdate_Top_No: TdsdExecStoredProc
@@ -610,8 +636,8 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         item
           StoredProc = spUpdate_Top_No
         end>
-      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
-      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
       ImageIndex = 80
     end
   end
@@ -677,6 +703,14 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_PackOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -713,6 +747,10 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     end
     object bbUpdate_Top_No: TdxBarButton
       Action = actUpdate_Top_No
+      Category = 0
+    end
+    object bbUpdate_PackOrder: TdxBarButton
+      Action = actUpdate_PackOrder
       Category = 0
     end
   end
@@ -971,5 +1009,47 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     PackSize = 1
     Left = 616
     Top = 128
+  end
+  object spUpdate_PackOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_isPackOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPackOrder'
+        Value = True
+        Component = MasterCDS
+        ComponentItem = 'IsPackOrder'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 264
   end
 end

@@ -49,6 +49,9 @@ type
     actUpdate_Top_No: TdsdExecStoredProc;
     actUpdate_Top_Yes: TdsdExecStoredProc;
     NormPack: TcxGridDBColumn;
+    spUpdate_PackOrder: TdsdStoredProc;
+    actUpdate_PackOrder: TdsdDataSetRefresh;
+    bbUpdate_PackOrder: TdxBarButton;
   private
     { Private declarations }
   public

@@ -3680,7 +3680,7 @@ begin
   // —начала проверим все action
   // и если там нет ничего, то тогда идем дальше
   for I := 0 to ActionItemList.Count - 1 do
-      if ShortCut(Key, Shift) = TShortCutActionItem(ActionItemList[i]).ShortCut then begin
+      if (ShortCut(Key, Shift) = TShortCutActionItem(ActionItemList[i]).ShortCut) and Assigned(ActionItemList[i].Action) then begin
          if ActionItemList[i].Action.Enabled then begin
             // ¬ыполнили первое действие в списке
             ActionItemList[i].Action.Execute;
