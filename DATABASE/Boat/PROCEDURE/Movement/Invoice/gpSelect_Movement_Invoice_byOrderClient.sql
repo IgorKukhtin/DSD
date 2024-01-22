@@ -27,7 +27,7 @@ RETURNS TABLE (Id              Integer
              , AmountIn_VAT     TFloat
              , AmountOut_VAT    TFloat
 
-             , VATPercent      TFloat             
+             , VATPercent      TFloat
 
                -- оплата
              , AmountIn_BankAccount  TFloat
@@ -61,11 +61,11 @@ RETURNS TABLE (Id              Integer
 
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-             
+
              , MovementId_parent       Integer
              , InvNumber_parent        TVarChar
              , MovementDescName_parent TVarChar
-      
+
              , Color_Pay Integer
               )
 
@@ -73,7 +73,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDate TDateTime; 
+   DECLARE vbEndDate TDateTime;
    DECLARE vbClientId Integer;
 BEGIN
 
@@ -85,7 +85,7 @@ BEGIN
           SELECT zc_Enum_Status_Complete()   AS StatusId
     UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
     UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE;
-       
+
      -- выбираем все документы Счетов у которых PArentId = inMovementId_OrderClient
      CREATE TEMP TABLE tmpInvoice (Id Integer, OperDate TDateTime) ON COMMIT DROP;
      INSERT INTO tmpInvoice (Id, OperDate)
@@ -108,24 +108,23 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH 
+       WITH
        tmpData AS (SELECT gpSelect.*
                    FROM gpSelect_Movement_Invoice(inStartDate :=vbStartDate, inEndDate := vbEndDate, inClientId:= vbClientId, inIsErased := inIsErased,  inSession := inSession) AS gpSelect
                         INNER JOIN tmpInvoice ON tmpInvoice.Id = gpSelect.Id
-                   )
-
+                  )
     -- Результат
-    SELECT     
+    SELECT
         tmpData.Id
       , tmpData.InvNumber
       , tmpData.InvNumber_Full
       , tmpData.OperDate
       , tmpData.PlanDate
       , tmpData.StatusCode
-      , tmpData.StatusName 
+      , tmpData.StatusName
       , tmpData.InvoiceKindId
       , tmpData.InvoiceKindName
-      , tmpData.isAuto 
+      , tmpData.isAuto
         -- с НДС
       , tmpData.AmountIn
       , tmpData.AmountOut

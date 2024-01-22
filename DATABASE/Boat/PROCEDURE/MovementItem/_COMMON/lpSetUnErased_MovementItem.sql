@@ -6,42 +6,52 @@ CREATE OR REPLACE FUNCTION lpSetUnErased_MovementItem(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inUserId              Integer
-)                              
-  RETURNS Boolean
+)
+RETURNS Boolean
 AS
 $BODY$
    DECLARE vbMovementId Integer;
+   DECLARE vbInvNumber  TVarChar;
    DECLARE vbStatusId Integer;
+   DECLARE vbDescId     Integer;
+   DECLARE vbMovementDescId Integer;
 BEGIN
-  -- устанавливаем новое значение
-  outIsErased := FALSE;
+    -- устанавливаем новое значение
+    outIsErased := FALSE;
 
-  -- Обязательно меняем 
-  UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
-         RETURNING MovementId INTO vbMovementId;
+    -- Обязательно меняем
+    UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
+           RETURNING MovementId, DescId INTO vbMovementId, vbDescId;
 
-  -- проверка - связанные документы Изменять нельзя
-  -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
+    -- проверка - связанные документы Изменять нельзя
+    -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
 
-  -- определяем <Статус>
-  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
-  -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete()
-  THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-  END IF;
+    -- определяем <Статус>
+    SELECT StatusId, InvNumber, DescId INTO vbStatusId, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = vbMovementId;
 
-  -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+    -- проверка - проведенные/удаленные документы Изменять нельзя
+    IF vbMovementDescId = zc_Movement_BankAccount() AND vbDescId = zc_MI_Child()
+    THEN
+        IF vbStatusId = zc_Enum_Status_Erased()
+        THEN
+            RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
+        END IF;
 
-  -- сохранили протокол
-  PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= FALSE);
+    ELSEIF vbStatusId <> zc_Enum_Status_UnComplete()
+    THEN
+        RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+    END IF;
+
+    -- пересчитали Итоговые суммы по накладной
+    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= FALSE);
 
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpSetUnErased_MovementItem (Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

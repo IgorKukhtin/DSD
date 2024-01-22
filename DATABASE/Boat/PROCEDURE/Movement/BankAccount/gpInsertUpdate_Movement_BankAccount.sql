@@ -64,11 +64,11 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Тип счета должен быть выбран как в Счете = <%>.', lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Invoice AND MLO.DescId = zc_MovementLinkObject_InvoiceKind()));
      END IF;
-     -- проверка - Тип счета
-     IF inMovementId_Invoice > 0 AND COALESCE (inAmount_Invoice, 0) <> COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_Amount()), 0)
+     -- проверка - Сумма счета
+     /*IF inMovementId_Invoice > 0 AND COALESCE (inAmount_Invoice, 0) <> COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_Amount()), 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Сумма счета должна быть как в Счете = <%>.', zfConvert_FloatToString((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_Amount()));
-     END IF;
+     END IF;*/
 
 
      -- !!!очень важный расчет!!!
@@ -86,11 +86,14 @@ BEGIN
      END IF;
 
      -- если док. Счет пусто нужно его создать
-     IF COALESCE (inMovementId_Invoice, 0) = 0
+     IF (COALESCE (inMovementId_Invoice, 0) = 0
         -- изменили Сумму счета
         OR NOT EXISTS (SELECT 1 FROM MovementFloat WHERE  MovementFloat.MovementId = inMovementId_Invoice AND MovementFloat.DescId = zc_MovementFloat_Amount() AND MovementFloat.ValueData = inAmount_Invoice)
         -- или изменили Заказ
         OR NOT EXISTS (SELECT 1 FROM Movement WHERE  Movement.Id = inMovementId_Invoice AND Movement.ParentId = inMovementId_Parent)
+       )
+       -- если НЕТ Child
+       AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
      THEN
          -- сохранили <Документ> + для inMovementId_Parent уствновится связь на этот inMovementId_Invoice
          inMovementId_Invoice := gpInsertUpdate_Movement_Invoice (ioId               := inMovementId_Invoice

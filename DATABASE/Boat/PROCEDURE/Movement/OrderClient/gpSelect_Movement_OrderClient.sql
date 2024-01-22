@@ -58,6 +58,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , Amount_Order_pay TFloat
                -- Оплачен полностью счет (у лодки) - да/нет
              , isPay Boolean
+               -- Если Найден ДРУГОЙ счет для оплаты, не тот что у заказа
+             , isInvoice_oth Boolean
                -- поиск для контрола
              , MovementId_Invoice_find Integer, InvNumberFull_Invoice_find TVarChar
              , InvoiceKindId_find Integer, InvoiceKindName_find TVarChar
@@ -351,6 +353,8 @@ BEGIN
 
                -- Оплачен полностью счет (у лодки) - да/нет
              , CASE WHEN Movement_Invoice.Id > 0 AND tmpInvoicePay.Amount_Invoice_rem = 0 THEN TRUE ELSE FALSE END ::Boolean AS isPay
+               -- Если Найден ДРУГОЙ счет для оплаты, не тот что у заказа
+             , CASE WHEN Movement_Invoice_find.Id > 0 AND Movement_Invoice.Id <> Movement_Invoice_find.Id THEN TRUE ELSE FALSE END ::Boolean AS isInvoice_oth
 
                -- нашли
              , Movement_Invoice_find.Id  AS MovementId_Invoice_find

@@ -83,7 +83,10 @@ BEGIN
 
 
      -- сохранили
-     IF 1 >= (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+     IF NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+        OR (1 = (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+        AND inMovementId_Invoice > 0
+           )
      THEN
          PERFORM lpInsertUpdate_MI_BankAccount_Child (ioId                  := COALESCE ((SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
                                                     , inParentId            := vbMovementItemId

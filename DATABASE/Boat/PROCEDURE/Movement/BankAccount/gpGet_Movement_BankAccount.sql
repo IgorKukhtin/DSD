@@ -86,6 +86,15 @@ BEGIN
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = inMoneyPlaceId
+            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_p
+                                 ON ObjectLink_InfoMoney_p.ObjectId = Object_MoneyPlace.Id
+                                AND ObjectLink_InfoMoney_p.DescId   = zc_ObjectLink_Partner_InfoMoney()
+            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_c
+                                 ON ObjectLink_InfoMoney_c.ObjectId = Object_MoneyPlace.Id
+                                AND ObjectLink_InfoMoney_c.DescId   = zc_ObjectLink_Client_InfoMoney()
+
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = inMovementId_Invoice
 
             -- тип счета
@@ -101,10 +110,8 @@ BEGIN
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                          ON MovementLinkObject_InfoMoney.MovementId = Movement_Invoice.Id
-                                        AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
-
-            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = inMoneyPlaceId
+                                        AND MovementLinkObject_InfoMoney.DescId     = zc_MovementLinkObject_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (MovementLinkObject_InfoMoney.ObjectId, ObjectLink_InfoMoney_c.ChildObjectId, ObjectLink_InfoMoney_p.ChildObjectId)
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = inMovementId_parent
             LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
@@ -142,6 +149,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyName
 
+             -- всегда ABS
            , ABS (MovementFloat_Amount.ValueData) :: TFloat AS Amount_Invoice
 
              -- parent для Invoice
@@ -182,7 +190,6 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                          ON MovementLinkObject_InfoMoney.MovementId = Movement_Invoice.Id
                                         AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
 
 
             -- элемент
@@ -203,16 +210,23 @@ BEGIN
                                              ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_p
+                                 ON ObjectLink_InfoMoney_p.ObjectId = Object_MoneyPlace.Id
+                                AND ObjectLink_InfoMoney_p.DescId   = zc_ObjectLink_Partner_InfoMoney()
+            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_c
+                                 ON ObjectLink_InfoMoney_c.ObjectId = Object_MoneyPlace.Id
+                                AND ObjectLink_InfoMoney_c.DescId   = zc_ObjectLink_Client_InfoMoney()
 
             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (MovementLinkObject_InfoMoney.ObjectId, ObjectLink_InfoMoney_c.ChildObjectId, ObjectLink_InfoMoney_p.ChildObjectId)
 
             -- Parent для Movement_Invoice - Документ Заказ или Приход
             LEFT JOIN Movement AS Movement_Parent
-                               ON Movement_Parent.Id = Movement_Invoice.ParentId
+                               ON Movement_Parent.Id       = Movement_Invoice.ParentId
                               AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
             LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
