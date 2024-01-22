@@ -156,6 +156,7 @@ BEGIN
                                                , inInvNumberPartner     := inInvNumberPartner
                                                , inOperDate             := inOperDate
                                                , inAmount               := vbAmount
+                                               , inAmount_Invoice       := CASE WHEN vbAmount < 0 THEN  -1 * ABS (inAmount_Invoice) ELSE 1 * ABS (inAmount_Invoice) END
                                                , inBankAccountId        := inBankAccountId
                                                , inMoneyPlaceId         := inMoneyPlaceId
                                                , inMovementId_Invoice   := inMovementId_Invoice

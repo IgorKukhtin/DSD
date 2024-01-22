@@ -117,7 +117,7 @@ BEGIN
            , Movement_Invoice.OperDate                      AS OperDate_Invoice
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
            , Movement_Invoice.InvNumber                     AS InvNumber_Invoice
-           , zfConvert_StringToNumber (MovementString_ReceiptNumber.ValueData) ::Integer AS ReceiptNumber_Invoice
+           , zfConvert_StringToNumber_null (MovementString_ReceiptNumber.ValueData) AS ReceiptNumber_Invoice
            , Object_InvoiceKind.Id                          AS InvoiceKindId
            , Object_InvoiceKind.ValueData                   AS InvoiceKindName
            , Object_Object_invoice.ValueData                AS ObjectName_invoice

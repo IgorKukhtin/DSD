@@ -52,6 +52,7 @@ BEGIN
                                                , inInvNumberPartner     := (SELECT tmp.ValueData FROM MovementString AS tmp WHERE tmp.DescId = zc_MovementString_InvNumberPartner() AND tmp.MovementId = ioId)
                                                , inOperDate             := inOperDate
                                                , inAmount               := inAmountIn
+                                               , inAmount_Invoice       := inAmountIn
                                                , inBankAccountId        := inBankAccountId
                                                , inMoneyPlaceId         := inMoneyPlaceId
                                                , inMovementId_Invoice   := inMovementId_Invoice

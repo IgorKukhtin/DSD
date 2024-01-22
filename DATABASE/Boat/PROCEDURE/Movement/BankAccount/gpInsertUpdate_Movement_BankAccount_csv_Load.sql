@@ -108,6 +108,7 @@ BEGIN
                                                        , inInvNumberPartner     := NULL        ::TVarChar
                                                        , inOperDate             := inOperDate  ::TDateTime
                                                        , inAmount               := inAmount    ::TFloat
+                                                       , inAmount_Invoice       := inAmount    ::TFloat
                                                        , inBankAccountId        := 33325       ::Integer       --     "34567890"     "Erste Bank"        "EUR"
                                                        , inMoneyPlaceId         := 0           ::Integer
                                                        , inMovementId_Invoice   := 0           ::Integer

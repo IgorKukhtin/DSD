@@ -118,6 +118,7 @@ BEGIN
                                                , inInvNumberPartner     := inInvNumberPartner
                                                , inOperDate             := inOperDate
                                                , inAmount               := vbAmount
+                                               , inAmount_Invoice       := vbAmount
                                                , inBankAccountId        := inBankAccountId
                                                , inMoneyPlaceId         := inMoneyPlaceId
                                                , inMovementId_Invoice   := (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = ioId)--inMovementId_Invoice

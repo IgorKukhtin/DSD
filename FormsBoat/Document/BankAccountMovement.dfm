@@ -104,6 +104,7 @@
     Top = 135
     Properties.Buttons = <
       item
+        Action = actGuidesObjectChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
@@ -147,6 +148,7 @@
     Top = 189
     Properties.Buttons = <
       item
+        Action = actGuidesInvoiceChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
@@ -235,6 +237,7 @@
     Top = 284
     Properties.Buttons = <
       item
+        Action = actGuidesParentChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
@@ -1159,74 +1162,7 @@
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMoneyPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_order'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_order'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_invoice'
-        Value = Null
-        Component = GuidesInvoice
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_invoice'
-        Value = Null
-        Component = GuidesInvoice
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Amount_Invoice'
-        Value = Null
-        Component = edAmount_invoice
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 220
     Top = 125
   end
@@ -1267,116 +1203,7 @@
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInvoiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesInvoice
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesInvoice
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectId'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectName'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Amount_Invoice'
-        Value = Null
-        Component = edAmount_invoice
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_parent'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberFull_parent'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindId'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindName'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientId'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientName'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 220
     Top = 183
   end
@@ -1403,130 +1230,7 @@
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TOrderClientJournalChoiceForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ClientId'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ClientName'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_Invoice_find'
-        Value = Null
-        Component = GuidesInvoice
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberFull_Invoice_find'
-        Value = Null
-        Component = GuidesInvoice
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindId_find'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindName_find'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Amount_Invoice_find'
-        Value = Null
-        Component = edAmount_invoice
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientId'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientName'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterSummDebet'
-        Value = Null
-        Component = ceAmountIn
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 216
     Top = 279
   end

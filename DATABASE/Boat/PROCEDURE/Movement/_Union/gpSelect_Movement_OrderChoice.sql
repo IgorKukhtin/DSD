@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumber
              , VATPercent TFloat, DiscountTax TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
-             , TotalSumm_debet TFloat, TotalSumm_credit TFloat 
+             , TotalSumm_debet TFloat, TotalSumm_credit TFloat
              , BasisWVAT_summ_transport TFloat
 
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
@@ -105,7 +105,7 @@ BEGIN
                                                                ON MovementLinkMovement_Invoice.MovementId = Movement.Id
                                                               AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                           )
-        , tmpSummProduct AS (SELECT  
+        , tmpSummProduct AS (SELECT
                                    gpSelect.MovementId_OrderClient
                                  -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
                                  , gpSelect.Basis_summ1_orig
@@ -158,7 +158,7 @@ BEGIN
              , 0                       :: TFloat AS TotalSumm_credit
               -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
              , tmpSummProduct.BasisWVAT_summ_transport ::TFloat
-             
+
 
              , Object_Object.Id                             AS ObjectId
              , Object_Object.ObjectCode                     AS ObjectCode
@@ -184,7 +184,8 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyId
              , Object_InfoMoney_View.InfoMoneyCode
              , Object_InfoMoney_View.InfoMoneyName
-             , Object_InfoMoney_View.InfoMoneyName_all
+             , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName_all
+           --, Object_InfoMoney_View.InfoMoneyName_all
              , Object_InfoMoney_View.InfoMoneyGroupName
              , Object_InfoMoney_View.InfoMoneyDestinationName
 
@@ -300,8 +301,8 @@ BEGIN
                                    AND ObjectString_TaxKind_Info.DescId   = zc_ObjectString_TaxKind_Info()
              LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                     ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                   AND ObjectString_TaxKind_Comment.DescId   = zc_ObjectString_TaxKind_Comment()    
-             
+                                   AND ObjectString_TaxKind_Comment.DescId   = zc_ObjectString_TaxKind_Comment()
+
              LEFT JOIN tmpSummProduct ON tmpSummProduct.MovementId_OrderClient = Movement.Id
 
         WHERE Movement.ObjectId = inObjectId OR COALESCE (inObjectId, 0) = 0

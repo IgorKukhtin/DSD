@@ -160,7 +160,7 @@ BEGIN
                  )
 
        -- нашли ВСЕ оплаты
-     , tmpMLM_BankAccount AS (SELECT tmp.MovementId_Invoice
+     , tmpMLM_BankAccount AS (SELECT tmp.MovementId_Invoice :: Integer AS MovementId_Invoice
                                    , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
                                    , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut
                               FROM (SELECT DISTINCT tmpMovement.Id :: TFloat AS MovementId_invoice FROM tmpMovement) AS tmp
@@ -442,7 +442,7 @@ BEGIN
       , tmpData.UnitName
 
       , tmpData.InvNumberPartner
-      , zfConvert_StringToNumber (tmpData.ReceiptNumber) ::Integer AS ReceiptNumber
+      , zfConvert_StringToNumber_null (tmpData.ReceiptNumber) AS ReceiptNumber
       , tmpData.Comment
 
       , tmpData.InsertName

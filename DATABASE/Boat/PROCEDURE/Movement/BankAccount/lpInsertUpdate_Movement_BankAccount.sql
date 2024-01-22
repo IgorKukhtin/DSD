@@ -1,17 +1,19 @@
--- Function: lpInsertUpdate_movement_BankAccount
+-- Function: lpInsertUpdate_Movement_BankAccount
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_movement_BankAccount(Integer, TVarChar, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_movement_BankAccount(
-  INOUT ioId                   Integer, 
-     IN inInvNumber            TVarChar, 
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
+  INOUT ioId                   Integer,
+     IN inInvNumber            TVarChar,
      IN inInvNumberPartner     TVarChar  , -- Номер документа (внешний)
-     IN inOperDate             TDateTime, 
-     IN inAmount               TFloat, 
-     IN inBankAccountId        Integer, 
-     IN inMoneyPlaceId         Integer, 
-     IN inMovementId_Invoice     Integer, 
-     IN inComment              TVarChar, 
+     IN inOperDate             TDateTime,
+     IN inAmount               TFloat,
+     IN inAmount_Invoice       TFloat    , -- Сумма Счет
+     IN inBankAccountId        Integer,
+     IN inMoneyPlaceId         Integer,
+     IN inMovementId_Invoice     Integer,
+     IN inComment              TVarChar,
      IN inuserid               Integer)
   RETURNS Integer AS
 $BODY$
@@ -38,7 +40,7 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, NULL, inUserId);
      -- сохранили
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner); 
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
      -- сохранили связь с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
@@ -75,7 +77,7 @@ BEGIN
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
          END IF;
      END IF;
-     
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
      -- сохранили протокол
@@ -93,7 +95,7 @@ BEGIN
                                                     , inMovementId          := ioId
                                                     , inMovementId_invoice  := inMovementId_Invoice
                                                     , inObjectId            := CASE WHEN inMoneyPlaceId > 0 THEN inMoneyPlaceId ELSE inBankAccountId END
-                                                    , inAmount              := inAmount
+                                                    , inAmount              := CASE WHEN ABS (inAmount_Invoice) < ABS (inAmount) THEN inAmount_Invoice ELSE inAmount END
                                                     , inComment             := ''
                                                     , inUserId              := inUserId
                                                      );
@@ -106,7 +108,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.02.21         * 
+ 04.02.21         *
 */
 
 -- тест

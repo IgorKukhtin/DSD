@@ -212,21 +212,20 @@ BEGIN
                                       AND Movement.DescId   = zc_Movement_Invoice()
                                    )
        -- оплаты по ВСЕМ счетам
-     , tmpMovement_BankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
+     , tmpMovement_BankAccount AS (SELECT tmp.MovementId_Invoice :: Integer    AS MovementId_Invoice
                                         , SUM (MovementItem.Amount)            AS Amount
-                              FROM MovementLinkMovement
-                                   INNER JOIN Movement AS Movement_BankAccount
-                                                       ON Movement_BankAccount.Id       = MovementLinkMovement.MovementId
-                                                      AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()
-                                                      AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
-                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                          AND MovementItem.isErased   = FALSE
-                                                          AND MovementItem.Amount     <> 0
-                              WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement_Invoice.MovementId_Invoice FROM tmpMovement_Invoice)
-                                AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Invoice()
-                              GROUP BY MovementLinkMovement.MovementChildId
-                             )
+                                   FROM (SELECT DISTINCT tmpMovement_Invoice.MovementId_Invoice :: TFloat AS MovementId_Invoice FROM tmpMovement_Invoice) AS tmp
+                                        INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                     ON MIFloat_MovementId.ValueData = tmp.MovementId_Invoice
+                                                                    AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                                        INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                               AND MovementItem.DescId   = zc_MI_Child()
+                                                               AND MovementItem.isErased = FALSE
+                                        INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MovementItem.MovementId
+                                                                                   AND Movement_BankAccount.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
+                                                                                   AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
+                                   GROUP BY tmp.MovementId_Invoice
+                                  )
        -- Остаток к оплате по ВСЕМ счетам
     , tmpInvoicePay AS (SELECT tmpMovement_Invoice.MovementId_Invoice
                              , tmpMovement_Invoice.MovementId_OrderClient
