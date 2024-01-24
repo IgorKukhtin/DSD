@@ -46,6 +46,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isSend_eTTN Boolean
              , Uuid TVarChar
              , CommentError TVarChar
+             , isSignConsignor_eTTN Boolean
+             , isSignCarrier_eTTN Boolean
              
              , PlaceOf TVarChar
              
@@ -171,6 +173,9 @@ BEGIN
            , (COALESCE(MovementString_Uuid.ValueData, '') <> '')::Boolean AS isSend_eTTN
            , MovementString_Uuid.ValueData             AS Uuid
            , MovementString_CommentError.ValueData     AS CommentError
+           , (COALESCE(Object_MemberSignConsignor.ValueData, '') <> '')::Boolean AS isSignConsignor_eTTN
+           , (COALESCE(Object_MemberSignCarrier.ValueData, '') <> '')::Boolean AS isSignCarrier_eTTN
+
            
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.ƒнiпро'

@@ -17,17 +17,17 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     Height = 465
     TabOrder = 3
     ExplicitTop = 66
-    ExplicitWidth = 1071
+    ExplicitWidth = 1076
     ExplicitHeight = 465
     ClientRectBottom = 465
     ClientRectRight = 1076
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1071
+      ExplicitWidth = 1076
       ExplicitHeight = 465
       inherited cxGrid: TcxGrid
         Width = 1076
         Height = 465
-        ExplicitWidth = 1071
+        ExplicitWidth = 1076
         ExplicitHeight = 465
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -128,7 +128,22 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 66
           end
-          object DeliveryInstructionsName: TcxGridDBColumn [1]
+          object isSignConsignor_eTTN: TcxGridDBColumn [1]
+            Caption = #1055#1086#1076#1087#1080#1089#1100' '#1075#1088#1091#1079#1086#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'isSignConsignor_eTTN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object isSignCarrier_eTTN: TcxGridDBColumn [2]
+            Caption = #1055#1086#1076#1087#1080#1089#1100' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+            DataBinding.FieldName = 'isSignCarrier_eTTN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object DeliveryInstructionsName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1087#1077#1088#1077#1074#1077#1079#1077#1085#1100
             DataBinding.FieldName = 'DeliveryInstructionsName'
             HeaderAlignmentHorz = taCenter
@@ -140,7 +155,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object ReestrKindName: TcxGridDBColumn [3]
+          object ReestrKindName: TcxGridDBColumn [5]
             Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             DataBinding.FieldName = 'ReestrKindName'
             Visible = False
@@ -148,11 +163,11 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          inherited colOperDate: TcxGridDBColumn [4]
+          inherited colOperDate: TcxGridDBColumn [6]
             HeaderAlignmentHorz = taCenter
             Width = 60
           end
-          inherited colInvNumber: TcxGridDBColumn [5]
+          inherited colInvNumber: TcxGridDBColumn [7]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -734,7 +749,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
   end
   inherited Panel: TPanel
     Width = 1076
-    ExplicitWidth = 1071
+    ExplicitWidth = 1076
     inherited deStart: TcxDateEdit
       EditValue = 44927d
     end
@@ -1367,6 +1382,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
       UpdateUuid = spUpdate_Uuid
+      UpdateSign = spUpdate_Sign_Consignor
       UpdateKATOTTG = spUpdate_Partner_KATOTTG
       UpdateError = spUpdate_CommentError
       EDINActions = edinSendSingETTN
@@ -2011,6 +2027,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         ComponentItem = 'SignCarrierDate'
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCommentError'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CommentError'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -2083,6 +2107,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         Component = MasterCDS
         ComponentItem = 'SignCarrierDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCommentError'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CommentError'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

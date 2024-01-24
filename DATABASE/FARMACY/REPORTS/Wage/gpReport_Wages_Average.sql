@@ -31,7 +31,8 @@ BEGIN
                                 WHERE Movement.OperDate BETWEEN date_trunc('month', inStartDate) AND date_trunc('month', inEndDate)
                                   AND Movement.StatusId <> zc_Enum_Status_Erased() 
                                   AND Movement.DescId = zc_Movement_Wages()),
-             tmpMI AS (SELECT MovementItem.Id                    AS Id
+             tmpMI AS (SELECT Movement.OperDate
+                            , MovementItem.Id                    AS Id
                             , MovementItem.ObjectId                         AS UserID
                             , MovementItem.Amount                           AS AmountAccrued
                             , ObjectLink_User_Member.ChildObjectId          AS MemberId 
@@ -111,15 +112,17 @@ BEGIN
 
                       ),
              tmpSUM AS (SELECT tmpMI.MemberId 
-                             , tmpMI.PositionId
-                             , tmpMI.UnitId 
                              , Round(SUM(tmpMI.Amount)/count(*), 2)::TFloat AS Amount
                              , count(*)::Integer                            AS CountMonth
                         FROM tmpMI
                          
-                        GROUP BY tmpMI.MemberId 
-                               , tmpMI.PositionId
-                               , tmpMI.UnitId)
+                        GROUP BY tmpMI.MemberId),
+             tmpUninit AS (SELECT tmpMI.MemberId 
+                                , tmpMI.PositionId
+                                , tmpMI.UnitId 
+                                , ROW_NUMBER() OVER (PARTITION BY tmpMI.MemberId ORDER BY tmpMI.OperDate DESC) AS Ord
+                           FROM tmpMI
+                           )
                                               
      SELECT Object_Member.ValueData        AS MemberName
           , Object_Position.ValueData      AS PositionName
@@ -130,9 +133,12 @@ BEGIN
      
      FROM tmpSUM
 
-          LEFT JOIN Object AS Object_Member ON Object_Member.Id =tmpSUM.MemberId
-          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpSUM.PositionId
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpSUM.UnitID
+          LEFT JOIN tmpUninit ON tmpUninit.MemberId = tmpSUM.MemberId
+                             AND tmpUninit.Ord = 1     
+
+          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpSUM.MemberId
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpUninit.PositionId
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUninit.UnitID
           
      WHERE tmpSUM.Amount > 0
 
@@ -158,5 +164,5 @@ ALTER FUNCTION gpSelect_Movement_Wages (TDateTime, TDateTime, Boolean, TVarChar)
 -- тест
 -- 
 
-SELECT * FROM gpReport_Wages_Average (inStartDate:= '01.08.2023', inEndDate:= '01.12.2023', inSession:= zfCalc_UserAdmin());
+select * from gpReport_Wages_Average(inStartDate := ('01.07.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime ,  inSession := '3');
 

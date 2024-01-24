@@ -102,6 +102,7 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     isReport8: TcxGridDBColumn;
+    isReportLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

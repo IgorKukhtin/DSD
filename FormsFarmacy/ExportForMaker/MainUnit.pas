@@ -27,7 +27,10 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxDateUtils, cxNavigator, dxDateRanges;
+  dxSkinXmas2008Blue, cxDateUtils, cxNavigator, dxDateRanges, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxScrollbarAnnotations;
 
 type
   TMainForm = class(TForm)
@@ -88,6 +91,8 @@ type
     EndDateEdit: TcxDateEdit;
     isReport8: TcxGridDBColumn;
     N8: TMenuItem;
+    isReportLoss: TcxGridDBColumn;
+    N9: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -147,6 +152,7 @@ type
     procedure ReportStockTimingRemainder;
     procedure ReportPayIncome(ADateStart, ADateEnd : TDateTime);
     procedure ReportRemainsDate(ADateEnd : TDateTime);
+    procedure ReportLoss(ADateStart : TDateTime);
 
     procedure ExportAnalysisRemainsSelling;
   end;
@@ -250,6 +256,14 @@ begin
       begin
         RepType := 7;
         ReportRemainsDate(IncDay(Date, -1));
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReportLoss').AsBoolean then
+      begin
+        RepType := 8;
+        ReportLoss(DateStart);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -425,6 +439,14 @@ begin
       begin
         RepType := 7;
         ReportPayIncome(DateStart, DateEnd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReportLoss').AsBoolean then
+      begin
+        RepType := 8;
+        ReportLoss(DateStart);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -983,6 +1005,39 @@ begin
   end;
 end;
 
+procedure TMainForm.ReportLoss(ADateStart : TDateTime);
+begin
+  Add_Log('Начало Формирования отчет по списанным товарам');
+  FileName := 'Отчет списанные товары';
+  Subject := FileName;
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select '#13#10 +
+    '  GoodsCode AS "Код", '#13#10 +
+    '  GoodsName AS "Название", '#13#10 +
+    '  UnitName AS "Подразделение", '#13#10 +
+    '  Amount AS "Списано", '#13#10 +
+    '  ExpirationDate AS "Срок годности" '#13#10 +
+    'from gpReport_Loss_DateMarketing(:inOperDate, :inMaker, ''3'')';
+
+  qryReport_Upload.Params.ParamByName('inOperDate').Value := IncDay(ADateStart);
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+
+  OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[3];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+end;
 
 procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
@@ -1166,6 +1221,7 @@ begin
     5 : ReportStockTimingRemainder;
     6 : ReportPayIncome(DateStart, DateEnd);
     7 : ReportRemainsDate(DateEnd);
+    8 : ReportLoss(DateStart);
   end;
 end;
 

@@ -107,6 +107,7 @@ type
     isReport7: TcxGridDBColumn;
     MainJuridicalName: TcxGridDBColumn;
     isReport8: TcxGridDBColumn;
+    isReportLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -20,9 +20,9 @@ object MakerForm: TMakerForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 27
+    Top = 32
     Width = 753
-    Height = 267
+    Height = 262
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -238,6 +238,14 @@ object MakerForm: TMakerForm
         Options.Editing = False
         Width = 105
       end
+      object isReportLoss: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1057#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'"'
+        DataBinding.FieldName = 'isReportLoss'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 94
+      end
       object isQuarter: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
         DataBinding.FieldName = 'isQuarter'
@@ -378,7 +386,7 @@ object MakerForm: TMakerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -15
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -397,7 +405,7 @@ object MakerForm: TMakerForm
     DockControlHeights = (
       0
       0
-      27
+      32
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -994,6 +1002,7 @@ object MakerForm: TMakerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 424
     Top = 128
@@ -1042,6 +1051,7 @@ object MakerForm: TMakerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 288
     Top = 344

@@ -18,9 +18,9 @@ object MakerReportForm: TMakerReportForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 68
+    Top = 73
     Width = 1062
-    Height = 355
+    Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -216,14 +216,6 @@ object MakerReportForm: TMakerReportForm
         Options.Editing = False
         Width = 100
       end
-      object isQuarter: TcxGridDBColumn
-        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
-        DataBinding.FieldName = 'isQuarter'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
       object isReport8: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
         DataBinding.FieldName = 'isReport8'
@@ -231,6 +223,22 @@ object MakerReportForm: TMakerReportForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 107
+      end
+      object isReportLoss: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1057#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'"'
+        DataBinding.FieldName = 'isReportLoss'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 88
+      end
+      object isQuarter: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
+        DataBinding.FieldName = 'isQuarter'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object is4Month: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
@@ -313,7 +321,7 @@ object MakerReportForm: TMakerReportForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -15
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -332,7 +340,7 @@ object MakerReportForm: TMakerReportForm
     DockControlHeights = (
       0
       0
-      27
+      32
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -867,6 +875,7 @@ object MakerReportForm: TMakerReportForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 424
     Top = 128
