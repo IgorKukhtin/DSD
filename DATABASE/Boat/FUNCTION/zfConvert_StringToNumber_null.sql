@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION zfConvert_StringToNumber_null(Number TVarChar)
 RETURNS Integer AS
 $BODY$
 BEGIN
-  RETURN COALESCE (Number :: Integer, 0);
+  RETURN NULLIF (COALESCE (Number :: Integer, 0), 0);
 EXCEPTION
   WHEN OTHERS THEN	
      RETURN NULL;

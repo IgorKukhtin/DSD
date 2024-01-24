@@ -856,7 +856,7 @@ BEGIN
            -- данные последнего счета
          , tmpInvoice.MovementId_Invoice  :: Integer  AS MovementId_Invoice
          , zfCalc_InvNumber_two_isErased ('', tmpInvoice.InvNumber, tmpInvoice.ReceiptNumber, tmpInvoice.OperDate, tmpInvoice.StatusId) AS InvNumberFull_Invoice
-         , zfConvert_StringToNumber (tmpInvoice.ReceiptNumber) AS ReceiptNumber_Invoice
+         , zfConvert_StringToNumber_null (tmpInvoice.ReceiptNumber) AS ReceiptNumber_Invoice
          , tmpInvoice.Amount              :: TFloat   AS Amount_Invoice          
          , tmpInvoice.InvoiceKindId
          , tmpInvoice.InvoiceKindName
