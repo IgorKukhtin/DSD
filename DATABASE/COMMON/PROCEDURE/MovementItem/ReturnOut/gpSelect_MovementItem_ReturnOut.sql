@@ -53,7 +53,7 @@ BEGIN
 
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-           , COALESCE (tmpPrice_kind.ValueData, tmpPrice.ValuePrice) :: TFloat AS Price
+           , COALESCE (tmpPrice_kind.ValuePrice, tmpPrice.ValuePrice) :: TFloat AS Price
            , 1      :: TFloat           AS CountForPrice
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -119,7 +119,7 @@ BEGIN
 
 
        WHERE tmpMI.GoodsId IS NULL
-         AND (COALESCE (tmpPrice_kind.ValueData, tmpPrice.ValuePrice) <> 0 OR vbPriceListId IS NULL)
+         AND (COALESCE (tmpPrice_kind.ValuePrice, tmpPrice.ValuePrice) <> 0 OR vbPriceListId IS NULL)
       UNION ALL
        SELECT
              MovementItem.Id				 AS Id
