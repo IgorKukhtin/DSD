@@ -735,6 +735,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderHint = #1058#1054#1055
             Width = 70
           end
+          object isPackOrder: TcxGridDBColumn
+            Caption = #1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095'. '#1085#1072' '#1091#1087#1072#1082
+            DataBinding.FieldName = 'isPackOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'.'
+            Options.Editing = False
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -1591,6 +1600,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 85
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
   end
