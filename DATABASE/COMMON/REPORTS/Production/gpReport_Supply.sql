@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpReport_Supply(
 RETURNS TABLE ( GoodsId Integer
               , GoodsCode Integer
               , GoodsName TVarChar
+              , Name_Scale TVarChar
               , GoodsKindName TVarChar
               , LocationId Integer
               , LocationCode Integer
@@ -384,7 +385,8 @@ BEGIN
          -- Результат
          SELECT Object_Goods.Id                            AS GoodsId
               , Object_Goods.ObjectCode                    AS GoodsCode
-              , Object_Goods.ValueData     :: TVarChar     AS GoodsName
+              , Object_Goods.ValueData     :: TVarChar     AS GoodsName 
+              , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
               --, Object_GoodsKind.ValueData :: TVarChar     AS GoodsKindName
               , tmpData.GoodsKindName      ::TVarChar      AS GoodsKindName
 
@@ -448,6 +450,10 @@ BEGIN
               LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                      ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                     AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+              LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                     ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                    AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
 
               LEFT JOIN tmpNorm ON tmpNorm.GoodsId = tmpData.GoodsId
                                AND COALESCE (tmpNorm.GoodsKindId, 0) = COALESCE (tmpData.GoodsKindId, 0)

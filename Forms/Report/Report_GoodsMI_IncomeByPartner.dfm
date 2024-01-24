@@ -6,7 +6,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1201
-  ExplicitHeight = 504
+  ExplicitHeight = 505
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -196,6 +196,14 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
+          end
+          object Name_Scale: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
+            DataBinding.FieldName = 'Name_Scale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076

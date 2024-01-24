@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_InventoryDetail (
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Name_Scale TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , PartionGoods TVarChar
@@ -303,7 +304,8 @@ BEGIN
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
-         , Object_Goods.ValueData                     AS GoodsName
+         , Object_Goods.ValueData                     AS GoodsName 
+         , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
          , Object_GoodsKind.ValueData                 AS GoodsKindName
          , Object_Measure.ValueData                   AS MeasureName
          , Object_TradeMark.ValueData                 AS TradeMarkName
@@ -437,6 +439,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull() 
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                 ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
 
           -- привязываем цены по прайсу 2 раза по виду товара и без
           LEFT JOIN tmpPricePR AS tmpPricePR_Kind 

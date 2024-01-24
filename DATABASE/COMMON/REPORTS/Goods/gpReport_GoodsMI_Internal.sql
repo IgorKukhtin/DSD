@@ -23,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Name_Scale TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , PartionGoods TVarChar
@@ -465,7 +466,8 @@ BEGIN
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
-         , Object_Goods.ValueData                     AS GoodsName
+         , Object_Goods.ValueData                     AS GoodsName 
+         , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
          , Object_GoodsKind.Id                        AS GoodsKindId
          , Object_GoodsKind.ValueData                 AS GoodsKindName
          , Object_Measure.ValueData                   AS MeasureName
@@ -590,6 +592,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                 ON ObjectString_Goods_Scale.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
 
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_from
                                ON ObjectLink_Personal_Member_from.ObjectId = tmpOperationGroup.UnitId

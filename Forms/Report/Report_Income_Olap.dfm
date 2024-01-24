@@ -180,6 +180,15 @@ object Report_Income_OlapForm: TReport_Income_OlapForm
       Width = 90
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
+    object pvName_Scale: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1058#1086#1074#1072#1088' (Scale)'
+      DataBinding.FieldName = 'Name_Scale'
+      Width = 90
+      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+    end
     object pvGoodsKindName: TcxDBPivotGridField
       AreaIndex = 3
       IsCaptionAssigned = True
