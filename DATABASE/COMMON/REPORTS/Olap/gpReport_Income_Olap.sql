@@ -19,6 +19,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , PartionGoods TVarChar, PartionGoods_Date TDateTime
              , GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
+             , Name_Scale TVarChar
              , GoodsKindName TVarChar
              , MeasureName TVarChar
              , Amount                TFloat
@@ -308,6 +309,7 @@ BEGIN
                                   , Object_TradeMark.ValueData                   AS TradeMarkName
                                   , Object_GoodsTag.ValueData                    AS GoodsTagName
                                   , Object_GoodsPlatform.ValueData               AS GoodsPlatformName
+                                  , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
                              FROM (SELECT DISTINCT tmpOperationGroup.GoodsId
                                    FROM tmpOperationGroup
                                    ) AS tmpGoods
@@ -327,6 +329,10 @@ BEGIN
                                   LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                                         AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+                                  LEFT JOIN ObjectString AS ObjectString_Goods_Scale
+                                                         ON ObjectString_Goods_Scale.ObjectId = tmpGoods.GoodsId
+                                                        AND ObjectString_Goods_Scale.DescId = zc_ObjectString_Goods_Scale()
 
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
                                                        ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmpGoods.GoodsId
@@ -358,7 +364,8 @@ BEGIN
            
            , tmpGoodsParam.GoodsGroupName     AS GoodsGroupName 
            , Object_Goods.ObjectCode          AS GoodsCode
-           , Object_Goods.ValueData           AS GoodsName  
+           , Object_Goods.ValueData           AS GoodsName
+           , tmpGoodsParam.Name_Scale  ::TVarChar AS Name_Scale
            , Object_GoodsKind.ValueData       AS GoodsKindName
            , Object_Measure.ValueData         AS MeasureName
            

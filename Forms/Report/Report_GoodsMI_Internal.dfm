@@ -5,7 +5,6 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -289
   ExplicitWidth = 1199
   ExplicitHeight = 391
   PixelsPerInch = 96
@@ -267,6 +266,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           object DayOfWeekName: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1076#1072#1090#1072' '#1076#1086#1082'.)'
             DataBinding.FieldName = 'DayOfWeekName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -321,6 +321,14 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1058#1086#1074#1072#1088
             Width = 141
+          end
+          object Name_Scale: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' (Scale)'
+            DataBinding.FieldName = 'Name_Scale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object AssetCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1074#1099#1088'. '#1085#1072' '#1086#1073#1086#1088#1091#1076'.1)'

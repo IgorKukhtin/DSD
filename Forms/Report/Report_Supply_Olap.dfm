@@ -161,6 +161,16 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
       Width = 150
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
+    object pvName_Scale: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1058#1086#1074#1072#1088' (Scale)'
+      DataBinding.FieldName = 'Name_Scale'
+      Visible = True
+      Width = 150
+      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+    end
     object pvGoodsKindName: TcxDBPivotGridField
       AreaIndex = 1
       IsCaptionAssigned = True
@@ -177,7 +187,7 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
     end
     object pvNormRem: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 1
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1053#1086#1088#1084'. '#1086#1089#1090', '#1090#1086#1085#1085
       DataBinding.FieldName = 'NormRem'
@@ -190,7 +200,7 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
     end
     object pvNormOut: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1053#1086#1088#1084'. '#1087#1086#1090#1088#1077#1073#1083'., '#1090#1086#1085#1085'/'#1084#1077#1089'.'
       DataBinding.FieldName = 'NormOut'
