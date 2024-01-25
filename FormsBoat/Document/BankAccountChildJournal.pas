@@ -53,8 +53,6 @@ type
     bbUpdateMoneyPlace: TdxBarButton;
     actOpenInvoiceForm: TdsdOpenForm;
     Panel_btn: TPanel;
-    btnInsert: TcxButton;
-    btnUpdate: TcxButton;
     btnComplete: TcxButton;
     btnUnComplete: TcxButton;
     btnSetErased: TcxButton;

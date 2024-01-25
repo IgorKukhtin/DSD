@@ -1193,6 +1193,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited Panel: TPanel
     Width = 1213
     Height = 30
+    ExplicitLeft = 8
+    ExplicitTop = -24
     ExplicitWidth = 1213
     ExplicitHeight = 30
     object lbSearchArticle: TcxLabel

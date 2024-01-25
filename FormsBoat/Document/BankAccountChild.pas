@@ -19,7 +19,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo;
 
 type
   TBankAccountChildForm = class(TAncestorEditDialog_boatForm)
@@ -58,8 +58,12 @@ type
     cxLabel9: TcxLabel;
     edInvoiceKind: TcxButtonEdit;
     GuidesInvoiceKind: TdsdGuides;
+    cmText: TcxMemo;
+    cxLabel8: TcxLabel;
+    cxLabel11: TcxLabel;
+    ceAmount_pay: TcxCurrencyEdit;
+    edAmount_invoice: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
-    ceAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

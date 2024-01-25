@@ -181,7 +181,7 @@
   end
   object cxLabel2: TcxLabel [21]
     Left = 287
-    Top = 199
+    Top = 200
     Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
   end
   object edAmount_invoice: TcxCurrencyEdit [22]
@@ -987,7 +987,7 @@
     FormName = 'TInvoiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <>
-    Left = 220
+    Left = 148
     Top = 119
   end
   object GuidesInvoiceKind: TdsdGuides
