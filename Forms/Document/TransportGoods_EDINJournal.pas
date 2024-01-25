@@ -124,6 +124,8 @@ type
     mactSendSingETTN: TMultiAction;
     actSendSignETTN: TdsdEDINAction;
     bbSendSingETTN: TdxBarButton;
+    isSignConsignor_eTTN: TcxGridDBColumn;
+    isSignCarrier_eTTN: TcxGridDBColumn;
   private
     { Private declarations }
   public

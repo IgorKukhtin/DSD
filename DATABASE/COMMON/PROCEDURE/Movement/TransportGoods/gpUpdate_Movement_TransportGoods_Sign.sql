@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_TransportGoods_Sign(
    OUT outSignConsignorDate       TDateTime , 
    OUT outMemberSignCarrierName   TVarChar  , 
    OUT outSignCarrierDate         TDateTime ,
+   OUT outCommentError            TVarChar  ,
     IN inSession                  TVarChar    -- сессия пользователя
 
 )                              
@@ -137,10 +138,12 @@ BEGIN
           , MovementDate_SignConsignor.ValueData                               AS SignConsignorDate
           , Object_MemberSignCarrier.ValueData                                 AS MemberSignCarrierName
           , MovementDate_SignCarrier.ValueData                                 AS SignCarrierDate
+          , MovementString_CommentError.ValueData                              AS CommentError
      INTO outMemberSignConsignorName
         , outSignConsignorDate
         , outMemberSignCarrierName
         , outSignCarrierDate
+        , outCommentError
      FROM Movement 
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSignConsignor
@@ -159,6 +162,10 @@ BEGIN
                                  ON MovementDate_SignCarrier.MovementId =  Movement.Id
                                 AND MovementDate_SignCarrier.DescId = zc_MovementDate_SignCarrier()
                                   
+          LEFT JOIN MovementString AS MovementString_CommentError
+                                   ON MovementString_CommentError.MovementId =  Movement.Id
+                                  AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                
      WHERE Movement.Id = inMovementId;
 
 END;

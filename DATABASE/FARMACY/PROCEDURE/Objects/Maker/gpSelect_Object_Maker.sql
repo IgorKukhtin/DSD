@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport6  Boolean
              , isReport7  Boolean
              , isReport8  Boolean
+             , isReportLoss Boolean
              , isQuarter  Boolean
              , is4Month  Boolean
              , isUnPlanned Boolean 
@@ -35,6 +36,24 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Maker());
 
      RETURN QUERY  
+     WITH
+       -- Маркетинговый контракт
+        tmpPromo AS (SELECT DISTINCT MovementLinkObject_Maker.ObjectId                     AS MakerID
+                     FROM Movement
+                          INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                  ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                 AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                                 AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
+                          INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                  ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                 AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                 AND MovementDate_EndPromo.ValueData >= CURRENT_DATE
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                                       ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                                      AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                     WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                       AND Movement.DescId = zc_Movement_Promo())
+                       
        SELECT 
              Object_Maker.Id          AS Id
            , Object_Maker.ObjectCode  AS Code
@@ -77,6 +96,7 @@ $BODY$BEGIN
            , COALESCE (ObjectBoolean_Maker_Report6.ValueData, FALSE) :: Boolean AS isReport6
            , COALESCE (ObjectBoolean_Maker_Report7.ValueData, FALSE) :: Boolean AS isReport7
            , COALESCE (ObjectBoolean_Maker_Report8.ValueData, FALSE) :: Boolean AS isReport8
+           , COALESCE (tmpPromo.MakerID, 0) <> 0 AND COALESCE (ObjectString_Mail.ValueData, '') <> '' AS isReportLoss
            , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
            , COALESCE (ObjectBoolean_Maker_4Month.ValueData, FALSE) :: Boolean  AS is4Month
 
@@ -165,6 +185,8 @@ $BODY$BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                 ON ObjectFloat_Month.ObjectId = Object_Maker.Id
                                AND ObjectFloat_Month.DescId = zc_ObjectFloat_Maker_Month()
+                               
+           LEFT JOIN tmpPromo ON tmpPromo.MakerID = Object_Maker.Id
 
      WHERE Object_Maker.DescId = zc_Object_Maker();
   
@@ -190,3 +212,5 @@ LANGUAGE plpgsql VOLATILE;
 -- тест
 -- SELECT * FROM gpSelect_Object_Maker('2')
 
+
+select * from gpSelect_Object_Maker( inSession := '3');

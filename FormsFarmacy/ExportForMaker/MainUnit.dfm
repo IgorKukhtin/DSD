@@ -26,6 +26,7 @@ object MainForm: TMainForm
     ExplicitTop = 241
     object grtvMaker: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
+      ScrollbarAnnotations.CustomAnnotations = <>
       DataController.DataSource = dsReport_Upload
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -97,7 +98,7 @@ object MainForm: TMainForm
       OnClick = btnAllMakerClick
     end
     object EditId: TEdit
-      Left = 146
+      Left = 144
       Top = 2
       Width = 66
       Height = 21
@@ -129,6 +130,7 @@ object MainForm: TMainForm
     LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
+      ScrollbarAnnotations.CustomAnnotations = <>
       DataController.DataSource = dsMaker
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
@@ -155,6 +157,7 @@ object MainForm: TMainForm
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 42
@@ -162,6 +165,7 @@ object MainForm: TMainForm
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
@@ -170,6 +174,7 @@ object MainForm: TMainForm
       object Mail: TcxGridDBColumn
         Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
         DataBinding.FieldName = 'Mail'
+        DataBinding.IsNullValueType = True
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -179,6 +184,7 @@ object MainForm: TMainForm
       object SendPlan: TcxGridDBColumn
         Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendPlan'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         Options.Editing = False
@@ -187,6 +193,7 @@ object MainForm: TMainForm
       object AmountMonth: TcxGridDBColumn
         Caption = #1055#1077#1088#1080#1086#1076'. '#1084#1077#1089#1103#1094#1077#1074
         DataBinding.FieldName = 'AmountMonth'
+        DataBinding.IsNullValueType = True
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
@@ -197,6 +204,7 @@ object MainForm: TMainForm
       object AmountDay: TcxGridDBColumn
         Caption = #1055#1077#1088#1080#1086#1076'. '#1076#1085#1077#1081
         DataBinding.FieldName = 'AmountDay'
+        DataBinding.IsNullValueType = True
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
@@ -207,6 +215,7 @@ object MainForm: TMainForm
       object isCurrMonth: TcxGridDBColumn
         Caption = #1058#1077#1082'. '#1084#1077#1089#1103#1094
         DataBinding.FieldName = 'isCurrMonth'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 56
@@ -214,6 +223,7 @@ object MainForm: TMainForm
       object isUnPlanned: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1099#1077' '#1086#1090#1095#1077#1090#1099
         DataBinding.FieldName = 'isUnPlanned'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 81
@@ -221,18 +231,21 @@ object MainForm: TMainForm
       object isQuarterAdd: TcxGridDBColumn
         Caption = #1044#1086#1087#1086#1083#1085'. '#1082#1074#1072#1088#1090#1072#1083
         DataBinding.FieldName = 'isQuarterAdd'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Width = 62
       end
       object is4MonthAdd: TcxGridDBColumn
         Caption = #1044#1086#1087#1086#1083#1085'. 4 '#1084#1077#1089#1103#1094#1072
         DataBinding.FieldName = 'is4MonthAdd'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Width = 55
       end
       object StartDateUnPlanned: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1083#1103' '#1042#1054
         DataBinding.FieldName = 'StartDateUnPlanned'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1083#1103' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1086#1075#1086' '#1086#1090#1095#1077#1090#1072
         Options.Editing = False
@@ -241,6 +254,7 @@ object MainForm: TMainForm
       object EndDateUnPlanned: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1083#1103' '#1042#1054
         DataBinding.FieldName = 'EndDateUnPlanned'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1083#1103' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1086#1075#1086' '#1086#1090#1095#1077#1090#1072
         Options.Editing = False
@@ -249,6 +263,7 @@ object MainForm: TMainForm
       object isReport1: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
         DataBinding.FieldName = 'isReport1'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
         Options.Editing = False
@@ -257,6 +272,7 @@ object MainForm: TMainForm
       object isReport2: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
         DataBinding.FieldName = 'isReport2'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
         Options.Editing = False
@@ -265,6 +281,7 @@ object MainForm: TMainForm
       object isReport3: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
         DataBinding.FieldName = 'isReport3'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
         Options.Editing = False
@@ -273,6 +290,7 @@ object MainForm: TMainForm
       object isReport4: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
         DataBinding.FieldName = 'isReport4'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
         Options.Editing = False
@@ -281,25 +299,37 @@ object MainForm: TMainForm
       object isReport6: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1080#1089#1090#1077#1082#1096#1080#1081' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
         DataBinding.FieldName = 'isReport6'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Width = 87
       end
       object isReport7: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
         DataBinding.FieldName = 'isReport7'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Width = 88
       end
       object isReport8: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
         DataBinding.FieldName = 'isReport8'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 94
       end
+      object isReportLoss: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1057#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'"'
+        DataBinding.Expression = #1'isReportLoss'
+        DataBinding.IsNullValueType = True
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 79
+      end
       object isQuarter: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
         DataBinding.FieldName = 'isQuarter'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -307,6 +337,7 @@ object MainForm: TMainForm
       object is4Month: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
         DataBinding.FieldName = 'is4Month'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 94
@@ -314,6 +345,7 @@ object MainForm: TMainForm
       object ContactPersonName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'ContactPersonName'
+        DataBinding.IsNullValueType = True
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -327,6 +359,7 @@ object MainForm: TMainForm
       object CountryName: TcxGridDBColumn
         Caption = #1057#1090#1088#1072#1085#1072
         DataBinding.FieldName = 'CountryName'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 147
@@ -334,6 +367,7 @@ object MainForm: TMainForm
       object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
         DataBinding.FieldName = 'Phone'
+        DataBinding.IsNullValueType = True
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -343,6 +377,7 @@ object MainForm: TMainForm
       object SendReal: TcxGridDBColumn
         Caption = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendReal'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072' / '#1074#1088#1077#1084#1103')'
         Options.Editing = False
@@ -351,6 +386,7 @@ object MainForm: TMainForm
       object SendLast: TcxGridDBColumn
         Caption = #1057#1083'. '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendLast'
+        DataBinding.IsNullValueType = True
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1086#1090#1087#1088#1072#1074#1082#1080
         Options.Editing = False
@@ -359,6 +395,7 @@ object MainForm: TMainForm
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        DataBinding.IsNullValueType = True
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -415,10 +452,9 @@ object MainForm: TMainForm
         '       DATE_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'3 DAY'#39') = 1   ' +
         '                      AS is4MonthAdd'
       'FROM gpSelect_Object_Maker( '#39'3'#39')'
-      'WHERE'
       
-        '((SendPlan <= CURRENT_TIMESTAMP AND (COALESCE(AmountDay, 0) NOT ' +
-        'IN (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR'
+        'WHERE  ((SendPlan <= CURRENT_TIMESTAMP AND (COALESCE(AmountDay, ' +
+        '0) NOT IN (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR'
       
         'SendReal < CURRENT_DATE AND COALESCE(AmountDay, 0) = 25 AND DATE' +
         '_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'5 DAY'#39') = 1 OR'
@@ -518,6 +554,11 @@ object MainForm: TMainForm
     object N8: TMenuItem
       Tag = 7
       Caption = #1054#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      OnClick = pmClick
+    end
+    object N9: TMenuItem
+      Tag = 8
+      Caption = #1054#1090#1095#1077#1090' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074
       OnClick = pmClick
     end
   end
