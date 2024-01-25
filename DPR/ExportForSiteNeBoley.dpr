@@ -2,7 +2,7 @@ program ExportForSiteNeBoley;
 
 uses
   Vcl.Forms,
-  MainUnit in '..\ExportForSiteNeBoley\MainUnit.pas' {MainForm};
+  MainUnit in '..\FormsFarmacy\MainUnitService\ExportForSiteNeBoley\MainUnit.pas' {MainForm};
 
 {$R *.res}
 

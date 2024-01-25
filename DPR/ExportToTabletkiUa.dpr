@@ -2,7 +2,7 @@ program ExportToTabletkiUa;
 
 uses
   Vcl.Forms,
-  MainUnit in '..\ExportToTabletkiUa\MainUnit.pas' {Form1};
+  MainUnit in '..\FormsFarmacy\MainUnitService\ExportToTabletkiUa\MainUnit.pas' {Form1};
 
 {$R *.res}
 

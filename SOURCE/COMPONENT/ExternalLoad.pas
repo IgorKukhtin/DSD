@@ -992,7 +992,7 @@ begin
                       begin
                         if VarIsNULL(Field.Value) then
                           vParamValue := ''
-                        else if StoredProc.Params.Items[i].DataType = ftString then
+                        else if TImportSettingsItems(Items[i]).Param.DataType = ftString then
                           vParamValue := Copy(Trim(AdaptStr(Field.Value)), 1, 255)
                         else vParamValue := Trim(AdaptStr(Field.Value));
 
