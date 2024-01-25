@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
   ClientHeight = 567
-  ClientWidth = 610
+  ClientWidth = 660
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -46,19 +46,21 @@ object ProductEditForm: TProductEditForm
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 0
-    Width = 610
+    Width = 660
     Height = 497
     Align = alTop
     TabOrder = 3
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
+    ExplicitWidth = 610
     ClientRectBottom = 497
-    ClientRectRight = 610
+    ClientRectRight = 660
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
+      ExplicitWidth = 610
       object edName: TcxTextEdit
         Left = 10
         Top = 393
@@ -715,6 +717,7 @@ object ProductEditForm: TProductEditForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 1
+      ExplicitWidth = 610
       object cxLabel22: TcxLabel
         Left = 611
         Top = 59
@@ -962,26 +965,29 @@ object ProductEditForm: TProductEditForm
       object Panel1: TPanel
         Left = 0
         Top = 217
-        Width = 610
+        Width = 660
         Height = 256
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 22
+        ExplicitWidth = 610
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 608
+          Width = 658
           Height = 26
           Align = dalTop
           BarManager = BarManager
+          ExplicitWidth = 608
         end
         object cxGrid1: TcxGrid
           Left = 1
           Top = 27
-          Width = 608
+          Width = 658
           Height = 228
           Align = alClient
           TabOrder = 1
+          ExplicitWidth = 608
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = BankDS
@@ -1225,26 +1231,29 @@ object ProductEditForm: TProductEditForm
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 610
+        Width = 660
         Height = 217
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 23
+        ExplicitWidth = 610
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 608
+          Width = 658
           Height = 26
           Align = dalTop
           BarManager = BarManager
+          ExplicitWidth = 608
         end
         object cxGrid: TcxGrid
           Left = 1
           Top = 27
-          Width = 608
+          Width = 658
           Height = 189
           Align = alClient
           TabOrder = 1
+          ExplicitWidth = 608
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InvoiceDS
@@ -1865,6 +1874,20 @@ object ProductEditForm: TProductEditForm
       ImageIndex = 13
       Status = mtDelete
     end
+    object macInsertInv: TMultiAction
+      Category = 'Doc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertInv
+        end
+        item
+          Action = actSelectInvoice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 0
+    end
     object mactLoadAgilis_all: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2400,7 +2423,7 @@ object ProductEditForm: TProductEditForm
       DataSource = BankDS
     end
     object actPrintInvoice: TdsdPrintAction
-      Category = 'Doc'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -2423,8 +2446,20 @@ object ProductEditForm: TProductEditForm
       ImageIndex = 3
       DataSets = <
         item
-          DataSet = PrintItemsCDS
+          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintReturnCDS
+          UserName = 'frxDBDReturn'
+        end
+        item
+          DataSet = PrintOptionCDS
+          UserName = 'frxDBDOption'
         end>
       Params = <
         item
@@ -2441,6 +2476,8 @@ object ProductEditForm: TProductEditForm
         end>
       ReportName = 'PrintMovement_Invoice'
       ReportNameParam.Value = 'PrintMovement_Invoice'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameInvoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2478,20 +2515,6 @@ object ProductEditForm: TProductEditForm
         end>
       isShowModal = False
     end
-    object macInsertInv: TMultiAction
-      Category = 'Doc'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertInv
-        end
-        item
-          Action = actSelectInvoice
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
-      ImageIndex = 0
-    end
     object actSelectInvoice: TdsdExecStoredProc
       Category = 'Doc'
       MoveParams = <>
@@ -2502,6 +2525,43 @@ object ProductEditForm: TProductEditForm
           StoredProc = spSelectInvoice
         end>
       Caption = 'actSelectInvoice'
+    end
+    object actInvoiceReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actInvoiceReportName'
+    end
+    object mactPrint_Invoice: TMultiAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInvoiceReportName
+        end
+        item
+          Action = actPrintInvoice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072
+      ImageIndex = 3
+      ShortCut = 16464
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -2801,6 +2861,13 @@ object ProductEditForm: TProductEditForm
         Name = 'inUrl_Photo'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameInvoice'
+        Value = 'PrintMovement_Invoice'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 56
@@ -3901,7 +3968,7 @@ object ProductEditForm: TProductEditForm
       Category = 0
     end
     object bbPrintInvoice: TdxBarButton
-      Action = actPrintInvoice
+      Action = mactPrint_Invoice
       Category = 0
     end
     object bbMovementProtocolOpenForm: TdxBarButton
@@ -4759,10 +4826,19 @@ object ProductEditForm: TProductEditForm
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'
-    DataSet = PrintItemsCDS
+    DataSet = PrintHeaderCDS
     DataSets = <
       item
+        DataSet = PrintHeaderCDS
+      end
+      item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintReturnCDS
+      end
+      item
+        DataSet = PrintOptionCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -4813,5 +4889,56 @@ object ProductEditForm: TProductEditForm
       end>
     Left = 389
     Top = 127
+  end
+  object spGetReportName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Invoice_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = InvoiceCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_parent'
+        Value = Null
+        Component = InvoiceCDS
+        ComponentItem = 'MovementId_parent'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Invoice_ReportName'
+        Value = 'PrintMovement_Invoice1'
+        Component = FormParams
+        ComponentItem = 'ReportNameInvoice'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 328
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 596
+    Top = 385
+  end
+  object PrintReturnCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 596
+    Top = 426
+  end
+  object PrintOptionCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 588
+    Top = 470
   end
 end
