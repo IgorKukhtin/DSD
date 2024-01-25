@@ -296,6 +296,12 @@ type
     InvoiceKindName_vh2: TcxGridDBColumn;
     isAuto: TcxGridDBColumn;
     ReceiptNumber_Invoice_ch2: TcxGridDBColumn;
+    spGetReportName: TdsdStoredProc;
+    actInvoiceReportName: TdsdExecStoredProc;
+    mactPrint_Invoice: TMultiAction;
+    PrintHeaderCDS: TClientDataSet;
+    PrintReturnCDS: TClientDataSet;
+    PrintOptionCDS: TClientDataSet;
   private
     { Private declarations }
   public

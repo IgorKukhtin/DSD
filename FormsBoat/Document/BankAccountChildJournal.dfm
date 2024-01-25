@@ -565,8 +565,8 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     end
     object cxButton3: TcxButton
       Left = 247
-      Top = 41
-      Width = 108
+      Top = 10
+      Width = 118
       Height = 25
       Action = mactSetErasedItem
       TabOrder = 6
@@ -586,6 +586,14 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Height = 25
       Action = actOpenFormPdfEdit
       TabOrder = 8
+    end
+    object cxButton6: TcxButton
+      Left = 247
+      Top = 41
+      Width = 118
+      Height = 25
+      Action = actOpenFormPdfAllEdit
+      TabOrder = 9
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1458,6 +1466,50 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090
       ImageIndex = 3
     end
+    object actOpenFormPdfAllEdit: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
+      ImageIndex = 26
+      FormName = 'TBankAccountPdfEditForm'
+      FormNameParam.Value = 'TBankAccountPdfEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovmentItemId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -1683,6 +1735,10 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         item
           Visible = True
           ItemName = 'bbOpenFormPdfEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormPdfAllEdit'
         end>
     end
     object bbsLoadForm: TdxBarSubItem
@@ -1710,6 +1766,10 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     end
     object bbtPrint_Invoice: TdxBarButton
       Action = mactPrint_Invoice
+      Category = 0
+    end
+    object bbOpenFormPdfAllEdit: TdxBarButton
+      Action = actOpenFormPdfAllEdit
       Category = 0
     end
   end
