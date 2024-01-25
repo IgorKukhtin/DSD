@@ -107,6 +107,9 @@ type
     PrintOptionCDS: TClientDataSet;
     cxButton4: TcxButton;
     cxButton5: TcxButton;
+    actOpenFormPdfAllEdit: TdsdOpenForm;
+    bbOpenFormPdfAllEdit: TdxBarButton;
+    cxButton6: TcxButton;
   private
     { Private declarations }
   public

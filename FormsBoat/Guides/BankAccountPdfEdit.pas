@@ -116,6 +116,7 @@ type
     cxLabel8: TcxLabel;
     cxLabel10: TcxLabel;
     ceBoat: TcxTextEdit;
+    DocInvNumber: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

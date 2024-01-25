@@ -528,7 +528,7 @@ object ProductEditForm: TProductEditForm
       end
       object edAmountIn_rem: TcxCurrencyEdit
         Left = 331
-        Top = 392
+        Top = 391
         Hint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1042#1057#1045#1052' '#1089#1095#1077#1090#1072#1084
         ParentFont = False
         ParentShowHint = False
@@ -3393,8 +3393,8 @@ object ProductEditForm: TProductEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 519
-    Top = 338
+    Left = 511
+    Top = 306
   end
   object GuidesProdEngine: TdsdGuides
     KeyField = 'Id'
@@ -4224,8 +4224,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 408
+    Left = 472
+    Top = 424
   end
   object spInsertUpdate_ProductDocument: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ProductDocument'
@@ -4302,8 +4302,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 328
+    Left = 384
+    Top = 288
   end
   object spGet_ProductDocument: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ProductDocument_https'
@@ -4556,6 +4556,7 @@ object ProductEditForm: TProductEditForm
       item
         FieldName = 'Image3'
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 56
     Top = 168
@@ -4593,6 +4594,7 @@ object ProductEditForm: TProductEditForm
       item
         FieldName = 'Image3'
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 80
     Top = 448

@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_BankAccountPdf(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccountPdf (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_BankAccountPdf (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccountPdf(
+    IN inMovmentId          Integer,
     IN inMovmentItemId      Integer,
     IN inSession            TVarChar       -- сессия пользователя
 )
@@ -11,6 +13,7 @@ RETURNS TABLE (Id Integer
              , DocTagId Integer, DocTagName TVarChar
              , Comment TVarChar
              , DocumentData TBlob
+             , InvNumber_invoice TVarChar
               )
 AS
 $BODY$
@@ -21,6 +24,8 @@ BEGIN
 
    RETURN QUERY
      WITH tmpProduct AS (SELECT MovementItem_OrderClient.ObjectId AS ProductId
+                              , MovementItem.Id                   AS MovementItemId
+                              , zfConvert_StringToNumber (Movement_Invoice.InvNumber) ::Integer AS InvNumber
                          FROM MovementItem
                               JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -41,10 +46,11 @@ BEGIN
                                                      AND MovementItem_OrderClient.DescId      = zc_MI_Master()
                                                      AND MovementItem_OrderClient.isErased    = FALSE
 
-                         WHERE MovementItem.Id       = inMovmentItemId
+                         WHERE MovementItem.MovementId = inMovmentId 
+                           AND (MovementItem.Id = inMovmentItemId OR inMovmentItemId = 0)
                            AND MovementItem.DescId   = zc_MI_Child()
                            AND MovementItem.isErased = FALSE
-                         LIMIT 1
+                         --LIMIT 1
                         )
      SELECT
             Object_BankAccountPdf.Id        AS Id
@@ -52,12 +58,15 @@ BEGIN
           , Object_DocTag.Id                AS DocTagId
           , Object_DocTag.ValueData         AS DocTagName
           , ObjectString_Comment.ValueData  AS Comment
-          , ObjectBlob_Data.ValueData       AS DocumentData
+          , ObjectBlob_Data.ValueData       AS DocumentData 
+          , tmpProduct.InvNumber ::TVarChar AS InvNumber_invoice
      FROM Object AS Object_BankAccountPdf
           JOIN ObjectFloat AS ObjectFloat_BankAccountPdf_MovmentItemId
                            ON ObjectFloat_BankAccountPdf_MovmentItemId.ObjectId = Object_BankAccountPdf.Id
                           AND ObjectFloat_BankAccountPdf_MovmentItemId.DescId = zc_ObjectFloat_BankAccountPdf_MovmentItemId()
-                          AND ObjectFloat_BankAccountPdf_MovmentItemId.ValueData = inMovmentItemId
+                          --AND ObjectFloat_BankAccountPdf_MovmentItemId.ValueData IN (SELECT DISTINCT tmpProduct.MovementItemId FROM tmpProduct)
+          JOIN tmpProduct ON tmpProduct.MovementItemId = ObjectFloat_BankAccountPdf_MovmentItemId.ValueData
+
           LEFT JOIN ObjectLink AS ObjectLink_BankAccountPdf_DocTag
                                ON ObjectLink_BankAccountPdf_DocTag.ObjectId = Object_BankAccountPdf.Id
                               AND ObjectLink_BankAccountPdf_DocTag.DescId = zc_ObjectLink_BankAccountPdf_DocTag()
@@ -81,12 +90,12 @@ BEGIN
           , Object_DocTag.ValueData          AS DocTagName
           , ObjectString_Comment.ValueData   AS Comment
           , ObjectBlob_Data.ValueData        AS DocumentData
-
+          , '' ::TVarChar                    AS InvNumber_invoice
      FROM Object AS Object_ProductDocument
           JOIN ObjectLink AS ObjectLink_ProductDocument_Product
                           ON ObjectLink_ProductDocument_Product.ObjectId = Object_ProductDocument.Id
                          AND ObjectLink_ProductDocument_Product.DescId   = zc_ObjectLink_ProductDocument_Product()
-          JOIN tmpProduct ON tmpProduct.ProductId = ObjectLink_ProductDocument_Product.ChildObjectId
+                         AND ObjectLink_ProductDocument_Product.ChildObjectId IN (SELECT DISTINCT tmpProduct.ProductId FROM tmpProduct)
 
           LEFT JOIN ObjectLink AS ObjectLink_DocTag
                                ON ObjectLink_DocTag.ObjectId = Object_ProductDocument.Id
@@ -115,3 +124,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_BankAccountPdf (557216,'2')
+--SELECT * FROM gpSelect_Object_BankAccountPdf (1804, 0,'2')
