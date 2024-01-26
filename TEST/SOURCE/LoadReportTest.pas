@@ -140,10 +140,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+   {
    LoadReportFromFile('Отчет_Анализ Заявки На Производство', ReportPath + '\Отчеты (производство)\Отчет_Анализ Заявки На Производство.fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет_Анализ Заявки На Производство', ReportPath + '\Товарный Учет\Отчет_Анализ Заявки На Производство.fr3');
   exit;
 
@@ -412,10 +412,10 @@ begin
 
   LoadReportFromFile('Отчет_Приход_Расход_производство_разделение_Итог', ReportPath + '\Отчеты (производство)\Отчет_Приход_Расход_производство_разделение_Итог.fr3');
    exit;
-   }
+
   LoadReportFromFile('Производство лакирование', ReportPath + '\Отчеты (производство)\Производство лакирование.fr3');
   exit;
-  {
+
   LoadReportFromFile('Производство и процент выхода (итоги)', ReportPath + '\Отчеты (производство)\Производство и процент выхода (итоги).fr3');
   LoadReportFromFile('Производство и процент выхода (Анализ)', ReportPath + '\Отчеты (производство)\Производство и процент выхода (Анализ).fr3');
   LoadReportFromFile('Приход на склад и процент потерь (итоги)', ReportPath + '\Отчеты (производство)\Приход на склад и процент потерь (итоги).fr3');
@@ -593,7 +593,10 @@ begin
   LoadReportFromFile('PrintMovement_ReturnIn32049199', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32049199.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32516492', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32516492.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn35442481', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn35442481.fr3');
+
+  }
   LoadReportFromFile('PrintMovement_ReturnInDay', ReportPath + '\Товарный Учет\PrintMovement_ReturnInDay.fr3');
+  exit;
 
   LoadReportFromFile('PrintMovement_ReturnIn_corr', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_corr.fr3');
   exit;
@@ -616,7 +619,7 @@ begin
   LoadReportFromFile('PrintMovement_Tax010423', ReportPath + '\Товарный Учет\PrintMovement_Tax010423.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective010423', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective010423.fr3');
   exit;
-   }
+
   LoadReportFromFile('PrintMovement_Tax010823', ReportPath + '\Товарный Учет\PrintMovement_Tax010823.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective010823', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective010823.fr3');
   exit;
@@ -743,7 +746,7 @@ end;
 procedure TLoadReportTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'asdasxq1', gc_User);
   Report := TfrxReport.Create(nil);
   Stream := TStringStream.Create;
 end;

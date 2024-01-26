@@ -136,6 +136,11 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_UKTZ_new', 'Новый УКТЗ'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_UKTZ_new');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_PrintAuto() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_PrintAuto'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_PrintAuto', 'Распечатан автоматически (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PrintAuto');
+
+
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Аптека
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_Deferred() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Deferred'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -459,9 +464,12 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_DiscountInformation() RETURNS inte
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_DiscountInformation', 'Информирование о скидке'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_DiscountInformation');
 
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 26.01.23         * zc_MovementBoolean_PrintAuto
  17.05.23                                                                                   * zc_MovementBoolean_DiscountInformation
  07.03.23                                                                                   * zc_MovementBoolean_SalaryException
  25.11.22                                                                                   * zc_MovementBoolean_AmountCheck

@@ -226,10 +226,15 @@ BEGIN
                                INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())      
-                                         AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                         AND MovementLinkObject_Contract.ObjectId = vbContractId 
+                               --для пакетной печати , чтоб после того ка распечатано для первой накладной  на второй не печаталось
+                               LEFT JOIN MovementBoolean AS MovementBoolean_PrintAuto
+                                      ON MovementBoolean_PrintAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_PrintAuto.DescId = zc_MovementBoolean_PrintAuto()
                           WHERE Movement.OperDate = vbOperDate
                             AND Movement.DescId   = zc_Movement_ReturnIn()
                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND COALESCE (MovementBoolean_PrintAuto.ValueData,False) = FALSE
                          )
      ,    tmpMovement_list AS (SELECT Movement.ParentId           AS MovementParentId
                                     , MAX (Object_User.ValueData) AS StoreKeeperName

@@ -367,6 +367,15 @@ type
     bbsSend: TdxBarSubItem;
     bbsEdit: TdxBarSubItem;
     bbsUnLoad: TdxBarSubItem;
+    macPrint_Group_cash_Ret: TMultiAction;
+    spUpdatePrintAuto_False: TdsdStoredProc;
+    actUpdatePrintAuto_False: TdsdExecStoredProc;
+    actPrintReturnInDay_2copy: TdsdPrintAction;
+    spUpdatePrintAuto_True: TdsdStoredProc;
+    actUpdatePrintAuto_True: TdsdExecStoredProc;
+    macPrint_Group_cash_Ret_test: TMultiAction;
+    macPrint_Group_list_cash_test: TMultiAction;
+    bbPrint_Group_cash_Ret: TdxBarButton;
   private
     { Private declarations }
   public
