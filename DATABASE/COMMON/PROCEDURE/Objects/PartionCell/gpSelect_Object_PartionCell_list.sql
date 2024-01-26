@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionCell_list(
     IN inisErased    Boolean ,
     IN inSession     TVarChar            -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , Level TFloat, Length TFloat, Width TFloat, Height TFloat
              , BoxCount TFloat, RowBoxCount TFloat, RowWidth TFloat, RowHeight TFloat
              , Comment TVarChar
@@ -24,7 +24,9 @@ BEGIN
        SELECT
              Object.Id         AS Id
            , Object.ObjectCode AS Code
-           , Object.ValueData  AS Name
+           , Object.ValueData  AS Name 
+           , (Object.ValueData ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (Object.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
+           
            , ObjectFloat_Level.ValueData        ::TFloat  AS Level
            , ObjectFloat_Length.ValueData       ::TFloat  AS Length 
            , ObjectFloat_Width.ValueData        ::TFloat  AS Width
@@ -79,7 +81,8 @@ BEGIN
       UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
-            , 'УДАЛИТЬ' :: TVarChar AS Name
+            , 'УДАЛИТЬ' :: TVarChar AS Name 
+            , '' ::TVarChar          AS Name_search
             , CAST (NULL as TFLOAT)  AS Level      
             , CAST (NULL as TFLOAT)  AS Length     
             , CAST (NULL as TFLOAT)  AS Width      
