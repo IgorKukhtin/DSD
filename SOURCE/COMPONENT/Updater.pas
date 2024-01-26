@@ -478,6 +478,18 @@ begin
        if GetFilePlatfotm64(ParamStr(0))
        then FileWriteString(ExtractFilePath(ParamStr(0)) + 'pdfium.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('pdfium64.dll'), ''))
        else FileWriteString(ExtractFilePath(ParamStr(0)) + 'pdfium.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('pdfium32.dll'), ''));
+    //1.4. SignFile.exe грузим - для подписи файлов
+    if (gc_ProgramName = 'Project.exe') and GetFilePlatfotm64(ParamStr(0)) then
+    begin
+      if  FileExists(ExtractFilePath(ParamStr(0)) + 'SignFile.exe') then
+      begin
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('SignFile.exe', GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'SignFile.exe', ''));
+        LocalVersionInfo := UnilWin.GetFileVersion(ExtractFilePath(ParamStr(0)) + 'SignFile.exe');
+        if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+           ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+          FileWriteString(ExtractFilePath(ParamStr(0)) + 'SignFile.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('SignFile.exe'), ''));
+      end else FileWriteString(ExtractFilePath(ParamStr(0)) + 'SignFile.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('SignFile.exe'), ''));
+    end;
 
   except
     on E: Exception do
