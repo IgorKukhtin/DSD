@@ -48,7 +48,7 @@ begin
 
   ResultFileName := ExtractFilePath(ParamStr(0)) + 'SignFileResult.dat';
 
-  if (apath = '') or (apath = '') or (apath = '') or (apath = '') then
+  if (apath = '') or (FileKeyName = '') or (Pass = '') or (FileName = '') then
   begin
     AddResult('Ошибка', 'Не переданы все параметры.');
     Exit;

@@ -310,7 +310,7 @@ implementation
 uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML,
-  DesadvFozzXML, OrderSpFozzXML, IftminFozzXML, Registry,
+  DesadvFozzXML, OrderSpFozzXML, IftminFozzXML, Registry, System.IniFiles,
   DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, UAECMRXML,
   Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
   IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
@@ -6085,12 +6085,19 @@ end;
 
 function TdsdEDINAction.SignData(UserSign : String) : boolean;
 var
-  FileName: AnsiString;
   apath: String;
+{$IFDEF WIN64}
+  StartInfo: TStartupInfo;
+  ProcInfo: TProcessInformation;
+  CmdLine, SignFile, FileKeyName, FileName: String;
+  f: TIniFile;
+{$ELSE}
+  FileName: AnsiString;
   CPInterface: PEUSignCP;
   CertOwnerInfo : TEUCertOwnerInfo;
   Param : DWORD;
   nError : integer;
+{$ENDIF WIN64}
 begin
 
   Result := False;
@@ -6104,6 +6111,76 @@ begin
       ShowError('Ошибка Не найден файл библиотеки подписи: ' + EUDLLName);
     end;
   end;
+
+{$IFDEF WIN64}
+
+  SignFile := ExtractFilePath(ParamStr(0)) + 'SignFile.exe';
+
+  if not FileExists(SignFile) then
+  begin
+    ShowError('Ошибка Не найдена программа шифрования: ' + SignFile);
+  end;
+
+  // 1.Установка ключей
+  if ExtractFilePath(UserSign) <> ''
+  then FileKeyName := AnsiString(UserSign)
+  else FileKeyName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign);
+
+  // проверка
+  if not FileExists(String(FileKeyName)) then ShowError('Файл не найден : <'+String(FileKeyName)+'>');
+
+  FKeyFileNameParam.Value := ExtractFileName(String(FileKeyName));
+
+  FileName := AnsiString(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
+  // проверка
+  if not FileExists(String(FileName)) then ShowError('Файл tTTN не найден : <'+String(FileName)+'>');
+
+  CmdLine := '"' + SignFile + '" "' + apath + '" "' + FileKeyName + '" "24447183" "' + FileName + '"';
+
+  FillChar(StartInfo, SizeOf(StartInfo), #0);
+  with StartInfo do
+  begin
+    cb := SizeOf(TStartupInfo);
+    dwFlags := STARTF_USESHOWWINDOW;
+    wShowWindow := SW_HIDE;
+  end;
+
+  // Запускаем процесс подписи
+  // Ожидаем завершения приложения
+  if CreateProcess(nil, PChar( String( CmdLine ) ), nil, nil, false,
+                   CREATE_NEW_CONSOLE or NORMAL_PRIORITY_CLASS, nil,
+                   PChar(ExtractFilePath(FileName)), StartInfo, ProcInfo) then
+  begin
+    WaitForSingleObject(ProcInfo.hProcess, INFINITE);
+    // Free the Handles
+    CloseHandle(ProcInfo.hProcess);
+    CloseHandle(ProcInfo.hThread);
+  end;
+
+  FileName := ExtractFilePath(ParamStr(0)) + 'SignFileResult.dat';
+
+  if not FileExists(FileName) then
+  begin
+    ShowError('Ошибка Не найдена результат работы программы шифрования: ' + FileName);
+  end;
+
+  f := TiniFile.Create(FileName);
+
+  try
+    try
+      if F.ReadString('SignResult', 'Ошибка', '') = '' then
+      begin
+        FKeyUserNameParam.Value := F.ReadString('SignResult', 'UserName', '');
+        Result := True;
+      end else ShowError('Ошибка ' + F.ReadString('SignResult', 'Ошибка', ''));;
+    Except
+    end;
+  finally
+    f.Free;
+  end;
+  DeleteFile(FileName);
+
+{$ELSE}
 
   if not EULoadDLL(apath) then
   begin
@@ -6192,6 +6269,8 @@ begin
     CPInterface.Finalize;
     EUUnloadDLL();
   end;
+{$ENDIF WIN64}
+
 end;
 
 function TdsdEDINAction.GetToken: Boolean;
