@@ -76,6 +76,8 @@
         Height = 441
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 0
+        ExplicitTop = 25
         object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DocumentDS
@@ -130,6 +132,14 @@
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 1
+          end
+          object DocInvNumber: TcxGridDBBandedColumn
+            Caption = #8470' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumber_invoice'
+            Width = 50
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -315,7 +325,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 21
+    TabOrder = 20
     Width = 182
   end
   object ceInfoMoneyName_invoice: TcxTextEdit
@@ -599,8 +609,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 134
-    Top = 448
+    Left = 142
+    Top = 408
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -873,6 +883,14 @@
         DataSet = DocumentCDS
       end>
     Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inMovmentItemId'
         Value = Null

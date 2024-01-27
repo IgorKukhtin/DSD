@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_TransportGoods_Sign(
    OUT outMemberSignCarrierName   TVarChar  , 
    OUT outSignCarrierDate         TDateTime ,
    OUT outCommentError            TVarChar  ,
+   OUT outisSignConsignor_eTTN    Boolean   ,
+   OUT outisSignCarrier_eTTN      Boolean   ,
     IN inSession                  TVarChar    -- сессия пользователя
 
 )                              
@@ -139,11 +141,15 @@ BEGIN
           , Object_MemberSignCarrier.ValueData                                 AS MemberSignCarrierName
           , MovementDate_SignCarrier.ValueData                                 AS SignCarrierDate
           , MovementString_CommentError.ValueData                              AS CommentError
+          , (COALESCE(Object_MemberSignConsignor.ValueData, '') <> '')::Boolean AS isSignConsignor_eTTN
+          , (COALESCE(Object_MemberSignCarrier.ValueData, '') <> '')::Boolean   AS isSignCarrier_eTTN
      INTO outMemberSignConsignorName
         , outSignConsignorDate
         , outMemberSignCarrierName
         , outSignCarrierDate
         , outCommentError
+        , outisSignConsignor_eTTN
+        , outisSignCarrier_eTTN
      FROM Movement 
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSignConsignor

@@ -172,6 +172,9 @@ type
     mactSetErasedInvoice: TMultiAction;
     actSetErasedInvoice: TdsdUpdateErased;
     spErasedMIChild_Invoice: TdsdStoredProc;
+    actOpenFormPdfAllEdit: TdsdOpenForm;
+    bbOpenFormPdfAllEdit: TdxBarButton;
+    cxButton2: TcxButton;
   private
     { Private declarations }
   public

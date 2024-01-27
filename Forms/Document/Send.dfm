@@ -2,8 +2,6 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1172
-  ExplicitLeft = -295
-  ExplicitTop = -170
   ExplicitWidth = 1188
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -504,9 +502,6 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -732,9 +727,6 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -908,9 +900,6 @@ inherited SendForm: TSendForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -1808,20 +1797,20 @@ inherited SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCellForm'
-      FormNameParam.Value = 'TPartionCellForm'
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id_l1'
+          Name = 'Key'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellId_1'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Name_l1'
+          Name = 'TextValue'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellName_1'
@@ -1834,21 +1823,21 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'PartionCellForm'
-      FormName = 'TPartionCellForm'
-      FormNameParam.Value = 'TPartionCellForm'
+      Caption = 'TPartionCell_listForm'
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id_l2'
+          Name = 'Key'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellId_2'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Name_l2'
+          Name = 'TextValue'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellName_2'
@@ -1862,20 +1851,20 @@ inherited SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCellForm'
-      FormNameParam.Value = 'TPartionCellForm'
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id_l3'
+          Name = 'Key'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellId_3'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Name_l3'
+          Name = 'TextValue'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellName_3'
@@ -1889,20 +1878,20 @@ inherited SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCellForm'
-      FormNameParam.Value = 'TPartionCellForm'
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id_l4'
+          Name = 'Key'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellId_4'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Name_l4'
+          Name = 'TextValue'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellName_4'
@@ -1916,20 +1905,20 @@ inherited SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCellForm'
-      FormNameParam.Value = 'TPartionCellForm'
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id_l5'
+          Name = 'Key'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellId_5'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Name_l5'
+          Name = 'TextValue'
           Value = Null
           Component = PartionCellCDS
           ComponentItem = 'PartionCellName_5'
@@ -5408,7 +5397,7 @@ inherited SendForm: TSendForm
     Top = 553
   end
   object spInsertUpdateMIPartionCell: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Inventory_PartionCell'
+    StoredProcName = 'gpInsertUpdate_MI_Send_PartionCell'
     DataSets = <>
     OutputType = otResult
     Params = <

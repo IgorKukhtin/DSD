@@ -234,7 +234,7 @@ BEGIN
                          )
 
        -- данные по оплате счетов
-     , tmpBankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
+   /*  , tmpBankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
                                , SUM (MovementItem.Amount)   ::TFloat AS AmountIn 
                           FROM MovementLinkMovement
                                INNER JOIN Movement AS Movement_BankAccount
@@ -248,6 +248,25 @@ BEGIN
                             AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Invoice()
                           GROUP BY MovementLinkMovement.MovementChildId
                          )
+*/
+      -- нашли ВСЕ оплаты
+     , tmpBankAccount AS (SELECT tmp.MovementId_Invoice :: Integer AS MovementId_Invoice
+                               , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
+                               , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut
+                               , SUM (COALESCE (MovementItem.Amount,0)) AS Amount
+                          FROM (SELECT DISTINCT tmpInvoice.MovementId_Invoice FROM tmpInvoice) AS tmp
+                               INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                            ON MIFloat_MovementId.ValueData = tmp.MovementId_Invoice
+                                                           AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                               INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                      AND MovementItem.DescId   = zc_MI_Child()
+                                                      AND MovementItem.isErased = FALSE
+                               INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MovementItem.MovementId
+                                                                          AND Movement_BankAccount.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
+                                                                          AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
+                          GROUP BY tmp.MovementId_Invoice
+                         )
+
 
 
      SELECT

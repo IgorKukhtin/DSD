@@ -1273,7 +1273,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Align = alBottom
     TabOrder = 6
     object btnInsert: TcxButton
-      Left = 491
+      Left = 517
       Top = 10
       Width = 78
       Height = 25
@@ -1281,7 +1281,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 575
+      Left = 601
       Top = 10
       Width = 78
       Height = 25
@@ -1289,7 +1289,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 1
     end
     object btnComplete: TcxButton
-      Left = 491
+      Left = 517
       Top = 41
       Width = 162
       Height = 25
@@ -1297,7 +1297,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 2
     end
     object btnUnComplete: TcxButton
-      Left = 659
+      Left = 685
       Top = 10
       Width = 143
       Height = 25
@@ -1305,7 +1305,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 659
+      Left = 685
       Top = 41
       Width = 143
       Height = 25
@@ -1313,7 +1313,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 4
     end
     object btnFormClose: TcxButton
-      Left = 833
+      Left = 859
       Top = 41
       Width = 153
       Height = 25
@@ -1340,8 +1340,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 7
     end
     object btnSetErasedItem: TcxButton
-      Left = 247
-      Top = 41
+      Left = 372
+      Top = 10
       Width = 110
       Height = 25
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1057#1095#1077#1090
@@ -1367,19 +1367,27 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     object btnOpenInvoiceForm: TcxButton
       Left = 247
       Top = 10
-      Width = 110
+      Width = 118
       Height = 25
       Action = actOpenInvoiceForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1095#1077#1090
       TabOrder = 11
     end
     object cxButton1: TcxButton
-      Left = 363
+      Left = 372
       Top = 41
       Width = 110
       Height = 25
       Action = mactSetErasedInvoice
       TabOrder = 12
+    end
+    object cxButton2: TcxButton
+      Left = 247
+      Top = 41
+      Width = 118
+      Height = 25
+      Action = actOpenFormPdfAllEdit
+      TabOrder = 13
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1407,7 +1415,51 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited ActionList: TActionList
     Left = 87
     Top = 50
-    object actOpenFormPdfEdit: TdsdOpenForm [0]
+    object actOpenFormPdfAllEdit: TdsdOpenForm [0]
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
+      ImageIndex = 26
+      FormName = 'TBankAccountPdfEditForm'
+      FormNameParam.Value = 'TBankAccountPdfEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovmentItemId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormPdfEdit: TdsdOpenForm [1]
       Category = 'OpenForm'
       MoveParams = <>
       Caption = #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' PDF'
@@ -1462,7 +1514,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           StoredProc = spSelectChild
         end>
     end
-    object actRefreshChild: TdsdDataSetRefresh [4]
+    object actRefreshChild: TdsdDataSetRefresh [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectChild
@@ -2428,6 +2480,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbOpenFormPdfEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormPdfAllEdit'
         end>
     end
     object bbsLoadForm: TdxBarSubItem
@@ -2455,6 +2511,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     object bbtPrint_Invoice: TdxBarButton
       Action = mactPrint_Invoice
+      Category = 0
+    end
+    object bbOpenFormPdfAllEdit: TdxBarButton
+      Action = actOpenFormPdfAllEdit
       Category = 0
     end
   end

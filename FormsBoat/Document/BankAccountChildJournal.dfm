@@ -59,7 +59,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = Amount_Pay_all
+              Column = Amount_Pay
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -93,7 +93,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = Amount_Pay_all
+              Column = Amount_Pay
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -293,15 +293,15 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
             Options.Editing = False
             Width = 120
           end
-          object Amount_Pay_all: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084
-            DataBinding.FieldName = 'Amount_Pay_all'
+          object Amount_Pay: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091
+            DataBinding.FieldName = 'Amount_Pay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            HeaderHint = #1042#1089#1077' '#1054#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091
             Options.Editing = False
             Width = 97
           end
@@ -513,29 +513,13 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     Height = 73
     Align = alBottom
     TabOrder = 6
-    object btnInsert: TcxButton
-      Left = 387
-      Top = 10
-      Width = 78
-      Height = 25
-      Action = actInsert
-      TabOrder = 0
-    end
-    object btnUpdate: TcxButton
-      Left = 469
-      Top = 10
-      Width = 78
-      Height = 25
-      Action = actUpdate
-      TabOrder = 1
-    end
     object btnComplete: TcxButton
       Left = 387
       Top = 41
       Width = 160
       Height = 25
       Action = actComplete
-      TabOrder = 2
+      TabOrder = 0
     end
     object btnUnComplete: TcxButton
       Left = 557
@@ -543,7 +527,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Width = 143
       Height = 25
       Action = actUnComplete
-      TabOrder = 3
+      TabOrder = 1
     end
     object btnSetErased: TcxButton
       Left = 557
@@ -551,7 +535,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Width = 143
       Height = 25
       Action = actSetErased
-      TabOrder = 4
+      TabOrder = 2
     end
     object btnFormClose: TcxButton
       Left = 777
@@ -561,7 +545,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Action = actFormClose
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 5
+      TabOrder = 3
     end
     object cxButton1: TcxButton
       Left = 12
@@ -569,7 +553,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Width = 108
       Height = 25
       Action = actInsert_Child
-      TabOrder = 6
+      TabOrder = 4
     end
     object cxButton2: TcxButton
       Left = 12
@@ -577,15 +561,15 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Width = 108
       Height = 25
       Action = actUpdate_Child
-      TabOrder = 7
+      TabOrder = 5
     end
     object cxButton3: TcxButton
       Left = 247
-      Top = 41
-      Width = 108
+      Top = 10
+      Width = 118
       Height = 25
       Action = mactSetErasedItem
-      TabOrder = 8
+      TabOrder = 6
     end
     object cxButton4: TcxButton
       Left = 126
@@ -593,7 +577,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Width = 115
       Height = 25
       Action = mactPrint_Invoice
-      TabOrder = 9
+      TabOrder = 7
     end
     object cxButton5: TcxButton
       Left = 126
@@ -601,7 +585,15 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Width = 115
       Height = 25
       Action = actOpenFormPdfEdit
-      TabOrder = 10
+      TabOrder = 8
+    end
+    object cxButton6: TcxButton
+      Left = 247
+      Top = 41
+      Width = 118
+      Height = 25
+      Action = actOpenFormPdfAllEdit
+      TabOrder = 9
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -707,8 +699,8 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     end
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 16433
-      FormName = 'TBankAccountChildForm'
-      FormNameParam.Value = 'TBankAccountChildForm'
+      FormName = 'TBankAccountMovementForm'
+      FormNameParam.Value = 'TBankAccountMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -730,25 +722,19 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         item
           Name = 'inMovementId_parent'
           Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementItemId_child'
-          Value = Null
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
           Name = 'inMoneyPlaceId'
           Value = Null
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Invoice'
           Value = Null
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end>
     end
@@ -778,8 +764,8 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TBankAccountChildForm'
-      FormNameParam.Value = 'TBankAccountChildForm'
+      FormName = 'TBankAccountMovementForm'
+      FormNameParam.Value = 'TBankAccountMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -798,25 +784,9 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41640d
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementItemId_child'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementItemId_child'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementItemId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementItemId'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
     end
@@ -1176,24 +1146,16 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     object actUpdate_Child: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1095#1077#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 1
-      FormName = 'TBankAccountMovementChildForm'
-      FormNameParam.Value = 'TBankAccountMovementChildForm'
+      FormName = 'TBankAccountChildForm'
+      FormNameParam.Value = 'TBankAccountChildForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inMovementItemId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementItemId_child'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementId'
+          Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
@@ -1201,16 +1163,34 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inParentId'
+          Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementItemId'
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Id'
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementItemId_child'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId_child'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1308,35 +1288,16 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     object actInsert_Child: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1091#1084#1084#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1091#1084#1084#1091' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 0
-      FormName = 'TBankAccountMovementChildForm'
-      FormNameParam.Value = 'TBankAccountMovementChildForm'
+      FormName = 'TBankAccountChildForm'
+      FormNameParam.Value = 'TBankAccountChildForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementItemId'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inParentId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementItemId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
@@ -1344,11 +1305,43 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AmountChild_diff'
+          Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AmountChild_diff'
-          DataType = ftFloat
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_parent'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId_child'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Invoice'
+          Value = Null
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1472,6 +1465,50 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090
       ImageIndex = 3
+    end
+    object actOpenFormPdfAllEdit: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
+      ImageIndex = 26
+      FormName = 'TBankAccountPdfEditForm'
+      FormNameParam.Value = 'TBankAccountPdfEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovmentItemId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1698,6 +1735,10 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         item
           Visible = True
           ItemName = 'bbOpenFormPdfEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormPdfAllEdit'
         end>
     end
     object bbsLoadForm: TdxBarSubItem
@@ -1725,6 +1766,10 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
     end
     object bbtPrint_Invoice: TdxBarButton
       Action = mactPrint_Invoice
+      Category = 0
+    end
+    object bbOpenFormPdfAllEdit: TdxBarButton
+      Action = actOpenFormPdfAllEdit
       Category = 0
     end
   end

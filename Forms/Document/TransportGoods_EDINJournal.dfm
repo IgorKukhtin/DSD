@@ -2035,6 +2035,22 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         ComponentItem = 'CommentError'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSignConsignor_eTTN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSignConsignor_eTTN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSignCarrier_eTTN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSignCarrier_eTTN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -2115,6 +2131,22 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         Component = MasterCDS
         ComponentItem = 'CommentError'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSignConsignor_eTTN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSignConsignor_eTTN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSignCarrier_eTTN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSignCarrier_eTTN'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

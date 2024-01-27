@@ -19,13 +19,15 @@ object PartionCell_listForm: TPartionCell_listForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 902
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -64,6 +66,13 @@ object PartionCell_listForm: TPartionCell_listForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 114
+      end
+      object Name_search: TcxGridDBColumn
+        Caption = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'Name_search'
+        Visible = False
+        HeaderHint = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -174,6 +183,36 @@ object PartionCell_listForm: TPartionCell_listForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 902
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -6
+    object lbSearchName: TcxLabel
+      Left = 5
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1071#1095#1077#1081#1082#1080':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 112
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        200
+        21)
+      Width = 200
     end
   end
   object DataSource: TDataSource
@@ -563,8 +602,22 @@ object PartionCell_listForm: TPartionCell_listForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 136
     Top = 224
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name_search
+    ColumnList = <
+      item
+        Column = Name_search
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 640
+    Top = 128
   end
 end

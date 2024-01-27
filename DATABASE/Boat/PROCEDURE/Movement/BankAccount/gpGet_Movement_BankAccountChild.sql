@@ -16,9 +16,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
-             , Amount TFloat 
+             , Amount_pay TFloat 
              , Amount_invoice TFloat
              , Comment TVarChar
+             , Comment_master Text
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
@@ -66,9 +67,10 @@ BEGIN
            , lfObject_Status.Name                              AS StatusName
            , 0::TFloat                                         AS AmountIn
            , 0::TFloat                                         AS AmountOut
-           , 0::TFloat                                         AS Amount  
-           , ABS (MovementFloat_Amount.ValueData) :: TFloat AS Amount_invoice
-           , ''::TVarChar                                      AS Comment
+           , 0     :: TFloat                                   AS Amount_pay  
+           , ABS (MovementFloat_Amount.ValueData)    :: TFloat AS Amount_invoice
+           , ''::TVarChar                                      AS Comment 
+           , NULL :: Text                                      AS Comment_master
            , tmpBankAccount.Id                                 AS BankAccountId
            , tmpBankAccount.Name                               AS BankAccountName
            , tmpBankAccount.BankId                             AS BankId
@@ -146,19 +148,20 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END ::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountOut
-           , tmpMI_Child.Amount                                                         ::TFloat AS Amount
+           , CASE WHEN tmpMI_Child.Amount > 0 THEN tmpMI_Child.Amount      ELSE 0 END ::TFloat AS AmountIn
+           , CASE WHEN tmpMI_Child.Amount < 0 THEN -1 * tmpMI_Child.Amount ELSE 0 END ::TFloat AS AmountOut
+           , ABS (MovementItem.Amount)                                                ::TFloat AS Amount_pay  
            , ABS (MovementFloat_Amount.ValueData) :: TFloat AS Amount_invoice
 
-           , MIString_Comment.ValueData        AS Comment
+           , MIString_Comment.ValueData                AS Comment
+           , MovementBlob_Comment.ValueData:: Text     AS Comment_master
 
            , Object_BankAccount.Id             AS BankAccountId
            , Object_BankAccount.ValueData      AS BankAccountName
            , Object_Bank.Id                    AS BankId
            , Object_Bank.ValueData             AS BankName
-           , Object_Object.Id                  AS MoneyPlaceId
-           , Object_Object.ValueData           AS MoneyPlaceName
+           , COALESCE (Object_MoneyPlace.Id, Object_Object.Id)               AS MoneyPlaceId
+           , COALESCE (Object_MoneyPlace.ValueData, Object_Object.ValueData) AS MoneyPlaceName
 
            , Movement_Invoice.Id               AS MovementId_Invoice
            --, zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
@@ -175,6 +178,11 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
+            -- Примечание (Цель использования)
+            LEFT JOIN MovementBlob AS MovementBlob_Comment
+                                   ON MovementBlob_Comment.MovementId = Movement.Id
+                                  AND MovementBlob_Comment.DescId     = zc_MovementBlob_11()
+
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -182,11 +190,12 @@ BEGIN
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = MovementItem.Id
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
-
-           LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+                  
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
@@ -204,6 +213,10 @@ BEGIN
                                         ON MIFloat_MovementId.MovementItemId = tmpMI_Child.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MIFloat_MovementId.ValueData ::Integer
+
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = tmpMI_Child.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                          ON MovementLinkObject_InvoiceKind.MovementId = Movement_Invoice.Id
@@ -224,11 +237,11 @@ BEGIN
                                         AND MovementLinkObject_InfoMoney_invoice.DescId     = zc_MovementLinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_invoice ON Object_InfoMoney_View_invoice.InfoMoneyId = MovementLinkObject_InfoMoney_invoice.ObjectId
 
-           --Parent для Movement_Invoice - Документ Заказ или Приход
-           LEFT JOIN Movement AS Movement_Parent
-                              ON Movement_Parent.Id = Movement_Invoice.ParentId
-                             AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
-           LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+            --Parent для Movement_Invoice - Документ Заказ или Приход
+            LEFT JOIN Movement AS Movement_Parent
+                               ON Movement_Parent.Id = Movement_Invoice.ParentId
+                              AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+            LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                          ON MovementLinkObject_Product.MovementId = Movement_Parent.Id

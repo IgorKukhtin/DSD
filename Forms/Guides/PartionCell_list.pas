@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TPartionCell_listForm = class(TParentForm)
@@ -65,6 +65,11 @@ type
     Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    FieldFilter_Name: TdsdFieldFilter;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    Name_search: TcxGridDBColumn;
   private
     { Private declarations }
   public

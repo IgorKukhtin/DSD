@@ -21,6 +21,7 @@ type
     procedure UpdateFarmacyCashServise;
     procedure UpdateFarmacyInventory;
     procedure UpdateMobile;
+    procedure UpdateSignFile;
    // procedure UpdateRecoveryFarmacy;
   end;
 
@@ -81,6 +82,11 @@ begin
   if FileExists(ExtractFileDir(ParamStr(0)) + '\sqlite3.dll')
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\sqlite3.dll');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyInventory.exe');
+end;
+
+procedure TUpdaterTest.UpdateSignFile;
+begin
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\SignFile.exe');
 end;
 
 procedure TUpdaterTest.UpdateMidas;
