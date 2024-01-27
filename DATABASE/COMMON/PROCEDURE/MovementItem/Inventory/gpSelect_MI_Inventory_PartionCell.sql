@@ -8,17 +8,17 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Inventory_PartionCell(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, MeasureName TVarChar 
+             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , PartionGoodsDate TDateTime
              , Amount TFloat
-                         
+
              , isPartionCell_Close_1 Boolean
-                           
+
              , PartionCellId_1     Integer
              , PartionCellCode_1   Integer
              , PartionCellName_1   TVarChar
-  
+
              , isPeresort Boolean
               )
 AS
@@ -45,15 +45,15 @@ BEGIN
            , Object_GoodsKind.ValueData            AS GoodsKindName
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , MovementItem.Amount                   AS Amount
-           
+
            , COALESCE (MIBoolean_PartionCell_Close_1.ValueData, FALSE) ::Boolean AS isPartionCell_Close_1
-            
-           , Object_PartionCell_1.Id            AS PartionCellId_1
-           , Object_PartionCell_1.ObjectCode    AS PartionCellCode_1
-           , Object_PartionCell_1.ValueData     AS PartionCellName_1
+
+           , Object_PartionCell_1.Id               AS PartionCellId_1
+           , Object_PartionCell_1.ObjectCode       AS PartionCellCode_1
+           , Object_PartionCell_1.ValueData        AS PartionCellName_1
 
            , MovementItem.isErased                 AS isErased
-           
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -69,7 +69,7 @@ BEGIN
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
             -- свойства из партии
-            LEFT JOIN ObjectDate AS ObjectDate_Value 
+            LEFT JOIN ObjectDate AS ObjectDate_Value
                                  ON ObjectDate_Value.ObjectId = MILinkObject_PartionGoods.ObjectId                      -- дата
                                 AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 

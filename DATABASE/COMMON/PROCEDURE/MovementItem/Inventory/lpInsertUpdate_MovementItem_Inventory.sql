@@ -36,11 +36,17 @@ BEGIN
      AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
      -- Кладовщик Днепр
      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382))
+     -- !!!tmp
+     AND inUserId <> 5
+
       THEN
-          RAISE EXCEPTION 'Ошибка.В документе <Инвентаризация> № <%> за <%> партия даты должна быть пустой <%>.'
+          RAISE EXCEPTION 'Ошибка.В документе <Инвентаризация> № <%> за <%> партия даты должна быть пустой <%>.% <%> <%>'
                          , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                          , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
                          , zfConvert_DateToString (inPartionGoodsDate)
+                         , CHR (13)
+                         , lfGet_Object_ValueData_sh (inGoodsId)
+                         , lfGet_Object_ValueData_sh (inGoodsKindId)
                           ;
       END IF;
 
@@ -90,6 +96,91 @@ BEGIN
       END IF;
 
 
+     -- Для Ячейки может быть сохранена только ОДНА партия
+     IF 1=1 AND inAssetId > 0 
+     -- Розподільчий комплекс
+     AND 8459 = (SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+     -- Проверка
+     AND EXISTS (SELECT 1
+                 FROM MovementItem
+                      JOIN MovementItemLinkObject AS MILO_PartionCell_1
+                                                  ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
+                                                 AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
+                                                 AND MILO_PartionCell_1.ObjectId       = inAssetId
+                      LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                       ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                      AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                      LEFT JOIN MovementItemDate AS MID_PartionGoodsDate
+                                                 ON MID_PartionGoodsDate.MovementItemId = MovementItem.Id
+                                                AND MID_PartionGoodsDate.DescId         = zc_MIDate_PartionGoods()
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE
+                   AND MovementItem.Id         <> COALESCE (ioId, 0)
+                   -- если другая партия или товар в этой ячейке
+                   AND (MovementItem.ObjectId <> inGoodsId
+                     OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
+                     OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (inPartionGoodsDate, zc_DateStart())
+                       )
+                )
+      THEN
+          RAISE EXCEPTION 'Ошибка.В документе <Инвентаризация> № <%> от <%> %для Ячейки <%> %может быть сохранена только партия% <%> %с датой <%>.'
+                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                         , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
+                        , CHR (13)
+                        , lfGet_Object_ValueData (inAssetId)
+                        , CHR (13)
+                        , CHR (13)
+                        , (SELECT DISTINCT lfGet_Object_ValueData (MovementItem.ObjectId) || '> <' || lfGet_Object_ValueData_sh (MILO_GoodsKind.ObjectId)
+                           FROM MovementItem
+                                INNER JOIN MovementItemLinkObject AS MILO_PartionCell_1
+                                                                  ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
+                                                                 AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
+                                                                 AND MILO_PartionCell_1.ObjectId       = inAssetId
+                                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+          
+                                LEFT JOIN MovementItemDate AS MID_PartionGoodsDate
+                                                           ON MID_PartionGoodsDate.MovementItemId = MovementItem.Id
+                                                          AND MID_PartionGoodsDate.DescId         = zc_MIDate_PartionGoods()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = FALSE
+                             AND MovementItem.Id         <> COALESCE (ioId, 0)
+                             -- если другая партия или товар в этой ячейке
+                             AND (MovementItem.ObjectId <> inGoodsId
+                               OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
+                               OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (inPartionGoodsDate, zc_DateStart())
+                                 )
+                          )
+                        , CHR (13)
+                        , (SELECT DISTINCT zfConvert_DateToString (MID_PartionGoodsDate.ValueData)
+                           FROM MovementItem
+                                INNER JOIN MovementItemLinkObject AS MILO_PartionCell_1
+                                                                  ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
+                                                                 AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
+                                                                 AND MILO_PartionCell_1.ObjectId       = inAssetId
+                                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+          
+                                LEFT JOIN MovementItemDate AS MID_PartionGoodsDate
+                                                           ON MID_PartionGoodsDate.MovementItemId = MovementItem.Id
+                                                          AND MID_PartionGoodsDate.DescId         = zc_MIDate_PartionGoods()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = FALSE
+                             AND MovementItem.Id         <> COALESCE (ioId, 0)
+                             -- если другая партия или товар в этой ячейке
+                             AND (MovementItem.ObjectId <> inGoodsId
+                               OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
+                               OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (inPartionGoodsDate, zc_DateStart())
+                                 )
+                          )
+                         ;
+      END IF;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -112,8 +203,16 @@ BEGIN
      -- сохранили связь с <Виды товаров ГП>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
+
+     -- если это Ячейка хрванения - ТОЛЬКО для Розподільчий комплекс
+     IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459))
+     THEN
+         -- сохранили связь с <Ячейка хранения>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), ioId, inAssetId);
+     ELSE
+         -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
+     END IF;
 
 
      IF COALESCE (inPartionGoodsId, 0) = 0
