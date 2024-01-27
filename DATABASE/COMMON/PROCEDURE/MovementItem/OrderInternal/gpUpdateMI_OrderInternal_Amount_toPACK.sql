@@ -765,7 +765,18 @@ end if;
              LOOP
                  UPDATE _tmpMI_Child SET AmountResult = _tmpMI_Child.AmountResult + tmpResult.Amount_result
                  FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
-                            tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
+                            tmpGoods_PackOrder_noLimit AS (--SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
+                                                           SELECT DISTINCT
+                                                                  ObjectLink_Goods.ChildObjectId AS GoodsId
+                                                           FROM ObjectBoolean AS ObjectBoolean_PackOrder
+                                                                INNER JOIN Object ON Object.Id       = ObjectBoolean_PackOrder.ObjectId
+                                                                                 AND Object.isErased = FALSE
+                                                                INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                                      ON ObjectLink_Goods.ObjectId = Object.Id
+                                                                                     AND ObjectLink_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+
+                                                           WHERE ObjectBoolean_PackOrder.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_PackOrder()
+                                                             AND ObjectBoolean_PackOrder.ValueData = TRUE
                                                           )
                             -- сумма - сколько уже распределили
                           , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete     AS GoodsId_master
