@@ -119,6 +119,7 @@ BEGIN
      OPEN Cursor2 FOR
      WITH tmpWeighing AS (SELECT MovementItem.ObjectId                                     AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)             AS GoodsKindId
+                               , COALESCE (MILinkObject_Asset.ObjectId, 0)                 AS PartionCellId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
@@ -140,8 +141,12 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                 ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
                           GROUP BY MovementItem.ObjectId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                 , COALESCE (MILinkObject_Asset.ObjectId, 0)
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                          )  
@@ -167,6 +172,7 @@ BEGIN
 
               , tmpMI AS (SELECT MovementItem.ObjectId                                     AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)             AS GoodsKindId
+                               , COALESCE (MILinkObject_PartionCell_1.ObjectId, 0)         AS PartionCellId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
@@ -181,6 +187,9 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
+                                                                 ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
 
                                 -- ÔË‚ˇÁ˚‚‡ÂÏ ˆÂÌ˚ ÔÓ Ô‡ÈÒÛ 2 ‡Á‡ ÔÓ ‚Ë‰Û ÚÓ‚‡‡ Ë ·ÂÁ
                                 LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
@@ -198,11 +207,13 @@ BEGIN
                             AND MovementItem.Amount <> 0
                           GROUP BY MovementItem.ObjectId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                 , COALESCE (MILinkObject_PartionCell_1.ObjectId, 0)
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                          )
           , tmpResult AS (SELECT COALESCE (tmpWeighing.GoodsId, tmpMI.GoodsId)                   AS GoodsId
                                , COALESCE (tmpWeighing.GoodsKindId, tmpMI.GoodsKindId)           AS GoodsKindId
+                               , COALESCE (tmpWeighing.PartionCellId, tmpMI.PartionCellId)       AS PartionCellId
                                , COALESCE (tmpWeighing.PartionGoods, tmpMI.PartionGoods)         AS PartionGoods
                                , COALESCE (tmpWeighing.PartionGoodsDate, tmpMI.PartionGoodsDate) AS PartionGoodsDate
                                , COALESCE (tmpWeighing.Amount, 0)                                AS Amount_Weighing
@@ -211,8 +222,10 @@ BEGIN
                            FROM tmpWeighing
                                 FULL JOIN tmpMI ON tmpMI.GoodsId          =  tmpWeighing.GoodsId
                                                AND tmpMI.GoodsKindId      =  tmpWeighing.GoodsKindId
+                                               AND tmpMI.PartionCellId    =  tmpWeighing.PartionCellId
                                                AND tmpMI.PartionGoods     =  tmpWeighing.PartionGoods
                                                AND tmpMI.PartionGoodsDate =  tmpWeighing.PartionGoodsDate
+                                               
                          )
 
 
@@ -220,6 +233,7 @@ BEGIN
        SELECT Object_Goods.ObjectCode  			  AS GoodsCode
             , Object_Goods.ValueData   			  AS GoodsName
             , Object_GoodsKind.ValueData                  AS GoodsKindName
+            , Object_PartionCell_1.ValueData              AS PartionCellName
             , Object_GoodsGroup.ValueData   		  AS GoodsGroupName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData                    AS MeasureName
@@ -253,6 +267,8 @@ BEGIN
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
 
+            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = tmpResult.PartionCellId
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpResult.GoodsId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -265,7 +281,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Inventory_Print (Integer,Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

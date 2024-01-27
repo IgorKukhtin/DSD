@@ -157,6 +157,8 @@ type
     spInsertUpdateMIPartionCell: TdsdStoredProc;
     acrRefreshPartionCell: TdsdDataSetRefresh;
     actUpdatePartionCellDS: TdsdUpdateDataSet;
+    PartionCellCode_1: TcxGridDBColumn;
+    PartionCellName_1: TcxGridDBColumn;
   private
     { Private declarations }
   public
