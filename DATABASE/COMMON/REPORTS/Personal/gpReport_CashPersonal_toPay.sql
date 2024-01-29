@@ -103,6 +103,16 @@ BEGIN
                         INNER JOIN MovementItemContainer AS MIContainer
                                                          ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                         AND MIContainer.DescId      = zc_MIContainer_Summ()
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                     ON MovementLinkObject_PersonalServiceList.MovementId = MIContainer.MovementId
+                                                    AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
+                                                ON ObjectBoolean_CompensationNot.ObjectId  = MovementLinkObject_PersonalServiceList.ObjectId
+                                               AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
+                                               AND ObjectBoolean_CompensationNot.ValueData = TRUE
+                   -- Исключить из расчета компенсации для отпуска
+                   WHERE ObjectBoolean_CompensationNot.ObjectId IS NULL
+
                    GROUP BY MIContainer.MovementId
                           , MIContainer.MovementDescId
                           , MIContainer.AnalyzerId
@@ -238,4 +248,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_CashPersonal_toPay(inServiceDate:= '01.05.2023', inPersonalId:= 7117901, inSession:= '5');
--- SELECT * FROM gpReport_CashPersonal_toPay(inServiceDate := ('01.05.2023')::TDateTime , inPersonalId := 3442965 ,  inSession := '5');
+-- SELECT * FROM gpReport_CashPersonal_toPay(inServiceDate:= ('01.05.2024')::TDateTime , inPersonalId := 3442965 ,  inSession := '5');
