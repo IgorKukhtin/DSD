@@ -90,6 +90,7 @@ type
     cxLabel19: TcxLabel;
     edPersonalServiceList_AvanceF2: TcxButtonEdit;
     GuidesPersonalServiceList_AvanceF2: TdsdGuides;
+    cbCompensationNot: TcxCheckBox;
   private
     { Private declarations }
   public

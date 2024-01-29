@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isBankOut Boolean
              , isDetail Boolean
              , isAvanceNot Boolean
+             , isCompensationNot Boolean
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -88,7 +89,7 @@ BEGIN
            , CAST(FALSE AS Boolean) AS isBankOut
            , CAST(FALSE AS Boolean) AS isDetail
            , CAST(FALSE AS Boolean) AS isAvanceNot
-           
+           , CAST(FALSE AS Boolean) AS isCompensationNot
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -145,10 +146,15 @@ BEGIN
            , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)   ::Boolean AS isBankOut
            , COALESCE (ObjectBoolean_Detail.ValueData, FALSE)    ::Boolean AS isDetail
            , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE) ::Boolean AS isAvanceNot
+           , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
 
            , Object_PersonalServiceList.isErased   AS isErased
 
        FROM Object AS Object_PersonalServiceList
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
+                                   ON ObjectBoolean_CompensationNot.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
+
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
                                    ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_PersonalServiceList_Second()
@@ -268,6 +274,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.01.24         * isCompensationNot
  27.04.23         *
  09.03.22         *
  18.11.21         * KoeffSummCardSecond

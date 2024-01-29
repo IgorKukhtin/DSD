@@ -2,7 +2,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 440
+  ClientHeight = 443
   ClientWidth = 647
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -390,6 +390,16 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 46
     Width = 274
   end
+  object cbCompensationNot: TcxCheckBox
+    Left = 457
+    Top = 30
+    Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1076#1083#1103' '#1086#1090#1087#1091#1089#1082#1072
+    Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 47
+    Width = 135
+  end
   object ActionList: TActionList
     Left = 88
     Top = 48
@@ -614,6 +624,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'inisAvanceNot'
         Value = Null
         Component = cbAvanceNot
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCompensationNot'
+        Value = Null
+        Component = cbCompensationNot
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -923,6 +941,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCompensationNot'
+        Value = Null
+        Component = cbCompensationNot
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -974,8 +999,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 72
+    Left = 136
+    Top = 120
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'

@@ -1552,11 +1552,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
   exit;
-  {
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
    exit;
@@ -1566,7 +1566,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
- }
+
 end;
 
 procedure TLoadFormTest.LoadSaleAssetFormTest;
