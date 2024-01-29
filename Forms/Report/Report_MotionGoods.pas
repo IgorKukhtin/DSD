@@ -248,6 +248,10 @@ type
     bbPrint_GoodsPartion: TdxBarButton;
     PartionCellCode: TcxGridDBColumn;
     PartionCellName: TcxGridDBColumn;
+    cbOperDate_Partion: TcxCheckBox;
+    cbPartionCell: TcxCheckBox;
+    actisPartionCell: TdsdDataSetRefresh;
+    actisOperDate_Partion: TdsdDataSetRefresh;
   private
   public
   end;

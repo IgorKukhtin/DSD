@@ -25,6 +25,8 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
     Height = 590
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -56
+    ExplicitTop = 16
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1737,8 +1739,9 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
     Height = 54
     Align = alTop
     TabOrder = 1
+    ExplicitLeft = 8
     object edGoodsGroup: TcxButtonEdit
-      Left = 853
+      Left = 952
       Top = 5
       Properties.Buttons = <
         item
@@ -1768,7 +1771,7 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Width = 85
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 555
+      Left = 654
       Top = 5
       Properties.Buttons = <
         item
@@ -1780,17 +1783,17 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 427
+      Left = 526
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object cxLabel1: TcxLabel
-      Left = 762
+      Left = 861
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoods: TcxButtonEdit
-      Left = 853
+      Left = 952
       Top = 30
       Properties.Buttons = <
         item
@@ -1802,7 +1805,7 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Width = 192
     end
     object edLocation: TcxButtonEdit
-      Left = 555
+      Left = 654
       Top = 30
       Properties.Buttons = <
         item
@@ -1814,7 +1817,7 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 481
+      Left = 580
       Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
     end
@@ -1829,12 +1832,12 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
     object cxLabel7: TcxLabel
-      Left = 813
+      Left = 912
       Top = 31
       Caption = #1058#1086#1074#1072#1088':'
     end
     object ceAccountGroup: TcxButtonEdit
-      Left = 221
+      Left = 320
       Top = 5
       Properties.Buttons = <
         item
@@ -1846,12 +1849,12 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Width = 200
     end
     object cxLabel2: TcxLabel
-      Left = 148
+      Left = 247
       Top = 6
       Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
     end
     object cbInfoMoney: TcxCheckBox
-      Left = 170
+      Left = 269
       Top = 30
       Action = actIsInfoMoney
       Properties.ReadOnly = False
@@ -1859,7 +1862,7 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Width = 154
     end
     object cbAllMO: TcxCheckBox
-      Left = 328
+      Left = 427
       Top = 30
       Action = actIsAllMO
       Properties.ReadOnly = False
@@ -1867,12 +1870,28 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       Width = 64
     end
     object cbAllAuto: TcxCheckBox
-      Left = 400
+      Left = 499
       Top = 30
       Action = actIsAllAuto
       Properties.ReadOnly = False
       TabOrder = 16
       Width = 71
+    end
+    object cbPartionCell: TcxCheckBox
+      Left = 152
+      Top = 5
+      Action = actisPartionCell
+      Properties.ReadOnly = False
+      TabOrder = 17
+      Width = 83
+    end
+    object cbOperDate_Partion: TcxCheckBox
+      Left = 152
+      Top = 30
+      Action = actisOperDate_Partion
+      Properties.ReadOnly = False
+      TabOrder = 18
+      Width = 89
     end
   end
   object cbGoodsKind: TcxCheckBox
@@ -3489,6 +3508,32 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actisPartionCell: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      Hint = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actisOperDate_Partion: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+      Hint = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object spReport: TdsdStoredProc
     StoredProcName = 'gpReport_GoodsBalance_Server'
@@ -3574,6 +3619,22 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         Name = 'inIsAllAuto'
         Value = Null
         Component = cbAllAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsOperDate_Partion'
+        Value = Null
+        Component = cbOperDate_Partion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionCell'
+        Value = Null
+        Component = cbPartionCell
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

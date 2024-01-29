@@ -1,6 +1,7 @@
 -- Function: gpReport_GoodsBalance()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsBalance (
     IN inStartDate          TDateTime , --
@@ -13,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsBalance (
     IN inIsInfoMoney        Boolean,    --
     IN inIsAllMO            Boolean,    -- все МО
     IN inIsAllAuto          Boolean,    -- все Авто
+    IN inIsOperDate_Partion Boolean,    -- по дате партии
+    IN inisPartionCell      Boolean,    -- по ячейкам
     IN inSession            TVarChar   -- пользователь
 )
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
@@ -834,9 +837,12 @@ BEGIN
                               , tmpAll.GoodsId
                               , tmpAll.GoodsKindId
                               , tmpAll.GoodsKindId_complete
-                              , tmpAll.PartionCellId
+                              , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END AS PartionCellId
+                              , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.ObjectCode ELSE 0 END AS PartionCellCode 
+                              , STRING_AGG (DISTINCT Object_PartionCell.ValueData, ';') ::TVarChar AS PartionCellName
                               , tmpAll.PartionGoodsName
-                              , tmpAll.PartionGoodsDate
+                              --, tmpAll.PartionGoodsDate
+                              , CASE WHEN inIsOperDate_Partion = TRUE THEN tmpAll.PartionGoodsDate ELSE NULL END ::TDateTime AS PartionGoodsDate
 
                                --cвойства из партий
                               , tmpAll.StorageId
@@ -1332,14 +1338,14 @@ BEGIN
                                     LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
                                                         
                               ) AS tmpAll
-
+                             LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpAll.PartionCellId
                         GROUP BY tmpAll.LocationId
                                , tmpAll.GoodsId
                                , tmpAll.GoodsKindId
                                , tmpAll.GoodsKindId_complete
-                               , tmpAll.PartionCellId
+                               --, tmpAll.PartionCellId
                                , tmpAll.PartionGoodsName
-                               , tmpAll.PartionGoodsDate
+                               --, tmpAll.PartionGoodsDate
                                , tmpAll.StorageId
                                , tmpAll.StorageName
                                , tmpAll.PartionModelId
@@ -1347,6 +1353,9 @@ BEGIN
                                , tmpAll.UnitId
                                , tmpAll.UnitName
                                , tmpAll.PartNumber
+                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END
+                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.ObjectCode ELSE 0 END
+                               , CASE WHEN inIsOperDate_Partion = TRUE THEN tmpAll.PartionGoodsDate ELSE NULL END
                         )
       , tmpNorm_PF AS (-- Нормы ПФ (ГП)
                        SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId_complete, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
@@ -1482,8 +1491,8 @@ BEGIN
         , tmpResult.PartionGoodsName :: TVarChar  AS PartionGoodsName
         , Object_AssetTo.ValueData       AS AssetToName
 
-        , Object_PartionCell.ObjectCode  AS PartionCellCode
-        , Object_PartionCell.ValueData   AS PartionCellName
+        , tmpResult.PartionCellCode  ::Integer  AS PartionCellCode
+        , tmpResult.PartionCellName  ::TVarChar AS PartionCellName
 
         , Object_Personal_Driver.ValueData AS DriverName
         , Object_Unit_to.ValueData         AS UnitName_to
@@ -1690,7 +1699,7 @@ BEGIN
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = tmpResult.GoodsKindId_complete
-        LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpResult.PartionCellId
+        --LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpResult.PartionCellId
 
         -- LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = NULL
         -- LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = NULL
@@ -1812,4 +1821,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_GoodsBalance (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
 
--- select * from gpReport_GoodsBalance(inStartDate := ('03.03.2024')::TDateTime , inEndDate := ('23.03.2024')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 2339 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');
+--  select * from gpReport_GoodsBalance(inStartDate := ('03.03.2024')::TDateTime , inEndDate := ('23.03.2024')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 2339 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' , inIsOperDate_Partion:= TRUE, inIsPartionCell := TRUE,  inSession := '5');
