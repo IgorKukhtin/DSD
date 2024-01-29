@@ -190,7 +190,7 @@ type
     bbInsertRecordAsset: TdxBarButton;
     bbPartionGoodsAssetChoiceForm: TdxBarButton;
     PartionModelName: TcxGridDBColumn;
-    NewOpenChoiceForm1: TOpenChoiceForm;
+    actAssetGoodsChoiceFormPC: TOpenChoiceForm;
     actGoodsChoiceForm: TOpenChoiceForm;
     cxTabSheet_PartionCell: TcxTabSheet;
     cxGrid_PartionCell: TcxGrid;
@@ -228,6 +228,8 @@ type
     bbUpdatePartionGoodsDate: TdxBarButton;
     actRefreshPartionCell: TdsdDataSetRefresh;
     GoodsName_old: TcxGridDBColumn;
+    actGoodsKindChoicePC: TOpenChoiceForm;
+    OpenChoiceForm1: TOpenChoiceForm;
   private
     { Private declarations }
   public

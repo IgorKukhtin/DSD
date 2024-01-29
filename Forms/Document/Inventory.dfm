@@ -2,7 +2,6 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 598
   ClientWidth = 1020
-  ExplicitTop = -110
   ExplicitWidth = 1036
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -554,13 +553,13 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actGoodsChoiceFormPC
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 224
           end
           object GoodsKindName_ch4GoodsKindName: TcxGridDBColumn
@@ -569,14 +568,13 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsKindChoice
+                Action = actGoodsKindChoicePC
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object MeasureName_ch4: TcxGridDBColumn
@@ -614,6 +612,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actOpenPartionCellForm1
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1015,7 +1014,34 @@ inherited InventoryForm: TInventoryForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
       ImageIndex = 27
     end
-    object actPrint1: TdsdPrintAction [20]
+    object actGoodsKindChoicePC: TOpenChoiceForm [19]
+      Category = 'PartionCell'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPrint1: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -1097,7 +1123,7 @@ inherited InventoryForm: TInventoryForm
         item
         end>
     end
-    object actStorageChoice: TOpenChoiceForm [27]
+    object actStorageChoice: TOpenChoiceForm [28]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1124,7 +1150,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actAssetChoice: TOpenChoiceForm [28]
+    object actAssetChoice: TOpenChoiceForm [29]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1151,7 +1177,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc [29]
+    object actInsertUpdateMIAmount: TdsdExecStoredProc [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1171,7 +1197,7 @@ inherited InventoryForm: TInventoryForm
         #1085#1072' '#1076#1072#1090#1091'?'
       InfoAfterExecute = '<'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
-    object actUnitChoice: TOpenChoiceForm [30]
+    object actUnitChoice: TOpenChoiceForm [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1198,7 +1224,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [31]
+    object actGoodsKindChoice: TOpenChoiceForm [32]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1835,6 +1861,67 @@ inherited InventoryForm: TInventoryForm
         end>
       Caption = 'actUpdatePartionCellDS'
       DataSource = PartionCellDS
+    end
+    object actGoodsChoiceFormPC: TOpenChoiceForm
+      Category = 'PartionCell'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenPartionCellForm1: TOpenChoiceForm
+      Category = 'PartionCell'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCell_listForm'
+      FormNameParam.Value = 'TPartionCell_listForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellId_1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'PartionCellName_1'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -3456,6 +3543,31 @@ inherited InventoryForm: TInventoryForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

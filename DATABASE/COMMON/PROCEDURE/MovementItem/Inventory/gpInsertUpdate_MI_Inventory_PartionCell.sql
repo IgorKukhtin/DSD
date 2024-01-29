@@ -1,11 +1,15 @@
 -- Function: gpInsertUpdate_MI_Inventory_PartionCell()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_PartionCell (Integer, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_PartionCell (Integer, Integer, TVarChar, Boolean, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_PartionCell (Integer, Integer, TVarChar, Boolean, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_PartionCell (Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Inventory_PartionCell(
     IN inId                      Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId                 Integer   , -- 
+    IN inGoodsKindId             Integer   , -- 
+    IN inAmount                  TFloat,
  INOUT ioPartionCellName_1       TVarChar   , --
     IN inisPartionCell_Close_1   Boolean    ,
     IN inPartionGoodsDate        TDateTime , -- Дата партии
@@ -16,8 +20,8 @@ AS
 $BODY$
    DECLARE vbUserId           Integer;
    DECLARE vbPartionCellId    Integer;
-   DECLARE vbGoodsId          Integer;
-   DECLARE vbGoodsKindId      Integer;
+   --DECLARE vbGoodsId          Integer;
+   --DECLARE vbGoodsKindId      Integer;
    DECLARE vbPartionGoodsDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -29,15 +33,34 @@ BEGIN
      END IF;
 
 
+     --могут изменить товар / вид товара / кол-во поэтому сохраняем
+     PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := inId
+                                                  , inMovementId         := inMovementId
+                                                  , inGoodsId            := inGoodsId
+                                                  , inAmount             := inAmount
+                                                  , inPartionGoodsDate   := tmp.PartionGoodsDate 
+                                                  , inPrice              := COALESCE (tmp.Price,0)    ::TFloat
+                                                  , inSumm               := COALESCE (tmp.Summ ,0)    ::TFloat
+                                                  , inHeadCount          := COALESCE (tmp.HeadCount,0)    ::TFloat
+                                                  , inCount              := COALESCE (tmp.Count,0)    ::TFloat
+                                                  , inPartionGoods       := tmp.PartionGoods 
+                                                  , inPartNumber         := tmp.PartNumber
+                                                  , inPartionGoodsId     := tmp.PartionGoodsId
+                                                  , inGoodsKindId        := inGoodsKindId
+                                                  , inGoodsKindCompleteId:= tmp.GoodsKindId_Complete
+                                                  , inAssetId            := tmp.AssetId
+                                                  , inUnitId             := tmp.UnitId
+                                                  , inStorageId          := tmp.StorageId
+                                                  , inPartionModelId     := tmp.PartionModelId
+                                                  , inUserId             := vbUserId
+                                                   )
+     FROM gpSelect_MovementItem_Inventory (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS tmp
+     WHERE tmp.Id = inId;
+
      -- нашли
-     SELECT MovementItem.ObjectId
-          , MILinkObject_GoodsKind.ObjectId
-          , MIDate_PartionGoods.ValueData
-            INTO vbGoodsId, vbGoodsKindId, vbPartionGoodsDate
+     SELECT MIDate_PartionGoods.ValueData
+            INTO vbPartionGoodsDate
      FROM MovementItem
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
           LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                      ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                     AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
@@ -95,8 +118,8 @@ BEGIN
                        AND MovementItem.isErased   = FALSE
                        AND MovementItem.Id         <> COALESCE (inId, 0)
                        -- если другая партия или товар в этой ячейке
-                       AND (MovementItem.ObjectId <> vbGoodsId
-                         OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (vbGoodsKindId, 0)
+                       AND (MovementItem.ObjectId <> inGoodsId
+                         OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
                          OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (vbPartionGoodsDate, zc_DateStart())
                            )
                     )
@@ -126,8 +149,8 @@ BEGIN
                                  AND MovementItem.isErased   = FALSE
                                  AND MovementItem.Id         <> COALESCE (inId, 0)
                                  -- если другая партия или товар в этой ячейке
-                                 AND (MovementItem.ObjectId <> vbGoodsId
-                                   OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (vbGoodsKindId, 0)
+                                 AND (MovementItem.ObjectId <> inGoodsId
+                                   OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
                                    OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (vbPartionGoodsDate, zc_DateStart())
                                      )
                               )
@@ -150,8 +173,8 @@ BEGIN
                                  AND MovementItem.isErased   = FALSE
                                  AND MovementItem.Id         <> COALESCE (inId, 0)
                                  -- если другая партия или товар в этой ячейке
-                                 AND (MovementItem.ObjectId <> vbGoodsId
-                                   OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (vbGoodsKindId, 0)
+                                 AND (MovementItem.ObjectId <> inGoodsId
+                                   OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
                                    OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (vbPartionGoodsDate, zc_DateStart())
                                      )
                               )

@@ -2,6 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1172
+  ExplicitTop = -65
   ExplicitWidth = 1188
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -1023,14 +1024,13 @@ inherited SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actAssetGoodsChoiceForm
+                Action = actAssetGoodsChoiceFormPC
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 182
           end
           object GoodsKindName_ch4GoodsKindName: TcxGridDBColumn
@@ -1039,14 +1039,13 @@ inherited SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsKindChoice
+                Action = actGoodsKindChoicePC
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object MeasureName_ch4: TcxGridDBColumn
@@ -1946,7 +1945,34 @@ inherited SendForm: TSendForm
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actReturnKindOpenForm: TOpenChoiceForm [28]
+    object actGoodsKindChoicePC: TOpenChoiceForm [28]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actReturnKindOpenForm: TOpenChoiceForm [29]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1973,7 +1999,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actSubjectDocOpenForm: TOpenChoiceForm [29]
+    object actSubjectDocOpenForm: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2000,7 +2026,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAssetChoiceForm: TOpenChoiceForm [30]
+    object actAssetChoiceForm: TOpenChoiceForm [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2027,7 +2053,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [31]
+    object actGoodsKindChoice: TOpenChoiceForm [32]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2054,7 +2080,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAsset_twoChoiceForm: TOpenChoiceForm [32]
+    object actAsset_twoChoiceForm: TOpenChoiceForm [33]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2084,7 +2110,7 @@ inherited SendForm: TSendForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actAddMaskDetail: TdsdExecStoredProc [36]
+    object actAddMaskDetail: TdsdExecStoredProc [37]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2317,11 +2343,11 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object NewOpenChoiceForm1: TOpenChoiceForm
+    object OpenChoiceForm1: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm1'
+      Caption = 'GoodsForm'
       FormName = 'TAssetGoods_ObjectForm'
       FormNameParam.Value = 'TAssetGoods_ObjectForm'
       FormNameParam.DataType = ftString
@@ -2346,6 +2372,40 @@ inherited SendForm: TSendForm
           Name = 'Code'
           Value = Null
           Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actAssetGoodsChoiceFormPC: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm1'
+      FormName = 'TAssetGoods_ObjectForm'
+      FormNameParam.Value = 'TAssetGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = PartionCellCDS
           ComponentItem = 'GoodsCode'
           MultiSelectSeparator = ','
         end>
@@ -5063,8 +5123,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 520
+    Left = 640
+    Top = 232
   end
   object spUnErasedMIDetail: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
@@ -5414,6 +5474,31 @@ inherited SendForm: TSendForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = PartionCellCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

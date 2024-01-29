@@ -1,11 +1,15 @@
 -- Function: gpInsertUpdate_MI_Send_PartionCell()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_PartionCell(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ> 
+    IN inGoodsId               Integer   , -- 
+    IN inGoodsKindId           Integer   , -- 
+    IN inAmount                TFloat,
     --IN inPartionGoodsDate      TDateTime , -- 
  INOUT ioPartionCellName_1     TVarChar   , -- 
  INOUT ioPartionCellName_2     TVarChar   ,
@@ -28,6 +32,28 @@ BEGIN
          RETURN;
      END IF;
 
+     ----могут изменить товар / вид товара / кол-во  поэтому сохраняем
+     PERFORM lpInsertUpdate_MovementItem_Send (ioId                  := inId
+                                             , inMovementId          := inMovementId
+                                             , inGoodsId             := inGoodsId
+                                             , inAmount              := inAmount
+                                             , inPartionGoodsDate    := tmp.PartionGoodsDate
+                                             , inCount               := tmp.Count
+                                             , inHeadCount           := tmp.HeadCount
+                                             , ioPartionGoods        := tmp.PartionGoods
+                                             , ioPartNumber          := tmp.PartNumber
+                                             , inGoodsKindId         := inGoodsKindId
+                                             , inGoodsKindCompleteId := tmp.GoodsKindId_Complete
+                                             , inAssetId             := tmp.AssetId
+                                             , inAssetId_two         := tmp.AssetId_two
+                                             , inUnitId              := NULL ::Integer
+                                             , inStorageId           := tmp.StorageId
+                                             , inPartionModelId      := tmp.PartionModelId
+                                             , inPartionGoodsId      := tmp.PartionGoodsId
+                                             , inUserId              := vbUserId
+                                              ) 
+     FROM gpSelect_MovementItem_Send (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS tmp
+     WHERE tmp.Id = inId; 
   
      --  1  
      IF COALESCE (ioPartionCellName_1, '') <> '' THEN

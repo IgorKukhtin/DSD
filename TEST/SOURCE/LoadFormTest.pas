@@ -1117,11 +1117,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionCellEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionCellEditForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   //exit;
