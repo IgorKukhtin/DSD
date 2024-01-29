@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isPersonalOut Boolean
              , isBankOut Boolean
              , isDetail Boolean
-             , isAvanceNot Boolean
+             , isAvanceNot Boolean, isCompensationNot Boolean
              , isErased Boolean
               )
 AS
@@ -112,16 +112,21 @@ BEGIN
            , COALESCE (ObjectFloat_SummAvanceMax.ValueData, 0)       :: TFloat AS SummAvanceMax
            , COALESCE (ObjectFloat_HourAvance.ValueData, 0)          :: TFloat AS HourAvance
 
-           , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean   AS isSecond
-           , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean   AS isRecalc
-           , COALESCE (ObjectBoolean_PersonalOut.ValueData, FALSE) ::Boolean AS isPersonalOut
-           , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)     ::Boolean AS isBankOut
-           , COALESCE (ObjectBoolean_Detail.ValueData, FALSE)      ::Boolean AS isDetail
-           , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE)   ::Boolean AS isAvanceNot
+           , COALESCE (ObjectBoolean_Second.ValueData,FALSE)           ::Boolean AS isSecond
+           , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)           ::Boolean AS isRecalc
+           , COALESCE (ObjectBoolean_PersonalOut.ValueData, FALSE)     ::Boolean AS isPersonalOut
+           , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)         ::Boolean AS isBankOut
+           , COALESCE (ObjectBoolean_Detail.ValueData, FALSE)          ::Boolean AS isDetail
+           , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE)       ::Boolean AS isAvanceNot
+           , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
 
            , Object_PersonalServiceList.isErased  AS isErased
 
        FROM Object AS Object_PersonalServiceList
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
+                                    ON ObjectBoolean_CompensationNot.ObjectId  = Object_PersonalServiceList.Id
+                                   AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
+
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
                                    ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_PersonalServiceList_Second()
