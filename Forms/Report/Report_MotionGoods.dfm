@@ -2512,6 +2512,24 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 70
       end
+      object PartionCellCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1071#1095#1077#1081#1082#1072
+        DataBinding.FieldName = 'PartionCellCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 70
+      end
+      object PartionCellName: TcxGridDBColumn
+        Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'PartionCellName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

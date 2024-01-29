@@ -191,6 +191,8 @@ type
     bbPrint_MOAuto: TdxBarButton;
     actPrintCount: TdsdPrintAction;
     bbPrintCount: TdxBarButton;
+    PartionCellCode: TcxGridDBColumn;
+    PartionCellName: TcxGridDBColumn;
   private
   public
   end;
