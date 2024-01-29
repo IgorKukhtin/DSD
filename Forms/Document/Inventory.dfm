@@ -2,6 +2,7 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 598
   ClientWidth = 1020
+  ExplicitTop = -110
   ExplicitWidth = 1036
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -330,6 +331,24 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PartionCellCode_1: TcxGridDBColumn
+            Caption = '1.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '1.1 '#1050#1086#1076' '#1071#1095#1077#1081#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionCellName_1: TcxGridDBColumn
+            Caption = '1.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -412,9 +431,6 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -423,8 +439,6 @@ inherited InventoryForm: TInventoryForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1172
-        ExplicitHeight = 516
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -605,7 +619,7 @@ inherited InventoryForm: TInventoryForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103
             Width = 159
           end
           object isPartionCell_Close_1_ch4: TcxGridDBColumn
@@ -613,7 +627,7 @@ inherited InventoryForm: TInventoryForm
             DataBinding.FieldName = 'isPartionCell_Close_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1101#1090#1086#1081' '#1087#1072#1088#1090#1080#1080' '#1074' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
             Width = 125
           end
         end

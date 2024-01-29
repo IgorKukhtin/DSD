@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_PartionCell (Integer, Intege
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Inventory_PartionCell(
     IN inId                      Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
- INOUT ioPartionCellName_1       TVarChar   , -- 
+ INOUT ioPartionCellName_1       TVarChar   , --
     IN inisPartionCell_Close_1   Boolean    ,
     IN inPartionGoodsDate        TDateTime , -- Дата партии
     IN inSession                 TVarChar    -- сессия пользователя
@@ -25,10 +25,11 @@ BEGIN
          RETURN;
      END IF;
 
-  
-     --  1  
-     IF COALESCE (ioPartionCellName_1, '') <> '' THEN
-         -- !!!поиск ИД !!! 
+
+     --  1
+     IF COALESCE (ioPartionCellName_1, '') <> '' AND TRIM (ioPartionCellName_1) <> '0'
+     THEN
+         -- !!!поиск ИД !!!
          --если ввели код ищем по коду, иначе по названию
          IF zfConvert_StringToNumber (ioPartionCellName_1) <> 0
          THEN
@@ -40,24 +41,31 @@ BEGIN
          ELSE
              vbPartionCellId:= (SELECT Object.Id
                                 FROM Object
-                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_1))
-                                  AND Object.DescId     = zc_Object_PartionCell()
+                                WHERE Object.ValueData ILIKE TRIM (ioPartionCellName_1)
+                                  AND Object.DescId    = zc_Object_PartionCell()
                                );
          END IF;
-         
-         --если не нашли ошибка
-         IF COALESCE (vbPartionCellId,0) = 0
+
+         -- если не нашли
+         IF COALESCE (vbPartionCellId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_1;
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка с % = <%>.'
+                           , CASE WHEN zfConvert_StringToNumber (ioPartionCellName_1) > 0 THEN 'Кодом =' ELSE 'Названием =' END
+                           , ioPartionCellName_1
+                            ;
          END IF;
 
-         -- сохранили связь с <>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inId, vbPartionCellId); 
-         
-         ioPartionCellName_1 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId); 
-     ELSE 
-         -- сохранили связь с <>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inId, Null);
+         -- сохранили связь с <Ячейка хранения>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inId, vbPartionCellId);
+
+         --
+         ioPartionCellName_1 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+
+     ELSE
+         -- обнулили связь с <Ячейка хранения>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inId, NULL);
+         --
+         ioPartionCellName_1:= '';
      END IF;
 
 
@@ -66,11 +74,11 @@ BEGIN
 
      -- меняем параметр
      IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
-     
+
      -- сохранили свойство <Дата партии>
      IF COALESCE (inPartionGoodsDate, zc_DateStart()) <> zc_DateStart() OR EXISTS (SELECT 1 FROM MovementItemDate AS MID WHERE MID.MovementItemId = inId AND MID.DescId = zc_MIDate_PartionGoods())
      THEN
-         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), inId, inPartionGoodsDate); 
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), inId, inPartionGoodsDate);
      END IF;
 
      -- сохранили протокол

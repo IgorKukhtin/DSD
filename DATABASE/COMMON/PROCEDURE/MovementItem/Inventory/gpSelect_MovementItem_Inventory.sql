@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , UnitId Integer, UnitName TVarChar
              , StorageId Integer, StorageName TVarChar
              , PartionModelId Integer, PartionModelName TVarChar
+             , PartionCellCode_1 Integer, PartionCellName_1 TVarChar
              , ContainerId Integer
              , isErased Boolean
              , PartionGoodsId Integer
@@ -115,6 +116,8 @@ BEGIN
            , CAST (NULL AS TVarChar)            AS StorageName
            , CAST (0 AS Integer)                AS PartionModelId
            , CAST (NULL AS TVarChar)            AS PartionModelName
+           , CAST (0 AS Integer)                AS PartionCellCode_1
+           , CAST (NULL AS TVarChar)            AS PartionCellName_1
 
            , 0 :: Integer AS ContainerId
 
@@ -230,6 +233,9 @@ BEGIN
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.Id ELSE Object_PartionModel.Id               END AS PartionModelId
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.ValueData ELSE Object_PartionModel.ValueData END AS PartionModelName
 
+           , Object_PartionCell_1.ObjectCode    AS PartionCellCode_1
+           , Object_PartionCell_1.ValueData     AS PartionCellName_1
+
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
            , MovementItem.isErased              AS isErased
            
@@ -317,6 +323,11 @@ BEGIN
                                              ON MILinkObject_PartionModel.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionModel.DescId = zc_MILinkObject_Storage()
             LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = MILinkObject_PartionModel.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
+                                             ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
+            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MILinkObject_PartionCell_1.ObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -451,6 +462,9 @@ BEGIN
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.Id ELSE Object_PartionModel.Id               END AS PartionModelId
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.ValueData ELSE Object_PartionModel.ValueData END AS PartionModelName
            
+           , Object_PartionCell_1.ObjectCode    AS PartionCellCode_1
+           , Object_PartionCell_1.ValueData     AS PartionCellName_1
+
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
 
            , MovementItem.isErased               AS isErased
@@ -533,6 +547,11 @@ BEGIN
                                              ON MILinkObject_PartionModel.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionModel.DescId = zc_MILinkObject_Storage()
             LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = MILinkObject_PartionModel.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
+                                             ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
+            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MILinkObject_PartionCell_1.ObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
