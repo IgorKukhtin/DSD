@@ -92,15 +92,24 @@ BEGIN
                                                  ON ObjectFloat_Weight.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+                           LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                     ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                    AND MovementBoolean_Peresort.ValueData = TRUE
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
+                        --
                         -- AND MIContainer.WhereObjectId_Analyzer = inToId
                         AND MIContainer.WhereObjectId_Analyzer IN (SELECT _tmpUnit_TaxLoss_report.UnitId FROM _tmpUnit_TaxLoss_report)
+                        -- еще условие
                         AND MIContainer.ObjectExtId_Analyzer = inFromId
+                        --
                         AND (MIContainer.ObjectIntId_Analyzer > 0 OR inToId = 8439) --  Участок мясного сырья
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
+                        -- !!!убрали Пересортицу!!!
+                        AND MovementBoolean_Peresort.MovementId IS NULL
                       )
          -- расход на производство ГП с inFromId на inToId
        , tmpMI_GP_out AS

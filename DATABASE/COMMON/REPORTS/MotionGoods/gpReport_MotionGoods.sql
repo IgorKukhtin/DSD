@@ -41,6 +41,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Model_Partion TVarChar
 
              , AssetToCode Integer, AssetToName TVarChar
+             , PartionCellCode Integer, PartionCellName TVarChar
 
              , CountStart TFloat
              , CountStart_Weight TFloat
@@ -699,12 +700,19 @@ BEGIN
         , ObjectFloat_CountForWeight.ValueData ::TFloat AS CountForWeight
         , ObjectFloat_WeightTare.ValueData     ::TFloat AS WeightTare
 
-
         , ObjectDate_In.ValueData       :: TDateTime AS InDate
         , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
            
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
-        , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
+        , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell()
+                    THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
+                      || Object_PartionCell.ValueData || ' '
+                      || CASE WHEN Object_GoodsKind.ValueData <> '' THEN Object_GoodsKind.ValueData || ' '
+                              WHEN Object_GoodsKind_complete.ValueData <> '' THEN Object_GoodsKind_complete.ValueData || ' '
+                              ELSE ''
+                         END
+                    
+               WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
                     THEN zfCalc_PartionGoodsName_Asset (inMovementId      := Object_PartionGoods.ObjectCode          -- 
                                                       , inInvNumber       := Object_PartionGoods.ValueData           -- »Ì‚ÂÌÚ‡Ì˚È ÌÓÏÂ
                                                       , inOperDate        := ObjectDate_PartionGoods_Value.ValueData -- ƒ‡Ú‡ ‚‚Ó‰‡ ‚ ˝ÍÒÔÎÛ‡Ú‡ˆË˛
@@ -735,6 +743,10 @@ BEGIN
 
         , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
+
+        , Object_PartionCell.ObjectCode  AS PartionCellCode
+        , Object_PartionCell.ValueData   AS PartionCellName
+        
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
         , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
@@ -1019,6 +1031,11 @@ BEGIN
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
 
+        LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                             ON ObjectLink_PartionCell.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_PartionCell.DescId = zc_ObjectLink_PartionGoods_PartionCell()
+        LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = ObjectLink_PartionCell.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Goods
                              ON ObjectLink_Goods.ObjectId = tmpMIContainer_group.PartionGoodsId
                             AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
@@ -1064,11 +1081,9 @@ BEGIN
                                           AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpMIContainer_group.GoodsKindId, 0)
       ;
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -1085,5 +1100,3 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 -- ÚÂÒÚ
 -- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * from gpReport_MotionGoods (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 1, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := zfCalc_UserAdmin());
-
--- SELECT * from gpReport_MotionGoods22 (inStartDate:= '01.08.2022'::TDateTime, inEndDate:= '02.08.2022'::TDateTime, inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 0, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := zfCalc_UserAdmin());

@@ -29,6 +29,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Weight TFloat, WeightTare TFloat
              , InDate TDateTime, PartnerInName TVarChar
              , PartionGoodsDate TDateTime, PartionGoodsName TVarChar, AssetToName TVarChar
+             , PartionCellCode Integer, PartionCellName TVarChar
              , DriverName TVarChar, UnitName_to TVarChar
 
              , CountReal        TFloat  -- остаток текущий
@@ -833,6 +834,7 @@ BEGIN
                               , tmpAll.GoodsId
                               , tmpAll.GoodsKindId
                               , tmpAll.GoodsKindId_complete
+                              , tmpAll.PartionCellId
                               , tmpAll.PartionGoodsName
                               , tmpAll.PartionGoodsDate
 
@@ -891,6 +893,7 @@ BEGIN
                                     , tmpMovement_all.GoodsId
                                     , tmpMovement_all.GoodsKindId
                                     , 0 AS GoodsKindId_complete
+                                    , 0 AS PartionCellId
                                     , CASE WHEN ObjectBoolean_PartionCount.ValueData = TRUE THEN zfFormat_PartionGoods (tmpMovement_all.PartionGoodsName) ELSE '' END AS PartionGoodsName
                                     , zc_DateStart() AS PartionGoodsDate
 
@@ -950,6 +953,7 @@ BEGIN
                                     , tmpMIContainer_Count.GoodsId
                                     , tmpMIContainer_Count.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
+                                    , COALESCE (ObjectLink_PartionCell.ChildObjectId, 0)                 AS PartionCellId
                                     , COALESCE (Object_PartionGoods.ValueData, '')                       AS PartionGoodsName
                                     , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
 
@@ -1004,7 +1008,10 @@ BEGIN
                                                         AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_Count.PartionGoodsId
-                                                        AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete() 
+                                                        AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete() 
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                         ON ObjectLink_PartionCell.ObjectId = tmpMIContainer_Count.PartionGoodsId
+                                                        AND ObjectLink_PartionCell.DescId   = zc_ObjectLink_PartionGoods_PartionCell()
                                     --
                                     LEFT JOIN ObjectLink AS ObjectLink_Storage
                                                          ON ObjectLink_Storage.ObjectId = tmpMIContainer_Count.PartionGoodsId
@@ -1031,6 +1038,7 @@ BEGIN
                                     , tmpMIContainer_all.GoodsId
                                     , tmpMIContainer_all.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
+                                    , COALESCE (ObjectLink_PartionCell.ChildObjectId, 0)                 AS PartionCellId
                                     , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
                                                 THEN zfCalc_PartionGoodsName_Asset (inMovementId      := Object_PartionGoods.ObjectCode          -- 
                                                                                   , inInvNumber       := Object_PartionGoods.ValueData           -- Инвентарный номер
@@ -1120,7 +1128,10 @@ BEGIN
 
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_all.PartionGoodsId
-                                                        AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                                        AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                         ON ObjectLink_PartionCell.ObjectId = tmpMIContainer_all.PartionGoodsId
+                                                        AND ObjectLink_PartionCell.DescId   = zc_ObjectLink_PartionGoods_PartionCell()
 
                                     LEFT JOIN ObjectString AS ObjectString_PartNumber
                                                            ON ObjectString_PartNumber.ObjectId = tmpMIContainer_all.PartionGoodsId                    -- Сер.номер
@@ -1136,6 +1147,7 @@ BEGIN
                                     , tmpMIContainer_GP.GoodsId
                                     , tmpMIContainer_GP.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
+                                    , COALESCE (ObjectLink_PartionCell.ChildObjectId, 0)                 AS PartionCellId
                                     , COALESCE (Object_PartionGoods.ValueData, '')                       AS PartionGoodsName
                                     , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
 
@@ -1207,7 +1219,10 @@ BEGIN
                                                         AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_GP.PartionGoodsId
-                                                        AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                                        AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                         ON ObjectLink_PartionCell.ObjectId = tmpMIContainer_GP.PartionGoodsId
+                                                        AND ObjectLink_PartionCell.DescId   = zc_ObjectLink_PartionGoods_PartionCell()
 
                                     --
                                     LEFT JOIN ObjectLink AS ObjectLink_Storage
@@ -1235,6 +1250,7 @@ BEGIN
                                     , tmpContainer_CountCount.GoodsId
                                     , tmpContainer_CountCount.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
+                                    , COALESCE (ObjectLink_PartionCell.ChildObjectId, 0)                 AS PartionCellId
                                     , COALESCE (Object_PartionGoods.ValueData, '')                       AS PartionGoodsName
                                     , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
 
@@ -1290,7 +1306,10 @@ BEGIN
                                                         AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpContainer_CountCount.PartionGoodsId
-                                                        AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                                        AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                         ON ObjectLink_PartionCell.ObjectId = tmpContainer_CountCount.PartionGoodsId
+                                                        AND ObjectLink_PartionCell.DescId   = zc_ObjectLink_PartionGoods_PartionCell()
 
                                     --
                                     LEFT JOIN ObjectLink AS ObjectLink_Storage
@@ -1318,6 +1337,7 @@ BEGIN
                                , tmpAll.GoodsId
                                , tmpAll.GoodsKindId
                                , tmpAll.GoodsKindId_complete
+                               , tmpAll.PartionCellId
                                , tmpAll.PartionGoodsName
                                , tmpAll.PartionGoodsDate
                                , tmpAll.StorageId
@@ -1461,6 +1481,9 @@ BEGIN
         , CASE WHEN tmpResult.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpResult.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
         , tmpResult.PartionGoodsName :: TVarChar  AS PartionGoodsName
         , Object_AssetTo.ValueData       AS AssetToName
+
+        , Object_PartionCell.ObjectCode  AS PartionCellCode
+        , Object_PartionCell.ValueData   AS PartionCellName
 
         , Object_Personal_Driver.ValueData AS DriverName
         , Object_Unit_to.ValueData         AS UnitName_to
@@ -1667,6 +1690,8 @@ BEGIN
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = tmpResult.GoodsKindId_complete
+        LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpResult.PartionCellId
+
         -- LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = NULL
         -- LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = NULL
         --                                           AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
@@ -1787,4 +1812,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_GoodsBalance (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
 
--- select * from gpReport_GoodsBalance(inStartDate := ('03.03.2020')::TDateTime , inEndDate := ('23.03.2020')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 2339 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');
+-- select * from gpReport_GoodsBalance(inStartDate := ('03.03.2024')::TDateTime , inEndDate := ('23.03.2024')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 2339 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');
