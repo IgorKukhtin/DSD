@@ -84,6 +84,7 @@ type
     ContentType: TcxGridDBColumn;
     OnFlowType: TcxGridDBColumn;
     isDetail: TcxGridDBColumn;
+    isCompensationNot: TcxGridDBColumn;
   private
     { Private declarations }
   public

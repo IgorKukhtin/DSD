@@ -13,8 +13,9 @@ RETURNS TABLE(MovementId  Integer
             , InvNumber   TVarChar
             , OperDate    TDateTime
             , ServiceDate TDateTime
-            , StatusCode  Integer 
+            , StatusCode  Integer
             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+            , PersonalServiceListId_doc Integer, PersonalServiceListName_doc TVarChar
             , MemberId    Integer, MemberCode  Integer, MemberName  TVarChar
             , SummService TFloat
             , SummHoliday TFloat
@@ -99,12 +100,21 @@ BEGIN
                                 , Movement.OperDate
                                 , Movement.ServiceDate
                                 , Movement.StatusId
+                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId_doc
                                 , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
                                 , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS SummService
                                 , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0)) AS SummHoliday
                                 , SUM (COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS SummHospOth
                                 , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0) + COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS Summa
                            FROM tmpMovement AS Movement
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                             ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                            AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
+                                                        ON ObjectBoolean_CompensationNot.ObjectId  = MovementLinkObject_PersonalServiceList.ObjectId
+                                                       AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
+                                                       AND ObjectBoolean_CompensationNot.ValueData = TRUE
+
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                                                        AND MovementItem.isErased = FALSE
@@ -135,24 +145,30 @@ BEGIN
                                                            AND MIFloat_SummHospOth.DescId = zc_MIFloat_SummHospOth()
                            WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0
                              AND (ObjectLink_Personal_PersonalServiceList.ChildObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
+                             -- Исключить из расчета компенсации для отпуска
+                             AND ObjectBoolean_CompensationNot.ObjectId IS NULL
+
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId
                                   , Movement.Id
                                   , Movement.InvNumber
                                   , Movement.OperDate
                                   , Movement.ServiceDate
                                   , Movement.StatusId
+                                  , MovementLinkObject_PersonalServiceList.ObjectId
                                   , ObjectLink_Personal_PersonalServiceList.ChildObjectId
                            HAVING SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) <> 0
-                           )
-
+                          )
     -- Результат
     SELECT tmpPersonalService.MovementId
          , tmpPersonalService.InvNumber
          , tmpPersonalService.OperDate
-         , Movement.ServiceDate
-         , Object_Status.ObjectCode             AS StatusCode  
-         , Object_PersonalServiceList.Id        AS PersonalServiceListId
-         , Object_PersonalServiceList.ValueData AS PersonalServiceListName
+         , tmpPersonalService.ServiceDate
+         , Object_Status.ObjectCode                 AS StatusCode
+         , Object_PersonalServiceList.Id            AS PersonalServiceListId
+         , Object_PersonalServiceList.ValueData     AS PersonalServiceListName
+         , Object_PersonalServiceList_doc.Id        AS PersonalServiceListId_doc
+         , Object_PersonalServiceList_doc.ValueData AS PersonalServiceListName_doc
+
          , Object_Member.Id             AS MemberId
          , Object_Member.ObjectCode     AS MemberCode
          , Object_Member.ValueData      AS MemberName
@@ -163,7 +179,8 @@ BEGIN
     FROM tmpPersonalService
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpPersonalService.MemberId
          LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpPersonalService.StatusId
-         LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpPersonalService.PersonalServiceListId
+         LEFT JOIN Object AS Object_PersonalServiceList     ON Object_PersonalServiceList.Id     = tmpPersonalService.PersonalServiceListId
+         LEFT JOIN Object AS Object_PersonalServiceList_doc ON Object_PersonalServiceList_doc.Id = tmpPersonalService.PersonalServiceListId_doc
     ;
 
 END;
