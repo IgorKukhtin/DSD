@@ -30,6 +30,7 @@ BEGIN
                                , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer
                                , UnitId_Item Integer, StorageId_Item Integer, UnitId_Partion Integer, Price_Partion TFloat
+                               , PartionCellId Integer
                                , isPartionCount Boolean, isPartionSumm Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
 
