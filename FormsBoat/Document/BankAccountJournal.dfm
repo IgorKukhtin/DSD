@@ -1418,7 +1418,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     object actOpenFormPdfAllEdit: TdsdOpenForm [0]
       Category = 'OpenForm'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' PDF'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' PDF'
       ImageIndex = 26
       FormName = 'TBankAccountPdfEditForm'

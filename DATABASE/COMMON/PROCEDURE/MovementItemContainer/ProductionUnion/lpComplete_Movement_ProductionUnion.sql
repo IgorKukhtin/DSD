@@ -619,7 +619,8 @@ BEGIN
                                , Container.ContainerId  AS ContainerId
                                , COALESCE (tmpContainer_rem.Amount_rem, Container.Amount) AS Amount_container
                                , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId
-                                                              ORDER BY COALESCE (tmpContainer_rem.Amount_rem, 0) DESC
+                                                              ORDER BY CASE WHEN tmpContainer_rem.Amount_rem > 0 THEN Container.ContainerId ELSE 0 END ASC
+                                                                     , COALESCE (tmpContainer_rem.Amount_rem, 0) DESC
                                                                      , CASE WHEN COALESCE (Object_PartionGoods.ValueData, '') = ''
                                                                               OR COALESCE (Object_PartionGoods.ValueData, '') = '0'
                                                                                  THEN 0
@@ -631,7 +632,8 @@ BEGIN
                                                              ) AS AmountSUM
                                  -- !!!Надо отловить ПОСЛЕДНИЙ!!!
                                , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId
-                                                    ORDER BY COALESCE (tmpContainer_rem.Amount_rem, 0) DESC
+                                                    ORDER BY CASE WHEN tmpContainer_rem.Amount_rem > 0 THEN Container.ContainerId ELSE 0 END ASC
+                                                           , COALESCE (tmpContainer_rem.Amount_rem, 0) DESC
                                                            , CASE WHEN COALESCE (Object_PartionGoods.ValueData, '') = ''
                                                                     OR COALESCE (Object_PartionGoods.ValueData, '') = '0'
                                                                        THEN 0
@@ -930,22 +932,23 @@ end if;
                                                -- Упаковка Мяса (тоже ПФ-ГП)
                                                WHEN vbIsPartionDate_Unit_To      = TRUE
                                                 AND ((vbIsPartionGoodsKind_Unit_To = TRUE
-                                                     AND vbUnitId_To NOT IN (8447    -- ЦЕХ ковбасних виробів
-                                                                           , 8449    -- Цех сирокопчених ковбас
-                                                                           , 8448    -- Дільниця делікатесів
-                                                                           , 2790412 -- ЦЕХ Тушенка
-                                                                             --
-                                                                           , 8020711 -- ЦЕХ колбасный (Ирна)
-                                                                           , 8020708 -- Склад МИНУСОВКА (Ирна)
-                                                                           , 8020709 -- Склад ОХЛАЖДЕНКА (Ирна)
-                                                                           , 8020710 -- Участок мясного сырья (Ирна)
-                                                                            ))
-                                                     -- ИЛИ это группа - ЦЕХ колбаса+дел-сы
-                                                     OR (EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
-                                                     -- select * from Object where DescId = zc_Object_Goods() and ObjectCode = 1256
-                                                     AND _tmpItem_pr.GoodsId = 1138737 -- !!!надо для 1256 ШКУРА СВ замоч. Чапли!!!!
+                                                      AND vbUnitId_To NOT IN (8447    -- ЦЕХ ковбасних виробів
+                                                                            , 8449    -- Цех сирокопчених ковбас
+                                                                            , 8448    -- Дільниця делікатесів
+                                                                            , 2790412 -- ЦЕХ Тушенка
+                                                                              --
+                                                                            , 8020711 -- ЦЕХ колбасный (Ирна)
+                                                                            , 8020708 -- Склад МИНУСОВКА (Ирна)
+                                                                            , 8020709 -- Склад ОХЛАЖДЕНКА (Ирна)
+                                                                            , 8020710 -- Участок мясного сырья (Ирна)
+                                                                             )
+                                                     )
+                                                  -- ИЛИ это группа - ЦЕХ колбаса+дел-сы
+                                                  OR (EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
+                                                  -- select * from Object where DescId = zc_Object_Goods() and ObjectCode = 1256
+                                                  AND _tmpItem_pr.GoodsId = 1138737 -- !!!надо для 1256 ШКУРА СВ замоч. Чапли!!!!
                                                    --AND _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_10102() -- Основное сырье + Мясное сырье + Свинина - !!!надо для ШКУРА СВ замоч. Чапли!!!!
-                                                        )
+                                                     )
                                                     )
                                                 AND vbIsPeresort = FALSE
                                                 AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
@@ -963,6 +966,16 @@ end if;
                                                 AND _tmpItem_pr.InfoMoneyId NOT IN (zc_Enum_InfoMoney_10105()  -- Прочее мясное сырье
                                                                                   , zc_Enum_InfoMoney_10106()  -- Сыр
                                                                                    )
+                                                AND vbUnitId_To NOT IN (8447    -- ЦЕХ ковбасних виробів
+                                                                      , 8449    -- Цех сирокопчених ковбас
+                                                                      , 8448    -- Дільниця делікатесів
+                                                                      , 2790412 -- ЦЕХ Тушенка
+                                                                        --
+                                                                      , 8020711 -- ЦЕХ колбасный (Ирна)
+                                                                      , 8020708 -- Склад МИНУСОВКА (Ирна)
+                                                                      , 8020709 -- Склад ОХЛАЖДЕНКА (Ирна)
+                                                                      , 8020710 -- Участок мясного сырья (Ирна)
+                                                                       )
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem_pr.PartionGoodsDate
                                                                                         , inGoodsKindId_complete := _tmpItem_pr.GoodsKindId_complete
                                                                                          )
@@ -1127,6 +1140,11 @@ END IF;
                                                                       , inObjectCostId      := NULL
                                                                        )
      WHERE _tmpItem_pr.OperCountCount <> 0;
+
+--  RAISE EXCEPTION 'Ошибка.<%>   %', (select _tmpItem_pr.PartionGoodsId from _tmpItem_pr )
+-- , (select _tmpItem_pr.ContainerId_GoodsTo from _tmpItem_pr )
+-- ;
+
 
      -- самое интересное: заполняем таблицу - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      IF inMovementId IN (2296516, 2296563) -- !!!захардкодил исправление ошибки - 31.07.2015!!!

@@ -80,6 +80,8 @@ type
     GuidesPersonalServiceList: TdsdGuides;
     StatusCode: TcxGridDBColumn;
     SummHospOth: TcxGridDBColumn;
+    ServiceDate: TcxGridDBColumn;
+    PersonalServiceListName_doc: TcxGridDBColumn;
   private
   public
   end;

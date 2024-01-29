@@ -157,9 +157,20 @@ object Select_HolidayCompensation_zpForm: TSelect_HolidayCompensation_zpForm
         Options.Editing = False
         Width = 100
       end
+      object ServiceDate: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+        DataBinding.FieldName = 'ServiceDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object MemberCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092#1080#1079'. '#1083#1080#1094#1072
         DataBinding.FieldName = 'MemberCode'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -188,6 +199,14 @@ object Select_HolidayCompensation_zpForm: TSelect_HolidayCompensation_zpForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 111
+      end
+      object PersonalServiceListName_doc: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+        DataBinding.FieldName = 'PersonalServiceListName_doc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
       object SummService: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1072#1095#1080#1089#1083#1077#1085#1086
@@ -934,6 +953,7 @@ object Select_HolidayCompensation_zpForm: TSelect_HolidayCompensation_zpForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 432
     Top = 344

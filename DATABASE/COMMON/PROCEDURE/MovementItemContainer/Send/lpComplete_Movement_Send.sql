@@ -55,7 +55,7 @@ BEGIN
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, CarId_From, BranchId_From, UnitId_To, MemberId_To, CarId_To, BranchId_To
-                         , ContainerDescId, MIContainerId_To, MIContainerId_count_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_countFrom, ContainerId_countTo, ObjectDescId, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
+                         , ContainerDescId, MIContainerId_To, MIContainerId_count_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_countFrom, ContainerId_countTo, ObjectDescId, GoodsId, GoodsKindId, GoodsKindId_to, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
                          , OperCount, OperCountCount
                          , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , JuridicalId_basis_To, BusinessId_To
@@ -102,6 +102,39 @@ BEGIN
                                         THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                    ELSE 0
                               END AS GoodsKindId
+                              -- 
+                            , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
+                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                                   WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                                    AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
+                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                                   -- НОВОЕ условие
+                                   WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                    AND MovementLinkObject_From.ObjectId = 8445  -- Склад МИНУСОВКА
+                                    AND MovementLinkObject_To.ObjectId  IN (8447    -- ЦЕХ ковбасних виробів
+                                                                          , 8449    -- Цех сирокопчених ковбас
+                                                                          , 8448    -- Дільниця делікатесів
+                                                                          , 2790412 -- ЦЕХ Тушенка
+                                                                            --
+                                                                          , 8020711 -- ЦЕХ колбасный (Ирна)
+                                                                          , 8020708 -- Склад МИНУСОВКА (Ирна)
+                                                                          , 8020709 -- Склад ОХЛАЖДЕНКА (Ирна)
+                                                                          , 8020710 -- Участок мясного сырья (Ирна)
+                                                                           )
+
+                                    AND vbOperDate >= '01.01.2024'
+                                    AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_Basis()
+
+                                        -- морож.
+                                        THEN 8338 
+
+                                   WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                   ELSE 0
+                              END AS GoodsKindId_to
+                              
                             , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
                             , CASE WHEN vbMovementDescId = zc_Movement_SendAsset() AND Object_Goods.DescId = zc_Object_Asset() THEN Object_Goods.Id ELSE 0 END AS AssetId
                             , COALESCE (MILinkObject_Storage.ObjectId, 0)    AS StorageId_mi
@@ -487,6 +520,7 @@ BEGIN
                            FROM tmpMI
                                 LEFT JOIN tmpContainer_list ON tmpContainer_list.GoodsId      = tmpMI.GoodsId
                                                            AND tmpContainer_list.PartionGoods = tmpMI.PartionGoods
+                                                           AND tmpContainer_list.Amount       > 0
                            -- партия установлена
                            WHERE tmpMI.PartionGoods <> ''
                           )
@@ -499,12 +533,13 @@ BEGIN
                                      , tmpContainer_list.GoodsId
                                      , tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_rem
                                 FROM tmpContainer_list
+                                     LEFT JOIN tmpContainer_find ON tmpContainer_find.ContainerId = tmpContainer_list.ContainerId
                                      LEFT JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.ContainerId = tmpContainer_list.ContainerId
                                                                     -- !!!на конец дня
                                                                     AND MIContainer.OperDate    > vbOperDate
-                                -- только если партии НЕТ
-                                WHERE tmpContainer_list.PartionGoods = ''
+                                -- только если партию НЕ нашли
+                                WHERE tmpContainer_find.ContainerId IS NULL
 
                                 GROUP BY tmpContainer_list.ContainerId, tmpContainer_list.GoodsId, tmpContainer_list.Amount
                                 HAVING tmpContainer_list.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) > 0
@@ -567,10 +602,11 @@ BEGIN
 
                        FROM tmpMI_summ AS tmpMI
                             INNER JOIN tmpContainer_list ON tmpContainer_list.GoodsId = tmpMI.GoodsId
+                            LEFT JOIN tmpContainer_find ON tmpContainer_find.ContainerId = tmpContainer_list.ContainerId
                             LEFT JOIN tmpContainer_rem ON tmpContainer_rem.ContainerId = tmpContainer_list.ContainerId
                        WHERE COALESCE (tmpContainer_rem.Amount_rem, tmpContainer_list.Amount) > 0
-                         -- только если партии НЕТ
-                         AND tmpMI.PartionGoods = ''
+                         -- только если партию НЕ нашли
+                         AND tmpContainer_find.ContainerId IS NULL
                       )
       -- итого кол-во разбили по партиям
     , tmpContainer_partion AS (SELECT DD.ContainerId
@@ -625,8 +661,9 @@ BEGIN
                              -- сортировка по MovementItemId
                            , SUM (tmpMI.OperCount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY tmpMI.MovementItemId ASC) AS AmountSUM
                       FROM tmpMI
-                      -- только если партии НЕТ
-                      WHERE tmpMI.PartionGoods = ''
+                           LEFT JOIN tmpContainer_find ON tmpContainer_find.MovementItemId = tmpMI.MovementItemId
+                      -- только если партию НЕ нашли
+                      WHERE tmpContainer_find.ContainerId IS NULL
                      )
 
       -- партии прикрутили к MI
@@ -671,6 +708,7 @@ BEGIN
             , _tmp.ObjectDescId
             , _tmp.GoodsId
             , _tmp.GoodsKindId
+            , _tmp.GoodsKindId_to
             , _tmp.GoodsKindId_complete
             , _tmp.AssetId
             , _tmp.PartionGoods
@@ -1501,6 +1539,11 @@ end if;
                                                                                                                         AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                                                             THEN 0
 
+                                                                                                                       -- Мясное сырье
+                                                                                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                                                                            -- НОВОЕ условие
+                                                                                                                            THEN _tmpItem.GoodsKindId_to
+
                                                                                                                        -- Тушенка
                                                                                                                        WHEN _tmpItem.InfoMoneyId IN (zc_Enum_InfoMoney_30102())
                                                                                                                         AND _tmpItem.OperDate >= '01.05.2022'
@@ -1784,6 +1827,12 @@ END IF;
                                                                                                                     -- Мясное сырье
                                                                                                                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                                                         THEN 0
+
+                                                                                                                   -- Мясное сырье
+                                                                                                                   WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                                                                        -- НОВОЕ условие
+                                                                                                                        THEN _tmpItem.GoodsKindId_to
+
                                                                                                                    ELSE _tmpItem.GoodsKindId
                                                                                                               END
                                                                                 , inIsPartionSumm          := _tmpItem.isPartionSumm

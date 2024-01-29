@@ -206,9 +206,11 @@ BEGIN
 
      -- если это Ячейка хрванения - ТОЛЬКО для Розподільчий комплекс
      IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459))
+        -- так передается из Scale
+        AND inAssetId < 0
      THEN
          -- сохранили связь с <Ячейка хранения>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), ioId, inAssetId);
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), ioId, -1 * inAssetId);
      ELSE
          -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);

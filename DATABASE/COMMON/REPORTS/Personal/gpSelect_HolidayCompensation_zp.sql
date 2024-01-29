@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_HolidayCompensation_zp(
 RETURNS TABLE(MovementId  Integer
             , InvNumber   TVarChar
             , OperDate    TDateTime
+            , ServiceDate TDateTime
             , StatusCode  Integer 
             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
             , MemberId    Integer, MemberCode  Integer, MemberName  TVarChar
@@ -84,6 +85,7 @@ BEGIN
                                     )
 
   , tmpMovement AS (SELECT Movement.*
+                         , MovementDate.ValueData AS ServiceDate
                     FROM MovementDate
                          INNER JOIN Movement ON Movement.Id       = MovementDate.MovementId
                                             AND Movement.DescId   = zc_Movement_PersonalService()
@@ -95,6 +97,7 @@ BEGIN
                                 , Movement.Id AS MovementId
                                 , Movement.InvNumber
                                 , Movement.OperDate
+                                , Movement.ServiceDate
                                 , Movement.StatusId
                                 , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
                                 , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS SummService
@@ -136,6 +139,7 @@ BEGIN
                                   , Movement.Id
                                   , Movement.InvNumber
                                   , Movement.OperDate
+                                  , Movement.ServiceDate
                                   , Movement.StatusId
                                   , ObjectLink_Personal_PersonalServiceList.ChildObjectId
                            HAVING SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) <> 0
@@ -145,6 +149,7 @@ BEGIN
     SELECT tmpPersonalService.MovementId
          , tmpPersonalService.InvNumber
          , tmpPersonalService.OperDate
+         , Movement.ServiceDate
          , Object_Status.ObjectCode             AS StatusCode  
          , Object_PersonalServiceList.Id        AS PersonalServiceListId
          , Object_PersonalServiceList.ValueData AS PersonalServiceListName

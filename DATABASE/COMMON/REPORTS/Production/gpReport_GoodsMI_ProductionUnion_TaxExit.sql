@@ -38,9 +38,11 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-         -- приходы п/ф ГП
-    WITH tmpMI_WorkProgress_in AS
-                     (SELECT MIContainer.MovementItemId              AS MovementItemId
+         
+    WITH -- приходы п/ф ГП
+         tmpMI_WorkProgress_in AS
+                     (SELECT MIContainer.MovementId                  AS MovementId
+                           , MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
@@ -53,12 +55,23 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                           LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                     ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                    AND MovementBoolean_Peresort.ValueData = TRUE
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
+                        --
                         AND MIContainer.WhereObjectId_Analyzer = inFromId
+                        -- еще условие
+                        AND MIContainer.ObjectExtId_Analyzer   = inFromId
+                        --
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
+                        -- !!!убрали Пересортицу!!!
+                        AND MovementBoolean_Peresort.MovementId IS NULL
+                        --
                         AND (MIContainer.ObjectIntId_Analyzer IN (zc_GoodsKind_WorkProgress(), zc_GoodsKind_Basis()) -- ограничение что это п/ф ГП
                               -- !!!захардкодил!!!
                           /*OR (MIContainer.WhereObjectId_Analyzer = 951601 -- ЦЕХ упаковки мясо
@@ -205,6 +218,7 @@ BEGIN
                      (SELECT tmpMI_WorkProgress_in.ContainerId
                            , tmpMI_WorkProgress_in.GoodsId
                            , tmpMI_WorkProgress_in.PartionGoodsId
+                           , STRING_AGG (tmpMI_WorkProgress_in.MovementId :: TVarChar, ';') AS MovementId
                            , COALESCE (MILO_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
 
                            , COALESCE (ObjectFloat_TaxExit.ValueData, 0)        AS TaxExit
@@ -268,6 +282,7 @@ BEGIN
                            , SUM (tmp.calcOut)                AS calcOut
                            , MAX (tmp.TaxExit)                AS TaxExit
                            , MAX (tmp.Comment)                AS Comment
+                           , MAX (tmp.MovementId)             AS MovementId
                       FROM
                      (-- Производство п/ф ГП
                       SELECT tmpMI_WorkProgress_in.GoodsId
@@ -287,6 +302,7 @@ BEGIN
                            , MAX (tmpMI_WorkProgress_in.Comment)  AS Comment
                            , 0                                    AS Amount_GP_in
                            , 0                                    AS AmountReceipt_out
+                           , MAX (tmpMI_WorkProgress_in.MovementId) AS MovementId
                       FROM tmpMI_WorkProgress_in_gr AS tmpMI_WorkProgress_in
                            LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
 
@@ -315,6 +331,7 @@ BEGIN
                            , '' AS Comment
                            , tmpMI_GP_in.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_GP_in
                            , tmpMI_GP_in.AmountReceipt * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountReceipt_out
+                           , '' AS MovementId
                       FROM tmpMI_GP_in
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_GP_in.GoodsId
                                                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -337,6 +354,7 @@ BEGIN
                            , '' AS Comment
                            , 0 AS Amount_GP_in
                            , 0 AS AmountReceipt_out
+                           , '' AS MovementId
                       FROM tmpMI_WorkProgress_find
                      ) AS tmp
                       GROUP BY tmp.GoodsId
@@ -346,7 +364,7 @@ BEGIN
 
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode                AS GoodsCode
-         , Object_Goods.ValueData                 AS GoodsName
+         , (Object_Goods.ValueData || CASE WHEN vbUserId = 5 AND 1=0 THEN ' ' || tmpResult.MovementId ELSE '' END) :: TVarChar                AS GoodsName
          , Object_GoodsKindComplete.ValueData     AS GoodsKindName_Complete
          , Object_Measure.ValueData               AS MeasureName
          , ObjectDate_PartionGoods.ValueData      AS PartionGoodsDate

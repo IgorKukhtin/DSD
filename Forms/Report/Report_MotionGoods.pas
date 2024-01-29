@@ -246,6 +246,8 @@ type
     Model_Partion: TcxGridDBColumn;
     actPrint_GoodsPartion: TdsdPrintAction;
     bbPrint_GoodsPartion: TdxBarButton;
+    PartionCellCode: TcxGridDBColumn;
+    PartionCellName: TcxGridDBColumn;
   private
   public
   end;
