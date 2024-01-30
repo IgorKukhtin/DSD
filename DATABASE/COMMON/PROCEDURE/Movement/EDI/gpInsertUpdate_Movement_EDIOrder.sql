@@ -114,13 +114,13 @@ end if;
                        AND Movement.StatusId <> zc_Enum_Status_Erased()
                        AND vbUserId <> 5
                     );
-                    
-     IF COALESCE(vbMovementId, 0) = 0 OR 
-        NOT EXISTS (SELECT 1 FROM MovementBoolean 
+
+     IF COALESCE(vbMovementId, 0) = 0 OR
+        NOT EXISTS (SELECT 1 FROM MovementBoolean
                     WHERE MovementBoolean.MovementId = vbMovementId
                       AND MovementBoolean.DescId = zc_MovementBoolean_isLoad()
                       AND MovementBoolean.ValueData = TRUE)
-     THEN 
+     THEN
 
        -- определяется параметр
        vbDescCode:= (SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_OrderExternal());
@@ -215,14 +215,17 @@ end if;
 
        vbisLoad := False;
      ELSE
-     
-       vbGoodsPropertyId := (SELECT MovementLinkObject.ObjectId 
+
+       vbGoodsPropertyId := (SELECT MovementLinkObject.ObjectId
                              FROM MovementLinkObject
                              WHERE MovementLinkObject.MovementId = vbMovementId
-                               AND MovementLinkObject.DescId = zc_MovementLinkObject_GoodsProperty()); 
-     
+                               AND MovementLinkObject.DescId = zc_MovementLinkObject_GoodsProperty());
+
        vbisLoad := True;
      END IF;
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, vbIsInsert);
 
      RETURN QUERY
      SELECT vbMovementId
@@ -234,13 +237,9 @@ end if;
           , vbisLoad       AS isLoad
            ;
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -250,5 +249,5 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
-select * from gpInsertUpdate_Movement_EDIOrder(inOrderInvNumber := 'MAIДB007537' , inOrderOperDate := ('21.01.2021')::TDateTime , inGLN := '9864066853281' , inGLNPlace := '9864232336358' , gIsDelete := 'True' ,  inSession := '14610');
+--
+-- select * from gpInsertUpdate_Movement_EDIOrder(inOrderInvNumber := 'MAIДB007537' , inOrderOperDate := ('21.01.2021')::TDateTime , inGLN := '9864066853281' , inGLNPlace := '9864232336358' , gIsDelete := 'True' ,  inSession := '14610');
