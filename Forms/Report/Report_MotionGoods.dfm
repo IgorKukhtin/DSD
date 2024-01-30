@@ -2543,7 +2543,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Align = alTop
     TabOrder = 1
     object edGoodsGroup: TcxButtonEdit
-      Left = 858
+      Left = 946
       Top = 5
       Properties.Buttons = <
         item
@@ -2573,7 +2573,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 85
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 560
+      Left = 648
       Top = 5
       Properties.Buttons = <
         item
@@ -2585,17 +2585,17 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 434
+      Left = 522
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object cxLabel1: TcxLabel
-      Left = 767
+      Left = 855
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoods: TcxButtonEdit
-      Left = 862
+      Left = 950
       Top = 29
       Properties.Buttons = <
         item
@@ -2607,7 +2607,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 192
     end
     object edLocation: TcxButtonEdit
-      Left = 560
+      Left = 648
       Top = 30
       Properties.Buttons = <
         item
@@ -2619,7 +2619,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 488
+      Left = 576
       Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
     end
@@ -2634,12 +2634,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
     object cxLabel7: TcxLabel
-      Left = 818
+      Left = 906
       Top = 31
       Caption = #1058#1086#1074#1072#1088':'
     end
     object ceAccountGroup: TcxButtonEdit
-      Left = 221
+      Left = 309
       Top = 5
       Properties.Buttons = <
         item
@@ -2651,12 +2651,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 209
     end
     object cxLabel2: TcxLabel
-      Left = 148
+      Left = 237
       Top = 6
       Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
     end
     object cbInfoMoney: TcxCheckBox
-      Left = 151
+      Left = 243
       Top = 30
       Action = actIsInfoMoney
       Properties.ReadOnly = False
@@ -2664,19 +2664,19 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 154
     end
     object cxLabel8: TcxLabel
-      Left = 1052
-      Top = 6
+      Left = 1176
+      Top = 7
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076'. ***:'
       Visible = False
     end
     object cxLabel9: TcxLabel
-      Left = 1074
-      Top = 31
+      Left = 1198
+      Top = 32
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' ***:'
       Visible = False
     end
     object edUnitGroup_by: TcxButtonEdit
-      Left = 1169
+      Left = 1297
       Top = 5
       Properties.Buttons = <
         item
@@ -2689,7 +2689,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 189
     end
     object edLocation_by: TcxButtonEdit
-      Left = 1169
+      Left = 1297
       Top = 30
       Properties.Buttons = <
         item
@@ -2702,7 +2702,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 189
     end
     object cbAllMO: TcxCheckBox
-      Left = 308
+      Left = 397
       Top = 30
       Action = actIsAllMO
       Properties.ReadOnly = False
@@ -2710,12 +2710,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 64
     end
     object cbAllAuto: TcxCheckBox
-      Left = 380
+      Left = 468
       Top = 30
       Action = actIsAllAuto
       Properties.ReadOnly = False
       TabOrder = 20
       Width = 71
+    end
+    object cbOperDate_Partion: TcxCheckBox
+      Left = 151
+      Top = 29
+      Action = actisOperDate_Partion
+      Properties.ReadOnly = False
+      TabOrder = 21
+      Width = 89
+    end
+    object cbPartionCell: TcxCheckBox
+      Left = 151
+      Top = 2
+      Action = actisPartionCell
+      Properties.ReadOnly = False
+      TabOrder = 22
+      Width = 83
     end
   end
   object cbGoodsKind: TcxCheckBox
@@ -3859,6 +3875,32 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       isShowModal = False
     end
+    object actisOperDate_Partion: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+      Hint = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actisPartionCell: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      Hint = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actIsAllMO: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -4759,6 +4801,22 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsOperDate_Partion'
+        Value = Null
+        Component = cbOperDate_Partion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionCell'
+        Value = Null
+        Component = cbPartionCell
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -4885,7 +4943,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 600
+    Left = 664
+    Top = 16
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'

@@ -159,6 +159,9 @@ type
     actUpdatePartionCellDS: TdsdUpdateDataSet;
     PartionCellCode_1: TcxGridDBColumn;
     PartionCellName_1: TcxGridDBColumn;
+    actGoodsChoiceFormPC: TOpenChoiceForm;
+    actGoodsKindChoicePC: TOpenChoiceForm;
+    actOpenPartionCellForm1: TOpenChoiceForm;
   private
     { Private declarations }
   public

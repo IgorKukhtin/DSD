@@ -193,6 +193,10 @@ type
     bbPrintCount: TdxBarButton;
     PartionCellCode: TcxGridDBColumn;
     PartionCellName: TcxGridDBColumn;
+    cbPartionCell: TcxCheckBox;
+    cbOperDate_Partion: TcxCheckBox;
+    actisOperDate_Partion: TdsdDataSetRefresh;
+    actisPartionCell: TdsdDataSetRefresh;
   private
   public
   end;
