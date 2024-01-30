@@ -1,4 +1,4 @@
--- Function: gpReport_CashPersonal_toPay ()
+ -- Function: gpReport_CashPersonal_toPay ()
 
 DROP FUNCTION IF EXISTS gpReport_CashPersonal_toPay (TDateTime, Integer, TVarChar);
 

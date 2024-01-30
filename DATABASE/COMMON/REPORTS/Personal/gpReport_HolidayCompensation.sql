@@ -154,7 +154,13 @@ BEGIN
                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inPersonalServiceListId := inPersonalServiceListId, inisDetail:= FALSE, inSession:= inSession) AS tmp
                    )
 
+  , tmpMember_day AS (SELECT tmpReport.MemberId, MIN (tmpReport.DateIn) AS DateIn
+                      FROM tmpReport
+                      GROUP BY tmpReport.MemberId
+                     )
+
   , tmpMovement AS (SELECT Movement.Id
+                         , MovementDate.ValueData AS ServiceDate
                     FROM MovementDate
                          INNER JOIN Movement ON Movement.Id       = MovementDate.MovementId
                                             AND Movement.DescId   = zc_Movement_PersonalService()
@@ -163,7 +169,10 @@ BEGIN
                       AND MovementDate.DescId = zc_MIDate_ServiceDate()
                    )
   , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
-                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0) + COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS Amount
+                                , SUM (CASE WHEN DATE_TRUNC ('MONTH', tmpMember_day.DateIn) <= DATE_TRUNC ('MONTH', Movement.ServiceDate)
+                                                 THEN COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0) + COALESCE (MIFloat_SummHospOth.ValueData, 0)
+                                            ELSE 0
+                                       END) AS Amount
                            FROM tmpMovement AS Movement
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                              ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
@@ -185,6 +194,8 @@ BEGIN
                                                       ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                      AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                                                      AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
+
+                                LEFT JOIN tmpMember_day ON tmpMember_day.MemberId = ObjectLink_Personal_Member.ChildObjectId
 
                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                      ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementItem.ObjectId

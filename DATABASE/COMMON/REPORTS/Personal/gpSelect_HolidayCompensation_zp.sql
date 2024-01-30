@@ -34,6 +34,7 @@ BEGIN
     WITH
      tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
    , tmpMemberPersonalServiceList AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+
                                      FROM ObjectLink AS ObjectLink_User_Member
                                           INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
                                                                 ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
@@ -85,6 +86,10 @@ BEGIN
                                        AND vbUserId = 106593*/
                                     )
 
+ , tmpMember_day AS (SELECT tmp.MemberId
+                          , tmp.DateIn
+                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inPersonalServiceListId := inPersonalServiceListId, inisDetail:= FALSE, inSession:= inSession) AS tmp
+                    )
   , tmpMovement AS (SELECT Movement.*
                          , MovementDate.ValueData AS ServiceDate
                     FROM MovementDate
@@ -102,10 +107,22 @@ BEGIN
                                 , Movement.StatusId
                                 , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId_doc
                                 , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
-                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS SummService
-                                , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0)) AS SummHoliday
-                                , SUM (COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS SummHospOth
-                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0) + COALESCE (MIFloat_SummHospOth.ValueData, 0)) AS Summa
+                                , SUM (CASE WHEN DATE_TRUNC ('MONTH', tmpMember_day.DateIn) <= DATE_TRUNC ('MONTH', Movement.ServiceDate)
+                                                 THEN COALESCE (MIFloat_SummService.ValueData, 0)
+                                            ELSE 0
+                                       END) AS SummService
+                                , SUM (CASE WHEN DATE_TRUNC ('MONTH', tmpMember_day.DateIn) <= DATE_TRUNC ('MONTH', Movement.ServiceDate)
+                                                 THEN COALESCE (MIFloat_SummHoliday.ValueData, 0)
+                                            ELSE 0
+                                       END) AS SummHoliday
+                                , SUM (CASE WHEN DATE_TRUNC ('MONTH', tmpMember_day.DateIn) <= DATE_TRUNC ('MONTH', Movement.ServiceDate)
+                                                 THEN COALESCE (MIFloat_SummHospOth.ValueData, 0)
+                                            ELSE 0
+                                       END) AS SummHospOth
+                                , SUM (CASE WHEN DATE_TRUNC ('MONTH', tmpMember_day.DateIn) <= DATE_TRUNC ('MONTH', Movement.ServiceDate)
+                                                 THEN COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0) + COALESCE (MIFloat_SummHospOth.ValueData, 0)
+                                            ELSE 0
+                                       END) AS Summa
                            FROM tmpMovement AS Movement
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                              ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
@@ -127,6 +144,8 @@ BEGIN
                                                       ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                      AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                                                      AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
+
+                                LEFT JOIN tmpMember_day ON tmpMember_day.MemberId = ObjectLink_Personal_Member.ChildObjectId
 
                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                      ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementItem.ObjectId
