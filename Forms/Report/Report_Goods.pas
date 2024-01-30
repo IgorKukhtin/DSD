@@ -115,6 +115,8 @@ type
     OperDate_Protocol_auto: TcxGridDBColumn;
     UserName_Protocol_auto: TcxGridDBColumn;
     PersonalGroupName: TcxGridDBColumn;
+    PartionCellName: TcxGridDBColumn;
+    isPartionCell_Close: TcxGridDBColumn;
   private
     { Private declarations }
   public
