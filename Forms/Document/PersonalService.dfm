@@ -324,6 +324,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCash_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHoursOne_child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -630,6 +635,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCash_pay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHoursOne_child
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -895,7 +905,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 85
           end
           object Price_child: TcxGridDBColumn [25]
             Caption = #1075#1088#1085'./'#1079#1072' '#1082#1075' '#1048#1051#1048' '#1075#1088#1085'./'#1089#1090#1072#1074#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
@@ -6440,6 +6450,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataSummaryItemIndex = -1
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 238
     Top = 473
@@ -7174,6 +7185,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataSummaryItemIndex = -1
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1230
     Top = 497

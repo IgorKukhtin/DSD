@@ -98,7 +98,11 @@ uses
   UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
-  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
+  DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas';
 
 {$R *.res}
 
