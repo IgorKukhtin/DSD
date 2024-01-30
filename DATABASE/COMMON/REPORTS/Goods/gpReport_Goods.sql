@@ -32,6 +32,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , PartionModelId Integer, PartionModelName TVarChar
               , UnitId_partion Integer, UnitName_partion TVarChar, BranchName_partion TVarChar
               , PartNumber_partion  TVarChar
+              , PartionCellName TVarChar, isPartionCell_Close Boolean
         
               , GoodsCode_parent Integer, GoodsName_parent TVarChar, GoodsKindName_parent TVarChar
               , Price TFloat, Price_branch TFloat, Price_end TFloat, Price_branch_end TFloat, Price_partner TFloat
@@ -230,10 +231,12 @@ BEGIN
         , gpReport.UnitId_partion      ::Integer
         , gpReport.UnitName_partion    ::TVarChar
         , gpReport.BranchName_partion ::TVarChar
-        , gpReport.PartNumber_partion  ::TVarChar
+        , gpReport.PartNumber_partion  ::TVarChar 
+        , ''  ::TVarChar   AS PartionCellName
+        , FALSE ::Boolean  AS isPartionCell_Close
         */                                       
         , 0    ::Integer AS StorageId           
-        , ''  ::TVarChar AS  StorageName       
+        , ''  ::TVarChar AS StorageName       
         , 0   ::Integer  AS PartionModelId    
         , ''  ::TVarChar AS PartionModelName  
         , 0   ::Integer  AS UnitId_partion    
@@ -893,6 +896,43 @@ BEGIN
                            WHERE tmp.Ord = 1
                           )
 
+   -- ˇ˜ÂÈÍË
+   , tmpPartionCell AS (WITH
+                        tmpMILO AS (SELECT MovementItemLinkObject.*
+                                        FROM MovementItemLinkObject
+                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.MovementItemId FROM tmpMIContainer_group)
+                                          AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
+                                                                         , zc_MILinkObject_PartionCell_2()
+                                                                         , zc_MILinkObject_PartionCell_3()
+                                                                         , zc_MILinkObject_PartionCell_4()
+                                                                         , zc_MILinkObject_PartionCell_5() 
+                                                                          )
+                                       )
+
+                      , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
+                                          FROM MovementItemBoolean
+                                          WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.MovementItemId FROM tmpMIContainer_group)
+                                            AND MovementItemBoolean.DescId IN (zc_MIBoolean_PartionCell_Close_1()
+                                                                             , zc_MIBoolean_PartionCell_Close_2()
+                                                                             , zc_MIBoolean_PartionCell_Close_3()
+                                                                             , zc_MIBoolean_PartionCell_Close_4()
+                                                                             , zc_MIBoolean_PartionCell_Close_5() 
+                                                                              )
+                                         )
+                        
+                        SELECT tmp.MovementItemId
+                             , STRING_AGG (Object_PartionCell.ValueData, ';') AS PartionCellName
+                             , SUM (CASE WHEN Object_PartionCell.Id <> 0 AND COALESCE (MIBoolean_PartionCell_Close.ValueData, FALSE) = TRUE THEN 0 ELSE 1 END ) AS PartionCell_Close
+                        FROM (SELECT DISTINCT tmpMIContainer_group.MovementItemId FROM tmpMIContainer_group) AS tmp
+                          LEFT JOIN tmpMILO AS MILinkObject_PartionCell
+                                            ON MILinkObject_PartionCell.MovementItemId = tmp.MovementItemId
+                          LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId 
+                          
+                          LEFT JOIN tmpMI_Boolean AS MIBoolean_PartionCell_Close
+                                                  ON MIBoolean_PartionCell_Close.MovementItemId = tmp.MovementItemId 
+                        GROUP BY tmp.MovementItemId
+                        )
+
     -- –≈«”À‹“¿“
   , tmpDataAll AS (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
@@ -1087,6 +1127,9 @@ BEGIN
                         , ObjectString_PartNumber.ValueData AS PartNumber_partion
                         
                         , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
+                        
+                        , tmpPartionCell.PartionCellName
+                        , CASE WHEN tmpPartionCell.PartionCell_Close <> 0 THEN FALSE ELSE TRUE END ::Boolean AS isPartionCell_Close
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -1208,7 +1251,7 @@ BEGIN
                         LEFT JOIN tmpProtocol ON tmpProtocol.MovementId =  tmpMIContainer_group.MovementId
                         LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId =  tmpMIContainer_group.MovementId
                         
-                        
+                        LEFT JOIN tmpPartionCell ON tmpPartionCell.MovementItemId = tmpMIContainer_group.MovementItemId
                    )
 
    -- –≈«”À‹“¿“
@@ -1250,8 +1293,10 @@ BEGIN
         , tmpDataAll.PartionModelName    ::TVarChar
         , tmpDataAll.UnitId_partion      ::Integer
         , tmpDataAll.UnitName_partion    ::TVarChar
-        , tmpDataAll.BranchName_partion ::TVarChar
+        , tmpDataAll.BranchName_partion  ::TVarChar
         , tmpDataAll.PartNumber_partion  ::TVarChar
+        , tmpDataAll.PartionCellName     ::TVarChar
+        , tmpDataAll.isPartionCell_Close ::Boolean
 
         , tmpDataAll.GoodsCode_parent
         , tmpDataAll.GoodsName_parent
@@ -1375,7 +1420,9 @@ BEGIN
         , tmpDataAll.UnitId_partion     
         , tmpDataAll.UnitName_partion 
         , tmpDataAll.BranchName_partion
-        , tmpDataAll.PartNumber_partion 
+        , tmpDataAll.PartNumber_partion
+        , tmpDataAll.PartionCellName
+        , tmpDataAll.isPartionCell_Close 
    ;
 
    END IF;
@@ -1387,6 +1434,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.01.24         *
  22.01.24         *
  03.12.21         *
  29.03.20         * add zc_Movement_SendAsset()

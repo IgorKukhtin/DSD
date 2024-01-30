@@ -1042,6 +1042,21 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 101
           end
+          object PartionCellName: TcxGridDBColumn
+            Caption = #1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object isPartionCell_Close: TcxGridDBColumn
+            Caption = #1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1077#1082' ('#1076#1072'/'#1085#1077#1090')'
+            Width = 60
+          end
         end
       end
       object cbSumm_branch: TcxCheckBox
