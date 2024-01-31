@@ -151,6 +151,36 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummHosp
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountCash_rem
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummCard_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummCardSecond_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummCardSecondCash_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummAvCardSecond_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummToPay_inf
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -277,6 +307,36 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummHosp
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountCash_rem
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummCard_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummCardSecond_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummCardSecondCash_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummAvCardSecond_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummToPay_inf
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -722,6 +782,74 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object AmountCash_rem: TcxGridDBColumn
+            Caption = #1054#1089#1090'.'#1082' '#1074#1099#1076#1072#1095#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'AmountCash_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummCard_inf: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 1'#1092'. ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SummCard_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecond_inf: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SummCardSecond_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecondCash_inf: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SummCardSecondCash_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummAvCardSecond_inf: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '#1040#1074#1072#1085#1089' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SummAvCardSecond_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummToPay_inf: TcxGridDBColumn
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075') ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SummToPay_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
