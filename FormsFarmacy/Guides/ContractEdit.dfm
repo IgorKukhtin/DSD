@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 529
   ClientWidth = 366
   ExplicitWidth = 372
-  ExplicitHeight = 558
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -289,10 +289,18 @@ inherited ContractEditForm: TContractEditForm
   end
   object cbDefermentContract: TcxCheckBox [41]
     Left = 201
-    Top = 402
+    Top = 398
     Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1086#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
     Caption = #1054#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
     TabOrder = 41
+    Width = 146
+  end
+  object cbForRealize: TcxCheckBox [42]
+    Left = 201
+    Top = 444
+    Hint = #1055#1086#1076' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1102
+    Caption = #1055#1086#1076' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1102
+    TabOrder = 42
     Width = 146
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -476,6 +484,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inisDefermentContract'
         Value = Null
         Component = cbDefermentContract
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisForRealize'
+        Value = Null
+        Component = cbForRealize
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -676,6 +692,13 @@ inherited ContractEditForm: TContractEditForm
         Name = 'isDefermentContract'
         Value = Null
         Component = cbDefermentContract
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isForRealize'
+        Value = Null
+        Component = cbForRealize
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

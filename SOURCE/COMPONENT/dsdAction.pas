@@ -1978,7 +1978,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   Menus, cxGridExportLink, ShellApi, cxFilter,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
-  frxDBSet, Printers, cxDBData, dsdAddOn,
+  frxDBSet, Printers, cxDBData, dsdAddOn, dsdException,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
   dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin,
   dsdExportToXLSAction, dsdExportToXMLAction, PUSHMessage, Xml.XMLDoc, XMLIntf;
@@ -3383,7 +3383,20 @@ begin
   begin
     if not BeforeAction.Execute then Exit;
   end;
-  result := LocalExecute;
+  try
+    result := LocalExecute;
+  except on E: Exception do
+    begin
+      if Assigned(CancelAction) then
+        CancelAction.Execute;
+
+      if E.ClassName = 'EStorageException' then
+        raise EStorageException.Create(E.Message)
+      else if E.ClassName = 'ESortException' then
+        raise ESortException.Create(E.Message)
+      else raise Exception.Create(E.Message);
+    end;
+  end;
   if PostDataSetAfterExecute then
     PostDataSet;
   if not result then

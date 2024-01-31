@@ -67,6 +67,7 @@ type
     cbNotIncome: TcxCheckBox;
     isNoGoodsIncome: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
+    isForRealize: TcxGridDBColumn;
   private
     { Private declarations }
   public

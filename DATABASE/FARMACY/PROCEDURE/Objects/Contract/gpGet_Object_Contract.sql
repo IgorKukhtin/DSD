@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Comment TVarChar,
                SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime,
                isMorionCode Boolean, isBarCode Boolean, isPartialPay Boolean, isDefermentContract Boolean,
-               isErased Boolean) AS
+               isForRealize Boolean, isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -66,6 +66,7 @@ BEGIN
            , CAST (False AS Boolean) AS isMorionCode
            , CAST (False AS Boolean) AS isBarCode
            , CAST (False AS Boolean) AS isPartialPay
+           , CAST (False AS Boolean) AS isForRealize
            , CAST (False AS Boolean) AS isDefermentContract
            , CAST (False AS Boolean) AS isErased;
    
@@ -111,6 +112,7 @@ BEGIN
            , COALESCE (ObjectBoolean_BarCode.ValueData, FALSE)     :: Boolean   AS isBarCode
            , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)  :: Boolean   AS isPartialPay
            , COALESCE (ObjectBoolean_DefermentContract.ValueData, FALSE):: Boolean AS isDefermentContract
+           , COALESCE (ObjectBoolean_ForRealize.ValueData, FALSE):: Boolean     AS isForRealize
 
            , Object_Contract_View.isErased
        FROM Object_Contract_View
@@ -161,6 +163,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DefermentContract
                                     ON ObjectBoolean_DefermentContract.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_DefermentContract.DescId = zc_ObjectBoolean_Contract_DefermentContract()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_ForRealize
+                                    ON ObjectBoolean_ForRealize.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_ForRealize.DescId = zc_ObjectBoolean_Contract_ForRealize()
 
       WHERE Object_Contract_View.Id = inId;
    END IF;
