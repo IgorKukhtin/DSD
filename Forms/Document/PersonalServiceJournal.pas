@@ -132,6 +132,14 @@ type
     actGet_Export_FileNameZp_dbf: TdsdExecStoredProc;
     spSelectExport_dbf: TdsdStoredProc;
     spGet_Export_FileNameZP_dbf: TdsdStoredProc;
+    mactExportCSV_F2: TMultiAction;
+    spGet_Export_EmailCSVF2: TdsdStoredProc;
+    actGet_Export_EmailCSVF2: TdsdExecStoredProc;
+    actGet_Export_FileNameCSVF2: TdsdExecStoredProc;
+    spGet_Export_FileNameCSVF2: TdsdStoredProc;
+    spSelect_ExportCSVF2: TdsdStoredProc;
+    actSelect_ExportCSVF2: TdsdExecStoredProc;
+    bbExportCSV_F2: TdxBarButton;
   private
     { Private declarations }
   public

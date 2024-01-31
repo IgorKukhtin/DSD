@@ -1,9 +1,11 @@
--- Function: gpGet_PersonalService_FileName(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_PersonalService_FileNameCSV (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_PersonalService_FileNameCSV (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_PersonalService_FileNameCSV (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_PersonalService_FileNameCSV(
-    IN inMovementId           Integer   ,
+    IN inMovementId           Integer   ,  
+    IN inParam                Integer,    -- = 1 ƒЋя CardSecond, INN, SummCardSecondRecalc, PersonalName 
+                                          -- = 2 ƒЋя CardBankSecond, SummCardSecondRecalc
    OUT outFileName            TVarChar  ,
    OUT outFileNamePrefix      TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
@@ -21,7 +23,8 @@ BEGIN
      -- –езультат
      SELECT ('PersonalService_' || CURRENT_DATE) AS outFileNamePrefix
           , Object_PersonalServiceList.ValueData
-            ||'_'||zfCalc_MonthName(MovementDate_ServiceDate.ValueData)
+            ||'_'||zfCalc_MonthName(MovementDate_ServiceDate.ValueData)  
+            ||CASE WHEN inParam = 2 THEN '_‘2' ELSE '' END
              AS outFileName
           , '.csv'                               AS outDefaultFileExt
           , TRUE                                 AS outEncodingANSI
@@ -50,4 +53,5 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpGet_PersonalService_FileNameCSV (21011498, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+-- SELECT * FROM gpGet_PersonalService_FileNameCSV (21011498, 2, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+

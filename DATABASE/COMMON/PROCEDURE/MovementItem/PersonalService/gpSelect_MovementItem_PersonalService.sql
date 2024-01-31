@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , MemberId_Personal Integer
              , INN TVarChar, Code1C TVarChar, Card TVarChar, CardSecond TVarChar
-             , CardIBAN TVarChar, CardIBANSecond TVarChar
+             , CardIBAN TVarChar, CardIBANSecond TVarChar 
+             , CardBank TVarChar, CardBankSecond TVarChar
              , isMain Boolean, isOfficial Boolean, DateOut TDateTime, DateIn TDateTime
              , PersonalCode_to Integer, PersonalName_to TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -476,7 +477,9 @@ BEGIN
             , ObjectString_Member_Card.ValueData            AS Card
             , ObjectString_Member_CardSecond.ValueData      AS CardSecond
             , ObjectString_Member_CardIBAN.ValueData        AS CardIBAN
-            , ObjectString_Member_CardIBANSecond.ValueData  AS CardIBANSecond
+            , ObjectString_Member_CardIBANSecond.ValueData  AS CardIBANSecond  
+            , ObjectString_Member_CardBank.ValueData        ::TVarChar  AS CardBank
+            , ObjectString_Member_CardBankSecond.ValueData  ::TVarChar  AS CardBankSecond
             , CASE WHEN tmpAll.MovementItemId > 0 AND 1=0 /*vbUserId <> 5*/ THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
               -- дата увольнения
@@ -865,6 +868,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Member_CardSecond
                                    ON ObjectString_Member_CardSecond.ObjectId = tmpAll.MemberId_Personal
                                   AND ObjectString_Member_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
+            LEFT JOIN ObjectString AS ObjectString_Member_CardBank
+                                   ON ObjectString_Member_CardBank.ObjectId = tmpAll.MemberId_Personal
+                                  AND ObjectString_Member_CardBank.DescId = zc_ObjectString_Member_CardBank()
+            LEFT JOIN ObjectString AS ObjectString_Member_CardBankSecond
+                                   ON ObjectString_Member_CardBankSecond.ObjectId = tmpAll.MemberId_Personal
+                                  AND ObjectString_Member_CardBankSecond.DescId = zc_ObjectString_Member_CardBankSecond()
 
             LEFT JOIN ObjectString AS ObjectString_Member_CardIBAN
                                    ON ObjectString_Member_CardIBAN.ObjectId = tmpAll.MemberId_Personal
@@ -914,6 +923,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.01.24         * CardBank, CardBankSecond
  04.07.23         *
  02.05.23         *
  27.03.23         *
