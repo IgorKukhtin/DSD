@@ -735,10 +735,9 @@ begin
 
               for J := 1 to Cols do
               begin
-                if Copy(Excel.Cells[I, J].NumberFormat, 1, 1) = '0' then Excel.Cells.NumberFormat  := 'General';
                 if (Copy(Excel.Cells[I, J].Formula, 1, 1) = '=') or (Copy(Excel.Cells[I, J].Text, 1, 1) = '#') then
                   TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value
-                else if Excel.Cells[I, J].NumberFormat = 'General' then
+                else if (Excel.Cells[I, J].NumberFormat = 'General') or (Copy(Excel.Cells[I, J].NumberFormat, 1, 1) = '0') then
                   TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Formula
                 else TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Text;
               end;
@@ -1091,7 +1090,7 @@ begin
           for I := 0 to saFound.Count - 1 do
           begin
               // конвертируем формат для штрихкодов (только для Excel)
-              if ImportSettings.FileType in [dtXLS, dtXLS_OLE] then
+              if ImportSettings.FileType in [dtXLS] then
               begin
                 if Copy(saFound[i], 1, 3) = '..\' then
                   CheckExcelFloat(AnsiReplaceText(UpperCase(ExtractFilePath(Application.ExeName)),
