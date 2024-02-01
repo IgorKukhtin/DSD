@@ -485,7 +485,7 @@ type
     N37: TMenuItem;
     miJuridicalGuides: TMenuItem;
     N38: TMenuItem;
-    actContractPartner: TdsdOpenForm;
+    actContractPartner_All: TdsdOpenForm;
     miContractPartner: TMenuItem;
     actRoleUnion: TdsdOpenForm;
     miRoleUnion: TMenuItem;
@@ -1466,6 +1466,8 @@ type
     miPartionCell: TMenuItem;
     actReport_Send_PartionCell: TdsdOpenForm;
     miReport_Send_PartionCell: TMenuItem;
+    actContractPartner: TdsdOpenForm;
+    N259: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
