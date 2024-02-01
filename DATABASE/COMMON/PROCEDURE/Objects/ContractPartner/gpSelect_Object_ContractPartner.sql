@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartner(
 RETURNS TABLE (Id Integer, Code Integer
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , JuridicalCode Integer, JuridicalName TVarChar
              , Address TVarChar
              , isConnected Boolean
              , isErased Boolean
@@ -33,6 +34,9 @@ BEGIN
            , Object_Partner.Id         AS PartnerId
            , Object_Partner.ObjectCode AS PartnerCode
            , Object_Partner.ValueData  AS PartnerName
+           , Object_Juridical.ObjectCode AS JuridicalCode
+           , Object_Juridical.ValueData  AS JuridicalName
+           
        
            , ObjectString_Address.ValueData      AS Address
 
@@ -50,6 +54,11 @@ BEGIN
                                  ON ObjectLink_ContractPartner_Partner.ObjectId = Object_ContractPartner.Id
                                 AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ContractPartner_Partner.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Address
                                    ON ObjectString_Address.ObjectId = Object_Partner.Id
@@ -69,6 +78,10 @@ BEGIN
            , Object_Partner.Id               AS PartnerId
            , Object_Partner.ObjectCode       AS PartnerCode
            , Object_Partner.ValueData        AS PartnerName
+
+           , Object_Juridical.ObjectCode AS JuridicalCode
+           , Object_Juridical.ValueData  AS JuridicalName
+
            , ObjectString_Address.ValueData  AS Address
 
            , FALSE                           AS isConnected
@@ -78,6 +91,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
 
             /*LEFT JOIN Object_ContractPartner_View AS View_ContractPartner
@@ -91,6 +106,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Address
                                    ON ObjectString_Address.ObjectId = Object_Partner.Id
                                   AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+
 
        WHERE Object_Partner.DescId = zc_Object_Partner()
          AND Object_Partner.isErased = FALSE
