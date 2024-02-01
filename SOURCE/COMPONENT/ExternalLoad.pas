@@ -10,7 +10,7 @@ uses
 
 type
 
-  TDataSetType = (dtDBF, dtXLS, dtMMO, dtODBC, dtXLS_OLE);
+  TDataSetType = (dtDBF, dtXLS, dtMMO, dtODBC, dtXLS_OLE, dtCSV_OLE, dtCSV_OLE_UTF8);
 
   TImportSettings = class;
 
@@ -147,7 +147,7 @@ implementation
 
 uses VCL.ActnList, SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin,
      DBClient, TypInfo, Variants, UtilConvert, WinApi.Windows, StrUtils,
-     System.Types, Registry, UtilConst;
+     System.Types, Registry, UtilConst, System.RegularExpressions;
 
 const cArchive = 'Archive';
 
@@ -173,7 +173,13 @@ begin
           if FileTypeName = 'Excel OLE' then
              result := dtXLS_OLE
           else
-            raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
+            if FileTypeName = 'CSV OLE' then
+               result := dtCSV_OLE
+            else
+              if FileTypeName = 'CSV OLE UTF8' then
+                 result := dtCSV_OLE_UTF8
+              else
+                raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
 end;
 
 function GetFieldName(AFieldName: AnsiString; AImportSettings: TImportSettings): string;
@@ -181,7 +187,7 @@ var
   c, c1: char;
 begin
   result := AFieldName;
-  if (AImportSettings.FileType in [dtXLS, dtXLS_OLE]) and (not AImportSettings.HDR) then begin
+  if (AImportSettings.FileType in [dtXLS, dtXLS_OLE, dtCSV_OLE, dtCSV_OLE_UTF8]) and (not AImportSettings.HDR) then begin
      if (length(AFieldName) = 1) then begin
         c := lowercase(AFieldName)[1];
         if CharInSet(c,['a'..'z']) then
@@ -288,6 +294,11 @@ begin
            begin
              FFileExtension := '*.xls';
              FFileFilter := 'Файлы выгрузки Excel|*.xls;*.xlsx|';
+           end;
+    dtCSV_OLE, dtCSV_OLE_UTF8:
+           begin
+             FFileExtension := '*.csv';
+             FFileFilter := 'Файлы выгрузки CSV|*.csv|';
            end;
   end;
 end;
@@ -582,6 +593,15 @@ var strConn :  widestring;
     Rows: integer;
     Excel, XLSheet: Variant;
     I, J: Integer;
+    TempArray: OLEVariant;
+    f:TextFile;
+    FileNameTxt, s : string;
+    Res: TArray<string>;
+const
+  xlWindows	= 2;
+  xlUTF_8	= 65001;
+  xlDelimited = 1;
+  xlDoubleQuote = 1;
 begin
   case FDataSetType of
     dtMMO: CreateMMODataSet(FileName);
@@ -678,14 +698,45 @@ begin
         FreeAndNil(List);
       end;
     end;
-    dtXLS_OLE: begin
+    dtXLS_OLE, dtCSV_OLE, dtCSV_OLE_UTF8: begin
+      FileNameTXT := '';
       FDataSet := TClientDataSet.Create(nil);
       Excel:=CreateOleObject('Excel.Application');
       try
         Excel.Visible:=False;
         Excel.Application.EnableEvents := False;
         Excel.DisplayAlerts := False;
-        Excel.WorkBooks.Open(FileName);
+
+        if FDataSetType in [dtCSV_OLE, dtCSV_OLE_UTF8] then
+        begin
+
+          FileNametxt := FileName + '.txt';
+          CopyFile(PWideChar(FileName), PWideChar(FileNameTXT), False);
+
+          AssignFile(f, FileNametxt);
+          Reset(f);
+          Readln(f,s);
+          CloseFile(f);
+
+          Res := TRegEx.Split(S, ';');
+          TempArray := VarArrayCreate([0,High(Res)],varVariant);
+
+          for I := 0 to High(Res) do
+            TempArray[I] := VarArrayOf([I + 1,2]);
+
+          if FDataSetType = dtCSV_OLE then
+            Excel.WorkBooks.OpenText(FileNameTXT, Origin:= xlWindows, StartRow:=1,
+                                    DataType:=xlDelimited, TextQualifier:=xlDoubleQuote,
+                                    ConsecutiveDelimiter:=False, Tab:=True, Semicolon:=True, Comma:=False,
+                                    Space:=False, Other:=False, FieldInfo:= TempArray,
+                                    TrailingMinusNumbers:=True)
+          else Excel.WorkBooks.OpenText(FileNameTXT, Origin:= xlUTF_8, StartRow:=1, DataType:=xlDelimited, TextQualifier:=xlDoubleQuote,
+                                        ConsecutiveDelimiter:=False, Tab:=True, Semicolon:=True, Comma:=False,
+                                        Space:=False, Other:=False, FieldInfo:= TempArray,
+                                        TrailingMinusNumbers:=True);
+
+        end else Excel.WorkBooks.Open(FileName);
+
         XLSheet := Excel.Worksheets[1];
         Cols := XLSheet.UsedRange.Columns.Count;
         Rows := XLSheet.UsedRange.Rows.Count;
@@ -754,6 +805,9 @@ begin
         Excel.Workbooks.Close;
         Excel.Quit;
         Excel:=Unassigned;
+        TempArray:=Unassigned;
+        if (FileNameTxt <> '') and FileExists(FileNameTxt) then DeleteFile(PWideChar(FileNameTxt));
+
       end;
 
     end;
@@ -1055,7 +1109,7 @@ var iFilesCount: Integer;
     TextMessage:String;
 begin
   case ImportSettings.FileType of
-    dtXLS, dtDBF, dtMMO, dtXLS_OLE: begin
+    dtXLS, dtDBF, dtMMO, dtXLS_OLE, dtCSV_OLE, dtCSV_OLE_UTF8: begin
         saFound := TStringList.Create;
         try
           // Если директории нет, то пусть пользователь выбирает.
@@ -1066,6 +1120,11 @@ begin
                //DefaultExt := FFileExtension;
                if ImportSettings.FileType in [dtXLS, dtXLS_OLE] then
                   Filter := '*.xls';
+               if ImportSettings.FileType in [dtCSV_OLE, dtCSV_OLE_UTF8] then
+                  begin
+                    Filter := 'Файлы CSV|*.csv|Все файлы|*.*';
+                    DefaultExt := 'csv';
+                  end;
                if Execute then begin
                   saFound.Add(FileName);
                   //InitializeDirectory := ExtractFilePath(FileName);
@@ -1077,7 +1136,7 @@ begin
           end
           else begin
             case ImportSettings.FileType of
-               dtXLS, dtXLS_OLE: FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
+               dtXLS, dtXLS_OLE, dtCSV_OLE, dtCSV_OLE_UTF8: FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
                dtMMO: FilesInDir('*.mmo', ImportSettings.Directory, iFilesCount, saFound, false);
                dtDBF: FilesInDir('*.dbf', ImportSettings.Directory, iFilesCount, saFound, false);
             end;
