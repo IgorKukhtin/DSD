@@ -123,7 +123,6 @@ BEGIN
                   )
 
 
-
        SELECT 
              tmpContractPartner.Id
            , tmpContractPartner.Code
@@ -148,7 +147,7 @@ BEGIN
                                                             
             INNER JOIN tmpCount ON tmpCount.ContractId = tmpContractPartner.ContractId
                               AND tmpCount.JuridicalId = tmpContractPartner.JuridicalId
-                              AND (tmpCount.CountParam = 2 OR inIsShowAll = TRUE)
+                              AND (tmpCount.CountParam = 2 OR inIsShowAll = TRUE)  --показываем только договора где не все контрагенты подключены
     ;
 
 END;
@@ -159,6 +158,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.02.24         *
  08.05.17         *
  05.02.15         * 
 */
