@@ -277,10 +277,8 @@ inherited ConvertRemainsForm: TConvertRemainsForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
-      Properties.ReadOnly = True
       TabOrder = 9
       Width = 426
     end
@@ -945,6 +943,7 @@ inherited ConvertRemainsForm: TConvertRemainsForm
         Control = edOperDate
       end
       item
+        Control = edUnitName
       end
       item
       end

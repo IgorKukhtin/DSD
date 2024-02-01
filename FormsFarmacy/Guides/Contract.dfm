@@ -2,19 +2,24 @@ inherited ContractForm: TContractForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientWidth = 828
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 844
-  ExplicitHeight = 347
+  ExplicitWidth = 850
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 828
+    ExplicitTop = 32
     ExplicitWidth = 828
+    ExplicitHeight = 276
     ClientRectRight = 828
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 828
+      ExplicitHeight = 276
       inherited cxGrid: TcxGrid
         Width = 828
+        Height = 276
         ExplicitWidth = 828
+        ExplicitHeight = 276
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -264,6 +269,14 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 77
           end
+          object isForRealize: TcxGridDBColumn
+            Caption = #1055#1086#1076' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'isForRealize'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
         end
       end
     end
@@ -403,7 +416,7 @@ inherited ContractForm: TContractForm
     DockControlHeights = (
       0
       0
-      26
+      32
       0)
     inherited Bar: TdxBar
       ItemLinks = <

@@ -15,6 +15,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   
+   DECLARE vbOperDate TDateTime;
+   DECLARE vbInvNumber TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ConvertRemains());
@@ -29,8 +32,18 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- определяем дату и номер документа
+     SELECT Movement.OperDate
+          , Movement.InvNumber
+     INTO vbOperDate, vbInvNumber
+     FROM Movement
+     WHERE Movement.Id = ioId;
+    
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ConvertRemains(), inInvNumber, inOperDate, NULL);
+     IF vbIsInsert = TRUE OR vbOperDate <> inOperDate OR vbInvNumber <> inInvNumber
+     THEN
+       ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ConvertRemains(), inInvNumber, inOperDate, NULL);
+     END IF;
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);

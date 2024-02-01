@@ -36,6 +36,12 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat, SummNalog TFloat, SummNalogRet TFloat
              , SummFine TFloat, SummHosp TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
+             , AmountCash_rem TFloat
+             , SummCard_inf           TFloat
+             , SummCardSecond_inf     TFloat
+             , SummCardSecondCash_inf TFloat
+             , SummAvCardSecond_inf TFloat
+             , SummToPay_inf TFloat
              , ContainerId Integer
               )
 AS
@@ -271,6 +277,11 @@ BEGIN
                                      , SUM (COALESCE (MIFloat_SummHoliday.ValueData,0)) AS  SummHoliday_inf
                                      , SUM (COALESCE (MIFloat_SummFine.ValueData,0))    AS  SummFine
                                      , SUM (COALESCE (MIFloat_SummHosp.ValueData,0))    AS  SummHosp
+                                     , SUM (COALESCE (MIFloat_SummToPay.ValueData,0))        AS SummToPay_inf
+                                     , SUM (COALESCE (MIFloat_SummAvCardSecond.ValueData,0)) AS SummAvCardSecond_inf
+, SUM (COALESCE (MIFloat_SummCard.ValueData,0))           AS SummCard_inf
+, SUM (COALESCE (MIFloat_SummCardSecond.ValueData,0))     AS SummCardSecond_inf
+, SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData,0)) AS SummCardSecondCash_inf
                                 FROM (SELECT DISTINCT MIContainer.ContainerId
                                            , MIContainer.MovementItemId
                                            , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, MIContainer.ContainerId) AS Ord
@@ -289,6 +300,21 @@ BEGIN
                                       LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
                                                                   ON MIFloat_SummHosp.MovementItemId = tmp.MovementItemId
                                                                  AND MIFloat_SummHosp.DescId = zc_MIFloat_SummHosp()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
+                                                                  ON MIFloat_SummToPay.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                                                  ON MIFloat_SummCard.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard() 
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                                                  ON MIFloat_SummCardSecond.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond() 
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
+                                                                  ON MIFloat_SummCardSecondCash.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                                  ON MIFloat_SummAvCardSecond.MovementItemId = tmp.MovementItemId
+                                                                 AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()                                     
                                 WHERE tmp.Ord = 1
                                 GROUP BY tmp.ContainerId
                                 )
@@ -439,6 +465,13 @@ BEGIN
                            , SUM (Operation_all.ServiceSumm)         AS ServiceSumm
                            , SUM (tmpMIFloat_SummService.SummService_inf) AS ServiceSumm_inf
                            , SUM (tmpMIFloat_SummService.SummHoliday_inf) AS SummHoliday_inf
+                           , SUM (tmpMIFloat_SummService.SummAvCardSecond_inf) AS SummAvCardSecond_inf
+                           , SUM (tmpMIFloat_SummService.SummToPay_inf)        AS SummToPay_inf
+                           
+, SUM (COALESCE (tmpMIFloat_SummService.SummCard_inf,0))           AS SummCard_inf
+, SUM (COALESCE (tmpMIFloat_SummService.SummCardSecond_inf,0))     AS SummCardSecond_inf
+, SUM (COALESCE (tmpMIFloat_SummService.SummCardSecondCash_inf,0)) AS SummCardSecondCash_inf                           
+
                            , SUM (tmpMIFloat_SummService.SummFine)        AS SummFine
                            , SUM (tmpMIFloat_SummService.SummHosp)        AS SummHosp
                            , SUM (Operation_all.IncomeSumm)            AS IncomeSumm
@@ -462,6 +495,46 @@ BEGIN
                              , Operation_all.ServiceDate
                              , Operation_all.PersonalServiceListId
                      )
+          --аванс
+        , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_all
+                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                        -- аванс по ведомости
+                                      , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                   AND Object.ValueData ILIKE '%АВАНС%'
+
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_avance_ps
+
+                                      , tmpContainer.PersonalId
+                                      , tmpContainer.PositionId
+                                      , tmpContainer.BranchId
+                                      , tmpContainer.UnitId
+                                      , tmpContainer.ServiceDate
+                                 FROM tmpContainer
+                                      INNER JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.ContainerId    = tmpContainer.ContainerId
+                                                                      AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                      AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                      LEFT JOIN MovementItem ON MovementItem.MovementId = MIContainer.MovementId
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                       ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                      LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+                                      LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                 GROUP BY tmpContainer.PersonalId
+                                        , tmpContainer.PositionId
+                                        , tmpContainer.BranchId
+                                        , tmpContainer.UnitId
+                                        , tmpContainer.ServiceDate
+                                )
+
 
      SELECT
         Object_Personal.Id                                                                          AS PersonalId,
@@ -510,8 +583,27 @@ BEGIN
         (-1 * Operation.EndAmount) :: TFloat                                                        AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
-        Operation.ContainerId :: Integer                                                            AS ContainerId
         
+        -- Остаток к выдаче (из кассы) грн
+        (COALESCE (Operation.SummToPay_inf, 0)
+            + (-1) *  CASE WHEN 1=0 AND vbUserId = 5
+                               THEN 0
+                          ELSE COALESCE (Operation.SummCard_inf, 0)
+                             + COALESCE (Operation.SummCardSecond_inf, 0)
+                             + COALESCE (Operation.SummCardSecondCash_inf, 0)
+                             + COALESCE (Operation.SummAvCardSecond_inf, 0)
+                             + COALESCE (tmpMIContainer_pay.Amount_avance_all, 0)
+                             + COALESCE (tmpMIContainer_pay.Amount_service, 0)
+                      END
+              ) :: TFloat AS AmountCash_rem,
+        Operation.SummCard_inf           ::TFloat,
+        Operation.SummCardSecond_inf     ::TFloat,
+        Operation.SummCardSecondCash_inf ::TFloat,
+        Operation.SummAvCardSecond_inf   ::TFloat,
+        Operation.SummToPay_inf          ::TFloat,
+              
+        Operation.ContainerId :: Integer    AS ContainerId
+       
      FROM tmpOperation AS Operation
 
           LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
@@ -530,6 +622,12 @@ BEGIN
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Unit_Business.ChildObjectId
 
           LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Operation.UnitId
+
+          LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.PersonalId = Operation.PersonalId
+                                      AND tmpMIContainer_pay.PositionId = Operation.PositionId
+                                      AND tmpMIContainer_pay.UnitId     = Operation.UnitId
+                                      AND tmpMIContainer_pay.BranchId   = Operation.BranchId
+                                      --AND tmpMIContainer_pay.ServiceDate = Operation.ServiceDate
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
        AND (_tmpList.PersonalServiceListId > 0 OR vbIsList_all = TRUE)
@@ -561,4 +659,8 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Personal (inStartDate:= '01.07.2019', inEndDate:= '01.08.2019', inServiceDate:= '01.07.2019', inIsServiceDate:= TRUE, inIsMember:= TRUE, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPersonalServiceListId:= 0, inPersonalId:= 590270, inSession:= zfCalc_UserAdmin())
+-- 
+/*
+SELECT * FROM gpReport_Personal (inStartDate:= '01.01.2024', inEndDate:= '31.01.2024', inServiceDate:= '01.01.2024', inIsServiceDate:= TRUE, inIsMember:= TRUE, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0
+, inInfoMoneyDestinationId:= 0, inPersonalServiceListId:= 346777, inPersonalId:= 0, inSession:= zfCalc_UserAdmin())
+*/

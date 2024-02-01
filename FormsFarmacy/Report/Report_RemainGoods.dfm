@@ -12,19 +12,19 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     Width = 1010
     Height = 270
     TabOrder = 3
-    ExplicitTop = 64
+    ExplicitTop = 68
     ExplicitWidth = 1010
-    ExplicitHeight = 274
+    ExplicitHeight = 270
     ClientRectBottom = 270
     ClientRectRight = 1010
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1010
-      ExplicitHeight = 274
+      ExplicitHeight = 270
       inherited cxGrid: TcxGrid
         Width = 1010
         Height = 270
         ExplicitWidth = 1010
-        ExplicitHeight = 274
+        ExplicitHeight = 270
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -529,6 +529,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'Color_calc'
             Visible = False
             VisibleForCustomization = False
+          end
+          object isForRealize: TcxGridDBColumn
+            Caption = #1055#1086#1076' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'isForRealize'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
           end
         end
       end

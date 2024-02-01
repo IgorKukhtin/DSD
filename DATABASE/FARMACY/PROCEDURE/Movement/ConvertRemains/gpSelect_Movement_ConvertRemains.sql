@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ConvertRemains(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , Comment TVarChar
               )
@@ -35,6 +35,7 @@ BEGIN
             , Movement.OperDate                     AS OperDate
             , Object_Status.ObjectCode              AS StatusCode
             , Object_Status.ValueData               AS StatusName
+            , Object_Unit.Id                        AS UnitId
             , Object_Unit.ObjectCode                AS UnitCode
             , Object_Unit.ValueData                 AS UnitName
             , MovementFloat_TotalCount.ValueData    AS TotalCount

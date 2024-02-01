@@ -337,7 +337,7 @@ begin
   XMLDocument := TXMLDocument.Create(nil);
   XMLDocument.LoadFromXML(XML);
   if XMLDocument.DocumentElement = Nil then
-    raise Exception.Create ('Ошибка обработки данных полученных с сервера...');;
+    raise Exception.Create ('Ошибка обработки данных полученных с сервера...');
 
   for I := 0 to Params.Count - 1 do
       if (Params[i].ParamType in [ptOutput, ptInputOutput])//and(Params[i].Name<>'')

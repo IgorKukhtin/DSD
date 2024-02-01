@@ -1,31 +1,7 @@
 -- Function: gpInsertUpdate_Object_Contract()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, TVarChar, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
-     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Tvarchar);
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, Tvarchar);
      
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -49,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inEndDate                 TDateTime,     -- Дата до которой действует договор    
     IN inisPartialPay            Boolean  ,     -- Оплата частями
     IN inisDefermentContract     Boolean  ,     -- Использовать в приходе отсрочку из договора
+    IN inisForRealize            Boolean  ,     -- Под реализацию
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -119,6 +96,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_PartialPay(), ioId, inisPartialPay);
       -- сохранили свойство <Использовать в приходе отсрочку из договора>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_DefermentContract(), ioId, inisDefermentContract);
+      -- сохранили свойство <Под реализацию>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_ForRealize(), ioId, inisForRealize);
 
 
    -- сохранили протокол

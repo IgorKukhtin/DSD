@@ -645,12 +645,13 @@ BEGIN
                      ) * 1000)
                   THEN 'тис€чна' ELSE 'тис€чних' END :: TVarChar AS Info2
           --
+          , 'ћ≥сце складанн€ документу'  :: TVarChar   AS PlaceOf
           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.ƒнiпро'
-                  END  :: TVarChar   AS PlaceOf
-          , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN Split_Part(COALESCE (ObjectString_PlaceOf.ValueData, ''), ',', 1)
-                  ELSE '' -- 'м.ƒнiпро'
                   END  :: TVarChar   AS PlaceOfDescription
+          /*, CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN Split_Part(COALESCE (ObjectString_PlaceOf.ValueData, ''), ',', 1)
+                  ELSE '' -- 'м.ƒнiпро'
+                  END  :: TVarChar   AS PlaceOfDescription*/
 
         --, tmpCar_param.Length :: TVarChar  AS Length
         --, tmpCar_param.Width  :: TVarChar  AS Width 
@@ -1231,3 +1232,5 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_TransportGoods_EDIN_Send(inMovementId := 22086098 ,  inSession := '14610');
+
+select * from gpSelect_Movement_TransportGoods_EDIN_Send(inMovementId := 27297491 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

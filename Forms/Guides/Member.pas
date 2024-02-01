@@ -156,6 +156,16 @@ type
     GLN: TcxGridDBColumn;
     actRefreshedit: TdsdDataSetRefresh;
     actUpdateActionGLN: TdsdInsertUpdateAction;
+    bbsLoad: TdxBarSubItem;
+    spGetImportSettingIdCardF1: TdsdStoredProc;
+    spGetImportSettingIdCardF2: TdsdStoredProc;
+    macStartLoadCardF1: TMultiAction;
+    macStartLoadCardF2: TMultiAction;
+    actGetImportSettingIdCard1: TdsdExecStoredProc;
+    actGetImportSettingIdCard2: TdsdExecStoredProc;
+    bbStartLoadCardF1: TdxBarButton;
+    bbStartLoadCardF2: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

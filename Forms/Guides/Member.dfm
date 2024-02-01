@@ -28,8 +28,8 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 256
-    ExplicitTop = 194
+    ExplicitLeft = -104
+    ExplicitTop = 226
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -85,6 +85,13 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object CardBank: TcxGridDBColumn
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'1)'
+        DataBinding.FieldName = 'CardBank'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082' ('#1060'1)'
         DataBinding.FieldName = 'BankName'
@@ -125,13 +132,6 @@ object MemberForm: TMemberForm
       object CardChild: TcxGridDBColumn
         Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
         DataBinding.FieldName = 'CardChild'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 115
-      end
-      object CardBank: TcxGridDBColumn
-        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'1)'
-        DataBinding.FieldName = 'CardBank'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 115
@@ -714,43 +714,19 @@ object MemberForm: TMemberForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoadSecond'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoadIBAN'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoadIBANSecond'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarControlContainerItem1'
         end
         item
           Visible = True
           ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsLoad'
         end
         item
           Visible = True
@@ -877,6 +853,60 @@ object MemberForm: TMemberForm
       Action = actUpdateActionGLN
       Category = 0
     end
+    object bbsLoad: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 27
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadIBAN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadIBANSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadCardF1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadCardF2'
+        end>
+    end
+    object bbStartLoadCardF1: TdxBarButton
+      Action = macStartLoadCardF1
+      Category = 0
+    end
+    object bbStartLoadCardF2: TdxBarButton
+      Action = macStartLoadCardF2
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator1'
+      Category = 0
+      Hint = 'Separator1'
+      Visible = ivAlways
+      ShowCaption = False
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -956,6 +986,17 @@ object MemberForm: TMemberForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
       ImageIndex = 41
     end
+    object actGetImportSettingIBAN: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingIdIBAN
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingIdIBAN
+        end>
+      Caption = 'actGetImportSettingIBAN'
+    end
     object actGetImportSetting: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -985,6 +1026,25 @@ object MemberForm: TMemberForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
       ImageIndex = 41
+    end
+    object macStartLoadIBAN: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingIBAN
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+      ImageIndex = 69
     end
     object actGetImportSettingSecond: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1459,36 +1519,6 @@ object MemberForm: TMemberForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
       ImageIndex = 76
     end
-    object macStartLoadIBAN: TMultiAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSettingIBAN
-        end
-        item
-          Action = actDoLoad
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)?'
-      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
-      ImageIndex = 69
-    end
-    object actGetImportSettingIBAN: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingIdIBAN
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingIdIBAN
-        end>
-      Caption = 'actGetImportSettingIBAN'
-    end
     object macStartLoadIBANSecond: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1531,6 +1561,66 @@ object MemberForm: TMemberForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
       ImageIndex = 77
+    end
+    object macStartLoadCardF1: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingIdCard1
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)'
+      ImageIndex = 71
+    end
+    object actGetImportSettingIdCard1: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingIdCardF1
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingIdCardF1
+        end>
+      Caption = 'actGetImportSettingIBAN'
+    end
+    object macStartLoadCardF2: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingIdCard2
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)'
+      ImageIndex = 73
+    end
+    object actGetImportSettingIdCard2: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingIdCardF2
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingIdCardF2
+        end>
+      Caption = 'actGetImportSettingIBAN'
     end
   end
   object spSelect: TdsdStoredProc
@@ -1601,6 +1691,7 @@ object MemberForm: TMemberForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 264
@@ -2069,8 +2160,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 672
-    Top = 272
+    Left = 688
+    Top = 304
   end
   object spUpdate_GLN: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Member_GLN'
@@ -2097,5 +2188,69 @@ object MemberForm: TMemberForm
     PackSize = 1
     Left = 448
     Top = 296
+  end
+  object spGetImportSettingIdCardF1: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TMemberForm;zc_Object_ImportSetting_MemberCardF1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 216
+  end
+  object spGetImportSettingIdCardF2: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TMemberForm;zc_Object_ImportSetting_MemberCardF2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 288
   end
 end

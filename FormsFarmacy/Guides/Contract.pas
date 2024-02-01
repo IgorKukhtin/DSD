@@ -60,6 +60,7 @@ type
     isDefermentContract: TcxGridDBColumn;
     actShowErased: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
+    isForRealize: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -12,6 +12,8 @@ type
 
   TDataSetType = (dtDBF, dtXLS, dtMMO, dtODBC, dtXLS_OLE);
 
+  TImportSettings = class;
+
   TExternalLoad = class(TExternalData)
   protected
     FStartDate: TDateTime;
@@ -29,12 +31,13 @@ type
     FFileFilter: string;
     FExtendedProperties: string;
     FStartRecord: integer;
+    FImportSettings: TImportSettings;
     // Создаем тут обработку mmo файлов
     procedure CreateMMODataSet(FileName: string);
   protected
     procedure First; override;
   public
-    constructor Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = ''); reintroduce;
+    constructor Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = ''; ImportSettings: TImportSettings = Nil); reintroduce;
     destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
@@ -112,7 +115,6 @@ type
     FExternalLoad: TExternalLoad;
     FImportSettings: TImportSettings;
     FExternalParams: TdsdParams;
-    function GetFieldName(AFieldName: AnsiString; AImportSettings: TImportSettings): string;
     function ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings): TJSONObject;
   public
     constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil); overload;
@@ -172,6 +174,26 @@ begin
              result := dtXLS_OLE
           else
             raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
+end;
+
+function GetFieldName(AFieldName: AnsiString; AImportSettings: TImportSettings): string;
+var
+  c, c1: char;
+begin
+  result := AFieldName;
+  if (AImportSettings.FileType in [dtXLS, dtXLS_OLE]) and (not AImportSettings.HDR) then begin
+     if (length(AFieldName) = 1) then begin
+        c := lowercase(AFieldName)[1];
+        if CharInSet(c,['a'..'z']) then
+           result := 'F' + IntToStr(byte(c) - byte('a') + 1);
+     end;
+     if (length(AFieldName) = 2) then begin
+        c  := lowercase(AFieldName)[1];
+        c1 := lowercase(AFieldName)[2];
+        if CharInSet(c,['a'..'z']) and CharInSet(c1,['a'..'z']) then
+           result := 'F' + IntToStr((byte(c) - byte('a') + 1) *26 + byte(c1) - byte('a') + 1);
+     end;
+  end;
 end;
 
 { TFileExternalLoad }
@@ -249,13 +271,14 @@ begin
      FAdoConnection.Connected := false;
 end;
 
-constructor TFileExternalLoad.Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = '');
+constructor TFileExternalLoad.Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = ''; ImportSettings: TImportSettings = Nil);
 begin
   inherited Create;
   FOEM := True;
   FDataSetType := DataSetType;
   FExtendedProperties := ExtendedProperties;
   FStartRecord := StartRecord;
+  FImportSettings := ImportSettings;
   case FDataSetType of
     dtDBF: begin
              FFileExtension := '*.dbf';
@@ -674,7 +697,32 @@ begin
 
         while Excel.Cells[1, Cols + 1].Text <> '' do Inc(Cols);
 
-        for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideMemo, 0);
+        for I := 1 to Cols do
+        begin
+
+          if Assigned(FImportSettings) then
+          begin
+            for J := 0 to FImportSettings.Count - 1 do
+            begin
+              if 'F' + IntToStr(I) = GetFieldName(TImportSettingsItems(FImportSettings.Items[J]).ItemName, FImportSettings) then
+              begin
+
+                case TImportSettingsItems(FImportSettings.Items[j]).Param.DataType of
+                  ftString : TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 300);
+                  ftWideString : TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideMemo, 0);
+                  else TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 100)
+                end;
+
+                Break;
+              end;
+            end;
+
+            if TClientDataSet(FDataSet).FieldDefs.Count < I then
+              TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideMemo, 0);
+
+          end else TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideMemo, 0);
+        end;
+
         TClientDataSet(FDataSet).CreateDataSet;
 
         with TGaugeFactory.GetGauge('Получение данных из файла экселя', 1, Rows - FStartRecord) do begin
@@ -686,9 +734,14 @@ begin
               TClientDataSet(FDataSet).Append;
 
               for J := 1 to Cols do
-                if (Copy(Excel.Cells[I, J].Formula, 1, 1) = '=') or (Copy(Excel.Cells[I, J].Text, 1, 1) = '#')  then
+              begin
+                if Copy(Excel.Cells[I, J].NumberFormat, 1, 1) = '0' then Excel.Cells.NumberFormat  := 'General';
+                if (Copy(Excel.Cells[I, J].Formula, 1, 1) = '=') or (Copy(Excel.Cells[I, J].Text, 1, 1) = '#') then
                   TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value
+                else if Excel.Cells[I, J].NumberFormat = 'General' then
+                  TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Formula
                 else TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Text;
+              end;
 
               TClientDataSet(FDataSet).Post;
               IncProgress;
@@ -722,7 +775,7 @@ begin
      ExtendedProperties := '; HDR=No';
   FImportSettings := ImportSettings;
   FExternalParams := ExternalParams;
-  FExternalLoad := TFileExternalLoad.Create(FileType, ImportSettings.StartRow, ExtendedProperties);
+  FExternalLoad := TFileExternalLoad.Create(FileType, ImportSettings.StartRow, ExtendedProperties, ImportSettings);
   TFileExternalLoad(FExternalLoad).Open(FileName);
 end;
 
@@ -740,27 +793,6 @@ destructor TExecuteProcedureFromExternalDataSet.Destroy;
 begin
   FreeAndNil(FExternalLoad);
   inherited;
-end;
-
-function TExecuteProcedureFromExternalDataSet.GetFieldName(AFieldName: AnsiString;
-  AImportSettings: TImportSettings): string;
-var
-  c, c1: char;
-begin
-  result := AFieldName;
-  if (AImportSettings.FileType in [dtXLS, dtXLS_OLE]) and (not AImportSettings.HDR) then begin
-     if (length(AFieldName) = 1) then begin
-        c := lowercase(AFieldName)[1];
-        if CharInSet(c,['a'..'z']) then
-           result := 'F' + IntToStr(byte(c) - byte('a') + 1);
-     end;
-     if (length(AFieldName) = 2) then begin
-        c  := lowercase(AFieldName)[1];
-        c1 := lowercase(AFieldName)[2];
-        if CharInSet(c,['a'..'z']) and CharInSet(c1,['a'..'z']) then
-           result := 'F' + IntToStr((byte(c) - byte('a') + 1) *26 + byte(c1) - byte('a') + 1);
-     end;
-  end;
 end;
 
 procedure TExecuteProcedureFromExternalDataSet.Load;
@@ -835,6 +867,9 @@ var i: integer;
 
       Result := ReplaceStr(Result, #$00c3#$201E, #$00C4);
       Result := ReplaceStr(Result, #$0413#$201E, #$00C4);
+
+      Result := ReplaceStr(Result, #$00c3#$0178, #$00DF);
+      Result := ReplaceStr(Result, #$0413#$045F, #$00DF);
 
 //      if POS(#$0413, Result) > 0 then
 //        Result := Result;

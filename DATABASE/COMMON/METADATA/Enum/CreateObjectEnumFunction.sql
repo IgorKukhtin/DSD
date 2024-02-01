@@ -1550,10 +1550,19 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Goods_ScaleName() RETURNS Integer 
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Goods_ScaleName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Goods_ScaleName' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
+--Загрузка № карты ЗП (ф1) в справочник физ. лиц
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MemberCardF1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_MemberCardF1' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MemberCardF1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_MemberCardF1' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+--Загрузка № карты ЗП (ф12) в справочник физ. лиц
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MemberCardF2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_MemberCardF2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MemberCardF2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_MemberCardF2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 31.01.24         * Загрузки № карты Ф1 И Ф2
  22.01.24         * Загрузить из экскля Названия товара Scale
  17.01.24         * Загрузить из экскля Названия товара
  28.12.23         * Загрузить из экскля Ячейки хранения (Партия учета)

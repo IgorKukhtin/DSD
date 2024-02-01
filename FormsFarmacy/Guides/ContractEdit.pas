@@ -69,6 +69,7 @@ type
     GuidesMember: TdsdGuides;
     cbPartialPay: TcxCheckBox;
     cbDefermentContract: TcxCheckBox;
+    cbForRealize: TcxCheckBox;
   private
     { Private declarations }
   public

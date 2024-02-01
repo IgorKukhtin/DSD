@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ConvertRemains(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , Comment TVarChar
               )
@@ -28,6 +28,7 @@ BEGIN
               , CURRENT_DATE::TDateTime      AS OperDate
               , Object_Status.Code           AS StatusCode
               , Object_Status.Name           AS StatusName
+              , Null::Integer                AS UnitId
               , Null::Integer                AS UnitCode
               , Null::TVarChar               AS UnitName
               , Null::TFloat                 AS TotalCount
@@ -42,6 +43,7 @@ BEGIN
               , Movement.OperDate                      AS OperDate
               , Object_Status.ObjectCode               AS StatusCode
               , Object_Status.ValueData                AS StatusName
+              , Object_Unit.Id                         AS UnitId
               , Object_Unit.ObjectCode                 AS UnitCode
               , Object_Unit.ValueData                  AS UnitName
               , MovementFloat_TotalCount.ValueData     AS TotalCount
