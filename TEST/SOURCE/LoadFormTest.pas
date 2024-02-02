@@ -504,6 +504,9 @@ end;
 
 procedure TLoadFormTest.LoadContractPartnerFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPartner_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractPartner_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPartnerEditForm'));

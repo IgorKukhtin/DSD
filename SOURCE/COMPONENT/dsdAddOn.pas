@@ -513,7 +513,7 @@ type
     property ShowFieldImageList: TOwnedCollection read FShowFieldImageList write FShowFieldImageList;
     // Отображение содержимое документа на контроле
     property ViewDocumentList: TOwnedCollection read FViewDocumentList write FViewDocumentList;
-    // Парвметры для отображения содержимое документа на контроле
+    // Параметры для отображения содержимое документа на контроле
     property ViewDocumentParam : TViewDocumentParam read FViewDocumentParam write FViewDocumentParam;
     // Поиск как фильтр
     property SearchAsFilter: boolean read FSearchAsFilter write SetSearchAsFilter default true;

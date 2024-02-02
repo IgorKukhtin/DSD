@@ -948,7 +948,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_MMO(), inDescId:= zc_Object_FileTypeKind(), inCode:= 3, inName:= 'MMO', inEnumName:= 'zc_Enum_FileTypeKind_MMO');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_ODBC(), inDescId:= zc_Object_FileTypeKind(), inCode:= 4, inName:= 'ODBC', inEnumName:= 'zc_Enum_FileTypeKind_ODBC');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_Excel_OLE(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 5, inName:= 'Excel OLE', inEnumName:= 'zc_Enum_FileTypeKind_Excel_OLE');
-     
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_CSV_OLE(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 6, inName:= 'CSV OLE', inEnumName:= 'zc_Enum_FileTypeKind_CSV_OLE');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_CSV_OLE_UTF8(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 7, inName:= 'CSV OLE UTF8', inEnumName:= 'zc_Enum_FileTypeKind_CSV_OLE_UTF8');     
 
      -- !!!
      -- !!! Типы связей

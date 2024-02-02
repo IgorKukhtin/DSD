@@ -381,7 +381,8 @@ uses
   PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas',
   BankAccountChildJournal in '..\..\FormsBoat\Document\BankAccountChildJournal.pas' {BankAccountChildJournalForm: TParentForm},
-  BankAccountChild in '..\..\FormsBoat\Document\BankAccountChild.pas' {BankAccountChildForm: TParentForm};
+  BankAccountChild in '..\..\FormsBoat\Document\BankAccountChild.pas' {BankAccountChildForm: TParentForm},
+  FileTypeKind in '..\..\FormsBoat\Import\FileTypeKind.pas' {FileTypeKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

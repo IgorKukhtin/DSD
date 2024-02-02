@@ -1490,7 +1490,8 @@ uses
   PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas',
-  Goods_ScaleDialog in '..\..\Forms\Guides\Goods_ScaleDialog.pas' {Goods_ScaleDialogForm: TParentForm};
+  Goods_ScaleDialog in '..\..\Forms\Guides\Goods_ScaleDialog.pas' {Goods_ScaleDialogForm: TParentForm},
+  ContractPartner_Object in '..\..\Forms\Guides\ContractPartner_Object.pas' {ContractPartner_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

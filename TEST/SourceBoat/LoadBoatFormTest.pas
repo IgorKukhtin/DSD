@@ -1071,6 +1071,8 @@ end;
 
 procedure TLoadFormTest.LoadImportTypeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFileTypeKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFileTypeKindForm');
   // Типы импорта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportTypeForm');
