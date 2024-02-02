@@ -123,5 +123,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_BankAccountPdf (557216,'2')
---SELECT * FROM gpSelect_Object_BankAccountPdf (1804, 0,'2')
+-- SELECT * FROM gpSelect_Object_BankAccountPdf (1804, 0,'2')

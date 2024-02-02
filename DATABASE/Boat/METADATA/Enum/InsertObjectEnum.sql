@@ -16,6 +16,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_MMO(), inDescId:= zc_Object_FileTypeKind(), inCode:= 3, inName:= 'MMO', inEnumName:= 'zc_Enum_FileTypeKind_MMO');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_ODBC(), inDescId:= zc_Object_FileTypeKind(), inCode:= 4, inName:= 'ODBC', inEnumName:= 'zc_Enum_FileTypeKind_ODBC');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_Excel_OLE(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 5, inName:= 'Excel OLE', inEnumName:= 'zc_Enum_FileTypeKind_Excel_OLE');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_CSV_OLE(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 6, inName:= 'CSV OLE', inEnumName:= 'zc_Enum_FileTypeKind_CSV_OLE');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_CSV_OLE_UTF8(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 7, inName:= 'CSV OLE UTF8', inEnumName:= 'zc_Enum_FileTypeKind_CSV_OLE_UTF8');
      -- !!! Типы НДС
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_WithVAT(), inDescId:= zc_Object_TaxKind(), inCode:= 1, inName:= 'With VAT', inEnumName:= 'zc_Enum_TaxKind_WithVAT');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_NonEU(),   inDescId:= zc_Object_TaxKind(), inCode:= 2, inName:= 'Non-EU',   inEnumName:= 'zc_Enum_TaxKind_NonEU');
@@ -6513,7 +6515,7 @@ BEGIN
                                                               inName         := 'Загрузка Банковских выписок (csv)',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
-                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel_OLE(),
+                                                              inFileTypeId   := zc_Enum_FileTypeKind_CSV_OLE_UTF8(),
                                                               inImportTypeId := vbImportTypeId,
                                                               inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
                                                               inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),

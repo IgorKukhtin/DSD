@@ -218,15 +218,22 @@ BEGIN
                                , Object_Status.ObjectCode AS StatusCode
                                , Object_Status.ValueData  AS StatusName
                                  -- ס ÍÄÑ
-                               , MovementFloat_Amount.ValueData     ::TFloat AS AmountIn
+                               , CASE WHEN MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_Return()
+                                      THEN 0
+                                      ELSE MovementFloat_Amount.ValueData     
+                                 END ::TFloat AS AmountIn
                                  -- ןונגûי סקוע
-                               , ROW_NUMBER () OVER (ORDER BY Movement.OperDate ASC) AS Ord
+                               , ROW_NUMBER () OVER (ORDER BY Movement.OperDate ASC, Movement.Id ASC) AS Ord
                           FROM Movement
                                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
                                LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                        ON MovementFloat_Amount.MovementId = Movement.Id
                                                       AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                            ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                           AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
 
                           WHERE Movement.ParentId = inMovementId_OrderClient
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
