@@ -263,22 +263,23 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1089#1091#1084#1084#1086#1081' '#1087#1086' '#1057#1095#1077#1090#1091
             Options.Editing = False
-            Width = 55
+            Width = 58
           end
           object isDiff: TcxGridDBColumn
             Caption = #1054#1090#1082#1083'.'
             DataBinding.FieldName = 'isDiff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1045#1089#1090#1100' '#1088#1072#1079#1085#1080#1094#1072' '#1089' '#1089#1091#1084#1084#1086#1081' '#1087#1086' '#1089#1095#1077#1090#1091' '#1076#1072'/'#1085#1077#1090
+            HeaderHint = #1045#1089#1090#1100' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1089' '#1089#1091#1084#1084#1086#1081' '#1087#1086' '#1089#1095#1077#1090#1091' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 51
           end
           object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            Caption = #1058#1077#1082#1089#1090
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '11. Verwendungszweck'
             Options.Editing = False
             Width = 100
           end

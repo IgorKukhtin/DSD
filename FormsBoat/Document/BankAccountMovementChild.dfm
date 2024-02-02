@@ -406,6 +406,23 @@
           MultiSelectSeparator = ','
         end
         item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MasterClientId'
           Value = Null
           Component = GuidesObject
@@ -525,6 +542,7 @@
           Value = Null
           Component = edAmount_invoice
           DataType = ftFloat
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
