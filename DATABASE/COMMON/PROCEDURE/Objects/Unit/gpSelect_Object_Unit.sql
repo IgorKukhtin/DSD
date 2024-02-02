@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
-               CityId Integer, CityName TVarChar
+               CityId Integer, CityName TVarChar,
                CityKindId Integer, CityKindName TVarChar, 
                RegionId Integer, RegionName TVarChar,
                ProvinceId Integer, ProvinceName TVarChar,
@@ -301,6 +301,7 @@ BEGIN
                                        , 3080691 -- Склад ГП ф.Львов
                                        , 6136671 -- Склад возвратов ф.Львов
                                        , 3080681 -- ф.Львов
+                                       , 133049  -- Дільниця обліку і реалізації м`ясної сировини
                                         )
              )
       UNION ALL
