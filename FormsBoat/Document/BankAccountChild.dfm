@@ -1,22 +1,22 @@
 ﻿inherited BankAccountChildForm: TBankAccountChildForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'> ('#1076#1077#1090#1072#1083#1100#1085#1086')'
-  ClientHeight = 527
-  ClientWidth = 463
-  ExplicitWidth = 469
-  ExplicitHeight = 556
+  ClientHeight = 572
+  ClientWidth = 457
+  ExplicitWidth = 463
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 119
-    Top = 488
-    ExplicitLeft = 119
-    ExplicitTop = 488
+    Left = 255
+    Top = 536
+    ExplicitLeft = 255
+    ExplicitTop = 536
   end
   inherited bbCancel: TcxButton
-    Left = 255
-    Top = 488
-    ExplicitLeft = 255
-    ExplicitTop = 488
+    Left = 359
+    Top = 536
+    ExplicitLeft = 359
+    ExplicitTop = 536
   end
   object Код: TcxLabel [2]
     Left = 8
@@ -56,7 +56,7 @@
   end
   object ceAmountIn: TcxCurrencyEdit [7]
     Left = 8
-    Top = 72
+    Top = 73
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 5
@@ -99,7 +99,7 @@
   end
   object cxLabel10: TcxLabel [13]
     Left = 8
-    Top = 284
+    Top = 283
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [14]
@@ -144,6 +144,7 @@
     Top = 165
     Properties.Buttons = <
       item
+        Action = actGuidesInvoiceChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
@@ -175,6 +176,7 @@
     Top = 256
     Properties.Buttons = <
       item
+        Action = actGuidesParentChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
@@ -184,7 +186,7 @@
   end
   object bbGuidesInvoiceChoiceForm: TcxButton [24]
     Left = 29
-    Top = 444
+    Top = 451
     Width = 180
     Height = 25
     Action = actGuidesInvoiceChoiceForm
@@ -193,8 +195,8 @@
     TabOrder = 24
   end
   object bbGuidesParentChoiceForm: TcxButton [25]
-    Left = 255
-    Top = 444
+    Left = 29
+    Top = 482
     Width = 180
     Height = 25
     Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
@@ -229,7 +231,7 @@
   end
   object cmText: TcxMemo [28]
     Left = 8
-    Top = 347
+    Top = 352
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold, toPenTapFeedback, toTouchUIForceOn, toTouchUIForceOff, toTouchSwitch, toFlicks]
     Properties.ReadOnly = True
@@ -285,16 +287,75 @@
     Top = 188
     Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
   end
+  object cxLabel12: TcxLabel [34]
+    Left = 287
+    Top = 235
+    Hint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+  end
+  object ceInfoMoney: TcxButtonEdit [35]
+    Left = 287
+    Top = 256
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 35
+    Width = 159
+  end
+  object btnGet_PrePay: TcxButton [36]
+    Left = 255
+    Top = 444
+    Width = 90
+    Height = 25
+    Action = actGet_PrePay
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 36
+  end
+  object btnGet_Pay: TcxButton [37]
+    Left = 359
+    Top = 444
+    Width = 90
+    Height = 25
+    Action = actGet_Pay
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 37
+  end
+  object btnGet_Proforma: TcxButton [38]
+    Left = 255
+    Top = 482
+    Width = 90
+    Height = 25
+    Action = actGet_Proforma
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 38
+  end
+  object btnGet_Service: TcxButton [39]
+    Left = 360
+    Top = 482
+    Width = 90
+    Height = 25
+    Action = actGet_Service
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 39
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 141
+    Left = 91
+    Top = 357
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 96
-    Top = 157
+    Left = 40
+    Top = 357
   end
   inherited ActionList: TActionList
-    Left = 191
-    Top = 180
+    Left = 175
+    Top = 364
     object actGuidesInvoiceChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -350,19 +411,17 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AmountOut'
+          Name = 'AmountOut_rem'
           Value = Null
           Component = ceAmountOut
           DataType = ftFloat
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AmountIn'
+          Name = 'AmountIn_rem'
           Value = Null
           Component = ceAmountIn
           DataType = ftFloat
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -400,6 +459,36 @@
           Value = Null
           Component = edAmount_invoice
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId'
+          Value = Null
+          Component = GuidesInvoiceKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindName'
+          Value = Null
+          Component = GuidesInvoiceKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -535,6 +624,54 @@
         end>
       isShowModal = True
     end
+    object actGet_Pay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Pay
+      StoredProcList = <
+        item
+          StoredProc = spGet_Pay
+        end>
+      Caption = #1057#1095#1077#1090
+      ImageIndex = 79
+    end
+    object actGet_Proforma: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Proforma
+      StoredProcList = <
+        item
+          StoredProc = spGet_Proforma
+        end>
+      Caption = #1055#1088#1086#1092#1086#1088#1084#1072
+      ImageIndex = 79
+    end
+    object actGet_Service: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Service
+      StoredProcList = <
+        item
+          StoredProc = spGet_Service
+        end>
+      Caption = #1059#1089#1083#1091#1075#1080
+      ImageIndex = 79
+    end
+    object actGet_PrePay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrePay
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrePay
+        end>
+      Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
+      ImageIndex = 79
+    end
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -574,8 +711,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 229
+    Left = 224
+    Top = 365
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_BankAccountChild'
@@ -685,6 +822,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInfoMoneyId'
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_Parent'
         Value = Null
         Component = GuidesParent
@@ -700,8 +844,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 217
+    Left = 368
+    Top = 377
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_BankAccountChild'
@@ -920,9 +1064,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId_invoice'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_invoice'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 248
-    Top = 201
+    Left = 304
+    Top = 361
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -1107,117 +1266,7 @@
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInvoiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesInvoice
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesInvoice
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectId'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectName'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountOut'
-        Value = Null
-        Component = ceAmountOut
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountIn'
-        Value = Null
-        Component = ceAmountIn
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientId'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientName'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_parent'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_parent'
-        Value = Null
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindId'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindName'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Amount_Invoice'
-        Value = Null
-        Component = edAmount_invoice
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 196
     Top = 136
   end
@@ -1245,122 +1294,9 @@
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TOrderClientJournalChoiceForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ClientId'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ClientName'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientId'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientName'
-        Value = ''
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SummDebet'
-        Value = Null
-        Component = ceAmountIn
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_parent'
-        Value = '0'
-        Component = GuidesParent
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_parent'
-        Value = ''
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_Invoice_find'
-        Value = Null
-        Component = GuidesInvoice
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberFull_Invoice_find'
-        Value = Null
-        Component = GuidesInvoice
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindId_find'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvoiceKindName_find'
-        Value = Null
-        Component = GuidesInvoiceKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 396
-    Top = 232
+    Params = <>
+    Left = 188
+    Top = 248
   end
   object GuidesInvoiceKind: TdsdGuides
     KeyField = 'Id'
@@ -1388,5 +1324,157 @@
       end>
     Left = 128
     Top = 208
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    Key = '0'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 366
+    Top = 256
+  end
+  object spGet_PrePay: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInvoiceKindDesc'
+        Value = 'zc_Enum_InvoiceKind_PrePay'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 32
+    Top = 527
+  end
+  object spGet_Pay: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInvoiceKindDesc'
+        Value = 'zc_Enum_InvoiceKind_Pay'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 512
+  end
+  object spGet_Proforma: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInvoiceKindDesc'
+        Value = 'zc_Enum_InvoiceKind_Proforma'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 128
+    Top = 528
+  end
+  object spGet_Service: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInvoiceKindDesc'
+        Value = 'zc_Enum_InvoiceKind_Service'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindId'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceKindName'
+        Value = ''
+        Component = GuidesInvoiceKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 512
   end
 end

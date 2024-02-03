@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccountChild (Integer, Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccountChild (Integer, Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccountChild (Integer, Integer, TVarChar, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccountChild(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ> 
@@ -15,8 +16,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccountChild(
     IN inAmount_Invoice       TFloat    , -- Сумма счета
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
-    IN inMovementId_Invoice   Integer   , -- Счет    
+    IN inMovementId_Invoice   Integer   , -- Счет   
     IN inInvoiceKindId        Integer   , -- вид счета
+    IN inInfoMoneyId          Integer   , -- назначение
     IN inMovementId_Parent    Integer   , -- Заказ Клиента
     IN inComment              TVarChar  , -- Комментарий
     IN inSession              TVarChar    -- сессия пользователя
@@ -25,7 +27,6 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
-   DECLARE vbInfoMoneyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
@@ -87,16 +88,12 @@ BEGIN
                                                                 , inComment          := ''                                  ::TVarChar
                                                                 , inObjectId         := inMoneyPlaceId
                                                                 , inUnitId           := NULL                                ::Integer
-                                                                , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
+                                                                , inInfoMoneyId      := inInfoMoneyId  ::Integer
                                                                 , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
                                                                 , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END :: Integer
                                                                 , inSession          := inSession
                                                                  )
-         FROM Object AS Object_Client
-              LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
-                                   ON ObjectLink_InfoMoney.ObjectId = Object_Client.Id
-                                  AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Client_InfoMoney()
-         WHERE Object_Client.Id = inMoneyPlaceId;
+         ;
 
          -- проводим Документ
          /*IF vbUserId = lpCheckRight (vbUserId :: TVarChar, zc_Enum_Process_Complete_Invoice())
@@ -128,12 +125,6 @@ BEGIN
                                                , inComment              := (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = ioId AND MS.DescId = zc_MovementString_Comment())
                                                , inUserId               := vbUserId
                                                 );
-     --из счета                                           
-     vbInfoMoneyId := (SELECT MovementLinkObject_InfoMoney.ObjectId AS InfoMoneyId 
-                       FROM MovementLinkObject AS MovementLinkObject_InfoMoney
-                       WHERE MovementLinkObject_InfoMoney.MovementId = inMovementId_Invoice
-                         AND MovementLinkObject_InfoMoney.DescId     = zc_MovementLinkObject_InfoMoney()
-                       );     
 
      --сохранили чайлд   
      PERFORM gpInsertUpdate_MI_BankAccount_Child(ioId                  := COALESCE (inMovementItemId_child,0)::Integer    -- Ключ объекта <> 
@@ -143,7 +134,7 @@ BEGIN
                                                , inMovementId_invoice  := inMovementId_Invoice   ::Integer    -- 
                                                , inInvoiceKindId       := inInvoiceKindId        ::Integer   --
                                                , inObjectId            := inMoneyPlaceId         ::Integer    --
-                                               , inInfoMoneyId         := vbInfoMoneyId          ::Integer    --
+                                               , inInfoMoneyId         := inInfoMoneyId          ::Integer    --
                                                , inAmount              := vbAmount               ::TFloat     --
                                                , inAmount_invoice      := CASE WHEN COALESCE (inAmount_Invoice,0) <> 0 THEN inAmount_Invoice ELSE vbAmount END  ::TFloat 
                                                , inComment             := inComment              ::TVarChar   --
