@@ -332,7 +332,10 @@ BEGIN
            , CASE WHEN MovementItem.Amount <> COALESCE (tmpMI_Child.Amount,0) THEN TRUE ELSE FALSE END ::Boolean AS isError
 
 
-           , (CASE WHEN LENGTH (MovementBlob_11.ValueData) > 0 THEN '(' || LENGTH (MovementBlob_11.ValueData) :: TVarChar || ') - ' ELSE '' END || MIString_Comment.ValueData) :: TVarChar AS Comment
+           , (CASE WHEN LENGTH (MovementBlob_11.ValueData) > 0 THEN '(' || LENGTH (MovementBlob_11.ValueData)  :: TVarChar || ') - ' 
+                   WHEN MIString_Comment.ValueData <> '' THEN '(0) - (' || LENGTH (MIString_Comment.ValueData) :: TVarChar || ') - ' 
+                   ELSE ''
+              END || MIString_Comment.ValueData) :: TVarChar AS Comment
            , MovementItem.ObjectId             AS BankAccountId
            , Object_BankAccount.ValueData      AS BankAccountName
            , Object_Bank.ValueData             AS BankName
