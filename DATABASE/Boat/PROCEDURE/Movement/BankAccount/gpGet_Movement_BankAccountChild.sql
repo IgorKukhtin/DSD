@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              , InvoiceKindId    Integer, InvoiceKindName  TVarChar 
-             , InfoMoneyName_invoice TVarChar
+             , InfoMoneyId_invoice Integer, InfoMoneyName_invoice TVarChar
              , MovementId_parent Integer
              , InvNumber_parent TVarChar
              , ProductName_Invoice TVarChar
@@ -83,6 +83,7 @@ BEGIN
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , Object_InvoiceKind.Id                             AS InvoiceKindId
            , Object_InvoiceKind.ValueData                      AS InvoiceKindName   
+           , Object_InfoMoney_View_invoice.InfoMoneyId         AS InfoMoneyId_invoice
            , Object_InfoMoney_View_invoice.InfoMoneyName       AS InfoMoneyName_invoice
                        
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
@@ -167,7 +168,8 @@ BEGIN
            --, zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , Object_InvoiceKind.Id             AS InvoiceKindId
-           , Object_InvoiceKind.ValueData      AS InvoiceKindName
+           , Object_InvoiceKind.ValueData      AS InvoiceKindName  
+           , Object_InfoMoney_View_invoice.InfoMoneyId         AS InfoMoneyId_invoice
            , Object_InfoMoney_View_invoice.InfoMoneyName       AS InfoMoneyName_invoice
 
            --parent для Invoice

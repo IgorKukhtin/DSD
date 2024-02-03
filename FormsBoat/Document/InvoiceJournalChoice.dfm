@@ -901,6 +901,22 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           ComponentItem = 'InvoiceKindName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountIn_rem'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountIn_rem'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountOut_rem'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountOut_rem'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

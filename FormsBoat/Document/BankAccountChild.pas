@@ -64,6 +64,21 @@ type
     ceAmount_pay: TcxCurrencyEdit;
     edAmount_invoice: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    cxLabel12: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
+    spGet_PrePay: TdsdStoredProc;
+    spGet_Pay: TdsdStoredProc;
+    spGet_Proforma: TdsdStoredProc;
+    spGet_Service: TdsdStoredProc;
+    btnGet_PrePay: TcxButton;
+    btnGet_Pay: TcxButton;
+    btnGet_Proforma: TcxButton;
+    btnGet_Service: TcxButton;
+    actGet_Pay: TdsdExecStoredProc;
+    actGet_Proforma: TdsdExecStoredProc;
+    actGet_Service: TdsdExecStoredProc;
+    actGet_PrePay: TdsdExecStoredProc;
   private
     { Private declarations }
   public
