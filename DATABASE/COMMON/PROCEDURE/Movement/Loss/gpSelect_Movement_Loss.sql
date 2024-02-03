@@ -167,6 +167,7 @@ BEGIN
        -- огр. просмотра
        WHERE vbUserId <> 300550 -- Рибалко Вікторія Віталіївна
          AND vbUserId <> 929721 -- Решетова И.А.
+         AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()
 
       UNION ALL
        SELECT
@@ -277,15 +278,17 @@ BEGIN
             LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
        -- огр. просмотра - Рибалко Вікторія Віталіївна
-       WHERE (vbUserId = 300550
-          AND Object_From.Id IN (8447   -- цех колбасный
-                               , 8448   -- ЦЕХ деликатесов
-                               , 8449   -- цех с/к
-                                )
-                                )
-         OR (vbUserId        = 929721 -- Решетова И.А.
+       WHERE ((vbUserId = 300550
+           AND Object_From.Id IN (8447   -- цех колбасный
+                                , 8448   -- ЦЕХ деликатесов
+                                , 8449   -- цех с/к
+                                 )
+              )
+          OR (vbUserId        = 929721 -- Решетова И.А.
           AND Object_From.Id = 8459   -- Склад Реализации
-          )
+             )
+            )
+          AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()
           ;
 
 END;
