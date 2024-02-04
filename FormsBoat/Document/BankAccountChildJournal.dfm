@@ -614,6 +614,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Width = 118
       Height = 25
       Action = actOpenFormPdfAllEdit
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' PDF'
       TabOrder = 9
     end
   end
