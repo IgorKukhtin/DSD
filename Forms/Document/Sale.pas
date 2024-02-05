@@ -293,6 +293,11 @@ type
     actSendETTN: TdsdEDINAction;
     actExecSelectPrint_TTN: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
+    bbsEdit: TdxBarSubItem;
+    bbsPrint: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    bbsShow: TdxBarSubItem;
+    bbsUnLoad: TdxBarSubItem;
   private
     { Private declarations }
   public
