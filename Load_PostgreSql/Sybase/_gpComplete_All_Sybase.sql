@@ -77,7 +77,7 @@ BEGIN
      -- IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN RETURN; END IF;
 
      -- !!!проверка!!!
-     IF COALESCE (vbMovementDescId, 0) = 0
+     IF COALESCE (vbMovementDescId, 0) = 0 OR inMovementId <= 1000000
      THEN
          RAISE EXCEPTION 'NOT FIND, inMovementId = %', inMovementId;
      END IF;
