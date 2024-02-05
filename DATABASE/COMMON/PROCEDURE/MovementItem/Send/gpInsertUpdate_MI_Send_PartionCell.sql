@@ -37,23 +37,63 @@ BEGIN
                                              , inMovementId          := inMovementId
                                              , inGoodsId             := inGoodsId
                                              , inAmount              := inAmount
-                                             , inPartionGoodsDate    := tmp.PartionGoodsDate
-                                             , inCount               := tmp.Count
-                                             , inHeadCount           := tmp.HeadCount
-                                             , ioPartionGoods        := tmp.PartionGoods
-                                             , ioPartNumber          := tmp.PartNumber
-                                             , inGoodsKindId         := inGoodsKindId
-                                             , inGoodsKindCompleteId := tmp.GoodsKindId_Complete
-                                             , inAssetId             := tmp.AssetId
-                                             , inAssetId_two         := tmp.AssetId_two
+                                             , inPartionGoodsDate    := COALESCE (MIDate_PartionGoods.ValueData,NULL)    ::TDateTime
+                                             , inCount               := COALESCE (MIFloat_CountPack.ValueData,0)      ::TFloat
+                                             , inHeadCount           := COALESCE (MIFloat_HeadCount.ValueData,0)      ::TFloat
+                                             , ioPartionGoods        := COALESCE (MIString_PartionGoods.ValueData,'')  ::TVarChar
+                                             , ioPartNumber          := COALESCE (MIString_PartNumber.ValueData,'')    ::TVarChar
+                                             , inGoodsKindId         := inGoodsKindId                    ::Integer
+                                             , inGoodsKindCompleteId := COALESCE (MILO_GoodsKindComplete.ObjectId, 0) ::Integer
+                                             , inAssetId             := COALESCE (MILinkObject_Asset.ObjectId,0)      ::Integer
+                                             , inAssetId_two         := COALESCE (MILinkObject_Asset_two.ObjectId,0)  ::Integer
                                              , inUnitId              := NULL ::Integer
-                                             , inStorageId           := tmp.StorageId
-                                             , inPartionModelId      := tmp.PartionModelId
-                                             , inPartionGoodsId      := tmp.PartionGoodsId
-                                             , inUserId              := vbUserId
+                                             , inStorageId           := COALESCE (MILinkObject_Storage.ObjectId,0)      ::Integer
+                                             , inPartionModelId      := COALESCE (MILinkObject_PartionModel.ObjectId,0) ::Integer
+                                             , inPartionGoodsId      := COALESCE (MILinkObject_PartionGoods.ObjectId,0) ::Integer
+                                             , inUserId              := vbUserId                         ::Integer
                                               ) 
-     FROM gpSelect_MovementItem_Send (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS tmp
-     WHERE tmp.Id = inId; 
+     --FROM gpSelect_MovementItem_Send (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS tmp  
+     FROM MovementItem
+          LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                           ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                          AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                           ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                           ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionModel
+                                           ON MILinkObject_PartionModel.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_PartionModel.DescId = zc_MILinkObject_PartionModel()
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                           ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                           ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+
+          LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                      ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                     AND MIFloat_CountPack.DescId         = zc_MIFloat_CountPack()
+          LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                      ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                     AND MIFloat_HeadCount.DescId         = zc_MIFloat_HeadCount()
+          LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                     ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                    AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+          LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                       ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                      AND MIString_PartionGoods.DescId         = zc_MIString_PartionGoods()
+
+          LEFT JOIN MovementItemString AS MIString_PartNumber
+                                       ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                      AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+     WHERE MovementItem.Id = inId 
+       AND MovementItem.MovementId = inMovementId
+     ; 
   
      --  1  
      IF COALESCE (ioPartionCellName_1, '') <> '' THEN

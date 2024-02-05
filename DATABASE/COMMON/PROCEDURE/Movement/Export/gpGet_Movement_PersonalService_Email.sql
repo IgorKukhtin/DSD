@@ -93,7 +93,7 @@ BEGIN
           , gpGet_User.Value                     AS UserName
           , gpGet_Password.Value                 AS Password
 
-     FROM gpGet_PersonalService_FileNameCSV (inMovementId, inSession) AS tmp
+     FROM gpGet_PersonalService_FileNameCSV (inMovementId, 1, inSession) AS tmp
           LEFT JOIN tmpExportJuridical ON 1 = 1
           LEFT JOIN tmpEmail AS gpGet_Host      ON gpGet_Host.EmailToolsId      = zc_Enum_EmailTools_Host()
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
