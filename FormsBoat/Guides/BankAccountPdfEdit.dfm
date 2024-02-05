@@ -76,8 +76,6 @@
         Height = 441
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 0
-        ExplicitTop = 25
         object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DocumentDS
@@ -289,7 +287,7 @@
   end
   object ceAmount: TcxCurrencyEdit
     Left = 12
-    Top = 248
+    Top = 246
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
@@ -751,7 +749,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
+        Name = 'Amount_pay'
         Value = Null
         Component = ceAmount
         DataType = ftFloat
