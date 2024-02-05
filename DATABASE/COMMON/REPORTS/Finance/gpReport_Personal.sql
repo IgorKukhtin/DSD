@@ -280,9 +280,9 @@ BEGIN
                                      , SUM (COALESCE (MIFloat_SummHosp.ValueData,0))    AS  SummHosp
                                      , SUM (COALESCE (MIFloat_SummToPay.ValueData,0))        AS SummToPay_inf
                                      , SUM (COALESCE (MIFloat_SummAvCardSecond.ValueData,0)) AS SummAvCardSecond_inf
-, SUM (COALESCE (MIFloat_SummCard.ValueData,0))           AS SummCard_inf
-, SUM (COALESCE (MIFloat_SummCardSecond.ValueData,0))     AS SummCardSecond_inf
-, SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData,0)) AS SummCardSecondCash_inf
+                                     , SUM (COALESCE (MIFloat_SummCard.ValueData,0))           AS SummCard_inf
+                                     , SUM (COALESCE (MIFloat_SummCardSecond.ValueData,0))     AS SummCardSecond_inf
+                                     , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData,0)) AS SummCardSecondCash_inf
                                 FROM (SELECT DISTINCT MIContainer.ContainerId
                                            , MIContainer.MovementItemId
                                            , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, MIContainer.ContainerId) AS Ord
@@ -469,9 +469,9 @@ BEGIN
                            , SUM (tmpMIFloat_SummService.SummAvCardSecond_inf) AS SummAvCardSecond_inf
                            , SUM (tmpMIFloat_SummService.SummToPay_inf)        AS SummToPay_inf
                            
-                           , SUM (COALESCE (tmpMIFloat_SummService.SummCard_inf,0))           AS SummCard_inf
-                           , SUM (COALESCE (tmpMIFloat_SummService.SummCardSecond_inf,0))     AS SummCardSecond_inf
-                           , SUM (COALESCE (tmpMIFloat_SummService.SummCardSecondCash_inf,0)) AS SummCardSecondCash_inf                           
+                          , SUM (COALESCE (tmpMIFloat_SummService.SummCard_inf,0))           AS SummCard_inf
+                          , SUM (COALESCE (tmpMIFloat_SummService.SummCardSecond_inf,0))     AS SummCardSecond_inf
+                          , SUM (COALESCE (tmpMIFloat_SummService.SummCardSecondCash_inf,0)) AS SummCardSecondCash_inf                           
 
                            , SUM (tmpMIFloat_SummService.SummFine)        AS SummFine
                            , SUM (tmpMIFloat_SummService.SummHosp)        AS SummHosp
