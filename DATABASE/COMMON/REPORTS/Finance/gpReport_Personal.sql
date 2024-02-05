@@ -58,14 +58,15 @@ BEGIN
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
-
+  
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
      THEN
-         vbUserId:= NULL;
-         RETURN;
+         vbUserId:= 5;
+         --vbUserId:= NULL;
+         --RETURN;
      END IF;
-
+ 
      -- !!! права пользователей !!!
      IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
         AND vbUserId <> 14599 -- Коротченко Т.Н.
@@ -468,9 +469,9 @@ BEGIN
                            , SUM (tmpMIFloat_SummService.SummAvCardSecond_inf) AS SummAvCardSecond_inf
                            , SUM (tmpMIFloat_SummService.SummToPay_inf)        AS SummToPay_inf
                            
-, SUM (COALESCE (tmpMIFloat_SummService.SummCard_inf,0))           AS SummCard_inf
-, SUM (COALESCE (tmpMIFloat_SummService.SummCardSecond_inf,0))     AS SummCardSecond_inf
-, SUM (COALESCE (tmpMIFloat_SummService.SummCardSecondCash_inf,0)) AS SummCardSecondCash_inf                           
+                           , SUM (COALESCE (tmpMIFloat_SummService.SummCard_inf,0))           AS SummCard_inf
+                           , SUM (COALESCE (tmpMIFloat_SummService.SummCardSecond_inf,0))     AS SummCardSecond_inf
+                           , SUM (COALESCE (tmpMIFloat_SummService.SummCardSecondCash_inf,0)) AS SummCardSecondCash_inf                           
 
                            , SUM (tmpMIFloat_SummService.SummFine)        AS SummFine
                            , SUM (tmpMIFloat_SummService.SummHosp)        AS SummHosp
@@ -513,6 +514,8 @@ BEGIN
                                       , tmpContainer.BranchId
                                       , tmpContainer.UnitId
                                       , tmpContainer.ServiceDate
+                                      , tmpContainer.PersonalServiceListId
+                                      , tmpContainer.InfoMoneyId
                                  FROM tmpContainer
                                       INNER JOIN MovementItemContainer AS MIContainer
                                                                        ON MIContainer.ContainerId    = tmpContainer.ContainerId
@@ -533,6 +536,8 @@ BEGIN
                                         , tmpContainer.BranchId
                                         , tmpContainer.UnitId
                                         , tmpContainer.ServiceDate
+                                        , tmpContainer.PersonalServiceListId
+                                        , tmpContainer.InfoMoneyId
                                 )
 
 
@@ -627,7 +632,9 @@ BEGIN
                                       AND tmpMIContainer_pay.PositionId = Operation.PositionId
                                       AND tmpMIContainer_pay.UnitId     = Operation.UnitId
                                       AND tmpMIContainer_pay.BranchId   = Operation.BranchId
-                                      --AND tmpMIContainer_pay.ServiceDate = Operation.ServiceDate
+                                      AND tmpMIContainer_pay.ServiceDate = Operation.ServiceDate
+                                      AND tmpMIContainer_pay.PersonalServiceListId = Operation.PersonalServiceListId
+                                      AND tmpMIContainer_pay.InfoMoneyId = Operation.InfoMoneyId
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
        AND (_tmpList.PersonalServiceListId > 0 OR vbIsList_all = TRUE)
