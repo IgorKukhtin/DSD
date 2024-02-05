@@ -154,12 +154,21 @@ BEGIN
      THEN
       INSERT INTO _Result(RowData)
       WITH
-      tmp AS (SELECT gpSelect.CardBankSecond
-                   , SUM (FLOOR (100 * CAST ( ((COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0)) * vbKoeffSummCardSecond) AS NUMERIC (16, 0)) ))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
+  tmp_all AS (SELECT gpSelect.CardBankSecond
+                     -- ПЕРЕВОДИМ в копейки
+                   , SUM (FLOOR (100 * CAST ( ((COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0))) AS NUMERIC (16, 0)) ))  AS SummCardSecondRecalc
               FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
               WHERE (gpSelect.SummCardSecondRecalc <> 0 OR gpSelect.SummAvCardSecondRecalc <> 0)
                 AND COALESCE (gpSelect.CardBankSecond,'') <> '' 
 	      GROUP BY gpSelect.CardBankSecond
+	      )
+    , tmp AS (SELECT tmp_all.CardBankSecond
+                     -- % и округлили
+                   , FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc <= 29999 * 100
+                                 THEN tmp_all.SummCardSecondRecalc
+                                 ELSE 29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005
+                            END) AS SummCardSecondRecalc
+              FROM tmp_all
 	      )
 	      
 	      SELECT tmp.CardBankSecond
@@ -196,6 +205,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_mail (21011498, zfCalc_UserAdmin());
-
---SELECT lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), 21011498, FAlse);
+-- SELECT * FROM gpSelect_Movement_PersonalService_mail (21011498, 2, zfCalc_UserAdmin());
