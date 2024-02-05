@@ -255,6 +255,8 @@ type
     bbBarSeparator: TdxBarSeparator;
     bbsPrintGroup: TdxBarSubItem;
     bbPrintPacklist: TdxBarButton;
+    bbsEdit: TdxBarSubItem;
+    bbsUnLoad: TdxBarSubItem;
   private
     { Private declarations }
   public

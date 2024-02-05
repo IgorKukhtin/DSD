@@ -1,19 +1,31 @@
 -- Function: gpInsertUpdate_MI_Sale_Child()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat,  Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Sale_Child(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inParentId              Integer   , -- Ключ
+
     IN inAmountGRN             TFloat    , -- сумма оплаты
     IN inAmountUSD             TFloat    , -- сумма оплаты
     IN inAmountEUR             TFloat    , -- сумма оплаты
     IN inAmountCard            TFloat    , -- сумма оплаты
-    IN inAmountDiscount_GRN    TFloat    , -- Дополнительная скидка в продаже !!! ГРН !!!
-    IN inCurrencyValueUSD      TFloat    , --
+    IN inAmountDiscount_EUR    TFloat    , -- всегда EUR
+    IN inAmountDiff            TFloat    , -- Сумма ручной сдачи
+    IN inAmountRemains_EUR     TFloat    , -- Сумма долга
+
+    IN inisDiscount            Boolean   , -- Списать остаток
+    IN inisChangeEUR           Boolean   , -- Расчет от евро
+    
+    IN inCurrencyValueUSD      TFloat    , -- Курсы
+    IN inCurrencyValueInUSD    TFloat    , --
     IN inParValueUSD           TFloat    , --
     IN inCurrencyValueEUR      TFloat    , --
+    IN inCurrencyValueInEUR    TFloat    , --
     IN inParValueEUR           TFloat    , --
     IN inCurrencyValueCross    TFloat    , --
     IN inParValueCross         TFloat    , --
@@ -32,14 +44,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
-
-
-     -- !!!замена!!! так исправляется списание
-     IF inAmountGRN < 0
-     THEN
-         inAmountDiscount_GRN:= inAmountDiscount_GRN + inAmountGRN;
-         inAmountGRN:= 0;
-     END IF;
 
      -- данные из документа
      vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
@@ -80,19 +84,19 @@ BEGIN
      END IF;
 
      -- заливка Сумма к Оплате - !!! грн + EUR !!!
-     CREATE TEMP TABLE _tmp_MI_Master (MovementItemId Integer, SummPriceList TFloat, SummPriceList_curr TFloat, AmountToPay TFloat, AmountToPay_curr TFloat) ON COMMIT DROP;
-     INSERT INTO _tmp_MI_Master (MovementItemId, SummPriceList, SummPriceList_curr, AmountToPay, AmountToPay_curr)
+     CREATE TEMP TABLE _tmp_MI_Master (MovementItemId Integer, SummPriceList TFloat, SummPriceList_EUR TFloat, AmountToPay TFloat, AmountToPay_EUR TFloat) ON COMMIT DROP;
+     INSERT INTO _tmp_MI_Master (MovementItemId, SummPriceList, SummPriceList_EUR, AmountToPay, AmountToPay_EUR)
         WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
                               -- SummPriceList
                             , zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
                                                                             THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, inCurrencyValueEUR, 1)
                                                                        ELSE MIFloat_OperPriceList.ValueData
                                                                   END, 1) AS SummPriceList
-                              -- SummPriceList_curr
+                              -- SummPriceList_EUR
                             , zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
                                                                             THEN MIFloat_OperPriceList_curr.ValueData
                                                                        ELSE zfCalc_CurrencyTo (MIFloat_OperPriceList.ValueData, inCurrencyValueEUR, 1)
-                                                                  END, 1) AS SummPriceList_curr
+                                                                  END, 1) AS SummPriceList_EUR
 
                               -- AmountToPay
                             , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
@@ -100,12 +104,12 @@ BEGIN
                                                                 , inCurrencyValueEUR, 1)
                                         ELSE zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
                               END AS AmountToPay
-                              -- AmountToPay_curr
+                              -- AmountToPay_EUR
                             , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
                                         THEN zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
                                         ELSE zfCalc_CurrencyTo (zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
                                                               , inCurrencyValueEUR, 1)
-                              END AS AmountToPay_curr
+                              END AS AmountToPay_EUR
 
                        FROM MovementItem
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
@@ -121,40 +125,40 @@ BEGIN
                                                         ON MIFloat_ChangePercentNext.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
 
-                          /*LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                                        ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
-                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
-                                                        ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()*/
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
                       )
         -- результат
-        SELECT tmpMI.MovementItemId, tmpMI.SummPriceList, tmpMI.SummPriceList_curr, tmpMI.AmountToPay, tmpMI.AmountToPay_curr
+        SELECT tmpMI.MovementItemId, tmpMI.SummPriceList, tmpMI.SummPriceList_EUR, tmpMI.AmountToPay, tmpMI.AmountToPay_EUR
         FROM tmpMI
         WHERE tmpMI.MovementItemId     = inParentId
            OR COALESCE (inParentId, 0) = 0;
-
-
 
      -- расчет Данных Child
      WITH tmpChild AS (SELECT *
                        FROM lpSelect_MI_Child_calc (inMovementId          := inMovementId
                                                   , inUnitId              := vbUnitId
-                                                  , inAmountGRN           := inAmountGRN          -- сумма оплаты
-                                                  , inAmountUSD           := inAmountUSD          -- сумма оплаты
-                                                  , inAmountEUR           := inAmountEUR          -- сумма оплаты
-                                                  , inAmountCard          := inAmountCard         -- сумма оплаты
-                                                  , inAmountDiscount_GRN  := inAmountDiscount_GRN -- Дополнительная скидка  !!! ГРН !!!
+                                                  , inAmountGRN           := inAmountGRN           -- сумма оплаты
+                                                  , inAmountUSD           := inAmountUSD           -- сумма оплаты
+                                                  , inAmountEUR           := inAmountEUR           -- сумма оплаты
+                                                  , inAmountCard          := inAmountCard          -- сумма оплаты
+                                                  , inAmountDiscount_EUR  := inAmountDiscount_EUR
+                                                  , inAmountDiff          := inAmountDiff 
+                                                  , inAmountRemains_EUR   := inAmountRemains_EUR
+                                                                                               
+                                                  , inisDiscount          := inisDiscount     
+                                                  , inisChangeEUR         := inisChangeEUR
+                                                  
                                                   , inCurrencyValueUSD    := inCurrencyValueUSD
+                                                  , inCurrencyValueInUSD  := inCurrencyValueInUSD
                                                   , inParValueUSD         := inParValueUSD
                                                   , inCurrencyValueEUR    := inCurrencyValueEUR
+                                                  , inCurrencyValueInEUR  := inCurrencyValueInEUR
                                                   , inParValueEUR         := inParValueEUR
-                                                  , inCurrencyId_Client   := vbCurrencyId_Client
                                                   , inCurrencyValueCross  := inCurrencyValueCross
                                                   , inParValueCross       := inParValueCross
+                                                  , inCurrencyId_Client   := vbCurrencyId_Client
                                                   , inUserId              := vbUserId
                                                    )
                       )
@@ -163,25 +167,27 @@ BEGIN
                               FROM (SELECT 1 AS Num
                                          , _tmp_MI_Master.MovementItemId
                                            -- Дополнительная скидка в продаже ГРН + EUR
-                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(),       _tmp_MI_Master.MovementItemId, COALESCE (tmp.AmountDiscount,      0))
-                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent_curr(),  _tmp_MI_Master.MovementItemId, COALESCE (tmp.AmountDiscount_curr, 0))
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(),       _tmp_MI_Master.MovementItemId, COALESCE (tmp.AmountDiscount,     0))
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent_curr(),  _tmp_MI_Master.MovementItemId, COALESCE (tmp.AmountDiscount_EUR, 0))
+                                           -- Округление в продаже ГРН + EUR
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummRounding(),            _tmp_MI_Master.MovementItemId, COALESCE (tmp.AmountRounding,     0))
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummRounding_curr(),       _tmp_MI_Master.MovementItemId, COALESCE (tmp.AmountRounding_EUR, 0))
                                            -- Итого скидка в продаже ГРН + EUR
-                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(),      _tmp_MI_Master.MovementItemId, _tmp_MI_Master.SummPriceList      - _tmp_MI_Master.AmountToPay      + COALESCE (tmp.AmountDiscount, 0))
-                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent_curr(), _tmp_MI_Master.MovementItemId, _tmp_MI_Master.SummPriceList_curr - _tmp_MI_Master.AmountToPay_curr + COALESCE (tmp.AmountDiscount_curr, 0))
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(),      _tmp_MI_Master.MovementItemId, _tmp_MI_Master.SummPriceList     - _tmp_MI_Master.AmountToPay     + COALESCE (tmp.AmountDiscount, 0)     + COALESCE (tmp.AmountRounding, 0))
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent_curr(), _tmp_MI_Master.MovementItemId, _tmp_MI_Master.SummPriceList_EUR - _tmp_MI_Master.AmountToPay_EUR + COALESCE (tmp.AmountDiscount_EUR, 0) + COALESCE (tmp.AmountRounding_EUR, 0))
                                            -- Итого оплата в продаже ГРН + EUR
-                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(),      _tmp_MI_Master.MovementItemId, COALESCE (tmp.TotalPay, 0))
-                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay_curr(), _tmp_MI_Master.MovementItemId, COALESCE (tmp.TotalPay_curr, 0))
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(),      _tmp_MI_Master.MovementItemId, COALESCE (tmp.TotalPay_GRN, 0)) 
+                                         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay_curr(), _tmp_MI_Master.MovementItemId, COALESCE (tmp.TotalPay_EUR, 0))
                                     FROM _tmp_MI_Master
                                          LEFT JOIN (SELECT tmpChild.ParentId
-                                                         , MAX (tmpChild.AmountDiscount)      AS AmountDiscount
-                                                         , MAX (tmpChild.AmountDiscount_curr) AS AmountDiscount_curr
-                                                         , SUM (tmpChild.Amount_GRN)          AS TotalPay
-                                                         , CASE WHEN MAX (tmpChild.AmountToPay) = SUM (tmpChild.Amount_GRN)
-                                                                     THEN MAX (tmpChild.AmountToPay_curr)
-                                                                ELSE SUM (tmpChild.Amount_EUR)
-                                                           END                                AS TotalPay_curr
+                                                         , SUM (tmpChild.AmountDiscount)      AS AmountDiscount
+                                                         , SUM (tmpChild.AmountDiscount_EUR)  AS AmountDiscount_EUR
+                                                         , SUM (tmpChild.AmountRounding)      AS AmountRounding
+                                                         , SUM (tmpChild.AmountRounding_EUR)  AS AmountRounding_EUR
+                                                         , SUM (tmpChild.Amount_EUR)          AS TotalPay_EUR
+                                                         , SUM (tmpChild.Amount_GRN)          AS TotalPay_GRN
                                                     FROM tmpChild
-                                                    WHERE tmpChild.ParentId > 0
+                                                    WHERE COALESCE(tmpChild.ParentId, 0) <> 0
                                                     GROUP BY tmpChild.ParentId
                                                    ) AS tmp ON tmp.ParentId = _tmp_MI_Master.MovementItemId
                                    ) AS tmp
@@ -196,7 +202,9 @@ BEGIN
                                                                 , inCashId_Exc         := tmpChild.CashId_Exc
                                                                 , inAmount             := tmpChild.Amount
                                                                 , inCurrencyValue      := tmpChild.CurrencyValue
+                                                                , inCurrencyValueIn    := tmpChild.CurrencyValueIn
                                                                 , inParValue           := tmpChild.ParValue
+                                                                , inAmountExchange     := tmpChild.Amount_GRN
                                                                 , inUserId             := vbUserId
                                                                  ) AS MovementItemId
                              FROM tmpChild
@@ -222,6 +230,7 @@ BEGIN
                                                            , inIsPay                   := FALSE                  -- добавить с оплатой
                                                            , ioAmount                  := MovementItem.Amount    -- Количество
                                                            , ioChangePercent           := 0                      -- *** - % Скидки
+                                                           , ioChangePercentNext       := 0                      -- *** - % Скидки Доп.
 
                                                            , ioSummChangePercent       := 0                      -- *** - Дополнительная скидка в продаже ГРН
                                                            , ioSummChangePercent_curr  := 0                      -- *** - Дополнительная скидка в продаже в валюте***
@@ -277,4 +286,23 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_Sale_Child (ioId:= 0, inMovementId:= 8, inGoodsId:= 446, inPartionId:= 50, inAmount:= 4, outOperPrice:= 100, ioCountForPrice:= 1, inSession:= zfCalc_UserAdmin());
+-- 
+
+--select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23590 , inParentId := 116340 , inAmountGRN := 1777 , inAmountUSD := 100 , inAmountEUR := 100 , inAmountCARD := 0 , inAmountDiscount_GRN := -0.38 , inAmountDiscount_EUR := -0.01 , inAmountRounding_GRN := 16.36 , inAmountRounding_EUR := 0 , inAmountDiff := 0 , inisChangeEUR := False, inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , inCurrencyValueCross := 1.09 , inParValueCross := 1 ,  inSession := '2');
+
+--select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23590 , inParentId := 116340 , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 300 , inAmountCARD := 0 , inAmountDiscount_GRN := -2635.1 , inAmountDiscount_EUR := -65 , inAmountRounding_GRN := 0 , inAmountRounding_EUR := 0 , inAmountDiff := 0 , inisChangeEUR := 'False' , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , inCurrencyValueCross := 1.09 , inParValueCross := 1 ,  inSession := '2');
+
+/*select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23591  , inParentId := 0 , 
+                                           inAmountGRN := 100 , inAmountUSD := 100 , inAmountEUR := 100 , inAmountCARD := 0 , inAmountDiscount_EUR := 141.82 , inAmountDiff := 0 , inAmountRemains_EUR := 0 ,
+                                           inisDiscount := 'True', 
+                                           inisChangeEUR := 'False' , 
+                                           inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , 
+                                           inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , 
+                                           inCurrencyValueCross := 1.09 , inParValueCross := 1 ,  inSession := '2');*/
+                                           
+select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23591 , inParentId := 0 , 
+                                           inAmountGRN := 6000 , inAmountUSD := 100 , inAmountEUR := 100 , inAmountCARD := 0 , inAmountDiscount_EUR := 0 , inAmountDiff := 0 , inAmountRemains_EUR := 0 , 
+                                           inisDiscount := 'True' , inisChangeEUR := 'False' , 
+                                           inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , 
+                                           inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , 
+                                           inCurrencyValueCross := 1.09 , inParValueCross := 1 ,  inSession := '2');

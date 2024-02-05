@@ -4923,10 +4923,6 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -6538,8 +6534,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1079
-    Top = 16
+    Left = 1127
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -6562,8 +6557,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1144
-    Top = 16
+    Left = 1232
+    Top = 8
   end
   object spSelectPrint_Total_To: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_TotalPrint'

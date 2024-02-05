@@ -3391,7 +3391,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateMI_Sale_PriceIn'
+          ItemName = 'bbsEdit'
         end
         item
           Visible = True
@@ -3399,15 +3399,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRoundAmountPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_PriceList'
+          ItemName = 'bbsUnLoad'
         end
         item
           Visible = True
@@ -3422,18 +3414,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           ItemName = 'dxBarStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbExport_XML'
-        end
-        item
-          Visible = True
-          ItemName = 'bbbExportFile_fromMail'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbsPrintGroup'
         end
@@ -3733,6 +3714,40 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     object bbPrintPacklist: TdxBarButton
       Action = macPrintPacklist
       Category = 0
+    end
+    object bbsEdit: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 79
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateMI_Sale_PriceIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRoundAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PriceList'
+        end>
+    end
+    object bbsUnLoad: TdxBarSubItem
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 5
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbExport_XML'
+        end
+        item
+          Visible = True
+          ItemName = 'bbbExportFile_fromMail'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

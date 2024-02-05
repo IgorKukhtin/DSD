@@ -265,6 +265,11 @@ type
     bbExport_XML: TdxBarButton;
     actOpenProductionUnionForm: TdsdOpenForm;
     bbOpenProductionUnionForm: TdxBarButton;
+    bbsEdit: TdxBarSubItem;
+    bbsSeparator: TdxBarSeparator;
+    bbsShow: TdxBarSubItem;
+    bbsUnLoad: TdxBarSubItem;
+    bbsPrint: TdxBarSubItem;
   private
     { Private declarations }
   public

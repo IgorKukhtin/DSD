@@ -2855,62 +2855,6 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdatePriceCurrency'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdatePrice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMI_Sale_PriceIn'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_PartionGoodsDateList'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Invnumber'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMaskReturn'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMaskSend'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -2926,8 +2870,9 @@ inherited Sale_OrderForm: TSale_OrderForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbOpenReport'
+          ItemName = 'bbsEdit'
         end
         item
           Visible = True
@@ -2935,19 +2880,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenProduction'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenProductionUnionForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOrderExternal'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPromo'
+          ItemName = 'bbsUnLoad'
         end
         item
           Visible = True
@@ -2955,7 +2888,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bbExport_XML'
+          ItemName = 'bbsShow'
         end
         item
           Visible = True
@@ -2963,103 +2896,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Transport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_PackWeight'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Bill'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTax_Client'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTax'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Spec'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Pack'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Pack21'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Pack22'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintPackGross'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_TTN'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Quality'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSaleOrder'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSaleOrderTax'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintReturnInDay'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -3223,6 +3060,205 @@ inherited Sale_OrderForm: TSale_OrderForm
     object bbOpenProductionUnionForm: TdxBarButton
       Action = actOpenProductionUnionForm
       Category = 0
+    end
+    object bbsEdit: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 79
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdatePriceCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMI_Sale_PriceIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PartionGoodsDateList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Invnumber'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMaskReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMaskSend'
+        end>
+    end
+    object bbsSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbsShow: TdxBarSubItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 24
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenReport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenProduction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenProductionUnionForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrderExternal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPromo'
+        end>
+    end
+    object bbsUnLoad: TdxBarSubItem
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 5
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbExport_XML'
+        end>
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Transport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_PackWeight'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Bill'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax_Client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Spec'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack21'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack22'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPackGross'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Quality'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSaleOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSaleOrderTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintReturnInDay'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
