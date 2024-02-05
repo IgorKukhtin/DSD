@@ -23,7 +23,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 563
-        ExplicitTop = -6
         ExplicitWidth = 1221
         ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -3354,6 +3353,12 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -3369,6 +3374,12 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3429,6 +3440,12 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -321,6 +321,15 @@ type
     bbUpdate_PriceNalog: TdxBarButton;
     actGridToExcel_Child: TdsdGridToExcel;
     bbGridToExcel_Child: TdxBarButton;
+    spSelect_ExportCSVF2: TdsdStoredProc;
+    spGet_Export_FileNameCSVF2: TdsdStoredProc;
+    spGet_Export_EmailCSVF2: TdsdStoredProc;
+    mactExportCSVF2: TMultiAction;
+    actGet_Export_EmailCSVF2: TdsdExecStoredProc;
+    actGet_Export_FileNameCSVF2: TdsdExecStoredProc;
+    actSelect_ExportCSVF2: TdsdExecStoredProc;
+    bbExportCSVF2: TdxBarButton;
+    bbSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

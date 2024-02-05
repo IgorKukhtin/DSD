@@ -22,9 +22,9 @@ BEGIN
 
      -- Результат
      SELECT ('PersonalService_' || CURRENT_DATE) AS outFileNamePrefix
-          , Object_PersonalServiceList.ValueData
+          , Object_PersonalServiceList.ValueData 
+            ||CASE WHEN inParam = 2 THEN ' по № карты' ELSE '' END
             ||'_'||zfCalc_MonthName(MovementDate_ServiceDate.ValueData)  
-            ||CASE WHEN inParam = 2 THEN '_Ф2' ELSE '' END
              AS outFileName
           , '.csv'                               AS outDefaultFileExt
           , TRUE                                 AS outEncodingANSI
@@ -38,7 +38,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-     WHERE Movement.Id = inMovementId;
+     WHERE Movement.Id = inMovementId; 
+     
+     --Отправить Электронный документ CSV - № карты Ф2
 
 END;
 $BODY$

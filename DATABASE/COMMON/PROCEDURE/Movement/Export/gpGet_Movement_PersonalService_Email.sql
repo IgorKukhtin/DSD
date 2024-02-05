@@ -1,9 +1,12 @@
 -- Function: gpGet_Movement_PersonalService_Email()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService_Email (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService_Email (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService_Email (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService_Email(
-    IN inMovementId           Integer   ,
+    IN inMovementId           Integer   ,   
+    IN inParam                Integer,    -- = 1 ƒЋя CardSecond, INN, SummCardSecondRecalc, PersonalName 
+                                          -- = 2 ƒЋя CardBankSecond, SummCardSecondRecalc
     IN inSession              TVarChar    -- сесси€ пользовател€
 )
 RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVarChar
@@ -93,7 +96,7 @@ BEGIN
           , gpGet_User.Value                     AS UserName
           , gpGet_Password.Value                 AS Password
 
-     FROM gpGet_PersonalService_FileNameCSV (inMovementId, 1, inSession) AS tmp
+     FROM gpGet_PersonalService_FileNameCSV (inMovementId, inParam, inSession) AS tmp
           LEFT JOIN tmpExportJuridical ON 1 = 1
           LEFT JOIN tmpEmail AS gpGet_Host      ON gpGet_Host.EmailToolsId      = zc_Enum_EmailTools_Host()
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
@@ -114,4 +117,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalService_Email (inMovementId:= 21011498, inSession:= zfCalc_UserAdmin()) -- 
+-- SELECT * FROM gpGet_Movement_PersonalService_Email (inMovementId:= 21011498,inParam:=1,  inSession:= zfCalc_UserAdmin()) -- 

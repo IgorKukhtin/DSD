@@ -806,7 +806,7 @@ BEGIN
              , CASE WHEN inisMonth = FALSE THEN tmpFuel.OperDate ELSE DATE_TRUNC ('Month', tmpFuel.OperDate) END ::TDateTime AS OperDate
              , ViewObject_Unit.BranchName
              , ViewObject_Unit.Name             AS UnitName_car
-             , STRING_AGG (Object_Unit_route.ValueData, ';') :: TVarChar AS UnitName_route
+             , STRING_AGG (DISTINCT Object_Unit_route.ValueData, ';') :: TVarChar AS UnitName_route
              , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
              , Object_Car.ValueData             AS CarName
              --, View_PersonalDriver.PersonalName AS PersonalDriverName 
@@ -858,17 +858,17 @@ BEGIN
              , MAX (COALESCE (tmpDataReestr.RouteName_order, ''))   :: TVarChar AS RouteName_order
 
 
-             , CAST (MovementFloat_PartnerCount.ValueData AS TFloat)                                                             AS PartnerCount
+             , SUM (CAST (MovementFloat_PartnerCount.ValueData AS TFloat))       ::TFloat                                                      AS PartnerCount
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
              , CAST (COALESCE (MovementFloat_HoursStop.ValueData, 0) AS TFloat)                                                  AS HoursStop
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
-             , (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16,2))) :: TFloat AS HoursPartner_all  -- общее время в точках
+             , (SUM(COALESCE (MovementFloat_PartnerCount.ValueData,0)) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16,2))) :: TFloat AS HoursPartner_all  -- общее время в точках
              , CAST((COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 )  AS NUMERIC (16,2))           :: TFloat AS HoursPartner      -- время в точке, часов
              , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
-                        - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
+                        - ( SUM (COALESCE (MovementFloat_PartnerCount.ValueData,0)) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
                          ) <> 0
                     THEN SUM (tmpFuel.DistanceFuel) / (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
-                                                     - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
+                                                     - (SUM (COALESCE (MovementFloat_PartnerCount.ValueData,0)) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
                                                       )
                     ELSE 0
                END :: TFloat AS Speed
@@ -956,17 +956,18 @@ BEGIN
                , ViewObject_Unit.BranchName
                , ViewObject_Unit.Name
 
-             , MovementFloat_PartnerCount.ValueData
+           --  , MovementFloat_PartnerCount.ValueData
              , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) )
              , (COALESCE (MovementFloat_HoursStop.ValueData, 0) )
-             , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+             /*, CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
                         - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
                          ) <> 0
                     THEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
                         - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
                          )
                     ELSE 0
-               END
+               END   */ 
+               
              , (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60)
              , MovementString_CommentStop.ValueData
        ;
