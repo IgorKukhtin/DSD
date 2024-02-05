@@ -236,6 +236,9 @@ type
     bbInsert_SMS: TdxBarButton;
     actSendSMSAction: TdsdSendSMSAction;
     ChangePercentNext: TcxGridDBColumn;
+    SummRounding: TcxGridDBColumn;
+    SummRounding_curr: TcxGridDBColumn;
+    Amount_Card_Exc: TcxGridDBColumn;
   private
   public
   end;

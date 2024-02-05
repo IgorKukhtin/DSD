@@ -478,14 +478,14 @@ object SalePodiumForm: TSalePodiumForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 155
+    Top = 164
     Width = 1066
-    Height = 448
+    Height = 439
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 448
+    ClientRectBottom = 439
     ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -495,7 +495,7 @@ object SalePodiumForm: TSalePodiumForm
         Left = 0
         Top = 83
         Width = 1066
-        Height = 341
+        Height = 332
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -908,6 +908,21 @@ object SalePodiumForm: TSalePodiumForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummDebt_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummRounding_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummRounding
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount_Card_Exc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1390,6 +1405,28 @@ object SalePodiumForm: TSalePodiumForm
             Options.Editing = False
             Width = 70
           end
+          object SummRounding_curr: TcxGridDBColumn
+            Caption = #1054#1082#1088#1091#1075#1083#1077#1085#1080#1077' EUR'
+            DataBinding.FieldName = 'SummRounding_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummRounding: TcxGridDBColumn
+            Caption = #1054#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1043#1056#1053
+            DataBinding.FieldName = 'SummRounding'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object TotalChangePercent_curr: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089#1082'. EUR '#1087#1086' % '
             DataBinding.FieldName = 'TotalChangePercent_curr'
@@ -1497,6 +1534,17 @@ object SalePodiumForm: TSalePodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1073#1084#1077#1085' '#1043#1056#1053
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_Card_Exc: TcxGridDBColumn
+            Caption = '***'#1054#1073#1084' '#1082#1072#1088#1090#1072
+            DataBinding.FieldName = 'Amount_Card_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
           end
@@ -1986,7 +2034,7 @@ object SalePodiumForm: TSalePodiumForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -2005,7 +2053,7 @@ object SalePodiumForm: TSalePodiumForm
     DockControlHeights = (
       0
       0
-      26
+      35
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False
@@ -3762,6 +3810,7 @@ object SalePodiumForm: TSalePodiumForm
         DataSummaryItemIndex = 32
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -4395,6 +4444,7 @@ object SalePodiumForm: TSalePodiumForm
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 784
     Top = 208
