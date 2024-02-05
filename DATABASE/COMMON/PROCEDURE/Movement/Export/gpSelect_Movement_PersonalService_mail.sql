@@ -165,8 +165,8 @@ BEGIN
     , tmp AS (SELECT tmp_all.CardBankSecond
                      -- % и округлили
                    , FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc <= 29999 * 100
-                                 THEN tmp_all.SummCardSecondRecalc
-                                 ELSE 29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005
+                                 THEN tmp_all.SummCardSecondRecalc / 100
+                                 ELSE (29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005) / 100
                             END) AS SummCardSecondRecalc
               FROM tmp_all
 	      )
