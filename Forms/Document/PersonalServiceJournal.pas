@@ -140,6 +140,9 @@ type
     spSelect_ExportCSVF2: TdsdStoredProc;
     actSelect_ExportCSVF2: TdsdExecStoredProc;
     bbExportCSV_F2: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbsSend: TdxBarSubItem;
+    bbSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

@@ -4,7 +4,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -117
   ExplicitWidth = 1237
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -2172,24 +2171,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_All'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Detail'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -2204,17 +2188,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           ItemName = 'dxBarStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbExportZp'
+          ItemName = 'bbsSend'
         end
         item
           Visible = True
@@ -2222,35 +2198,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbExport_dbf'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExport'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportCSV'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportCSV_F2'
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbTax: TdxBarButton
@@ -2325,6 +2273,67 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     object bbExportCSV_F2: TdxBarButton
       Action = mactExportCSV_F2
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Detail'
+        end>
+    end
+    object bbsSend: TdxBarSubItem
+      Caption = #1069#1082#1089#1087#1086#1088#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 50
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbExportZp'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport_dbf'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportCSV'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportCSV_F2'
+        end>
+    end
+    object bbSeparator1: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
