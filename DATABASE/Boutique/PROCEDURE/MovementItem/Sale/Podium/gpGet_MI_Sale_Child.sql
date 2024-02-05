@@ -422,7 +422,7 @@ BEGIN
              -- Округление - ГРН
            , (Res.AmountDiscount - round(Res.AmountDiscount))::TFloat            AS AmountDiscDiff
              -- Округлениее курсов - ГРН
-           , vbAmountRounding_GRN
+           , Res.AmountRounding
 
 
              -- Дополнительная скидка - EUR
