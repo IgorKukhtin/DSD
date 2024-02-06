@@ -11,7 +11,13 @@ uses
   Log in '..\SOURCE\Log.pas',
   UtilConst in '..\SOURCE\UtilConst.pas',
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
-  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
+  DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
+  EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.res}
 
