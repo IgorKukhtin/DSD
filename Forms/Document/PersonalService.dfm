@@ -12,17 +12,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Height = 666
     ExplicitTop = 115
     ExplicitWidth = 1258
-    ExplicitHeight = 634
+    ExplicitHeight = 666
     ClientRectBottom = 666
     ClientRectRight = 1258
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1258
-      ExplicitHeight = 610
+      ExplicitHeight = 642
       inherited cxGrid: TcxGrid
         Width = 1258
         Height = 247
         ExplicitWidth = 1258
-        ExplicitHeight = 215
+        ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1688,7 +1688,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 220
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -2061,7 +2060,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 215
       end
       object cxGrid2: TcxGrid
         Left = 0
@@ -2072,7 +2070,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         PopupMenu = PopupMenu
         TabOrder = 3
         Visible = False
-        ExplicitTop = 387
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -2221,7 +2218,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         AlignSplitter = salBottom
         Control = cxGrid2
         Visible = False
-        ExplicitTop = 381
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
@@ -2231,7 +2227,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         TabOrder = 5
         Visible = False
-        ExplicitTop = 525
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -2263,7 +2258,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitHeight = 610
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2272,7 +2269,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 610
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2358,7 +2354,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitHeight = 610
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -2367,7 +2365,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 610
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -3022,8 +3019,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object mactExportCSVF2: TMultiAction [8]
       Category = 'Export_Email'
       MoveParams = <>
-      EnabledTimer = True
-      Timer = mactExportCSVF2.Timer
       ActionList = <
         item
           Action = actGet_Export_EmailCSVF2
@@ -3342,8 +3337,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           StoredProc = spSelectChild
-        end
-        item
         end
         item
           StoredProc = spSelectMISign
