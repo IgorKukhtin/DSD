@@ -850,6 +850,22 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
       ImageIndex = 76
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1059#1074#1086#1083#1077#1085#1085#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082'"?'
     end
+    object actSetPayrollType: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetPayrollType
+      StoredProcList = <
+        item
+          StoredProc = spSetPayrollType
+        end>
+      Caption = #1042#1099#1089#1090#1072#1074#1080#1090#1100' '#1089#1084#1077#1085#1099
+      Hint = #1042#1099#1089#1090#1072#1074#1080#1090#1100' '#1089#1084#1077#1085#1099
+      ImageIndex = 79
+      QuestionBeforeExecute = #1042#1099#1089#1090#1072#1074#1080#1090#1100' '#1089#1084#1077#1085#1099' '#1087#1086' '#1074#1089#1077#1084' '#1086#1090#1084#1077#1090#1082#1072#1084' '#1073#1077#1079' '#1089#1084#1077#1085#1099'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1001,6 +1017,14 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end
         item
           Visible = True
+          ItemName = 'bbSetPayrollType'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton8'
         end
         item
@@ -1097,6 +1121,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     end
     object dxBarButton11: TdxBarButton
       Action = actUpdate_User_DismissedUser
+      Category = 0
+    end
+    object bbSetPayrollType: TdxBarButton
+      Action = actSetPayrollType
       Category = 0
     end
   end
@@ -1462,6 +1490,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderPrevCDS
     HeaderColumnName = 'ValueField'
@@ -1489,6 +1518,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
@@ -1514,6 +1544,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueFieldUser'
@@ -1653,6 +1684,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueFieldUser'
@@ -1710,5 +1742,24 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     PackSize = 1
     Left = 568
     Top = 337
+  end
+  object spSetPayrollType: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_EmployeeSchedule_SetPayrollType'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 186
+    Top = 336
   end
 end
