@@ -97,6 +97,9 @@ type
     spUpdate_User_DismissedUser: TdsdStoredProc;
     actUpdate_User_DismissedUser: TdsdExecStoredProc;
     dxBarButton11: TdxBarButton;
+    spSetPayrollType: TdsdStoredProc;
+    actSetPayrollType: TdsdExecStoredProc;
+    bbSetPayrollType: TdxBarButton;
   private
     { Private declarations }
   public
