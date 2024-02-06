@@ -2695,7 +2695,7 @@ begin
             // Номер підтвердження замовлення
             DESADV_fozz.ORDRSPNUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
             // Дата підтвердження замовлення
-            DESADV_fozz.ORDRSPDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate').asDateTime);
+            DESADV_fozz.ORDRSPDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
             // Номер накладної
             DESADV_fozz.DELIVERYNOTENUMBER := StrToInt(HeaderDataSet.FieldByName('InvNumber').asString);
             // Дата накладної
@@ -3005,16 +3005,18 @@ begin
             DESADV := DesadvXML.NewDESADV;
             //
             DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-            DESADV.Date := FormatDateTime('yyyy-mm-dd',
-              HeaderDataSet.FieldByName('OperDate').asDateTime);
-            DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-              HeaderDataSet.FieldByName('OperDate').asDateTime);
+            // Дата документа
+            DESADV.Date := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            // Дата поставки
+            DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            //
             DESADV.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-            DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-              HeaderDataSet.FieldByName('OperDate').asDateTime);
+            // Дата замовлення
+            DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+            //
             DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-            DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
-              HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            // Дата накладної
+            DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
             //
             if HeaderDataSet.FieldByName('INFO_RoomNumber').asString <> ''
             then DESADV.INFO := HeaderDataSet.FieldByName('INFO_RoomNumber').asString;
@@ -4126,7 +4128,7 @@ begin
           // Номер підтвердження замовлення
           ORDRSP_fozz.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
           // Дата документа
-          ORDRSP_fozz.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+          ORDRSP_fozz.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
           // Час створення документа
           ORDRSP_fozz.Time := FormatDateTime('hh:mm',HeaderDataSet.FieldByName('OperDate_insert').asDateTime);
           // Номер замовлення
@@ -4208,13 +4210,14 @@ begin
           ORDRSP := ORDRSPXML.NewORDRSP;
           //
           ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-          ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
-            HeaderDataSet.FieldByName('OperDate').asDateTime);
-          ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-            HeaderDataSet.FieldByName('OperDate').asDateTime);
+          // Дата документа
+          ORDRSP.Date := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+          // Дата доставки
+          ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+          //
           ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-          ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-            HeaderDataSet.FieldByName('OperDate').asDateTime);
+          // Дата замовлення
+          ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
 
           if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
           then
