@@ -1,4 +1,4 @@
- -- Function: gpReport_GoodsMI_byMovement ()
+-- Function: gpReport_GoodsMI_byMovement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
