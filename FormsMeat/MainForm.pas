@@ -1468,6 +1468,8 @@ type
     miReport_Send_PartionCell: TMenuItem;
     actContractPartner: TdsdOpenForm;
     N259: TMenuItem;
+    actCashOperationPav_Nal: TdsdOpenForm;
+    miCashOperationPav_Nal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
