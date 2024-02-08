@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_mail (Integer, Integer
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_mail(
     IN inMovementId           Integer,
     IN inParam                Integer,    -- = 1  CardSecond, INN, SummCardSecondRecalc, PersonalName 
-                                          -- = 2  CardBankSecond, SummCardSecondRecalc
+                                          --CSV  = 2 ДЛЯ CardBankSecond, SummCardSecondRecalc
+                                          
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (RowData TBlob)
@@ -182,11 +183,12 @@ BEGIN
               SELECT ''
            || ';' || (SUM (tmp.SummCardSecondRecalc)) :: Integer
               FROM tmp
-             ;
+             ;   
      END IF;
 
+
      -- сохранили свойство <Сформирована Выгрузка (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
+    -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
 
      -- Результат
      RETURN QUERY
@@ -200,9 +202,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.02.24         *
  31.01.24         *
  17.11.21         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_mail (21011498, 2, zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_mail (27194351, 2, zfCalc_UserAdmin());

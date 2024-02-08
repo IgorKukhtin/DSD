@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpGet_PersonalService_FileNameCSV (Integer, Integer, TVa
 CREATE OR REPLACE FUNCTION gpGet_PersonalService_FileNameCSV(
     IN inMovementId           Integer   ,  
     IN inParam                Integer,    -- = 1 ДЛЯ CardSecond, INN, SummCardSecondRecalc, PersonalName 
-                                          -- = 2 ДЛЯ CardBankSecond, SummCardSecondRecalc
+                                          --CSV  = 2 ДЛЯ CardBankSecond, SummCardSecondRecalc
+                                          --XLS  = 3 ДЛЯ CardBankSecond, SummCardSecondRecalc
    OUT outFileName            TVarChar  ,
    OUT outFileNamePrefix      TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
@@ -23,10 +24,10 @@ BEGIN
      -- Результат
      SELECT ('PersonalService_' || CURRENT_DATE) AS outFileNamePrefix
           , Object_PersonalServiceList.ValueData 
-            ||CASE WHEN inParam = 2 THEN ' по № карты' ELSE '' END
+            ||CASE WHEN inParam = 2 OR inParam = 3 THEN ' по № карты' ELSE '' END
             ||'_'||zfCalc_MonthName(MovementDate_ServiceDate.ValueData)  
-             AS outFileName
-          , '.csv'                               AS outDefaultFileExt
+             ::TVarChar AS outFileName
+          , CASE WHEN inParam = 3 THEN '.xls' ELSE '.csv' END ::TVarChar  AS outDefaultFileExt
           , TRUE                                 AS outEncodingANSI
    INTO outFileNamePrefix, outFileName, outDefaultFileExt, outEncodingANSI
      FROM Movement
@@ -40,8 +41,6 @@ BEGIN
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
      WHERE Movement.Id = inMovementId; 
      
-     --Отправить Электронный документ CSV - № карты Ф2
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -50,6 +49,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.02.24         *
  17.11.21         *
 */
 
