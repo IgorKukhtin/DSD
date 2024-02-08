@@ -33,6 +33,9 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+    PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
     vbMemberId := (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
                    FROM ObjectLink AS ObjectLink_Personal_Member
                    WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
