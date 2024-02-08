@@ -80,6 +80,7 @@ BEGIN
                     WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
                       AND ObjectLink.ObjectId = inPersonalServiceListId
                    )
+      AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.В справочнике <Ведомости начисления> для <%> не установлено значение Физ.лицо (пользователь).', lfGet_Object_ValueData_sh (inPersonalServiceListId);
      END IF;
