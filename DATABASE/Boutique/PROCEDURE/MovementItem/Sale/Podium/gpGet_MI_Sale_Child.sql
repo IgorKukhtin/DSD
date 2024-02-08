@@ -549,4 +549,4 @@ $BODY$
 -- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inIsGRN:= FALSE, inIsUSD:= FALSE, inIsEUR:= FALSE, inIsCard:= FALSE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23591 ,  inSession := '2');
+select * from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23589 ,  inSession := '2');

@@ -6,7 +6,8 @@ DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService_Email (Integer, Integer, 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService_Email(
     IN inMovementId           Integer   ,   
     IN inParam                Integer,    -- = 1 ДЛЯ CardSecond, INN, SummCardSecondRecalc, PersonalName 
-                                          -- = 2 ДЛЯ CardBankSecond, SummCardSecondRecalc
+                                          --CSV  = 2 ДЛЯ CardBankSecond, SummCardSecondRecalc
+                                          --XLS  = 3 ДЛЯ CardBankSecond, SummCardSecondRecalc
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVarChar
@@ -84,11 +85,13 @@ BEGIN
                                                                                      )
                                                                   , inSession    := inSession)
                                                                    )
-     SELECT (tmp.outFileName || '.csv') :: TVarChar AS Subject
+     SELECT CASE WHEN inParam = 3 THEN (tmp.outFileName || '.xls') 
+                 ELSE (tmp.outFileName ||'.csv')
+            END                       :: TVarChar AS Subject
           , ''                        :: TBlob    AS Body
           , gpGet_Mail.Value                      AS AddressFrom
           , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu@ua.fm'
-                 WHEN vbUserId = 9457 AND 1=0 THEN 'innafelon@gmail.com'
+                 WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
                  ELSE tmpExportJuridical.ContactPersonMail --|| ';ashtu@ua.fm'
             END :: TVarChar AS AddressTo
           , gpGet_Host.Value                     AS Host
@@ -113,8 +116,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.02.24         *
  25.02.16                                        *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalService_Email (inMovementId:= 21011498,inParam:=1,  inSession:= zfCalc_UserAdmin()) -- 
+-- SELECT * FROM gpGet_Movement_PersonalService_Email (inMovementId:= 21011498, inParam:=1,  inSession:= zfCalc_UserAdmin()) -- 

@@ -592,7 +592,7 @@ var strConn :  widestring;
     Cols: integer;
     Rows: integer;
     Excel, XLSheet: Variant;
-    I, J: Integer;
+    I, J, MaxCols: Integer;
     TempArray: OLEVariant;
     f:TextFile;
     FileNameTxt, s : string;
@@ -747,6 +747,7 @@ begin
         // Подправим количество столбиков
 
         while Excel.Cells[1, Cols + 1].Text <> '' do Inc(Cols);
+        MaxCols := 0;
 
         for I := 1 to Cols do
         begin
@@ -764,6 +765,7 @@ begin
                   else TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 100)
                 end;
 
+                MaxCols := I;
                 Break;
               end;
             end;
@@ -772,6 +774,12 @@ begin
               TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideMemo, 0);
 
           end else TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideMemo, 0);
+        end;
+
+        if Assigned(FImportSettings) and (MaxCols > 0) and (MaxCols < Cols) then
+        begin
+          Cols := MaxCols;
+          while TClientDataSet(FDataSet).FieldDefs.Count > Cols do TClientDataSet(FDataSet).FieldDefs.Delete(TClientDataSet(FDataSet).FieldDefs.Count - 1);
         end;
 
         TClientDataSet(FDataSet).CreateDataSet;

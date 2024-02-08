@@ -214,8 +214,8 @@ BEGIN
      -- Распределили суммы по оплатам
      SELECT Res.AmountDiff
 
-          , Res.AmountRemains
-          , Res.AmountRemains_EUR
+          , Res.AmountRest
+          , Res.AmountRest_EUR
 
             -- Дополнительная скидка - ГРН
           , Res.AmountDiscount
@@ -306,11 +306,114 @@ BEGIN
                                       , inCurrencyId_Client      := inCurrencyId_Client 
                                       , inUserId                 := inUserId) AS Res;
                                            
+     --raise notice 'Remains: % %', vbAmountRemains, vbAmountRemains_EUR;
      --raise notice 'Discount: % % % %', vbAmountDiscount, vbAmountRounding, vbAmountDiscount_EUR, vbAmountRounding_EUR;
      --raise notice 'EUR: % % % %', vbAmountEUR_Pay, vbAmountEUR_Pay_GRN, vbAmountEUR_Over, vbAmountEUR_Over_GRN;
      --raise notice 'USD: % % % % %', vbAmountUSD_Pay, vbAmountUSD_EUR, vbAmountUSD_Pay_GRN, vbAmountUSD_Over, vbAmountUSD_Over_GRN;
      --raise notice 'CARD: % % %', vbAmountCARD_Pay, vbAmountCARD_EUR, vbAmountCARD_Over;
      --raise notice 'GRN: % % %', vbAmountGRN_Pay, vbAmountGRN_EUR, vbAmountGRN_Over;
+          
+     --Округляем долг в валюте до целого
+     IF COALESCE(inAmountDiscount_EUR, 0) = 0 AND COALESCE(vbAmountRemains_EUR, 0) <> Round(COALESCE(vbAmountRemains_EUR, 0))
+     THEN
+       SELECT Res.AmountDiff
+
+            , Res.AmountRest
+            , Res.AmountRest_EUR
+
+              -- Дополнительная скидка - ГРН
+            , Res.AmountDiscount
+              -- Округлениее курсов - ГРН
+            , Res.AmountRounding
+
+
+              -- Дополнительная скидка - EUR
+            , Res.AmountDiscount_EUR
+              -- Дополнительная скидка - EUR
+            , Res.AmountRounding_EUR
+            
+            , Res.AmountGRN_Pay
+            , Res.AmountGRN_EUR
+
+            , Res.AmountGRN_Over
+
+            , Res.AmountUSD_Pay
+            , Res.AmountUSD_EUR
+            , Res.AmountUSD_Pay_GRN
+            , Res.AmountUSD_Over
+            , Res.AmountUSD_Over_GRN
+
+            , Res.AmountEUR_Pay
+            , Res.AmountEUR_Pay_GRN
+            , Res.AmountEUR_Over
+            , Res.AmountEUR_Over_GRN
+
+            , Res.AmountCARD_Pay
+            , Res.AmountCARD_EUR
+            , Res.AmountCARD_Over
+
+       INTO vbAmountDiff
+
+          , vbAmountRemains
+          , vbAmountRemains_EUR
+          
+            -- Дополнительная скидка - ГРН
+          , vbAmountDiscount
+            -- Округлениее курсов - ГРН
+          , vbAmountRounding
+
+
+            -- Дополнительная скидка - EUR
+          , vbAmountDiscount_EUR
+            -- Дополнительная скидка - EUR
+          , vbAmountRounding_EUR
+            
+          , vbAmountGRN_Pay
+          , vbAmountGRN_EUR
+          , vbAmountGRN_Over
+
+          , vbAmountUSD_Pay
+          , vbAmountUSD_EUR
+          , vbAmountUSD_Pay_GRN
+          , vbAmountUSD_Over
+          , vbAmountUSD_Over_GRN
+
+          , vbAmountEUR_Pay
+          , vbAmountEUR_Pay_GRN
+          , vbAmountEUR_Over
+          , vbAmountEUR_Over_GRN
+
+          , vbAmountCARD_Pay
+          , vbAmountCARD_EUR
+          , vbAmountCARD_Over
+             
+       FROM lpGet_MI_Sale_Child_TotalCalc(inCurrencyValueUSD       := inCurrencyValueUSD
+                                        , inCurrencyValueInUSD     := inCurrencyValueInUSD
+                                        , inCurrencyValueEUR       := inCurrencyValueEUR
+                                        , inCurrencyValueInEUR     := inCurrencyValueInEUR
+                                        , inCurrencyValueCross     := inCurrencyValueCross
+
+                                        , inAmountToPay_EUR        := vbAmountToPay_EUR 
+                                        , inAmountGRN              := inAmountGRN
+                                        , inAmountUSD              := inAmountUSD
+                                        , inAmountEUR              := inAmountEUR
+                                        , inAmountCard             := inAmountCard
+                                        , inAmountDiscount_EUR     := COALESCE(vbAmountRemains_EUR, 0) - Round(COALESCE(vbAmountRemains_EUR, 0))
+                                         
+                                        , inisDiscount             := inisDiscount
+                                        , inisChangeEUR            := inisChangeEUR
+                                         
+                                        , inisAmountRemains_EUR    := inisDiscount = TRUE AND inAmountRemains_EUR > 0
+                                        , inAmountRemains_EUR      := CASE WHEN inisDiscount = TRUE AND inAmountRemains_EUR > 0 THEN inAmountRemains_EUR ELSE 0 END
+                                        , inisAmountDiff           := inAmountDiff <> 0
+                                        , inAmountDiff             := inAmountDiff
+                                        , inCurrencyId_Client      := inCurrencyId_Client 
+                                        , inUserId                 := inUserId) AS Res;
+
+       --raise notice 'Remains: % %', vbAmountRemains, vbAmountRemains_EUR;
+       --raise notice 'Discount: % % % %', vbAmountDiscount, vbAmountRounding, vbAmountDiscount_EUR, vbAmountRounding_EUR;
+     
+     END IF;
      
      --Поменяем долг по гривне от долга евро
      IF Round(zfCalc_CurrencyFrom (vbAmountRemains_EUR, inCurrencyValueEUR, 1), 2) <> Round(zfCalc_CurrencyFrom (vbAmountToPay_EUR, inCurrencyValueEUR, 1), 2) - vbAmountEUR_Pay_GRN - vbAmountUSD_Pay_GRN - vbAmountCARD_Pay - vbAmountGRN_Pay - vbAmountDiscount - vbAmountRounding
@@ -327,6 +430,9 @@ BEGIN
                                       
      -- Дополнительная оплата из за невыданного округления    
      vbAmountDiffLeft_GRN := (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over) - vbAmountDiff;
+     vbAmountDiscount := vbAmountDiscount - vbAmountDiffLeft_GRN;
+
+     raise notice 'D: % %  % ', vbAmountDiffLeft_GRN, (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), vbAmountDiff;
           
      -- распределили - Дополнительую скидку по всем строкам
      -- Распределили EUR
@@ -647,7 +753,7 @@ BEGIN
                                       , tmpMI.AmountToPay_EUR - tmpMI.AmountDiscount_EUR - tmpMI.AmountRounding_EUR - tmpMI.Amount_EUR - COALESCE(res.Amount_EUR, 0) AS Amount_all
                                        
                                         -- Переводим в Валюту + округлили коп.
-                                      , ROUND (CASE WHEN inisChangeEUR = TRUE 
+                                      , ROUND (CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0
                                                     THEN (tmpMI.AmountToPay_EUR - tmpMI.AmountDiscount_EUR - tmpMI.AmountRounding_EUR - tmpMI.Amount_EUR - COALESCE(res.Amount_EUR, 0)) * inCurrencyValueEUR 
                                                     ELSE (tmpMI.AmountToPay_EUR - tmpMI.AmountDiscount_EUR - tmpMI.AmountRounding_EUR - tmpMI.Amount_EUR - COALESCE(res.Amount_EUR, 0)) * inCurrencyValueUSD * inCurrencyValueCross END) AS Amount_calc
                                          
@@ -684,7 +790,7 @@ BEGIN
                                                THEN DD.Amount_all
                                                -- оплатили частично
                                                WHEN vbAmountCARD_Pay - (DD.Amount_SUM - DD.Amount_calc) > 0
-                                               THEN Round(CASE WHEN inisChangeEUR = TRUE 
+                                               THEN Round(CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0 
                                                                THEN (vbAmountCARD_Pay - (DD.Amount_SUM - DD.Amount_calc)) * inCurrencyValueEUR 
                                                                ELSE (vbAmountCARD_Pay - (DD.Amount_SUM - DD.Amount_calc)) * inCurrencyValueUSD * inCurrencyValueCross END, 2) 
                                                ELSE 0
@@ -692,7 +798,7 @@ BEGIN
 
                                         , CASE WHEN vbAmountCARD_Pay  - DD.Amount_SUM > 0
                                                -- оплатили полностью, поправили скидку
-                                               THEN Round(DD.Amount_all - CASE WHEN inisChangeEUR = TRUE 
+                                               THEN Round(DD.Amount_all - CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0 
                                                                                THEN DD.Amount_calc / inCurrencyValueEUR 
                                                                                ELSE DD.Amount_calc / inCurrencyValueUSD / inCurrencyValueCross END, 2) ::TFloat
                                                -- оплатили частично
@@ -701,7 +807,7 @@ BEGIN
 
                                         , CASE WHEN vbAmountCARD_Pay  - DD.Amount_SUM > 0
                                                -- оплатили полностью, поправили скидку
-                                               THEN Round(CASE WHEN inisChangeEUR = TRUE 
+                                               THEN Round(CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0 
                                                                THEN DD.Amount_all * inCurrencyValueEUR 
                                                                ELSE DD.Amount_all * inCurrencyValueUSD * inCurrencyValueCross END - DD.Amount_calc, 2) ::TFloat
                                                -- оплатили частично
@@ -803,7 +909,7 @@ BEGIN
                                      , tmpMI.AmountToPay_EUR - tmpMI.AmountDiscount_EUR - tmpMI.AmountRounding_EUR - tmpMI.Amount_EUR - COALESCE(res.Amount_EUR, 0) AS Amount_all
                                        
                                        -- Переводим в Валюту + округлили коп.
-                                     , Round(CASE WHEN inisChangeEUR = TRUE 
+                                     , Round(CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0 
                                                   THEN (tmpMI.AmountToPay_EUR - tmpMI.AmountDiscount_EUR - tmpMI.AmountRounding_EUR - tmpMI.Amount_EUR - COALESCE(res.Amount_EUR, 0)) * inCurrencyValueEUR 
                                                   ELSE (tmpMI.AmountToPay_EUR - tmpMI.AmountDiscount_EUR - tmpMI.AmountRounding_EUR - tmpMI.Amount_EUR - COALESCE(res.Amount_EUR, 0)) * inCurrencyValueUSD * inCurrencyValueCross END) AS Amount_calc
                                          
@@ -839,7 +945,7 @@ BEGIN
                                                THEN DD.Amount_all
                                                -- оплатили частично
                                                WHEN vbAmountGRN_Pay - (DD.Amount_SUM - DD.Amount_calc) > 0
-                                               THEN Round(CASE WHEN inisChangeEUR = TRUE 
+                                               THEN Round(CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0 
                                                                THEN (vbAmountGRN_Pay - (DD.Amount_SUM - DD.Amount_calc)) * inCurrencyValueEUR 
                                                                ELSE (vbAmountGRN_Pay - (DD.Amount_SUM - DD.Amount_calc)) * inCurrencyValueUSD * inCurrencyValueCross END, 2) 
                                                ELSE 0
@@ -847,7 +953,7 @@ BEGIN
 
                                         , CASE WHEN vbAmountGRN_Pay  - DD.Amount_SUM > 0
                                                -- оплатили полностью, поправили скидку
-                                               THEN Round(DD.Amount_all - CASE WHEN inisChangeEUR = TRUE 
+                                               THEN Round(DD.Amount_all - CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0 
                                                                                THEN DD.Amount_calc / inCurrencyValueEUR 
                                                                                ELSE DD.Amount_calc / inCurrencyValueUSD / inCurrencyValueCross END, 2) ::TFloat
                                                -- оплатили частично
@@ -856,7 +962,7 @@ BEGIN
 
                                         , CASE WHEN vbAmountGRN_Pay  - DD.Amount_SUM > 0
                                                -- оплатили полностью, поправили скидку
-                                               THEN Round(CASE WHEN inisChangeEUR = TRUE 
+                                               THEN Round(CASE WHEN inisChangeEUR = TRUE OR inAmountUSD = 0 
                                                                THEN DD.Amount_all * inCurrencyValueEUR 
                                                                ELSE DD.Amount_all * inCurrencyValueUSD * inCurrencyValueCross END - DD.Amount_calc, 2) ::TFloat
                                                -- оплатили частично
@@ -943,13 +1049,14 @@ BEGIN
          AND _tmpResult.CashId = (SELECT tmpCash.CashId FROM tmpCash WHERE tmpCash.CurrencyId = zc_Currency_GRN() AND tmpCash.isBankAccount = FALSE);
      END IF; 
      
+     
      -- ********** Перераспределили скидки по гривне и евро с учнтом оплат **********
      -- Уберем переплаты по грн и евро
      UPDATE _tmpResult SET AmountDiscount = CASE WHEN (_tmpResult.AmountToPay - COALESCE( tmpData.AmountDiscount, 0) - COALESCE( tmpData.AmountRounding, 0)) < COALESCE( tmpData.Amount_GRN, 0) 
-                                                 THEN (_tmpResult.AmountToPay - COALESCE( tmpData.AmountRounding, 0)) - COALESCE( tmpData.Amount_GRN, 0)
+                                                 THEN _tmpResult.AmountDiscount + (_tmpResult.AmountToPay - COALESCE( tmpData.AmountDiscount, 0) - COALESCE( tmpData.AmountRounding, 0)) - COALESCE( tmpData.Amount_GRN, 0) 
                                                  ELSE _tmpResult.AmountDiscount END
                          , AmountDiscount_EUR = CASE WHEN (_tmpResult.AmountToPay_EUR - COALESCE( tmpData.AmountDiscount_EUR, 0) - COALESCE( tmpData.AmountRounding_EUR, 0)) < COALESCE( tmpData.Amount_EUR, 0)  
-                                                     THEN (_tmpResult.AmountToPay_EUR - COALESCE( tmpData.AmountRounding_EUR, 0)) - COALESCE( tmpData.Amount_EUR, 0)  
+                                                     THEN _tmpResult.AmountDiscount_EUR + (_tmpResult.AmountToPay_EUR - COALESCE( tmpData.AmountDiscount_EUR, 0) - COALESCE( tmpData.AmountRounding_EUR, 0)) - COALESCE( tmpData.Amount_EUR, 0)  
                                                      ELSE _tmpResult.AmountDiscount_EUR END
      FROM (SELECT tmpMI.ParentId
                 , SUM(tmpMI.AmountDiscount):: TFloat AS AmountDiscount
@@ -971,8 +1078,8 @@ BEGIN
      FROM _tmpResult
      WHERE _tmpResult.CurrencyId = zc_Currency_EUR();
 
-     -- raise notice 'Discount: % % % %', vbAmountDiscount, vbAmountDiscRest, vbAmountDiscount_EUR, vbAmountDiscRest_EUR;
-          
+     -- raise notice 'Discount: % % % %', vbAmountDiscount, vbAmountDiscRest, vbAmountDiscount_EUR, vbAmountDiscRest_EUR;    
+      
      -- Дораспределили остатки скидок
      UPDATE _tmpResult SET AmountDiscount = _tmpResult.AmountDiscount + COALESCE(tmpData.AmountDiscountAdd, 0)
                          , AmountDiscount_EUR = _tmpResult.AmountDiscount_EUR + COALESCE(tmpData.AmountDiscountAdd_EUR, 0)
@@ -1037,20 +1144,7 @@ BEGIN
      WHERE _tmpResult.CurrencyId = zc_Currency_EUR() 
        AND _tmpResult.ParentId = tmpData.ParentId;
 
-                                       
-                                        
-
-
-
-   /*  vbMaxOrder := (SELECT Max(tmpMI.Ord) FROM _tmpResult AS tmpMI 
-                    WHERE tmpMI.CurrencyId = zc_Currency_EUR());
-                        
-     UPDATE _tmpResult SET AmountRounding = vbAmountRounding - COALESCE(tmpData.AmountRounding, 0)
-     FROM (SELECT SUM(CASE WHEN tmpMI.Ord <> vbMaxOrder THEN tmpMI.AmountRounding END):: TFloat AS AmountRounding
-           FROM _tmpResult AS tmpMI
-           WHERE tmpMI.CurrencyId = zc_Currency_EUR()) AS tmpData
-     WHERE _tmpResult.CurrencyId = zc_Currency_EUR() AND _tmpResult.Ord = vbMaxOrder;
-     */
+     
      -- ********** Обмен (переплата) **********
      
      -- Обмен EUR -> GRN
@@ -1271,7 +1365,7 @@ BEGIN
        
      IF COALESCE(vbText, '') <> ''
      THEN
-        RAISE EXCEPTION 'Ошибка. Не удалось распределить суммы:% %', Chr(13), vbText;
+        RAISE notice /*EXCEPTION*/ 'Ошибка. Не удалось распределить суммы:% %', Chr(13), vbText;
      END IF;
           
      -- RAISE notice /*EXCEPTION*/ 'Ошибка. %', (SELECT SUM (_tmpResult.AmountDiscount) FROM _tmpResult     );
@@ -1310,21 +1404,21 @@ $BODY$
 
 -- тест
 
-/*SELECT Object_Cash.valuedata, Calc.* 
+SELECT Object_Cash.valuedata, Calc.* 
 FROM lpSelect_MI_Child_calc(
-      inMovementId            := 23591       
-    , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23591       AND MLO.DescId = zc_MovementLinkObject_From())
-    , inAmountGRN := 300 , inAmountUSD := 200 , inAmountEUR := 0 , inAmountCARD := 6000, inAmountDiscount_EUR := -0.43, inAmountDiff :=  0, inAmountRemains_EUR := 10
-    , inisDiscount := 'True', inisChangeEUR := 'False'
+      inMovementId            := 23589        
+    , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23589 AND MLO.DescId = zc_MovementLinkObject_From())
+    , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 500 , inAmountCARD := 0, inAmountDiscount_EUR := 0, inAmountDiff :=  0, inAmountRemains_EUR := 0
+    , inisDiscount := 'False', inisChangeEUR := 'False'
     , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1
     , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1
     , inCurrencyValueCross := 1.09 , inParValueCross := 1
     , inCurrencyId_Client     := zc_Currency_EUR()
     , inUserId                := 2
 ) AS Calc left join Object AS Object_Cash ON Object_Cash.Id = Calc.CashId --WHERE Calc.CashId = 18666
-ORDER BY Calc.ParentId, Calc.ParValue;*/
+ORDER BY Calc.ParentId, Calc.ParValue;
 
-
+/*
 SELECT 
        Calc.parentid
      , Max(Calc.amounttopay)         AS amounttopay
@@ -1353,10 +1447,10 @@ SELECT
      
      
 FROM lpSelect_MI_Child_calc(
-      inMovementId            := 23591       
-    , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23591       AND MLO.DescId = zc_MovementLinkObject_From())
-    , inAmountGRN := 0 , inAmountUSD := 200 , inAmountEUR := 0 , inAmountCARD := 6000, inAmountDiscount_EUR := 0, inAmountDiff :=  0, inAmountRemains_EUR := 10
-    , inisDiscount := 'True', inisChangeEUR := 'False'
+      inMovementId            := 23589        
+    , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23589 AND MLO.DescId = zc_MovementLinkObject_From())
+    , inAmountGRN := 6164 , inAmountUSD := 328 , inAmountEUR := 0 , inAmountCARD := 0, inAmountDiscount_EUR := 0, inAmountDiff :=  0, inAmountRemains_EUR := 175.77
+    , inisDiscount := 'False', inisChangeEUR := 'False'
     , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1
     , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1
     , inCurrencyValueCross := 1.09 , inParValueCross := 1
@@ -1365,4 +1459,4 @@ FROM lpSelect_MI_Child_calc(
 ) AS Calc 
 WHERE Calc.parentid <> 0
 GROUP BY Calc.parentid
-ORDER BY Calc.ParentId
+ORDER BY Calc.ParentId*/
