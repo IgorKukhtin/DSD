@@ -49,8 +49,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- определяем
+     vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inParentId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
-     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+     IF NOT EXISTS (SELECT 1 FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId AND (Object_PersonalServiceList_User_View.PersonalServiceListId = vbPersonalServiceListId OR COALESCE (vbPersonalServiceListId, 0) = 0))
+     THEN PERFORM lpCheck_UserRole_8813637 (vbUserId);
+     END IF;
 
 
      -- Блокируем ему просмотр
@@ -70,8 +75,6 @@ BEGIN
          vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
      END IF;
 
-     -- определяем
-     vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inParentId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
      -- определяем - !!! НЕ схема премии!!!
      vbIsOnly:= -- одинаковые ведомости

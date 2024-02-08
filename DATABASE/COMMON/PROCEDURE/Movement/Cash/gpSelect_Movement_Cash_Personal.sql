@@ -37,7 +37,9 @@ BEGIN
 
 
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
-     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+     IF NOT EXISTS (SELECT 1 FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId AND Object_PersonalServiceList_User_View.PersonalServiceListId > 0)
+     THEN PERFORM lpCheck_UserRole_8813637 (vbUserId);
+     END IF;
 
 
      -- Блокируем ему просмотр
@@ -100,6 +102,9 @@ BEGIN
                            )  
           , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
 
+            -- !!!права!!!
+          , tmpPersonalServiceList_User AS (SELECT Object_PersonalServiceList_User_View.PersonalServiceListId FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId)
+
 
        SELECT
              tmpMovement.Id
@@ -161,6 +166,8 @@ BEGIN
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement_PersonalService.Id
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+            
+            LEFT JOIN tmpPersonalServiceList_User ON tmpPersonalServiceList_User.PersonalServiceListId = Object_PersonalServiceList.Id
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummToPay
                                     ON MovementFloat_TotalSummToPay.MovementId =  Movement_PersonalService.Id
@@ -186,6 +193,8 @@ BEGIN
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+       WHERE tmpPersonalServiceList_User.PersonalServiceListId > 0
+          OR Object_PersonalServiceList.Id IS NULL
       ;
    
 END;
@@ -204,4 +213,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inCashId:= 14462, inJuridicalBasisId:=0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '01.01.2024', inEndDate:= '01.01.2024', inCashId:= 14462, inJuridicalBasisId:=0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

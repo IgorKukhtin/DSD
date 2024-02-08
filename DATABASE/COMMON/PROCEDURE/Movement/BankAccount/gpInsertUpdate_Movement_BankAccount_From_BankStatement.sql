@@ -259,8 +259,8 @@ end if;
                   , tmpBankStatementItem_all.CurrencyPartnerValue
                   , tmpBankStatementItem_all.ParPartnerValue
                   , MAX (tmpBankStatementItem_all.BankAccountName) AS BankAccountName
-                  , tmpBankStatementItem_all.BankMFO
-                  , tmpBankStatementItem_all.BankName
+                  , MAX (tmpBankStatementItem_all.BankMFO)         AS BankMFO
+                  , MAX (tmpBankStatementItem_all.BankName)        AS BankName
              FROM tmpBankStatementItem_all
                   INNER JOIN Object ON Object.Id     = tmpBankStatementItem_all.MoneyPlaceId
                                    AND Object.DescId = zc_Object_PersonalServiceList()
@@ -278,8 +278,8 @@ end if;
                     , tmpBankStatementItem_all.CurrencyPartnerValue
                     , tmpBankStatementItem_all.ParPartnerValue
                   --, tmpBankStatementItem_all.BankAccountName
-                    , tmpBankStatementItem_all.BankMFO
-                    , tmpBankStatementItem_all.BankName
+                  --, tmpBankStatementItem_all.BankMFO
+                  --, tmpBankStatementItem_all.BankName
             ) AS tmpBankStatementItem
                  LEFT JOIN Movement AS Movement_BankAccount 
                                     ON Movement_BankAccount.ParentId = tmpBankStatementItem.MovementId

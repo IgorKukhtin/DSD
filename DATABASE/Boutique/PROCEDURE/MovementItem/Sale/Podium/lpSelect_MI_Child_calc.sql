@@ -430,7 +430,7 @@ BEGIN
                                       
      -- Дополнительная оплата из за невыданного округления    
      vbAmountDiffLeft_GRN := (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over) - vbAmountDiff;
-     vbAmountDiscount := vbAmountDiscount - vbAmountDiffLeft_GRN;
+     vbAmountDiscount := vbAmountDiscount + vbAmountDiff;
 
      raise notice 'D: % %  % ', vbAmountDiffLeft_GRN, (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), vbAmountDiff;
           
@@ -1409,7 +1409,7 @@ FROM lpSelect_MI_Child_calc(
       inMovementId            := 23589        
     , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23589 AND MLO.DescId = zc_MovementLinkObject_From())
     , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 500 , inAmountCARD := 0, inAmountDiscount_EUR := 0, inAmountDiff :=  0, inAmountRemains_EUR := 0
-    , inisDiscount := 'False', inisChangeEUR := 'False'
+    , inisDiscount := 'True', inisChangeEUR := 'False'
     , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1
     , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1
     , inCurrencyValueCross := 1.09 , inParValueCross := 1

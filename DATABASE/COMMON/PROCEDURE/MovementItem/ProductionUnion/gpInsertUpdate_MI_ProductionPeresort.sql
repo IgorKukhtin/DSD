@@ -122,6 +122,9 @@ BEGIN
                                               , inUserId                 := vbUserId
                                                );
 
+
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+
    --
    outGoodsChildName:= (SELECT ValueData FROM Object WHERE Id = ioGoodsChildId);
    outGoodsChilCode:= (SELECT ObjectCode FROM Object WHERE Id = ioGoodsChildId);

@@ -20,7 +20,8 @@ BEGIN
 
       -- Проверка - что б не копировали два раза
       IF EXISTS (SELECT Id FROM MovementItem WHERE isErased = FALSE AND DescId = zc_MI_Master() AND MovementId = inMovementId AND Amount <> 0)
-         THEN RAISE EXCEPTION 'Ошибка.В документе уже есть данные по начислениям.';
+          AND vbUserId <> 409388 -- Шадура В.В.
+      THEN RAISE EXCEPTION 'Ошибка.В документе уже есть данные по начислениям.';
       END IF;
 
 
@@ -208,7 +209,9 @@ BEGIN
                                 AND tmpMI.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
        WHERE MovementItem.isErased = FALSE
          AND MovementItem.DescId = zc_MI_Master()
-         AND MovementItem.MovementId =  inMovementMaskId ;
+         AND MovementItem.MovementId =  inMovementMaskId 
+       --AND tmpMI.PersonalId IS NULL
+         ;
 
 
      PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := MovementItemId
