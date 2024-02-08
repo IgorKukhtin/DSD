@@ -23,12 +23,15 @@ BEGIN
 
      -- Результат
      SELECT ('PersonalService_' || CURRENT_DATE) AS outFileNamePrefix
+
           , Object_PersonalServiceList.ValueData 
             ||CASE WHEN inParam = 2 OR inParam = 3 THEN ' по № карты' ELSE '' END
             ||'_'||zfCalc_MonthName(MovementDate_ServiceDate.ValueData)  
              ::TVarChar AS outFileName
+
           , CASE WHEN inParam = 3 THEN '.xls' ELSE '.csv' END ::TVarChar  AS outDefaultFileExt
-          , TRUE                                 AS outEncodingANSI
+
+          , CASE WHEN inParam = 3 THEN FALSE ELSE TRUE END    ::Boolean   AS outEncodingANSI
    INTO outFileNamePrefix, outFileName, outDefaultFileExt, outEncodingANSI
      FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList

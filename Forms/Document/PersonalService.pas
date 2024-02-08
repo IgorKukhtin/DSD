@@ -333,11 +333,12 @@ type
     spGet_Export_EmailCSVF2_xls: TdsdStoredProc;
     spSelect_ExportCSVF2_xls: TdsdStoredProc;
     spGet_Export_FileNameCSVF2_xls: TdsdStoredProc;
-    mactExportCSVF2_xls: TMultiAction;
-    actGet_Export_EmailCSVF2_xls: TdsdExecStoredProc;
-    actGet_Export_FileNameCSVF2_xls: TdsdExecStoredProc;
-    actSelect_ExportCSVF2_xls: TdsdExecStoredProc;
+    mactExportF2_xls: TMultiAction;
+    actGet_Export_EmailF2_xls: TdsdExecStoredProc;
+    actGet_Export_FileNameF2_xls: TdsdExecStoredProc;
+    actSelect_ExportF2_xls: TdsdExecStoredProc;
     bbExportCSVF2_xls: TdxBarButton;
+    actExport_GridF2_xls: TExportGrid;
   private
     { Private declarations }
   public

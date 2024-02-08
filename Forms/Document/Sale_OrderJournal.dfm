@@ -6274,8 +6274,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 472
+    Left = 312
+    Top = 504
   end
   object spGet_Export_FileName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Email_FileName'
