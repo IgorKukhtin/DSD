@@ -314,7 +314,12 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 32
-    Buttons = <>
+    Buttons = <
+      item
+        Action = actUpdate_CurrencyValueCross
+        Kind = bkGlyph
+      end>
+    Images = dmMain.ImageList
     Width = 120
   end
   object ceAmountDiscDiff_EUR: TcxCurrencyEdit
@@ -417,8 +422,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Width = 41
   end
   object ceAmountRounding: TcxCurrencyEdit
-    Left = 395
-    Top = 189
+    Left = 398
+    Top = 183
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -2212,6 +2217,23 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actUpdate_CurrencyValueCross: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      CancelAction = actEnableHeaderChanger
+      AfterAction = actRefreshTotal
+      BeforeAction = actDisableHeaderChanger
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CurrencyValueCross
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CurrencyValueCross
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1050#1088#1086#1089#1089'-'#1050#1091#1088#1089' (EUR/USD)'
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1050#1088#1086#1089#1089'-'#1050#1091#1088#1089' (EUR/USD)'
+      ImageIndex = 42
+      QuestionBeforeExecute = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1050#1088#1086#1089#1089'-'#1050#1091#1088#1089' (EUR/USD)?'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -4888,5 +4910,37 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     PackSize = 1
     Left = 288
     Top = 165
+  end
+  object spUpdate_CurrencyValueCross: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Sale_CurrencyValueCross'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCurrencyValueUSD'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueEUR'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValueCross'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_Cross
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 348
+    Top = 152
   end
 end

@@ -135,6 +135,8 @@ type
     actRefreshTotalDiff: TdsdDataSetRefresh;
     spGet_TotalRemains: TdsdStoredProc;
     spGet_TotalDiff: TdsdStoredProc;
+    spUpdate_CurrencyValueCross: TdsdStoredProc;
+    actUpdate_CurrencyValueCross: TdsdExecStoredProc;
   private
     { Private declarations }
   public
