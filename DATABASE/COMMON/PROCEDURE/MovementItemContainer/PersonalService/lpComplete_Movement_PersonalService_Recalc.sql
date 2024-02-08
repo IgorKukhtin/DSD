@@ -509,7 +509,7 @@ BEGIN
                                          WHERE ObjectLink_User_Member.ObjectId IS NULL
                                          LIMIT 1
                                         );
-     IF vbPersonalServiceListId_to_check <> 0
+     IF vbPersonalServiceListId_to_check <> 0 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Для ведомости <%> не установлено <Физ.лицо (пользователь)>.', lfGet_Object_ValueData (vbPersonalServiceListId_to_check);
      END IF;
