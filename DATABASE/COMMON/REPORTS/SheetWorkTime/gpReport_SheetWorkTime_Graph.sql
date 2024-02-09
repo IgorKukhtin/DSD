@@ -62,7 +62,8 @@ BEGIN
                                     , inUnitId
                                     , TRUE      --inIsDate
                                     , TRUE      --inIsPersonalGroup
-                                    , FALSE     --inisMovement
+                                    , FALSE     --inisMovement 
+                                    , FALSE     --inisUnComplete
                                     , inSession
                                     ) AS tmp
         GROUP BY tmp.OperDate
