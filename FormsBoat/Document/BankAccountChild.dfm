@@ -707,7 +707,7 @@
       end
       item
         Name = 'inMovementItemId_child'
-        Value = Null
+        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -823,6 +823,7 @@
       end
       item
         Name = 'inInfoMoneyId'
+        Value = Null
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput

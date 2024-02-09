@@ -65,8 +65,8 @@ BEGIN
            , CURRENT_DATE /*inOperDate*/          :: TDateTime AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
-           , 0::TFloat                                         AS AmountIn
-           , 0::TFloat                                         AS AmountOut
+           , 0                                        ::TFloat AS AmountIn
+           , 0                                        ::TFloat AS AmountOut
            , 0     :: TFloat                                   AS Amount_pay  
            , ABS (MovementFloat_Amount.ValueData)    :: TFloat AS Amount_invoice
            , ''::TVarChar                                      AS Comment 
@@ -126,7 +126,7 @@ BEGIN
                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
                                   AND ObjectString_CIN.DescId   = zc_ObjectString_Product_CIN()
 
-            LEFT JOIN tmpBankAccount ON 1=1
+            LEFT JOIN tmpBankAccount ON 1=1  
       ;
      ELSE
 
@@ -138,8 +138,10 @@ BEGIN
                        FROM MovementItem
                        WHERE MovementItem.MovementId = inMovementId_Value
                          AND (MovementItem.Id = inMovementItemId_child OR inMovementItemId_child = 0) --показіваем инфу по всем счетам STRING_AGG
-                         AND MovementItem.DescId = zc_MI_Child()
+                         AND MovementItem.DescId = zc_MI_Child() 
+                         AND (MovementItem.isErased = FALSE OR inMovementItemId_child <> 0)
                        )
+       --счета
      , tmpInvoice AS (SELECT MIFloat_MovementId.MovementItemId
                            , MIFloat_MovementId.ValueData ::Integer  
                            , MIFloat_MovementId.DescId
@@ -147,15 +149,17 @@ BEGIN
                       WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                         AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                       )
-   
+       --Сумма счета
      , tmpInvoice_Amount AS (SELECT MovementFloat_Amount.*
                              FROM MovementFloat AS MovementFloat_Amount
                              WHERE MovementFloat_Amount.MovementId IN (SELECT DISTINCT tmpInvoice.ValueData::Integer FROM tmpInvoice)
                                AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                             )
+                             ) 
+       --Сумма по всем счетам
      , tmpInvoice_Amount_All AS (SELECT SUM(tmpInvoice_Amount.ValueData) AS Summ_all
                                  FROM tmpInvoice_Amount
                                  )
+
        SELECT
              Movement.Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
@@ -164,8 +168,12 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , SUM (CASE WHEN tmpMI_Child.Amount > 0 THEN tmpMI_Child.Amount      ELSE 0 END) ::TFloat AS AmountIn
-           , SUM (CASE WHEN tmpMI_Child.Amount < 0 THEN -1 * tmpMI_Child.Amount ELSE 0 END) ::TFloat AS AmountOut
+           , CASE WHEN inMovementItemId_child = 0 THEN  ABS (MovementItem.Amount - SUM (COALESCE(tmpMI_Child.Amount,0)))
+                  ELSE SUM (CASE WHEN tmpMI_Child.Amount > 0 THEN tmpMI_Child.Amount ELSE 0 END)
+             END ::TFloat AS AmountIn
+           , CASE WHEN inMovementItemId_child = 0 THEN 0
+                  ELSE SUM (CASE WHEN tmpMI_Child.Amount < 0 THEN -1 * tmpMI_Child.Amount ELSE 0 END)
+             END ::TFloat AS AmountOut
            , ABS (MovementItem.Amount)                                               ::TFloat AS Amount_pay  
            , ABS (CASE WHEN inMovementItemId_child = 0 THEN tmpInvoice_Amount_All.Summ_all ELSE SUM (MovementFloat_Amount.ValueData) END) :: TFloat AS Amount_invoice
 
@@ -303,4 +311,3 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpGet_Movement_BankAccountChild (inMovementId:= 1804, inMovementId_Value := 1804 , inMovementId_Invoice := 0 , inMovementId_parent := 0 , inMovementItemId_child :=0, inMoneyPlaceId:=0, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
-

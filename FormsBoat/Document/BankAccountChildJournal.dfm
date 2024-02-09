@@ -25,6 +25,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       inherited cxGrid: TcxGrid
         Width = 1189
         Height = 464
+        ExplicitTop = 4
         ExplicitWidth = 1189
         ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1344,12 +1345,11 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
         item
           Name = 'inMovementId_parent'
           Value = Null
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MovementItemId_child'
-          Value = Null
+          Name = 'inMovementItemId_child'
+          Value = '0'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1794,6 +1794,17 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       Action = actOpenFormPdfAllEdit
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actUpdate_Child
+      end>
+    ActionItemList = <
+      item
+        Action = actUpdate_Child
+        ShortCut = 13
+      end>
   end
   inherited PopupMenu: TPopupMenu
     Left = 136

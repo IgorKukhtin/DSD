@@ -286,7 +286,7 @@
     Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
   end
   object ceAmount: TcxCurrencyEdit
-    Left = 12
+    Left = 8
     Top = 246
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -300,8 +300,8 @@
     Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
   end
   object edAmount_invoice: TcxCurrencyEdit
-    Left = 127
-    Top = 206
+    Left = 124
+    Top = 202
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
