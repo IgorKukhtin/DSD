@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , InfoMoneyId_Invoice Integer, InfoMoneyCode_Invoice Integer, InfoMoneyGroupName_Invoice TVarChar, InfoMoneyDestinationName_Invoice TVarChar, InfoMoneyName_Invoice TVarChar, InfoMoneyName_all_Invoice TVarChar
 
               -- Заказ Клиента / Заказ Поставщику
-             , MovementId_parent Integer, InvNumberFull_parent TVarChar, MovementDescName_parent TVarChar
+             , MovementId_parent Integer, InvNumber_parent TVarChar, InvNumberFull_parent TVarChar, MovementDescName_parent TVarChar
              , ProductCode_Invoice Integer
              , ProductName_Invoice TVarChar
              , ProductCIN_Invoice TVarChar
@@ -202,7 +202,8 @@ BEGIN
            , Object_InfoMoney_View_invoice.InfoMoneyName_all
 
              -- Заказ Клиента / Заказ Поставщику
-           , Movement_Parent.Id             ::Integer  AS MovementId_parent
+           , Movement_Parent.Id             ::Integer  AS MovementId_parent                                                                        
+           , Movement_Parent.InvNumber                 AS InvNumber_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
            , MovementDesc_Parent.ItemName              AS MovementDescName_parent
            , Object_Product.ObjectCode                                                       AS ProductCode_Invoice
