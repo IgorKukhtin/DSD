@@ -433,12 +433,15 @@ BEGIN
                                      AND Object_GoodsByGoodsKind_View.GoodsId IN (SELECT DISTINCT tmpMovement.GoodsId FROM tmpMovement)
                                    --AND 1=0
                                   )
-             , tmpOrderCarInfo AS (SELECT gpSelect.Id, gpSelect.RouteId, gpSelect.RetailId
+             , tmpOrderCarInfo AS (SELECT MAX (gpSelect.Id) AS Id, gpSelect.RouteId, gpSelect.RetailId
                                         , gpSelect.OperDate_int, gpSelect.OperDatePartner_int
-                                        , gpSelect.Days, gpSelect.Hour, gpSelect.Min
+                                        , gpSelect.Days, MAX (gpSelect.Hour) AS Hour, MAX (gpSelect.Min) AS Min
                                    FROM gpSelect_Object_OrderCarInfo (inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect
 
                                    WHERE gpSelect.UnitId = inToId
+                                   GROUP BY gpSelect.RouteId, gpSelect.RetailId
+                                          , gpSelect.OperDate_int, gpSelect.OperDatePartner_int
+                                          , gpSelect.Days
                                   )
        -- Результат
        SELECT

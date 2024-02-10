@@ -99,7 +99,7 @@ BEGIN
                                       )
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
-                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '420 SEC'))
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '550 SEC'))
                     );
     ELSE
         -- замена, делаем задержку на 30 SEC
@@ -110,7 +110,7 @@ BEGIN
                                       )
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
-                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '400 SEC'))
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '550 SEC'))
                     );
     END IF;
 
@@ -128,7 +128,7 @@ BEGIN
                                       )
                      SELECT MAX (Id)
                      FROM _replica.table_update_data
-                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '420 SEC'))
+                     WHERE transaction_id IN (SELECT transaction_id FROM tmp_tran WHERE last_m < timezone('utc'::text, vb_Query_start - INTERVAL '550 SEC'))
                     );
 
     END IF;
