@@ -26,7 +26,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его
-   inCode:=lfGet_ObjectCode (inCode, zc_Object_PartionCell());
+   inCode:=CASE WHEN inCode < 0 THEN lfGet_ObjectCode (inCode, zc_Object_PartionCell()) ELSE inCode END;
 
    -- проверка уникальности для свойства <Наименование Единицы измерения>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_PartionCell(), inName);
