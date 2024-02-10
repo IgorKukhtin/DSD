@@ -6627,7 +6627,7 @@ BEGIN
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inOperDate';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 6, 
-                                                                inName          := 'inOperDate ', 
+                                                                inName          := 'inOperDate', 
                                                                 inParamType     := 'ftDateTime', 
                                                                 inUserParamName := 'дата валютирования',
                                                                 inImportTypeId  := vbImportTypeId, 

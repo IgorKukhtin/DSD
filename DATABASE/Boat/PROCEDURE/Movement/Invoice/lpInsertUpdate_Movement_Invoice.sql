@@ -43,6 +43,7 @@ BEGIN
 
      -- проверка - свойство должно быть установлено
      IF zfConvert_StringToNumber (inReceiptNumber) = 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Proforma()
+        AND inAmount > 0
      THEN
         RAISE EXCEPTION 'Ошибка.Не определено значение <Invoice No>.';
      END IF;

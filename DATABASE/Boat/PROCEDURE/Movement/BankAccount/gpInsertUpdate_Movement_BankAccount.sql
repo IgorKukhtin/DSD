@@ -104,8 +104,8 @@ BEGIN
                                                                   -- это св-во в Заказе
                                                                 , inVATPercent       := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Parent AND MF.DescId = zc_MovementFloat_VATPercent())
                                                                   --
-                                                                , inAmountIn         := CASE WHEN vbAmount > 0 THEN  1 * ABS (inAmount_Invoice) ELSE 0 END
-                                                                , inAmountOut        := CASE WHEN vbAmount < 0 THEN -1 * ABS (inAmount_Invoice) ELSE 0 END
+                                                                , inAmountIn         := CASE WHEN vbAmount > 0 THEN 1 * ABS (inAmount_Invoice) ELSE 0 END
+                                                                , inAmountOut        := CASE WHEN vbAmount < 0 THEN 1 * ABS (inAmount_Invoice) ELSE 0 END
                                                                 , inInvNumberPartner := ''                                  ::TVarChar
                                                                 , inReceiptNumber    := CASE WHEN vbAmount < 0
                                                                                                   THEN ''
