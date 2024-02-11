@@ -49,7 +49,7 @@ type
 implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, idGlobal, Variants, ZLib,
-     StrUtils, IDComponent, CommonData,
+     StrUtils, IDComponent, SimpleGauge, CommonData,
      {$IFDEF MSWINDOWS}
      VCL.Forms, VCL.Dialogs,
      {$ELSE}

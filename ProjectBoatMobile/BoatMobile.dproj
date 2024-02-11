@@ -58,6 +58,12 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Cfg_1)'=='true') or '$(Cfg_1_Android)'!=''">
+        <Cfg_1_Android>true</Cfg_1_Android>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
         <Cfg_1_Win32>true</Cfg_1_Win32>
         <CfgParent>Cfg_1</CfgParent>
@@ -260,11 +266,27 @@
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_RangeChecking>true</DCC_RangeChecking>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Android)'!=''">
+        <VerInfo_Build>1</VerInfo_Build>
+        <Android_LauncherIcon36>img\BoatMobile_36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>img\BoatMobile_48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>img\BoatMobile_72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>img\BoatMobile_96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>img\BoatMobile_144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>img\BoatMobile_192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>img\BoatMobile_426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>img\BoatMobile_470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>img\BoatMobile_640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>img\BoatMobile_960x720.png</Android_SplashImage960>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <UWP_DelphiLogo44>img\BoatMobile_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>img\BoatMobile_150.png</UWP_DelphiLogo150>
+        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -344,6 +366,20 @@
                 <DeployFile LocalName="..\BIN\Win32\Debug\BoatMobile.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>BoatMobile.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\BoatMobile_150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo150x150.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\BoatMobile_44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
