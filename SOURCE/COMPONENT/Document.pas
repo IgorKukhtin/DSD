@@ -20,6 +20,7 @@ type
     function GetName: string;
     procedure OpenDocument;
     procedure SaveDocument;
+    property FileName: string read FFileName write FFileName;
   published
     property GetBlobProcedure: TdsdStoredProc read FBlobProcedure write FBlobProcedure;
   end;

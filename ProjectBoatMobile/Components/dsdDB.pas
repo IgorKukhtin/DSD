@@ -12,32 +12,34 @@ type
     FComponent: TComponent;
     FDataType: TFieldType;
     FValue: Variant;
+    FOldValue: Variant;
     FName: String;
     FComponentItem: String;
     FParamType: TParamType;
     FonChange: TNotifyEvent;
     FMultiSelectSeparator: String;
-    FValueChange: Boolean;  // add 22.01.2018
+    FIsFillOutParams: Boolean;
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
-    procedure SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
-    function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
-    procedure SetInCrossDBViewAddOn(const Value: Variant);
-    function GetFromCrossDBViewAddOn: Variant;
+    //procedure SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
+    //function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
+    procedure SetIsFillOutParams(const Value: Boolean);
+    function GetisChanged: boolean;
   protected
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
     function GetOwner: TPersistent; override;
   public
-    property isValueChange: Boolean read FValueChange write FValueChange; // add 22.01.2018
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
     function AsFloat: double;
-    function AsInteger: Integer;
+    procedure FixOldValue;
     procedure Assign(Source: TPersistent); override;
     constructor Create(Collection: TCollection); overload; override;
-    constructor Create; reintroduce; overload;
+    constructor Create;  reintroduce; overload;
+    property IsFillOutParams: Boolean read FIsFillOutParams write SetIsFillOutParams;
+    property isChanged: boolean read GetisChanged;
   published
     property Name: String read FName write FName;
     property Value: Variant read GetValue write SetValue;
@@ -105,9 +107,9 @@ type
     FCurrentPackSize: integer;
     FDataXML: string;
     FAutoWidth: boolean;
-    FNeedResetData: Boolean;
     FParamKeyField: String;
     FAfterExecute: TNotifyEvent;
+    FisFunction: Boolean;
     // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
@@ -117,19 +119,20 @@ type
     procedure MultiDataSetRefresh;
     procedure SetStoredProcName(const Value: String);
     function GetDataSetType: string;
+    function getChanged: boolean;
     property CurrentPackSize: integer read FCurrentPackSize write FCurrentPackSize;
     procedure MultiExecute(ExecPack, AnyExecPack: boolean); //***12.07.2016 add AnyExecPack
-    procedure ResetData;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; virtual;
+    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; //***12.07.2016 add AnyExecPack
     function ParamByName(const Value: string): TdsdParam;
     // XML для вызова на сервере
     function GetXML: String;
     //procedure Assign(Source: TPersistent); override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    property isChanged: boolean read getChanged;
   published
     // Название процедуры на сервере
     property StoredProcName: String read FStoredProcName write SetStoredProcName;
@@ -145,64 +148,12 @@ type
     property PackSize: integer read FPackSize write FPackSize;
     // автоматический расчет ширины колонок
     property AutoWidth: boolean read FAutoWidth write FAutoWidth default false;
-    // посылать команду перечитывания формам после экзекюта
-    property NeedResetData: Boolean read FNeedResetData write FNeedResetData Default False;
     //Имя параметра, в котором ИД записи (нужно для перечитывания форм)
     property ParamKeyField: String read FParamKeyField write FParamKeyField;
     //процедура, которая вызовется после экзекюта
     property AfterExecute: TNotifyEvent read FAfterExecute write FAfterExecute;
-  end;
-
-
-  TSQLStrings = class(TCollectionItem)
-  private
-    FStrings: TStrings;
-    procedure SetStrings(const Value: TStrings);
-  public
-    constructor Create(Collection: TCollection); override;
-    destructor Destroy; override;
-    procedure Assign(ASource: TPersistent); override;
-  published
-    property SQL: TStrings read FStrings write SetStrings;
-  end;
-
-  TSQLList = class(TOwnedCollection);
-
-  TdsdStoredProcSQLite = class (TdsdStoredProc)
-  private
-    FSQLList: TSQLList;
-    procedure DataSetSQLiteRefresh;
-    procedure MultiDataSetSQLiteRefresh;
-    procedure FillOutputParamsSQLite;
-    function GetFieldSQLite : String;
-  protected
-  public
-    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; override;
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-  published
-    // Название процедуры на сервере
-    property StoredProcName;
-    // ДатаСет с данными. Введен для удобства, так как зачастую DataSet = DataSets[0]
-    property DataSet;
-    // Обновляемые ДатаСеты
-    property DataSets;
-    // тип возврата значений
-    property OutputType;
-    // Параметры процедуры
-    property Params;
-    // Количество записей в пакете для вызова
-    property PackSize;
-    // автоматический расчет ширины колонок
-    property AutoWidth;
-    // посылать команду перечитывания формам после экзекюта
-    property NeedResetData;
-    //Имя параметра, в котором ИД записи (нужно для перечитывания форм)
-    property ParamKeyField;
-    //процедура, которая вызовется после экзекюта
-    property AfterExecute;
-    //SQL при получении данных из SQLite
-    property SQLList: TSQLList read FSQLList write FSQLList;
+    // Function
+    property isFunction: Boolean read FisFunction write FisFunction Default False;
   end;
 
   procedure Register;
@@ -210,19 +161,15 @@ type
 
 implementation
 
-uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL.Forms,
-     XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
-     Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
-     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage, cxDateNavigator,
-     cxMemo, cxImage, cxDropDownEdit, cxMaskEdit, dsdInternetAction, ParentForm,
-     Vcl.ActnList, System.Rtti, Log, StorageSQLite, cxDBEdit;
+uses Storage, TypInfo, UtilConvert, SysUtils,
+     XMLDoc, XMLIntf, StrUtils, CommonData,
+     Variants, UITypes, Defaults, UtilConst,
+     System.Rtti, CursorUtils;
 
 procedure Register;
 begin
    RegisterComponents('DSDComponent', [TdsdFormParams]);
    RegisterComponents('DSDComponent', [TdsdStoredProc]);
-   RegisterComponents('DSDComponent', [TdsdStoredProcSQLite]);
 end;
 
 
@@ -255,8 +202,8 @@ begin
   PackSize := 1;
   FDataXML := '';
   FAutoWidth := false;
-  FNeedResetData := False;
   FParamKeyField := '';
+  FisFunction := False;
 end;
 
 procedure TdsdStoredProc.DataSetRefresh;
@@ -273,12 +220,19 @@ begin
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
      if DataSets[0].DataSet is TClientDataSet then begin
-        FStringStream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(GetXML)));
-        try
-          TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
-        finally
-          FreeAndNil(FStringStream);
-        end;
+         try
+           FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML), TEncoding.UTF8);
+           try
+             TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
+           finally
+             FreeAndNil(FStringStream);
+           end;
+         except
+           on E : Exception do
+           begin
+             raise Exception.Create(E.Message);
+           end;
+         end;
      end;
      if Assigned(B) then
      begin
@@ -300,14 +254,10 @@ begin
 end;
 
 function TdsdStoredProc.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
-var TickCount: cardinal;
 begin
   result := '';
-  TickCount := 0;
-  if gc_isShowTimeMode then
-     TickCount := GetTickCount;
   if ACursorHourGlass then
-    Screen.Cursor := crHourGlass;
+    Screen_Cursor_crHourGlass;
   try
     if (OutputType = otDataSet) then DataSetRefresh;
     if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
@@ -319,12 +269,8 @@ begin
         MultiExecute(ExecPack, AnyExecPack); //***12.07.2016 add AnyExecPack
   finally
     if ACursorHourGlass then
-      Screen.Cursor := crDefault;
+      Screen_Cursor_crDefault;
   end;
-  if gc_isShowTimeMode then
-     ShowMessage('Время выполнения ' + StoredProcName + ' - ' + FloatToStr((GetTickCount - TickCount)/1000) + ' сек ' ); ;
-  if NeedResetData then
-    ResetData;
   if assigned(AfterExecute) then
     AfterExecute(self);
 end;
@@ -333,18 +279,40 @@ procedure TdsdStoredProc.FillOutputParams(XML: String);
 var
   XMLDocument: IXMLDocument;
   i: integer;
+  tmpStr: String;
 begin
   XMLDocument := TXMLDocument.Create(nil);
   XMLDocument.LoadFromXML(XML);
-  if XMLDocument.DocumentElement = Nil then
-    raise Exception.Create ('Ошибка обработки данных полученных с сервера...');
-
   for I := 0 to Params.Count - 1 do
-      if (Params[i].ParamType in [ptOutput, ptInputOutput])//and(Params[i].Name<>'')
-      then
-         if XMLDocument.DocumentElement.HasAttribute(LowerCase(Params[i].Name)) then
+      if Params[i].ParamType in [ptOutput, ptInputOutput] then
+      begin
+         if XMLDocument.DocumentElement.HasAttribute(lowercase(Params[i].Name)) then
+         begin
             // XMLDocument режет перевод строки!!! приходится делать так
-            Params[i].Value := XMLDocument.DocumentElement.Attributes[LowerCase(Params[i].Name)];
+            Params[i].IsFillOutParams := true;
+            try
+              if (Params[I].DataType = ftDate) or
+                 (Params[I].DataType = ftDateTime) then
+              begin
+                tmpStr := varToStr(XMLDocument.DocumentElement.Attributes[lowercase(Params[i].Name)]);
+                if (length(tmpStr) = length('НННН-MM-ВВThh:mm:ss')) and
+                   (pos('T', tmpStr) = 11) then
+                   tmpStr := StringReplace(tmpStr, 'T', ' ', []);
+                try
+                  Params[i].Value := VarToDateTime(tmpStr);
+                except
+                  Params[i].Value := tmpStr;
+                end
+              end
+              else
+                Params[i].Value := XMLDocument.DocumentElement.Attributes[lowercase(Params[i].Name)];
+            finally
+              Params[i].IsFillOutParams := false;
+            end;
+         end;
+      end
+      else
+        Params[i].FixOldValue;
 end;
 
 function TdsdStoredProc.FillParams: String;
@@ -366,21 +334,25 @@ begin
                 Result := Result + '<' + Name +
                      '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
                      '  Value="' + ParamStr + '" />'
-           else
-             if (DataType = ftDateTime) and (ParamStr <> 'NULL') then
-                try   Result := Result + '<' + Name +
-                           '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                           '  Value="' + DateTimeToStr(StrToDateTime(ParamStr)) + '" />';
-                except
-                      Result := Result + '<' + Name +
-                           '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                           '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
-                end
              else
                 Result := Result + '<' + Name +
                      '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
                      '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
         end;
+end;
+
+function TdsdStoredProc.getChanged: boolean;
+var
+  p: TdsdParam;
+  i: integer;
+begin
+  for i:= 0 to params.Count - 1 do
+  begin
+    p:=params.Items[i];
+    if p.isChanged then
+      exit(true);
+  end;
+  result := false;
 end;
 
 function TdsdStoredProc.GetDataSet: TDataSet;
@@ -445,7 +417,10 @@ procedure TdsdStoredProc.SetStoredProcName(const Value: String);
     if PostgresType = 'INOUT' then
        result := ptInputOutput;
   end;
-var lDataSet: TClientDataSet;
+{$IFDEF MSWINDOWS}
+var
+  lDataSet: TClientDataSet;
+{$ENDIF}
 const
    pXML =
   '<xml Session = "">' +
@@ -459,6 +434,7 @@ begin
      if Value <> FStoredProcName then
      begin
        FStoredProcName := Value;
+       {$IFDEF MSWINDOWS}
        if ShiftDown then begin
          Params.Clear;
          lDataSet := TClientDataSet.Create(nil);
@@ -485,6 +461,7 @@ begin
            lDataSet.Free;
          end;
        end;
+       {$ENDIF}
      end
   end
   else
@@ -524,31 +501,29 @@ begin
        if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
           DataSets[i].DataSet.Post;
   XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
-  for I := 0 to DataSets.Count - 1 do begin
-     if DataSets[i].DataSet.Active then
-        B := DataSets[i].DataSet.GetBookmark;
-      if DataSets[i].DataSet is TClientDataSet then begin
+  try
+    for I := 0 to DataSets.Count - 1 do begin
+       if DataSets[i].DataSet.Active then
+          B := DataSets[i].DataSet.GetBookmark;
+        if DataSets[i].DataSet is TClientDataSet then begin
 //          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
-//           if (dsdProject = prBoat) and SameText(Copy(XMLResult[i], 1, 19), '<?xml version="1.0"') then
-//             FStringStream := TStringStream.Create(String(XMLResult[i]), TEncoding.UTF8)
-//           else
            FStringStream := TStringStream.Create(String(XMLResult[i]));
-         XMLResult[i] := '';
-         try
-            TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);
-         finally
-           FreeAndNil(FStringStream);
-         end;
-      end;
-     if Assigned(B) then
-     begin
-        try
-         if DataSets[i].DataSet.BookmarkValid(B) then
-          DataSets[i].DataSet.GotoBookmark(B);
-        except
+           XMLResult[i] := '';
+           try
+              TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);
+           finally
+             FreeAndNil(FStringStream);
+           end;
         end;
-        DataSets[0].DataSet.FreeBookmark(B);
-     end;
+       if Assigned(B) then
+          try
+            DataSets[i].DataSet.GotoBookmark(B);
+          except
+          end;
+    end;
+  finally
+    if Assigned(B) then
+       DataSets[0].DataSet.FreeBookmark(B);
   end;
 end;
 
@@ -559,9 +534,8 @@ begin
      FDataXML := FDataXML + '<dataitem>' + FillParams + '</dataitem>';
   // Увеличиваем счетчик
   CurrentPackSize := CurrentPackSize + 1;
-  //
-  // Выполняем, ИЛИ всегда при логировании
-  if (CurrentPackSize = PackSize) or ExecPack {or Logger.Enabled} then begin
+  // Выполняем
+  if (CurrentPackSize = PackSize) or ExecPack then begin
      CurrentPackSize := 0;
      try
        TStorageFactory.GetStorage.ExecuteProc(GetXML);
@@ -600,31 +574,6 @@ begin
      raise Exception.Create('Параметр ' + Value + ' не найден в компоненте ' + Self.Name);
 end;
 
-procedure TdsdStoredProc.ResetData;
-var
-  I: Integer;
-begin
-  for I := 0 to Application.ComponentCount - 1 do
-  Begin
-    if (Application.Components[I] is TParentForm) AND
-       (Self.Owner is TParentForm) AND
-       (Application.Components[I] <> Self.Owner) AND
-       (ParamKeyField <> '') AND
-       (Params.ParamByName(ParamKeyField) <> nil) then
-    Begin
-      if TParentForm(Application.Components[I]).AddOnFormData.AddOnFormRefresh.SelfList =
-         TParentForm(Self.Owner).AddOnFormData.AddOnFormRefresh.ParentList then
-      Begin
-        with TParentForm(Application.Components[I]).AddOnFormData.AddOnFormRefresh do
-        Begin
-          NeedRefresh := True;
-          RefreshID := Self.ParamByName(ParamKeyField).Value;
-        End;
-      End;
-    End;
-  End;
-end;
-
 { TdsdParmas }
 
 function TdsdParams.Add: TdsdParam;
@@ -653,12 +602,8 @@ begin
         if ParamByName(Source[i].Name) = nil then begin
            Add.AssignParam(Source[i])
         end
-        else begin
-           try ParamByName(Source[i].Name).isValueChange:= ParamByName(Source[i].Name).Value <> Source[i].Value;
-           except ParamByName(Source[i].Name).isValueChange:= true;
-           end;
+        else
            ParamByName(Source[i].Name).Value := Source[i].Value
-        end;
 end;
 
 function TdsdParams.GetItem(Index: Integer): TdsdParam;
@@ -686,17 +631,18 @@ end;
 { TdsdParam }
 
 function TdsdParam.AsFloat: double;
-var Flo : Extended;
+var D: Variant;
 begin
-  if TryStrToFloat(VarToStr(Value), Flo) then Result := Flo
-  else Result := 0;
-end;
-
-function TdsdParam.AsInteger: Integer;
-var Int: Integer;
-begin
-  if TryStrToInt(VarToStr(Value), Int) then Result := Int
-  else Result := 0;
+  D := Value;
+  case VarType(D) of
+    vtExtended: result := D;
+    vtString, vtWideString, vtClass: result := gfStrToFloat(D)
+    else
+    begin
+      if not TryStrToFloat(VarToStr(D), Result) then
+        Result := 0;
+    end;
+  end;
 end;
 
 procedure TdsdParam.Assign(Source: TPersistent);
@@ -719,10 +665,10 @@ procedure TdsdParam.AssignParam(Param: TdsdParam);
 begin
   if Param <> nil then
   begin
-    Value := Param.Value;
     Name := Param.Name;
     ParamType := Param.ParamType;
     DataType := Param.DataType;
+    Value := Param.Value;
   end;
 end;
 
@@ -733,7 +679,7 @@ begin
   Data := Value;
   if VarisNull(Data) then
     case DataType of
-      ftDate, ftTime, ftDateTime: Data := StringReplace('01-01-1900', '-', FormatSettings.DateSeparator, [rfReplaceAll])
+      ftDate, ftTime, ftDateTime: Data := '01-01-1900'
       else  Data := '';
     end;
   if varType(Data) in [varSingle, varDouble, varCurrency] then
@@ -806,7 +752,11 @@ begin
   FParamType := ptOutput;
   FDataType := ftInteger;
   FMultiSelectSeparator := ',';
-  FValueChange:= false; // add 22.01.2018
+end;
+
+procedure TdsdParam.FixOldValue;
+begin
+  FOldValue := Value;
 end;
 
 constructor TdsdParam.Create(Collection: TCollection);
@@ -816,26 +766,13 @@ begin
   FParamType := ptOutput;
   FDataType := ftInteger;
   FMultiSelectSeparator := ',';
-  FValueChange:= false; // add 22.01.2018
 end;
 
 function TdsdParam.GetDisplayName: string;
 begin
   result := Name
 end;
-
-function TdsdParam.GetFromCrossDBViewAddOn: Variant;
-var CrossDBViewAddOn: TCrossDBViewAddOn;
-begin
-  CrossDBViewAddOn := TCrossDBViewAddOn(Component);
-  // Ничего лучшего не нашел пока. Если ячейка грида находится в редиме редактирования
-  // и выполняется Post, то вот тут данных в датасете еще нифига нет!
-  // Поэтому надо дернуть грид и уговорить его поставить
-  CrossDBViewAddOn.View.DataController.UpdateData;
-  if CrossDBViewAddOn.HeaderDataSet.Active then
-     result := GetFromDataSet(CrossDBViewAddOn.DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo));
-end;
-
+{
 function TdsdParam.GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
 begin
   if DataSet.Active then begin
@@ -852,6 +789,11 @@ begin
     end;
   end;
 end;
+}
+function TdsdParam.GetisChanged: boolean;
+begin
+  Result := varToStr(FOldValue) <> VarToStr(Value)
+end;
 
 function TdsdParam.GetOwner: TPersistent;
 var Owner: TComponent;
@@ -861,9 +803,11 @@ begin
   else
      Owner := nil;
   while (Owner <> nil) do
+     { ???
      if Owner is TCustomForm then
         break
      else
+     }
         Owner := Owner.Owner;
   result := Owner;
 end;
@@ -872,13 +816,71 @@ function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
 var
-  i: Integer;
-  IDs: String;
-  Clmn: TcxGridDBColumn;
-  Bol : Boolean;
-  Flo : Extended;
-  DT : TDateTime;
+  FRttiContext: TRttiContext;
+  FRttiProperty: TRttiProperty;
+  FRttiType: TRttiType;
+  RttiValue : TValue;
+  //Done: Boolean;
 begin
+  { ???
+  if Assigned(Component) and
+     (Self.GetOwner is TvtCustomForm) and
+     not(csDesigning in Component.ComponentState) then
+  begin
+    (Self.GetOwner as TvtCustomForm).GetComponentData(Component, ComponentItem, FValue, Done);
+    if Done then
+      exit(FValue);
+  end;
+  }
+  if Assigned(Component) AND (ComponentItem <> '') and not(csDesigning in Component.ComponentState) then
+  begin
+    FRttiContext := TRttiContext.Create;
+    try
+      FRttiType := FRttiContext.GetType(Component.ClassType);
+      if FRttiType <> nil then
+      begin
+        try
+          FRttiProperty := FRttiType.GetProperty(ComponentItem);
+          if FRttiProperty <> nil then
+          Begin
+            try
+              RttiValue := FRttiProperty.GetValue(Component);
+              case FRttiProperty.PropertyType.TypeKind of
+                tkInteger: Result := RttiValue.AsInteger;
+                tkInt64: Result := RttiValue.AsInt64;
+                tkFloat: Result := RttiValue.AsExtended;
+                tkString: Result := RttiValue.AsString;
+                tkEnumeration: Result := RttiValue.AsType<Boolean>;
+              else Result := RttiValue.AsVariant;
+              end;
+              try
+                case DataType of
+                  ftSmallint, ftInteger, ftWord, ftShortint, ftByte:
+                    Result := VarAsType(Result, varInteger);
+                  ftBoolean :
+                    Result := VarAsType(Result, varBoolean);
+                  ftFloat, ftCurrency, ftBCD, ftFMTBcd, TFieldType.ftExtended, TFieldType.ftSingle:
+                    Result := VarAsType(Result, varCurrency);
+                  ftDate, ftTime, ftDateTime:
+                    Result := VarAsType(Result, varDate);
+                  ftLargeint:
+                    Result := VarAsType(Result, varInt64);
+                end;
+              except
+                Result := Null;
+              end;
+            finally
+              FRttiProperty.Free;
+            end;
+          End;
+        finally
+          FRttiType.Free;
+        end;
+      end;
+    finally
+      FRttiContext.Free;
+    end;
+(* TODO
   if Assigned(FComponent) and (not Assigned(FComponent.Owner)
        or (Assigned(FComponent.Owner) and (not (csWriting in (FComponent.Owner).ComponentState)))) then begin
      // В зависимости от типа компонента Value содержится в разных property
@@ -888,20 +890,12 @@ begin
         result := (Component as TPivotAddOn).GetCurrentData;
      if Component is TcxTextEdit then
         Result := (Component as TcxTextEdit).Text;
-     if Component is TcxDBTextEdit then
-        Result := (Component as TcxDBTextEdit).Text;
      if Component is TcxMemo then
         Result := (Component as TcxMemo).Text;
-     if Component is TcxMaskEdit then
-        Result := (Component as TcxMaskEdit).Text;
      if Component is TcxButtonEdit then
         Result := (Component as TcxButtonEdit).Text;
      if (Component is TDataSet) then
         Result := GetFromDataSet(TDataSet(Component), ComponentItem);
-     if Component is TcxComboBox then
-        Result := (Component as TcxComboBox).Text;
-     if Component is TcxDateNavigator then
-        Result := (Component as TcxDateNavigator).Date;
      if (Component is TdsdFormParams) then
         if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
            Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
@@ -923,27 +917,20 @@ begin
         else
            Result := (Component as TCustomGuides).Key;
      end;
-     if Component is TCheckListBoxAddOn then begin
-        Result := (Component as TCheckListBoxAddOn).KeyList;
-     end;
      if Component is TcxCheckBox then
         Result := BoolToStr((Component as TcxCheckBox).Checked, true);
      if Component is TcxDateEdit then begin
         if (Component as TcxDateEdit).Date = -700000 then
            (Component as TcxDateEdit).Date := Date;
-        Result := (Component as TcxDateEdit).CurrentDate;
+        Result := (Component as TcxDateEdit).Date;
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
-     if (Component is TAction) and (Component.ClassName = 'TAction') then
-        Result := (Component as TAction).Checked;
      if Component is TEDI then
         result := (Component as TEDI).Directory;
      if Component is TDocument then begin
         if LowerCase(ComponentItem) = 'name' then
            result := TDocument(Component).GetName
-        else if LowerCase(ComponentItem) = 'filename' then
-           result := TDocument(Component).FileName
         else
            result := TDocument(Component).GetData;
      end;
@@ -973,41 +960,14 @@ begin
          End;
        end;
        Result := IDs;
-     End;
-     if Component is TdsdPropertiesСhange then
-        result := (Component as TdsdPropertiesСhange).IndexProperties;
+     End;*)
   end
   else
   Begin
-    try
-//      if VarIsNull(FValue) AND (DataType = ftDateTime) then
-//        Result := 'NULL'
-//      else
-//
-      if not VarIsNull(FValue) AND (DataType = ftDateTime) then
-      begin
-        if (VarToStr(FValue) = 'NULL') OR (VarToStr(FValue) = '') OR (VarToStr(FValue) = '0') then Result := NULL
-        else if VarToStr(FValue) = '-700000' then Result := Date
-        else if TryStrToDateTime(VarToStr(FValue), DT) then Result := FValue
-        else Result := gfXSStrToDate(FValue)
-      end
-      else
-      if not VarIsNull(FValue) AND (DataType = ftBoolean) then
-      begin
-        if TryStrToBool(VarToStr(FValue), Bol) then Result := Bol
-        else Result := FValue;
-      end
-      else
-      if not VarIsNull(FValue) AND (DataType = ftFloat) then
-      begin
-        if TryStrToFloat(ReplaceStr(ReplaceStr(VarToStr(FValue), '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator), Flo) then Result := Flo
-        else Result := FValue;
-      end
-      else
-        Result := FValue
-    except
+    if VarIsNull(FValue) AND (DataType = ftDateTime) then
+      Result := 'NULL'
+    else
       Result := FValue
-    end;
   End;
 end;
 
@@ -1021,19 +981,9 @@ begin
      FComponent := Value;
   end
 end;
-
-procedure TdsdParam.SetInCrossDBViewAddOn(const Value: Variant);
-var CrossDBViewAddOn: TCrossDBViewAddOn;
-begin
-  CrossDBViewAddOn := TCrossDBViewAddOn(Component);
-  if CrossDBViewAddOn.HeaderDataSet.Active then
-     SetInDataSet(CrossDBViewAddOn.DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo), Value);
-end;
-
+{
 procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
 var Field: TField;
-    Bol : Boolean;
-    DT : TDateTime;
 begin
   if DataSet.Active then begin
     if not (DataSet.State in [dsEdit, dsInsert]) then
@@ -1042,7 +992,7 @@ begin
     if Assigned(Field) then begin
          // в случае дробного числа и если строка, то надо конвертить
          if (Field.DataType in [ftFloat, ftInteger]) and (VarType(FValue) in [vtString, vtClass]) then begin
-             if VarToStr(FValue) = '' then
+             if FValue = '' then
                 Field.Value := null
              else
                 Field.Value := gfStrToFloat(FValue)
@@ -1050,23 +1000,10 @@ begin
          else
            // в случае даты и если строка, то надо конвертить
            if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
-              if VarToStr(FValue) = '' then
+              if FValue = '' then
                 Field.Value := null
-              else if TryStrToDateTime(VarToStr(FValue), DT) then
-                Field.Value := FValue
               else
                 Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
-           end
-           // в случае логического и если строка, то надо конвертить
-           else
-           if (Field.DataType in [ftBoolean]) and (VarType(FValue) in [vtString, vtClass]) then begin
-              if VarToStr(FValue) = '' then
-                Field.Value := null
-              else
-                if TryStrToBool(FValue, Bol) then
-                  Field.Value := Bol
-                else
-                  Field.Value := False;
            end
            else
               Field.Value := FValue;
@@ -1075,20 +1012,178 @@ begin
       raise Exception.Create('У дата сета "' + Component.Name + '" нет поля "' + FieldName + '"');
   end;
 end;
+}
+procedure TdsdParam.SetIsFillOutParams(const Value: Boolean);
+begin
+  FIsFillOutParams := Value;
+end;
 
 procedure TdsdParam.SetValue(const Value: Variant);
 var
   FRttiContext: TRttiContext;
   FRttiProperty: TRttiProperty;
   RttiValue : TValue;
-  PhotoGUID: TGUID;
-  PhotoName: string;
-  E : TcxExport;
-  I : integer;
-  DT : TDateTime;
-  Flo : Extended;
+  FRttiType: TRttiType;
+  IntValue: Integer;
+  Int64Value: Int64;
+  FloatValue: Extended;
+  //Done: Boolean;
+  DateTimeValue: TDateTime;
+  function MyStrToDateTime(AStrDate: String): TDateTime;
+  begin
+    if AStrDate = '' then
+      exit(0);
+    if (pos('T',AStrDate) = 11) then
+      try
+        Result := gfXSStrToDate(AStrDate)
+      except
+        Result := 0;
+      end
+    else
+      try
+        Result := VarToDateTime(AStrDate);
+      except
+        Result := 0;
+      end;
+  end;
+
 begin
   FValue := Value;
+  DateTimeValue := 0;
+  { ???
+  if Assigned(Component) and
+     (Self.GetOwner is TvtCustomForm) and
+     not(csDesigning in Component.ComponentState) then
+  Begin
+    (Self.GetOwner as TvtCustomForm).SetComponentData(Component, ComponentItem, FValue, Done);
+    if FIsFillOutParams then
+      FOldValue := FValue;
+    if Done then
+      exit;
+  end;
+  }
+  if Assigned(Component) AND (ComponentItem <> '') and not(csDesigning in Component.ComponentState) then
+  Begin
+    FRttiContext := TRttiContext.Create;
+    try
+      FRttiType := FRttiContext.GetType(Component.ClassType);
+      if FRttiType <> nil then
+      begin
+        try
+          FRttiProperty := FRttiType.GetProperty(ComponentItem);
+          if FRttiProperty <> nil then
+          Begin
+            try
+              case FRttiProperty.PropertyType.TypeKind of
+                tkInteger:
+                  begin
+                    if (FValue = Null) or not TryStrToInt(VarToStr(FValue), IntValue) then
+                      IntValue := 0;
+                    RttiValue := IntValue;
+                    FValue := IntValue;
+                  end;
+                tkInt64:
+                  begin
+                    if (FValue = Null) or not TryStrToInt64(VarToStr(FValue), Int64Value) then
+                      Int64Value := 0;
+                    RttiValue := Int64Value;
+                    FValue := Int64Value;
+                  end;
+                tkFloat:
+                  begin
+                    if DataType = ftDate then
+                      FloatValue := MyStrToDateTime(VarToStr(FValue))
+                    else
+                    if (FValue = Null) then
+                      FloatValue := 0
+                    else
+                    if not TryStrToFloat(VarToStr(FValue), FloatValue) then
+                      FloatValue := 0;
+                    RttiValue := FloatValue;
+                    FValue := FloatValue;
+                  end;
+                tkString, tkUString:
+                  begin
+                    if (DataType = ftDate) or (DataType = ftDateTime) then
+                    Begin
+                      if VarType(FValue) <> varDate then
+                        DateTimeValue := MyStrToDateTime(VarToStr(FValue));
+                      if DateTimeValue = 0 then
+                        RttiValue := ''
+                      else
+                      begin
+                        RttiValue := DateTimeToStr(DateTimeValue);
+                        FValue := DateTimeValue;
+                      end;
+                    End
+                    else
+                    begin
+                      RttiValue := VarToStr(FValue);
+                      FValue := RttiValue.AsString;
+                    end;
+                  end;
+                tkEnumeration:
+                  begin
+                    RttiValue := not sameText(varToStr(FValue), 'False') AND
+                                 not sameText(varToStr(FValue), '0');
+                    FValue := RttiValue.asBoolean;
+                  end
+              else
+                begin
+                  if DataType = ftDate then
+                  Begin
+                    if varIsNull(FValue) or (VarToStr(FValue) = '') then
+                    begin
+                      FValue := Null;
+                      RttiValue := TValue.From(Null)
+                    end
+                    else
+                    begin
+                      DateTimeValue := MyStrToDateTime(VarToStr(FValue));
+                      RttiValue := DateTimeValue;
+                      FValue := DateTimeValue;
+                    end;
+                  End
+                  else
+                  begin
+                    RttiValue := VarToStr(FValue);
+                    FValue := RttiValue.AsString;
+                  end;
+                end;
+              end;
+              FRttiProperty.SetValue(Component,RttiValue);
+            finally
+              FRttiProperty.Free;
+            end;
+          End;
+        finally
+          FRttiType.Free;
+        end;
+      end;
+    finally
+      FRttiContext.Free;
+    end;
+  End;
+  try
+    case DataType of
+      ftSmallint, ftInteger, ftWord, ftShortint, ftByte:
+        FValue := VarAsType(FValue, varInteger);
+      ftBoolean :
+        FValue := VarAsType(FValue, varBoolean);
+      ftFloat, ftCurrency, ftBCD, ftFMTBcd, TFieldType.ftExtended, TFieldType.ftSingle:
+        FValue := VarAsType(FValue, varCurrency);
+      ftDate, ftTime, ftDateTime:
+        FValue := VarAsType(FValue, varDate);
+      ftLargeint:
+        FValue := VarAsType(FValue, varInt64);
+    end;
+  except
+  end;
+  if FIsFillOutParams then
+  Begin
+    FOldValue := FValue;
+  End;
+(* TODO
   // передаем значение параметра дальше по цепочке
   if Assigned(FComponent) then begin
      if (Component is TCrossDBViewAddOn) then
@@ -1097,24 +1192,8 @@ begin
         SetInDataSet(TDataSet(Component), ComponentItem, FValue);
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
-     if Component is TcxDBTextEdit then
-        (Component as TcxDBTextEdit).Text := FValue;
      if Component is TcxMemo then
         (Component as TcxMemo).Text := FValue;
-     if Component is TcxMaskEdit then
-        (Component as TcxMaskEdit).Text := FValue;
-     if Component is TcxComboBox then
-        (Component as TcxComboBox).Text := FValue;
-     if Component is TcxDateNavigator then
-        (Component as TcxDateNavigator).Date := FValue;
-     if Component is TcxImage then
-     begin
-        CreateGUID(PhotoGUID);
-        PhotoName := ExtractFilePath(ParamStr(0)) + GUIDToString(PhotoGUID) + '.jpeg';
-        FileWriteString(PhotoName, ReConvertConvert(VarToStr(FValue)));
-        (Component as TcxImage).Picture.LoadFromFile(PhotoName);
-        System.SysUtils.DeleteFile(PhotoName);
-     end;
      if Component is TcxButtonEdit then
         (Component as TcxButtonEdit).Text := FValue;
      if Component is TdsdFormParams then
@@ -1124,31 +1203,18 @@ begin
           else
              Params.AddParam(FComponentItem, ftString, ptInput, FValue);
         end;
-     if Component is TcxCurrencyEdit_check then
-     begin
-        if TryStrToFloat(ReplaceStr(ReplaceStr(VarToStr(FValue), '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator), Flo) then
-        begin
-          if Round((Component as TcxCurrencyEdit_check).Value * 10000) <> Round(Flo * 10000) then (Component as TcxCurrencyEdit_check).Value := Flo;
-        end
-        else
-          (Component as TcxCurrencyEdit_check).Clear;
-     end else if Component is TcxCurrencyEdit then
-     begin
-        if TryStrToFloat(ReplaceStr(ReplaceStr(VarToStr(FValue), '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator), Flo) then
-          (Component as TcxCurrencyEdit).Value := Flo
-        else
-          (Component as TcxCurrencyEdit).Clear;
-     end;
+     if Component is TcxCurrencyEdit then
+        (Component as TcxCurrencyEdit).Value := gfStrToFloat(FValue);
      if Component is TcxCheckBox then
         (Component as TcxCheckBox).Checked := StrToBool(FValue);
      if Component is TcxDateEdit then
-        if TryStrToDateTime(VarToStr(FValue), DT) then (Component as TcxDateEdit).Date := DT
-        else
-        begin
-          if not VarIsNull(FValue) AND (VarToStr(FValue) <> '') AND (VarToStr(FValue) <> '0') AND (VarToStr(FValue) <> 'NULL') then
+        if VarType(FValue) = vtObject then
+          (Component as TcxDateEdit).Date := FValue
+        else begin
+          if (FValue <> '') AND (FValue <> 'NULL') then
              (Component as TcxDateEdit).Date := gfXSStrToDate(FValue) // convert to TDateTime
           else
-             (Component as TcxDateEdit).Clear;
+             (Component as TcxDateEdit).Text := '';
         end;
      if Component is TEDI then
         (Component as TEDI).Directory := FValue;
@@ -1156,39 +1222,15 @@ begin
         AND
         ((LowerCase(ComponentItem) = LowerCase('DefaultFileName'))
          or
-         (LowerCase(ComponentItem) = LowerCase('ExportType'))
-         or
-         (LowerCase(ComponentItem) = LowerCase('DefaultFileExt'))
-         or
-         (LowerCase(ComponentItem) = LowerCase('EncodingANSI'))) then begin
+         (LowerCase(ComponentItem) = LowerCase('ExportType'))) then begin
         if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
            (Component as TExportGrid).DefaultFileName := FValue;
         if LowerCase(ComponentItem) = LowerCase('ExportType') then
-           begin
-             if not TryStrToInt(FValue, I) then
-             begin
-               for E := Low(TcxExport) to High(TcxExport) do
-               if AnsiUpperCase(FValue) =  AnsiUpperCase(GetEnumName(TypeInfo(TcxExport), ord(E))) then
-               begin
-                 (Component as TExportGrid).ExportType := E;
-                 Break;
-               end;
-             end else (Component as TExportGrid).ExportType := FValue;
-           end;
-        if LowerCase(ComponentItem) = LowerCase('DefaultFileExt') then 
-           (Component as TExportGrid).DefaultFileExt := FValue;
-        if LowerCase(ComponentItem) = LowerCase('EncodingANSI') then 
-           (Component as TExportGrid).EncodingANSI := FValue
+           (Component as TExportGrid).ExportType := FValue;
      end
      else
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := FValue
-     else
-     if (Component is TAction) and (Component.ClassName = 'TAction') then
-        (Component as TAction).Checked := FValue
-     else
-     if (Component is TDocument) and (LowerCase(ComponentItem) = 'filename') then
-        TDocument(Component).FileName := FValue
      else
      if (Component is TADOQueryAction)
         AND
@@ -1234,13 +1276,7 @@ begin
            if VarIsNull(FValue) then
               FValue := '';
            (Component as TCustomGuides).TextValue := FValue;
-        end else if LowerCase(ComponentItem) = 'disableguidesopen' then
-        begin
-           if VarIsNull(FValue) then
-              FValue := False;
-           (Component as TCustomGuides).DisableGuidesOpen := FValue
-        end
-        else
+        end else
           if LowerCase(ComponentItem) = 'parentid' then
              (Component as TCustomGuides).ParentId := FValue
           else begin
@@ -1248,25 +1284,11 @@ begin
                 FValue := 0;
              (Component as TCustomGuides).Key := FValue;
           end;
-     if Component is TCheckListBoxAddOn then
-     begin
-        if VarIsNull(FValue) then FValue := '';
-        (Component as TCheckListBoxAddOn).KeyList := FValue;
-     end;
-     if Component is TdsdPropertiesСhange then
-        (Component as TdsdPropertiesСhange).IndexProperties := FValue;
-     if Component is TcxGridDBTableView then
-     begin
-       if UpperCase(Name) = UpperCase('GroupByBox') then
-       begin
-         TcxGridDBTableView(Component).OptionsView.GroupByBox := FValue;
-         if not TcxGridDBTableView(Component).OptionsView.GroupByBox then
-           TcxGridDBTableView(Component).DataController.Groups.ClearGrouping;
-       end;
-     end;
+
   end;
   if Assigned(FonChange) then
      FonChange(Self);
+  *)
 end;
 
 { TdsdFormParams }
@@ -1298,9 +1320,7 @@ end;
 
 function TdsdFormParams.ParamByName(const Value: string): TdsdParam;
 begin
-  result := FParams.ParamByName(Value);
-//  if not Assigned(result) then
-//    raise Exception.Create('Параметр "' + Value + '" не найден.');
+  result := FParams.ParamByName(Value)
 end;
 
 
@@ -1347,182 +1367,10 @@ begin
   end;
 end;
 
-{ TSQLStrings }
-
-constructor TSQLStrings.Create(Collection: TCollection);
-begin
-  inherited Create(Collection);
-  FStrings := TStringList.Create;
-end;
-
-destructor TSQLStrings.Destroy;
-begin
-  FStrings.Free;
-  inherited;
-end;
-
-procedure TSQLStrings.Assign(ASource: TPersistent);
-begin
-  if ASource is TSQLStrings then
-    FStrings.Assign(TSQLStrings(ASource).SQL)
-  else
-    inherited;
-end;
-
-procedure TSQLStrings.SetStrings(const Value: TStrings);
-begin
-  FStrings.Assign(Value);
-end;
-
-
-{ TdsdStoredProcSQLite }
-
-constructor TdsdStoredProcSQLite.Create(AOwner: TComponent);
-begin
-  inherited;
-  FSQLList := TSQLList.Create(Self, TSQLStrings);
-end;
-
-destructor TdsdStoredProcSQLite.Destroy;
-begin
-  FSQLList.Free;
-  inherited;
-end;
-
-procedure TdsdStoredProcSQLite.DataSetSQLiteRefresh;
-var B: TBookMark;
-begin
-  if (DataSets.Count > 0) and
-      Assigned(DataSets[0]) and
-      Assigned(DataSets[0].DataSet) then
-   begin
-     if DataSets[0].DataSet.State in dsEditModes then begin
-        DataSets[0].DataSet.Post;
-     end;
-     if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
-        B := DataSets[0].DataSet.GetBookmark;
-     if DataSets[0].DataSet is TClientDataSet then
-     begin
-       if (SQLList.Count > 0) and Assigned(SQLList.Items[0]) and (TSQLStrings(SQLList.Items[0]).SQL.Text <> '') then
-         LoadSQLiteSQL(TClientDataSet(DataSets[0].DataSet), TSQLStrings(SQLList.Items[0]).SQL.Text, Params)
-       else ShowMessage('Не определен SQL для выполнения запроса.');
-     end;
-     if Assigned(B) then
-     begin
-        try
-          if DataSets[0].DataSet.BookmarkValid(B) then
-            DataSets[0].DataSet.GotoBookmark(B);
-        except
-        end;
-        DataSets[0].DataSet.FreeBookmark(B);
-     end;
-   end;
-end;
-
-procedure TdsdStoredProcSQLite.MultiDataSetSQLiteRefresh;
-var B: TBookMark;
-    i: integer;
-begin
-  for I := 0 to DataSets.Count - 1 do
-      if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
-         DataSets[i].DataSet.Post;
-
-  for I := 0 to DataSets.Count - 1 do
-  begin
-      if DataSets[i].DataSet.Active then
-        B := DataSets[i].DataSet.GetBookmark;
-      if DataSets[i].DataSet is TClientDataSet then
-      begin
-        if (SQLList.Count > I) and Assigned(SQLList.Items[I]) and (TSQLStrings(SQLList.Items[I]).SQL.Text <> '') then
-          LoadSQLiteSQL(TClientDataSet(DataSets[I].DataSet), TSQLStrings(SQLList.Items[I]).SQL.Text)
-        else ShowMessage('Не определен SQL для выполнения запроса.');
-      end;
-      if Assigned(B) then
-      begin
-        try
-          if DataSets[i].DataSet.BookmarkValid(B) then
-            DataSets[i].DataSet.GotoBookmark(B);
-        except
-        end;
-        DataSets[0].DataSet.FreeBookmark(B);
-      end;
-  end;
-end;
-
-procedure TdsdStoredProcSQLite.FillOutputParamsSQLite;
-  var ClientDataSet: TClientDataSet;
-      i: integer;
-begin
-
-  if (SQLList.Count = 0) or not Assigned(SQLList.Items[0]) or (TSQLStrings(SQLList.Items[0]).SQL.Text = '') then
-  begin
-    ShowMessage('Не определен SQL для выполнения запроса.');
-    Exit;
-  end;
-
-  ClientDataSet := TClientDataSet.Create(Nil);
-  try
-
-    LoadSQLiteSQL(ClientDataSet, TSQLStrings(SQLList.Items[0]).SQL.Text, Params);
-
-    for I := 0 to Params.Count - 1 do
-      if (Params[i].ParamType in [ptOutput, ptInputOutput])
-      then
-         if Assigned(ClientDataSet.FindField(Params[i].Name)) then
-            Params[i].Value := ClientDataSet.FieldByName(Params[i].Name).AsVariant;
-  finally
-    ClientDataSet.Free;
-  end;
-end;
-
-function TdsdStoredProcSQLite.GetFieldSQLite : String;
-  var ClientDataSet: TClientDataSet;
-      i: integer;
-begin
-
-  if (SQLList.Count = 0) or not Assigned(SQLList.Items[0]) or (TSQLStrings(SQLList.Items[0]).SQL.Text = '') then
-  begin
-    ShowMessage('Не определен SQL для выполнения запроса.');
-    Exit;
-  end;
-
-  ClientDataSet := TClientDataSet.Create(Nil);
-  try
-
-    LoadSQLiteSQL(ClientDataSet, TSQLStrings(SQLList.Items[0]).SQL.Text);
-
-    Result := ClientDataSet.Fields.Fields[0].AsString;
-
-  finally
-    ClientDataSet.Free;
-  end;
-end;
-
-function TdsdStoredProcSQLite.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
-begin
-  result := '';
-
-  if (gc_User.Local = true) or (StoredProcName = '') then
-  begin
-
-    if ACursorHourGlass then
-      Screen.Cursor := crHourGlass;
-    try
-      if (OutputType = otDataSet) then DataSetSQLiteRefresh;
-      if (OutputType = otMultiDataSet) then MultiDataSetSQLiteRefresh;
-      if (OutputType = otResult) then FillOutputParamsSQLite;
-      if (OutputType = otBlob) then result := GetFieldSQLite;
-    finally
-      if ACursorHourGlass then
-        Screen.Cursor := crDefault;
-    end;
-  end else result := inherited;
-
-end;
-
 initialization
 
   VerifyBoolStrArray;
   Classes.RegisterClass(TdsdDataSets);
 
 end.
+

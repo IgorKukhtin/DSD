@@ -99,14 +99,11 @@ RETURNS TABLE (Id Integer
 
              , AmountRest           TFloat
              , AmountRest_EUR       TFloat
-
+             
                -- Итоговые обороты по валютам (должно быть 0)
              , AmountDiffFull_GRN   TFloat
              , AmountDiffFull_EUR   TFloat         
-             
-               -- Для отладки
-             , AmountOver_GRN       TFloat
-              )
+             )
 AS
 $BODY$
    DECLARE vbUserId                 Integer;
@@ -320,13 +317,15 @@ BEGIN
                                  , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() AND MovementItem.ParentId IS NULL THEN MovementItem.Amount ELSE 0 END), 0) AS AmountCardOver
                                                                     
                                  -- AmountGRNOver_GRN
-                                 , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() AND MovementItem.ParentId IS NULL THEN MIFloat_AmountExchange.ValueData ELSE 0 END), 0) AS AmountGRNOver_GRN
+                                 , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() AND MovementItem.ParentId IS NULL THEN MovementItem.Amount ELSE 0 END), 0) AS AmountGRNOver_GRN
                                    -- AmountUSDOver_GRN
                                  , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() AND MovementItem.ParentId IS NULL THEN MIFloat_AmountExchange.ValueData ELSE 0 END), 0) AS AmountUSDOver_GRN
                                    -- AmountEUROver_GRN
                                  , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() AND MovementItem.ParentId IS NULL THEN MIFloat_AmountExchange.ValueData ELSE 0 END), 0) AS AmountEUROver_GRN
                                    -- AmountCardOver_GRN
-                                 , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() AND MovementItem.ParentId IS NULL THEN MIFloat_AmountExchange.ValueData ELSE 0 END), 0) AS AmountCardOver_GRN
+                                 , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() AND MovementItem.ParentId IS NULL THEN MovementItem.Amount ELSE 0 END), 0) AS AmountCardOver_GRN
+                                   -- AmountDiff
+                                 , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() AND MovementItem.ParentId IS NULL THEN MIFloat_AmountExchange.ValueData ELSE 0 END), 0) AS AmountDiff
                             FROM MovementItem
                                   LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id = MovementItem.ParentId
                                   LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
@@ -361,6 +360,7 @@ BEGIN
                                 , tmpRes_all.AmountUSDOver_GRN
                                 , tmpRes_all.AmountEUROver_GRN
                                 , tmpRes_all.AmountCardOver_GRN
+                                , tmpRes_all.AmountDiff
 
                                 , (tmpRes_all.AmountGRNOver_GRN +
                                    tmpRes_all.AmountUSDOver_GRN +
@@ -381,12 +381,17 @@ BEGIN
                              , tmpRes.AmountUSDOver_GRN
                              , tmpRes.AmountEUROver_GRN
                              , tmpRes.AmountCardOver_GRN
+                             , tmpRes.AmountDiff
                                  
                              , tmpRes.AmountOver_GRN
                                  
                              , tmpRes.AmountRounding_ForUSD
                              , tmpRes.AmountRounding_ForEUR
                                  
+                             , CASE WHEN tmpRes.AmountDiff <> 0
+                                    THEN ROUND(zfCalc_CurrencyTo (vbAmountDiscount_GRN, vbCurrencyValue_EUR, 1), 2)
+                                    ELSE 0 END :: TFloat  AS AmountDiscount_EUR_Diff
+
                              , tmpRes.AmountUSD > 0 AND (tmpRes.AmountRounding_ForUSD <> tmpRes.AmountRounding_ForEUR AND (tmpRes.AmountRounding_ForEUR + vbAmountRounding_GRN)::TFloat = 0 OR 
                                tmpRes.AmountUSDOver_GRN > 0 AND tmpRes.AmountUSDOver_GRN = Round(tmpRes.AmountUSDOver / vbCurrencyValue_Cross * vbCurrencyValueIn_EUR, 2))            AS isChangeEUR
                                    
@@ -456,9 +461,9 @@ BEGIN
            , TRUE AS isPayTotal
 
            , tmpMI.AmountGRN > 0, tmpMI.AmountUSD > 0, tmpMI.AmountEUR > 0, tmpMI.AmountCard > 0
-           , Res.AmountDiscount_EUR >= 1 OR ABS(Res.AmountDiscount) >= 5 AND (Res.AmountOver_GRN + Res.AmountDiscount) = 0 AND (Res.AmountOver_GRN) > 0
+           , ABS(Res.AmountDiscount_EUR) >= 1 OR ABS(Res.AmountDiscount) >= 5 AND (Res.AmountOver_GRN + Res.AmountDiscount) = 0 AND (Res.AmountOver_GRN) > 0
            , tmpMI.AmountGRN > 0, tmpMI.AmountUSD > 0, tmpMI.AmountEUR > 0, tmpMI.AmountCard > 0
-           , Res.AmountDiscount_EUR >= 1 OR ABS(Res.AmountDiscount) >= 5 AND (Res.AmountOver_GRN + Res.AmountDiscount) = 0 AND (Res.AmountOver_GRN) > 0
+           , ABS(Res.AmountDiscount_EUR) >= 1 OR ABS(Res.AmountDiscount) >= 5 AND (Res.AmountOver_GRN + Res.AmountDiscount) = 0 AND (Res.AmountOver_GRN) > 0
            
            , tmpMI.isChangeEUR
            
@@ -491,13 +496,10 @@ BEGIN
 
            , Res.AmountRest
            , Res.AmountRest_EUR
-
+           
              -- Итоговые обороты по валютам (должно быть 0)
            , Res.AmountDiffFull_GRN
            , Res.AmountDiffFull_EUR
-           
-           , tmpMI.AmountOver_GRN
-           
        FROM tmpMI
       
             LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = vbCurrencyId_Client
@@ -514,20 +516,14 @@ BEGIN
                                                   , inAmountUSD              := tmpMI.AmountUSD
                                                   , inAmountEUR              := tmpMI.AmountEUR
                                                   , inAmountCard             := tmpMI.AmountCard
-                                                  , inAmountDiscount_EUR     := Round(vbAmountDiscount_EUR)
+                                                  , inAmountDiscount_EUR     := CASE WHEN ABS(vbAmountDiscount_EUR - tmpMI.AmountDiscount_EUR_Diff) >= 1 
+                                                                                     THEN vbAmountDiscount_EUR - tmpMI.AmountDiscount_EUR_Diff 
+                                                                                     ELSE ROUND(vbAmountDiscount_EUR - tmpMI.AmountDiscount_EUR_Diff) END
                                                    
-                                                  , inisDiscount             := vbAmountDiscount_EUR >= 1 OR ABS(vbAmountDiscount_GRN) >= 5 AND (tmpMI.AmountOver_GRN + vbAmountDiscount_GRN) = 0 AND (tmpMI.AmountOver_GRN) > 0
+                                                  , inisDiscount             := ABS(vbAmountDiscount_EUR + tmpMI.AmountDiscount_EUR_Diff) >= 1 OR ABS(vbAmountDiscount_GRN) >= 5 AND (tmpMI.AmountOver_GRN + vbAmountDiscount_GRN) = 0 AND (tmpMI.AmountOver_GRN) > 0
                                                   , inisChangeEUR            := tmpMI.isChangeEUR
-                                                  , inisAmountRemains_EUR    := ROUND(vbAmountToPay_EUR - vbSummTotalPay_EUR - vbAmountDiscount_EUR - vbAmountRounding_EUR) > 0 
-                                                                                 AND (tmpMI.AmountOver_GRN > 0 OR vbAmountDiscount_EUR > 1)
-                                                  , inAmountRemains_EUR      := CASE WHEN ROUND(vbAmountToPay_EUR - vbSummTotalPay_EUR - vbAmountDiscount_EUR - vbAmountRounding_EUR) > 0 
-                                                                                            AND (tmpMI.AmountOver_GRN > 0 OR vbAmountDiscount_EUR > 1)
-                                                                                     THEN ROUND(vbAmountToPay_EUR - vbSummTotalPay_EUR - vbAmountDiscount_EUR - vbAmountRounding_EUR)
-                                                                                     ELSE 0 END
-                                                  , inisAmountDiff           := tmpMI.AmountOver_GRN > 0 AND tmpMI.AmountOver_GRN + vbAmountDiscount_GRN > 0
-                                                  , inAmountDiff             := CASE WHEN tmpMI.AmountOver_GRN > 0 AND tmpMI.AmountOver_GRN + vbAmountDiscount_GRN > 0
-                                                                                THEN (tmpMI.AmountOver_GRN + vbAmountDiscount_GRN) 
-                                                                                ELSE 0 END
+                                                  , inisAmountDiff           := TRUE
+                                                  , inAmountDiff             := tmpMI.AmountDiff
                                                   , inCurrencyId_Client      := vbCurrencyId_Client 
                                                   , inUserId                 := vbUserId) AS Res ON 1 = 1
             
@@ -549,4 +545,4 @@ $BODY$
 -- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inIsGRN:= FALSE, inIsUSD:= FALSE, inIsEUR:= FALSE, inIsCard:= FALSE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23589 ,  inSession := '2');
+select AmountDiscount_EUR from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23589  ,  inSession := '2');

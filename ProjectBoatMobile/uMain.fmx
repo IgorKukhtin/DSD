@@ -1,0 +1,306 @@
+object frmMain: TfrmMain
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 542
+  ClientWidth = 334
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object vsbMain: TVertScrollBox
+    Align = Client
+    Size.Width = 334.000000000000000000
+    Size.Height = 542.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 334.000000000000000000
+    Viewport.Height = 542.000000000000000000
+    object pBack: TPanel
+      Align = Top
+      Size.Width = 334.000000000000000000
+      Size.Height = 65.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+    end
+    object tcMain: TTabControl
+      Align = Client
+      Size.Width = 334.000000000000000000
+      Size.Height = 477.000000000000000000
+      Size.PlatformDefault = False
+      TabIndex = 0
+      TabOrder = 1
+      TabPosition = None
+      Sizes = (
+        334s
+        477s
+        334s
+        477s)
+      object tiStart: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = True
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'tiStart'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object LoginPanel: TPanel
+          Align = Contents
+          Size.Width = 334.000000000000000000
+          Size.Height = 477.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'LoginPanelStyle1'
+          TabOrder = 0
+          object LoginScaledLayout: TScaledLayout
+            Align = Contents
+            OriginalWidth = 334.000000000000000000
+            OriginalHeight = 477.000000000000000000
+            Size.Width = 334.000000000000000000
+            Size.Height = 477.000000000000000000
+            Size.PlatformDefault = False
+            object Layout1: TLayout
+              Align = MostTop
+              Position.Y = 93.000000000000000000
+              Size.Width = 334.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              object LoginEdit: TEdit
+                Touch.InteractiveGestures = [LongTap, DoubleTap]
+                Align = VertCenter
+                TabOrder = 0
+                ReturnKeyType = Done
+                Text = #1040#1076#1084#1080#1085
+                TextSettings.Font.Family = 'Times New Roman'
+                TextSettings.Font.Size = 13.000000000000000000
+                TextSettings.FontColor = xFF005078
+                TextSettings.HorzAlign = Center
+                Position.X = 15.000000000000000000
+                Position.Y = 9.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 304.000000000000000000
+                Size.Height = 32.000000000000000000
+                Size.PlatformDefault = False
+                StyledSettings = []
+                KillFocusByReturn = True
+              end
+            end
+            object Layout2: TLayout
+              Align = MostTop
+              Position.Y = 67.000000000000000000
+              Size.Width = 334.000000000000000000
+              Size.Height = 26.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              object Label2: TLabel
+                Align = Client
+                StyledSettings = [Family]
+                Margins.Left = 15.000000000000000000
+                Size.Width = 319.000000000000000000
+                Size.Height = 26.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF005078
+                Text = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+              end
+            end
+            object Layout3: TLayout
+              Align = MostTop
+              Position.Y = 143.000000000000000000
+              Size.Width = 334.000000000000000000
+              Size.Height = 25.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 4
+              object PasswordLabel: TLabel
+                Align = Client
+                StyledSettings = [Family]
+                Margins.Left = 15.000000000000000000
+                Size.Width = 319.000000000000000000
+                Size.Height = 25.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF005078
+                Text = #1055#1072#1088#1086#1083#1100
+              end
+            end
+            object Layout4: TLayout
+              Align = MostTop
+              Position.Y = 168.000000000000000000
+              Size.Width = 334.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              object PasswordEdit: TEdit
+                Touch.InteractiveGestures = [LongTap, DoubleTap]
+                Align = VertCenter
+                TabOrder = 0
+                ReturnKeyType = Done
+                Password = True
+                TextSettings.Font.Family = 'Times New Roman'
+                TextSettings.Font.Size = 13.000000000000000000
+                TextSettings.FontColor = xFF005078
+                TextSettings.HorzAlign = Center
+                Position.X = 15.000000000000000000
+                Position.Y = 9.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 304.000000000000000000
+                Size.Height = 32.000000000000000000
+                Size.PlatformDefault = False
+                StyledSettings = []
+                KillFocusByReturn = True
+              end
+            end
+            object Panel1: TPanel
+              Align = MostTop
+              Size.Width = 334.000000000000000000
+              Size.Height = 67.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'Panel1Style1'
+              TabOrder = 5
+              object Label3: TLabel
+                Align = Top
+                StyledSettings = []
+                Size.Width = 334.000000000000000000
+                Size.Height = 42.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Family = 'Times New Roman'
+                TextSettings.Font.Size = 32.000000000000000000
+                TextSettings.FontColor = claRed
+                TextSettings.HorzAlign = Center
+                TextSettings.VertAlign = Trailing
+                TextSettings.WordWrap = False
+                Text = 'Project Boot'
+              end
+              object Label4: TLabel
+                Align = Top
+                StyledSettings = []
+                Position.Y = 42.000000000000000000
+                Size.Width = 334.000000000000000000
+                Size.Height = 20.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Family = 'Times New Roman'
+                TextSettings.Font.Size = 16.000000000000000000
+                TextSettings.FontColor = xFF005078
+                TextSettings.HorzAlign = Center
+                Text = 'Mobile edition'
+              end
+            end
+            object WebServerLayout: TLayout
+              Align = MostTop
+              Position.Y = 218.000000000000000000
+              Size.Width = 334.000000000000000000
+              Size.Height = 75.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              object WebServerLayout11: TLayout
+                Align = Top
+                Size.Width = 334.000000000000000000
+                Size.Height = 25.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object WebServerLabel: TLabel
+                  Align = Client
+                  StyledSettings = [Family]
+                  Margins.Left = 15.000000000000000000
+                  Size.Width = 319.000000000000000000
+                  Size.Height = 25.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.Font.StyleExt = {00070000000000000004000000}
+                  TextSettings.FontColor = xFF005078
+                  Text = #1057#1077#1088#1074#1077#1088
+                end
+              end
+              object WebServerLayout12: TLayout
+                Align = Client
+                Size.Width = 334.000000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                object WebServerEdit: TEdit
+                  Touch.InteractiveGestures = [LongTap, DoubleTap]
+                  Align = VertCenter
+                  TabOrder = 0
+                  ReturnKeyType = Done
+                  Text = 'http://in.mer-lin.org.ua/projectboat_test/index.php'
+                  TextSettings.Font.Family = 'Times New Roman'
+                  TextSettings.Font.Size = 13.000000000000000000
+                  TextSettings.FontColor = xFF005078
+                  TextSettings.HorzAlign = Center
+                  Position.X = 15.000000000000000000
+                  Position.Y = 9.000000000000000000
+                  Margins.Left = 15.000000000000000000
+                  Margins.Right = 15.000000000000000000
+                  Size.Width = 304.000000000000000000
+                  Size.Height = 32.000000000000000000
+                  Size.PlatformDefault = False
+                  StyledSettings = []
+                  KillFocusByReturn = True
+                end
+              end
+            end
+            object Layout43: TLayout
+              Align = Client
+              Size.Width = 334.000000000000000000
+              Size.Height = 184.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 8
+              object Layout5: TLayout
+                Align = Top
+                Size.Width = 334.000000000000000000
+                Size.Height = 89.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object Layout37: TLayout
+                  Align = Bottom
+                  Position.Y = 29.000000000000000000
+                  Size.Width = 334.000000000000000000
+                  Size.Height = 60.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  object LogInButton: TButton
+                    Align = Center
+                    StyledSettings = []
+                    Size.Width = 219.000000000000000000
+                    Size.Height = 60.000000000000000000
+                    Size.PlatformDefault = False
+                    StyleLookup = 'EnterStyle'
+                    TabOrder = 0
+                    Text = #1042#1086#1081#1090#1080
+                    TextSettings.Font.Family = 'Times New Roman'
+                    TextSettings.Font.Size = 24.000000000000000000
+                    TextSettings.FontColor = xFF005078
+                    OnClick = LogInButtonClick
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+      object tiMain: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'tiMain'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+      end
+    end
+  end
+end

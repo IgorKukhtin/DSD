@@ -15,8 +15,8 @@ CREATE OR REPLACE FUNCTION lpSelect_MI_Child_calc(
     IN inAmountUSD             TFloat    , -- сумма оплаты
     IN inAmountEUR             TFloat    , -- сумма оплаты
     IN inAmountCard            TFloat    , -- сумма оплаты
-    IN inAmountDiscount_EUR    TFloat    , -- всегда EUR
-    IN inAmountDiff            TFloat    , -- Сумма скидки
+    IN inAmountDiscount_EUR    TFloat    , -- Сумма скидки всегда EUR
+    IN inAmountDiff            TFloat    , -- Сумма сдачи
     IN inAmountRemains_EUR     TFloat    , -- Сумма долга
 
     IN inisDiscount            Boolean   , -- Списать остаток
@@ -194,7 +194,7 @@ BEGIN
      vbAmountToPay     := (SELECT SUM (_tmp_MI_Master.AmountToPay)      FROM _tmp_MI_Master);
      vbAmountToPay_EUR:= (SELECT SUM (_tmp_MI_Master.AmountToPay_EUR) FROM _tmp_MI_Master);
      
-     inAmountDiscount_EUR := Round(inAmountDiscount_EUR);
+     --inAmountDiscount_EUR := Round(inAmountDiscount_EUR);
      
      -- кассы
      CREATE TEMP TABLE tmpCash ON COMMIT DROP AS 
@@ -263,7 +263,7 @@ BEGIN
         , vbAmountDiscount_EUR
           -- Дополнительная скидка - EUR
         , vbAmountRounding_EUR
-          
+        
         , vbAmountGRN_Pay
         , vbAmountGRN_EUR
         , vbAmountGRN_Over
@@ -299,9 +299,7 @@ BEGIN
                                       , inisDiscount             := inisDiscount
                                       , inisChangeEUR            := inisChangeEUR
                                        
-                                      , inisAmountRemains_EUR    := inisDiscount = TRUE AND inAmountRemains_EUR > 0
-                                      , inAmountRemains_EUR      := CASE WHEN inisDiscount = TRUE AND inAmountRemains_EUR > 0 THEN inAmountRemains_EUR ELSE 0 END
-                                      , inisAmountDiff           := inAmountDiff <> 0
+                                      , inisAmountDiff           := TRUE
                                       , inAmountDiff             := inAmountDiff
                                       , inCurrencyId_Client      := inCurrencyId_Client 
                                       , inUserId                 := inUserId) AS Res;
@@ -312,9 +310,10 @@ BEGIN
      --raise notice 'USD: % % % % %', vbAmountUSD_Pay, vbAmountUSD_EUR, vbAmountUSD_Pay_GRN, vbAmountUSD_Over, vbAmountUSD_Over_GRN;
      --raise notice 'CARD: % % %', vbAmountCARD_Pay, vbAmountCARD_EUR, vbAmountCARD_Over;
      --raise notice 'GRN: % % %', vbAmountGRN_Pay, vbAmountGRN_EUR, vbAmountGRN_Over;
-          
-     --Округляем долг в валюте до целого
-     IF COALESCE(inAmountDiscount_EUR, 0) = 0 AND COALESCE(vbAmountRemains_EUR, 0) <> Round(COALESCE(vbAmountRemains_EUR, 0))
+     
+     
+     -- Не выданную сдачу добавим в округление по евро
+     IF inisDiscount = FALSE AND COALESCE(inAmountDiscount_EUR, 0) = 0 AND ROUND(zfCalc_CurrencyTo (vbAmountDiff -  (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), inCurrencyValueEUR, 1), 2) <> 0
      THEN
        SELECT Res.AmountDiff
 
@@ -398,20 +397,114 @@ BEGIN
                                         , inAmountUSD              := inAmountUSD
                                         , inAmountEUR              := inAmountEUR
                                         , inAmountCard             := inAmountCard
-                                        , inAmountDiscount_EUR     := COALESCE(vbAmountRemains_EUR, 0) - Round(COALESCE(vbAmountRemains_EUR, 0))
+                                        , inAmountDiscount_EUR     := ROUND(zfCalc_CurrencyTo (vbAmountDiff - (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), inCurrencyValueEUR, 1), 2)
                                          
                                         , inisDiscount             := inisDiscount
                                         , inisChangeEUR            := inisChangeEUR
                                          
-                                        , inisAmountRemains_EUR    := inisDiscount = TRUE AND inAmountRemains_EUR > 0
-                                        , inAmountRemains_EUR      := CASE WHEN inisDiscount = TRUE AND inAmountRemains_EUR > 0 THEN inAmountRemains_EUR ELSE 0 END
-                                        , inisAmountDiff           := inAmountDiff <> 0
+                                        , inisAmountDiff           := TRUE
+                                        , inAmountDiff             := inAmountDiff
+                                        , inCurrencyId_Client      := inCurrencyId_Client 
+                                        , inUserId                 := inUserId) AS Res;     
+
+     END IF;
+          
+     --Округляем долг в валюте до целого
+     IF /*COALESCE(inAmountDiscount_EUR, 0) = 0 AND */ COALESCE(vbAmountRemains_EUR, 0) <> Round(COALESCE(vbAmountRemains_EUR, 0))
+     THEN
+       SELECT Res.AmountDiff
+
+            , Res.AmountRest
+            , Res.AmountRest_EUR
+
+              -- Дополнительная скидка - ГРН
+            , Res.AmountDiscount
+              -- Округлениее курсов - ГРН
+            , Res.AmountRounding
+
+
+              -- Дополнительная скидка - EUR
+            , Res.AmountDiscount_EUR
+              -- Дополнительная скидка - EUR
+            , Res.AmountRounding_EUR
+            
+            , Res.AmountGRN_Pay
+            , Res.AmountGRN_EUR
+
+            , Res.AmountGRN_Over
+
+            , Res.AmountUSD_Pay
+            , Res.AmountUSD_EUR
+            , Res.AmountUSD_Pay_GRN
+            , Res.AmountUSD_Over
+            , Res.AmountUSD_Over_GRN
+
+            , Res.AmountEUR_Pay
+            , Res.AmountEUR_Pay_GRN
+            , Res.AmountEUR_Over
+            , Res.AmountEUR_Over_GRN
+
+            , Res.AmountCARD_Pay
+            , Res.AmountCARD_EUR
+            , Res.AmountCARD_Over
+
+       INTO vbAmountDiff
+
+          , vbAmountRemains
+          , vbAmountRemains_EUR
+          
+            -- Дополнительная скидка - ГРН
+          , vbAmountDiscount
+            -- Округлениее курсов - ГРН
+          , vbAmountRounding
+
+
+            -- Дополнительная скидка - EUR
+          , vbAmountDiscount_EUR
+            -- Дополнительная скидка - EUR
+          , vbAmountRounding_EUR
+            
+          , vbAmountGRN_Pay
+          , vbAmountGRN_EUR
+          , vbAmountGRN_Over
+
+          , vbAmountUSD_Pay
+          , vbAmountUSD_EUR
+          , vbAmountUSD_Pay_GRN
+          , vbAmountUSD_Over
+          , vbAmountUSD_Over_GRN
+
+          , vbAmountEUR_Pay
+          , vbAmountEUR_Pay_GRN
+          , vbAmountEUR_Over
+          , vbAmountEUR_Over_GRN
+
+          , vbAmountCARD_Pay
+          , vbAmountCARD_EUR
+          , vbAmountCARD_Over
+             
+       FROM lpGet_MI_Sale_Child_TotalCalc(inCurrencyValueUSD       := inCurrencyValueUSD
+                                        , inCurrencyValueInUSD     := inCurrencyValueInUSD
+                                        , inCurrencyValueEUR       := inCurrencyValueEUR
+                                        , inCurrencyValueInEUR     := inCurrencyValueInEUR
+                                        , inCurrencyValueCross     := inCurrencyValueCross
+
+                                        , inAmountToPay_EUR        := vbAmountToPay_EUR 
+                                        , inAmountGRN              := inAmountGRN
+                                        , inAmountUSD              := inAmountUSD
+                                        , inAmountEUR              := inAmountEUR
+                                        , inAmountCard             := inAmountCard
+                                        , inAmountDiscount_EUR     := vbAmountDiscount_EUR + COALESCE(vbAmountRemains_EUR, 0) - Round(COALESCE(vbAmountRemains_EUR, 0))
+                                         
+                                        , inisDiscount             := inisDiscount
+                                        , inisChangeEUR            := inisChangeEUR
+                                         
+                                        , inisAmountDiff           := TRUE
                                         , inAmountDiff             := inAmountDiff
                                         , inCurrencyId_Client      := inCurrencyId_Client 
                                         , inUserId                 := inUserId) AS Res;
 
-       --raise notice 'Remains: % %', vbAmountRemains, vbAmountRemains_EUR;
-       --raise notice 'Discount: % % % %', vbAmountDiscount, vbAmountRounding, vbAmountDiscount_EUR, vbAmountRounding_EUR;
+       raise notice 'Discount 3: % % % %', vbAmountDiscount, vbAmountRounding, vbAmountDiscount_EUR, vbAmountRounding_EUR;
      
      END IF;
      
@@ -430,9 +523,9 @@ BEGIN
                                       
      -- Дополнительная оплата из за невыданного округления    
      vbAmountDiffLeft_GRN := (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over) - vbAmountDiff;
-     vbAmountDiscount := vbAmountDiscount + vbAmountDiff;
+     --vbAmountDiscount := vbAmountDiscount + vbAmountDiff;
 
-     raise notice 'D: % %  % ', vbAmountDiffLeft_GRN, (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), vbAmountDiff;
+     --raise notice 'D: % %  % ', vbAmountDiffLeft_GRN, (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), vbAmountDiff;
           
      -- распределили - Дополнительую скидку по всем строкам
      -- Распределили EUR
@@ -1273,7 +1366,7 @@ BEGIN
           , 0 :: TFloat AS AmountRounding_curr
 
           , vbAmountGRN_Over   :: TFloat AS Amount
-          , vbAmountGRN_Over   :: TFloat AS Amount_GRN
+          , inAmountDiff       :: TFloat AS Amount_GRN
           , 0                  :: TFloat AS Amount_EUR
 
           , 0 :: TFloat                  AS CurrencyValue
@@ -1286,7 +1379,7 @@ BEGIN
           LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = 0
                                AND tmpMI_Child.CashId   = tmpCash.CashId
      WHERE tmpCash.CurrencyId = zc_Currency_GRN() AND tmpCash.isBankAccount = FALSE
-       AND (COALESCE (vbAmountGRN_Over, 0) > 0 OR COALESCE (tmpMI_Child.MovementItemId, 0) <> 0);     
+       AND (COALESCE (vbAmountGRN_Over, 0) > 0 OR COALESCE (tmpMI_Child.MovementItemId, 0) <> 0 OR inAmountDiff <> 0);     
        
      -- Проверим итоговые суммы
      SELECT 
@@ -1408,11 +1501,11 @@ SELECT Object_Cash.valuedata, Calc.*
 FROM lpSelect_MI_Child_calc(
       inMovementId            := 23589        
     , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23589 AND MLO.DescId = zc_MovementLinkObject_From())
-    , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 500 , inAmountCARD := 0, inAmountDiscount_EUR := 0, inAmountDiff :=  0, inAmountRemains_EUR := 0
-    , inisDiscount := 'True', inisChangeEUR := 'False'
+    , inAmountGRN := 0 , inAmountUSD := 300 , inAmountEUR := 200 , inAmountCARD := 0, inAmountDiscount_EUR := 0, inAmountDiff :=  1020, inAmountRemains_EUR := 0
+    , inisDiscount := 'False', inisChangeEUR := 'False'
     , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1
     , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1
-    , inCurrencyValueCross := 1.09 , inParValueCross := 1
+    , inCurrencyValueCross := 1.0868 , inParValueCross := 1
     , inCurrencyId_Client     := zc_Currency_EUR()
     , inUserId                := 2
 ) AS Calc left join Object AS Object_Cash ON Object_Cash.Id = Calc.CashId --WHERE Calc.CashId = 18666

@@ -145,6 +145,7 @@ begin
             if (Component is TDocument) then
             begin
               Proc('Name');
+              Proc('FileName');
               Proc('Data');
             end;
             if (Component is TADOQueryAction) then
