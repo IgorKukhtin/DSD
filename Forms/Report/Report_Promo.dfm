@@ -117,6 +117,11 @@ inherited Report_PromoForm: TReport_PromoForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaProfit_plan
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = RetailName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False

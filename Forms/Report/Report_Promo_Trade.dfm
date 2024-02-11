@@ -97,6 +97,11 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
               Format = ',0.####'
               Kind = skSum
               Column = CostPromo
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = RetailName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False

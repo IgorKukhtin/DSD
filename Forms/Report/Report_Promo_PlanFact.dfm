@@ -127,6 +127,11 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight_fact
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName_str
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
