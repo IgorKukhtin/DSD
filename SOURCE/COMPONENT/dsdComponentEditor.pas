@@ -146,6 +146,7 @@ begin
             begin
               Proc('Name');
               Proc('FileName');
+              Proc('ExtractFileName');
               Proc('Data');
             end;
             if (Component is TADOQueryAction) then

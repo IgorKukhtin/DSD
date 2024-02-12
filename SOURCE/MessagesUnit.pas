@@ -72,11 +72,11 @@ begin
   m_stMessagePassword:='';
   fFullMessage:=inFullMessage;
   try
-    meFullMessage.Lines.Text := inFullMessage;
+    meFullMessage.Lines.Text := Copy(inFullMessage, 1, 4096);
   except
   end;
   if trim(inMessage)<>'' then
-     rlError.Caption := inMessage
+     rlError.Caption := Copy(inMessage, 1, 4096)
   else begin
      with rlError.Font do begin
        Color:= clRed;
