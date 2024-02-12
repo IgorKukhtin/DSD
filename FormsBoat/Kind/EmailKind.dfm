@@ -1,9 +1,9 @@
 object EmailKindForm: TEmailKindForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1087#1086#1095#1090#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087' '#1074#1085#1077#1096#1085#1077#1075#1086' '#1048#1084#1087#1086#1088#1090#1072'/'#1069#1082#1089#1087#1086#1088#1090#1072'>'
   ClientHeight = 376
-  ClientWidth = 390
+  ClientWidth = 516
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object EmailKindForm: TEmailKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
+    Width = 516
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 390
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +39,6 @@ object EmailKindForm: TEmailKindForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -51,14 +51,30 @@ object EmailKindForm: TEmailKindForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 73
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 243
+        Width = 181
+      end
+      object DropBox: TcxGridDBColumn
+        DataBinding.FieldName = 'DropBox'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' DropBox'
+        Width = 248
+      end
+      object EnumName: TcxGridDBColumn
+        Caption = #1060#1091#1085#1082#1094#1080#1103
+        DataBinding.FieldName = 'EnumName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1091#1085#1082#1094#1080#1103
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -98,8 +114,8 @@ object EmailKindForm: TEmailKindForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 88
+    Left = 65528
+    Top = 32
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -138,23 +154,6 @@ object EmailKindForm: TEmailKindForm
       FloatClientHeight = 0
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -249,10 +248,12 @@ object EmailKindForm: TEmailKindForm
       FormName = 'TEmailKindEditForm'
       FormNameParam.Value = 'TEmailKindEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -262,10 +263,10 @@ object EmailKindForm: TEmailKindForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -281,8 +282,8 @@ object EmailKindForm: TEmailKindForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TEmailKindEditForm'
-      FormNameParam.Value = 'TEmailKindEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -290,6 +291,7 @@ object EmailKindForm: TEmailKindForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -307,6 +309,7 @@ object EmailKindForm: TEmailKindForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -314,6 +317,7 @@ object EmailKindForm: TEmailKindForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -338,6 +342,7 @@ object EmailKindForm: TEmailKindForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -345,6 +350,7 @@ object EmailKindForm: TEmailKindForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -353,6 +359,7 @@ object EmailKindForm: TEmailKindForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -387,8 +394,20 @@ object EmailKindForm: TEmailKindForm
       isSetErased = False
       DataSource = DataSource
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_EmailKind'
     DataSet = ClientDataSet
     DataSets = <
@@ -411,6 +430,7 @@ object EmailKindForm: TEmailKindForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 312
@@ -426,9 +446,6 @@ object EmailKindForm: TEmailKindForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -441,6 +458,7 @@ object EmailKindForm: TEmailKindForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -451,7 +469,36 @@ object EmailKindForm: TEmailKindForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_EmailKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDropBox'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DropBox'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 104
   end
 end

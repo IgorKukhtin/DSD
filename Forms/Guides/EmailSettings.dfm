@@ -203,6 +203,10 @@ inherited EmailSettingsForm: TEmailSettingsForm
       Visible = ivAlways
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 416
+    Top = 248
+  end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_EmailSettings'
     DataSets = <>
@@ -278,8 +282,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 16
+    Left = 424
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

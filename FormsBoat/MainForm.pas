@@ -320,6 +320,11 @@ type
     miGoodsGroup_all: TMenuItem;
     actBankAccountChildJournal: TdsdOpenForm;
     N3: TMenuItem;
+    actEmailSettings: TdsdOpenForm;
+    actEmailKind: TdsdOpenForm;
+    miEmailSettings: TMenuItem;
+    misep: TMenuItem;
+    miEmailKind: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private

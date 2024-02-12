@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_EmailKind(
     IN inDropBox             TVarChar,      -- Директория сохранения в DropBox
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Void AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
@@ -20,7 +20,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_EmailKind_DropBox(), inId, inDropBox);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
 END;
 $BODY$
