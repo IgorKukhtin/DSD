@@ -6,7 +6,16 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.Objects, FMX.Edit,
-  System.Generics.Collections;
+  System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
+  System.IniFiles
+  {$IFDEF ANDROID}
+  ,System.Permissions,Androidapi.JNI.Os,
+  FMX.Helpers.Android, Androidapi.Helpers,
+  Androidapi.JNI.Location, Androidapi.JNIBridge,
+  Androidapi.JNI.GraphicsContentViewText,
+  Androidapi.JNI.JavaTypes,
+  AndroidApi.JNI.WebKit
+  {$ENDIF};
 
 type
   TFormStackItem = record
@@ -42,15 +51,27 @@ type
     Layout37: TLayout;
     LogInButton: TButton;
     tiMain: TTabItem;
+    acMain: TActionList;
+    ChangePartnerInfoLeft: TChangeTabAction;
+    ChangePartnerInfoRight: TChangeTabAction;
+    ChangeMainPage: TChangeTabAction;
+    aiWait: TAniIndicator;
+    imLogo: TImage;
+    lCaption: TLabel;
+    sbBack: TSpeedButton;
+    Image7: TImage;
+    sbMain: TStyleBook;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure ChangeMainPageUpdate(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FTemporaryServer: string;
     FUseAdminRights: boolean;
+    FPermissionState: boolean;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure Wait(AWait: Boolean);
@@ -63,7 +84,7 @@ var
 
 implementation
 
-uses System.IOUtils, System.IniFiles, Authentication, Storage, CommonData, CursorUtils;
+uses System.IOUtils, Authentication, Storage, CommonData, CursorUtils;
 
 {$R *.fmx}
 
@@ -109,6 +130,7 @@ begin
   finally
     FreeAndNil(SettingsFile);
   end;
+  FPermissionState := True;
 
   // установка вертикального положения экрана телефона
   {$IFDEF ANDROID}
@@ -125,13 +147,11 @@ begin
   {$IFDEF ANDROID}
   if not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE)) or
      not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.CAMERA)) or
-     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.ACCESS_FINE_LOCATION)) or
      not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)) then
   begin
     FPermissionState := False;
     PermissionsService.RequestPermissions([JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE),
                                            JStringToString(TJManifest_permission.JavaClass.CAMERA),
-                                           JStringToString(TJManifest_permission.JavaClass.ACCESS_FINE_LOCATION),
                                            JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)],
       procedure(const APermissions: TClassicStringDynArray; const AGrantResults: TClassicPermissionStatusDynArray)
       begin
@@ -153,6 +173,36 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
+// обработка изменения закладки (формы)
+procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
+var
+  TaskCount : integer;
+begin
+  FUseAdminRights := false;
+
+  { настройка панели возврата }
+  if (tcMain.ActiveTab = tiStart)  then
+    pBack.Visible := false
+  else
+  begin
+    pBack.Visible := true;
+    if tcMain.ActiveTab = tiMain then
+    begin
+      imLogo.Visible := true;
+      sbBack.Visible := false;
+    end
+    else
+    begin
+      imLogo.Visible := false;
+      sbBack.Visible := true;
+    end;
+
+    if tcMain.ActiveTab = tiMain then
+      lCaption.Text := 'Project Boot Mobile'
+    else ;
+  end;
+end;
+
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   FFormsStack.Free;
@@ -161,7 +211,7 @@ end;
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   SwitchToForm(tiStart, nil);
-//  ChangeMainPageUpdate(tcMain);
+  ChangeMainPageUpdate(nil);
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -172,12 +222,11 @@ var
 begin
   NeedSync := not assigned(gc_User);
 
-//  if not FPermissionState then
-//  begin
-//    ShowMessage('Необходимые разрешения не предоставлены');
-//    exit;
-//  end;
-
+  if not FPermissionState then
+  begin
+    ShowMessage('Необходимые разрешения не предоставлены');
+    exit;
+  end;
 
   if gc_WebService = '' then
     gc_WebService := WebServerEdit.Text;
