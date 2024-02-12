@@ -330,9 +330,9 @@ type
     actSelect_ExportCSVF2: TdsdExecStoredProc;
     bbExportCSVF2: TdxBarButton;
     bbSeparator: TdxBarSeparator;
-    spGet_Export_EmailCSVF2_xls: TdsdStoredProc;
-    spSelect_ExportCSVF2_xls: TdsdStoredProc;
-    spGet_Export_FileNameCSVF2_xls: TdsdStoredProc;
+    spGet_Export_EmailF2_xls: TdsdStoredProc;
+    spSelect_ExportF2_xls: TdsdStoredProc;
+    spGet_Export_FileNameF2_xls: TdsdStoredProc;
     mactExportF2_xls: TMultiAction;
     actGet_Export_EmailF2_xls: TdsdExecStoredProc;
     actGet_Export_FileNameF2_xls: TdsdExecStoredProc;

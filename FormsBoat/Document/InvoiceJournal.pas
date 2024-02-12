@@ -150,6 +150,8 @@ type
     dxBarButton1: TdxBarButton;
     PaidKindName: TcxGridDBColumn;
     Ord_ch4: TcxGridDBColumn;
+    btnOpenFormPdfEdit: TcxButton;
+    actOpenFormPdfEdit: TdsdOpenForm;
   private
     { Private declarations }
   public

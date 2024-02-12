@@ -1298,8 +1298,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 24
+    Left = 192
+    Top = 8
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'

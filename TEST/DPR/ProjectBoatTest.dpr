@@ -382,7 +382,8 @@ uses
   PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas',
   BankAccountChildJournal in '..\..\FormsBoat\Document\BankAccountChildJournal.pas' {BankAccountChildJournalForm: TParentForm},
   BankAccountChild in '..\..\FormsBoat\Document\BankAccountChild.pas' {BankAccountChildForm: TParentForm},
-  FileTypeKind in '..\..\FormsBoat\Import\FileTypeKind.pas' {FileTypeKindForm: TParentForm};
+  FileTypeKind in '..\..\FormsBoat\Import\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
+  InvoicePdfEdit in '..\..\FormsBoat\Guides\InvoicePdfEdit.pas' {InvoicePdfEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

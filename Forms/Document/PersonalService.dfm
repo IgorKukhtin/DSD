@@ -2,7 +2,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 781
   ClientWidth = 1258
-  ExplicitTop = -188
   ExplicitWidth = 1274
   ExplicitHeight = 820
   PixelsPerInch = 96
@@ -2228,7 +2227,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         TabOrder = 5
         Visible = False
-        ExplicitWidth = 400
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -2915,10 +2913,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_EmailCSVF2_xls
+      StoredProc = spGet_Export_EmailF2_xls
       StoredProcList = <
         item
-          StoredProc = spGet_Export_EmailCSVF2_xls
+          StoredProc = spGet_Export_EmailF2_xls
         end>
       Caption = 'actGet_Export_EmailF2_xls'
     end
@@ -2942,10 +2940,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileNameCSVF2_xls
+      StoredProc = spGet_Export_FileNameF2_xls
       StoredProcList = <
         item
-          StoredProc = spGet_Export_FileNameCSVF2_xls
+          StoredProc = spGet_Export_FileNameF2_xls
         end>
       Caption = 'actGet_Export_FileNameF2_xls'
     end
@@ -2974,10 +2972,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelect_ExportCSVF2_xls
+      StoredProc = spSelect_ExportF2_xls
       StoredProcList = <
         item
-          StoredProc = spSelect_ExportCSVF2_xls
+          StoredProc = spSelect_ExportF2_xls
         end>
       Caption = 'actSelect_ExportCSVF2'
     end
@@ -8054,7 +8052,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 704
     Top = 680
   end
-  object spGet_Export_EmailCSVF2_xls: TdsdStoredProc
+  object spGet_Export_EmailF2_xls: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService_Email'
     DataSet = ExportEmailCDS
     DataSets = <
@@ -8077,10 +8075,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 728
+    Left = 600
+    Top = 720
   end
-  object spSelect_ExportCSVF2_xls: TdsdStoredProc
+  object spSelect_ExportF2_xls: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_mail_xls'
     DataSet = ExportCDS
     DataSets = <
@@ -8103,10 +8101,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 816
+    Left = 760
     Top = 728
   end
-  object spGet_Export_FileNameCSVF2_xls: TdsdStoredProc
+  object spGet_Export_FileNameF2_xls: TdsdStoredProc
     StoredProcName = 'gpGet_PersonalService_FileNameCSV'
     DataSets = <>
     OutputType = otResult
@@ -8158,7 +8156,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 920
-    Top = 728
+    Left = 872
+    Top = 720
   end
 end

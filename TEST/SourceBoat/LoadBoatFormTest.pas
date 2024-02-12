@@ -373,6 +373,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceItemEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoicePdfEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoicePdfEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;
