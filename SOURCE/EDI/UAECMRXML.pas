@@ -286,6 +286,7 @@ type
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
     { Methods & Properties }
@@ -295,6 +296,7 @@ type
     property PostalTradeAddress: IXMLPostalTradeAddressType read Get_PostalTradeAddress;
     property DefinedTradeContact: IXMLDefinedTradeContactType read Get_DefinedTradeContact;
     property SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType read Get_SpecifiedGovernmentRegistration;
+    property SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType read Get_SpecifiedTaxRegistration;
   end;
 
 { IXMLIDType }
@@ -1135,6 +1137,7 @@ type
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
   public
@@ -2018,6 +2021,7 @@ begin
   RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
   RegisterChildNode('DefinedTradeContact', TXMLDefinedTradeContactType);
   RegisterChildNode('SpecifiedGovernmentRegistration', TXMLSpecifiedGovernmentRegistrationType);
+  RegisterChildNode('SpecifiedTaxRegistration', TXMLSpecifiedTaxRegistrationType);
   inherited;
 end;
 
@@ -2059,6 +2063,11 @@ end;
 function TXMLConsignorTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
 begin
   Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
+end;
+
+function TXMLConsignorTradePartyType.Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
+begin
+  Result := ChildNodes['ram:SpecifiedTaxRegistration'] as IXMLSpecifiedTaxRegistrationType;
 end;
 
 { TXMLIDType }
