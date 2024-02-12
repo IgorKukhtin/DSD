@@ -211,10 +211,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_BankAccountPdf_MovmentItemId() RETURNS
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_BankAccountPdf_MovmentItemId', zc_Object_BankAccountPdf(), '  документ Расчетный счет, приход/расход' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BankAccountPdf_MovmentItemId');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_InvoicePdf_MovementId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_InvoicePdf_MovementId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_InvoicePdf_MovementId', zc_Object_InvoicePdf(), ' документ Cчет, приход/расход' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_InvoicePdf_MovementId');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 12.01.24         * zc_ObjectFloat_InvoicePdf_MovmentId
  08.01.24         * zc_ObjectFloat_PartionCell_Level
  29.05.23         * zc_ObjectFloat_ProdOptions_Amount
  22.09.22                                                       * zc_ObjectFloat_ProdColor_Value

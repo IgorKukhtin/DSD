@@ -485,10 +485,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccountPdf_DocTag() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_BankAccountPdf_DocTag', 'Категория Документация', zc_Object_BankAccountPdf(), zc_Object_DocTag() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BankAccountPdf_DocTag');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InvoicePdf_DocTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InvoicePdf_DocTag'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_InvoicePdf_DocTag', 'Категория Документация', zc_Object_InvoicePdf(), zc_Object_DocTag() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InvoicePdf_DocTag');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 12.01.24        * zc_ObjectLink_InvoicePdf_DocTag
  13.01.24        * zc_ObjectLink_BankAccountPdf_DocTag
  01.12.23        * zc_ObjectLink_ReceiptGoods_UnitChild
  22.12.22        * zc_ObjectLink_ReceiptProdModel_Unit

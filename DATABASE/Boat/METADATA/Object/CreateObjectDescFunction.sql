@@ -368,12 +368,16 @@ CREATE OR REPLACE FUNCTION zc_Object_PhotoTag() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PhotoTag', 'Категория Фото' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PhotoTag');
 
+CREATE OR REPLACE FUNCTION zc_Object_InvoicePdf() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_InvoicePdf'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_InvoicePdf', 'Счет, скан документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_InvoicePdf');
 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.02.24         * zc_Object_InvoicePdf
  12.01.24         * zc_Object_BankAccountPdf
                     zc_Object_PhotoTag
  08.01.24         * zc_Object_PartionCell

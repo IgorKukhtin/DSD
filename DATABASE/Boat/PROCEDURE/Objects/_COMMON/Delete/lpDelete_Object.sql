@@ -9,7 +9,7 @@ IN Session tvarchar)
 $BODY$
 BEGIN
 
-  IF (SELECT Object.DescId FROM Object WHERE Object.Id = inId) <> zc_Object_BankAccountPdf()
+  IF (SELECT Object.DescId FROM Object WHERE Object.Id = inId) NOT IN (zc_Object_BankAccountPdf(), zc_Object_InvoicePdf())
   THEN
       RAISE EXCEPTION 'Ошибка.<%>', 'lpDelete_Object';
   ELSE

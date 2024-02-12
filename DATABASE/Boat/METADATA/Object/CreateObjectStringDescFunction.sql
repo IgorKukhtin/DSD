@@ -363,13 +363,15 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_BankAccountPdf_Comment', zc_object_BankAccountPdf(), 'Категория фото' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BankAccountPdf_Comment');
 
-
-
+ CREATE OR REPLACE FUNCTION zc_ObjectString_InvoicePdf_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InvoicePdf_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_InvoicePdf_Comment', zc_object_InvoicePdf(), 'Категория фото' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InvoicePdf_Comment');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 12.01.24         * zc_ObjectString_InvoicePdf_Comment
  13.01.24         * zc_ObjectString_BankAccountPdf_Comment
  08.01.24         * zc_ObjectString_PartionCell_Comment
  06.12.23         * zc_ObjectString_InvoiceKind_Comment
