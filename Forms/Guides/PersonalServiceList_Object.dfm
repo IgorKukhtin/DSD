@@ -249,6 +249,14 @@ object PersonalServiceList_ObjectForm: TPersonalServiceList_ObjectForm
         Options.Editing = False
         Width = 50
       end
+      object isBankNot: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1074#1099#1087#1083#1072#1090#1099' '#1073#1072#1085#1082' 2'#1092
+        DataBinding.FieldName = 'isBankNot'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1042#1099#1087#1083#1072#1090#1072' '#1073#1072#1085#1082' 2'#1092
+        Options.Editing = False
+      end
       object KoeffSummCardSecond: TcxGridDBColumn
         Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
         DataBinding.FieldName = 'KoeffSummCardSecond'
@@ -900,6 +908,7 @@ object PersonalServiceList_ObjectForm: TPersonalServiceList_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

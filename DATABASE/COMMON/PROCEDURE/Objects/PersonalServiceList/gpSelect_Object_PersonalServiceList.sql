@@ -28,7 +28,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isPersonalOut Boolean
              , isBankOut Boolean
              , isDetail Boolean
-             , isAvanceNot Boolean, isCompensationNot Boolean
+             , isAvanceNot Boolean
+             , isBankNot Boolean
+             , isCompensationNot Boolean
              , isErased Boolean
               )
 AS
@@ -118,6 +120,7 @@ BEGIN
            , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)         ::Boolean AS isBankOut
            , COALESCE (ObjectBoolean_Detail.ValueData, FALSE)          ::Boolean AS isDetail
            , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE)       ::Boolean AS isAvanceNot
+           , COALESCE (ObjectBoolean_BankNot.ValueData, FALSE)         ::Boolean AS isBankNot
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
 
            , Object_PersonalServiceList.isErased  AS isErased
@@ -147,7 +150,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_AvanceNot
                                    ON ObjectBoolean_AvanceNot.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_AvanceNot.DescId = zc_ObjectBoolean_PersonalServiceList_AvanceNot()
-
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BankNot
+                                   ON ObjectBoolean_BankNot.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_BankNot.DescId = zc_ObjectBoolean_PersonalServiceList_BankNot()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -252,6 +257,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.02.24          * isBankNot
  27.04.23          *
  14.03.23          *
  09.03.22          *

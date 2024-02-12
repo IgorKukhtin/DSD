@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isBankOut Boolean
              , isDetail Boolean
              , isAvanceNot Boolean
+             , isBankNot Boolean   
              , isCompensationNot Boolean
              , isErased Boolean) AS
 $BODY$
@@ -88,7 +89,8 @@ BEGIN
            , CAST(FALSE AS Boolean) AS isRecalc
            , CAST(FALSE AS Boolean) AS isBankOut
            , CAST(FALSE AS Boolean) AS isDetail
-           , CAST(FALSE AS Boolean) AS isAvanceNot
+           , CAST(FALSE AS Boolean) AS isAvanceNot 
+           , CAST(FALSE AS Boolean) AS isBankNot
            , CAST(FALSE AS Boolean) AS isCompensationNot
 
            , CAST (NULL AS Boolean) AS isErased;
@@ -146,6 +148,7 @@ BEGIN
            , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)   ::Boolean AS isBankOut
            , COALESCE (ObjectBoolean_Detail.ValueData, FALSE)    ::Boolean AS isDetail
            , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE) ::Boolean AS isAvanceNot
+           , COALESCE (ObjectBoolean_BankNot.ValueData, FALSE)   ::Boolean AS isBankNot
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
 
            , Object_PersonalServiceList.isErased   AS isErased
@@ -174,6 +177,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_AvanceNot
                                    ON ObjectBoolean_AvanceNot.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_AvanceNot.DescId = zc_ObjectBoolean_PersonalServiceList_AvanceNot()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BankNot
+                                   ON ObjectBoolean_BankNot.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_BankNot.DescId = zc_ObjectBoolean_PersonalServiceList_BankNot()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -274,6 +280,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.02.24         * isBankNot
  29.01.24         * isCompensationNot
  27.04.23         *
  09.03.22         *

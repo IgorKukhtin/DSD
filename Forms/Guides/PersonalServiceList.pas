@@ -85,6 +85,7 @@ type
     OnFlowType: TcxGridDBColumn;
     isDetail: TcxGridDBColumn;
     isCompensationNot: TcxGridDBColumn;
+    isBankNot: TcxGridDBColumn;
   private
     { Private declarations }
   public
