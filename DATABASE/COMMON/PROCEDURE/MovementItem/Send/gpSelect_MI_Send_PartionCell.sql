@@ -44,7 +44,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionCellId_5     Integer 
              , PartionCellCode_5   Integer 
              , PartionCellName_5   TVarChar
-             , isPeresort Boolean
+             , isErased Boolean
               )
 AS
 $BODY$

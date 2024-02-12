@@ -230,6 +230,15 @@ type
     GoodsName_old: TcxGridDBColumn;
     actGoodsKindChoicePC: TOpenChoiceForm;
     OpenChoiceForm1: TOpenChoiceForm;
+    spUnErasedMIPC: TdsdStoredProc;
+    spErasedMIPC: TdsdStoredProc;
+    actMISetErasedPC: TdsdUpdateErased;
+    actMISetUnErasedPC: TdsdUpdateErased;
+    bbMISetErasedPC: TdxBarButton;
+    bbMISetUnErasedPC: TdxBarButton;
+    actShowErasedPC: TBooleanStoredProcAction;
+    bbShowErasedPC: TdxBarButton;
+    isErased_ch4: TcxGridDBColumn;
   private
     { Private declarations }
   public
