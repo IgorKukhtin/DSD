@@ -170,6 +170,10 @@ BEGIN
                                  ELSE (29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005) / 100
                             END) AS SummCardSecondRecalc
               FROM tmp_all
+              WHERE 4000 <= FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc <= 29999 * 100
+                                        THEN tmp_all.SummCardSecondRecalc / 100
+                                        ELSE (29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005) / 100
+                                   END)
 	      )
 	      
 	      SELECT tmp.CardBankSecond

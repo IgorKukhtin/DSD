@@ -90,7 +90,7 @@ BEGIN
             END                       :: TVarChar AS Subject
           , ''                        :: TBlob    AS Body
           , gpGet_Mail.Value                      AS AddressFrom
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu@ua.fm'
+          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
                  ELSE tmpExportJuridical.ContactPersonMail --|| ';ashtu@ua.fm'
             END :: TVarChar AS AddressTo
