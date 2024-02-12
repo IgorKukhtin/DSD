@@ -944,6 +944,8 @@ begin
            result := TDocument(Component).GetName
         else if LowerCase(ComponentItem) = 'filename' then
            result := TDocument(Component).FileName
+        else if LowerCase(ComponentItem) = 'extractfilename' then
+           result := TDocument(Component).GetExtractFileName
         else
            result := TDocument(Component).GetData;
      end;
