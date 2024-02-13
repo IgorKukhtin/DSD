@@ -1,6 +1,6 @@
 -- Function: gpGet_Movement_Invoice_ReportName()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_ReportName (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_ReportName (Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice_ReportName (
@@ -8,10 +8,12 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice_ReportName (
     IN inMovementId_Parent  Integer  , -- 
     IN inSession            TVarChar   -- сессия пользователя
 )
-RETURNS TVarChar
+RETURNS TABLE (gpGet_Movement_Invoice_ReportName               TVarChar
+             , InvoiceFileName                                 TVarChar)
 AS
 $BODY$
-   DECLARE vbPrintFormName TVarChar;
+   DECLARE vbPrintFormName    TVarChar;
+   DECLARE vbInvoiceFileName  TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -66,8 +68,21 @@ BEGIN
        WHERE Movement.Id = inMovementId
        LIMIT 1
       );
+      
+     vbInvoiceFileName := 'Invoice_'||COALESCE((SELECT COALESCE(MovementString_ReceiptNumber.ValueData, 'XXX')||'_'||
+                                                       zfConvert_DateShortToString(Movement.OperDate)  
+                                                FROM Movement 
+                                                     -- Официальный номер квитанции - Quittung Nr
+                                                     LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                                                              ON MovementString_ReceiptNumber.MovementId = Movement.Id
+                                                                             AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
+                                                WHERE Movement.Id = inMovementId), 'XXXX_XXXX');
 
-     RETURN (vbPrintFormName);
+     -- Результат
+     RETURN QUERY
+
+     SELECT vbPrintFormName
+          , vbInvoiceFileName;
 
 END;
 $BODY$
@@ -75,9 +90,12 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.               
+ 12.02.24                                                       *
  08.12.23         *
 */
 
 -- тест
 -- SELECT gpGet_Movement_Invoice_ReportName FROM gpGet_Movement_Invoice_ReportName(inMovementId := 891, inMovementId_Parent:= 0, inSession := zfCalc_UserAdmin()); -- все
+
+select * from gpGet_Movement_Invoice_ReportName(inMovementId := 1808 , inMovementId_parent := 890 ,  inSession := '5');
