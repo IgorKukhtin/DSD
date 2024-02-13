@@ -13,7 +13,6 @@ RETURNS TABLE (CardBankSecond          TVarChar
               )
 AS
 $BODY$
-   DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -48,24 +47,6 @@ BEGIN
      END IF;
 
 
-     -- определили данные из ведомости начисления
-     SELECT --ObjectFloat_KoeffSummCardSecond.ValueData AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
-            CAST (ObjectFloat_KoeffSummCardSecond.ValueData/ 1000 AS NUMERIC (16,10)) AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
-            INTO vbKoeffSummCardSecond
-     FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
-          LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
-                                ON ObjectFloat_KoeffSummCardSecond.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                               AND ObjectFloat_KoeffSummCardSecond.DescId = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
-     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
-       AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
-
-     --если не внесен коєф. берем по умолчанию = 1.00807
-     IF COALESCE (vbKoeffSummCardSecond,0) = 0
-     THEN
-         vbKoeffSummCardSecond := 1.00807;
-     END IF;
-
-
      --EXL  CardBankSecond, SummCardSecondRecalc         
      IF inParam = 3
      THEN  
@@ -84,16 +65,13 @@ BEGIN
                    )
     , tmp AS (SELECT tmp_all.CardBankSecond
                      -- % и округлили
-                   , FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc <= 29999 * 100
+                   , FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc / 100 <= 29999
                                  THEN tmp_all.SummCardSecondRecalc / 100
-                                 ELSE (29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005) / 100
+                                 ELSE tmp_all.SummCardSecondRecalc / 100 + (tmp_all.SummCardSecondRecalc / 100 - 29999) * 0.005
                             END) AS SummCardSecondRecalc
               FROM tmp_all
-              WHERE 4000 <= FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc <= 29999 * 100
-                                        THEN tmp_all.SummCardSecondRecalc / 100
-                                        ELSE (29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005) / 100
-                                   END)
-              )
+              WHERE 4000 <= tmp_all.SummCardSecondRecalc
+             )
 
               SELECT tmp.CardBankSecond   ::TVarChar
                , tmp.SummCardSecondRecalc ::TFloat
@@ -105,7 +83,7 @@ BEGIN
              UNION ALL
               --итого 
               SELECT ''  ::TVarChar
-                  , (SUM (tmp.SummCardSecondRecalc)) :: Integer
+                  , (SUM (tmp.SummCardSecondRecalc)) :: TFloat
               FROM tmp
              ;
 

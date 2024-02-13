@@ -60,55 +60,7 @@ BEGIN
      WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
 
-/*
-     -- определили данные из ведомости начисления
-     SELECT Object_Bank.Id                 AS BankId             -- БАНК
-          , Object_Bank.ValueData          AS BankName           -- БАНК
-          , ObjectString_MFO.ValueData     AS MFO                --
-          , Object_BankAccount.Id          AS BankAccountId      -- р/счет
-          , Object_BankAccount.ValueData   AS BankAccountName    -- р/счет
-          , ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId AS PSLExportKindId    -- Тип выгрузки ведомости в банк
-          , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType  -- Content-Type
-          , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType   -- Вид начисления в банке
-          , ObjectFloat_KoeffSummCardSecond.ValueData       AS KoeffSummCardSecond --Коэфф для выгрузки ведомости Банк 2ф.
-   INTO vbBankId, vbBankName, vbMFO
-      , vbBankAccountId, vbBankAccountName
-      , vbPSLExportKindId, vbContentType, vbOnFlowType
-      , vbKoeffSummCardSecond
-     FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
-           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Bank
-                                ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                               AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
-           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_PersonalServiceList_Bank.ChildObjectId
-
-           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PSLExportKind
-                                ON ObjectLink_PersonalServiceList_PSLExportKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                               AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind()
-
-           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_BankAccount
-                                ON ObjectLink_PersonalServiceList_BankAccount.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId 
-                               AND ObjectLink_PersonalServiceList_BankAccount.DescId = zc_ObjectLink_PersonalServiceList_BankAccount()
-           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_PersonalServiceList_BankAccount.ChildObjectId
-
-           LEFT JOIN ObjectString AS ObjectString_ContentType 
-                                  ON ObjectString_ContentType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                                 AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
-           LEFT JOIN ObjectString AS ObjectString_OnFlowType 
-                                  ON ObjectString_OnFlowType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                                 AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
-
-           LEFT JOIN ObjectString AS ObjectString_MFO
-                                  ON ObjectString_MFO.ObjectId = Object_Bank.Id
-                                 AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
-
-           LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
-                                 ON ObjectFloat_KoeffSummCardSecond.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                                AND ObjectFloat_KoeffSummCardSecond.DescId = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
-
-     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
-       AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
-*/
-     --если не внесен коєф. берем по умолчанию = 1.00807
+     -- если не внесен коєф. берем по умолчанию = 1.00807
      IF COALESCE (vbKoeffSummCardSecond,0) = 0
      THEN
          vbKoeffSummCardSecond := 1.00807;
@@ -165,18 +117,15 @@ BEGIN
 	      )
     , tmp AS (SELECT tmp_all.CardBankSecond
                      -- % и округлили
-                   , FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc <= 29999 * 100
+                   , FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc / 100 <= 29999
                                  THEN tmp_all.SummCardSecondRecalc / 100
-                                 ELSE (29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005) / 100
+                                 ELSE tmp_all.SummCardSecondRecalc / 100 + (tmp_all.SummCardSecondRecalc / 100 - 29999) * 0.005
                             END) AS SummCardSecondRecalc
               FROM tmp_all
-              WHERE 4000 <= FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc <= 29999 * 100
-                                        THEN tmp_all.SummCardSecondRecalc / 100
-                                        ELSE (29999 * 100 + (tmp_all.SummCardSecondRecalc - 29999 * 100) * 0.005) / 100
-                                   END)
-	      )
+              WHERE 4000 <= tmp_all.SummCardSecondRecalc / 100
+	     )
 	      
-	      SELECT tmp.CardBankSecond
+	      SELECT tmp.CardBankSecond     
            || ';' || tmp.SummCardSecondRecalc
               FROM tmp
              UNION ALL
@@ -185,7 +134,7 @@ BEGIN
              UNION ALL
               --итого 
               SELECT ''
-           || ';' || (SUM (tmp.SummCardSecondRecalc)) :: Integer
+           || ';' || (SUM (tmp.SummCardSecondRecalc)) :: TFloat
               FROM tmp
              ;   
      END IF;
