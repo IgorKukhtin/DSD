@@ -339,6 +339,8 @@ type
     actSelect_ExportF2_xls: TdsdExecStoredProc;
     bbExportCSVF2_xls: TdxBarButton;
     actExport_GridF2_xls: TExportGrid;
+    SummCardSecondRecalc_00807: TcxGridDBColumn;
+    SummCardSecondRecalc_005: TcxGridDBColumn;
   private
     { Private declarations }
   public
