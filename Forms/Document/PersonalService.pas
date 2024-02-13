@@ -339,6 +339,10 @@ type
     actSelect_ExportF2_xls: TdsdExecStoredProc;
     bbExportCSVF2_xls: TdxBarButton;
     actExport_GridF2_xls: TExportGrid;
+    spUpdate_CardSecond4000: TdsdStoredProc;
+    macUpdateCardSecond4000: TMultiAction;
+    actUpdateCardSecond4000: TdsdExecStoredProc;
+    bbUpdateCardSecond4000: TdxBarButton;
   private
     { Private declarations }
   public
