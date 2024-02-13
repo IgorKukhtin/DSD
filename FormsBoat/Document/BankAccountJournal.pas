@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, ExternalLoad, cxSplitter;
+  Vcl.StdCtrls, cxButtons, ExternalLoad, cxSplitter, Document;
 
 type
   TBankAccountJournalForm = class(TAncestorJournal_boatForm)
@@ -175,6 +175,11 @@ type
     actOpenFormPdfAllEdit: TdsdOpenForm;
     bbOpenFormPdfAllEdit: TdxBarButton;
     cxButton2: TcxButton;
+    DocumentInvoice: TDocument;
+    spInsertDocument: TdsdStoredProc;
+    spGetDocument: TdsdStoredProc;
+    actInsertDocument: TdsdExecStoredProc;
+    actDocumentOpenInvoice: TDocumentOpenAction;
   private
     { Private declarations }
   public

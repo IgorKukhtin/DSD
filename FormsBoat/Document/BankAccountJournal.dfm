@@ -4,28 +4,28 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1229
-  ExplicitHeight = 632
+  ExplicitWidth = 1235
+  ExplicitHeight = 649
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 56
+    Top = 65
     Width = 1213
-    Height = 464
+    Height = 455
     TabOrder = 3
-    ExplicitTop = 56
+    ExplicitTop = 65
     ExplicitWidth = 1213
-    ExplicitHeight = 464
-    ClientRectBottom = 464
+    ExplicitHeight = 455
+    ClientRectBottom = 455
     ClientRectRight = 1213
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1213
-      ExplicitHeight = 464
+      ExplicitHeight = 455
       inherited cxGrid: TcxGrid
         Width = 1213
-        Height = 339
+        Height = 330
         ExplicitWidth = 1213
-        ExplicitHeight = 339
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -817,7 +817,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end
       object cxSplitter_Bottom_Child: TcxSplitter
         Left = 0
-        Top = 339
+        Top = 330
         Width = 1213
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -826,7 +826,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end
       object cxGrid_Child: TcxGrid
         Left = 0
-        Top = 347
+        Top = 338
         Width = 1213
         Height = 117
         Align = alBottom
@@ -2195,6 +2195,51 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_EmbeddedFonts'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_Background'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ExportDirectory'
+          Value = 'GetTempPath'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvoiceFileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GetFileNameExport'
+          Value = Null
+          Component = DocumentInvoice
+          ComponentItem = 'FileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Invoice1'
       ReportNameParam.Value = ''
@@ -2239,10 +2284,44 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Action = actPrintInvoice
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = actDocumentOpenInvoice
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090
       ImageIndex = 3
+    end
+    object actInsertDocument: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'BankAccountPdfId'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertDocument
+      StoredProcList = <
+        item
+          StoredProc = spInsertDocument
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 0
+    end
+    object actDocumentOpenInvoice: TDocumentOpenAction
+      Category = 'Print'
+      MoveParams = <>
+      Document = DocumentInvoice
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1082#1072#1085
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
     end
   end
   inherited MasterDS: TDataSource
@@ -2263,7 +2342,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     DockControlHeights = (
       0
       0
-      26
+      35
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2559,6 +2638,17 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Name = 'isCopy'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceFileName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountPdfId'
+        Value = '0'
         MultiSelectSeparator = ','
       end>
   end
@@ -2978,6 +3068,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ComponentItem = 'ReportNameInvoice'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvoiceFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 800
@@ -3026,5 +3124,70 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 584
     Top = 432
+  end
+  object DocumentInvoice: TDocument
+    GetBlobProcedure = spGetDocument
+    Left = 440
+    Top = 240
+  end
+  object spInsertDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_BankAccountInvoicePdf'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BankAccountPdfId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhotoname'
+        Value = ''
+        Component = DocumentInvoice
+        ComponentItem = 'ExtractFileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovmentItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountPdfData'
+        Value = '789C535018D10000F1E01FE1'
+        Component = DocumentInvoice
+        ComponentItem = 'Data'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 288
+  end
+  object spGetDocument: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_BankAccountPdf'
+    DataSets = <>
+    OutputType = otBlob
+    Params = <
+      item
+        Name = 'inBankAccountPdfId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BankAccountPdfId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 288
   end
 end
