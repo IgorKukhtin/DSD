@@ -26,7 +26,10 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat,AmountCash_rem TFloat, AmountCash_pay TFloat
              , SummService TFloat
-             , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
+             , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat
+             , SummCardSecondRecalc TFloat, SummCardSecondRecalc_00807 TFloat, SummCardSecondRecalc_005 TFloat
+
+             , SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummCardSecond_Avance TFloat
              , SummAvCardSecond TFloat, SummAvCardSecondRecalc TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
@@ -61,6 +64,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , isAuto Boolean
              , isBankOut Boolean
              , BankOutDate TDateTime, BankOutDate_export TDateTime
+             --, Ord Integer
               )
 AS
 $BODY$
@@ -74,6 +78,8 @@ $BODY$
    DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
    DECLARE vbOperDate TDateTime;
+
+   DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalService());
@@ -106,6 +112,25 @@ BEGIN
      vbServiceDate  := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate());
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
      vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+
+     -- определили данные из ведомости начисления
+     SELECT --ObjectFloat_KoeffSummCardSecond.ValueData AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
+            CAST (ObjectFloat_KoeffSummCardSecond.ValueData/ 1000 AS NUMERIC (16,10)) AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
+            INTO vbKoeffSummCardSecond
+     FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+          LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
+                                ON ObjectFloat_KoeffSummCardSecond.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                               AND ObjectFloat_KoeffSummCardSecond.DescId   = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
+     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+       AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
+
+     -- если не внесен коєф. берем по умолчанию = 1.00807
+     IF COALESCE (vbKoeffSummCardSecond,0) = 0
+     THEN
+         vbKoeffSummCardSecond := 1.00807;
+     END IF;
+
+
 
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
      THEN
@@ -190,6 +215,8 @@ BEGIN
                            , ObjectLink_Personal_Member.ChildObjectId AS MemberId_Personal
                            , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                            , MovementItem.isErased
+                             -- № п/п
+                           , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY MovementItem.Id DESC) AS Ord
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                   AND MovementItem.DescId = zc_MI_Master()
@@ -372,9 +399,9 @@ BEGIN
                            WHERE tmpMI.PersonalId IS NULL
                              AND inShowAll = TRUE
                           )
-          , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId , tmpMI.PersonalServiceListId, tmpMI.isErased FROM tmpMI
+          , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId , tmpMI.PersonalServiceListId, tmpMI.isErased, tmpMI.Ord FROM tmpMI
                       UNION ALL
-                       SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId, tmpPersonal.isErased FROM tmpPersonal
+                       SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId, tmpPersonal.isErased, 0 AS Ord FROM tmpPersonal
                       )
             -- выплата аванса
           , tmpContainer_pay AS (SELECT DISTINCT
@@ -538,6 +565,19 @@ BEGIN
                                                    )
                )
 
+     , tmpMI_card_b2 AS (SELECT tmpMI.MemberId_Personal
+                              , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS Summ_calc
+                         FROM tmpMI
+                         
+                              LEFT JOIN MIFloat AS MIFloat_SummCardSecondRecalc
+                                                          ON MIFloat_SummCardSecondRecalc.MovementItemId = tmpMI.MovementItemId
+                                                         AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+                              LEFT JOIN MIFloat AS MIFloat_SummAvCardSecondRecalc
+                                                          ON MIFloat_SummAvCardSecondRecalc.MovementItemId = tmpMI.MovementItemId
+                                                         AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
+                         GROUP BY tmpMI.MemberId_Personal
+                        )
+
        -- Результат
        SELECT tmpAll.MovementItemId                         AS Id
             , Object_Personal.Id                            AS PersonalId
@@ -616,7 +656,20 @@ BEGIN
             , MIFloat_SummCard.ValueData              AS SummCard
             , MIFloat_SummCardRecalc.ValueData        AS SummCardRecalc
             , MIFloat_SummCardSecond.ValueData        AS SummCardSecond
+
             , MIFloat_SummCardSecondRecalc.ValueData  AS SummCardSecondRecalc
+
+            , (FLOOR (100 * CAST ((COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) * vbKoeffSummCardSecond
+                                 AS NUMERIC (16, 0))
+                     ) / 100) :: TFloat AS SummCardSecondRecalc_00807
+
+            , FLOOR (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
+                               THEN 0
+                          WHEN tmpMI_card_b2.Summ_calc <= 29999
+                          THEN CAST (tmpMI_card_b2.Summ_calc AS NUMERIC (16, 0))
+                          ELSE CAST (tmpMI_card_b2.Summ_calc AS NUMERIC (16, 0)) + (CAST (tmpMI_card_b2.Summ_calc AS NUMERIC (16, 0)) - 29999) * 0.005
+                     END) :: TFloat AS SummCardSecondRecalc_005
+
             , MIFloat_SummCardSecondDiff.ValueData    AS SummCardSecondDiff
             , MIFloat_SummCardSecondCash.ValueData    AS SummCardSecondCash
             , tmpMI_SummCardSecondRecalc.SummCardSecondRecalc ::TFloat AS SummCardSecond_Avance    
@@ -692,7 +745,11 @@ BEGIN
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate
             , COALESCE (MIDate_BankOut.ValueData, vbOperDate)   :: TDateTime AS BankOutDate_export
+            --, tmpAll.Ord :: Integer
        FROM tmpAll
+            LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpAll.MemberId_Personal
+                                   AND tmpAll.Ord = 1
+
             LEFT JOIN ObjectString AS ObjectString_Code1C
                                    ON ObjectString_Code1C.ObjectId = tmpAll.PersonalId
                                   AND ObjectString_Code1C.DescId    = zc_ObjectString_Personal_Code1C()
@@ -1032,4 +1089,4 @@ $BODY$
 
 --select * from gpSelect_MovementItem_PersonalService22(inMovementId := 27102444 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');
 --select * from gpSelect_MovementItem_PersonalService(inMovementId := 27099657 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');
---select * from gpSelect_MovementItem_PersonalService(inMovementId := 27099657 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');
+--select * from gpSelect_MovementItem_PersonalService(inMovementId := 27428409 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');

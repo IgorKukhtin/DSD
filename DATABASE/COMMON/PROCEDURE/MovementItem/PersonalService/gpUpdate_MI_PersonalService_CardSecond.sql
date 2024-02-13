@@ -245,6 +245,8 @@ END IF;
                                      INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
                                                                     ON CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                                                                    AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                                     LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = CLO_PersonalServiceList.ObjectId 
+
                                      INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                            ON ObjectLink_Personal_Member.ObjectId      = CLO_Personal.ObjectId
                                                           AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
@@ -255,6 +257,9 @@ END IF;
                                 WHERE CLO_ServiceDate.ObjectId    = vbServiceDateId
                                   AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
                                   AND ObjectLink_PersonalServiceList_PaidKind.ObjectId IS NULL
+                                  -- !!!временно!!!
+                                  AND Object_PersonalServiceList.Id NOT IN (1064330, 10231279, 10231282, 10231283)
+
                                   -- если это не Аванс
                                   AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                                )                                   
