@@ -77,6 +77,8 @@ type
     btnGet_Pay: TcxButton;
     btnGet_Proforma: TcxButton;
     btnGet_Service: TcxButton;
+    edString_7: TcxTextEdit;
+    cxLabel14: TcxLabel;
   private
     { Private declarations }
   public

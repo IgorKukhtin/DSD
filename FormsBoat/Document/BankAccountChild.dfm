@@ -98,15 +98,15 @@
     Width = 259
   end
   object cxLabel10: TcxLabel [13]
-    Left = 8
-    Top = 283
+    Left = 287
+    Top = 284
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [14]
-    Left = 8
-    Top = 303
+    Left = 287
+    Top = 305
     TabOrder = 8
-    Width = 438
+    Width = 159
   end
   object edInvNumber: TcxTextEdit [15]
     Left = 8
@@ -231,7 +231,7 @@
   end
   object cmText: TcxMemo [28]
     Left = 8
-    Top = 352
+    Top = 351
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold, toPenTapFeedback, toTouchUIForceOn, toTouchUIForceOff, toTouchSwitch, toFlicks]
     Properties.ReadOnly = True
@@ -241,7 +241,7 @@
   end
   object cxLabel8: TcxLabel [29]
     Left = 8
-    Top = 329
+    Top = 330
     Caption = #1058#1077#1082#1089#1090
   end
   object cxLabel11: TcxLabel [30]
@@ -344,6 +344,18 @@
     ParentShowHint = False
     ShowHint = True
     TabOrder = 39
+  end
+  object cxLabel14: TcxLabel [40]
+    Left = 8
+    Top = 284
+    Caption = '7. Name Zahlungsbeteiligter'
+  end
+  object edString_7: TcxTextEdit [41]
+    Left = 8
+    Top = 305
+    Properties.ReadOnly = True
+    TabOrder = 41
+    Width = 259
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 91
@@ -1078,6 +1090,13 @@
         Value = Null
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'String_7'
+        Value = Null
+        Component = edString_7
         DataType = ftString
         MultiSelectSeparator = ','
       end>

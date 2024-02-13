@@ -26,7 +26,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , InfoMoneyName_all TVarChar
              , Amount_Invoice TFloat
              , MovementId_parent Integer
-             , InvNumber_parent TVarChar
+             , InvNumber_parent TVarChar 
+             , String_7     TVarChar  --Name Zahlungsbeteiligter; наименование плательщика;
              )
 AS
 $BODY$
@@ -85,7 +86,8 @@ BEGIN
 
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
-
+           --
+           , '' ::TVarChar AS String_7
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
 
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = inMoneyPlaceId
@@ -156,13 +158,17 @@ BEGIN
              -- parent для Invoice
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
-
+           --
+           , MovementString_7.ValueData   ::TVarChar AS String_7
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_7
+                                     ON MovementString_7.MovementId = Movement.Id
+                                    AND MovementString_7.DescId = zc_MovementString_7()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
                                            ON MovementLinkMovement_Invoice.MovementId = Movement.Id
