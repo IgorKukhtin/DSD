@@ -75,8 +75,8 @@ BEGIN
      END IF;
 
      --проверка нельзя выбрать чужую кассу, филиал можно, для пользователей с ролью админ не проверяем
-     IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-        AND vbUserId <> 128491 -- Хохлова Е.Ю.
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+    AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = zc_Enum_Process_AccessKey_CashAll())
      THEN
          IF inCashId <> (SELECT tmp.CashId FROM gpGet_UserParams_bonus (inSession:= inSession) AS tmp)
          THEN
