@@ -540,6 +540,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshMov: TdsdDataSetRefresh [3]

@@ -152,9 +152,9 @@ END IF;
 
 
      -- новые данные - MovementItem
-     CREATE TEMP TABLE _tmpMI (MovementItemId Integer, MemberId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, PersonalServiceListId Integer, FineSubjectId Integer, UnitId_FineSubject Integer, SummCardSecondRecalc TFloat, TotaSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI (MovementItemId Integer, MemberId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, PersonalServiceListId Integer, FineSubjectId Integer, UnitId_FineSubject Integer, SummCardSecondRecalc TFloat, TotalSumm TFloat) ON COMMIT DROP;
      --
-     INSERT INTO _tmpMI (MovementItemId, MemberId, PersonalId, UnitId, PositionId, InfoMoneyId, PersonalServiceListId, FineSubjectId, UnitId_FineSubject, SummCardSecondRecalc, TotaSumm)
+     INSERT INTO _tmpMI (MovementItemId, MemberId, PersonalId, UnitId, PositionId, InfoMoneyId, PersonalServiceListId, FineSubjectId, UnitId_FineSubject, SummCardSecondRecalc, TotalSumm)
            WITH -- Сотрудники ВСЕ
                 tmpPersonal_all AS (SELECT Object_Personal.Id                                         AS PersonalId
                                          , ObjectLink_Personal_Unit.ChildObjectId                     AS UnitId
@@ -437,7 +437,7 @@ END IF;
                  , tmp.FineSubjectId
                  , tmp.UnitId_FineSubject
                  , tmp.SummCardSecondRecalc
-                 , SUM (COALESCE (tmp.SummCardSecondRecalc,0)) OVER (PARTITION BY tmp.MemberId) AS TotaSumm
+                 , SUM (COALESCE (tmp.SummCardSecondRecalc,0)) OVER (PARTITION BY tmp.MemberId) AS TotalSumm
             FROM
             (SELECT tmpListPersonal.MovementItemId
                  , tmpListPersonal.MemberId
@@ -560,7 +560,7 @@ END IF;
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                   ON ObjectBoolean_Main.ObjectId = _tmpMI.PersonalId
                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
-     WHERE _tmpMI.TotaSumm >= 4000
+     WHERE _tmpMI.TotalSumm >= 4000
      ;
 
      -- Проверка

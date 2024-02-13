@@ -81,6 +81,18 @@ type
     ceUnit: TcxButtonEdit;
     cxLabel4: TcxLabel;
     UnitGuides: TdsdGuides;
+    Weight_Send_out: TcxGridDBColumn;
+    cxTabSheet4: TcxTabSheet;
+    cxGrid6: TcxGrid;
+    cxGridDBChartView6: TcxGridDBChartView;
+    cxGridDBChartDataGroup6: TcxGridDBChartDataGroup;
+    cxGridDBChartSeries2: TcxGridDBChartSeries;
+    cxGridDBChartSeries5: TcxGridDBChartSeries;
+    cxGridDBChartSeries6: TcxGridDBChartSeries;
+    cxGridDBChartSeries7: TcxGridDBChartSeries;
+    cxGridDBChartSeries8: TcxGridDBChartSeries;
+    cxGridDBChartSeries9: TcxGridDBChartSeries;
+    cxGridLevel6: TcxGridLevel;
   private
     { Private declarations }
   public
