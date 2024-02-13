@@ -343,6 +343,8 @@ type
     macUpdateCardSecond4000: TMultiAction;
     actUpdateCardSecond4000: TdsdExecStoredProc;
     bbUpdateCardSecond4000: TdxBarButton;
+    SummCardSecondRecalc_00807: TcxGridDBColumn;
+    SummCardSecondRecalc_005: TcxGridDBColumn;
   private
     { Private declarations }
   public
