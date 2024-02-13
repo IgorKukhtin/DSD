@@ -143,6 +143,15 @@ type
     bbsPrint: TdxBarSubItem;
     bbsSend: TdxBarSubItem;
     bbSeparator1: TdxBarSeparator;
+    spGet_Export_EmailF2_xls: TdsdStoredProc;
+    spSelect_ExportF2_xls: TdsdStoredProc;
+    spGet_Export_FileNameF2_xls: TdsdStoredProc;
+    actSelect_ExportF2_xls: TdsdExecStoredProc;
+    actExport_GridF2_xls: TExportGrid;
+    actGet_Export_FileNameF2_xls: TdsdExecStoredProc;
+    actGet_Export_EmailF2_xls: TdsdExecStoredProc;
+    mactExportF2_xls: TMultiAction;
+    bbtExportF2_xls: TdxBarButton;
   private
     { Private declarations }
   public

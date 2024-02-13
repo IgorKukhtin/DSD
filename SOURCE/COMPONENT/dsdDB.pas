@@ -942,6 +942,10 @@ begin
      if Component is TDocument then begin
         if LowerCase(ComponentItem) = 'name' then
            result := TDocument(Component).GetName
+        else if LowerCase(ComponentItem) = 'filename' then
+           result := TDocument(Component).FileName
+        else if LowerCase(ComponentItem) = 'extractfilename' then
+           result := TDocument(Component).GetExtractFileName
         else
            result := TDocument(Component).GetData;
      end;
@@ -1184,6 +1188,9 @@ begin
      else
      if (Component is TAction) and (Component.ClassName = 'TAction') then
         (Component as TAction).Checked := FValue
+     else
+     if (Component is TDocument) and (LowerCase(ComponentItem) = 'filename') then
+        TDocument(Component).FileName := FValue
      else
      if (Component is TADOQueryAction)
         AND

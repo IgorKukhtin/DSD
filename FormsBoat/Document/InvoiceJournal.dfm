@@ -3,7 +3,6 @@
   ClientHeight = 569
   ClientWidth = 1121
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -227
   ExplicitWidth = 1137
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -713,16 +712,16 @@
     Align = alBottom
     TabOrder = 6
     object btnUpdate: TcxButton
-      Left = 231
-      Top = 9
-      Width = 101
+      Left = 223
+      Top = 8
+      Width = 111
       Height = 25
       Action = actUpdate
       TabOrder = 0
     end
     object btnComplete: TcxButton
       Left = 349
-      Top = 9
+      Top = 8
       Width = 150
       Height = 25
       Action = actComplete
@@ -730,7 +729,7 @@
     end
     object btnUnComplete: TcxButton
       Left = 505
-      Top = 9
+      Top = 8
       Width = 150
       Height = 25
       Action = actUnComplete
@@ -738,7 +737,7 @@
     end
     object btnSetErased: TcxButton
       Left = 661
-      Top = 9
+      Top = 8
       Width = 162
       Height = 25
       Action = actSetErased
@@ -798,7 +797,7 @@
     end
     object cxButton7: TcxButton
       Left = 10
-      Top = 39
+      Top = 42
       Width = 95
       Height = 25
       Action = actInsert_Proforma
@@ -811,6 +810,14 @@
       Height = 25
       Action = actInsert_Service
       TabOrder = 11
+    end
+    object btnOpenFormPdfEdit: TcxButton
+      Left = 223
+      Top = 42
+      Width = 111
+      Height = 25
+      Action = actOpenFormPdfEdit
+      TabOrder = 12
     end
   end
   object cxGrid_Item: TcxGrid [3]
@@ -2131,6 +2138,51 @@
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
       ShortCut = 49220
+    end
+    object actOpenFormPdfEdit: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' PDF'
+      Hint = #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' PDF'
+      ImageIndex = 60
+      FormName = 'TInvoicePdfEditForm'
+      FormNameParam.Value = 'TInvoicePdfEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovmentItemId'
+          Value = Null
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource

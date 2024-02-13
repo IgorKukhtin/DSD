@@ -2,8 +2,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 781
   ClientWidth = 1258
-  ExplicitLeft = -381
-  ExplicitTop = -157
   ExplicitWidth = 1274
   ExplicitHeight = 820
   PixelsPerInch = 96
@@ -331,16 +329,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = WorkTimeHoursOne_child
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummCardSecondRecalc_00807
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummCardSecondRecalc_005
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -652,16 +640,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = WorkTimeHoursOne_child
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummCardSecondRecalc_00807
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummCardSecondRecalc_005
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -1484,29 +1462,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummCardSecondRecalc_00807: TcxGridDBColumn [76]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1086#1101#1092'. 0.8%) - 2'#1092'.'
-            DataBinding.FieldName = 'SummCardSecondRecalc_00807'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object SummCardSecondRecalc_005: TcxGridDBColumn [77]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1086#1101#1092'. 0.5%) - 2'#1092'.'
-            DataBinding.FieldName = 'SummCardSecondRecalc_005'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object SummNalogRetRecalc: TcxGridDBColumn [78]
+          object SummNalogRetRecalc: TcxGridDBColumn [76]
             Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummNalogRetRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1517,7 +1473,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummCompensationRecalc: TcxGridDBColumn [79]
+          object SummCompensationRecalc: TcxGridDBColumn [77]
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087'. ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummCompensationRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1528,7 +1484,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1074#1074#1086#1076')'
             Width = 75
           end
-          object SummHospOthRecalc: TcxGridDBColumn [80]
+          object SummHospOthRecalc: TcxGridDBColumn [78]
             Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095'. ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummHospOthRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1539,7 +1495,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 75
           end
-          object SummChildRecalc: TcxGridDBColumn [81]
+          object SummChildRecalc: TcxGridDBColumn [79]
             Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummChildRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1549,7 +1505,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object SummMinusExtRecalc: TcxGridDBColumn [82]
+          object SummMinusExtRecalc: TcxGridDBColumn [80]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085'. '#1102#1088'.'#1083'. ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummMinusExtRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1559,7 +1515,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object SummNalogRecalc: TcxGridDBColumn [83]
+          object SummNalogRecalc: TcxGridDBColumn [81]
             Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'SummNalogRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1569,7 +1525,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummAvanceRecalc: TcxGridDBColumn [84]
+          object SummAvanceRecalc: TcxGridDBColumn [82]
             Caption = #1040#1074#1072#1085#1089' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             DataBinding.FieldName = 'SummAvanceRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1579,7 +1535,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object InfoMoneyCode: TcxGridDBColumn [85]
+          object InfoMoneyCode: TcxGridDBColumn [83]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -1588,7 +1544,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 55
           end
-          object InfoMoneyName: TcxGridDBColumn [86]
+          object InfoMoneyName: TcxGridDBColumn [84]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -1597,7 +1553,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object isAuto: TcxGridDBColumn [87]
+          object isAuto: TcxGridDBColumn [85]
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
             DataBinding.FieldName = 'isAuto'
             Visible = False
@@ -1607,7 +1563,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 38
           end
-          object BankOutDate: TcxGridDBColumn [88]
+          object BankOutDate: TcxGridDBColumn [86]
             Caption = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
             DataBinding.FieldName = 'BankOutDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -1617,7 +1573,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1044#1072#1090#1072' '#1074#1099#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
             Width = 80
           end
-          object isBankOut: TcxGridDBColumn [89]
+          object isBankOut: TcxGridDBColumn [87]
             Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
             DataBinding.FieldName = 'isBankOut'
             Visible = False
@@ -1627,7 +1583,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object DayVacation: TcxGridDBColumn [90]
+          object DayVacation: TcxGridDBColumn [88]
             Caption = #1055#1086#1083#1086#1078#1077#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayVacation'
             HeaderAlignmentHorz = taCenter
@@ -1635,7 +1591,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayHoliday: TcxGridDBColumn [91]
+          object DayHoliday: TcxGridDBColumn [89]
             Caption = #1048#1089#1087'. '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayHoliday'
             HeaderAlignmentHorz = taCenter
@@ -1644,7 +1600,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayCompensation: TcxGridDBColumn [92]
+          object DayCompensation: TcxGridDBColumn [90]
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1082#1086#1084#1087#1077#1085#1089'. '#1086#1090#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'DayCompensation'
             HeaderAlignmentHorz = taCenter
@@ -1653,7 +1609,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object InfoMoneyName_all: TcxGridDBColumn [93]
+          object InfoMoneyName_all: TcxGridDBColumn [91]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -1662,7 +1618,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object DayWork: TcxGridDBColumn [94]
+          object DayWork: TcxGridDBColumn [92]
             Caption = #1056#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
             DataBinding.FieldName = 'DayWork'
             HeaderAlignmentHorz = taCenter
@@ -1670,7 +1626,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 83
           end
-          object DayAudit: TcxGridDBColumn [95]
+          object DayAudit: TcxGridDBColumn [93]
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102', '#1076#1085'.'
             DataBinding.FieldName = 'DayAudit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1682,7 +1638,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object DaySkip: TcxGridDBColumn [96]
+          object DaySkip: TcxGridDBColumn [94]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1076#1085
             DataBinding.FieldName = 'DaySkip'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1694,7 +1650,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 77
           end
-          object DayMedicday: TcxGridDBColumn [97]
+          object DayMedicday: TcxGridDBColumn [95]
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1076#1085'.'
             DataBinding.FieldName = 'DayMedicday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2302,9 +2258,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2398,9 +2351,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -2963,10 +2913,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_EmailCSVF2_xls
+      StoredProc = spGet_Export_EmailF2_xls
       StoredProcList = <
         item
-          StoredProc = spGet_Export_EmailCSVF2_xls
+          StoredProc = spGet_Export_EmailF2_xls
         end>
       Caption = 'actGet_Export_EmailF2_xls'
     end
@@ -2990,10 +2940,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileNameCSVF2_xls
+      StoredProc = spGet_Export_FileNameF2_xls
       StoredProcList = <
         item
-          StoredProc = spGet_Export_FileNameCSVF2_xls
+          StoredProc = spGet_Export_FileNameF2_xls
         end>
       Caption = 'actGet_Export_FileNameF2_xls'
     end
@@ -3022,10 +2972,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelect_ExportCSVF2_xls
+      StoredProc = spSelect_ExportF2_xls
       StoredProcList = <
         item
-          StoredProc = spSelect_ExportCSVF2_xls
+          StoredProc = spSelect_ExportF2_xls
         end>
       Caption = 'actSelect_ExportCSVF2'
     end
@@ -3059,7 +3009,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
       ImageIndex = 53
     end
-    object actGet_Export_EmailCSVF2: TdsdExecStoredProc [7]
+    object actUpdateCardSecond4000: TdsdExecStoredProc [7]
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CardSecond4000
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CardSecond4000
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'. (>=4000)'
+    end
+    object actGet_Export_EmailCSVF2: TdsdExecStoredProc [8]
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3070,7 +3031,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGet_Export_EmailCSVF2'
     end
-    object actGet_Export_FileNameCSVF2: TdsdExecStoredProc [8]
+    object actGet_Export_FileNameCSVF2: TdsdExecStoredProc [9]
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3081,7 +3042,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGet_Export_FileNameCSVF2'
     end
-    object actGetImportSettingAvance: TdsdExecStoredProc [9]
+    object actGetImportSettingAvance: TdsdExecStoredProc [10]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3092,7 +3053,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actSelect_ExportCSVF2: TdsdExecStoredProc [10]
+    object actSelect_ExportCSVF2: TdsdExecStoredProc [11]
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3103,7 +3064,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actSelect_ExportCSVF2'
     end
-    object actDoLoad_Compens: TExecuteImportSettingsAction [11]
+    object actDoLoad_Compens: TExecuteImportSettingsAction [12]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -3119,7 +3080,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actRefresh_Message: TdsdDataSetRefresh [12]
+    object actRefresh_Message: TdsdDataSetRefresh [13]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectMIMessage
@@ -3133,7 +3094,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object mactExportCSVF2: TMultiAction [13]
+    object mactExportCSVF2: TMultiAction [14]
       Category = 'Export_Email'
       MoveParams = <>
       ActionList = <
@@ -3163,7 +3124,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
       ImageIndex = 53
     end
-    object actRefreshMaster: TdsdDataSetRefresh [14]
+    object actRefreshMaster: TdsdDataSetRefresh [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -3177,7 +3138,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actDoLoad_Avance: TExecuteImportSettingsAction [15]
+    object actDoLoad_Avance: TExecuteImportSettingsAction [16]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -3193,7 +3154,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object macLoad_Compens: TMultiAction [16]
+    object macLoad_Compens: TMultiAction [17]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -3213,7 +3174,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 74
       WithoutNext = True
     end
-    object actExportToFileZpDate: TdsdStoredProcExportToFile [17]
+    object actExportToFileZpDate: TdsdStoredProcExportToFile [18]
       Category = 'Export'
       MoveParams = <>
       dsdStoredProcName = spSelectExportDate
@@ -3235,7 +3196,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Left = 1216
       Top = 168
     end
-    object actRefresh_Sign: TdsdDataSetRefresh [18]
+    object actRefresh_Sign: TdsdDataSetRefresh [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -3252,7 +3213,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actGetImportSettingSS: TdsdExecStoredProc [19]
+    object actGetImportSettingSS: TdsdExecStoredProc [20]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3263,7 +3224,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actDoLoad_SS: TExecuteImportSettingsAction [20]
+    object actDoLoad_SS: TExecuteImportSettingsAction [21]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -3279,7 +3240,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object macLoad_Avance: TMultiAction [21]
+    object macLoad_Avance: TMultiAction [22]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -3299,7 +3260,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 81
       WithoutNext = True
     end
-    object actExportZPDate: TMultiAction [22]
+    object actExportZPDate: TMultiAction [23]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -3317,7 +3278,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
       ImageIndex = 67
     end
-    object actGetImportSetting_SMER: TdsdExecStoredProc [23]
+    object actGetImportSetting_SMER: TdsdExecStoredProc [24]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3328,7 +3289,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actDoLoad_fine: TExecuteImportSettingsAction [24]
+    object actDoLoad_fine: TExecuteImportSettingsAction [25]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -3345,7 +3306,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actRefreshGet: TdsdDataSetRefresh [25]
+    object actRefreshGet: TdsdDataSetRefresh [26]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -3359,7 +3320,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macStartLoad_SMER: TMultiAction [26]
+    object macStartLoad_SMER: TMultiAction [27]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -3379,7 +3340,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 82
       WithoutNext = True
     end
-    object macStartLoad: TMultiAction [27]
+    object macStartLoad: TMultiAction [28]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -3399,7 +3360,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 41
       WithoutNext = True
     end
-    object actGetImportSetting: TdsdExecStoredProc [28]
+    object actGetImportSetting: TdsdExecStoredProc [29]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3413,7 +3374,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object macStartLoad_SS: TMultiAction [29]
+    object macStartLoad_SS: TMultiAction [30]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -3433,7 +3394,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 50
       WithoutNext = True
     end
-    object actGridToExcel_Child_all: TdsdGridToExcel [30]
+    object actGridToExcel_Child_all: TdsdGridToExcel [31]
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
@@ -3463,7 +3424,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object actGridToExcel_Child: TdsdGridToExcel [33]
+    object actGridToExcel_Child: TdsdGridToExcel [34]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3503,8 +3464,26 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [39]
-      Category = 'DSDLib'
+    object macUpdateCardSecond4000: TMultiAction [40]
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateCardSecond4000
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)' +
+        '?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
+      ImageIndex = 74
+    end
+    object actUpdateIsMain: TdsdExecStoredProc [41]
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMain
@@ -3522,7 +3501,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [41]
+    object actPrint_Detail: TdsdPrintAction [43]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -3563,7 +3542,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [42]
+    object actPrint_All: TdsdPrintAction [44]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -3631,8 +3610,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.ParamType = ptInput
     end
-    object actUpdate_PriceNalog: TdsdExecStoredProc [45]
-      Category = 'DSDLib'
+    object actUpdate_PriceNalog: TdsdExecStoredProc [47]
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_PriceNalog
@@ -3673,7 +3652,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [51]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [53]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3700,7 +3679,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [54]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [56]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3827,7 +3806,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       isShowModal = True
     end
     object mactUpdateMask: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -3844,7 +3823,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 59
     end
     object actInsertUpdate_byMemberMinus: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_byMemberMinus
@@ -3855,7 +3834,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
     end
     object actUpdate_Compensation: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_Compensation
@@ -3866,7 +3845,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
     end
     object macUpdate_Compensation: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -3884,7 +3863,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 56
     end
     object actUpdateCardSecond: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_CardSecond
@@ -3895,7 +3874,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
     end
     object actUpdateCardSecondCash: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_CardSecondCash
@@ -3906,7 +3885,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
     end
     object macUpdateCardSecond: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -3922,7 +3901,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 74
     end
     object macUpdateCardSecondCash: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -3938,7 +3917,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 27
     end
     object actUpdateMask: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateMask
@@ -3949,7 +3928,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = 'actUpdateMask'
     end
     object actUpdateSummNalogRet: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -3965,7 +3944,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 39
     end
     object macUpdateSummNalogRet: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -3985,7 +3964,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 39
     end
     object macUpdateNalogRetSimpl: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -4526,7 +4505,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       WithoutNext = True
     end
     object actInsertUpdate_MemberMinus: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_MemberMinus
@@ -4538,7 +4517,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 60
     end
     object macInsertUpdate_MemberMinus: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -4838,7 +4817,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       OpenBeforeShow = True
     end
     object macUpdate_PriceNalog: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       ActionList = <
         item
@@ -5258,6 +5237,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbUpdate_PriceNalog'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateCardSecond4000'
         end>
     end
     object bbExportSub: TdxBarSubItem
@@ -5349,6 +5336,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object bbExportCSVF2_xls: TdxBarButton
       Action = mactExportF2_xls
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'  XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
+      Category = 0
+    end
+    object bbUpdateCardSecond4000: TdxBarButton
+      Action = macUpdateCardSecond4000
       Category = 0
     end
   end
@@ -6794,8 +6785,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 400
+    Left = 568
+    Top = 344
   end
   object spSelectMISign: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PersonalService_Sign'
@@ -8102,7 +8093,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 704
     Top = 680
   end
-  object spGet_Export_EmailCSVF2_xls: TdsdStoredProc
+  object spGet_Export_EmailF2_xls: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService_Email'
     DataSet = ExportEmailCDS
     DataSets = <
@@ -8125,10 +8116,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 728
+    Left = 600
+    Top = 720
   end
-  object spSelect_ExportCSVF2_xls: TdsdStoredProc
+  object spSelect_ExportF2_xls: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_mail_xls'
     DataSet = ExportCDS
     DataSets = <
@@ -8151,10 +8142,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 816
+    Left = 760
     Top = 728
   end
-  object spGet_Export_FileNameCSVF2_xls: TdsdStoredProc
+  object spGet_Export_FileNameF2_xls: TdsdStoredProc
     StoredProcName = 'gpGet_PersonalService_FileNameCSV'
     DataSets = <>
     OutputType = otResult
@@ -8206,7 +8197,24 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 920
-    Top = 728
+    Left = 872
+    Top = 720
+  end
+  object spUpdate_CardSecond4000: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_CardSecond_4000'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 400
   end
 end

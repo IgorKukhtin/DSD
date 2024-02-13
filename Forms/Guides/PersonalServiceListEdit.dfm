@@ -400,6 +400,16 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 47
     Width = 135
   end
+  object cbBankNot: TcxCheckBox
+    Left = 8
+    Top = 391
+    Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1042#1099#1087#1083#1072#1090#1072' '#1073#1072#1085#1082' 2'#1092
+    Caption = #1048#1089#1082#1083'. '#1080#1079' '#1074#1099#1087#1083#1072#1090#1099' '#1073#1072#1085#1082' 2'#1092
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 48
+    Width = 161
+  end
   object ActionList: TActionList
     Left = 88
     Top = 48
@@ -624,6 +634,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'inisAvanceNot'
         Value = Null
         Component = cbAvanceNot
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBankNot'
+        Value = Null
+        Component = cbBankNot
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -946,6 +964,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'isCompensationNot'
         Value = Null
         Component = cbCompensationNot
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBankNot'
+        Value = Null
+        Component = cbBankNot
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

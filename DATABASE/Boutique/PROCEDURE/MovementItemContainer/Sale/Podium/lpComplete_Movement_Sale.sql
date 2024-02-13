@@ -21,6 +21,8 @@ $BODY$
   DECLARE vbBusinessId              Integer; -- значение пока НЕ определяется
   DECLARE vbContainerId_err         Integer;
   DECLARE vbId_err                  Integer;
+  DECLARE vbCurrencyId_Client       Integer;
+  DECLARE vbCurrencyValueEUR        TFloat;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -67,16 +69,17 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Нет подтверждения кода по SMS <%>.%Введите правильный код.', inKeySMS, CHR (13);
      END IF;
 
-
      -- Параметры из документа
      SELECT _tmp.MovementDescId, _tmp.OperDate, _tmp.UnitId, _tmp.ClientId
           , _tmp.AccountDirectionId_From, _tmp.AccountDirectionId_To
+          , _tmp.CurrencyId_Client
             INTO vbMovementDescId
                , vbOperDate
                , vbUnitId
                , vbClientId
                , vbAccountDirectionId_From
                , vbAccountDirectionId_To
+               , vbCurrencyId_Client
      FROM (SELECT Movement.DescId AS MovementDescId
                 , Movement.OperDate
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()   THEN Object_From.Id ELSE 0 END, 0) AS UnitId
@@ -87,6 +90,8 @@ BEGIN
 
                   -- !!!ВСЕГДА - zc_Enum_AccountDirection_20100!!! Дебиторы + Покупатели
                 , zc_Enum_AccountDirection_20100() AS AccountDirectionId_To
+                
+                , COALESCE (ObjectLink_Unit_AccountDirection.ObjectId, 0) AS CurrencyId_Client
 
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -99,6 +104,10 @@ BEGIN
                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyClient
+                                             ON MovementLinkObject_CurrencyClient.MovementId = Movement.Id
+                                            AND MovementLinkObject_CurrencyClient.DescId     = zc_MovementLinkObject_CurrencyClient()
+
                 LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
                                      ON ObjectLink_Unit_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_Unit_AccountDirection.DescId   = zc_ObjectLink_Unit_AccountDirection()
@@ -109,6 +118,29 @@ BEGIN
           ) AS _tmp;
 
 
+     -- Определили курс - если вводили
+     SELECT MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_CurrencyValue.ValueData, 0) ELSE 0 END) AS CurrencyValueEUR
+            INTO vbCurrencyValueEUR
+     FROM MovementItem
+          LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id       = MovementItem.ParentId
+                                             AND MI_Master.isErased = FALSE
+          LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+          INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                            ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                           AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+          LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                      ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                     AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+          LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueIn
+                                      ON MIFloat_CurrencyValueIn.MovementItemId = MovementItem.Id
+                                     AND MIFloat_CurrencyValueIn.DescId         = zc_MIFloat_CurrencyValueIn()
+          LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                      ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                     AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.isErased   = FALSE;
+              
      -- проверка - Установлено Подразделение
      IF COALESCE (vbUnitId, 0) = 0
      THEN
@@ -324,15 +356,55 @@ BEGIN
                    , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)                          AS TotalChangePercent
                      -- Итого сумма оплаты (в ГРН) - в текущем документе по zc_MI_Child
                    , COALESCE (MIFloat_TotalPay.ValueData, 0)                                    AS TotalPay
-
+                   
                      -- Сезонная скидка
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Period() 
+                          THEN zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                                                            THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, vbCurrencyValueEUR, 1)
+                                                                       ELSE MIFloat_OperPriceList.ValueData
+                                                                  END, 1) -
+                               CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                        THEN zfCalc_CurrencyFrom (zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
+                                                                , vbCurrencyValueEUR, 1)
+                                        ELSE zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
+                                        END
+                          ELSE 0 END                                                             AS Summ_10201
+                     -- Скидка outlet
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Outlet() 
+                          THEN zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                                                            THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, vbCurrencyValueEUR, 1)
+                                                                       ELSE MIFloat_OperPriceList.ValueData
+                                                                  END, 1) -
+                               CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                        THEN zfCalc_CurrencyFrom (zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
+                                                                , vbCurrencyValueEUR, 1)
+                                        ELSE zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
+                                        END
+                          ELSE 0 END                                                             AS Summ_10202
+                     -- Скидка клиента
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Client() 
+                          THEN zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                                                            THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, vbCurrencyValueEUR, 1)
+                                                                       ELSE MIFloat_OperPriceList.ValueData
+                                                                  END, 1) -
+                               CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                        THEN zfCalc_CurrencyFrom (zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
+                                                                , vbCurrencyValueEUR, 1)
+                                        ELSE zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
+                                        END
+                          ELSE 0 END                                                             AS Summ_10203
+                     -- Скидка дополнительная
+                   , COALESCE (MIFloat_SummChangePercent.ValueData, 0) + COALESCE (MIFloat_SummRounding.ValueData, 0) AS Summ_10204
+                   
+                   
+                    /* -- Сезонная скидка
                    , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Period() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData) ELSE 0 END AS Summ_10201
                      -- Скидка outlet
                    , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Outlet() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData) ELSE 0 END AS Summ_10202
                      -- Скидка клиента
                    , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Client() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData) ELSE 0 END AS Summ_10203
                      -- Скидка дополнительная
-                   , COALESCE (MIFloat_SummChangePercent.ValueData, 0) AS Summ_10204
+                   , COALESCE (MIFloat_SummChangePercent.ValueData, 0) AS Summ_10204*/
 
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
@@ -368,6 +440,13 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                               AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                   LEFT JOIN MovementItemFloat AS MIFloat_SummRounding
+                                               ON MIFloat_SummRounding.MovementItemId = MovementItem.Id
+                                              AND MIFloat_SummRounding.DescId         = zc_MIFloat_SummRounding()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                               ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
+                                              AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
 
                    LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
                                                ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
@@ -415,8 +494,8 @@ end if;
      -- проверка что скидка та что надо
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
      THEN
-         RAISE EXCEPTION 'Ошибка. Скида итого <%> не равна <%>.', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
-                                                                , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+         RAISE EXCEPTION 'Ошибка. Скидка итого <%> не равна <%>.', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                                                                 , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
          ;
      END IF;
 
@@ -1429,3 +1508,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 1100, inUserId:= zfCalc_UserAdmin() :: Integer)
+
+
+select * from gpUpdate_Status_Sale(inMovementId := 23589 , inStatusCode := 2 , inKeySMS := 0 ,  inSession := '2');

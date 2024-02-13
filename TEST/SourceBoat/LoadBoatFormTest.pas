@@ -26,6 +26,7 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadDiscountPartnerFormTest;
     procedure LoadDocTagFormTest;
+    procedure LoadEmailFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsTagFormTest;
@@ -360,6 +361,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDocTagEditForm');
 end;
 
+procedure TLoadFormTest.LoadEmailFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailSettingsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailToolsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmailToolsForm');
+end;
+
 procedure TLoadFormTest.LoadInvoiceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
@@ -373,6 +384,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceItemEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoicePdfEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoicePdfEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;

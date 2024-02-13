@@ -600,7 +600,7 @@ BEGIN
            , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, tmpTransportGoods.OperDate) ELSE tmpTransportGoods.OperDate END :: TDateTime AS OperDate
            , tmpTransportGoods.InvNumberMark
 
-           , tmpTransportGoods.CarName
+           , REPLACE(REPLACE(tmpTransportGoods.CarName, ' ', ''), '-', '')::TVarChar       AS CarName
            , Object_CarModel.ValueData       AS CarBrandName
            , Object_CarType.ValueData        AS CarModelName
            , Object_CarObjectColor.ValueData AS CarColorName
@@ -629,6 +629,12 @@ BEGIN
            , tmpTransportGoods.MemberName5
            , tmpTransportGoods.MemberName6
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN tmpTransportGoods.MemberName7 ELSE tmpTransportGoods.MemberName4 END AS MemberName7
+           
+           , 'Петренко Євгеній Сергійович'::TVarChar      AS ConsignorPersonName
+           , '3110604434'::TVarChar                       AS ConsignorPersonINN
+           , ''::TVarChar                                 AS ConsignorPersonTelephone
+           , '0673344579'::TVarChar                       AS ConsignorPersonMobileTelephone
+           
            , tmpTransportGoods.TotalCountBox
            , tmpTransportGoods.TotalWeightBox
            ,   COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0) AS TotalWeight_Brutto

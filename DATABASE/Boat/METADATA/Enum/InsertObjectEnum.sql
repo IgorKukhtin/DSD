@@ -48,6 +48,19 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InvoiceKind_Proforma(), inDescId:= zc_Object_InvoiceKind(), inCode:= 4, inName:= 'Проформа',   inEnumName:= 'zc_Enum_InvoiceKind_Proforma');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InvoiceKind_Service(),  inDescId:= zc_Object_InvoiceKind(), inCode:= 5, inName:= 'Услуги',     inEnumName:= 'zc_Enum_InvoiceKind_Service');
 
+   -- !!! Тип внешнего Импорта/Экспорта
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_DropBox_InvoiceKredit(),inDescId:= zc_Object_EmailKind(), inCode:= 1, inName:= 'Исходящая, отправка входящих счетов в DropBox',  inEnumName:= 'zc_Enum_EmailKind_DropBox_InvoiceKredit');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_DropBox_InvoiceDebet(), inDescId:= zc_Object_EmailKind(), inCode:= 2, inName:= 'Исходящая, отправка исходящих счетов в DropBox', inEnumName:= 'zc_Enum_EmailKind_DropBox_InvoiceDebet');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailKind_Mail_InvoiceKredit(),   inDescId:= zc_Object_EmailKind(), inCode:= 3, inName:= 'Входящая, загрузка входящих счетов из GetMail' , inEnumName:= 'zc_Enum_EmailKind_Mail_InvoiceKredit');
+     
+     -- !!! Параметры подключения к внешнему Импорту/Экспорту
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Host(),     inDescId:= zc_Object_EmailTools(), inCode:= 1, inName:= 'Host',     inEnumName:= 'zc_Enum_EmailTools_Host');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Port(),     inDescId:= zc_Object_EmailTools(), inCode:= 2, inName:= 'Port',     inEnumName:= 'zc_Enum_EmailTools_Port');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Mail(),     inDescId:= zc_Object_EmailTools(), inCode:= 3, inName:= 'Адрес' ,   inEnumName:= 'zc_Enum_EmailTools_Mail');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_User(),     inDescId:= zc_Object_EmailTools(), inCode:= 4, inName:= 'User',     inEnumName:= 'zc_Enum_EmailTools_User');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Password(), inDescId:= zc_Object_EmailTools(), inCode:= 5, inName:= 'Password', inEnumName:= 'zc_Enum_EmailTools_Password');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Directory(),inDescId:= zc_Object_EmailTools(), inCode:= 6, inName:= 'Директория формирования файлов (используется для входящей почты)' , inEnumName:= 'zc_Enum_EmailTools_Directory');
+
 
 END $$;
 

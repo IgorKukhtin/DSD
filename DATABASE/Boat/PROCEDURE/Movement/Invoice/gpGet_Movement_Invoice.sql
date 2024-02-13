@@ -25,6 +25,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , VATPercent      TFloat
              , AmountIn        TFloat
              , AmountOut       TFloat
+             , Amount          TFloat
+             , Amount_pay      TFloat
+             , Amount_diff     TFloat
 
              , ObjectId        Integer
              , ObjectName      TVarChar
@@ -86,6 +89,9 @@ BEGIN
                , 0::TFloat                  AS VATPercent
                , 0::TFloat                  AS AmountIn
                , 0::TFloat                  AS AmountOut
+               , 0::TFloat                  AS Amount
+               , 0::TFloat                  AS Amount_pay
+               , 0::TFloat                  AS Amount_diff
 
                , Object_Object.Id           AS ObjectId
                , Object_Object.ValueData    AS ObjectName
@@ -150,7 +156,23 @@ BEGIN
                                  ) AS tmp
                             -- возьмем первый
                             WHERE tmp.Ord = 1
-                           )
+                           ) 
+                 -- нашли ВСЕ оплаты
+               , tmpMLM_BankAccount AS (SELECT MIFloat_MovementId.ValueData:: Integer AS MovementId_Invoice
+                                             , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
+                                             , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut
+                                             , SUM (MovementItem.Amount) AS Amount
+                                        FROM MovementItemFloat AS MIFloat_MovementId
+                                             INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                                    AND MovementItem.DescId   = zc_MI_Child()
+                                                                    AND MovementItem.isErased = FALSE
+                                             INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MovementItem.MovementId
+                                                                                        AND Movement_BankAccount.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
+                                                                                        AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
+                                        WHERE MIFloat_MovementId.ValueData = inMovementId
+                                          AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()                              
+                                        GROUP BY MIFloat_MovementId.ValueData
+                                       )
            -- Результат
            SELECT
                Movement.Id
@@ -165,7 +187,14 @@ BEGIN
 
              , COALESCE (MovementFloat_VATPercent.ValueData, 0)    ::TFloat      AS VATPercent
              , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN MovementFloat_Amount.ValueData      ELSE 0 END::TFloat AS AmountIn
-             , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
+             , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut  
+             --
+             , COALESCE (MovementFloat_Amount.ValueData,0)::TFloat AS Amount 
+             --сумма оплаты по счету
+             , COALESCE (tmpMLM_BankAccount.Amount, 0)    ::TFloat AS Amount_pay 
+             --разница между сетом и оплатой
+             , (COALESCE (MovementFloat_Amount.ValueData, 0) - COALESCE (tmpMLM_BankAccount.Amount, 0)) ::TFloat AS Amount_diff
+
              , Object_Object.Id                                    AS ObjectId
              , Object_Object.ValueData                             AS ObjectName
              , Object_TaxKind.Id                                   AS TaxKindId
@@ -266,6 +295,8 @@ BEGIN
                                    AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
                LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
+               -- оплаты из документа BankAccount
+               LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementId_Invoice = Movement.Id
               WHERE Movement.Id = inMovementId
              ;
 
@@ -283,4 +314,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 1, inMovementId_OrderClient:=0, inProductId:= 0, inClientId:= 0, inOperDate:= NULL :: TDateTime, inInvoiceKindDesc:= 'zc_Enum_InvoiceKind_PrePay', inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 2203, inMovementId_OrderClient:=0, inProductId:= 0, inClientId:= 0, inOperDate:= NULL :: TDateTime, inInvoiceKindDesc:= 'zc_Enum_InvoiceKind_PrePay', inSession:= zfCalc_UserAdmin());

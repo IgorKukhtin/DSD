@@ -91,6 +91,7 @@ type
     edPersonalServiceList_AvanceF2: TcxButtonEdit;
     GuidesPersonalServiceList_AvanceF2: TdsdGuides;
     cbCompensationNot: TcxCheckBox;
+    cbBankNot: TcxCheckBox;
   private
     { Private declarations }
   public

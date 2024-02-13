@@ -162,6 +162,13 @@ type
     actGoodsChoiceFormPC: TOpenChoiceForm;
     actGoodsKindChoicePC: TOpenChoiceForm;
     actOpenPartionCellForm1: TOpenChoiceForm;
+    spErasedMIPC: TdsdStoredProc;
+    spUnErasedMIPC: TdsdStoredProc;
+    actMISetErasedPC: TdsdUpdateErased;
+    actMISetUnErasedPc: TdsdUpdateErased;
+    bbMISetErasedPC: TdxBarButton;
+    bbMISetUnErasedPc: TdxBarButton;
+    isErased_ch4: TcxGridDBColumn;
   private
     { Private declarations }
   public

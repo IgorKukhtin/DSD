@@ -18,8 +18,10 @@ type
     constructor Create(AOwner: TComponent); override;
     function GetData: string;
     function GetName: string;
+    function GetExtractFileName: string;
     procedure OpenDocument;
     procedure SaveDocument;
+    property FileName: string read FFileName write FFileName;
   published
     property GetBlobProcedure: TdsdStoredProc read FBlobProcedure write FBlobProcedure;
   end;
@@ -134,6 +136,13 @@ begin
   finally
     Free;
   end;
+end;
+
+function TDocument.GetExtractFileName: string;
+begin
+  if (csWriting in Owner.ComponentState) or (csDesigning in Owner.ComponentState) then
+     exit;
+  result := ExtractFileName(FFileName);
 end;
 
 procedure TDocument.Notification(AComponent: TComponent; Operation: TOperation);

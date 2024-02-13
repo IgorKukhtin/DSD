@@ -5845,8 +5845,12 @@ begin
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Id.NodeValue := HeaderDataSet.FieldByName('OKPO_From').asString; // 32132132;
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString; // 'ТОВ "Вантажовідправник_v3"';
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.RoleCode := 'CZ';
-    if HeaderDataSet.FieldByName('MemberName4').asString <> '' then
-      UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.DefinedTradeContact.PersonName := HeaderDataSet.FieldByName('MemberName4').asString; // 'Тестовий Водій Водійович';
+    if HeaderDataSet.FieldByName('ConsignorPersonName').asString <> '' then
+      UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.DefinedTradeContact.PersonName := HeaderDataSet.FieldByName('ConsignorPersonName').asString;
+    if HeaderDataSet.FieldByName('ConsignorPersonTelephone').asString <> '' then
+      UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.DefinedTradeContact.TelephoneUniversalCommunication.CompleteNumber := HeaderDataSet.FieldByName('ConsignorPersonTelephone').asString;;
+    if HeaderDataSet.FieldByName('ConsignorPersonMobileTelephone').asString <> '' then
+      UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.DefinedTradeContact.MobileTelephoneUniversalCommunication.CompleteNumber := HeaderDataSet.FieldByName('ConsignorPersonMobileTelephone').asString;;
     if HeaderDataSet.FieldByName('PostcodeCode_From').asString <> '' then
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.PostcodeCode := HeaderDataSet.FieldByName('PostcodeCode_From').asString;
     if HeaderDataSet.FieldByName('StreetName_From').asString <> '' then
@@ -5856,6 +5860,9 @@ begin
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.CountryID := 'UA';
     if HeaderDataSet.FieldByName('CountrySubDivisionName_From').asString <> '' then
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.CountrySubDivisionName := HeaderDataSet.FieldByName('CountrySubDivisionName_From').asString;
+    if HeaderDataSet.FieldByName('ConsignorPersonINN').asString <> '' then
+      UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.SpecifiedTaxRegistration.ID := HeaderDataSet.FieldByName('ConsignorPersonINN').asString;;
+
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.SpecifiedGovernmentRegistration.ID := HeaderDataSet.FieldByName('GLN_from').asString;
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.SpecifiedGovernmentRegistration.TypeCode := 'TRADEPARTY_GLN';
 

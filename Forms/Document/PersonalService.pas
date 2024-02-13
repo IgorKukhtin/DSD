@@ -330,17 +330,19 @@ type
     actSelect_ExportCSVF2: TdsdExecStoredProc;
     bbExportCSVF2: TdxBarButton;
     bbSeparator: TdxBarSeparator;
-    spGet_Export_EmailCSVF2_xls: TdsdStoredProc;
-    spSelect_ExportCSVF2_xls: TdsdStoredProc;
-    spGet_Export_FileNameCSVF2_xls: TdsdStoredProc;
+    spGet_Export_EmailF2_xls: TdsdStoredProc;
+    spSelect_ExportF2_xls: TdsdStoredProc;
+    spGet_Export_FileNameF2_xls: TdsdStoredProc;
     mactExportF2_xls: TMultiAction;
     actGet_Export_EmailF2_xls: TdsdExecStoredProc;
     actGet_Export_FileNameF2_xls: TdsdExecStoredProc;
     actSelect_ExportF2_xls: TdsdExecStoredProc;
     bbExportCSVF2_xls: TdxBarButton;
     actExport_GridF2_xls: TExportGrid;
-    SummCardSecondRecalc_00807: TcxGridDBColumn;
-    SummCardSecondRecalc_005: TcxGridDBColumn;
+    spUpdate_CardSecond4000: TdsdStoredProc;
+    macUpdateCardSecond4000: TMultiAction;
+    actUpdateCardSecond4000: TdsdExecStoredProc;
+    bbUpdateCardSecond4000: TdxBarButton;
   private
     { Private declarations }
   public

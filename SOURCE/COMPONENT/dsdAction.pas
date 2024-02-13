@@ -3385,30 +3385,20 @@ begin
   end;
   try
     result := LocalExecute;
-  except on E: Exception do
+    if PostDataSetAfterExecute then
+      PostDataSet;
+  finally
+    if not result then
     begin
       if Assigned(CancelAction) then
         CancelAction.Execute;
-
-      if E.ClassName = 'EStorageException' then
-        raise EStorageException.Create(E.Message)
-      else if E.ClassName = 'ESortException' then
-        raise ESortException.Create(E.Message)
-      else raise Exception.Create(E.Message);
+    end else if Assigned(AfterAction) then
+        AfterAction.Execute;
+    if result and (InfoAfterExecute <> '') then
+    begin
+      Application.ProcessMessages;
+      ShowMessage(InfoAfterExecute);
     end;
-  end;
-  if PostDataSetAfterExecute then
-    PostDataSet;
-  if not result then
-  begin
-    if Assigned(CancelAction) then
-      CancelAction.Execute;
-  end else if Assigned(AfterAction) then
-      AfterAction.Execute;
-  if result and (InfoAfterExecute <> '') then
-  begin
-    Application.ProcessMessages;
-    ShowMessage(InfoAfterExecute);
   end;
 end;
 
@@ -3842,7 +3832,7 @@ begin
     if InfoAfterExecute <> '' then
       RestoreInfoAfterExecute;
   end;
-  result := true
+  result := true;
 end;
 
 procedure TMultiAction.Notification(AComponent: TComponent;
@@ -4259,9 +4249,11 @@ var
   frxXLSExport1: TfrxXLSExport;
   frxPDFExport_find, frxXLSExport_find: Boolean;
   frxPDFExport1_ShowDialog, frxXLSExport1_ShowDialog: Boolean;
+  frxPDFExport1_Background,frxPDFExport1_EmbeddedFonts: Boolean;
   FileNameExport: String;
   PrefixFileNameExport: String;
   ExportDirectory: String;
+  FileNameParam: TdsdParam;
 begin
   DataSetList := TList.Create;
   MemTableList := TList.Create;
@@ -4436,9 +4428,12 @@ begin
       // Показывать диалог при печати в DBF
       frxPDFExport1_ShowDialog:=True;
       frxXLSExport1_ShowDialog:=True;
+      frxPDFExport1_Background:= False;
+      frxPDFExport1_EmbeddedFonts:= False;
       FileNameExport:= '';
       PrefixFileNameExport:= '';
       ExportDirectory:= '';
+      FileNameParam:= Nil;
       //
       for i := 0 to AParams.Count - 1 do
       begin
@@ -4456,6 +4451,15 @@ begin
         if (AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxXLSExport1_ShowDialog')) and
            (AParams[i].DataType = ftBoolean)
         then frxXLSExport1_ShowDialog:= AParams[i].Value;
+        // если есть такой параметр, тогда без диалога экспорт фонв
+        if (AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport1_Background')) and
+           (AParams[i].DataType = ftBoolean)
+        then frxPDFExport1_Background:= AParams[i].Value;
+        // если есть такой параметр, тогда без диалога встраивание шрифирв
+        if (AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport1_EmbeddedFonts')) and
+           (AParams[i].DataType = ftBoolean)
+        then frxPDFExport1_EmbeddedFonts:= AParams[i].Value;
+
         // если есть такой параметр, Префикс файла экспорта
         if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('PrefixFileNameExport')
         then PrefixFileNameExport:= AParams[i].Value;
@@ -4465,6 +4469,10 @@ begin
         // если есть такой параметр, Путь к сохраняемому файлу
         if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('ExportDirectory')
         then ExportDirectory:= AParams[i].Value;
+        // если есть такой параметр, Возвращает полній путь с именем к файлу
+        if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('GetFileNameExport')
+        then FileNameParam:= AParams[i];
+
         //
         case AParams[i].DataType of
           ftString, ftDate, ftDateTime:
@@ -4528,8 +4536,11 @@ begin
                    FileNameExport := FileNameExport + '.pdf';
                    if PrefixFileNameExport <> '' then
                      FileNameExport := PrefixFileNameExport + FileNameExport;
-                   if ExportDirectory <> '' then
+                   if UpperCase(ExportDirectory) = UpperCase('GetTempPath') then
+                     FileNameExport := TPath.GetTempPath + FileNameExport
+                   else if ExportDirectory <> '' then
                      FileNameExport := ExportDirectory + '\' + FileNameExport;
+                   if ExpandFileName(ExtractFilePath(FileNameExport)) <> '' then
                    try
                      if not DirectoryExists(ExpandFileName(ExtractFilePath(FileNameExport))) then
                        ForceDirectories(ExpandFileName(ExtractFilePath(FileNameExport)));
@@ -4538,7 +4549,14 @@ begin
                  end;
                  frxPDFExport1.FileName := FileNameExport;
                  frxPDFExport1.ShowDialog := frxPDFExport1_ShowDialog;
+                 if not frxPDFExport1_ShowDialog then
+                 begin
+                   frxPDFExport1.Background := frxPDFExport1_Background;
+                   frxPDFExport1.EmbeddedFonts := frxPDFExport1_EmbeddedFonts;
+                 end;
                  FReport.Export(frxPDFExport1);
+                 if Assigned(FileNameParam) then FileNameParam.Value := FileNameExport;
+
                finally
                  FreeAndNil(frxPDFExport1);
                end;
