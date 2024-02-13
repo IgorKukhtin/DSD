@@ -64,7 +64,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , isAuto Boolean
              , isBankOut Boolean
              , BankOutDate TDateTime, BankOutDate_export TDateTime
-             , Ord Integer
+             --, Ord Integer
               )
 AS
 $BODY$
@@ -745,7 +745,7 @@ BEGIN
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate
             , COALESCE (MIDate_BankOut.ValueData, vbOperDate)   :: TDateTime AS BankOutDate_export
-            , tmpAll.Ord :: Integer
+            --, tmpAll.Ord :: Integer
        FROM tmpAll
             LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpAll.MemberId_Personal
                                    AND tmpAll.Ord = 1
