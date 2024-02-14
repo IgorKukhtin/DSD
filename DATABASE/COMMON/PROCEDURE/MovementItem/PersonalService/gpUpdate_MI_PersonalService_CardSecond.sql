@@ -254,12 +254,16 @@ END IF;
                                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = CLO_PersonalServiceList.ObjectId
                                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
                                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
+                                     -- !!!исключили!!!
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_BankNot
+                                                             ON ObjectBoolean_BankNot.ObjectId  = CLO_PersonalServiceList.ObjectId
+                                                            AND ObjectBoolean_BankNot.DescId    = zc_ObjectBoolean_PersonalServiceList_BankNot()
+                                                            AND ObjectBoolean_BankNot.ValueData = TRUE
                                 WHERE CLO_ServiceDate.ObjectId    = vbServiceDateId
                                   AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
                                   AND ObjectLink_PersonalServiceList_PaidKind.ObjectId IS NULL
-                                  -- !!!временно!!!
-                                  AND Object_PersonalServiceList.Id NOT IN (1064330, 10231279, 10231282, 10231283)
-
+                                  -- !!!исключили!!!
+                                  AND ObjectBoolean_BankNot.ObjectId
                                   -- если это не Аванс
                                   AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                                )                                   
@@ -632,14 +636,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12977959, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12950764, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12950244, inSession:= zfCalc_UserAdmin())
-
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12665399, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12667151, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12703415, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12713906, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12726220, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12739783, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12739807, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond (inMovementId:= 12768253, inSession:= zfCalc_UserAdmin())
