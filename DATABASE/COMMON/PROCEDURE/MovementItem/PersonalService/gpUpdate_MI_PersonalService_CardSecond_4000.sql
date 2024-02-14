@@ -129,6 +129,10 @@ END IF;
                                                                  ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
                                                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
                                                                 AND ObjectString_CardSecond.ValueData ILIKE '%UA%'
+                                         INNER JOIN ObjectString AS ObjectString_Member_CardBankSecond
+                                                                 ON ObjectString_Member_CardBankSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
+                                                                AND ObjectString_Member_CardBankSecond.DescId    = zc_ObjectString_Member_CardBankSecond()
+                                                                AND ObjectString_Member_CardBankSecond.ValueData <> ''
 
                                     WHERE ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
                                       AND (ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
@@ -261,7 +265,7 @@ END IF;
                                   AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
                                   AND ObjectLink_PersonalServiceList_PaidKind.ObjectId IS NULL
                                   -- !!!исключили!!!
-                                  AND ObjectBoolean_BankNot.ObjectId
+                                  AND ObjectBoolean_BankNot.ObjectId IS NULL
                                   -- если это не Аванс
                                   AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                                )                                   
@@ -621,7 +625,7 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест 
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 -- RAISE EXCEPTION 'ок' ;
-IF vbUserId = 5 and 1=1
+IF vbUserId = 5 and 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test=ok   %'
   , (            SELECT sum (coalesce (MIF_SummCardSecondRecalc.ValueData, 0))
