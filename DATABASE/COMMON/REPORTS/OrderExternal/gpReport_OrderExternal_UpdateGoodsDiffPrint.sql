@@ -72,6 +72,10 @@ $BODY$
    DECLARE vbEndDate TDateTime;
    DECLARE inGoodsGroupId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
+
      -- !!!временно
      inGoodsGroupId:= 1832; -- ГП
 
@@ -279,7 +283,9 @@ BEGIN
                             ,  (tmpMI_Child.Amount_all_sh)   AS AmountSh_child     -- Итого
                             
                               -- Итого не хватает для резерва, вес
-                            , (CASE WHEN Movement.isRemains = TRUE
+                            , (CASE WHEN vbUserId = 5 AND 1=0
+                                         THEN 100
+                                    WHEN Movement.isRemains = TRUE
                                         THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                                            - COALESCE (tmpMI_Child.Amount_all_Weight, 0)
@@ -460,7 +466,10 @@ BEGIN
                          , SUM (tmp.AmountWeight)    AS AmountWeight
                          , SUM (tmp.Amount_sh)       AS Amount_sh
 
-                         , SUM (tmp.AmountWeight1)   AS AmountWeight1
+                         , SUM (CASE WHEN vbUserId = 5 AND 1=0
+                                         THEN 100
+                                    ELSE tmp.AmountWeight1
+                                END)   AS AmountWeight1
                          , SUM (tmp.AmountWeight2)   AS AmountWeight2
                          , SUM (tmp.AmountWeight3)   AS AmountWeight3
                          , SUM (tmp.AmountWeight4)   AS AmountWeight4
