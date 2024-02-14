@@ -253,7 +253,9 @@ BEGIN
 	--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 	
 	CREATE TEMP TABLE tmpGoodsSP_1303 ON COMMIT DROP AS 
-	(SELECT * FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession));
+	(SELECT GoodsSP.* 
+          , ROW_NUMBER() OVER (PARTITION BY GoodsSP.GoodsId ORDER BY GoodsSP.MovementItemId DESC) AS Ord 
+     FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession) AS GoodsSP);
                                        
 	ANALYZE tmpGoodsSP_1303;
 
@@ -1439,6 +1441,7 @@ BEGIN
            LEFT JOIN tmpGoodsAutoVIPforSalesCash ON tmpGoodsAutoVIPforSalesCash.GoodsId = CashSessionSnapShot.ObjectId
            
            LEFT JOIN tmpGoodsSP_1303 ON tmpGoodsSP_1303.GoodsId = CashSessionSnapShot.ObjectId
+                                    AND tmpGoodsSP_1303.Ord = 1
                                  
            LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = CashSessionSnapShot.ObjectId
                                    

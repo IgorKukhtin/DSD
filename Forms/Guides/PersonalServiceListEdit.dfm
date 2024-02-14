@@ -28,7 +28,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 371
+    Left = 341
     Top = 407
     Width = 75
     Height = 25
@@ -37,7 +37,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 514
+    Left = 484
     Top = 407
     Width = 75
     Height = 25
@@ -207,8 +207,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 134
   end
   object edisBankOut: TcxCheckBox
-    Left = 310
-    Top = 30
+    Left = 314
+    Top = 12
     Caption = #1076#1083#1103' '#1059#1074#1086#1083#1077#1085#1085#1099#1093' ('#1073#1072#1085#1082')'
     TabOrder = 24
     Width = 138
@@ -391,8 +391,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 274
   end
   object cbCompensationNot: TcxCheckBox
-    Left = 457
-    Top = 30
+    Left = 458
+    Top = 12
     Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1076#1083#1103' '#1086#1090#1087#1091#1089#1082#1072
     Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
     ParentShowHint = False
@@ -401,8 +401,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 135
   end
   object cbBankNot: TcxCheckBox
-    Left = 8
-    Top = 391
+    Left = 314
+    Top = 36
     Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1042#1099#1087#1083#1072#1090#1072' '#1073#1072#1085#1082' 2'#1092
     Caption = #1048#1089#1082#1083'. '#1080#1079' '#1074#1099#1087#1083#1072#1090#1099' '#1073#1072#1085#1082' 2'#1092
     ParentShowHint = False
@@ -671,7 +671,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
+    Left = 192
     Top = 56
   end
   object dsdFormParams: TdsdFormParams
