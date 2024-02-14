@@ -1,22 +1,22 @@
 ﻿inherited BankAccountMovementForm: TBankAccountMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 517
+  ClientHeight = 553
   ClientWidth = 457
   ExplicitWidth = 463
-  ExplicitHeight = 546
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 225
-    Top = 480
+    Top = 520
     ExplicitLeft = 225
-    ExplicitTop = 480
+    ExplicitTop = 520
   end
   inherited bbCancel: TcxButton
     Left = 345
-    Top = 480
+    Top = 520
     ExplicitLeft = 345
-    ExplicitTop = 480
+    ExplicitTop = 520
   end
   object Код: TcxLabel [2]
     Left = 8
@@ -172,12 +172,12 @@
   end
   object cxLabel4: TcxLabel [20]
     Left = 8
-    Top = 264
+    Top = 263
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object bbGuidesInvoiceChoiceForm: TcxButton [21]
     Left = 22
-    Top = 447
+    Top = 487
     Width = 180
     Height = 25
     Action = actGuidesInvoiceChoiceForm
@@ -187,7 +187,7 @@
   end
   object bbGuidesParentChoiceForm: TcxButton [22]
     Left = 22
-    Top = 480
+    Top = 520
     Width = 180
     Height = 25
     Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
@@ -222,19 +222,19 @@
   end
   object cxLabel5: TcxLabel [25]
     Left = 8
-    Top = 310
+    Top = 350
     Caption = #1058#1077#1082#1089#1090
   end
   object cmText: TcxMemo [26]
     Left = 8
-    Top = 330
+    Top = 370
     TabOrder = 26
     Height = 76
     Width = 438
   end
   object edParent: TcxButtonEdit [27]
     Left = 8
-    Top = 284
+    Top = 282
     Properties.Buttons = <
       item
         Action = actGuidesParentChoiceForm
@@ -286,7 +286,7 @@
   end
   object btnGuidesObjectChoiceForm: TcxButton [32]
     Left = 22
-    Top = 415
+    Top = 455
     Width = 180
     Height = 25
     Action = actGuidesObjectChoiceForm
@@ -296,7 +296,7 @@
   end
   object btnGet_PrePay: TcxButton [33]
     Left = 225
-    Top = 415
+    Top = 455
     Width = 90
     Height = 25
     Action = actGet_PrePay
@@ -306,7 +306,7 @@
   end
   object btnGet_Pay: TcxButton [34]
     Left = 345
-    Top = 415
+    Top = 455
     Width = 90
     Height = 25
     Action = actGet_Pay
@@ -316,7 +316,7 @@
   end
   object btnGet_Proforma: TcxButton [35]
     Left = 225
-    Top = 447
+    Top = 487
     Width = 90
     Height = 25
     Action = actGet_Proforma
@@ -326,7 +326,7 @@
   end
   object btnGet_Service: TcxButton [36]
     Left = 345
-    Top = 447
+    Top = 487
     Width = 90
     Height = 25
     Action = actGet_Service
@@ -334,17 +334,29 @@
     ShowHint = True
     TabOrder = 36
   end
+  object edString_7: TcxTextEdit [37]
+    Left = 8
+    Top = 327
+    Properties.ReadOnly = True
+    TabOrder = 37
+    Width = 259
+  end
+  object cxLabel14: TcxLabel [38]
+    Left = 8
+    Top = 308
+    Caption = '7. Name Zahlungsbeteiligter'
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
-    Top = 364
+    Top = 404
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 160
-    Top = 340
+    Top = 380
   end
   inherited ActionList: TActionList
     Left = 111
-    Top = 331
+    Top = 371
     inherited actFormClose: TdsdFormClose
       Category = ''
     end
@@ -764,7 +776,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 240
-    Top = 324
+    Top = 364
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_BankAccount'
@@ -882,7 +894,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 376
-    Top = 328
+    Top = 368
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_BankAccount'
@@ -1088,9 +1100,16 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'String_7'
+        Value = Null
+        Component = edString_7
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
-    Top = 320
+    Top = 360
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -1211,7 +1230,7 @@
       item
       end>
     Left = 40
-    Top = 328
+    Top = 368
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -1308,7 +1327,7 @@
       end>
     PackSize = 1
     Left = 224
-    Top = 376
+    Top = 416
   end
   object spGet_Pay: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
@@ -1339,7 +1358,7 @@
       end>
     PackSize = 1
     Left = 272
-    Top = 368
+    Top = 408
   end
   object spGet_Proforma: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
@@ -1370,7 +1389,7 @@
       end>
     PackSize = 1
     Left = 336
-    Top = 376
+    Top = 416
   end
   object spGet_Service: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
@@ -1401,6 +1420,6 @@
       end>
     PackSize = 1
     Left = 392
-    Top = 376
+    Top = 416
   end
 end

@@ -121,6 +121,10 @@ type
     bbOpenFormOrderExternalChild: TdxBarButton;
     bbPrintSort: TdxBarButton;
     actPrintSort: TdsdPrintAction;
+    bbsPrint: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    bbtSilentList: TdxBarButton;
+    bbsUpdate: TdxBarSubItem;
   private
     { Private declarations }
   public

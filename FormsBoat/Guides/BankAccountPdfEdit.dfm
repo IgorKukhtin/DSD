@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1089#1082#1072#1085' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'>'
-  ClientHeight = 487
+  ClientHeight = 496
   ClientWidth = 867
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 7
-    Top = 455
+    Top = 463
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 119
-    Top = 455
+    Top = 463
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -41,11 +41,12 @@
     Left = 215
     Top = 0
     Width = 652
-    Height = 487
+    Height = 496
     Align = alRight
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 487
     object dxBarDockControl3: TdxBarDockControl
       Left = 0
       Top = 0
@@ -58,24 +59,27 @@
       Left = 648
       Top = 26
       Width = 4
-      Height = 461
+      Height = 470
       AlignSplitter = salRight
+      ExplicitHeight = 461
     end
     object Panel1: TPanel
       Left = 0
       Top = 26
       Width = 249
-      Height = 461
+      Height = 470
       Align = alLeft
       Caption = 'Panel1'
       TabOrder = 2
+      ExplicitHeight = 461
       object cxGrid2: TcxGrid
         Left = 1
         Top = 19
         Width = 243
-        Height = 441
+        Height = 450
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 441
         object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DocumentDS
@@ -148,9 +152,10 @@
         Left = 244
         Top = 19
         Width = 4
-        Height = 441
+        Height = 450
         AlignSplitter = salRight
         Control = cxGrid2
+        ExplicitHeight = 441
       end
       object cxLabel1: TcxLabel
         Left = 1
@@ -172,11 +177,12 @@
       Left = 249
       Top = 26
       Width = 399
-      Height = 461
+      Height = 470
       Align = alClient
       Caption = 'PanelDocView'
       ShowCaption = False
       TabOrder = 3
+      ExplicitHeight = 461
     end
   end
   object Код: TcxLabel
@@ -216,12 +222,12 @@
   end
   object cxLabel6: TcxLabel
     Left = 12
-    Top = 100
+    Top = 95
     Caption = 'Lieferanten / Kunden'
   end
   object ceObject: TcxButtonEdit
     Left = 12
-    Top = 119
+    Top = 114
     Properties.Buttons = <
       item
         Default = True
@@ -241,29 +247,17 @@
   end
   object cxLabel15: TcxLabel
     Left = 12
-    Top = 143
+    Top = 137
     Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
-  end
-  object ceInvoice: TcxButtonEdit
-    Left = 12
-    Top = 161
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 13
-    Width = 182
   end
   object cxLabel9: TcxLabel
     Left = 12
-    Top = 188
+    Top = 235
     Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
   end
   object edInvoiceKind: TcxButtonEdit
     Left = 12
-    Top = 206
+    Top = 253
     ParentFont = False
     Properties.Buttons = <
       item
@@ -277,77 +271,87 @@
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 106
   end
   object cxLabel5: TcxLabel
     Left = 12
-    Top = 229
+    Top = 276
     Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
   end
   object ceAmount: TcxCurrencyEdit
-    Left = 8
-    Top = 246
+    Left = 12
+    Top = 294
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 17
+    TabOrder = 16
     Width = 182
   end
   object cxLabel4: TcxLabel
-    Left = 124
-    Top = 188
+    Left = 127
+    Top = 235
     Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090#1072
   end
   object edAmount_invoice: TcxCurrencyEdit
-    Left = 124
-    Top = 202
+    Left = 127
+    Top = 253
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 19
+    TabOrder = 18
     Width = 67
   end
   object cxLabel7: TcxLabel
     Left = 12
-    Top = 317
+    Top = 364
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object edParent: TcxButtonEdit
     Left = 12
-    Top = 334
+    Top = 381
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 19
     Width = 182
   end
   object ceInfoMoneyName_invoice: TcxTextEdit
     Left = 12
-    Top = 290
+    Top = 337
     Properties.ReadOnly = True
-    TabOrder = 23
+    TabOrder = 22
     Width = 182
   end
   object cxLabel8: TcxLabel
     Left = 12
-    Top = 273
+    Top = 320
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object cxLabel10: TcxLabel
     Left = 12
-    Top = 361
+    Top = 408
     Caption = 'Boat'
   end
   object ceBoat: TcxTextEdit
     Left = 12
-    Top = 378
+    Top = 425
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 182
+  end
+  object cmInvoice: TcxMemo
+    Left = 12
+    Top = 155
+    Touch.ParentTabletOptions = False
+    Touch.TabletOptions = [toPressAndHold, toPenTapFeedback, toTouchUIForceOn, toTouchUIForceOff, toTouchSwitch, toFlicks]
     Properties.ReadOnly = True
     TabOrder = 28
+    Height = 79
     Width = 182
   end
   object ActionList: TActionList
@@ -789,6 +793,13 @@
         Component = GuidesParent
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Invoice'
+        Value = Null
+        Component = cmInvoice
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1382,9 +1393,7 @@
   end
   object GuidesInvoice: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInvoice
     DisableGuidesOpen = True
-    Key = '0'
     FormNameParam.Value = 'TInvoiceJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1490,8 +1499,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 148
-    Top = 151
+    Left = 140
+    Top = 95
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'

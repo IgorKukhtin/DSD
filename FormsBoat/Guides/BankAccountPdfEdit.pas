@@ -27,7 +27,7 @@ uses
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter, cxGridBandedTableView,
-  cxGridDBBandedTableView;
+  cxGridDBBandedTableView, cxMemo;
 
 type
   TBankAccountPdfEditForm = class(TParentForm)
@@ -100,7 +100,6 @@ type
     cxLabel1: TcxLabel;
     PanelDocView: TPanel;
     cxLabel15: TcxLabel;
-    ceInvoice: TcxButtonEdit;
     cxLabel9: TcxLabel;
     edInvoiceKind: TcxButtonEdit;
     GuidesInvoiceKind: TdsdGuides;
@@ -117,6 +116,7 @@ type
     cxLabel10: TcxLabel;
     ceBoat: TcxTextEdit;
     DocInvNumber: TcxGridDBBandedColumn;
+    cmInvoice: TcxMemo;
   private
     { Private declarations }
   public

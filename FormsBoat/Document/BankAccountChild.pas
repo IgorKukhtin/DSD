@@ -79,6 +79,8 @@ type
     actGet_Proforma: TdsdExecStoredProc;
     actGet_Service: TdsdExecStoredProc;
     actGet_PrePay: TdsdExecStoredProc;
+    cxLabel14: TcxLabel;
+    edString_7: TcxTextEdit;
   private
     { Private declarations }
   public

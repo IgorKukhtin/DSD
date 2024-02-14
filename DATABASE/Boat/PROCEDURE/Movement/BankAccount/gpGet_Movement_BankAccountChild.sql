@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , InvNumber_parent TVarChar
              , ProductName_Invoice TVarChar
              , ProductCIN_Invoice TVarChar
+             , String_7     TVarChar  --Name Zahlungsbeteiligter; наименование плательщика;
              )
 AS
 $BODY$
@@ -90,6 +91,8 @@ BEGIN
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
            , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName_Invoice
            , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN_Invoice
+           --
+           , '' ::TVarChar AS String_7
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = inMovementId_Invoice
@@ -188,7 +191,7 @@ BEGIN
            , STRING_AGG (DISTINCT COALESCE (Object_MoneyPlace.ValueData, Object_Object.ValueData), ';')          ::TVarChar  AS MoneyPlaceName
 
            , CASE WHEN inMovementItemId_child = 0 THEN 0 ELSE Movement_Invoice.Id END                        AS MovementId_Invoice
-           , STRING_AGG (DISTINCT zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId), ';') ::TVarChar AS InvNumber_Invoice
+           , STRING_AGG (DISTINCT zfCalc_InvNumber_two_isErased ('', Movement_Invoice.InvNumber, MovementString_ReceiptNumber.ValueData, Movement_Invoice.OperDate, Movement_Invoice.StatusId), CHR (13)) ::TVarChar AS InvNumber_Invoice
            , CASE WHEN inMovementItemId_child = 0 THEN 0 ELSE Object_InvoiceKind.Id END                      AS InvoiceKindId
            , STRING_AGG (DISTINCT Object_InvoiceKind.ValueData, ';')                                  ::TVarChar      AS InvoiceKindName  
            , CASE WHEN inMovementItemId_child = 0 THEN 0 ELSE Object_InfoMoney_View_invoice.InfoMoneyId END  AS InfoMoneyId_invoice
@@ -199,6 +202,8 @@ BEGIN
            , STRING_AGG (DISTINCT zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId), ';') ::TVarChar AS InvNumber_parent
            , STRING_AGG (DISTINCT zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased), ';') ::TVarChar      AS ProductName_Invoice
            , STRING_AGG (DISTINCT zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased), ';') ::TVarChar    AS ProductCIN_Invoice
+           --
+           , MovementString_7.ValueData   ::TVarChar AS String_7
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
@@ -209,7 +214,10 @@ BEGIN
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
-                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner() 
+            LEFT JOIN MovementString AS MovementString_7
+                                     ON MovementString_7.MovementId = Movement.Id
+                                    AND MovementString_7.DescId = zc_MovementString_7()
             -- данные BankAccount
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = MovementItem.ObjectId
@@ -291,9 +299,10 @@ BEGIN
            , CASE WHEN inMovementItemId_child = 0 THEN 0 ELSE Object_InvoiceKind.Id END
            , CASE WHEN inMovementItemId_child = 0 THEN 0 ELSE Object_InfoMoney_View_invoice.InfoMoneyId END
            , CASE WHEN inMovementItemId_child = 0 THEN 0 ELSE Movement_Parent.Id  END 
-           , ABS (MovementItem.Amount) 
+           , (MovementItem.Amount) 
            , ABS (CASE WHEN inMovementItemId_child = 0 THEN tmpInvoice_Amount_All.Summ_all ELSE 0 END)
            , tmpInvoice_Amount_All.Summ_all
+           , MovementString_7.ValueData
        ;
 
    END IF;
