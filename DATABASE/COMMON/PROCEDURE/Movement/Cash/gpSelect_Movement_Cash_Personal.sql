@@ -103,7 +103,13 @@ BEGIN
           , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
 
             -- !!!права!!!
-          , tmpPersonalServiceList_User AS (SELECT Object_PersonalServiceList_User_View.PersonalServiceListId FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId)
+          , tmpPersonalServiceList_User AS (SELECT Object_PersonalServiceList_User_View.PersonalServiceListId FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId
+                                           UNION
+                                            SELECT Object_PersonalServiceList.Id
+                                            FROM Object AS Object_PersonalServiceList
+                                            WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                            AND EXISTS (SELECT 1 FROM tmpAccessKey_isCashAll)
+                                           )
 
 
        SELECT
