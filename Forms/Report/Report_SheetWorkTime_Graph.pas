@@ -66,6 +66,12 @@ type
     cxGridDBChartDataGroup3: TcxGridDBChartDataGroup;
     cxGridLevel3: TcxGridLevel;
     cxTabSheet2: TcxTabSheet;
+    cxTabSheet3: TcxTabSheet;
+    cxGrid4: TcxGrid;
+    cxGridDBChartView4: TcxGridDBChartView;
+    cxGridDBChartDataGroup4: TcxGridDBChartDataGroup;
+    cxGridDBChartSeries3: TcxGridDBChartSeries;
+    cxGridLevel4: TcxGridLevel;
     cxGrid5: TcxGrid;
     cxGridDBChartView5: TcxGridDBChartView;
     cxGridDBChartSeries4: TcxGridDBChartSeries;
@@ -76,17 +82,6 @@ type
     cxLabel4: TcxLabel;
     UnitGuides: TdsdGuides;
     Weight_Send_out: TcxGridDBColumn;
-    cxTabSheet4: TcxTabSheet;
-    cxGrid6: TcxGrid;
-    cxGridDBChartView6: TcxGridDBChartView;
-    cxGridDBChartDataGroup6: TcxGridDBChartDataGroup;
-    cxGridDBChartSeries2: TcxGridDBChartSeries;
-    cxGridDBChartSeries5: TcxGridDBChartSeries;
-    cxGridDBChartSeries6: TcxGridDBChartSeries;
-    cxGridDBChartSeries7: TcxGridDBChartSeries;
-    cxGridDBChartSeries8: TcxGridDBChartSeries;
-    cxGridDBChartSeries9: TcxGridDBChartSeries;
-    cxGridLevel6: TcxGridLevel;
   private
     { Private declarations }
   public

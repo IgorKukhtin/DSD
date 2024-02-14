@@ -131,26 +131,26 @@ BEGIN
    ---
    SELECT tmpReport.PersonalGroupName
         , tmpReport.OperDate :: TDateTime
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12466   THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_1
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 2237044 THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_2
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12471   THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_3
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12467   THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_4
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12471   THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_1
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12467   THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_2
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 2237044 THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_3
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12466   THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_4
         , SUM (CASE WHEN tmpReport.PersonalGroupId = 0       THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage_0
         , SUM (CASE WHEN tmpReport.PersonalGroupId not in (0,12466,2237044,12471,12467) THEN COALESCE (tmpReport.CountPackage,0) ELSE 0 END)  ::TFloat AS CountPackage
 
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12466   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_1
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 2237044 THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_2
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12471   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_3
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12467   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_4
+        /*, SUM (CASE WHEN tmpReport.PersonalGroupId = 12471   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_1
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12467   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_2
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 2237044 THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_3
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12466   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_4
         , SUM (CASE WHEN tmpReport.PersonalGroupId = 0       THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage_0
         , SUM (CASE WHEN tmpReport.PersonalGroupId not in (0,12466,2237044,12471,12467) THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS WeightPackage 
-        
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12466   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_1
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 2237044 THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_2
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12471   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_3
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12467   THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_4
-        , SUM (CASE WHEN tmpReport.PersonalGroupId = 0       THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_0
-        , SUM (CASE WHEN tmpReport.PersonalGroupId not in (0,12466,2237044,12471,12467) THEN COALESCE (tmpReport.WeightPackage,0) ELSE 0 END)  ::TFloat AS Weight_Send_out
+        */
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12471   THEN COALESCE (tmpReport.Weight_Send_out,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_1
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12467   THEN COALESCE (tmpReport.Weight_Send_out,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_2
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 2237044 THEN COALESCE (tmpReport.Weight_Send_out,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_3
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 12466   THEN COALESCE (tmpReport.Weight_Send_out,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_4
+        , SUM (CASE WHEN tmpReport.PersonalGroupId = 0       THEN COALESCE (tmpReport.Weight_Send_out,0) ELSE 0 END)  ::TFloat AS Weight_Send_out_0
+        , SUM (CASE WHEN tmpReport.PersonalGroupId not in (0,12466,2237044,12471,12467) THEN COALESCE (tmpReport.Weight_Send_out,0) ELSE 0 END)  ::TFloat AS Weight_Send_out
         
        -- , SUM (tmpReport.WeightPackage) ::TFloat AS WeightPackage
    FROM tmpReport
