@@ -51,7 +51,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = WeightPackage
             end
             item
               Format = ',0.####'
@@ -82,7 +81,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = WeightPackage
             end
             item
               Format = ',0.####'
@@ -146,17 +144,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
             HeaderAlignmentVert = vaCenter
             Width = 92
           end
-          object WeightPackage: TcxGridDBColumn
-            Caption = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089')'
-            DataBinding.FieldName = 'WeightPackage'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 104
-          end
           object Weight_Send_out: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
             DataBinding.FieldName = 'Weight_Send_out'
@@ -170,9 +157,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
     object tsPivot: TcxTabSheet
       Caption = #1043#1088#1072#1092#1080#1082' 1'
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 747
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -180,7 +164,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 747
         object cxGridDBChartView1: TcxGridDBChartView
           DataController.DataSource = DSGraph1
           DiagramArea.Values.LineWidth = 2
@@ -205,9 +188,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
     object tsDetail: TcxTabSheet
       Caption = #1043#1088#1072#1092#1080#1082' 2'
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 747
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -215,7 +195,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 747
         object cxGridDBChartView2: TcxGridDBChartView
           DataController.DataSource = DSGraph1
           DiagramArea.Values.LineWidth = 2
@@ -240,9 +219,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1043#1088#1072#1092#1080#1082' 3'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 747
-      ExplicitHeight = 0
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0
@@ -250,7 +226,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 747
         object cxGridDBChartView3: TcxGridDBChartView
           DataController.DataSource = DSGraph3
           DiagramArea.Values.LineWidth = 2
@@ -266,10 +241,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
             DataBinding.FieldName = 'CountPackage'
             DisplayText = #1055#1072#1082#1077#1090#1099' ('#1096#1090')'
           end
-          object cxGridDBChartWeightPackage: TcxGridDBChartSeries
-            DataBinding.FieldName = 'WeightPackage'
-            DisplayText = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089')'
-          end
           object cxGridDBChartWeight_Send_out: TcxGridDBChartSeries
             DataBinding.FieldName = 'Weight_Send_out'
             DisplayText = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
@@ -283,9 +254,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1043#1088#1072#1092#1080#1082' 4'
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 747
-      ExplicitHeight = 0
       object cxGrid5: TcxGrid
         Left = 0
         Top = 0
@@ -293,7 +261,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 747
         object cxGridDBChartView5: TcxGridDBChartView
           DataController.DataSource = DSGraph4
           DiagramArea.Values.LineWidth = 2
@@ -335,67 +302,9 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
         end
       end
     end
-    object cxTabSheet3: TcxTabSheet
-      Caption = #1043#1088#1072#1092#1080#1082' 5'
-      ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 747
-      ExplicitHeight = 0
-      object cxGrid4: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 966
-        Height = 458
-        Align = alClient
-        TabOrder = 0
-        ExplicitWidth = 747
-        object cxGridDBChartView4: TcxGridDBChartView
-          DataController.DataSource = DSGraph4
-          DiagramArea.Values.LineWidth = 2
-          DiagramLine.Active = True
-          DiagramLine.Values.LineWidth = 2
-          ToolBox.CustomizeButton = True
-          ToolBox.DiagramSelector = True
-          object cxGridDBChartDataGroup4: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'OperDate'
-            DisplayText = #1044#1072#1090#1072
-          end
-          object cxGridDBChartSeries3: TcxGridDBChartSeries
-            DataBinding.FieldName = 'WeightPackage'
-            DisplayText = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089') '#1041#1088#1080#1075#1072#1076#1072' '#1076#1088'.'
-          end
-          object cxGridDBChartSeries3_1: TcxGridDBChartSeries
-            DataBinding.FieldName = 'WeightPackage_1'
-            DisplayText = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089') '#1041#1088#1080#1075#1072#1076#1072' 1'
-          end
-          object cxGridDBChartSeries3_2: TcxGridDBChartSeries
-            DataBinding.FieldName = 'WeightPackage_2'
-            DisplayText = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089') '#1041#1088#1080#1075#1072#1076#1072' 2'
-          end
-          object cxGridDBChartSeries3_3: TcxGridDBChartSeries
-            DataBinding.FieldName = 'WeightPackage_3'
-            DisplayText = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089') '#1041#1088#1080#1075#1072#1076#1072' 3'
-          end
-          object cxGridDBChartSeries3_4: TcxGridDBChartSeries
-            DataBinding.FieldName = 'WeightPackage_4'
-            DisplayText = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089') '#1041#1088#1080#1075#1072#1076#1072' 4'
-          end
-          object cxGridDBChartSeries3_0: TcxGridDBChartSeries
-            DataBinding.FieldName = 'WeightPackage_0'
-            DisplayText = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089') '#1041#1088#1080#1075#1072#1076#1072' _'
-          end
-        end
-        object cxGridLevel4: TcxGridLevel
-          GridView = cxGridDBChartView4
-        end
-      end
-    end
     object cxTabSheet4: TcxTabSheet
-      Caption = #1043#1088#1072#1092#1080#1082' 6'
+      Caption = #1043#1088#1072#1092#1080#1082' 5'
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 747
-      ExplicitHeight = 0
       object cxGrid6: TcxGrid
         Left = 0
         Top = 0
@@ -403,7 +312,6 @@ inherited Report_SheetWorkTime_GraphForm: TReport_SheetWorkTime_GraphForm
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 747
         object cxGridDBChartView6: TcxGridDBChartView
           DataController.DataSource = DSGraph4
           DiagramArea.Values.LineWidth = 2
