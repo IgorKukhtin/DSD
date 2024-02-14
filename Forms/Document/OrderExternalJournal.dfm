@@ -852,7 +852,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsName;GoodsKindName'
+          IndexFieldNames = 'LineNum;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -1031,7 +1031,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1095#1072#1090#1080' '#1087#1072#1082#1077#1090#1072'?'
       Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
-      ImageIndex = 3
+      ImageIndex = 23
     end
     inherited actUpdate: TdsdInsertUpdateAction [17]
       FormName = 'TOrderExternalForm'
@@ -1665,34 +1665,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMIChild_Amount'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMIChild_AmountSecond'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMIChild_AmountNull'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateMIChild_AmountSecondNull'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbOpenFormOrderExternalChild'
         end
         item
@@ -1701,11 +1673,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSort'
+          ItemName = 'bbsUpdate'
         end
         item
           Visible = True
@@ -1713,23 +1681,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Order2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTotal'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Account'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1799,6 +1751,95 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     object bbPrintSort: TdxBarButton
       Action = actPrintSort
       Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSort'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Order2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTotal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Account'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtSilentList'
+        end>
+    end
+    object bbSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbtSilentList: TdxBarButton
+      Action = mactSilentList
+      Category = 0
+    end
+    object bbsUpdate: TdxBarSubItem
+      Caption = #1056#1077#1079#1077#1088#1074
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 50
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_Amount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountNull'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMIChild_AmountSecondNull'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
