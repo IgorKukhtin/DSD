@@ -600,27 +600,27 @@ BEGIN
            , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, tmpTransportGoods.OperDate) ELSE tmpTransportGoods.OperDate END :: TDateTime AS OperDate
            , tmpTransportGoods.InvNumberMark
 
-           , REPLACE(REPLACE(tmpTransportGoods.CarName, ' ', ''), '-', '')::TVarChar       AS CarName
+           , REPLACE(REPLACE(tmpTransportGoods.CarName, ' ', ''), '-', '')::TVarChar        AS CarName
            , Object_CarModel.ValueData       AS CarBrandName
            , Object_CarType.ValueData        AS CarModelName
            , Object_CarObjectColor.ValueData AS CarColorName
            , Object_CarProperty.ValueData    AS CarTypeName
 
 
-           , tmpTransportGoods.CarTrailerName
+           , REPLACE(REPLACE(tmpTransportGoods.CarTrailerName, ' ', ''), '-', '')::TVarChar AS CarTrailerName
            , Object_CarTrailerModel.ValueData       AS CarTrailerBrandName
            , Object_CarTrailerType.ValueData        AS CarTrailerModelName
            , Object_CarTrailerObjectColor.ValueData AS CarTrailerColorName
            , Object_CarTrailerProperty.ValueData    AS CarTrailerTypeName
 
            , tmpTransportGoods.PersonalDriverName
-           --, 'Гуменний Володимир Антонович'::TVarChar AS PersonalDriverName
            , Upper(REPLACE(COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData), ' ', '')) :: TVarChar AS DriverCertificate
-           --, 'ВХО320611'::TVarChar AS DriverCertificate
            , COALESCE (ObjectString_DriverINN_external.ValueData, ObjectString_DriverINN.ValueData) :: TVarChar AS DriverINN
-           --, '3234715572'::TVarChar AS DriverINN
+           , ''::TVarChar                                 AS DriverTelephone
+           , ''::TVarChar                                 AS DriverMobileTelephone
+           , ''::TVarChar                                 AS DriverEmailURI
+
            , COALESCE (ObjectString_DriverGLN_external.ValueData, ObjectString_DriverGLN.ValueData) :: TVarChar AS GLN_Driver
-           --, '9864232596745'::TVarChar AS GLN_Driver
            
            , CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN tmpTransportGoods.PersonalDriverName ELSE tmpTransportGoods.MemberName1 END :: TVarChar AS MemberName1
            , tmpTransportGoods.MemberName2
@@ -630,11 +630,42 @@ BEGIN
            , tmpTransportGoods.MemberName6
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN tmpTransportGoods.MemberName7 ELSE tmpTransportGoods.MemberName4 END AS MemberName7
            
+           , ''::TVarChar                                 AS NotifiedPersonName
+           , ''::TVarChar                                 AS NotifiedPersonINN
+           , ''::TVarChar                                 AS NotifiedPersonTelephone
+           , ''::TVarChar                                 AS NotifiedPersonMobileTelephone
+           , ''::TVarChar                                 AS NotifiedPersonEmailURI
+
            , 'Петренко Євгеній Сергійович'::TVarChar      AS ConsignorPersonName
            , '3110604434'::TVarChar                       AS ConsignorPersonINN
            , ''::TVarChar                                 AS ConsignorPersonTelephone
-           , '0673344579'::TVarChar                       AS ConsignorPersonMobileTelephone
+           , '380673344579'::TVarChar                     AS ConsignorPersonMobileTelephone
+           , ''::TVarChar                                 AS ConsignorPersonEmailURI
+
+           , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN tmpTransportGoods.MemberName7 ELSE tmpTransportGoods.MemberName4 END AS ConsigneePersonName
+           , ''::TVarChar                                 AS ConsigneePersonINN
+           , ''::TVarChar                                 AS ConsigneePersonTelephone
+           , ''::TVarChar                                 AS ConsigneePersonMobileTelephone
+           , ''::TVarChar                                 AS ConsigneePersonEmailURI
            
+           , ''::TVarChar                                 AS NotifiedPersonName
+           , ''::TVarChar                                 AS NotifiedPersonINN
+           , ''::TVarChar                                 AS NotifiedPersonTelephone
+           , ''::TVarChar                                 AS NotifiedPersonMobileTelephone
+           , ''::TVarChar                                 AS NotifiedPersonEmailURI
+
+           , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN tmpTransportGoods.MemberName7 ELSE tmpTransportGoods.MemberName4 END AS DeliveryCN_PersonName
+           , ''::TVarChar                                 AS DeliveryCN_PersonINN
+           , ''::TVarChar                                 AS DeliveryCN_PersonTelephone
+           , ''::TVarChar                                 AS DeliveryCN_PersonMobileTelephone
+           , ''::TVarChar                                 AS DeliveryCN_PersonEmailURI
+           
+           , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN tmpTransportGoods.MemberName4 ELSE tmpTransportGoods.MemberName7 END AS PickUpCZ_PersonName
+           , ''::TVarChar                                 AS PickUpCZ_PersonINN
+           , ''::TVarChar                                 AS PickUpCZ_PersonTelephone
+           , ''::TVarChar                                 AS PickUpCZ_PersonMobileTelephone
+           , ''::TVarChar                                 AS PickUpCZ_PersonEmailURI
+
            , tmpTransportGoods.TotalCountBox
            , tmpTransportGoods.TotalWeightBox
            ,   COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0) AS TotalWeight_Brutto

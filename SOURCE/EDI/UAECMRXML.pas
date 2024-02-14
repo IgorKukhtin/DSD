@@ -54,6 +54,7 @@ type
   IXMLActualOccurrenceDateTimeType = interface;
   IXMLScheduledOccurrenceDateTimeType = interface;
   IXMLCertifyingTradePartyType = interface;
+  IXMLCertifyingTradePartyTypeList = interface;
   IXMLPickUpTransportEventType = interface;
   IXMLIncludedSupplyChainConsignmentItemType = interface;
   IXMLIncludedSupplyChainConsignmentItemTypeList = interface;
@@ -344,6 +345,7 @@ type
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
     { Methods & Properties }
@@ -353,6 +355,7 @@ type
     property PostalTradeAddress: IXMLPostalTradeAddressType read Get_PostalTradeAddress;
     property DefinedTradeContact: IXMLDefinedTradeContactType read Get_DefinedTradeContact;
     property SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType read Get_SpecifiedGovernmentRegistration;
+    property SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType read Get_SpecifiedTaxRegistration;
   end;
 
 { IXMLSpecifiedTaxRegistrationType }
@@ -360,10 +363,9 @@ type
   IXMLSpecifiedTaxRegistrationType = interface(IXMLNode)
     ['{BF3FE8FC-0F8C-44D3-B417-6080F918DB7F}']
     { Property Accessors }
-    function Get_ID: UnicodeString;
-    procedure Set_ID(Value: UnicodeString);
+    function Get_ID: IXMLIDType;
     { Methods & Properties }
-    property ID: UnicodeString read Get_ID write Set_ID;
+    property ID: IXMLIDType read Get_ID;
   end;
 
 { IXMLSpecifiedGovernmentRegistrationType }
@@ -475,6 +477,8 @@ type
     function Get_Name: UnicodeString;
     function Get_RoleCode: UnicodeString;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
+    function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
@@ -483,6 +487,8 @@ type
     property Name: UnicodeString read Get_Name write Set_Name;
     property RoleCode: UnicodeString read Get_RoleCode write Set_RoleCode;
     property PostalTradeAddress: IXMLPostalTradeAddressType read Get_PostalTradeAddress;
+    property DefinedTradeContact: IXMLDefinedTradeContactType read Get_DefinedTradeContact;
+    property SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType read Get_SpecifiedTaxRegistration;
     property SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType read Get_SpecifiedGovernmentRegistration;
   end;
 
@@ -563,13 +569,13 @@ type
     function Get_Description: UnicodeString;
     function Get_ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType;
     function Get_ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType;
-    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
+    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
     procedure Set_Description(Value: UnicodeString);
     { Methods & Properties }
     property Description: UnicodeString read Get_Description write Set_Description;
     property ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType read Get_ActualOccurrenceDateTime;
     property ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType read Get_ScheduledOccurrenceDateTime;
-    property CertifyingTradeParty: IXMLCertifyingTradePartyType read Get_CertifyingTradeParty;
+    property CertifyingTradeParty: IXMLCertifyingTradePartyTypeList read Get_CertifyingTradeParty;
   end;
 
 { IXMLActualOccurrenceDateTimeType }
@@ -604,6 +610,7 @@ type
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     function Get_ID: IXMLIDType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
@@ -612,8 +619,21 @@ type
     property RoleCode: UnicodeString read Get_RoleCode write Set_RoleCode;
     property DefinedTradeContact: IXMLDefinedTradeContactType read Get_DefinedTradeContact;
     property PostalTradeAddress: IXMLPostalTradeAddressType read Get_PostalTradeAddress;
+    property SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType read Get_SpecifiedTaxRegistration;
     property SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType read Get_SpecifiedGovernmentRegistration;
     property ID: IXMLIDType read Get_ID;
+  end;
+
+{ IXMLCertifyingTradePartyTypeList }
+
+  IXMLCertifyingTradePartyTypeList = interface(IXMLNodeCollection)
+    ['{138E781F-7F71-4C91-A822-F214FE65D45A}']
+    { Methods & Properties }
+    function Add: IXMLCertifyingTradePartyType;
+    function Insert(const Index: Integer): IXMLCertifyingTradePartyType;
+
+    function Get_Item(Index: Integer): IXMLCertifyingTradePartyType;
+    property Items[Index: Integer]: IXMLCertifyingTradePartyType read Get_Item; default;
   end;
 
 { IXMLPickUpTransportEventType }
@@ -624,13 +644,13 @@ type
     function Get_Description: UnicodeString;
     function Get_ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType;
     function Get_ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType;
-    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
+    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
     procedure Set_Description(Value: UnicodeString);
     { Methods & Properties }
     property Description: UnicodeString read Get_Description write Set_Description;
     property ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType read Get_ActualOccurrenceDateTime;
     property ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType read Get_ScheduledOccurrenceDateTime;
-    property CertifyingTradeParty: IXMLCertifyingTradePartyType read Get_CertifyingTradeParty;
+    property CertifyingTradeParty: IXMLCertifyingTradePartyTypeList read Get_CertifyingTradeParty;
   end;
 
 { IXMLIncludedSupplyChainConsignmentItemType }
@@ -938,6 +958,7 @@ type
   TXMLActualOccurrenceDateTimeType = class;
   TXMLScheduledOccurrenceDateTimeType = class;
   TXMLCertifyingTradePartyType = class;
+  TXMLCertifyingTradePartyTypeList = class;
   TXMLPickUpTransportEventType = class;
   TXMLIncludedSupplyChainConsignmentItemType = class;
   TXMLIncludedSupplyChainConsignmentItemTypeList = class;
@@ -1181,6 +1202,7 @@ type
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
   public
@@ -1192,8 +1214,9 @@ type
   TXMLSpecifiedTaxRegistrationType = class(TXMLNode, IXMLSpecifiedTaxRegistrationType)
   protected
     { IXMLSpecifiedTaxRegistrationType }
-    function Get_ID: UnicodeString;
-    procedure Set_ID(Value: UnicodeString);
+    function Get_ID: IXMLIDType;
+  public
+    procedure AfterConstruction; override;
   end;
 
 { TXMLSpecifiedGovernmentRegistrationType }
@@ -1288,6 +1311,8 @@ type
     function Get_Name: UnicodeString;
     function Get_RoleCode: UnicodeString;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
+    function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
@@ -1355,12 +1380,14 @@ type
 { TXMLDeliveryTransportEventType }
 
   TXMLDeliveryTransportEventType = class(TXMLNode, IXMLDeliveryTransportEventType)
+  private
+    FCertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
   protected
     { IXMLDeliveryTransportEventType }
     function Get_Description: UnicodeString;
     function Get_ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType;
     function Get_ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType;
-    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
+    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
     procedure Set_Description(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
@@ -1394,6 +1421,7 @@ type
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     function Get_ID: IXMLIDType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
@@ -1401,15 +1429,29 @@ type
     procedure AfterConstruction; override;
   end;
 
+
+{ TXMLCertifyingTradePartyTypeList }
+
+  TXMLCertifyingTradePartyTypeList = class(TXMLNodeCollection, IXMLCertifyingTradePartyTypeList)
+  protected
+    { IXMLCertifyingTradePartyTypeList }
+    function Add: IXMLCertifyingTradePartyType;
+    function Insert(const Index: Integer): IXMLCertifyingTradePartyType;
+
+    function Get_Item(Index: Integer): IXMLCertifyingTradePartyType;
+  end;
+
 { TXMLPickUpTransportEventType }
 
   TXMLPickUpTransportEventType = class(TXMLNode, IXMLPickUpTransportEventType)
+  private
+    FCertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
   protected
     { IXMLPickUpTransportEventType }
     function Get_Description: UnicodeString;
     function Get_ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType;
     function Get_ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType;
-    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
+    function Get_CertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
     procedure Set_Description(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
@@ -2142,6 +2184,7 @@ begin
   RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
   RegisterChildNode('DefinedTradeContact', TXMLDefinedTradeContactType);
   RegisterChildNode('SpecifiedGovernmentRegistration', TXMLSpecifiedGovernmentRegistrationType);
+  RegisterChildNode('SpecifiedTaxRegistration', TXMLSpecifiedTaxRegistrationType);
   inherited;
 end;
 
@@ -2185,16 +2228,22 @@ begin
   Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
 end;
 
-{ TXMLSpecifiedTaxRegistrationType }
-
-function TXMLSpecifiedTaxRegistrationType.Get_ID: UnicodeString;
+function TXMLConsigneeTradePartyType.Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
 begin
-  Result := ChildNodes['ram:ID'].Text;
+  Result := ChildNodes['ram:SpecifiedTaxRegistration'] as IXMLSpecifiedTaxRegistrationType;
 end;
 
-procedure TXMLSpecifiedTaxRegistrationType.Set_ID(Value: UnicodeString);
+{ TXMLSpecifiedTaxRegistrationType }
+
+procedure TXMLSpecifiedTaxRegistrationType.AfterConstruction;
 begin
-  ChildNodes['ram:ID'].NodeValue := Value;
+  RegisterChildNode('ID', TXMLIDType);
+  inherited;
+end;
+
+function TXMLSpecifiedTaxRegistrationType.Get_ID: IXMLIDType;
+begin
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 { TXMLSpecifiedGovernmentRegistrationType }
@@ -2372,6 +2421,8 @@ procedure TXMLNotifiedTradePartyType.AfterConstruction;
 begin
   RegisterChildNode('ID', TXMLIDType);
   RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
+  RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
+  RegisterChildNode('SpecifiedTaxRegistration', TXMLSpecifiedTaxRegistrationType);
   RegisterChildNode('SpecifiedGovernmentRegistration', TXMLSpecifiedGovernmentRegistrationType);
   inherited;
 end;
@@ -2409,6 +2460,16 @@ end;
 function TXMLNotifiedTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
 begin
   Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
+end;
+
+function TXMLNotifiedTradePartyType.Get_DefinedTradeContact: IXMLDefinedTradeContactType;
+begin
+  Result := ChildNodes['ram:DefinedTradeContact'] as IXMLDefinedTradeContactType;
+end;
+
+function TXMLNotifiedTradePartyType.Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
+begin
+  Result := ChildNodes['ram:SpecifiedTaxRegistration'] as IXMLSpecifiedTaxRegistrationType;
 end;
 
 { TXMLCarrierAcceptanceLogisticsLocationType }
@@ -2560,7 +2621,8 @@ procedure TXMLDeliveryTransportEventType.AfterConstruction;
 begin
   RegisterChildNode('ActualOccurrenceDateTime', TXMLActualOccurrenceDateTimeType);
   RegisterChildNode('ScheduledOccurrenceDateTime', TXMLScheduledOccurrenceDateTimeType);
-  RegisterChildNode('CertifyingTradeParty', TXMLCertifyingTradePartyType);
+  RegisterChildNode('ram:CertifyingTradeParty', TXMLCertifyingTradePartyType);
+  FCertifyingTradeParty := CreateCollection(TXMLCertifyingTradePartyTypeList, IXMLCertifyingTradePartyType, 'ram:CertifyingTradeParty') as IXMLCertifyingTradePartyTypeList;
   inherited;
 end;
 
@@ -2584,9 +2646,9 @@ begin
   Result := ChildNodes['ram:ScheduledOccurrenceDateTime'] as IXMLScheduledOccurrenceDateTimeType;
 end;
 
-function TXMLDeliveryTransportEventType.Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
+function TXMLDeliveryTransportEventType.Get_CertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
 begin
-  Result := ChildNodes['ram:CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
+  Result := FCertifyingTradeParty;
 end;
 
 { TXMLActualOccurrenceDateTimeType }
@@ -2620,6 +2682,7 @@ begin
   RegisterChildNode('DefinedTradeContact', TXMLDefinedTradeContactType);
   RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
   RegisterChildNode('SpecifiedGovernmentRegistration', TXMLSpecifiedGovernmentRegistrationType);
+  RegisterChildNode('SpecifiedTaxRegistration', TXMLSpecifiedTaxRegistrationType);
   RegisterChildNode('ID', TXMLIDType);
   inherited;
 end;
@@ -2664,13 +2727,36 @@ begin
   Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
+function TXMLCertifyingTradePartyType.Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
+begin
+  Result := ChildNodes['ram:SpecifiedTaxRegistration'] as IXMLSpecifiedTaxRegistrationType;
+end;
+
+{ TXMLCertifyingTradePartyTypeList }
+
+function TXMLCertifyingTradePartyTypeList.Add: IXMLCertifyingTradePartyType;
+begin
+  Result := AddItem(-1) as IXMLCertifyingTradePartyType;
+end;
+
+function TXMLCertifyingTradePartyTypeList.Insert(const Index: Integer): IXMLCertifyingTradePartyType;
+begin
+  Result := AddItem(Index) as IXMLCertifyingTradePartyType;
+end;
+
+function TXMLCertifyingTradePartyTypeList.Get_Item(Index: Integer): IXMLCertifyingTradePartyType;
+begin
+  Result := List[Index] as IXMLCertifyingTradePartyType;
+end;
+
 { TXMLPickUpTransportEventType }
 
 procedure TXMLPickUpTransportEventType.AfterConstruction;
 begin
   RegisterChildNode('ActualOccurrenceDateTime', TXMLActualOccurrenceDateTimeType);
   RegisterChildNode('ScheduledOccurrenceDateTime', TXMLScheduledOccurrenceDateTimeType);
-  RegisterChildNode('CertifyingTradeParty', TXMLCertifyingTradePartyType);
+  RegisterChildNode('ram:CertifyingTradeParty', TXMLCertifyingTradePartyType);
+  FCertifyingTradeParty := CreateCollection(TXMLCertifyingTradePartyTypeList, IXMLCertifyingTradePartyType, 'ram:CertifyingTradeParty') as IXMLCertifyingTradePartyTypeList;
   inherited;
 end;
 
@@ -2694,9 +2780,9 @@ begin
   Result := ChildNodes['ram:ScheduledOccurrenceDateTime'] as IXMLScheduledOccurrenceDateTimeType;
 end;
 
-function TXMLPickUpTransportEventType.Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
+function TXMLPickUpTransportEventType.Get_CertifyingTradeParty: IXMLCertifyingTradePartyTypeList;
 begin
-  Result := ChildNodes['ram:CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
+  Result := FCertifyingTradeParty;
 end;
 
 { TXMLIncludedSupplyChainConsignmentItemType }
