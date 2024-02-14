@@ -3,7 +3,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
   ClientHeight = 443
-  ClientWidth = 647
+  ClientWidth = 623
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -401,8 +401,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 135
   end
   object cbBankNot: TcxCheckBox
-    Left = 314
-    Top = 36
+    Left = 458
+    Top = 37
     Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1042#1099#1087#1083#1072#1090#1072' '#1073#1072#1085#1082' 2'#1092
     Caption = #1048#1089#1082#1083'. '#1080#1079' '#1074#1099#1087#1083#1072#1090#1099' '#1073#1072#1085#1082' 2'#1092
     ParentShowHint = False
