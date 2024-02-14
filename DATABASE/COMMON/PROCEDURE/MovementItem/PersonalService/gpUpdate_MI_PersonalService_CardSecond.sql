@@ -595,6 +595,12 @@ END IF;
                                                     ));
      END IF;
      
+     --для протокола чтоб понимать какую кнопку нажали если свыше 4000 = ДА обычную  = НЕТ
+     -- сохранили свойство <Проверен>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_4000(), inMovementId, FALSE);
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     
 /*
 RAISE EXCEPTION '<%  >  %', (select count(*) 
 from _tmpMI where _tmpMI.MemberId = 239655)
