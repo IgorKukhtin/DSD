@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_mail_xls (Integer, Int
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_mail_xls(
     IN inMovementId           Integer,
     IN inParam                Integer,    --XLS  = 3 ДЛЯ CardBankSecond, SummCardSecondRecalc
-                                          
+
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (CardBankSecond          TVarChar
@@ -28,7 +28,7 @@ BEGIN
                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                        , CHR(13)
                         ;
-                         
+
      END IF;
 
      -- Проверка
@@ -43,24 +43,24 @@ BEGIN
                        , CHR(13)
                        , (SELECT lfGet_Object_ValueData_sh (zc_Enum_Status_Complete()))
                         ;
-                         
+
      END IF;
 
 
-     --EXL  CardBankSecond, SummCardSecondRecalc         
+     --EXL  CardBankSecond, SummCardSecondRecalc
      IF inParam = 3
-     THEN  
-     
+     THEN
+
      RETURN QUERY
      -- Таблица для результата
-  
+
       WITH
        tmp_all AS (SELECT gpSelect.CardBankSecond
                           -- ПЕРЕВОДИМ в копейки
                         , SUM (FLOOR (100 * CAST ( ((COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0))) AS NUMERIC (16, 0)) ))  AS SummCardSecondRecalc
                    FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
                    WHERE (gpSelect.SummCardSecondRecalc <> 0 OR gpSelect.SummAvCardSecondRecalc <> 0)
-                     AND COALESCE (gpSelect.CardBankSecond,'') <> '' 
+                     AND COALESCE (gpSelect.CardBankSecond,'') <> ''
                    GROUP BY gpSelect.CardBankSecond
                    )
     , tmp AS (SELECT tmp_all.CardBankSecond
@@ -81,7 +81,7 @@ BEGIN
               SELECT ''   ::TVarChar
                    , NULL ::TFloat
              UNION ALL
-              --итого 
+              --итого
               SELECT ''  ::TVarChar
                   , (SUM (tmp.SummCardSecondRecalc)) :: TFloat
               FROM tmp
@@ -91,7 +91,9 @@ BEGIN
 
 
      -- сохранили свойство <Сформирована Выгрузка (да/нет)>
-    -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
      -- Результат
     -- RETURN QUERY
