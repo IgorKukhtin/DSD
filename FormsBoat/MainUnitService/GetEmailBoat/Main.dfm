@@ -83,14 +83,16 @@ object MainForm: TMainForm
       ExplicitWidth = 666
     end
   end
-  object PanelLoadXLS: TPanel
+  object PanelLoadFile: TPanel
     Left = 0
     Top = 258
     Width = 984
     Height = 70
     Align = alTop
-    Caption = 'Load XLS : '
+    Caption = 'Load File: '
     TabOrder = 4
+    ExplicitLeft = 1
+    ExplicitTop = 263
     object GaugeLoadXLS: TGauge
       Left = 1
       Top = 50
@@ -132,14 +134,6 @@ object MainForm: TMainForm
     TabOrder = 6
     OnClick = cbTimerClick
   end
-  object cbBeginMove: TCheckBox
-    Left = 24
-    Top = 413
-    Width = 217
-    Height = 17
-    Caption = 'Move '#1087#1088#1072#1081#1089' '#1074' '#1072#1082#1090#1091#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099
-    TabOrder = 7
-  end
   object PanelError: TPanel
     Left = 0
     Top = 0
@@ -152,7 +146,7 @@ object MainForm: TMainForm
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 8
+    TabOrder = 7
   end
   object PanelInfo: TPanel
     Left = 0
@@ -166,7 +160,7 @@ object MainForm: TMainForm
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-    TabOrder = 9
+    TabOrder = 8
   end
   object IdMessage: TIdMessage
     AttachmentEncoding = 'UUE'
@@ -179,8 +173,8 @@ object MainForm: TMainForm
     Recipients = <>
     ReplyTo = <>
     ConvertPreamble = True
-    Left = 120
-    Top = 40
+    Left = 440
+    Top = 24
   end
   object spSelect: TdsdStoredProc
     DataSet = ClientDataSet
@@ -190,18 +184,18 @@ object MainForm: TMainForm
       end>
     Params = <>
     PackSize = 1
-    Left = 40
-    Top = 8
+    Left = 32
+    Top = 128
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 88
-    Top = 152
+    Left = 112
+    Top = 130
   end
   object ActionList: TActionList
-    Left = 392
-    Top = 256
+    Left = 816
+    Top = 264
     object actExecuteImportSettings: TExecuteImportSettingsAction
       Category = 'Load'
       MoveParams = <>
@@ -332,8 +326,8 @@ object MainForm: TMainForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 104
-    Top = 304
+    Left = 368
+    Top = 288
   end
   object spSelectMove: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_LoadPriceList'
@@ -344,8 +338,8 @@ object MainForm: TMainForm
       end>
     Params = <>
     PackSize = 1
-    Left = 200
-    Top = 296
+    Left = 560
+    Top = 288
   end
   object spUpdateGoods: TdsdStoredProc
     StoredProcName = 'gpUpdatePartnerGoods'
@@ -361,8 +355,8 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 344
+    Left = 544
+    Top = 360
   end
   object spLoadPriceList: TdsdStoredProc
     StoredProcName = 'gpLoadPriceList'
@@ -378,15 +372,15 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 136
-    Top = 368
+    Left = 376
+    Top = 344
   end
   object Timer: TTimer
     Enabled = False
     Interval = 100
     OnTimer = TimerTimer
-    Left = 480
-    Top = 320
+    Left = 544
+    Top = 24
   end
   object IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL
     Destination = ':143'
@@ -396,8 +390,8 @@ object MainForm: TMainForm
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
-    Left = 416
-    Top = 32
+    Left = 328
+    Top = 24
   end
   object spGet_LoadPriceList: TdsdStoredProc
     StoredProcName = 'gpGet_LoadPriceList'
@@ -428,8 +422,8 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 232
+    Left = 736
+    Top = 208
   end
   object spUpdate_Protocol_LoadPriceList: TdsdStoredProc
     StoredProcName = 'gpUpdate_Protocol_LoadPriceList'
@@ -445,8 +439,8 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 288
+    Left = 792
+    Top = 336
   end
   object spExportSettings_Email: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ExportSettings_Email'
@@ -490,14 +484,14 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 72
-    Top = 224
+    Left = 408
+    Top = 208
   end
   object ExportSettingsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 128
-    Top = 192
+    Left = 544
+    Top = 128
   end
   object spRefreshMovementItemLastPriceList_View: TdsdStoredProc
     StoredProcName = 'lpRefreshMovementItemLastPriceList_View'
@@ -505,7 +499,7 @@ object MainForm: TMainForm
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 512
-    Top = 184
+    Left = 736
+    Top = 136
   end
 end
