@@ -663,12 +663,12 @@ BEGIN
                                  AS NUMERIC (16, 0))
                      ) / 100) :: TFloat AS SummCardSecondRecalc_00807
 
-            , FLOOR (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
+            , CAST (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
                                THEN 0
                           WHEN tmpMI_card_b2.Summ_calc <= 29999
-                          THEN CAST (tmpMI_card_b2.Summ_calc AS NUMERIC (16, 0))
-                          ELSE CAST (tmpMI_card_b2.Summ_calc AS NUMERIC (16, 0)) + (CAST (tmpMI_card_b2.Summ_calc AS NUMERIC (16, 0)) - 29999) * 0.005
-                     END) :: TFloat AS SummCardSecondRecalc_005
+                          THEN tmpMI_card_b2.Summ_calc
+                          ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
+                    END AS NUMERIC (16, 0)) :: TFloat AS SummCardSecondRecalc_005
 
             , MIFloat_SummCardSecondDiff.ValueData    AS SummCardSecondDiff
             , MIFloat_SummCardSecondCash.ValueData    AS SummCardSecondCash

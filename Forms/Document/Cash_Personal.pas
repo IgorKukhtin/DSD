@@ -114,6 +114,10 @@ type
     bbReport_Open: TdxBarButton;
     MoneyPlaceName: TcxGridDBColumn;
     ServiceDate_mp: TcxGridDBColumn;
+    SummCardSecond_all_00807: TcxGridDBColumn;
+    SummCardSecond_diff_00807: TcxGridDBColumn;
+    SummCardSecond_all_005: TcxGridDBColumn;
+    SummCardSecond_diff_005: TcxGridDBColumn;
   private
     { Private declarations }
   public
