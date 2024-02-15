@@ -7,12 +7,8 @@ uses
   System.Classes
   {$IFDEF ANDROID}
   , System.SysUtils, Androidapi.Helpers, Androidapi.JNI.GraphicsContentViewText,
-  Androidapi.JNI.JavaTypes, Androidapi.JNI.App, Androidapi.JNIBridge, Androidapi.JNI.Embarcadero
-
-{  ,FMX.Platform, FMX.Platform.Android, FMX.Helpers.Android, System.Rtti, FMX.Types, System.SysUtils,
-  Androidapi.JNI.App, Androidapi.JNI.GraphicsContentViewText, Androidapi.JNI.JavaTypes, Androidapi.Helpers,
-  FMX.Edit, Androidapi.JNIBridge,
-  Androidapi.JNI.Embarcadero}
+  Androidapi.JNI.JavaTypes, Androidapi.JNI.App, Androidapi.JNIBridge, Androidapi.JNI.Embarcadero,
+  FMX.TKRBarCodeScanner, FMX.Platform.Android, Androidapi.JNI.Os
   {$ENDIF}
   ;
 type
@@ -42,9 +38,11 @@ type
     FOnScanResult: TDataWedgeBarCodeResult;
     FOnScanResultDetails: TDataWedgeBarCodeResultDetails;
   {$IFDEF ANDROID}
+    FTKRBarCodeScanner: TTKRBarCodeScanner;
     FReceiver: JBroadcastReceiver;
     FListener : TCSListener;
 
+    procedure OnScanResultCamera(Sender: TObject; AData_String: String);
     procedure BroadcastReceiverOnReceive(csContext: JContext; csIntent: JIntent);
     procedure CallScan;
   {$ENDIF}
@@ -107,14 +105,22 @@ var
 {$ENDIF}
 begin
   inherited Create(AOwner);
-
   {$IFDEF ANDROID}
-  FListener := TCSListener.Create(Self);
-  FReceiver := TJFMXBroadcastReceiver.JavaClass.init(FListener);
-  IntentFilter := TJIntentFilter.Create;
-  IntentFilter.addAction(StringToJString(ourIntentAction));
-  IntentFilter.addCategory(TJIntent.JavaClass.CATEGORY_DEFAULT);
-  TAndroidHelper.Context.registerReceiver(FReceiver, IntentFilter);
+  FTKRBarCodeScanner := Nil;
+
+  if Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0 then
+  begin
+    FListener := TCSListener.Create(Self);
+    FReceiver := TJFMXBroadcastReceiver.JavaClass.init(FListener);
+    IntentFilter := TJIntentFilter.Create;
+    IntentFilter.addAction(StringToJString(ourIntentAction));
+    IntentFilter.addCategory(TJIntent.JavaClass.CATEGORY_DEFAULT);
+    TAndroidHelper.Context.registerReceiver(FReceiver, IntentFilter);
+  end else
+  begin
+    FTKRBarCodeScanner := TTKRBarCodeScanner.Create(Nil);
+    FTKRBarCodeScanner.OnScanResult := OnScanResultCamera;
+  end;
   {$ENDIF}
 end;
 
@@ -122,6 +128,7 @@ destructor TDataWedgeBarCode.Destroy;
 begin
   {$IFDEF ANDROID}
   if FReceiver <> nil then TAndroidHelper.Activity.UnregisterReceiver(FReceiver);
+  if Assigned(FTKRBarCodeScanner) then FTKRBarCodeScanner.Free;
   {$ENDIF}
   inherited Destroy;
 end;
@@ -129,7 +136,9 @@ end;
 procedure TDataWedgeBarCode.Scan;
 begin
   {$IFDEF ANDROID}
-  CallScan;
+  if Assigned(FTKRBarCodeScanner) then
+    FTKRBarCodeScanner.Scan
+  else CallScan;
   {$ENDIF}
 end;
 
@@ -151,11 +160,22 @@ end;
 {$ENDIF}
 
 {$IFDEF ANDROID}
+procedure TDataWedgeBarCode.OnScanResultCamera(Sender: TObject; AData_String: String);
+begin
+  if Assigned(FOnScanResultDetails) then
+      FOnScanResultDetails(Self, '', 'Camera', '', AData_String);
+
+  if Assigned(FOnScanResult) then
+      FOnScanResult(Self, AData_String);
+end;
+{$ENDIF}
+
+{$IFDEF ANDROID}
 procedure TDataWedgeBarCode.CallScan;
 var
   intent: JIntent;
 begin
-  intent := tjintent.Create;
+  intent := TJIntent.Create;
   intent.setAction(stringtojstring(ACTION_SOFTSCANTRIGGER));
   intent.putExtra(stringtojstring(EXTRA_PARAM), stringtojstring(DWAPI_TOGGLE_SCANNING));
   TAndroidHelper.Activity.sendBroadcast(intent);

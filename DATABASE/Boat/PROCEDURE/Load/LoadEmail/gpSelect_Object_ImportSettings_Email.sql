@@ -12,7 +12,9 @@ RETURNS TABLE (EmailKindId      Integer
              , zc_Enum_EmailKind_Mail TVarChar
 
              , Host TVarChar, Port TVarChar, Mail TVarChar
-             , UserName TVarChar, PasswordValue TVarChar, DirectoryMail TVarChar
+             , UserName TVarChar, Password TVarChar, DirectoryMail TVarChar
+             
+             , onTime Integer
 
               )
 AS
@@ -42,8 +44,10 @@ BEGIN
           , gpGet_Port.Value      AS Port
           , gpGet_Mail.Value      AS Mail
           , gpGet_User.Value      AS UserName
-          , gpGet_Password.Value  AS PasswordValue
+          , gpGet_Password.Value  AS Password
           , gpGet_Directory.Value AS DirectoryMail
+          
+          , 10                    AS onTime
 
      FROM tmpEmail AS gpGet_Host
           INNER JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailKindId      = gpGet_Host.EmailKindId AND gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()

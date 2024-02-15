@@ -146,7 +146,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\Main.pas">
+        <DCCReference Include="..\FormsBoat\MainUnitService\GetEmailBoat\Main.pas">
             <Form>MainForm</Form>
         </DCCReference>
         <DCCReference Include="..\SOURCE\Authentication.pas"/>

@@ -4,7 +4,7 @@ uses
   MidasLib,
   Vcl.Forms,
   SysUtils,
-  Main in '..\FormsFarmacy\MainUnitService\GetEmail\Main.pas' {MainForm},
+  Main in '..\FormsBoat\MainUnitService\GetEmailBoat\Main.pas' {MainForm},
   Authentication in '..\SOURCE\Authentication.pas',
   CommonData in '..\SOURCE\CommonData.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},

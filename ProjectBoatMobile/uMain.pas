@@ -40,11 +40,6 @@ type
     Panel1: TPanel;
     Label3: TLabel;
     Label4: TLabel;
-    WebServerLayout: TLayout;
-    WebServerLayout11: TLayout;
-    WebServerLabel: TLabel;
-    WebServerLayout12: TLayout;
-    WebServerEdit: TEdit;
     Layout43: TLayout;
     Layout5: TLayout;
     Layout37: TLayout;
@@ -89,9 +84,6 @@ type
     tiInformation: TTabItem;
     Panel17: TPanel;
     VertScrollBox6: TVertScrollBox;
-    lWebService: TLayout;
-    Label39: TLabel;
-    eWebService: TEdit;
     lMobileVersion: TLayout;
     Label31: TLabel;
     eMobileVersion: TEdit;
@@ -99,14 +91,16 @@ type
     Label48: TLabel;
     eServerVersion: TEdit;
     bUpdateProgram: TButton;
-    lCurWebService: TLayout;
-    Label81: TLabel;
-    eCurWebService: TEdit;
     pScanTest: TPanel;
     sbScan: TSpeedButton;
     Image8: TImage;
     lwPromoPartners: TListView;
     Label9: TLabel;
+    Layout6: TLayout;
+    Layout7: TLayout;
+    Layout8: TLayout;
+    LogInButtonCode: TButton;
+    StyleBook1: TStyleBook;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -122,12 +116,12 @@ type
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
+    procedure VertScrollBox6Click(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
-    FTemporaryServer: string;
-    FUseAdminRights: boolean;
+    FWebServer: string;
     FPermissionState: boolean;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
@@ -147,13 +141,15 @@ uses System.IOUtils, Authentication, Storage, CommonData, CursorUtils;
 
 {$R *.fmx}
 
+const
+  WebServer = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+
 // перевод формы в/из режим ожидания
 procedure TfrmMain.Wait(AWait: Boolean);
 begin
   LogInButton.Enabled := not AWait;
   LoginEdit.Enabled := not AWait;
   PasswordEdit.Enabled := not AWait;
-  WebServerEdit.Enabled := not AWait;
 
   if AWait then
     Screen_Cursor_crHourGlass
@@ -171,7 +167,6 @@ var
   {$ENDIF}
   SettingsFile : TIniFile;
 begin
-  FUseAdminRights := false;
 
   //Application.OnIdle := MobileIdle;
 
@@ -185,7 +180,7 @@ begin
   {$ENDIF}
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
-    FTemporaryServer := SettingsFile.ReadString('LOGIN', 'TemporaryServer', '');
+    FWebServer := SettingsFile.ReadString('LOGIN', 'WebServer', WebServer);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -241,6 +236,11 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
+procedure TfrmMain.VertScrollBox6Click(Sender: TObject);
+begin
+
+end;
+
 // возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
 procedure TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean);
 var
@@ -267,7 +267,6 @@ end;
 // обработка изменения закладки (формы)
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
-  FUseAdminRights := false;
   lwPromoPartners.Items.Clear;
   FDataWedgeBarCode.OnScanResultDetails := Nil;
   FDataWedgeBarCode.OnScanResult := Nil;
@@ -295,7 +294,7 @@ begin
     else sbScan.Visible := false;
 
     if tcMain.ActiveTab = tiMain then
-      lCaption.Text := 'Project Boot Mobile'
+      lCaption.Text := 'A g i l i s'
     else
     if tcMain.ActiveTab = tiInformation then
     begin
@@ -485,8 +484,7 @@ begin
     exit;
   end;
 
-  if gc_WebService = '' then
-    gc_WebService := WebServerEdit.Text;
+  if gc_WebService = '' then gc_WebService := FWebServer;
 
   Wait(True);
   try
@@ -542,7 +540,7 @@ begin
 //      DM.CheckUpdate; // проверка небходимости обновления
 //  end;
 
-  // сохранение логина в ini файле
+  // сохранение логина и веб сервера в ini файле
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
@@ -550,11 +548,6 @@ begin
   {$ENDIF}
   try
     SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
-    if FUseAdminRights then
-    begin
-      SettingsFile.WriteString('LOGIN', 'TemporaryServer', WebServerEdit.Text);
-      FTemporaryServer := WebServerEdit.Text;
-    end;
   finally
     FreeAndNil(SettingsFile);
   end;
