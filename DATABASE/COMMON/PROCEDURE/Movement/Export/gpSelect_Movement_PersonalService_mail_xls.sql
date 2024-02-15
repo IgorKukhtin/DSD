@@ -50,14 +50,42 @@ BEGIN
      --EXL  CardBankSecond, SummCardSecondRecalc
      IF inParam = 3
      THEN
+         IF vbUserId = 5 AND 1=0
+         THEN
+             RAISE EXCEPTION 'Ошибка. <%>'
+                           , (WITH tmp_all AS (SELECT gpSelect.CardBankSecond
+                                                      -- ПЕРЕВОДИМ
+                                                    , SUM (COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0))  AS SummCardSecondRecalc
+                                               FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
+                                               WHERE (gpSelect.SummCardSecondRecalc <> 0 OR gpSelect.SummAvCardSecondRecalc <> 0)
+                                                 AND COALESCE (gpSelect.CardBankSecond,'') <> ''
+                                               GROUP BY gpSelect.CardBankSecond
+                                               )
+                                , tmp AS (SELECT tmp_all.CardBankSecond
+                                                 -- % и округлили
+                                               , CAST (CASE WHEN tmp_all.SummCardSecondRecalc  <= 29999
+                                                            THEN tmp_all.SummCardSecondRecalc 
+                                                            ELSE tmp_all.SummCardSecondRecalc  + (tmp_all.SummCardSecondRecalc - 29999) * 0.005
+                                                       END AS NUMERIC (16, 0)) AS SummCardSecondRecalc
+                                          FROM tmp_all
+                                          WHERE 4000 <= tmp_all.SummCardSecondRecalc
+                                         )
+                        
+                             SELECT tmp.SummCardSecondRecalc ::TFloat
+                             FROM tmp
+                             WHERE tmp.CardBankSecond = '4218550008680591'
+                             )
+                            ;
+    
+         END IF;
 
-     RETURN QUERY
-     -- Таблица для результата
-
+      -- результат
+      RETURN QUERY
       WITH
        tmp_all AS (SELECT gpSelect.CardBankSecond
-                          -- ПЕРЕВОДИМ в копейки
-                        , SUM (FLOOR (100 * CAST ( ((COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0))) AS NUMERIC (16, 0)) ))  AS SummCardSecondRecalc
+                          -- ПЕРЕВОДИМ
+                        , SUM (COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0))  AS SummCardSecondRecalc
+
                    FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
                    WHERE (gpSelect.SummCardSecondRecalc <> 0 OR gpSelect.SummAvCardSecondRecalc <> 0)
                      AND COALESCE (gpSelect.CardBankSecond,'') <> ''
@@ -65,10 +93,10 @@ BEGIN
                    )
     , tmp AS (SELECT tmp_all.CardBankSecond
                      -- % и округлили
-                   , FLOOR (CASE WHEN tmp_all.SummCardSecondRecalc / 100 <= 29999
-                                 THEN tmp_all.SummCardSecondRecalc / 100
-                                 ELSE tmp_all.SummCardSecondRecalc / 100 + (tmp_all.SummCardSecondRecalc / 100 - 29999) * 0.005
-                            END) AS SummCardSecondRecalc
+                   , CAST (CASE WHEN tmp_all.SummCardSecondRecalc  <= 29999
+                                THEN tmp_all.SummCardSecondRecalc 
+                                ELSE tmp_all.SummCardSecondRecalc  + (tmp_all.SummCardSecondRecalc - 29999) * 0.005
+                           END AS NUMERIC (16, 0)) AS SummCardSecondRecalc
               FROM tmp_all
               WHERE 4000 <= tmp_all.SummCardSecondRecalc
              )
