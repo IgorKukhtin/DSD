@@ -152,6 +152,7 @@ type
     actGet_Export_EmailF2_xls: TdsdExecStoredProc;
     mactExportF2_xls: TMultiAction;
     bbtExportF2_xls: TdxBarButton;
+    is4000: TcxGridDBColumn;
   private
     { Private declarations }
   public

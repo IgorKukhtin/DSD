@@ -22,8 +22,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 539
-        ExplicitLeft = -56
-        ExplicitTop = -6
         ExplicitWidth = 1221
         ExplicitHeight = 539
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1145,6 +1143,15 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderHint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1077
             Options.Editing = False
             Width = 80
+          end
+          object is4000: TcxGridDBColumn
+            Caption = #1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
+            DataBinding.FieldName = 'is4000'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
+            Width = 70
           end
         end
       end
