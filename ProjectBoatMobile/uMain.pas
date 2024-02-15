@@ -121,6 +121,7 @@ type
     procedure ShowInformation;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
+    procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -267,6 +268,10 @@ end;
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
   FUseAdminRights := false;
+  lwPromoPartners.Items.Clear;
+  FDataWedgeBarCode.OnScanResultDetails := Nil;
+  FDataWedgeBarCode.OnScanResult := Nil;
+  PasswordEdit.Text := '';
 
   { настройка панели возврата }
   if (tcMain.ActiveTab = tiStart)  then
@@ -293,7 +298,10 @@ begin
       lCaption.Text := 'Project Boot Mobile'
     else
     if tcMain.ActiveTab = tiInformation then
-      lCaption.Text := 'Информация'
+    begin
+      lCaption.Text := 'Информация';
+      FDataWedgeBarCode.OnScanResultDetails := OnScanResultDetails;
+    end
     else
   end;
 end;
@@ -553,5 +561,21 @@ begin
 
   SwitchToForm(tiMain, nil);
 end;
+
+procedure TfrmMain.OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
+begin
+  with TListViewItem(TAppearanceListViewItems(lwPromoPartners.Items.AddItem(0))) do
+  begin
+    Data['ActionLabel'] := 'Action';
+    Data['Action'] := AAction;
+    Data['SourceLabel'] := 'Source';
+    Data['Source'] := ASource;
+    Data['Label_TypeLabel'] := 'Label_Type';
+    Data['Label_Type'] := ALabel_Type;
+    Data['Data_StringLabel'] := 'Data_String';
+    Data['Data_String'] := AData_String;
+  end;
+end;
+
 
 end.
