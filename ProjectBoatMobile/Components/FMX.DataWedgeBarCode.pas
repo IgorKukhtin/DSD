@@ -34,7 +34,7 @@ type
   end;
   {$ENDIF}
 
-  [ComponentPlatformsAttribute(pidAndroid)]
+  [ComponentPlatformsAttribute(pidAndroidArm32)]
   TDataWedgeBarCode = class(TComponent)
   public
   protected

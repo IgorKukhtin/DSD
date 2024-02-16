@@ -11,14 +11,14 @@ uses
   {$IFDEF ANDROID}
   ,FMX.Platform, FMX.Helpers.Android, System.Rtti, FMX.Types, System.SysUtils,
   Androidapi.JNI.GraphicsContentViewText, Androidapi.JNI.JavaTypes, Androidapi.Helpers,
-  FMX.StdCtrls, FMX.Edit
+  FMX.StdCtrls, FMX.Edit, Androidapi.JNI.App
   {$ENDIF}
   ;
 type
   TTKRBarCodeScannerResult = procedure(Sender: TObject; AResult: String) of object;
 
 type
-  [ComponentPlatformsAttribute(pidAndroid or pidiOSDevice)]
+  [ComponentPlatformsAttribute(pidAndroidArm32 or pidiOSDevice32)]
   TTKRBarCodeScanner = class(TComponent)
   public
     type TBarcodeMode = (bmOneD, bmQRCode, bmProduct, bmDataMatrix);
@@ -162,7 +162,7 @@ begin
     intent.setAction(stringtojstring('com.google.zxing.client.android.SCAN'));
     aScanCmd := GetModeString;
     intent.putExtra(tjintent.JavaClass.EXTRA_TEXT, stringtojstring(aScanCmd));
-    sharedactivity.startActivityForResult(intent, 0);
+    TAndroidHelper.Activity.startActivity(intent);
   end;
 end;
 {$ENDIF}

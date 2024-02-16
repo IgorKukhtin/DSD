@@ -53,7 +53,7 @@ function IsWow64: Boolean;
 
 implementation
 
-uses SysUtils;
+uses SysUtils, ShellAPI, System.RegularExpressions;
 
 function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
 var
@@ -196,30 +196,90 @@ Var
   Data:Pointer;
   VersionInfo:PVSFixedFileInfo;
   Size:Integer;
+  versionName: String;
+  I, J, L: Integer;
+  List: TStringList;
+  Res: TArray<string>;
+  StartInfo: TStartupInfo;
+  ProcInfo: TProcessInformation;
 Begin
-  Size:=GetFileVersionInfoSize(PChar(FileName),Dummy);
-  If Size=0 Then
-  Begin
-    Result.VerHigh:=0;                     
+  if AnsiLowerCase(ExtractFileExt(FileName)) = '.apk' then
+  begin
+    Result.VerHigh:=0;
     Result.VerLow:=0;
-  End;
-   GetMem(Data,Size);
-  Try
-    If Not GetFileVersionInfo(PChar(FileName),0,Size,Data) Then
+    if FileExists(ExtractFilePath(ParamStr(0)) + '\APKVersion.txt') then DeleteFile(ExtractFilePath(ParamStr(0)) + '\APKVersion.txt');
+
+    StartInfo.wShowWindow := SW_HIDE;
+    StartInfo.dwFlags := STARTF_USESHOWWINDOW;
+
+    // Запускаем процесс получения версии apk
+    // Ожидаем завершения приложения
+    if CreateProcess(nil, PChar('cmd.exe /c aapt.exe dump badging ' + ExtractFileName(FileName) + ' > APKVersion.txt'), nil, nil, false,
+                     CREATE_NEW_CONSOLE or NORMAL_PRIORITY_CLASS, nil,
+                     PChar(ExtractFilePath(FileName)), StartInfo, ProcInfo) then
+    begin
+      WaitForSingleObject(ProcInfo.hProcess, INFINITE);
+      // Free the Handles
+      CloseHandle(ProcInfo.hProcess);
+      CloseHandle(ProcInfo.hThread);
+    end;
+
+    // ShellExecute(0,'open','cmd.exe',PWideChar('/c aapt.exe dump badging ' + ExtractFileName(FileName) + ' > APKVersion.txt'), PWideChar(ExtractFileDir(ParamStr(0))), SW_HIDE);
+
+    if FileExists(ExtractFilePath(ParamStr(0)) + '\APKVersion.txt') then
+    begin
+      List := TStringList.Create;
+      try
+        List.LoadFromFile(ExtractFileDir(ParamStr(0)) + '\APKVersion.txt');
+        if List.Count = 0 then Exit;
+
+        Res := TRegEx.Split(List.Strings[0], ' ');
+        for I := 0 to High(Res) do
+          if Pos('versionname', AnsiLowerCase(Res[I])) = 1 then versionName := StringReplace(Copy(Res[I], Pos('=', Res[I]) + 1, Length(Res[I])), '''', '', [rfReplaceAll]);
+
+        J := 0;
+        Res := TRegEx.Split(versionName, '\.');
+        for I := High(Res) downto 0 do
+        begin
+          case J of
+            0 : if TryStrToInt(Res[I], L) then Result.VerLow := Result.VerLow + L;
+            1 : if TryStrToInt(Res[I], L) then Result.VerLow := Result.VerLow + L * 65536;
+            2 : if TryStrToInt(Res[I], L) then Result.VerHigh := Result.VerHigh + L;
+            3 : if TryStrToInt(Res[I], L) then Result.VerHigh := Result.VerHigh + L * 65536;
+          end;
+          Inc(J);
+        end;
+      finally
+        List.Free;
+        if FileExists(ExtractFilePath(ParamStr(0)) + '\APKVersion.txt') then DeleteFile(ExtractFilePath(ParamStr(0)) + '\APKVersion.txt')
+      end;
+    end;
+  end else
+  begin
+    Size:=GetFileVersionInfoSize(PChar(FileName),Dummy);
+    If Size=0 Then
     Begin
       Result.VerHigh:=0;
       Result.VerLow:=0;
-      Exit;
     End;
-    VerQueryValue(Data,'\',Pointer(VersionInfo),Dummy);
-    With Result,VersionInfo^ Do
-    Begin
-      VerHigh:=dwFileVersionMS;          
-      VerLow:=dwFileVersionLS;
+     GetMem(Data,Size);
+    Try
+      If Not GetFileVersionInfo(PChar(FileName),0,Size,Data) Then
+      Begin
+        Result.VerHigh:=0;
+        Result.VerLow:=0;
+        Exit;
+      End;
+      VerQueryValue(Data,'\',Pointer(VersionInfo),Dummy);
+      With Result,VersionInfo^ Do
+      Begin
+        VerHigh:=dwFileVersionMS;
+        VerLow:=dwFileVersionLS;
+      End;
+    Finally
+      FreeMem(Data);
     End;
-  Finally
-    FreeMem(Data);
-  End;
+  end;
 End;
 
 // Функция проверяет разрядность EXE файлам

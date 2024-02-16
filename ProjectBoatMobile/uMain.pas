@@ -9,7 +9,7 @@ uses
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
   System.IniFiles, FMX.VirtualKeyboard, FMX.DialogService, FMX.DataWedgeBarCode,
   FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
-  FMX.ListView
+  FMX.ListView, uDM
   {$IFDEF ANDROID}
   ,System.Permissions,Androidapi.JNI.Os, FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
@@ -69,7 +69,7 @@ type
     bReport: TButton;
     Image6: TImage;
     Label7: TLabel;
-    bSync: TButton;
+    bLogIn: TButton;
     Image3: TImage;
     Label8: TLabel;
     bInfo: TButton;
@@ -99,8 +99,18 @@ type
     Layout6: TLayout;
     Layout7: TLayout;
     Layout8: TLayout;
-    LogInButtonCode: TButton;
-    StyleBook1: TStyleBook;
+    LogInCodeButton: TButton;
+    pProgress: TPanel;
+    Layout9: TLayout;
+    Pie3: TPie;
+    pieProgress: TPie;
+    Pie1: TPie;
+    Circle1: TCircle;
+    pieAllProgress: TPie;
+    lProgress: TLabel;
+    lProgressName: TLabel;
+    Layout10: TLayout;
+    lUser: TLabel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -118,6 +128,8 @@ type
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
     procedure OnScanResultLogin(Sender: TObject; AData_String: String);
     procedure VertScrollBox6Click(Sender: TObject);
+    procedure bLogInClick(Sender: TObject);
+    procedure bUpdateProgramClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -312,41 +324,27 @@ var
   Res : integer;
 begin
 
-//  eMobileVersion.Text := DM.GetCurrentVersion;
+  eMobileVersion.Text := DM.GetCurrentVersion;
 
-//  Res := DM.CompareVersion(eMobileVersion.Text, DM.tblObject_ConstMobileVersion.AsString);
-//  if Res > 0 then
-//  begin
-//    lServerVersion.Height := 60;
-//    eServerVersion.Text := DM.tblObject_ConstMobileVersion.AsString;
-//
-//    {$IFDEF ANDROID}
-//    bUpdateProgram.Visible := true
-//    {$ELSE}
-//    bUpdateProgram.Visible := false;
-//    {$ENDIF}
-//  end
-//  else
-//    lServerVersion.Height := 0;
+  {$IFDEF ANDROID}
+  eServerVersion.Text := DM.GetMobileVersion;
+  Res := DM.CompareVersion(eMobileVersion.Text, eServerVersion.Text);
+  {$ELSE}
+  Res := 0;
+  {$ENDIF}
 
-//  eWebService.Text := DM.tblObject_ConstWebService.AsString
-//            + ' ; ' + DM.tblObject_ConstWebService_two.AsString
-//            + ' ; ' + DM.tblObject_ConstWebService_three.AsString
-//            + ' ; ' + DM.tblObject_ConstWebService_four.AsString
-//    ;
+  if Res > 0 then
+  begin
+    lServerVersion.Visible := true;
 
-//  if not SameText(gc_WebService, DM.tblObject_ConstWebService.AsString) then
-//  begin
-//    lCurWebService.Height := 60;
-//    eCurWebService.Text := gc_WebService;
-//    if High(gc_WebServers) > 1 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers[1];
-//    if High(gc_WebServers_r) > 0 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers_r[0];
-//    if High(gc_WebServers_r) > 1 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers_r[1];
-//  end
-//  else
-//    lCurWebService.Height := 0;
-//  eSyncDateIn.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateIn.AsDateTime);
-//  eSyncDateOut.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateOut.AsDateTime);
+    {$IFDEF ANDROID}
+    bUpdateProgram.Visible := true;
+    {$ELSE}
+    bUpdateProgram.Visible := false;
+    {$ENDIF}
+  end
+  else
+    lServerVersion.Visible := False;
 
   SwitchToForm(tiInformation, nil);
 end;
@@ -358,9 +356,20 @@ begin
 end;
 
 // возврат на форму логина
+procedure TfrmMain.bLogInClick(Sender: TObject);
+begin
+  FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
+  FDataWedgeBarCode.Scan;
+end;
+
 procedure TfrmMain.bReloginClick(Sender: TObject);
 begin
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bUpdateProgramClick(Sender: TObject);
+begin
+  DM.UpdateProgram(mrYes);
 end;
 
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
@@ -371,8 +380,8 @@ end;
 
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
-var
-  Mes : string;
+//var
+//  Mes : string;
 begin
 //  if (tcMain.ActiveTab = tiOrderExternal) and FCanEditDocument then
 //  begin
@@ -431,9 +440,9 @@ begin
     begin
       Key := 0;
 
-//      if pProgress.Visible then
-//        exit
-//      else
+      if pProgress.Visible then
+        exit
+      else
 //      if ppEnterAmount.IsOpen then
 //        ppEnterAmount.IsOpen := false
 //      else
@@ -475,9 +484,7 @@ procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
   SettingsFile : TIniFile;
-  NeedSync : boolean;
 begin
-  NeedSync := not assigned(gc_User);
 
   if not FPermissionState then
   begin
@@ -498,6 +505,8 @@ begin
       Exit;
     end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
 
+    if Assigned(gc_User) then lUser.Text := gc_User.Login;
+
     Wait(False);
 
     if ErrorMessage <> '' then
@@ -514,17 +523,9 @@ begin
     //
   end;
 
-//
-//  if not gc_User.Local then
-//  begin
-//    if not DM.GetConfigurationInfo then
-//      Exit;
-//
-//    if NeedSync then
-//      DM.SynchronizeWithMainDatabase
-//    else
-//      DM.CheckUpdate; // проверка небходимости обновления
-//  end;
+  {$IFDEF ANDROID}
+  DM.CheckUpdate; // проверка небходимости обновления
+  {$ENDIF}
 
   // сохранение логина и веб сервера в ini файле
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -563,39 +564,40 @@ begin
 
   FDataWedgeBarCode.OnScanResult := Nil;
 
-  Wait(True);
   try
-    ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, AData_String, gc_User);
 
-    Wait(False);
+    Wait(True);
+    try
+      lUser.Text := '';
+      ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, AData_String, gc_User);
+      if Assigned(gc_User) then lUser.Text := gc_User.Login;
 
-    if ErrorMessage <> '' then
-    begin
-      ShowMessage(ErrorMessage);
-      exit;
-    end;
-  except on E: Exception do
-    begin
       Wait(False);
-      ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
-      exit;
+
+      if ErrorMessage <> '' then
+      begin
+        ShowMessage(ErrorMessage);
+        exit;
+      end;
+    except on E: Exception do
+      begin
+        Wait(False);
+        ErrorMessage := 'Нет связи с сервером. Продолжение работы невозможно';
+        ShowMessage(ErrorMessage+#13#10 + E.Message);
+        exit;
+      end;
+      //
     end;
-    //
+
+    {$IFDEF ANDROID}
+    DM.CheckUpdate; // проверка небходимости обновления
+    {$ENDIF}
+
+  finally
+    if (ErrorMessage <> '') and (tcMain.ActiveTab <> tiStart) then
+      ReturnPriorForm
+    else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then SwitchToForm(tiMain, nil);
   end;
-
-
-//  if not gc_User.Local then
-//  begin
-//    if not DM.GetConfigurationInfo then
-//      Exit;
-//
-//    if NeedSync then
-//      DM.SynchronizeWithMainDatabase
-//    else
-//      DM.CheckUpdate; // проверка небходимости обновления
-//  end;
-
-  SwitchToForm(tiMain, nil);
 end;
 
 end.

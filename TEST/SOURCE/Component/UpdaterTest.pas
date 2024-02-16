@@ -139,7 +139,9 @@ end;
 
 procedure TUpdaterTest.UpdateMobile;
 begin
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\ProjectMobile.apk');
+  if dsdProject = prBoat then
+    SaveFile(ExtractFileDir(ParamStr(0)) + '\BoatMobile.apk')
+  else SaveFile(ExtractFileDir(ParamStr(0)) + '\ProjectMobile.apk');
 end;
 
 procedure TUpdaterTest.UpdateScale;
