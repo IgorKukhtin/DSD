@@ -116,6 +116,7 @@ type
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
+    procedure OnScanResultLogin(Sender: TObject; AData_String: String);
     procedure VertScrollBox6Click(Sender: TObject);
   private
     { Private declarations }
@@ -488,7 +489,14 @@ begin
 
   Wait(True);
   try
-    ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
+
+    if TButton(Sender).Tag = 1 then
+    begin
+      FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
+      FDataWedgeBarCode.Scan;
+      Wait(False);
+      Exit;
+    end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
 
     Wait(False);
 
@@ -501,33 +509,11 @@ begin
     begin
       Wait(False);
 
-      if assigned(gc_User) then  { Проверяем login и password в локальной БД }
-      begin
-        gc_User.Local := true;
-
-        if (LoginEdit.Text <> gc_User.Login) or (PasswordEdit.Text <> gc_User.Password) then
-        begin
-          ShowMessage('Введен неправильный логин или пароль');
-          exit;
-        end
-        else
-          ShowMessage('Нет связи с сервером. Программа переведена в режим автономной работы.');
-      end
-      else
-      begin
-        ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
-        exit;
-      end;
+      ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
     end;
     //
   end;
 
-  // !!!Optimize!!!
-  //if SyncCheckBox.IsChecked = TRUE then
-  //   fOptimizeDB;
-
-//  // сохранение координат при логине и запуск таймера
-//  tSavePathTimer(tSavePath);
 //
 //  if not gc_User.Local then
 //  begin
@@ -570,5 +556,46 @@ begin
   end;
 end;
 
+procedure TfrmMain.OnScanResultLogin(Sender: TObject; AData_String: String);
+var
+  ErrorMessage: String;
+begin
+
+  FDataWedgeBarCode.OnScanResult := Nil;
+
+  Wait(True);
+  try
+    ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, AData_String, gc_User);
+
+    Wait(False);
+
+    if ErrorMessage <> '' then
+    begin
+      ShowMessage(ErrorMessage);
+      exit;
+    end;
+  except on E: Exception do
+    begin
+      Wait(False);
+      ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
+      exit;
+    end;
+    //
+  end;
+
+
+//  if not gc_User.Local then
+//  begin
+//    if not DM.GetConfigurationInfo then
+//      Exit;
+//
+//    if NeedSync then
+//      DM.SynchronizeWithMainDatabase
+//    else
+//      DM.CheckUpdate; // проверка небходимости обновления
+//  end;
+
+  SwitchToForm(tiMain, nil);
+end;
 
 end.

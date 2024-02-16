@@ -39,8 +39,8 @@ type
     constructor Create(ALogin, APassword: string;
       ASession: String = ''; ALocal: Boolean = true);
 
-    property Login: String read FLogin;
-    property Password: String read FPassword;
+    property Login: String read FLogin write FLogin;
+    property Password: String read FPassword write FPassword;
     property Session: String read FSession write FSession;
     Property Local: Boolean read FLocal Write SetLocal;
   end;
@@ -56,6 +56,9 @@ type
     ///	</summary>
     class function CheckLogin(pStorage: IStorage;
       const pUserName, pPassword: string; var pUser: TUser;
+      ANeedShowException: Boolean = True): string;
+    class function CheckLoginCode(pStorage: IStorage;
+      const pCode: string; var pUser: TUser;
       ANeedShowException: Boolean = True): string;
   end;
 
@@ -207,6 +210,8 @@ begin
         begin
           if Assigned(pUser) then
           begin
+            pUser.Login := pUserName;
+            pUser.Password := pPassword;
             pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
             pUser.Local := false;
           end
@@ -221,6 +226,157 @@ begin
   if not ConnectOk then
     raise Exception.Create('Не удалось установить соединение');
 end;
+{------------------------------------------------------------------------------}
+class function TAuthentication.CheckLoginCode(pStorage: IStorage;
+  const pCode: string; var pUser: TUser;
+  ANeedShowException: Boolean = True): string;
+var
+  N: IXMLNode;
+  {$IFDEF ANDROID}
+  obj: JObject;
+  tm: JTelephonyManager;
+  LocaleService: IFMXLocaleService;
+  {$ENDIF}
+  lIMEI      : String;
+  lBrand     : String;
+  lModel     : String;
+  lLang      : String;
+  lVesion    : String;
+  lVesion_two: String;
+  lVesionSDK : String;
+  ConnectOk: boolean;
+  ServNum: integer;
+const
+  {создаем XML вызова процедуры на сервере}
+  pXML =
+  '<xml Session = "" >' +
+    '<gpCheckLoginCodeMobile OutputType="otResult">' +
+      '<inUserId       DataType="ftInteger" Value="%s" />' +
+      '<inSerialNumber DataType="ftString" Value="%s" />' +
+      '<inModel        DataType="ftString" Value="%s" />' +
+      '<inVesion       DataType="ftString" Value="%s" />' +
+      '<inVesionSDK    DataType="ftString" Value="%s" />' +
+    '</gpCheckLoginCodeMobile>' +
+  '</xml>';
+begin
+  lIMEI      := '';
+  lBrand     := '';
+  lModel     := '';
+  lLang      := '';
+  lVesion    := '';
+  lVesion_two:= '';
+  lVesionSDK := '';
+
+  {$IFDEF ANDROID}
+  // Модель телефона
+  try lBrand := JStringToString(TJBuild.JavaClass.BRAND); except lBrand:='???'; end;
+  // Модель телефона
+  try lModel := JStringToString(TJBuild.JavaClass.MODEL); except lModel:='???'; end;
+  try lModel := lModel + ' PRODUCT:' + JStringToString(TJBuild.JavaClass.PRODUCT)
+                       + ' SERIAL:' + JStringToString(TJBuild.JavaClass.SERIAL)
+                       + ' DEVICE:' + JStringToString(TJBuild.JavaClass.DEVICE)
+                        ;
+  except lModel:= lModel + ' ???'; end;
+  // Версия Android
+  try lVesion:= TOSVersion.Name; except lVesion:='???'; end;
+  // Версия Android
+  try lVesion_two:= Format('%d.%d', [TOSVersion.Major,TOSVersion.Minor]); except lVesion_two:='?.?'; end;
+  try lVesion_two:= lVesion_two + ' Platform :' + Format('%d', [Ord(TOSVersion.Platform)]); except lVesion_two:= lVesion_two + ' Platform :???'; end;
+  // Версия SDK
+  try lVesionSDK:= JStringToString(TJBuild_VERSION.JavaClass.SDK); except lVesionSDK:= '???'; end;
+  try lVesionSDK:= lVesionSDK + '(' + IntToStr(TJBuild_VERSION.JavaClass.SDK_INT)+')'; except lVesionSDK:= lVesionSDK + ' (?)'; end;
+  // Версия ПРОГРАММЫ - захардкодим в SDK
+  lVesionSDK:= lVesionSDK + ' + PM: ' + DM.GetCurrentVersion;
+  //
+  try
+    if TPlatformServices.Current.SupportsPlatformService(IFMXLocaleService, IInterface(LocaleService))
+    then
+      lLang := LocaleService.GetCurrentLangID()
+    else lLang := '?1?';
+  except lLang:='???'; end;
+
+  try
+    obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
+    if obj <> nil then
+    begin
+      tm := TJTelephonyManager.Wrap( (obj as ILocalObject).GetObjectID );
+      if tm <> nil then begin
+        // IMEI телефона - работает
+         lIMEI      := JStringToString(tm.getDeviceId);
+        // Модель телефона
+        //lModel     := '???'; //
+        // Версия Android
+        //lVesion    := '???'; // JStringToString(tm.getDeviceSoftwareVersion);
+        // Версия SDK
+        //lVesionSDK := '???';
+      end;
+    end;
+  except lIMEI:=''; end;
+
+  if lIMEI = '' then begin
+    // IMEI телефона - работает
+    lIMEI      := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,
+                                  TJSettings_Secure.JavaClass.ANDROID_ID));
+    // Модель телефона
+    //lModel     := '???';
+    // Версия Android
+    //lVesion    := '???';
+    // Версия SDK
+    //lVesionSDK := '???';
+  end;
+  {$ELSE}
+  lIMEI      := '';
+  lBrand     := '';
+  lModel     := '';
+  lLang      := '';
+  lVesion    := '';
+  lVesion_two:= '';
+  lVesionSDK := '';
+  {$ENDIF}
+
+  ConnectOk := false;
+  ServNum := -1;
+  repeat
+    try
+      inc(ServNum);
+      if ServNum > 0 then
+      begin
+        gc_WebService := gc_WebServers[ServNum];
+        pStorage.Connection := gc_WebService;
+      end;
+
+      lModel:= lBrand + ' ' + lModel;
+      lVesion:= lVesion + ' '  + lVesion_two;
+      //lVesionSDK:= lVesionSDK;
+
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pCode, lIMEI, lModel, lVesion, lVesionSDK]), False, 1, ANeedShowException)).DocumentElement;
+      if Assigned(N) then
+      begin
+        Result := N.GetAttribute(AnsiLowerCase(gcMessage));
+
+        ConnectOk := true;
+
+        if Result = '' then
+        begin
+          if Assigned(pUser) then
+          begin
+            pUser.Login := N.GetAttribute(AnsiLowerCase(gcUserLogin));
+            pUser.Password := N.GetAttribute(AnsiLowerCase(gcUserPassword));
+            pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
+            pUser.Local := false;
+          end
+          else
+            pUser := TUser.Create(N.GetAttribute(AnsiLowerCase(gcUserLogin)), N.GetAttribute(AnsiLowerCase(gcUserPassword)), N.GetAttribute(AnsiLowerCase(gcSession)), false);
+        end;
+      end;
+    except
+    end;
+  until ConnectOk or (ServNum >= Length(gc_WebServers) - 1);
+
+  if not ConnectOk then
+    raise Exception.Create('Не удалось установить соединение');
+end;
+
 
 procedure TUser.SetLocal(const Value: Boolean);
 begin

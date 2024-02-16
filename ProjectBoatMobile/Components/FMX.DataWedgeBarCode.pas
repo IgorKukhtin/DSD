@@ -5,6 +5,9 @@ interface
 
 uses
   System.Classes
+  {$IFDEF MSWINDOWS}
+  , FMX.Dialogs
+  {$ENDIF}
   {$IFDEF ANDROID}
   , System.SysUtils, Androidapi.Helpers, Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes, Androidapi.JNI.App, Androidapi.JNIBridge, Androidapi.JNI.Embarcadero,
@@ -134,11 +137,24 @@ begin
 end;
 
 procedure TDataWedgeBarCode.Scan;
+  {$IFDEF MSWINDOWS}
+  var S: String;
+  {$ENDIF}
 begin
   {$IFDEF ANDROID}
   if Assigned(FTKRBarCodeScanner) then
     FTKRBarCodeScanner.Scan
   else CallScan;
+  {$ENDIF}
+  {$IFDEF MSWINDOWS}
+  S := InputBox('Введите код', 'Код', '');
+  if S = '' then Exit;
+
+  if Assigned(FOnScanResultDetails) then
+      FOnScanResultDetails(Self, '', 'InputBox', '', S);
+
+  if Assigned(FOnScanResult) then
+      FOnScanResult(Self, S);
   {$ENDIF}
 end;
 

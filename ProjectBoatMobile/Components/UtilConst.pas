@@ -285,6 +285,8 @@ const
   gcUserInfo = 'UserInfo';
   gcUserName = 'UserName';
   gcMessage = 'outMessage';
+  gcUserLogin = 'outUserLogin';
+  gcUserPassword = 'outUserPassword';
 
   {контсатнты для XML}
   gcEmptyXML = '<xml/>';
