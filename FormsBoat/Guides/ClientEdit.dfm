@@ -45,8 +45,8 @@ object ClientEditForm: TClientEditForm
     TabOrder = 3
   end
   object cxPageControl1: TcxPageControl
-    Left = 8
-    Top = 8
+    Left = 24
+    Top = 32
     Width = 576
     Height = 353
     TabOrder = 2
@@ -58,7 +58,6 @@ object ClientEditForm: TClientEditForm
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 577
       object cxLabel2: TcxLabel
         Left = 10
         Top = 8
@@ -121,7 +120,7 @@ object ClientEditForm: TClientEditForm
       object edStreet_add: TcxTextEdit
         Left = 295
         Top = 163
-        TabOrder = 15
+        TabOrder = 14
         Width = 273
       end
       object edEmail: TcxTextEdit
@@ -154,12 +153,12 @@ object ClientEditForm: TClientEditForm
       end
       object cxLabel20: TcxLabel
         Left = 295
-        Top = 10
+        Top = 8
         Caption = 'Tax Number'
       end
       object edTaxNumber: TcxTextEdit
         Left = 295
-        Top = 26
+        Top = 25
         TabOrder = 9
         Width = 127
       end
@@ -178,7 +177,7 @@ object ClientEditForm: TClientEditForm
       object edName3: TcxTextEdit
         Left = 394
         Top = 249
-        TabOrder = 16
+        TabOrder = 15
         Width = 174
       end
       object cxLabel22: TcxLabel
@@ -199,7 +198,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 17
+        TabOrder = 16
         Width = 273
       end
       object cxLabel23: TcxLabel
@@ -226,7 +225,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 21
+        TabOrder = 19
         Width = 130
       end
       object cxLabel14: TcxLabel
@@ -243,7 +242,6 @@ object ClientEditForm: TClientEditForm
     object Detail: TcxTabSheet
       Caption = 'Detail'
       ImageIndex = 1
-      ExplicitWidth = 574
       object edIBAN: TcxTextEdit
         Left = 270
         Top = 112
@@ -341,7 +339,7 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 11
+        TabOrder = 9
         Width = 130
       end
       object cxLabel5: TcxLabel
@@ -959,8 +957,8 @@ object ClientEditForm: TClientEditForm
     Top = 379
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 296
+    Left = 112
+    Top = 280
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'
@@ -988,8 +986,8 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 525
-    Top = 291
+    Left = 277
+    Top = 227
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
