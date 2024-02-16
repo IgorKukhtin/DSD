@@ -44,6 +44,7 @@ type
     TaxKindName_Info: TcxGridDBColumn;
     TaxKindName_Comment: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    TaxNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public
