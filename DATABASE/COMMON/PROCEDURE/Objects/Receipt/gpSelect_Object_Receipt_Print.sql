@@ -67,6 +67,8 @@ BEGIN
          , Object_GoodsChild.ObjectCode       AS GoodsChildCode
          , CASE WHEN Object_GoodsKindChild.Id <> zc_GoodsKind_WorkProgress() AND Object_GoodsKindChild.ObjectCode = 0
                      THEN Object_GoodsChild.ValueData || ' ' || Object_GoodsKindChild.ValueData
+                WHEN Object_GoodsKindChild.Id <> zc_GoodsKind_WorkProgress()
+                     THEN Object_GoodsChild.ValueData || ' ' || Object_GoodsKindChild.ValueData
                 ELSE Object_GoodsChild.ValueData
            END :: TVarChar AS GoodsChildName
 
