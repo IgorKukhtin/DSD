@@ -5,7 +5,8 @@ uses
   FMX.Forms,
   uMain in 'uMain.pas' {frmMain},
   uDM in 'uDM.pas' {DM: TDataModule},
-  UtilConst in 'Components\UtilConst.pas';
+  UtilConst in 'Components\UtilConst.pas',
+  FMX.DataWedgeBarCode in 'Components\FMX.DataWedgeBarCode.pas';
 
 {$R *.res}
 

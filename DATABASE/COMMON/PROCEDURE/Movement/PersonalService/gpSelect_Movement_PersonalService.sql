@@ -40,7 +40,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , isAuto Boolean, isDetail Boolean, isExport Boolean
-             , isMail Boolean
+             , isMail Boolean 
+             , is4000 Boolean
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
              , MemberName     TVarChar
@@ -278,7 +279,8 @@ BEGIN
            , COALESCE(MovementBoolean_Detail.ValueData, False) :: Boolean  AS isDetail
            , COALESCE(MovementBoolean_Export.ValueData, False) :: Boolean  AS isExport
            , COALESCE(MovementBoolean_Mail.ValueData, False)   :: Boolean  AS isMail
-
+           , COALESCE(MovementBoolean_4000.ValueData, False)   :: Boolean  AS is4000
+           
            , tmpSign.strSign
            , tmpSign.strSignNo 
 
@@ -489,7 +491,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Mail
                                       ON MovementBoolean_Mail.MovementId = Movement.Id
                                      AND MovementBoolean_Mail.DescId = zc_MovementBoolean_Mail()
-                                     
+            LEFT JOIN MovementBoolean AS MovementBoolean_4000
+                                      ON MovementBoolean_4000.MovementId = Movement.Id
+                                     AND MovementBoolean_4000.DescId = zc_MovementBoolean_4000()                                     
+
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
       where vbUserId NOT IN (/*5,*/ 9457) or tmpMovement.PersonalServiceListId <> 416828
@@ -502,6 +507,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.02.24         * is4000
  04.07.23         * PriceNalog
  02.05.23         *
  24.04.23         *

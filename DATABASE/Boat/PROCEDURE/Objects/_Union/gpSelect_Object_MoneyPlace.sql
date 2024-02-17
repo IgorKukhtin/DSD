@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKind_Value TFloat
              , TaxKindId Integer, TaxKindName TVarChar
              , TaxKindName_Info TVarChar, TaxKindName_Comment TVarChar
+             , TaxNumber TVarChar
              , ItemName TVarChar
              , isErased Boolean
               )
@@ -37,6 +38,7 @@ BEGIN
                       , '' :: TVarChar AS TaxKindName
                       , '' :: TVarChar AS TaxKindName_Info
                       , '' :: TVarChar AS TaxKindName_Comment
+                      , '' :: TVarChar AS TaxNumber
                       , ObjectDesc.ItemName
                       , Object_Cash.isErased
                  FROM Object AS Object_Cash
@@ -57,6 +59,7 @@ BEGIN
                       , '' :: TVarChar AS TaxKindName
                       , '' :: TVarChar AS TaxKindName_Info
                       , '' :: TVarChar AS TaxKindName_Comment
+                      , '' :: TVarChar AS TaxNumber
                       , ObjectDesc.ItemName
                       , Object_BankAccount.isErased
                  FROM Object AS Object_BankAccount
@@ -81,6 +84,7 @@ BEGIN
                       , Object_TaxKind.ValueData               AS TaxKindName
                       , ObjectString_TaxKind_Info.ValueData    AS TaxKindName_Info
                       , ObjectString_TaxKind_Comment.ValueData AS TaxKindName_Comment
+                      , ObjectString_TaxNumber.ValueData       AS TaxNumber
                       , ObjectDesc.ItemName
                       , Object_Client.isErased
 
@@ -106,7 +110,9 @@ BEGIN
                       LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                              ON ObjectString_TaxKind_Comment.ObjectId = Object_TaxKind.Id
                                             AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
-
+                      LEFT JOIN ObjectString AS ObjectString_TaxNumber
+                                             ON ObjectString_TaxNumber.ObjectId = Object_Client.Id
+                                            AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
                  WHERE Object_Client.DescId = zc_Object_Client()
                   AND Object_Client.isErased = FALSE
 
@@ -123,6 +129,7 @@ BEGIN
                       , Object_TaxKind.ValueData               AS TaxKindName
                       , ObjectString_TaxKind_Info.ValueData    AS TaxKindName_Info
                       , ObjectString_TaxKind_Comment.ValueData AS TaxKindName_Comment
+                      , ObjectString_TaxNumber.ValueData       AS TaxNumber
                       , ObjectDesc.ItemName
                       , Object_Partner.isErased
                  FROM Object AS Object_Partner
@@ -147,7 +154,9 @@ BEGIN
                       LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                              ON ObjectString_TaxKind_Comment.ObjectId = Object_TaxKind.Id
                                             AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
-
+                      LEFT JOIN ObjectString AS ObjectString_TaxNumber
+                                             ON ObjectString_TaxNumber.ObjectId = Object_Partner.Id
+                                            AND ObjectString_TaxNumber.DescId = zc_ObjectString_Partner_TaxNumber()
                 WHERE Object_Partner.DescId = zc_Object_Partner()
                   AND Object_Partner.isErased = FALSE
                 )
@@ -167,6 +176,7 @@ BEGIN
           , tmpData.TaxKindName
           , tmpData.TaxKindName_Info
           , tmpData.TaxKindName_Comment
+          , tmpData.TaxNumber 
           , tmpData.ItemName
           , tmpData.isErased
      FROM tmpData

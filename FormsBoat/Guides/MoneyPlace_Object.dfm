@@ -11,17 +11,17 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
     Width = 759
     Height = 380
     ExplicitTop = 59
-    ExplicitWidth = 669
+    ExplicitWidth = 759
     ExplicitHeight = 380
     ClientRectBottom = 380
     ClientRectRight = 759
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 669
+      ExplicitWidth = 759
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
         Width = 759
         Height = 380
-        ExplicitWidth = 669
+        ExplicitWidth = 759
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -111,6 +111,12 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Options.Editing = False
             Width = 80
           end
+          object TaxNumber: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#8470
+            DataBinding.FieldName = 'TaxNumber'
+            Visible = False
+            Width = 70
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -131,7 +137,6 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitWidth = 669
     object btnFormClose: TcxButton
       Left = 381
       Top = 7
@@ -156,7 +161,6 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 669
     object lbSearchName: TcxLabel
       Left = 6
       Top = 6
@@ -253,6 +257,14 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Name = 'Amount_Invoice'
           Value = 0.000000000000000000
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxNumber'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
     end

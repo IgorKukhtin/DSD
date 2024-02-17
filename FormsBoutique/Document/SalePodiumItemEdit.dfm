@@ -422,8 +422,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Width = 41
   end
   object ceAmountRounding: TcxCurrencyEdit
-    Left = 398
-    Top = 183
+    Left = 395
+    Top = 189
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -3203,14 +3203,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountDiff'
-        Value = Null
-        Component = ceAmountDiff
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisChangeEUR'
         Value = Null
         Component = cbChangeEUR
@@ -3880,14 +3872,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountDiff'
-        Value = Null
-        Component = ceAmountDiff
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisChangeEUR'
         Value = False
         Component = cbChangeEUR
@@ -4489,14 +4473,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'AmountDiscount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountDiff'
-        Value = Null
-        Component = ceAmountDiff
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

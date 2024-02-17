@@ -25,7 +25,6 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
       inherited cxGrid: TcxGrid
         Width = 1189
         Height = 464
-        ExplicitTop = 4
         ExplicitWidth = 1189
         ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -61,6 +60,16 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
               Format = ',0.00##'
               Kind = skSum
               Column = Amount_Pay_all_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_Invoice_all_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -95,6 +104,16 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
               Format = ',0.00##'
               Kind = skSum
               Column = Amount_Pay_all_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_Invoice_all_ch2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_diff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -307,7 +326,7 @@ inherited BankAccountChildJournalForm: TBankAccountChildJournalForm
             Width = 97
           end
           object Amount_diff: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1042#1089#1077#1084' '#1057#1095#1077#1090#1072#1084
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091
             DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

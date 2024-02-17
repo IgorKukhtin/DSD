@@ -142,7 +142,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_4000() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_4000'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
-  SELECT 'zc_MovementBoolean_4000', 'Формирование данные Карта БН (ввод) - 2ф. (>=4000)(да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_4000');
+  SELECT 'zc_MovementBoolean_4000', 'Формирование данных Карта БН (ввод) - 2ф. (>=4000)(да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_4000');
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Аптека

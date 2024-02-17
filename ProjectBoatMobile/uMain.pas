@@ -9,7 +9,7 @@ uses
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
   System.IniFiles, FMX.VirtualKeyboard, FMX.DialogService, FMX.DataWedgeBarCode,
   FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
-  FMX.ListView
+  FMX.ListView, uDM
   {$IFDEF ANDROID}
   ,System.Permissions,Androidapi.JNI.Os, FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
@@ -40,11 +40,6 @@ type
     Panel1: TPanel;
     Label3: TLabel;
     Label4: TLabel;
-    WebServerLayout: TLayout;
-    WebServerLayout11: TLayout;
-    WebServerLabel: TLabel;
-    WebServerLayout12: TLayout;
-    WebServerEdit: TEdit;
     Layout43: TLayout;
     Layout5: TLayout;
     Layout37: TLayout;
@@ -74,7 +69,7 @@ type
     bReport: TButton;
     Image6: TImage;
     Label7: TLabel;
-    bSync: TButton;
+    bLogIn: TButton;
     Image3: TImage;
     Label8: TLabel;
     bInfo: TButton;
@@ -89,9 +84,6 @@ type
     tiInformation: TTabItem;
     Panel17: TPanel;
     VertScrollBox6: TVertScrollBox;
-    lWebService: TLayout;
-    Label39: TLabel;
-    eWebService: TEdit;
     lMobileVersion: TLayout;
     Label31: TLabel;
     eMobileVersion: TEdit;
@@ -99,14 +91,26 @@ type
     Label48: TLabel;
     eServerVersion: TEdit;
     bUpdateProgram: TButton;
-    lCurWebService: TLayout;
-    Label81: TLabel;
-    eCurWebService: TEdit;
     pScanTest: TPanel;
     sbScan: TSpeedButton;
     Image8: TImage;
     lwPromoPartners: TListView;
     Label9: TLabel;
+    Layout6: TLayout;
+    Layout7: TLayout;
+    Layout8: TLayout;
+    LogInCodeButton: TButton;
+    pProgress: TPanel;
+    Layout9: TLayout;
+    Pie3: TPie;
+    pieProgress: TPie;
+    Pie1: TPie;
+    Circle1: TCircle;
+    pieAllProgress: TPie;
+    lProgress: TLabel;
+    lProgressName: TLabel;
+    Layout10: TLayout;
+    lUser: TLabel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -121,12 +125,16 @@ type
     procedure ShowInformation;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
+    procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
+    procedure OnScanResultLogin(Sender: TObject; AData_String: String);
+    procedure VertScrollBox6Click(Sender: TObject);
+    procedure bLogInClick(Sender: TObject);
+    procedure bUpdateProgramClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
-    FTemporaryServer: string;
-    FUseAdminRights: boolean;
+    FWebServer: string;
     FPermissionState: boolean;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
@@ -146,13 +154,15 @@ uses System.IOUtils, Authentication, Storage, CommonData, CursorUtils;
 
 {$R *.fmx}
 
+const
+  WebServer = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+
 // перевод формы в/из режим ожидания
 procedure TfrmMain.Wait(AWait: Boolean);
 begin
   LogInButton.Enabled := not AWait;
   LoginEdit.Enabled := not AWait;
   PasswordEdit.Enabled := not AWait;
-  WebServerEdit.Enabled := not AWait;
 
   if AWait then
     Screen_Cursor_crHourGlass
@@ -170,7 +180,6 @@ var
   {$ENDIF}
   SettingsFile : TIniFile;
 begin
-  FUseAdminRights := false;
 
   //Application.OnIdle := MobileIdle;
 
@@ -184,7 +193,7 @@ begin
   {$ENDIF}
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
-    FTemporaryServer := SettingsFile.ReadString('LOGIN', 'TemporaryServer', '');
+    FWebServer := SettingsFile.ReadString('LOGIN', 'WebServer', WebServer);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -240,6 +249,11 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
+procedure TfrmMain.VertScrollBox6Click(Sender: TObject);
+begin
+
+end;
+
 // возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
 procedure TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean);
 var
@@ -266,7 +280,10 @@ end;
 // обработка изменения закладки (формы)
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
-  FUseAdminRights := false;
+  lwPromoPartners.Items.Clear;
+  FDataWedgeBarCode.OnScanResultDetails := Nil;
+  FDataWedgeBarCode.OnScanResult := Nil;
+  PasswordEdit.Text := '';
 
   { настройка панели возврата }
   if (tcMain.ActiveTab = tiStart)  then
@@ -290,10 +307,13 @@ begin
     else sbScan.Visible := false;
 
     if tcMain.ActiveTab = tiMain then
-      lCaption.Text := 'Project Boot Mobile'
+      lCaption.Text := 'A g i l i s'
     else
     if tcMain.ActiveTab = tiInformation then
-      lCaption.Text := 'Информация'
+    begin
+      lCaption.Text := 'Информация';
+      FDataWedgeBarCode.OnScanResultDetails := OnScanResultDetails;
+    end
     else
   end;
 end;
@@ -304,41 +324,27 @@ var
   Res : integer;
 begin
 
-//  eMobileVersion.Text := DM.GetCurrentVersion;
+  eMobileVersion.Text := DM.GetCurrentVersion;
 
-//  Res := DM.CompareVersion(eMobileVersion.Text, DM.tblObject_ConstMobileVersion.AsString);
-//  if Res > 0 then
-//  begin
-//    lServerVersion.Height := 60;
-//    eServerVersion.Text := DM.tblObject_ConstMobileVersion.AsString;
-//
-//    {$IFDEF ANDROID}
-//    bUpdateProgram.Visible := true
-//    {$ELSE}
-//    bUpdateProgram.Visible := false;
-//    {$ENDIF}
-//  end
-//  else
-//    lServerVersion.Height := 0;
+  {$IFDEF ANDROID}
+  eServerVersion.Text := DM.GetMobileVersion;
+  Res := DM.CompareVersion(eMobileVersion.Text, eServerVersion.Text);
+  {$ELSE}
+  Res := 0;
+  {$ENDIF}
 
-//  eWebService.Text := DM.tblObject_ConstWebService.AsString
-//            + ' ; ' + DM.tblObject_ConstWebService_two.AsString
-//            + ' ; ' + DM.tblObject_ConstWebService_three.AsString
-//            + ' ; ' + DM.tblObject_ConstWebService_four.AsString
-//    ;
+  if Res > 0 then
+  begin
+    lServerVersion.Visible := true;
 
-//  if not SameText(gc_WebService, DM.tblObject_ConstWebService.AsString) then
-//  begin
-//    lCurWebService.Height := 60;
-//    eCurWebService.Text := gc_WebService;
-//    if High(gc_WebServers) > 1 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers[1];
-//    if High(gc_WebServers_r) > 0 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers_r[0];
-//    if High(gc_WebServers_r) > 1 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers_r[1];
-//  end
-//  else
-//    lCurWebService.Height := 0;
-//  eSyncDateIn.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateIn.AsDateTime);
-//  eSyncDateOut.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateOut.AsDateTime);
+    {$IFDEF ANDROID}
+    bUpdateProgram.Visible := true;
+    {$ELSE}
+    bUpdateProgram.Visible := false;
+    {$ENDIF}
+  end
+  else
+    lServerVersion.Visible := False;
 
   SwitchToForm(tiInformation, nil);
 end;
@@ -350,9 +356,20 @@ begin
 end;
 
 // возврат на форму логина
+procedure TfrmMain.bLogInClick(Sender: TObject);
+begin
+  FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
+  FDataWedgeBarCode.Scan;
+end;
+
 procedure TfrmMain.bReloginClick(Sender: TObject);
 begin
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bUpdateProgramClick(Sender: TObject);
+begin
+  DM.UpdateProgram(mrYes);
 end;
 
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
@@ -363,8 +380,8 @@ end;
 
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
-var
-  Mes : string;
+//var
+//  Mes : string;
 begin
 //  if (tcMain.ActiveTab = tiOrderExternal) and FCanEditDocument then
 //  begin
@@ -423,9 +440,9 @@ begin
     begin
       Key := 0;
 
-//      if pProgress.Visible then
-//        exit
-//      else
+      if pProgress.Visible then
+        exit
+      else
 //      if ppEnterAmount.IsOpen then
 //        ppEnterAmount.IsOpen := false
 //      else
@@ -467,9 +484,7 @@ procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
   SettingsFile : TIniFile;
-  NeedSync : boolean;
 begin
-  NeedSync := not assigned(gc_User);
 
   if not FPermissionState then
   begin
@@ -477,12 +492,20 @@ begin
     exit;
   end;
 
-  if gc_WebService = '' then
-    gc_WebService := WebServerEdit.Text;
+  if gc_WebService = '' then gc_WebService := FWebServer;
 
   Wait(True);
   try
-    ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
+
+    if TButton(Sender).Tag = 1 then
+    begin
+      FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
+      FDataWedgeBarCode.Scan;
+      Wait(False);
+      Exit;
+    end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
+
+    if Assigned(gc_User) then lUser.Text := gc_User.Login;
 
     Wait(False);
 
@@ -495,46 +518,16 @@ begin
     begin
       Wait(False);
 
-      if assigned(gc_User) then  { Проверяем login и password в локальной БД }
-      begin
-        gc_User.Local := true;
-
-        if (LoginEdit.Text <> gc_User.Login) or (PasswordEdit.Text <> gc_User.Password) then
-        begin
-          ShowMessage('Введен неправильный логин или пароль');
-          exit;
-        end
-        else
-          ShowMessage('Нет связи с сервером. Программа переведена в режим автономной работы.');
-      end
-      else
-      begin
-        ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
-        exit;
-      end;
+      ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
     end;
     //
   end;
 
-  // !!!Optimize!!!
-  //if SyncCheckBox.IsChecked = TRUE then
-  //   fOptimizeDB;
+  {$IFDEF ANDROID}
+  DM.CheckUpdate; // проверка небходимости обновления
+  {$ENDIF}
 
-//  // сохранение координат при логине и запуск таймера
-//  tSavePathTimer(tSavePath);
-//
-//  if not gc_User.Local then
-//  begin
-//    if not DM.GetConfigurationInfo then
-//      Exit;
-//
-//    if NeedSync then
-//      DM.SynchronizeWithMainDatabase
-//    else
-//      DM.CheckUpdate; // проверка небходимости обновления
-//  end;
-
-  // сохранение логина в ini файле
+  // сохранение логина и веб сервера в ini файле
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
@@ -542,16 +535,69 @@ begin
   {$ENDIF}
   try
     SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
-    if FUseAdminRights then
-    begin
-      SettingsFile.WriteString('LOGIN', 'TemporaryServer', WebServerEdit.Text);
-      FTemporaryServer := WebServerEdit.Text;
-    end;
   finally
     FreeAndNil(SettingsFile);
   end;
 
   SwitchToForm(tiMain, nil);
+end;
+
+procedure TfrmMain.OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
+begin
+  with TListViewItem(TAppearanceListViewItems(lwPromoPartners.Items.AddItem(0))) do
+  begin
+    Data['ActionLabel'] := 'Action';
+    Data['Action'] := AAction;
+    Data['SourceLabel'] := 'Source';
+    Data['Source'] := ASource;
+    Data['Label_TypeLabel'] := 'Label_Type';
+    Data['Label_Type'] := ALabel_Type;
+    Data['Data_StringLabel'] := 'Data_String';
+    Data['Data_String'] := AData_String;
+  end;
+end;
+
+procedure TfrmMain.OnScanResultLogin(Sender: TObject; AData_String: String);
+var
+  ErrorMessage: String;
+begin
+
+  FDataWedgeBarCode.OnScanResult := Nil;
+
+  try
+
+    Wait(True);
+    try
+      lUser.Text := '';
+      ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, AData_String, gc_User);
+      if Assigned(gc_User) then lUser.Text := gc_User.Login;
+
+      Wait(False);
+
+      if ErrorMessage <> '' then
+      begin
+        ShowMessage(ErrorMessage);
+        exit;
+      end;
+    except on E: Exception do
+      begin
+        Wait(False);
+        ErrorMessage := 'Нет связи с сервером. Продолжение работы невозможно';
+        ShowMessage(ErrorMessage+#13#10 + E.Message);
+        exit;
+      end;
+      //
+    end;
+
+    {$IFDEF ANDROID}
+    DM.CheckUpdate; // проверка небходимости обновления
+    {$ENDIF}
+
+  finally
+    if (ErrorMessage <> '') and (tcMain.ActiveTab <> tiStart) then
+      ReturnPriorForm
+    else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then SwitchToForm(tiMain, nil);
+  end;
 end;
 
 end.

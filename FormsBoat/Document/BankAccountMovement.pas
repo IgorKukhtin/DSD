@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo,
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
 
 type
   TBankAccountMovementForm = class(TAncestorEditDialog_boatForm)
@@ -79,6 +80,46 @@ type
     btnGet_Service: TcxButton;
     edString_7: TcxTextEdit;
     cxLabel14: TcxLabel;
+    cxLabel11: TcxLabel;
+    GuidesBankAccount_p2: TdsdGuides;
+    cxLabel20: TcxLabel;
+    cxLabel12: TcxLabel;
+    edCode: TcxCurrencyEdit;
+    edTaxNumber: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    edName: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    cxLabel17: TcxLabel;
+    edPLZ: TcxButtonEdit;
+    cxLabel21: TcxLabel;
+    edStreet: TcxTextEdit;
+    edCountry: TcxButtonEdit;
+    cxLabel23: TcxLabel;
+    cxLabel22: TcxLabel;
+    edCity: TcxButtonEdit;
+    edStreet_add: TcxTextEdit;
+    cxLabel25: TcxLabel;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    spInsert_MoneyPlace: TdsdStoredProc;
+    edIBAN: TcxTextEdit;
+    GuidesTaxKind: TdsdGuides;
+    GuidesCountry: TdsdGuides;
+    GuidesPLZ: TdsdGuides;
+    spUpdate_MoneyPlace: TdsdStoredProc;
+    actInsert_MoneyPlace: TdsdExecStoredProc;
+    actInsertUpdate_MoneyPlace: TdsdExecStoredProc;
+    cxButton4: TcxButton;
+    cxButton5: TcxButton;
+    spGet_MoneyPlace_Clear: TdsdStoredProc;
+    actClear_MoneyPlace: TdsdExecStoredProc;
+    spGet_MoneyPlace: TdsdStoredProc;
+    actGet_MoneyPlace: TdsdExecStoredProc;
+    cxPageControl1: TcxPageControl;
+    Main: TcxTabSheet;
+    cxTabSheet1: TcxTabSheet;
   private
     { Private declarations }
   public

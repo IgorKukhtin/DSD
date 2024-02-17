@@ -46,7 +46,6 @@
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 487
     object dxBarDockControl3: TdxBarDockControl
       Left = 0
       Top = 0
@@ -61,7 +60,6 @@
       Width = 4
       Height = 470
       AlignSplitter = salRight
-      ExplicitHeight = 461
     end
     object Panel1: TPanel
       Left = 0
@@ -71,7 +69,6 @@
       Align = alLeft
       Caption = 'Panel1'
       TabOrder = 2
-      ExplicitHeight = 461
       object cxGrid2: TcxGrid
         Left = 1
         Top = 19
@@ -79,7 +76,6 @@
         Height = 450
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 441
         object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DocumentDS
@@ -155,7 +151,6 @@
         Height = 450
         AlignSplitter = salRight
         Control = cxGrid2
-        ExplicitHeight = 441
       end
       object cxLabel1: TcxLabel
         Left = 1
@@ -182,7 +177,6 @@
       Caption = 'PanelDocView'
       ShowCaption = False
       TabOrder = 3
-      ExplicitHeight = 461
     end
   end
   object Код: TcxLabel
@@ -277,7 +271,7 @@
   object cxLabel5: TcxLabel
     Left = 12
     Top = 276
-    Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+    Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1074#1099#1087#1080#1089#1082#1077' '#1073#1072#1085#1082#1072
   end
   object ceAmount: TcxCurrencyEdit
     Left = 12
@@ -341,7 +335,7 @@
     Left = 12
     Top = 425
     Properties.ReadOnly = True
-    TabOrder = 27
+    TabOrder = 26
     Width = 182
   end
   object cmInvoice: TcxMemo
@@ -631,7 +625,7 @@
     Top = 160
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_BankAccountChild'
+    StoredProcName = 'gpGet_Movement_BankAccount_byPDF'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -644,45 +638,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Value'
-        Value = Null
-        Component = dsdFormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Invoice'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_parent'
-        Value = 0.000000000000000000
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inMovementItemId_child'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'inMovmentItemId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMoneyPlaceId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = Null
-        Component = dsdFormParams
-        ComponentItem = 'inOperDate'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
