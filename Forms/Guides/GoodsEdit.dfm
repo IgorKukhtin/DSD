@@ -342,12 +342,12 @@
   end
   object cxLabel20: TcxLabel
     Left = 39
-    Top = 480
+    Top = 523
     Caption = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '
   end
   object edGoodsGroupProperty: TcxButtonEdit
     Left = 39
-    Top = 499
+    Top = 542
     Properties.Buttons = <
       item
         Default = True
@@ -359,12 +359,12 @@
   end
   object cxLabel21: TcxLabel
     Left = 39
-    Top = 522
+    Top = 481
     Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
   end
   object cxButtonEdit1: TcxButtonEdit
     Left = 39
-    Top = 540
+    Top = 499
     Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
     ParentShowHint = False
     Properties.Buttons = <
