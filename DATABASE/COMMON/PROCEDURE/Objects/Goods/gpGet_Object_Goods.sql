@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar , ShortName TVarChar
              , BusinessId Integer, BusinessName TVarChar
              , FuelId Integer, FuelName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar 
-             , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar
+             , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
              , PriceListId Integer, PriceListName TVarChar, StartDate TDateTime, ValuePrice TFloat
               )
 AS
@@ -82,6 +82,8 @@ BEGIN
 
            , CAST (0 as Integer)   AS GoodsGroupPropertyId
            , CAST ('' as TVarChar) AS GoodsGroupPropertyName
+           , CAST (0 as Integer)   AS GoodsGroupPropertyId_Parent
+           , CAST ('' as TVarChar) AS GoodsGroupPropertyName_Parent
 
            , vbPriceListId                 AS PriceListId 
            , vbPriceListName               AS PriceListName
@@ -132,6 +134,8 @@ BEGIN
 
            , Object_GoodsGroupProperty.Id        AS GoodsGroupPropertyId
            , Object_GoodsGroupProperty.ValueData AS GoodsGroupPropertyName
+           , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+           , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
 
            , vbPriceListId                 AS PriceListId 
            , vbPriceListName               AS PriceListName
@@ -212,6 +216,10 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
           LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                               ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                              AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+          LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
 
           LEFT JOIN gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := vbPriceListId , inGoodsId :=  inId,  inGoodsKindId := 0,  inSession := inSession) as tmp ON tmp.EndDate  =  zc_DateEnd()
 

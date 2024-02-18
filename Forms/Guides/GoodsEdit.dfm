@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 583
+  ClientHeight = 601
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 70
-    Top = 543
+    Left = 66
+    Top = 573
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 206
-    Top = 543
+    Top = 573
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -342,7 +342,7 @@
   end
   object cxLabel20: TcxLabel
     Left = 39
-    Top = 481
+    Top = 480
     Caption = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '
   end
   object edGoodsGroupProperty: TcxButtonEdit
@@ -355,6 +355,26 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 43
+    Width = 273
+  end
+  object cxLabel21: TcxLabel
+    Left = 39
+    Top = 522
+    Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
+  end
+  object cxButtonEdit1: TcxButtonEdit
+    Left = 39
+    Top = 540
+    Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
+    ParentShowHint = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    ShowHint = True
+    TabOrder = 45
     Width = 273
   end
   object ActionList: TActionList
@@ -824,6 +844,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupPropertyId_Parent'
+        Value = Null
+        Component = GuidesGoodsGroupPropertyParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupPropertyName_Parent'
+        Value = Null
+        Component = GuidesGoodsGroupPropertyParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 16
@@ -1167,8 +1202,56 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentId'
+        Value = Null
+        Component = GuidesGoodsGroupPropertyParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentName'
+        Value = Null
+        Component = GuidesGoodsGroupPropertyParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 190
     Top = 483
+  end
+  object GuidesGoodsGroupPropertyParent: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cxButtonEdit1
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TGoodsGroupProperty_ObjecForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroupProperty_ObjecForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroupPropertyParent
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroupPropertyParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 198
+    Top = 525
   end
 end

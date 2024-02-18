@@ -530,6 +530,7 @@ object GoodsGroupPropertyForm: TGoodsGroupPropertyForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

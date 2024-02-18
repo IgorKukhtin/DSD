@@ -90,6 +90,9 @@ type
     cxLabel20: TcxLabel;
     edGoodsGroupProperty: TcxButtonEdit;
     GuidesGoodsGroupProperty: TdsdGuides;
+    cxLabel21: TcxLabel;
+    cxButtonEdit1: TcxButtonEdit;
+    GuidesGoodsGroupPropertyParent: TdsdGuides;
   private
     { Private declarations }
   public
