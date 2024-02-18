@@ -87,6 +87,10 @@ type
     bbProtocolRole: TdxBarButton;
     spUnErased: TdsdStoredProc;
     LanguageName: TcxGridDBColumn;
+    actPrintUser_Badge: TdsdPrintAction;
+    spPrintUser_Badge: TdsdStoredProc;
+    PrintUser_BadgeCDS: TClientDataSet;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

@@ -9,7 +9,7 @@ uses
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
   System.IniFiles, FMX.VirtualKeyboard, FMX.DialogService, FMX.DataWedgeBarCode,
   FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
-  FMX.ListView, uDM
+  FMX.ListView, uDM, FMX.Media,  Winsoft.FireMonkey.Obr
   {$IFDEF ANDROID}
   ,System.Permissions,Androidapi.JNI.Os, FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
@@ -94,7 +94,7 @@ type
     pScanTest: TPanel;
     sbScan: TSpeedButton;
     Image8: TImage;
-    lwPromoPartners: TListView;
+    lwBarCodeResult: TListView;
     Label9: TLabel;
     Layout6: TLayout;
     Layout7: TLayout;
@@ -111,6 +111,10 @@ type
     lProgressName: TLabel;
     Layout10: TLayout;
     lUser: TLabel;
+    tiScanBarCode: TTabItem;
+    CameraScanBarCode: TCameraComponent;
+    imgCameraScanBarCode: TImage;
+    StopCamera: TTimer;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -127,15 +131,22 @@ type
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
     procedure OnScanResultLogin(Sender: TObject; AData_String: String);
-    procedure VertScrollBox6Click(Sender: TObject);
     procedure bLogInClick(Sender: TObject);
     procedure bUpdateProgramClick(Sender: TObject);
+    procedure ChangePartnerInfoRightUpdate(Sender: TObject);
+    procedure CameraScanBarCodeSampleBufferReady(Sender: TObject;
+      const ATime: TMediaTime);
+    procedure OnObrBarcodeDetected(Sender: TObject);
+    procedure StopCameraTimer(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
+    FObr: TFObr;
     FWebServer: string;
     FPermissionState: boolean;
+    FisZebraScaner: boolean;
+    FisCameraScanBarCode: boolean;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
@@ -212,8 +223,19 @@ begin
 
   FDataWedgeBarCode := TDataWedgeBarCode.Create(Nil);
 
+  FObr := TFObr.Create(Nil);
+  FObr.OnBarcodeDetected := OnObrBarcodeDetected;
+
+  //Настройка камері
+  CameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
+  CameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
+  CameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+
   // установка разрешений
   {$IFDEF ANDROID}
+
+  FisZebraScaner := Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0;
+
   if not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE)) or
      not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.CAMERA)) or
      not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)) then
@@ -228,11 +250,17 @@ begin
           FPermissionState := True;
       end);
   end;
+
+  {$ELSE}
+
+  FisZebraScaner := False;
+
   {$ENDIF}
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  FObr.Free;
   FDataWedgeBarCode.Free;
   FFormsStack.Free;
 end;
@@ -249,10 +277,6 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
-procedure TfrmMain.VertScrollBox6Click(Sender: TObject);
-begin
-
-end;
 
 // возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
 procedure TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean);
@@ -278,11 +302,50 @@ begin
 end;
 
 // обработка изменения закладки (формы)
+procedure TfrmMain.CameraScanBarCodeSampleBufferReady(Sender: TObject;
+  const ATime: TMediaTime);
+begin
+  if CameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
+  begin
+    CameraScanBarCode.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
+    CameraScanBarCode.SampleBufferToBitmap(FObr.Picture, True);
+    FObr.Scan;
+  end;
+end;
+
+procedure TfrmMain.OnObrBarcodeDetected(Sender: TObject);
+var
+  Barcode: TObrSymbol;
+  pOnScanResult: TDataWedgeBarCodeResult;
+  pOnScanResultDetails: TDataWedgeBarCodeResultDetails;
+begin
+  if (FObr.BarcodeCount > 0) and FisCameraScanBarCode then
+  begin
+    FisCameraScanBarCode := False;
+    Barcode := FObr.Barcode[0];
+
+    pOnScanResultDetails := FDataWedgeBarCode.OnScanResultDetails;
+    pOnScanResult := FDataWedgeBarCode.OnScanResult;
+
+    sbBackClick(Sender);
+
+    if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, '',
+                          'Camera', Barcode.SymbologyName, Barcode.DataUtf8);
+
+    if Assigned(pOnScanResult) then pOnScanResult(Self, Barcode.DataUtf8);
+
+    StopCamera.Enabled := True;
+  end;
+end;
+
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
-  lwPromoPartners.Items.Clear;
-  FDataWedgeBarCode.OnScanResultDetails := Nil;
-  FDataWedgeBarCode.OnScanResult := Nil;
+  if tcMain.ActiveTab <> tiScanBarCode then
+  begin
+    FDataWedgeBarCode.OnScanResultDetails := Nil;
+    FDataWedgeBarCode.OnScanResult := Nil;
+  end;
+  if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
   PasswordEdit.Text := '';
 
   { настройка панели возврата }
@@ -314,8 +377,21 @@ begin
       lCaption.Text := 'Информация';
       FDataWedgeBarCode.OnScanResultDetails := OnScanResultDetails;
     end
-    else
+    else if tcMain.ActiveTab = tiScanBarCode then
+    begin
+      lCaption.Text := 'Сканер штрихкода';
+      StopCamera.Enabled := False;
+      imgCameraScanBarCode.Bitmap.Assign(Nil);
+      FObr.Active := True;
+      FisCameraScanBarCode := True;
+      CameraScanBarCode.Active := True;
+    end
   end;
+end;
+
+procedure TfrmMain.ChangePartnerInfoRightUpdate(Sender: TObject);
+begin
+
 end;
 
 // начитка информации про программу
@@ -349,6 +425,13 @@ begin
   SwitchToForm(tiInformation, nil);
 end;
 
+procedure TfrmMain.StopCameraTimer(Sender: TObject);
+begin
+  StopCamera.Enabled := False;
+  CameraScanBarCode.Active := false;
+  FObr.Active := False;
+end;
+
 // переход на форму отображения информации
 procedure TfrmMain.bInfoClick(Sender: TObject);
 begin
@@ -359,7 +442,7 @@ end;
 procedure TfrmMain.bLogInClick(Sender: TObject);
 begin
   FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
-  FDataWedgeBarCode.Scan;
+   sbScanClick(Sender);
 end;
 
 procedure TfrmMain.bReloginClick(Sender: TObject);
@@ -421,7 +504,8 @@ end;
 
 procedure TfrmMain.sbScanClick(Sender: TObject);
 begin
-  FDataWedgeBarCode.Scan;
+  if FisZebraScaner then FDataWedgeBarCode.Scan
+  else SwitchToForm(tiScanBarCode, nil);
 end;
 
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -500,7 +584,7 @@ begin
     if TButton(Sender).Tag = 1 then
     begin
       FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
-      FDataWedgeBarCode.Scan;
+      sbScanClick(Sender);
       Wait(False);
       Exit;
     end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
@@ -544,7 +628,7 @@ end;
 
 procedure TfrmMain.OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
 begin
-  with TListViewItem(TAppearanceListViewItems(lwPromoPartners.Items.AddItem(0))) do
+  with TListViewItem(TAppearanceListViewItems(lwBarCodeResult.Items.AddItem(0))) do
   begin
     Data['ActionLabel'] := 'Action';
     Data['Action'] := AAction;
@@ -559,17 +643,22 @@ end;
 
 procedure TfrmMain.OnScanResultLogin(Sender: TObject; AData_String: String);
 var
-  ErrorMessage: String;
+  ErrorMessage, Password: String;
+  I, J : Integer;
 begin
 
   FDataWedgeBarCode.OnScanResult := Nil;
 
   try
 
+    Password := '';
+    for I := 1 to Length(AData_String) do
+      if TryStrToInt(COPY(AData_String, I, 1), J) then Password := Password + COPY(AData_String, I, 1);
+
     Wait(True);
     try
       lUser.Text := '';
-      ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, AData_String, gc_User);
+      ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, Password, gc_User);
       if Assigned(gc_User) then lUser.Text := gc_User.Login;
 
       Wait(False);

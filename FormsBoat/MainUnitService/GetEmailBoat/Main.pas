@@ -5,12 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.DateUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, IdMessage,
-  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
+  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, ShellAPI,
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
   Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls, Vcl.ActnList,
   dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
   IdSSL, IdSSLOpenSSL, IdIMAP4, dsdInternetAction, ZAbstractRODataset,
-  ZAbstractDataset, ZDataset, ZAbstractConnection, ZConnection, System.Actions;
+  ZAbstractDataset, ZDataset, ZAbstractConnection, ZConnection, System.Actions,
+  sevenzip, FormStorage, UnilWin;
 
 const SAVE_LOG = true;
 
@@ -49,23 +50,14 @@ type
     GaugeMailFrom: TGauge;
     GaugeParts: TGauge;
     GaugeLoadXLS: TGauge;
-    GaugeMove: TGauge;
     PanelLoadFile: TPanel;
-    MasterCDS: TClientDataSet;
-    spSelectMove: TdsdStoredProc;
-    PanelMove: TPanel;
-    spUpdateGoods: TdsdStoredProc;
-    spLoadPriceList: TdsdStoredProc;
     Timer: TTimer;
     cbTimer: TCheckBox;
     IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
-    spGet_LoadPriceList: TdsdStoredProc;
-    spUpdate_Protocol_LoadPriceList: TdsdStoredProc;
     PanelError: TPanel;
-    spExportSettings_Email: TdsdStoredProc;
-    ExportSettingsCDS: TClientDataSet;
-    spRefreshMovementItemLastPriceList_View: TdsdStoredProc;
+    spInsertUpdate_Invoice: TdsdStoredProc;
     PanelInfo: TPanel;
+    spInsertUpdate_InvoicePdf: TdsdStoredProc;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
@@ -116,6 +108,28 @@ begin
   CloseFile(F);
 end;
 
+function PADR(Src: string; Lg: Integer): string;
+begin
+  Result := Src;
+  while Length(Result) < Lg do
+    Result := Result + ' ';
+end;
+
+//Удаление директорий с содержимым
+function DelDir(Const dir: string): Boolean;
+var
+  fos: TSHFileOpStruct;
+begin
+  ZeroMemory(@fos, SizeOf(fos));
+  with fos do
+  begin
+    wFunc  := FO_DELETE;
+    fFlags := FOF_SILENT or FOF_NOCONFIRMATION;
+    pFrom  := PChar(dir + #0);
+  end;
+  Result := (0 = ShFileOperation(fos));
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
@@ -132,7 +146,6 @@ begin
   GaugeMailFrom.Progress:=0;
   GaugeParts.Progress:=0;
   GaugeLoadXLS.Progress:=0;
-  GaugeMove.Progress:=0;
   //
   AddToLog('---- Start');
   // включаем таймер
@@ -167,6 +180,7 @@ end;
 function TMainForm.fInitArray : Boolean;
 var i,nn:Integer;
 begin
+     Result := True;
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;
@@ -210,7 +224,7 @@ begin
             end;
 
             // !!!в таймере!!! обновили новый минимум -  с какой периодичностью проверять почту в активном периоде
-            if (Timer.Interval > DataSet.FieldByName('onTime').asInteger * 60 * 1000) or (Timer.Interval <= 1000) then
+            if (Timer.Interval > Cardinal(DataSet.FieldByName('onTime').asInteger * 60 * 1000)) or (Timer.Interval <= 1000) then
             begin
                  Timer.Interval:= DataSet.FieldByName('onTime').asInteger * 60 * 1000;
                  cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec ' + '('+FormatDateTime('dd.mm.yyyy hh:mm:ss',vbOnTimer)+')';
@@ -253,11 +267,10 @@ var
   ii, i,j: integer;
   flag: boolean;
   msgcnt: integer;
-  Session,mailFolderMain,mailFolder,StrCopyFolder: ansistring;
+  Session,mailFolderMain,mailFolder,StrCopyFolder: string;
   StartTime:TDateTime;
   IdIMAP4:TIdIMAP4;
-  searchResult, searchResult_save : TSearchRec;
-  fOK,fMMO:Boolean;
+  searchResult : TSearchRec;
   msgDate_save:TDateTime;
 begin
    //
@@ -313,8 +326,8 @@ begin
               PanelHost.Invalidate;
               //параметры подключения к ящику
               Host    := vbArrayMail[ii].Host;
-              UserName:= 'shapiro.mmo@gmail.com'; //vbArrayMail[ii].UserName;
-              Password:= 'vkcnufplsimceyaa'; //vbArrayMail[ii].Password;
+              UserName:= vbArrayMail[ii].UserName;
+              Password:= vbArrayMail[ii].Password;
               Port    := vbArrayMail[ii].Port;
 
               try
@@ -358,125 +371,142 @@ begin
                    IdMessage.Clear; // очистка буфера для сообщения
                    flag:= false;
 
-                   //такого файла - нет
-                   fMMO:= false;
-
                    PanelHost.Caption:= 'Start Mail (5.1.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    PanelHost.Invalidate;
-                   //если вытянулось из почты письмо
-                   if (IdIMAP4.Retrieve(i, IdMessage)) then
-                   begin
-                       PanelHost.Caption:= 'Start Mail (5.2.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-                       PanelHost.Invalidate;
-                       //IdMessage.CharSet := 'UTF-8';
+                   try
+                     //если вытянулось из почты письмо
+                     if (IdIMAP4.Retrieve(i, IdMessage)) then
+                     begin
+                         PanelHost.Caption:= 'Start Mail (5.2.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+                         PanelHost.Invalidate;
+                         //IdMessage.CharSet := 'UTF-8';
 
-                       PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + Trim(IdMessage.From.Address);
-                       PanelMailFrom.Invalidate;
+                         PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + Trim(IdMessage.From.Address);
+                         PanelMailFrom.Invalidate;
 
-                       //current directory to store the email files
-                       mailFolder:= mailFolderMain + '\' + FormatDateTime('yyyy-mm-dd hh-mm-ss',IdMessage.Date);
-                       //создали папку для писем если таковой нет
-                       ForceDirectories(mailFolder);
+                         //current directory to store the email files
+                         mailFolder:= mailFolderMain + '\' + FormatDateTime('yyyy-mm-dd hh-mm-ss',IdMessage.Date);
+                         //создали папку для писем если таковой нет
+                         ForceDirectories(mailFolder);
 
-                       //
-                       GaugeParts.Progress:=0;
-                       GaugeParts.MaxValue:=IdMessage.MessageParts.Count;
-                       Application.ProcessMessages;
-                       PanelHost.Caption:= 'Start Mail (5.3.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-                       PanelHost.Invalidate;
-                       //пройдемся по всем частям письма
-                       for j := 0 to IdMessage.MessageParts.Count - 1 do
-                       begin
                          //
-                         PanelParts.Caption:= 'Parts : '+Trim(IdMessage.From.Address);
+                         GaugeParts.Progress:=0;
+                         GaugeParts.MaxValue:=IdMessage.MessageParts.Count;
                          Application.ProcessMessages;
-                         //если это вложенный файлик
-                         if IdMessage.MessageParts[j] is TIdAttachment then
+                         PanelHost.Caption:= 'Start Mail (5.3.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+                         PanelHost.Invalidate;
+
+                         //  Если загрузка счетов
+                         if vbArrayMail[ii].EmailKindDesc = 'zc_Enum_EmailKind_Mail_InvoiceKredit' then
                          begin
-                             // сохранили файлик из письма
-                             (IdMessage.MessageParts[j] as TIdAttachment).SaveToFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
-                             // если надо - разархивировали
-                             //if not (System.Pos(AnsiUppercase('.xls'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
-                             // and not(System.Pos(AnsiUppercase('.xlsx'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
-                             // and not(System.Pos(AnsiUppercase('.xml'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
-                             if (System.Pos(AnsiUppercase('.zip'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0)
-                             then begin
-//                                             arch.OpenFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
-//                                             arch.ExtractTo(mailFolder + '\');
-                                  end;
-                         end;
-                         GaugeParts.Progress:=GaugeParts.Progress+1;
-                         Application.ProcessMessages;
-                       end;//завершилась обработка всех частей одного письма
 
-                      //создали папку для загрузки, если таковой нет
-                      ForceDirectories(vbArrayMail[ii].Directory);
-
-                      // ТОЛЬКО если "сегодня" не было загрузки JurPos или это ПРИХОД
-                      if vbArrayMail[ii].EmailKindDesc = 'zc_Enum_EmailKind_Mail_InvoiceKredit'
-                      then
-                      begin
-                           //НЕ будем копировать
-                           fOK:=false;
-
-                           //2.1. поиск файла xls И это не MMO
-                           if (System.SysUtils.FindFirst(mailFolder + '\*.xls', faAnyFile, searchResult) = 0)
-                           then
+                           //пройдемся по всем частям письма
+                           for j := 0 to IdMessage.MessageParts.Count - 1 do
                            begin
-                                searchResult_save:=searchResult;
-                                if System.SysUtils.FindNext(searchResult) <> 0
-                                then
-                                    //будем копировать
-                                    fOK:=true
-                                else
-                                    //ошибка - найден НЕ ОДИН файл xls для загрузки
-//                                    fError_SendEmail(vbArrayImportSettings[JurPos].Id
-//                                                   , vbArrayImportSettings[JurPos].ContactPersonId
-//                                                   , IdMessage.Date
-//                                                   , vbArrayImportSettings[JurPos].JuridicalMail + ' * ' + vbArrayMail[ii].Mail
-//                                                   , '4');
+                             //
+                             PanelParts.Caption:= 'Parts : '+Trim(IdMessage.From.Address);
+                             Application.ProcessMessages;
+                             //если это вложенный файлик
+                             if IdMessage.MessageParts[j] is TIdAttachment then
+                             begin
+                               // сохранили файлик из письма
+                               (IdMessage.MessageParts[j] as TIdAttachment).SaveToFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                               // если надо - разархивировали
+                               if (System.Pos(AnsiUppercase('.zip'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0) then
+                               begin
+                                 try
+                                   with CreateInArchive(CLSID_CFormatZip) do
+                                   begin
+                                     OpenFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                     ExtractTo(mailFolder + '\');
+                                     Close;
+                                   end;
+                                   DeleteFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                 except
+                                 end;
+                               end else if (System.Pos(AnsiUppercase('.rar'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0) then
+                               begin
+                                 try
+                                   with CreateInArchive(CLSID_CFormatRar) do
+                                   begin
+                                     OpenFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                     ExtractTo(mailFolder + '\');
+                                     Close;
+                                   end;
+                                   DeleteFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                 except
+                                 end;
+                               end else if (System.Pos(AnsiUppercase('.7z'), AnsiUppercase(IdMessage.MessageParts[J].FileName)) > 0) then
+                               begin
+                                 try
+                                   with CreateInArchive(CLSID_CFormat7z) do
+                                   begin
+                                     OpenFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                     ExtractTo(mailFolder + '\');
+                                     Close;
+                                   end;
+                                   DeleteFile(mailFolder + '\' + IdMessage.MessageParts[J].FileName);
+                                 except
+                                 end;
+                               end;
+                             end;
+                             GaugeParts.Progress:=GaugeParts.Progress+1;
+                             Application.ProcessMessages;
+                           end;//завершилась обработка всех частей одного письма
+
+                           //2.1. Создаем счет на сервере
+                           spInsertUpdate_Invoice.ParamByName('ioId').Value := 0;
+                           spInsertUpdate_Invoice.ParamByName('inSubject').Value := IdMessage.Subject;
+                           spInsertUpdate_Invoice.Execute;
+
+                           //удалить письмо в почте
+                           flag := True;
+
+                           //2.1. Прикрепляем файлы к счету
+                           if (System.SysUtils.FindFirst(mailFolder + '\*.*', faArchive, searchResult) = 0) then
+                           begin
+                              repeat
+                                //
+                                if (searchResult.Attr and faArchive) = searchResult.Attr then
+                                begin
+                                  AddToLog('Найден файл: ' + searchResult.Name + ' прикрепляем к счету.');
+
+                                  spInsertUpdate_InvoicePdf.ParamByName('ioId').Value := 0;
+                                  spInsertUpdate_InvoicePdf.ParamByName('inPhotoName').Value := searchResult.Name;
+                                  spInsertUpdate_InvoicePdf.ParamByName('inMovmentId').Value := spInsertUpdate_Invoice.ParamByName('ioId').Value;
+                                  spInsertUpdate_InvoicePdf.ParamByName('inInvoicePdfData').Value := ConvertConvert(PADR(searchResult.Name, 255) + String(FileReadString(mailFolder + '\' + searchResult.Name)));
+                                  spInsertUpdate_InvoicePdf.Execute;
+                                end;
+                               until System.SysUtils.FindNext(searchResult) <> 0;
                            end;
+                       end
+                       // если не нашли - все равно удалить письмо в почте
+                       else flag:= true;
 
-                           //
-                           // если надо - будем копировать
-//                           if fOK = TRUE then
-//                           begin
-//                                  //если это не MMO
-//                                  if vbArrayMail[ii].EmailKindDesc = 'zc_Enum_EmailKind_Mail_InvoiceKredit'
-//                                  then begin
-//                                        // потом скопировали ВСЕ файлики xls в папку из которой уже будет загрузка
-//                                        StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xls' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-//                                        WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-//                                        // потом скопировали ВСЕ файлики xlsx в папку из которой уже будет загрузка
-//                                        StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.xlsx' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-//                                        WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-//                                  end;
-//                                  // потом скопировали ВСЕ файлики в папку из которой уже будет загрузка
-//                                  StrCopyFolder:='cmd.exe /c copy ' + chr(34) + mailFolder + '\*.mmo' + chr(34) + ' ' + chr(34) + vbArrayImportSettings[JurPos].Directory + chr(34);
-//                                  WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
-//                           end;
-                           // потом надо удалить письмо в почте
-                      end
-                      else
-                          // если "сегодня" была загрузка JurPos - надо удалить письмо в почте
-                          flag:= true;
-                  end
-                  // если не нашли - все равно удалить письмо в почте
-                  else flag:= true;
+                       //удаление письма
+                       //***if flag then IdPOP3.Delete(i);   //POP3
+                       PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+                       PanelHost.Invalidate;
+                       if flag then
+                       begin
+                         IdIMAP4.DeleteMsgs([i]);    //IMAP
+                         IdIMAP4.ExpungeMailBox;
+                       end;
+                       PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+                       PanelHost.Invalidate;
+                       //
+                       // Почистим папку письма
+                       DelDir(mailFolder);
+                     end;
 
-                   //удаление письма
-                   //***if flag then IdPOP3.Delete(i);   //POP3
-                   PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-                   PanelHost.Invalidate;
-                   if flag then
-                   begin
-//                        IdIMAP4.DeleteMsgs([i]);    //IMAP
-//                        IdIMAP4.ExpungeMailBox;
+                   except  on E: Exception do
+                     // Ошибка загузки письма
+                     begin
+                       AddToLog('Error - обработки письма:'#13#10 + E.Message);
+                       // Почистим папку письма
+                       DelDir(mailFolder);
+                     end;
                    end;
-                   PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-                   PanelHost.Invalidate;
-                   //
-
 
                    //все, идем дальше
                    Sleep(200);
@@ -490,6 +520,8 @@ begin
 
                  //осталось сохранить время последней обработки почтового ящика
                  vbArrayMail[ii].BeginTime:=vbOnTimer;
+                 // Почистим папку загрузки
+                 DelDir(mailFolderMain);
                  //
                  PanelHost.Caption:= 'End Mail (5.7): '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
                  PanelHost.Invalidate;
@@ -540,15 +572,17 @@ end;
 function TMainForm.fBeginAll : Boolean;
 var isErr, isErr_exit : Boolean;
 begin
+     Result := True;
      PanelError.Caption:= '';
      PanelError.Invalidate;
      PanelInfo.Caption:= 'Начало цикла обработки.';
      PanelInfo.Invalidate;
+     isErr:= false;
+     isErr_exit:= false;
+     Timer.Enabled:= false;
+     BtnStart.Enabled:= false;
 
      try
-       isErr_exit:= false;
-       Timer.Enabled:= false;
-       BtnStart.Enabled:= false;
 
        //инициализируем данные по всем ящикам
        try fInitArray;

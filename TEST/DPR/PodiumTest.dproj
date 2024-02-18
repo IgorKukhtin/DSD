@@ -566,8 +566,8 @@
 				<Form>LossForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\CurrencyMovement.pas">
-				<Form>CurrencyMovementForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Document\CurrencyPodiumMovement.pas">
+				<Form>CurrencyPodiumMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\PriceList.pas">
@@ -658,8 +658,8 @@
 				<Form>InfoMoneyDestinationEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\CurrencyJournal.pas">
-				<Form>CurrencyJournalForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Document\CurrencyPodiumJournal.pas">
+				<Form>CurrencyPodiumJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas">
@@ -1186,6 +1186,10 @@
 			<DCCReference Include="..\..\SOURCE\EDI\UAECMRXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EUSignCP\EUSignCP.pas"/>
 			<DCCReference Include="..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\Guides\IntegerDialog.pas">
+				<Form>IntegerDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

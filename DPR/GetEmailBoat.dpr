@@ -33,7 +33,8 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
-  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  sevenzip in '..\FormsBoat\MainUnitService\GetEmailBoat\sevenzip.pas';
 
 {$R *.res}
 
