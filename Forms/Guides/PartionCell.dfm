@@ -883,6 +883,10 @@ object PartionCellForm: TPartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoadBox'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1017,6 +1021,13 @@ object PartionCellForm: TPartionCellForm
       Action = actProtocol6
       Category = 0
     end
+    object bbStartLoadBox: TdxBarButton
+      Action = macStartLoadBox
+      Caption = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1080'  '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1071#1097#1080#1082#1086#1074' '#1045'2 '#1080#1079' '#1092 +
+        #1072#1081#1083#1072
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1057,6 +1068,42 @@ object PartionCellForm: TPartionCellForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object macStartLoadBox: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingIdBox
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1080' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1071#1097#1080#1082#1086#1074' '#1045'2' +
+        ' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1080' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2 '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1080' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1071#1097#1080#1082#1086#1074' '#1045'2 '#1080#1079' '#1092#1072 +
+        #1081#1083#1072
+      Hint = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1103' '#1091#1088#1086#1074#1085#1077#1081' '#1089#1090#1077#1083#1072#1078#1077#1081' '#1080' '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1071#1097#1080#1082#1086#1074' '#1045'2 '#1080#1079' '#1092#1072 +
+        #1081#1083#1072
+      ImageIndex = 27
+    end
+    object actGetImportSettingIdBox: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingIdBox
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingIdBox
+        end>
+      Caption = 'actGetImportSetting'
     end
     object actUpdate1: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -1672,6 +1719,7 @@ object PartionCellForm: TPartionCellForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 136
     Top = 224
@@ -1828,5 +1876,37 @@ object PartionCellForm: TPartionCellForm
     PackSize = 1
     Left = 588
     Top = 201
+  end
+  object spGetImportSettingIdBox: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPartionCellForm;zc_Object_ImportSetting_PartionCell_BoxCount'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 80
   end
 end

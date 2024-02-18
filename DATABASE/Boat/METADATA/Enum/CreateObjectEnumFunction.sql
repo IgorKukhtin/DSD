@@ -189,3 +189,6 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportType_BankAccount_csv() RETURNS Integer 
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_BankAccount_csv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_BankAccount_csv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
+
+
+

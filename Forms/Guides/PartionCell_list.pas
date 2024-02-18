@@ -70,6 +70,7 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     Name_search: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
   private
     { Private declarations }
   public

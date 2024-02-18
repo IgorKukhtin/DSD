@@ -26,8 +26,6 @@ object PartionCell_listForm: TPartionCell_listForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,6 +49,14 @@ object PartionCell_listForm: TPartionCell_listForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Ord: TcxGridDBColumn
+        Caption = #8470' '#1087'.'#1087'.'
+        DataBinding.FieldName = 'Ord'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -192,7 +198,6 @@ object PartionCell_listForm: TPartionCell_listForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -6
     object lbSearchName: TcxLabel
       Left = 5
       Top = 6

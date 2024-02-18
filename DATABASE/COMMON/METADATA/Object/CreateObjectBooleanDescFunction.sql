@@ -382,6 +382,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsByGoodsKind_PackOrder() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectBoolean_GoodsByGoodsKind_PackOrder', 'Нет ограничения в заявке на упак' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_PackOrder');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsByGoodsKind_PackLimit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_PackLimit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectBoolean_GoodsByGoodsKind_PackLimit', 'Ограничение в днях в заявке на упак' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_PackLimit');
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Retail_OperDateOrder() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Retail_OperDateOrder'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1471,6 +1475,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 16.02.24         * zc_ObjectBoolean_GoodsByGoodsKind_PackLimit
  12.02.24         * zc_ObjectBoolean_PersonalServiceList_BankNot
  31.01.24                                                                                                          * zc_ObjectBoolean_Contract_ForRealize
  13.01.24                                                                                                          * zc_ObjectBoolean_CashSettings_BansSEND

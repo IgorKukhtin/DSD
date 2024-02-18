@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxContainer, cxLabel, cxTextEdit;
 
 type
   TGoodsByGoodsKind_OrderForm = class(TAncestorEnumForm)
@@ -52,6 +52,22 @@ type
     spUpdate_PackOrder: TdsdStoredProc;
     actUpdate_PackOrder: TdsdDataSetRefresh;
     bbUpdate_PackOrder: TdxBarButton;
+    PackLimit: TcxGridDBColumn;
+    isPackLimit: TcxGridDBColumn;
+    edPackLimit: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    bbTextPackLimit: TdxBarControlContainerItem;
+    bbPackLimit: TdxBarControlContainerItem;
+    spUpdate_PackLimit_Yes: TdsdStoredProc;
+    spUpdate_isPackLimit_No: TdsdStoredProc;
+    actUpdate_PackLimit_Yes: TdsdExecStoredProc;
+    actUpdate_PackLimit_No: TdsdExecStoredProc;
+    mactUpdate_PackLimit_Yes_list: TMultiAction;
+    mactUpdate_PackLimit_Yes: TMultiAction;
+    mactUpdate_PackLimit_No_list: TMultiAction;
+    mactUpdate_PackLimit_No: TMultiAction;
+    bbUpdate_PackLimit_Yes: TdxBarButton;
+    bbUpdate_PackLimit_No: TdxBarButton;
   private
     { Private declarations }
   public

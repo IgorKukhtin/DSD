@@ -24,7 +24,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Value1_gk TVarChar, Value11_gk TVarChar
 
              , NormRem TFloat, NormOut TFloat
-             , NormPack TFloat
+             , NormPack TFloat 
+             , PackLimit TFloat
+             , isPackLimit Boolean
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , isNewQuality Boolean
              , isTop Boolean
@@ -198,8 +200,10 @@ BEGIN
            
            , COALESCE (ObjectFloat_NormRem.ValueData,0)         ::TFloat  AS NormRem
            , COALESCE (ObjectFloat_NormOut.ValueData,0)         ::TFloat  AS NormOut
-           , COALESCE (ObjectFloat_NormPack.ValueData,0)        ::TFloat  AS NormPack
+           , COALESCE (ObjectFloat_NormPack.ValueData,0)        ::TFloat  AS NormPack 
+           , COALESCE (ObjectFloat_PackLimit.ValueData,0)       ::TFloat  AS PackLimit
 
+           , COALESCE (ObjectBoolean_PackLimit.ValueData, FALSE) ::Boolean AS isPackLimit
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
@@ -367,7 +371,14 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_NormPack
                                   ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
+                                 
+            LEFT JOIN ObjectFloat AS ObjectFloat_PackLimit
+                                  ON ObjectFloat_PackLimit.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_PackLimit.DescId = zc_ObjectFloat_GoodsByGoodsKind_PackLimit()
  --
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PackLimit
+                                    ON ObjectBoolean_PackLimit.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                   AND ObjectBoolean_PackLimit.DescId = zc_ObjectBoolean_GoodsByGoodsKind_PackLimit()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                     ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
                                    AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
@@ -558,6 +569,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.02.24        * PackLimit, isPackLimit
  22.01.24        * isPackOrder
  20.12.22        * GoodsKindNew
  07.12.22        * isRK

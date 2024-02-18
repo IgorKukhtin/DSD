@@ -226,7 +226,7 @@
     Caption = #1050#1086#1083'-'#1074#1086' '#1084#1080#1085#1091#1090' '#1085#1072' '#1058#1058
   end
   object edPartnerMin: TcxCurrencyEdit
-    Left = 172
+    Left = 171
     Top = 62
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter

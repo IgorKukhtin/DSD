@@ -834,6 +834,26 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 60
           end
+          object PackLimit: TcxGridDBColumn
+            Caption = #1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082
+            DataBinding.FieldName = 'PackLimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082
+            Options.Editing = False
+            Width = 80
+          end
+          object isPackLimit: TcxGridDBColumn
+            Caption = #1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isPackLimit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end

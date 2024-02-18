@@ -539,6 +539,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsByGoodsKind_NormPack() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectFloat_GoodsByGoodsKind_NormPack', 'нормы упаковывания (в кг/час)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_NormPack');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsByGoodsKind_PackLimit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_PackLimit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectFloat_GoodsByGoodsKind_PackLimit', 'Ограничение в днях в заявке на упак' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_PackLimit');
+
 --
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Quality_NumberPrint() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Quality_NumberPrint'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2534,6 +2538,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.02.24         * zc_ObjectFloat_GoodsByGoodsKind_PackLimit
  27.12.23         * zc_ObjectFloat_PartionCell_...
  27.12.23                                                                                      * zc_ObjectFloat_CashSettings_SmashSumSend
  24.10.23                                                                                      * zc_ObjectFloat_CashSettings_CourseReport

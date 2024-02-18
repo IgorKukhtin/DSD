@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionCell_list(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , Level TFloat, Length TFloat, Width TFloat, Height TFloat
              , BoxCount TFloat, RowBoxCount TFloat, RowWidth TFloat, RowHeight TFloat
-             , Comment TVarChar
+             , Comment TVarChar  
+             , Ord Integer
              , isErased boolean
               )
 AS
@@ -36,6 +37,12 @@ BEGIN
            , ObjectFloat_RowWidth.ValueData     ::TFloat  AS RowWidth
            , ObjectFloat_RowHeight.ValueData    ::TFloat  AS RowHeight    
            , ObjectString_Comment.ValueData     ::TVarChar AS Comment
+           
+           , ROW_NUMBER() OVER (ORDER BY ObjectFloat_Level.ValueData
+                                       , zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=2)::Integer
+                                       , zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3)::Integer
+                                       , COALESCE (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=4) ,0)::Integer
+                                ) ::Integer AS Ord
 
            , Object.isErased   AS isErased
 
@@ -110,3 +117,9 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_PartionCell_list (FALSE, zfCalc_UserAdmin())
+/*
+
+ SELECT Name, zfConvert_StringToNumber(zfCalc_Word_Split (inValue:= Name, inSep:= '-', inIndex:=2))::Integer
+                                       , zfConvert_StringToNumber(zfCalc_Word_Split (inValue:= Name, inSep:= '-', inIndex:=3))::Integer
+                                     , zfConvert_StringToNumber(zfCalc_Word_Split (inValue:= Name, inSep:= '-', inIndex:=4) )::Integer
+ FROM gpSelect_Object_PartionCell_list (FALSE, zfCalc_UserAdmin())*/

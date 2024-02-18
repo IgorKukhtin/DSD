@@ -426,7 +426,43 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Options.Editing = False
             Width = 40
           end
+          object PackLimit: TcxGridDBColumn
+            Caption = #1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082
+            DataBinding.FieldName = 'PackLimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082
+            Options.Editing = False
+            Width = 80
+          end
+          object isPackLimit: TcxGridDBColumn
+            Caption = #1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isPackLimit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
+            Options.Editing = False
+            Width = 80
+          end
         end
+      end
+      object edPackLimit: TcxCurrencyEdit
+        Left = 707
+        Top = 86
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 1
+        Width = 60
+      end
+      object cxLabel11: TcxLabel
+        Left = 707
+        Top = 70
+        Hint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
+        Caption = #1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082
       end
     end
   end
@@ -640,6 +676,86 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
       ImageIndex = 80
     end
+    object actUpdate_PackLimit_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PackLimit_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PackLimit_Yes
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' - '#1044#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' - '#1044#1072'"'
+      ImageIndex = 76
+    end
+    object mactUpdate_PackLimit_Yes_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PackLimit_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactUpdate_PackLimit_Yes_list'
+      ImageIndex = 76
+    end
+    object mactUpdate_PackLimit_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdate_PackLimit_Yes_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'."?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'."'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'."'
+      ImageIndex = 76
+    end
+    object actUpdate_PackLimit_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isPackLimit_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isPackLimit_No
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' - '#1053#1077#1090'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082' - '#1053#1077#1090'"'
+      ImageIndex = 77
+    end
+    object mactUpdate_PackLimit_No_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PackLimit_No
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactUpdate_PackLimit_No_list'
+      ImageIndex = 77
+    end
+    object mactUpdate_PackLimit_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdate_PackLimit_No_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'."- '#1053#1077#1090'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'."- '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1054#1075#1088'. '#1074' '#1076#1085'. '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'."- '#1053#1077#1090
+      ImageIndex = 77
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -711,6 +827,34 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbTextPackLimit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPackLimit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PackLimit_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PackLimit_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -751,6 +895,28 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     end
     object bbUpdate_PackOrder: TdxBarButton
       Action = actUpdate_PackOrder
+      Category = 0
+    end
+    object bbTextPackLimit: TdxBarControlContainerItem
+      Caption = 'TextPackLimit'
+      Category = 0
+      Hint = 'bbText'
+      Visible = ivAlways
+      Control = cxLabel11
+    end
+    object bbPackLimit: TdxBarControlContainerItem
+      Caption = 'edPackLimit'
+      Category = 0
+      Hint = 'edPackLimit'
+      Visible = ivAlways
+      Control = edPackLimit
+    end
+    object bbUpdate_PackLimit_Yes: TdxBarButton
+      Action = mactUpdate_PackLimit_Yes
+      Category = 0
+    end
+    object bbUpdate_PackLimit_No: TdxBarButton
+      Action = mactUpdate_PackLimit_No
       Category = 0
     end
   end
@@ -1051,5 +1217,70 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     PackSize = 1
     Left = 504
     Top = 264
+  end
+  object spUpdate_PackLimit_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_PackLimit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPackLimit'
+        Value = Null
+        Component = edPackLimit
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPackLimit'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 232
+  end
+  object spUpdate_isPackLimit_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_PackLimit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPackLimit'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'PackLimit'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPackLimit'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 185
   end
 end

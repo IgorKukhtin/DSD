@@ -87,6 +87,10 @@ type
     bbProtocol5: TdxBarButton;
     bbProtocol6: TdxBarButton;
     Code_l1: TcxGridDBColumn;
+    spGetImportSettingIdBox: TdsdStoredProc;
+    actGetImportSettingIdBox: TdsdExecStoredProc;
+    macStartLoadBox: TMultiAction;
+    bbStartLoadBox: TdxBarButton;
   private
     { Private declarations }
   public
