@@ -39,9 +39,9 @@ BEGIN
            , ObjectString_Comment.ValueData     ::TVarChar AS Comment
            
            , ROW_NUMBER() OVER (ORDER BY ObjectFloat_Level.ValueData
-                                       , zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=2)::Integer
-                                       , zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3)::Integer
-                                       , COALESCE (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=4) ,0)::Integer
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=2))::Integer
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3))::Integer
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=4))::Integer
                                 ) ::Integer AS Ord
 
            , Object.isErased   AS isErased
