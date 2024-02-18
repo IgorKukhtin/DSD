@@ -71,3 +71,15 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
+
+/*
+--перенумеровать по Level
+
+UPDATE Object
+ SET Code = tmp.Ord 
+ FROM (SELECT * FROM gpSelect_Object_PartionCell_list (TRUE, zfCalc_UserAdmin())
+       ) as tmp
+ WHERE Object.DescId = zc_Object_PartionCell()
+   AND Object.Id = tmp.Id; 
+
+*/
