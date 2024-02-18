@@ -1144,10 +1144,10 @@
   object GuidesGoodsGroupProperty: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroupProperty
-    FormNameParam.Value = 'TGoodsGroupProperty_ObjectForm'
+    FormNameParam.Value = 'TGoodsGroupPropertyForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroupProperty_ObjectForm'
+    FormName = 'TGoodsGroupPropertyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
