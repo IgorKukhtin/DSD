@@ -176,6 +176,13 @@ type
     IdHTTPWork: TIdHTTPWork;
     CheckConnectThread: TCheckConnectThread;
 
+function PADR(Src: string; Lg: Integer): string;
+begin
+  Result := Src;
+  while Length(Result) < Lg do
+    Result := Result + ' ';
+end;
+
 { TCustomIdHTTP }
 
 constructor TCustomIdHTTP.Create(AOwner: TComponent);
@@ -1203,7 +1210,12 @@ begin
         Result := ProcessMultiDataSet;
         Exit;
       end else if ResultType = gcError then
+      begin
+        if POS(PADR('error', ResultTypeLenght) + 'f', Str) > 0 then Str := Copy(Str, 1, POS(PADR('error', ResultTypeLenght) + 'f', Str) - 1)
+        else if POS(PADR('error', ResultTypeLenght) + 't', Str) > 0 then Str := Copy(Str, 1, POS(PADR('error', ResultTypeLenght) + 't', Str) - 1);
+
         ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData))
+      end
       else if (ResultType = gcResult) or (ResultType = gcDataSet) then
         Result := PrepareStr;
 
