@@ -25,14 +25,14 @@ BEGIN
                               , Movement_Invoice.Id               AS MovementId
                               , zfConvert_StringToNumber (Movement_Invoice.InvNumber) ::Integer AS InvNumber
                          FROM Movement AS Movement_Invoice
-                              INNER JOIN Movement AS Movement_OrderClient
-                                                  ON Movement_OrderClient.Id       = Movement_Invoice.ParentId
-                                                 AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased()
-                                                 AND Movement_OrderClient.DescId   = zc_Movement_OrderClient()
-                              INNER JOIN MovementItem AS MovementItem_OrderClient
-                                                      ON MovementItem_OrderClient.MovementId  = Movement_OrderClient.Id
-                                                     AND MovementItem_OrderClient.DescId      = zc_MI_Master()
-                                                     AND MovementItem_OrderClient.isErased    = FALSE
+                              LEFT JOIN Movement AS Movement_OrderClient
+                                                 ON Movement_OrderClient.Id       = Movement_Invoice.ParentId
+                                                AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased()
+                                                AND Movement_OrderClient.DescId   = zc_Movement_OrderClient()
+                              LEFT JOIN MovementItem AS MovementItem_OrderClient
+                                                     ON MovementItem_OrderClient.MovementId  = Movement_OrderClient.Id
+                                                    AND MovementItem_OrderClient.DescId      = zc_MI_Master()
+                                                    AND MovementItem_OrderClient.isErased    = FALSE
                          WHERE Movement_Invoice.Id       = inMovementId
                            AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
                            AND Movement_Invoice.DescId   = zc_Movement_Invoice()

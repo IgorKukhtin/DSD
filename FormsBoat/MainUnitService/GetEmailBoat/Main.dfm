@@ -71,6 +71,8 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Parts : '
     TabOrder = 3
+    ExplicitLeft = 1
+    ExplicitTop = 193
     object GaugeParts: TGauge
       Left = 1
       Top = 50
@@ -78,9 +80,7 @@ object MainForm: TMainForm
       Height = 19
       Align = alBottom
       Progress = 50
-      ExplicitLeft = 0
-      ExplicitTop = -6
-      ExplicitWidth = 666
+      ExplicitTop = 45
     end
   end
   object PanelLoadFile: TPanel
@@ -91,7 +91,9 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Add File: '
     TabOrder = 4
-    object GaugeLoadXLS: TGauge
+    ExplicitLeft = 1
+    ExplicitTop = 263
+    object GaugeLoadFile: TGauge
       Left = 1
       Top = 50
       Width = 982
