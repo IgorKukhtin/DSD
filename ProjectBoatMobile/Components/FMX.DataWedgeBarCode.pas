@@ -11,7 +11,7 @@ uses
   {$IFDEF ANDROID}
   , System.SysUtils, Androidapi.Helpers, Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes, Androidapi.JNI.App, Androidapi.JNIBridge, Androidapi.JNI.Embarcadero,
-  FMX.TKRBarCodeScanner, FMX.Platform.Android, Androidapi.JNI.Os
+  FMX.Platform.Android, Androidapi.JNI.Os
   {$ENDIF}
   ;
 type
@@ -41,7 +41,6 @@ type
     FOnScanResult: TDataWedgeBarCodeResult;
     FOnScanResultDetails: TDataWedgeBarCodeResultDetails;
   {$IFDEF ANDROID}
-    FTKRBarCodeScanner: TTKRBarCodeScanner;
     FReceiver: JBroadcastReceiver;
     FListener : TCSListener;
 
@@ -109,21 +108,13 @@ var
 begin
   inherited Create(AOwner);
   {$IFDEF ANDROID}
-  FTKRBarCodeScanner := Nil;
 
-  if Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0 then
-  begin
-    FListener := TCSListener.Create(Self);
-    FReceiver := TJFMXBroadcastReceiver.JavaClass.init(FListener);
-    IntentFilter := TJIntentFilter.Create;
-    IntentFilter.addAction(StringToJString(ourIntentAction));
-    IntentFilter.addCategory(TJIntent.JavaClass.CATEGORY_DEFAULT);
-    TAndroidHelper.Context.registerReceiver(FReceiver, IntentFilter);
-  end else
-  begin
-    FTKRBarCodeScanner := TTKRBarCodeScanner.Create(Nil);
-    FTKRBarCodeScanner.OnScanResult := OnScanResultCamera;
-  end;
+  FListener := TCSListener.Create(Self);
+  FReceiver := TJFMXBroadcastReceiver.JavaClass.init(FListener);
+  IntentFilter := TJIntentFilter.Create;
+  IntentFilter.addAction(StringToJString(ourIntentAction));
+  IntentFilter.addCategory(TJIntent.JavaClass.CATEGORY_DEFAULT);
+  TAndroidHelper.Context.registerReceiver(FReceiver, IntentFilter);
   {$ENDIF}
 end;
 
@@ -131,7 +122,6 @@ destructor TDataWedgeBarCode.Destroy;
 begin
   {$IFDEF ANDROID}
   if FReceiver <> nil then TAndroidHelper.Activity.UnregisterReceiver(FReceiver);
-  if Assigned(FTKRBarCodeScanner) then FTKRBarCodeScanner.Free;
   {$ENDIF}
   inherited Destroy;
 end;
@@ -142,9 +132,7 @@ procedure TDataWedgeBarCode.Scan;
   {$ENDIF}
 begin
   {$IFDEF ANDROID}
-  if Assigned(FTKRBarCodeScanner) then
-    FTKRBarCodeScanner.Scan
-  else CallScan;
+  CallScan;
   {$ENDIF}
   {$IFDEF MSWINDOWS}
   S := InputBox('Введите код', 'Код', '');

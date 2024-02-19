@@ -278,9 +278,10 @@
         <Android_SplashImage470>img\BoatMobile_470x320.png</Android_SplashImage470>
         <Android_SplashImage640>img\BoatMobile_640x480.png</Android_SplashImage640>
         <Android_SplashImage960>img\BoatMobile_960x720.png</Android_SplashImage960>
-        <Android_SplashGravity>fill_horizontal</Android_SplashGravity>
+        <Android_SplashGravity>fill</Android_SplashGravity>
         <EL_SecureFileSharing>true</EL_SecureFileSharing>
         <AUP_REQUEST_INSTALL_PACKAGES>true</AUP_REQUEST_INSTALL_PACKAGES>
+        <VerInfo_Keys>package=com.embarcadero.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.3;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -690,6 +691,13 @@
                 <DeployFile LocalName="img\BoatMobile_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="libzbar.so" Configuration="Debug" Class="File">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi-v7a\</RemoteDir>
+                        <RemoteName>libzbar.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

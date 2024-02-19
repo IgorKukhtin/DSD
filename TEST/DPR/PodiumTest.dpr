@@ -175,7 +175,7 @@ uses
   PartionGoodsChoice in '..\..\FormsBoutique\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   LossJournal in '..\..\FormsBoutique\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   Loss in '..\..\FormsBoutique\Document\Loss.pas' {LossForm: TParentForm},
-  CurrencyMovement in '..\..\FormsBoutique\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
+  CurrencyPodiumMovement in '..\..\FormsBoutique\Document\CurrencyPodiumMovement.pas' {CurrencyPodiumMovementForm: TParentForm},
   PriceList in '..\..\FormsBoutique\Guides\PriceList.pas' {PriceListForm: TParentForm},
   PriceListEdit in '..\..\FormsBoutique\Guides\PriceListEdit.pas' {PriceListEditForm: TParentForm},
   PriceListTaxDialog in '..\..\FormsBoutique\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm},
@@ -198,7 +198,7 @@ uses
   InfoMoneyDestination in '..\..\FormsBoutique\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
   InfoMoneyDestination_Object in '..\..\FormsBoutique\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
   InfoMoneyDestinationEdit in '..\..\FormsBoutique\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm},
-  CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
+  CurrencyPodiumJournal in '..\..\FormsBoutique\Document\CurrencyPodiumJournal.pas' {CurrencyPodiumJournalForm: TParentForm},
   Report_MovementReturnOutDialog in '..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas' {Report_MovementReturnOutDialogForm: TParentForm},
   Report_MovementSend in '..\..\FormsBoutique\Report\Report_MovementSend.pas' {Report_MovementSendForm: TParentForm},
   Report_MovementSendDialog in '..\..\FormsBoutique\Report\Report_MovementSendDialog.pas' {Report_MovementSendDialogForm: TParentForm},
@@ -349,7 +349,8 @@ uses
   PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
   EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
-  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
+  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  IntegerDialog in '..\..\FormsBoutique\Guides\IntegerDialog.pas' {IntegerDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

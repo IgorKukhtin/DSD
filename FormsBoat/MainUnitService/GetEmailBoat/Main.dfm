@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1040#1074#1090#1086'-'#1079#1072#1075#1088#1091#1079#1082#1072' '#1087#1086#1095#1090#1099
-  ClientHeight = 442
+  ClientHeight = 396
   ClientWidth = 984
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,8 +15,8 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object BtnStart: TBitBtn
-    Left = 258
-    Top = 409
+    Left = 250
+    Top = 353
     Width = 75
     Height = 25
     Caption = 'Start !!!'
@@ -71,6 +71,8 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Parts : '
     TabOrder = 3
+    ExplicitLeft = 1
+    ExplicitTop = 193
     object GaugeParts: TGauge
       Left = 1
       Top = 50
@@ -78,9 +80,7 @@ object MainForm: TMainForm
       Height = 19
       Align = alBottom
       Progress = 50
-      ExplicitLeft = 0
-      ExplicitTop = -6
-      ExplicitWidth = 666
+      ExplicitTop = 45
     end
   end
   object PanelLoadFile: TPanel
@@ -89,29 +89,11 @@ object MainForm: TMainForm
     Width = 984
     Height = 70
     Align = alTop
-    Caption = 'Load File: '
+    Caption = 'Add File: '
     TabOrder = 4
-    object GaugeLoadXLS: TGauge
-      Left = 1
-      Top = 50
-      Width = 982
-      Height = 19
-      Align = alBottom
-      Progress = 50
-      ExplicitLeft = 0
-      ExplicitTop = -6
-      ExplicitWidth = 666
-    end
-  end
-  object PanelMove: TPanel
-    Left = 0
-    Top = 328
-    Width = 984
-    Height = 70
-    Align = alTop
-    Caption = 'Move : '
-    TabOrder = 5
-    object GaugeMove: TGauge
+    ExplicitLeft = 1
+    ExplicitTop = 263
+    object GaugeLoadFile: TGauge
       Left = 1
       Top = 50
       Width = 982
@@ -124,12 +106,12 @@ object MainForm: TMainForm
     end
   end
   object cbTimer: TCheckBox
-    Left = 352
-    Top = 413
+    Left = 344
+    Top = 357
     Width = 400
     Height = 17
     Caption = 'Timer ON '
-    TabOrder = 6
+    TabOrder = 5
     OnClick = cbTimerClick
   end
   object PanelError: TPanel
@@ -144,7 +126,7 @@ object MainForm: TMainForm
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 7
+    TabOrder = 6
   end
   object PanelInfo: TPanel
     Left = 0
@@ -158,7 +140,7 @@ object MainForm: TMainForm
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-    TabOrder = 8
+    TabOrder = 7
   end
   object IdMessage: TIdMessage
     AttachmentEncoding = 'UUE'
@@ -191,59 +173,6 @@ object MainForm: TMainForm
     Left = 112
     Top = 130
   end
-  object MasterCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 368
-    Top = 288
-  end
-  object spSelectMove: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_LoadPriceList'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
-    Params = <>
-    PackSize = 1
-    Left = 560
-    Top = 288
-  end
-  object spUpdateGoods: TdsdStoredProc
-    StoredProcName = 'gpUpdatePartnerGoods'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 544
-    Top = 360
-  end
-  object spLoadPriceList: TdsdStoredProc
-    StoredProcName = 'gpLoadPriceList'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 376
-    Top = 344
-  end
   object Timer: TTimer
     Enabled = False
     Interval = 100
@@ -262,113 +191,65 @@ object MainForm: TMainForm
     Left = 328
     Top = 24
   end
-  object spGet_LoadPriceList: TdsdStoredProc
-    StoredProcName = 'gpGet_LoadPriceList'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'outId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAreaId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 736
-    Top = 208
-  end
-  object spUpdate_Protocol_LoadPriceList: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Protocol_LoadPriceList'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inImportSettingsId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 792
-    Top = 336
-  end
-  object spExportSettings_Email: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ExportSettings_Email'
-    DataSet = ExportSettingsCDS
+  object spInsertUpdate_Invoice: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Invoice_LoadMail'
     DataSets = <
       item
-        DataSet = ExportSettingsCDS
       end>
+    OutputType = otResult
     Params = <
       item
-        Name = 'inObjectId'
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSubject'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 216
+  end
+  object spInsertUpdate_InvoicePdf: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_InvoicePdf'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhotoName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovmentId'
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inContactPersonId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inByDate'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inByMail'
-        Value = Null
-        DataType = ftWideString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inByFileName'
+        Name = 'inInvoicePdfData'
         Value = Null
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 208
-  end
-  object ExportSettingsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 544
-    Top = 128
-  end
-  object spRefreshMovementItemLastPriceList_View: TdsdStoredProc
-    StoredProcName = 'lpRefreshMovementItemLastPriceList_View'
-    DataSets = <>
-    OutputType = otResult
-    Params = <>
-    PackSize = 1
-    Left = 736
-    Top = 136
+    Left = 296
+    Top = 216
   end
 end

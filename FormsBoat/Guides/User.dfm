@@ -237,7 +237,7 @@ object UserForm: TUserForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -328,6 +328,10 @@ object UserForm: TUserForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
       OneOnRow = True
       Row = 0
@@ -376,6 +380,10 @@ object UserForm: TUserForm
     end
     object bbProtocolRole: TdxBarButton
       Action = actProtocolRole
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrintUser_Badge
       Category = 0
     end
   end
@@ -703,6 +711,32 @@ object UserForm: TUserForm
         end>
       isShowModal = False
     end
+    object actPrintUser_Badge: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPrintUser_Badge
+      StoredProcList = <
+        item
+          StoredProc = spPrintUser_Badge
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1073#1077#1081#1076#1078#1080#1082#1072' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1073#1077#1081#1076#1078#1080#1082#1072' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintUser_BadgeCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintUser_Badge'
+      ReportNameParam.Value = 'PrintUser_Badge'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
@@ -737,11 +771,13 @@ object UserForm: TUserForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 232
@@ -780,11 +816,13 @@ object UserForm: TUserForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 344
     Top = 136
@@ -854,11 +892,13 @@ object UserForm: TUserForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 472
     Top = 216
@@ -954,5 +994,31 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 144
     Top = 288
+  end
+  object spPrintUser_Badge: TdsdStoredProc
+    StoredProcName = 'gpSelect_User_PrintBadge'
+    DataSet = PrintUser_BadgeCDS
+    DataSets = <
+      item
+        DataSet = PrintUser_BadgeCDS
+      end>
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 263
+    Top = 104
+  end
+  object PrintUser_BadgeCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 344
+    Top = 88
   end
 end
