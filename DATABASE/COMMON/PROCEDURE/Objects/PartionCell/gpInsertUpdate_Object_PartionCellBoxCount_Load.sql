@@ -257,12 +257,12 @@ BEGIN
          END IF;
          
      END IF;
-
+     /*
      IF (vbUserId = 5 OR vbUserId = 9457) AND 1=1
      THEN
            RAISE EXCEPTION 'Ошибка.test=ok ';
      END IF;
-
+     */
 
 END;
 $BODY$
