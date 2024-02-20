@@ -23,7 +23,7 @@ type
   TDataWedgeBarCode = class;
 
   {$IFDEF ANDROID}
-  TOnReceive = procedure (csContext: JContext; csIntent: JIntent) of object;
+  //TOnReceive = procedure (csContext: JContext; csIntent: JIntent) of object;
 
   TCSListener = class(TJavaLocal, JFMXBroadcastReceiverListener)
     private
@@ -38,21 +38,25 @@ type
   TDataWedgeBarCode = class(TComponent)
   public
   protected
+    FisIllumination: Boolean;
     FOnScanResult: TDataWedgeBarCodeResult;
     FOnScanResultDetails: TDataWedgeBarCodeResultDetails;
+    FOnGetConfig: TNotifyEvent;
+    FListParam: TStrings;
   {$IFDEF ANDROID}
     FReceiver: JBroadcastReceiver;
     FListener : TCSListener;
-
-    procedure OnScanResultCamera(Sender: TObject; AData_String: String);
     procedure BroadcastReceiverOnReceive(csContext: JContext; csIntent: JIntent);
     procedure CallScan;
   {$ENDIF}
   public
-    procedure Scan;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure SetIllumination;
+    procedure Scan;
+    //procedure ChangeIllumination;
   published
+    property isIllumination: Boolean read FisIllumination write FisIllumination;
     property OnScanResult: TDataWedgeBarCodeResult read FOnScanResult write FOnScanResult;
     property OnScanResultDetails: TDataWedgeBarCodeResultDetails read FOnScanResultDetails write FOnScanResultDetails;
   end;
@@ -68,6 +72,8 @@ const
   LABEL_TYPE_TAG = 'com.symbol.datawedge.label_type';
     // This intent string contains the barcode data as a byte array list
   DECODE_DATA_TAG = 'com.symbol.datawedge.decode_data';
+    //
+  SWITCH_SCANNER_PARAMS = 'com.symbol.datawedge.api.SWITCH_SCANNER_PARAMS';
 
     // This intent string contains the captured data as a string
     // (in the case of MSR this data string contains a concatenation of the track data)
@@ -80,10 +86,14 @@ const
   DWAPI_STOP_SCANNING = 'STOP_SCANNING';
   DWAPI_TOGGLE_SCANNING = 'TOGGLE_SCANNING';
 
-  ourIntentAction = 'com.dwoutput.ACTION';
-{ TCSListener }
+  PROFILE_NAME_DEFAULT = 'Profile0 (default)';
+  PROFILE_NAME = 'Profile0 (default)';
+
+  SCAN_RESULT_ACTION = 'com.dwoutput.ACTION';
 
 {$IFDEF ANDROID}
+
+{ TCSListener }
 constructor TCSListener.Create(AOwner: TDataWedgeBarCode);
 begin
   inherited Create;
@@ -94,7 +104,6 @@ procedure TCSListener.OnReceive(csContext: JContext; csIntent: JIntent);
 begin
   FOwner.BroadcastReceiverOnReceive(csContext, csIntent);
 end;
-
 {$ENDIF}
 
 
@@ -107,23 +116,50 @@ var
 {$ENDIF}
 begin
   inherited Create(AOwner);
+  FisIllumination := True;
+  FListParam := TStrings.Create;
   {$IFDEF ANDROID}
 
   FListener := TCSListener.Create(Self);
   FReceiver := TJFMXBroadcastReceiver.JavaClass.init(FListener);
   IntentFilter := TJIntentFilter.Create;
-  IntentFilter.addAction(StringToJString(ourIntentAction));
+  IntentFilter.addAction(StringToJString(SCAN_RESULT_ACTION));
   IntentFilter.addCategory(TJIntent.JavaClass.CATEGORY_DEFAULT);
   TAndroidHelper.Context.registerReceiver(FReceiver, IntentFilter);
+
+  //GetConfig;
   {$ENDIF}
 end;
 
 destructor TDataWedgeBarCode.Destroy;
 begin
+  FListParam.Free;
   {$IFDEF ANDROID}
   if FReceiver <> nil then TAndroidHelper.Activity.UnregisterReceiver(FReceiver);
   {$ENDIF}
   inherited Destroy;
+end;
+
+procedure TDataWedgeBarCode.SetIllumination;
+  {$IFDEF ANDROID}
+var
+  intentParams: JIntent;
+  bScannerParams: JBundle;
+  {$ENDIF}
+begin
+  {$IFDEF ANDROID}
+  intentParams := TJIntent.Create;
+  intentParams.setAction(stringtojstring(ACTION_SOFTSCANTRIGGER));
+
+  bScannerParams := TJBundle.Create;
+
+  if FisIllumination then
+    bScannerParams.putString(stringtojstring('illumination_mode'), stringtojstring('torch'))
+  else bScannerParams.putString(stringtojstring('illumination_mode'), stringtojstring('off'));
+
+  intentParams.putExtra(stringtojstring(SWITCH_SCANNER_PARAMS), bScannerParams);
+  TAndroidHelper.Activity.sendBroadcast(intentParams);
+  {$ENDIF}
 end;
 
 procedure TDataWedgeBarCode.Scan;
@@ -160,17 +196,6 @@ begin
   if Assigned(FOnScanResult) then
       FOnScanResult(Self, JStringToString(csIntent.getStringExtra(StringToJString(DATA_STRING_TAG))));
 
-end;
-{$ENDIF}
-
-{$IFDEF ANDROID}
-procedure TDataWedgeBarCode.OnScanResultCamera(Sender: TObject; AData_String: String);
-begin
-  if Assigned(FOnScanResultDetails) then
-      FOnScanResultDetails(Self, '', 'Camera', '', AData_String);
-
-  if Assigned(FOnScanResult) then
-      FOnScanResult(Self, AData_String);
 end;
 {$ENDIF}
 

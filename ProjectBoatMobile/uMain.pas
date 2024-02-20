@@ -9,7 +9,7 @@ uses
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
   System.IniFiles, FMX.VirtualKeyboard, FMX.DialogService, FMX.DataWedgeBarCode,
   FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
-  FMX.ListView, uDM, FMX.Media,  Winsoft.FireMonkey.Obr
+  FMX.ListView, uDM, FMX.Media,  Winsoft.FireMonkey.Obr, System.ImageList, FMX.ImgList
   {$IFDEF ANDROID}
   ,System.Permissions,Androidapi.JNI.Os, FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
@@ -112,9 +112,12 @@ type
     Layout10: TLayout;
     lUser: TLabel;
     tiScanBarCode: TTabItem;
-    CameraScanBarCode: TCameraComponent;
     imgCameraScanBarCode: TImage;
-    StopCamera: TTimer;
+    tiStopCamera: TTimer;
+    sbIlluminationMode: TSpeedButton;
+    Image9: TImage;
+    ilPartners: TImageList;
+    ilButton: TImageList;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -137,19 +140,25 @@ type
     procedure CameraScanBarCodeSampleBufferReady(Sender: TObject;
       const ATime: TMediaTime);
     procedure OnObrBarcodeDetected(Sender: TObject);
-    procedure StopCameraTimer(Sender: TObject);
+    procedure tiStopCameraTimer(Sender: TObject);
+    procedure sbIlluminationModeClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
+    FCameraScanBarCode: TCameraComponent;
     FObr: TFObr;
     FWebServer: string;
     FPermissionState: boolean;
     FisZebraScaner: boolean;
     FisCameraScanBarCode: boolean;
+    FisBecomeForeground: Boolean;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
+    {$IFDEF ANDROID}
+    function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
+    {$ENDIF}
 
     procedure Wait(AWait: Boolean);
   public
@@ -188,6 +197,7 @@ var
   {$IFDEF ANDROID}
   ScreenService: IFMXScreenService;
   OrientSet: TScreenOrientations;
+  var aFMXApplicationEventService: IFMXApplicationEventService;
   {$ENDIF}
   SettingsFile : TIniFile;
 begin
@@ -195,21 +205,28 @@ begin
   //Application.OnIdle := MobileIdle;
 
   FormatSettings.DecimalSeparator := '.';
+  FisBecomeForeground := False;
+
+  FFormsStack := TStack<TFormStackItem>.Create;
+
+  FDataWedgeBarCode := TDataWedgeBarCode.Create(Nil);
 
   // получение настроек из ini файла
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  FisZebraScaner := Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0;
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
+  FisZebraScaner := False;
   SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
   {$ENDIF}
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
     FWebServer := SettingsFile.ReadString('LOGIN', 'WebServer', WebServer);
+    FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
   finally
     FreeAndNil(SettingsFile);
   end;
   FPermissionState := True;
-
   // установка вертикального положения экрана телефона
   {$IFDEF ANDROID}
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
@@ -219,22 +236,28 @@ begin
   end;
   {$ENDIF}
 
-  FFormsStack := TStack<TFormStackItem>.Create;
+  if not FisZebraScaner then
+  begin
+    //Распознавание штрих кода
+    FObr := TFObr.Create(Nil);
+    FObr.OnBarcodeDetected := OnObrBarcodeDetected;
 
-  FDataWedgeBarCode := TDataWedgeBarCode.Create(Nil);
-
-  FObr := TFObr.Create(Nil);
-  FObr.OnBarcodeDetected := OnObrBarcodeDetected;
-
-  //Настройка камері
-  CameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
-  CameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
-  CameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+    //Настройка камерЫ
+    FCameraScanBarCode := TCameraComponent.Create(Nil);
+    FCameraScanBarCode.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
+    FCameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
+    FCameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
+    FCameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+  end else
+  begin
+    FDataWedgeBarCode.SetIllumination;
+    if FDataWedgeBarCode.isIllumination then
+      Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
+    else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
+  end;
 
   // установка разрешений
   {$IFDEF ANDROID}
-
-  FisZebraScaner := Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0;
 
   if not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE)) or
      not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.CAMERA)) or
@@ -251,6 +274,8 @@ begin
       end);
   end;
 
+  if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(aFMXApplicationEventService)) then
+     aFMXApplicationEventService.SetApplicationEventHandler(HandleAppEvent)
   {$ELSE}
 
   FisZebraScaner := False;
@@ -260,11 +285,22 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  FCameraScanBarCode.Free;
   FObr.Free;
   FDataWedgeBarCode.Free;
   FFormsStack.Free;
 end;
 
+{$IFDEF ANDROID}
+function TfrmMain.HandleAppEvent(AAppEvent: TApplicationEvent;
+  AContext: TObject): Boolean;
+begin
+  case AAppEvent of
+    TApplicationEvent.WillBecomeForeground : if FisZebraScaner then FisBecomeForeground := True;
+  end;
+  Result := True;
+end;
+{$ENDIF}
 
 // переход на заданную форму с сохранением её в стэк открываемых форм
 procedure TfrmMain.SwitchToForm(const TabItem: TTabItem; const Data: TObject);
@@ -305,10 +341,10 @@ end;
 procedure TfrmMain.CameraScanBarCodeSampleBufferReady(Sender: TObject;
   const ATime: TMediaTime);
 begin
-  if CameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
+  if FCameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
   begin
-    CameraScanBarCode.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
-    CameraScanBarCode.SampleBufferToBitmap(FObr.Picture, True);
+    FCameraScanBarCode.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
+    FCameraScanBarCode.SampleBufferToBitmap(FObr.Picture, True);
     FObr.Scan;
   end;
 end;
@@ -334,7 +370,7 @@ begin
 
     if Assigned(pOnScanResult) then pOnScanResult(Self, Barcode.DataUtf8);
 
-    StopCamera.Enabled := True;
+    tiStopCamera.Enabled := True;
   end;
 end;
 
@@ -368,6 +404,7 @@ begin
     if (tcMain.ActiveTab = tiInformation)  then
       sbScan.Visible := true
     else sbScan.Visible := false;
+    sbIlluminationMode.Visible := sbScan.Visible and FisZebraScaner;
 
     if tcMain.ActiveTab = tiMain then
       lCaption.Text := 'A g i l i s'
@@ -380,11 +417,14 @@ begin
     else if tcMain.ActiveTab = tiScanBarCode then
     begin
       lCaption.Text := 'Сканер штрихкода';
-      StopCamera.Enabled := False;
+      tiStopCamera.Enabled := False;
       imgCameraScanBarCode.Bitmap.Assign(Nil);
-      FObr.Active := True;
-      FisCameraScanBarCode := True;
-      CameraScanBarCode.Active := True;
+      if Assigned(FCameraScanBarCode) then
+      begin
+        FObr.Active := True;
+        FisCameraScanBarCode := True;
+        FCameraScanBarCode.Active := True;
+      end;
     end
   end;
 end;
@@ -425,11 +465,14 @@ begin
   SwitchToForm(tiInformation, nil);
 end;
 
-procedure TfrmMain.StopCameraTimer(Sender: TObject);
+procedure TfrmMain.tiStopCameraTimer(Sender: TObject);
 begin
-  StopCamera.Enabled := False;
-  CameraScanBarCode.Active := false;
-  FObr.Active := False;
+  tiStopCamera.Enabled := False;
+  if Assigned(FCameraScanBarCode) then
+  begin
+    FCameraScanBarCode.Active := false;
+    FObr.Active := False;
+  end;
 end;
 
 // переход на форму отображения информации
@@ -502,8 +545,40 @@ begin
     ReturnPriorForm;
 end;
 
+procedure TfrmMain.sbIlluminationModeClick(Sender: TObject);
+  var SettingsFile : TIniFile;
+begin
+  FDataWedgeBarCode.isIllumination := not FDataWedgeBarCode.isIllumination;
+  if FisZebraScaner then FDataWedgeBarCode.SetIllumination;
+  if FDataWedgeBarCode.isIllumination then
+    Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
+  else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
+
+  // сохранение подсветки в ini файле
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
+  {$ELSE}
+  SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
+  {$ENDIF}
+  try
+    SettingsFile.WriteBool('DataWedge', 'isIllumination', FDataWedgeBarCode.isIllumination);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
 procedure TfrmMain.sbScanClick(Sender: TObject);
 begin
+  if FisBecomeForeground and FisZebraScaner then
+  begin
+    Sleep(500);
+    FDataWedgeBarCode.SetIllumination;
+    if FDataWedgeBarCode.isIllumination then
+      Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
+    else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
+    FisBecomeForeground := False;
+  end;
+
   if FisZebraScaner then FDataWedgeBarCode.Scan
   else SwitchToForm(tiScanBarCode, nil);
 end;
