@@ -38,15 +38,15 @@ BEGIN
                                    );
 
        --
-       SELECT CASE WHEN 1=0 AND vbUserId = 5 THEN 'PrintMovement_Quality310855'
+       SELECT CASE WHEN vbUserId = 5 AND 1=0 THEN 'PrintMovement_Quality32294926'
 
                    WHEN vbIsGoodsCode_2393 = TRUE AND OH_JuridicalDetails.OKPO =  '32049199' THEN 'PrintMovement_Quality32049199_2393'
                    WHEN vbIsGoodsCode_2393 = TRUE AND OH_JuridicalDetails.OKPO <> '32049199' THEN 'PrintMovement_Quality32294926'
 
                    WHEN ObjectLink_Juridical_Retail.ChildObjectId   = 310855 -- Варус
                     AND ObjectLink_Contract_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101() -- Готовая продукция
-                    AND vbUserId <> 5
-                        THEN 'PrintMovement_Quality310855'
+                    --AND vbUserId <> 5
+                        THEN 'PrintMovement_Quality32294926' -- 'PrintMovement_Quality310855'
 
                    ELSE COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Quality')
               END
