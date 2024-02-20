@@ -130,6 +130,10 @@ type
     PG5DS: TDataSource;
     DBViewAddOnPG5: TdsdDBViewAddOn;
     actPrint_test: TdsdPrintAction;
+    actGridTestToExcel: TdsdGridToExcel;
+    actPivotTestToExcel: TdsdGridToExcel;
+    bbGridTestToExcel: TdxBarButton;
+    bbPivotTestToExcel: TdxBarButton;
   private
     { Private declarations }
   public

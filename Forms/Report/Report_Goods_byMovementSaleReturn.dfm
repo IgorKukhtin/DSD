@@ -459,6 +459,9 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -1453,7 +1456,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
       end
     end
     object tsMainTest: TcxTabSheet
-      Caption = #1043#1055' - '#1090#1077#1089#1090
+      Caption = '***'#1043#1086#1090#1086#1074#1072#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1103
       ImageIndex = 3
       object cxGrid_PG4: TcxGrid
         Left = 0
@@ -1594,7 +1597,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
       end
     end
     object tsPivotTest: TcxTabSheet
-      Caption = #1058#1091#1096#1077#1085#1082#1072' - '#1090#1077#1089#1090
+      Caption = '***'#1058#1091#1096#1077#1085#1082#1072' '
       ImageIndex = 4
       object cxGridPG5: TcxGrid
         Left = 0
@@ -2288,6 +2291,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
   inherited ActionList: TActionList
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
+      ShortCut = 16436
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -2407,9 +2411,10 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     object actPrint_test: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' -'#1058#1077#1089#1090
-      Hint = #1055#1077#1095#1072#1090#1100' -'#1058#1077#1089#1090
+      Caption = '***'#1055#1077#1095#1072#1090#1100
+      Hint = '***'#1055#1077#1095#1072#1090#1100' - '#1057#1090#1072#1088#1072#1103' '#1074#1077#1088#1089#1080#1103
       ImageIndex = 16
       DataSets = <
         item
@@ -2539,7 +2544,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
-      ShortCut = 16472
+      ShortCut = 16437
     end
     object actDetailToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2550,7 +2555,29 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
-      ShortCut = 16472
+      ShortCut = 16435
+    end
+    object actGridTestToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = tsMainTest
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGrid_PG4
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16433
+    end
+    object actPivotTestToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = tsPivotTest
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridPG5
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16434
     end
   end
   inherited MasterDS: TDataSource
@@ -2680,7 +2707,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_test'
         end
         item
           Visible = True
@@ -2688,7 +2715,7 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
         end
         item
           Visible = True
-          ItemName = 'bbPrint_test'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -2705,6 +2732,14 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
         item
           Visible = True
           ItemName = 'bbDetailToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridTestToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPivotTestToExcel'
         end
         item
           Visible = True
@@ -2729,6 +2764,14 @@ inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleRet
     end
     object bbDetailToExcel: TdxBarButton
       Action = actDetailToExcel
+      Category = 0
+    end
+    object bbGridTestToExcel: TdxBarButton
+      Action = actGridTestToExcel
+      Category = 0
+    end
+    object bbPivotTestToExcel: TdxBarButton
+      Action = actPivotTestToExcel
       Category = 0
     end
   end

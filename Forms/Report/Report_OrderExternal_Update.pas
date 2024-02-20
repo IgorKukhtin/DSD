@@ -139,6 +139,12 @@ type
     spSelectPrintGoodsDiff_3Upack: TdsdStoredProc;
     bbPrintGoodsDiff_Upack: TdxBarButton;
     bbPrintGoodsDiff_3Upack: TdxBarButton;
+    AmountWeight_sub_child_one: TcxGridDBColumn;
+    AmountWeight_sub_child_sec: TcxGridDBColumn;
+    AmountWeight_sub_child: TcxGridDBColumn;
+    AmountSh_sub_child_one: TcxGridDBColumn;
+    AmountSh_sub_child_sec: TcxGridDBColumn;
+    AmountSh_sub_child: TcxGridDBColumn;
   private
     { Private declarations }
   public
