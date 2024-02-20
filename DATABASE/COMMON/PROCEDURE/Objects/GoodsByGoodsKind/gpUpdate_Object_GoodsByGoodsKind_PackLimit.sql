@@ -21,13 +21,16 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Элемент справочника не установлен.';
    END IF;
-  /*
+  
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_PackLimit(), inId, inPackLimit);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_PackLimit(), ioId, inisPackLimit);
+   IF inisPackLimit = TRUE
+   THEN
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_PackLimit(), inId, inPackLimit);
+   END IF;
 
-   */
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_PackLimit(), inId, inisPackLimit);
+
    -- проверка - что б Админ ничего не ломал
    IF vbUserId = 5 OR vbUserId = 9457
    THEN
