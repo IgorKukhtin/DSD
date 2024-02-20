@@ -282,6 +282,7 @@ type
     FFieldName : String;
     FControl: TWinControl;
     FPdfCtrl: TPdfControl;
+    FImage: TcxImage;
     FisFocused: Boolean;
 
     FBarManager: TdxBarManager;
@@ -305,6 +306,7 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
     procedure ShowPDF(AMemoryStream: TMemoryStream);
+    procedure ShowGraphic(AGraphicClass: TGraphicClass; AMemoryStream: TMemoryStream);
     procedure Clear;
   published
     // Имя поля с данными
@@ -2708,6 +2710,7 @@ begin
     try
       try
         if Assigned(TViewDocument(Item).FPdfCtrl) then FreeAndNil(TViewDocument(Item).FPdfCtrl);
+        if Assigned(TViewDocument(Item).FImage) then FreeAndNil(TViewDocument(Item).FImage);
         if Length(DataSet.FieldByName(TViewDocument(Item).FieldName).AsString) <= 4 then Continue;
 
         Data := ReConvertConvert(DataSet.FieldByName(TViewDocument(Item).FieldName).AsString);
@@ -2724,7 +2727,32 @@ begin
 
           TViewDocument(Item).ShowPDF(FMemoryStream);
 
+        end else
+        begin
+
+          if 'wmf' = Ext then GraphicClass := TMetafile
+          else if 'emf' =  Ext then GraphicClass := TMetafile
+          else if 'ico' =  Ext then GraphicClass := TIcon
+          else if 'tiff' = Ext then GraphicClass := TWICImage
+          else if 'tif' = Ext then GraphicClass := TWICImage
+          else if 'png' = Ext then GraphicClass := TWICImage
+          else if 'gif' = Ext then GraphicClass := TWICImage
+          else if 'jpeg' = Ext then GraphicClass := TWICImage
+          else if 'jpg' = Ext then GraphicClass := TWICImage
+          else if 'bmp' = Ext then GraphicClass := TBitmap
+          else GraphicClass := nil;
+
+          if Assigned(GraphicClass) then
+          begin
+            Data := Copy(Data, 256, maxint);
+            Len := Length(Data);
+            FMemoryStream.WriteBuffer(Data[1],  Len);
+            FMemoryStream.Position := 0;
+
+            TViewDocument(Item).ShowGraphic(GraphicClass, FMemoryStream)
+          end;
         end;
+
       finally
         FMemoryStream.Clear;
       end;
@@ -6596,6 +6624,7 @@ begin
   FFieldName := '';
   FControl := Nil;
   FPdfCtrl := Nil;
+  FImage := Nil;
   FisFocused := False;
 end;
 
@@ -6722,9 +6751,33 @@ begin
   end;
 end;
 
+procedure TViewDocument.ShowGraphic(AGraphicClass: TGraphicClass; AMemoryStream: TMemoryStream);
+  var Graphic: TGraphic;
+begin
+  if not Assigned(FControl) then Exit;
+  try
+    FImage := TcxImage.Create(FControl.Owner);
+    FImage.Parent := FControl;
+    FImage.Align := alClient;
+    FImage.SendToBack;
+    FImage.Properties.ReadOnly := True;
+
+    Graphic := TGraphicClass(AGraphicClass).Create;
+    try
+      Graphic.LoadFromStream(AMemoryStream);
+      FImage.Picture.Graphic := Graphic;
+    finally
+      Graphic.Free;
+    end;
+  except
+    Clear;
+  end;
+end;
+
 procedure TViewDocument.Clear;
 begin
   if Assigned(FPdfCtrl) then FreeAndNil(FPdfCtrl);
+  if Assigned(FImage) then FreeAndNil(FImage);
   if Assigned(FBarManager) then FreeAndNil(FBarManager);
 end;
 

@@ -59,6 +59,18 @@ BEGIN
                                ORDER BY Object_BankAccount.Id
                                LIMIT 1
                               )
+          -- расчетное значение - Разница оплаты и Итого по Счетам
+          , tmpReturnPay AS (SELECT MovementItem.Amount - SUM (COALESCE (MI_Child.Amount, 0))  AS Amount_ret
+                             FROM MovementItem
+                                  LEFT JOIN MovementItem AS MI_Child
+                                                         ON MI_Child.MovementId = inMovementId
+                                                        AND MI_Child.DescId     = zc_MI_Child()
+                                                        AND MI_Child.isErased   = FALSE
+                             WHERE MovementItem.MovementId = inMovementId
+                               AND MovementItem.DescId     = zc_MI_Master()
+                             GROUP BY MovementItem.Amount
+                            )
+              
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar)  AS InvNumber
@@ -66,8 +78,8 @@ BEGIN
            , CURRENT_DATE /*inOperDate*/          :: TDateTime AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
-           , 0                                        ::TFloat AS AmountIn
-           , 0                                        ::TFloat AS AmountOut
+           , CASE WHEN COALESCE (tmpReturnPay.Amount_ret,0) > 0 THEN tmpReturnPay.Amount_ret ELSE 0 END ::TFloat AS AmountIn
+           , CASE WHEN COALESCE (tmpReturnPay.Amount_ret,0) < 0 THEN tmpReturnPay.Amount_ret ELSE 0 END ::TFloat AS AmountOut
            , 0     :: TFloat                                   AS Amount_pay  
            , ABS (MovementFloat_Amount.ValueData)    :: TFloat AS Amount_invoice
            , ''::TVarChar                                      AS Comment 
@@ -128,7 +140,8 @@ BEGIN
                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
                                   AND ObjectString_CIN.DescId   = zc_ObjectString_Product_CIN()
 
-            LEFT JOIN tmpBankAccount ON 1=1  
+            LEFT JOIN tmpBankAccount ON 1=1 
+            LEFT JOIN tmpReturnPay ON 1=1 
       ;
      ELSE
 
@@ -142,6 +155,18 @@ BEGIN
                          AND MovementItem.Id = inMovementItemId_child
                          AND MovementItem.DescId = zc_MI_Child()
                        )
+     -- расчетное значение - Разница оплаты и Итого по Счетам
+     , tmpReturnPay AS (SELECT MovementItem.Amount - SUM (COALESCE (MI_Child.Amount, 0))  AS Amount_ret
+                        FROM MovementItem
+                             LEFT JOIN MovementItem AS MI_Child
+                                                    ON MI_Child.MovementId = inMovementId
+                                                   AND MI_Child.DescId     = zc_MI_Child()
+                                                   AND MI_Child.isErased   = FALSE
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId     = zc_MI_Master()
+                        GROUP BY MovementItem.Amount
+                       )
+
 
        SELECT
              Movement.Id
@@ -151,8 +176,12 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , CASE WHEN tmpMI_Child.Amount > 0 THEN tmpMI_Child.Amount      ELSE 0 END ::TFloat AS AmountIn
-           , CASE WHEN tmpMI_Child.Amount < 0 THEN -1 * tmpMI_Child.Amount ELSE 0 END ::TFloat AS AmountOut
+           , CASE WHEN inMovementItemId_child = 0 THEN CASE WHEN COALESCE (tmpReturnPay.Amount_ret,0) > 0 THEN tmpReturnPay.Amount_ret ELSE 0 END
+                  ELSE CASE WHEN tmpMI_Child.Amount > 0 THEN tmpMI_Child.Amount ELSE 0 END
+             END ::TFloat AS AmountIn
+           , CASE WHEN inMovementItemId_child = 0 THEN CASE WHEN COALESCE (tmpReturnPay.Amount_ret,0) < 0 THEN (-1) * tmpReturnPay.Amount_ret ELSE 0 END
+                  ELSE CASE WHEN tmpMI_Child.Amount < 0 THEN -1 * tmpMI_Child.Amount ELSE 0 END
+             END ::TFloat AS AmountOut
            , ABS (MovementItem.Amount)                                                ::TFloat AS Amount_pay  
            , ABS (MovementFloat_Amount.ValueData) :: TFloat AS Amount_invoice
 
@@ -179,6 +208,8 @@ BEGIN
            , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
            , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName_Invoice
            , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN_Invoice
+           --
+           , MovementString_7.ValueData   ::TVarChar AS String_7
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
@@ -186,6 +217,10 @@ BEGIN
             LEFT JOIN MovementBlob AS MovementBlob_Comment
                                    ON MovementBlob_Comment.MovementId = Movement.Id
                                   AND MovementBlob_Comment.DescId     = zc_MovementBlob_11()
+
+            LEFT JOIN MovementString AS MovementString_7
+                                     ON MovementString_7.MovementId = Movement.Id
+                                    AND MovementString_7.DescId = zc_MovementString_7()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -254,6 +289,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_CIN
                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
                                   AND ObjectString_CIN.DescId   = zc_ObjectString_Product_CIN()
+
+            LEFT JOIN tmpReturnPay ON 1=1 
        WHERE Movement.Id = inMovementId_Value;
 
    END IF;

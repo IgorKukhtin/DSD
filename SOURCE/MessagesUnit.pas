@@ -19,7 +19,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, Buttons, ActnList, Grids;
+  Dialogs, ExtCtrls, StdCtrls, Buttons, ActnList, Grids, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, cxLabel;
 
 type
 
@@ -30,7 +31,7 @@ type
     btnDetails: TButton;
     ActionList: TActionList;
     actExit: TAction;
-    rlError: TLabel;
+    rlError: TcxLabel;
     procedure btnDetailsClick(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -68,17 +69,26 @@ begin
 end;
 {--------------------------------------------------------------------------------------------------}
 procedure TMessagesForm.Execute(const inMessage, inFullMessage: string; ShowFullInfo: boolean = false);
+  var List: TStringList;
 begin
   m_stMessagePassword:='';
   fFullMessage:=inFullMessage;
   try
     meFullMessage.Lines.Text := Copy(inFullMessage, 1, 4096);
+    List := TStringList.Create;
+    try
+      List.Text := meFullMessage.Lines.Text;
+      if List.Count > 10 then rlError.Properties.Alignment.Vert := taTopJustify;
+    finally
+      List.Free;
+    end;
   except
   end;
-  if trim(inMessage)<>'' then
+  if trim(inMessage)<>''then
+  begin
      rlError.Caption := Copy(inMessage, 1, 4096)
-  else begin
-     with rlError.Font do begin
+  end else begin
+     with rlError.Style.Font do begin
        Color:= clRed;
        Style:= [fsBold];
      end;

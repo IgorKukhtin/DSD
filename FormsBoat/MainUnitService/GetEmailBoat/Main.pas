@@ -49,7 +49,7 @@ type
     PanelParts: TPanel;
     GaugeMailFrom: TGauge;
     GaugeParts: TGauge;
-    GaugeLoadXLS: TGauge;
+    GaugeLoadFile: TGauge;
     PanelLoadFile: TPanel;
     Timer: TTimer;
     cbTimer: TCheckBox;
@@ -145,7 +145,7 @@ begin
   GaugeHost.Progress:=0;
   GaugeMailFrom.Progress:=0;
   GaugeParts.Progress:=0;
-  GaugeLoadXLS.Progress:=0;
+  GaugeLoadFile.Progress:=0;
   //
   AddToLog('---- Start');
   // включаем таймер
@@ -264,7 +264,7 @@ end;
 function TMainForm.fBeginMail : Boolean;
 var
   msgs: integer;
-  ii, i,j: integer;
+  ii, i, j, l: integer;
   flag: boolean;
   msgcnt: integer;
   Session,mailFolderMain,mailFolder,StrCopyFolder: string;
@@ -272,6 +272,7 @@ var
   IdIMAP4:TIdIMAP4;
   searchResult : TSearchRec;
   msgDate_save:TDateTime;
+  FileList: TStringList;
 begin
    //
    if vbIsBegin = true then exit;
@@ -465,19 +466,36 @@ begin
                            //2.1. Прикрепляем файлы к счету
                            if (System.SysUtils.FindFirst(mailFolder + '\*.*', faArchive, searchResult) = 0) then
                            begin
-                              repeat
-                                //
-                                if (searchResult.Attr and faArchive) = searchResult.Attr then
+                              FileList := TStringList.Create;
+                              try
+                                repeat
+                                  //
+                                  if (searchResult.Attr and faArchive) = searchResult.Attr then
+                                  begin
+                                    AddToLog('Найден файл: ' + searchResult.Name);
+                                    PanelLoadFile.Caption:= 'Add File: '+Trim(searchResult.Name);
+                                    FileList.Add(searchResult.Name);
+                                  end;
+                                until System.SysUtils.FindNext(searchResult) <> 0;
+                                System.SysUtils.FindClose(searchResult);
+
+                                GaugeLoadFile.Progress:=0;
+                                GaugeLoadFile.MaxValue:=FileList.Count;
+                                for l := 0 to FileList.Count - 1 do
                                 begin
-                                  AddToLog('Найден файл: ' + searchResult.Name + ' прикрепляем к счету.');
+                                  AddToLog('Добавим файл к счету: ' + FileList.Strings[l]);
+                                  PanelLoadFile.Caption:= 'Add File: Добавим файл '+ Trim(FileList.Strings[l]) + ' к счету';
 
                                   spInsertUpdate_InvoicePdf.ParamByName('ioId').Value := 0;
-                                  spInsertUpdate_InvoicePdf.ParamByName('inPhotoName').Value := searchResult.Name;
+                                  spInsertUpdate_InvoicePdf.ParamByName('inPhotoName').Value := FileList.Strings[l];
                                   spInsertUpdate_InvoicePdf.ParamByName('inMovmentId').Value := spInsertUpdate_Invoice.ParamByName('ioId').Value;
-                                  spInsertUpdate_InvoicePdf.ParamByName('inInvoicePdfData').Value := ConvertConvert(PADR(searchResult.Name, 255) + String(FileReadString(mailFolder + '\' + searchResult.Name)));
+                                  spInsertUpdate_InvoicePdf.ParamByName('inInvoicePdfData').Value := ConvertConvert(PADR(FileList.Strings[l], 255) + String(FileReadString(mailFolder + '\' + FileList.Strings[l])));
                                   spInsertUpdate_InvoicePdf.Execute;
+                                  GaugeLoadFile.Progress:=GaugeLoadFile.Progress + 1;
                                 end;
-                               until System.SysUtils.FindNext(searchResult) <> 0;
+                              finally
+                                FileList.Free;
+                              end;
                            end;
                        end
                        // если не нашли - все равно удалить письмо в почте

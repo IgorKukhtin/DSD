@@ -18,19 +18,6 @@ object MessagesForm: TMessagesForm
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
-  object rlError: TLabel
-    Left = 0
-    Top = 0
-    Width = 467
-    Height = 181
-    Align = alClient
-    Alignment = taCenter
-    Caption = 'rlError'
-    Layout = tlCenter
-    WordWrap = True
-    ExplicitWidth = 27
-    ExplicitHeight = 13
-  end
   object meFullMessage: TMemo
     Left = 0
     Top = 222
@@ -68,9 +55,23 @@ object MessagesForm: TMessagesForm
       OnClick = btnDetailsClick
     end
   end
+  object rlError: TcxLabel
+    Left = 0
+    Top = 0
+    Align = alClient
+    Caption = 'rlError'
+    Properties.Alignment.Horz = taCenter
+    Properties.Alignment.Vert = taVCenter
+    ExplicitLeft = 120
+    ExplicitTop = 72
+    ExplicitWidth = 47
+    ExplicitHeight = 17
+    AnchorX = 234
+    AnchorY = 91
+  end
   object ActionList: TActionList
     Left = 222
-    Top = 68
+    Top = 76
     object actExit: TAction
       Caption = #1042#1099#1093#1086#1076
       Hint = #1042#1099#1093#1086#1076
