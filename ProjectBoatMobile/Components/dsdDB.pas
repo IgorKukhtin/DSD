@@ -33,6 +33,7 @@ type
   public
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
+    function AsStringDB: string;
     function AsFloat: double;
     procedure FixOldValue;
     procedure Assign(Source: TPersistent); override;
@@ -208,7 +209,7 @@ end;
 
 procedure TdsdStoredProc.DataSetRefresh;
 var B: TBookMark;
-    FStringStream: TStringStream;
+    FStringStream: TBytesStream;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
@@ -221,7 +222,7 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      if DataSets[0].DataSet is TClientDataSet then begin
          try
-           FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML), TEncoding.UTF8);
+           FStringStream := TBytesStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
            try
              TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
            finally
@@ -324,20 +325,20 @@ begin
   for I := 0 to Params.Count - 1 do
       with Params[i] do
         if ParamType in [ptInput, ptInputOutput] then begin
-           ParamStr := asString;
+           ParamStr := asStringDB;
            if DataType = ftWideString then
               Result := Result + '<' + Name +
                    '  DataType="ftBlob" '+
                    '  Value="' + gfStrToXmlStr(ParamStr) + '" />'
            else
-             if DataType = ftBlob then
-                Result := Result + '<' + Name +
-                     '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                     '  Value="' + ParamStr + '" />'
-             else
-                Result := Result + '<' + Name +
-                     '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                     '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
+           if DataType = ftBlob then
+              Result := Result + '<' + Name +
+                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                   '  Value="' + ParamStr + '" />'
+           else
+              Result := Result + '<' + Name +
+                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                   '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
         end;
 end;
 
@@ -676,6 +677,7 @@ function TdsdParam.AsString: string;
 var i: Integer;
     Data: Variant;
 begin
+
   Data := Value;
   if VarisNull(Data) then
     case DataType of
@@ -696,52 +698,41 @@ begin
            if not TryStrToInt(result, i)
            then
              result := '0';
- {   ftFloat: ;
-    ftCurrency: ;
-    ftBCD: ;
-    ftDate: ;
-    ftTime: ;
-    ftDateTime: ;
-    ftBytes: ;
-    ftVarBytes: ;
-    ftAutoInc: ;
-    ftBlob: ;
-    ftMemo: ;
-    ftGraphic: ;
-    ftFmtMemo: ;
-    ftParadoxOle: ;
-    ftDBaseOle: ;
-    ftTypedBinary: ;
-    ftCursor: ;
-    ftFixedChar: ;
-    ftWideString: ;
-    ftLargeint: ;
-    ftADT: ;
-    ftArray: ;
-    ftReference: ;
-    ftDataSet: ;
-    ftOraBlob: ;
-    ftOraClob: ;
-    ftVariant: ;
-    ftInterface: ;
-    ftIDispatch: ;
-    ftGuid: ;
-    ftTimeStamp: ;
-    ftFMTBcd: ;
-    ftFixedWideChar: ;
-    ftWideMemo: ;
-    ftOraTimeStamp: ;
-    ftOraInterval: ;
-    ftLongWord: ;
-    ftShortint: ;
-    ftByte: ;
-    ftExtended: ;
-    ftConnection: ;
-    ftParams: ;
-    ftStream: ;
-    ftTimeStampOffset: ;
-    ftObject: ;
-    ftSingle: ;}
+  end;
+end;
+
+function TdsdParam.AsStringDB: string;
+var i: Integer;
+    Data: Variant;
+begin
+
+  {$IFDEF ANDROID}
+  if not VarisNull(Data) and (DataType in [ftDate, ftTime, ftDateTime]) then
+    Data := FormatDateTime('DD.MM.YYYY HH:NN:SS', Value)
+  else Data := Value;
+  {$ELSE}
+  Data := Value;
+  {$ENDIF}
+
+  if VarisNull(Data) then
+    case DataType of
+      ftDate, ftTime, ftDateTime: Data := '01-01-1900'
+      else  Data := '';
+    end;
+  if varType(Data) in [varSingle, varDouble, varCurrency] then
+     result := gfFloatToStr(Data)
+  else begin
+     if (varType(Data) = varString) and (Data = #0) then
+        // При пустой строку result = #0
+        result := ''
+     else
+        result := Data;
+  end;
+  case DataType of
+    ftSmallint, ftInteger, ftWord:
+           if not TryStrToInt(result, i)
+           then
+             result := '0';
   end;
 end;
 

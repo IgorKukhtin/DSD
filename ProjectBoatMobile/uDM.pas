@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, FMX.DialogService, System.UITypes,
-  Data.DB, dsdDB
+  Data.DB, dsdDB, Datasnap.DBClient
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App,
@@ -36,6 +36,17 @@ type
   end;
 
   TDM = class(TDataModule)
+    cdsInventoryJournal: TClientDataSet;
+    cdsInventoryJournalId: TIntegerField;
+    cdsInventoryJournalStatusId: TIntegerField;
+    cdsInventoryJournalisList: TBooleanField;
+    cdsInventoryJournalInvNumber: TWideStringField;
+    cdsInventoryJournalStatus: TWideStringField;
+    cdsInventoryJournalUnitName: TWideStringField;
+    cdsInventoryJournalComment: TWideStringField;
+    cdsInventoryJournalOperDate: TWideStringField;
+    cdsInventoryJournalTotalCount: TWideStringField;
+    cdsInventoryJournalEditButton: TIntegerField;
   private
     { Private declarations }
   public
@@ -46,6 +57,9 @@ type
     procedure CheckUpdate;
     function CompareVersion(ACurVersion, AServerVersion: string): integer;
     procedure UpdateProgram(const AResult: TModalResult);
+
+    function LoadInventoryJournal : Boolean;
+    function LoadInventory : Boolean;
   end;
 
 var
@@ -434,5 +448,68 @@ begin
     WaitThread.Start;
   end;
 end;
+
+{ начитка журнала инвентаризаций }
+function TDM.LoadInventoryJournal : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_Movement_MobileInventory';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, frmMain.deInventoryStartDate.Date);
+    StoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, frmMain.deInventoryEntDate.Date);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
+    StoredProc.DataSet := cdsInventoryJournal;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result :=cdsInventoryJournal.Active;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+{ начитка инвентаризации}
+function TDM.LoadInventory : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+//    StoredProc.StoredProcName := 'gpSelect_Movement_MobileInventory';
+//    StoredProc.Params.Clear;
+//    StoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, frmMain.deInventoryStartDate.Date);
+//    StoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, frmMain.deInventoryEntDate.Date);
+//    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
+//    StoredProc.DataSet := cdsInventoryJournal;
+//
+//    try
+//      StoredProc.Execute(false, false, false);
+//      Result :=cdsInventoryJournal.Active;
+//    except
+//      on E : Exception do
+//      begin
+//        raise Exception.Create(E.Message);
+//        exit;
+//      end;
+//    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
 
 end.
