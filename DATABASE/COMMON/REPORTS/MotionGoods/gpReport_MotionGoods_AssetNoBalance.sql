@@ -286,18 +286,20 @@ BEGIN
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
                          UNION ALL
                            SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate
-                                                                 , inAccountGroupId:= zc_Enum_AccountGroup_20000()
+                                                                 , inAccountGroupId:= 1 * zc_Enum_AccountGroup_20000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
+                                                                   -- добавить "МНМА + ОС"
                                                                  , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 9354099 ELSE inGoodsGroupId END
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
-                           WHERE inGoodsGroupId = 0 AND inGoodsId = 0   
+                           --WHERE inGoodsGroupId = 0 AND inGoodsId = 0   
                          UNION ALL
                            SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate
-                                                                 , inAccountGroupId:= zc_Enum_AccountGroup_20000()
+                                                                 , inAccountGroupId:= 1 * zc_Enum_AccountGroup_20000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
+                                                                   -- добавить "ШИНЫ", если выбрали ВСЕ или "МНМА + ОС"
                                                                  , inGoodsGroupId:= CASE WHEN (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0 THEN 7597944 ELSE inGoodsGroupId END
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
-                           WHERE (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0
+                           --WHERE (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0
                           )
         
         
