@@ -230,8 +230,10 @@ BEGIN
                       END AS DescId
                     , tmpDesc.ContainerDescId
                FROM Object
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE
-                         UNION SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE
+                    LEFT JOIN (SELECT zc_Container_Count()      AS ContainerDescId
+                         UNION SELECT zc_Container_Summ()       AS ContainerDescId WHERE vbIsSummIn = TRUE
+                         UNION SELECT zc_Container_CountAsset() AS ContainerDescId
+                         UNION SELECT zc_Container_SummAsset()  AS ContainerDescId WHERE vbIsSummIn = TRUE
                               ) AS tmpDesc ON 1 = 1
                WHERE Object.Id = inLocationId
               ;
@@ -245,8 +247,10 @@ BEGIN
                    UNION ALL
                     SELECT Object.Id, zc_ContainerLinkObject_Member() AS DescId FROM Object WHERE Object.DescId = zc_Object_Member()
                    ) AS tmp
-                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE
-                        UNION SELECT zc_Container_CountAsset() AS ContainerDescId UNION SELECT zc_Container_SummAsset() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+                   LEFT JOIN (SELECT zc_Container_Count()      AS ContainerDescId
+                        UNION SELECT zc_Container_Summ()       AS ContainerDescId WHERE vbIsSummIn = TRUE
+                        UNION SELECT zc_Container_CountAsset() AS ContainerDescId
+                        UNION SELECT zc_Container_SummAsset()  AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
              ;
         END IF;
     END IF;
@@ -285,13 +289,15 @@ BEGIN
                                                                  , inAccountGroupId:= zc_Enum_AccountGroup_20000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
                                                                  , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 9354099 ELSE inGoodsGroupId END
-                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp   
+                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
+                           WHERE inGoodsGroupId = 0 AND inGoodsId = 0   
                          UNION ALL
                            SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate
                                                                  , inAccountGroupId:= zc_Enum_AccountGroup_20000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
                                                                  , inGoodsGroupId:= CASE WHEN (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0 THEN 7597944 ELSE inGoodsGroupId END
-                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp   
+                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
+                           WHERE (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0
                           )
         
         
