@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpReport_MotionGoods(
     IN inUserId             Integer     -- пользователь
 )
 RETURNS TABLE (AccountId Integer
+             , ContainerDescId_count Integer
              , ContainerId_count Integer
              , ContainerId Integer
              , LocationId Integer
@@ -519,7 +520,7 @@ end if;
 
     -- 2.3. убрали
     DELETE FROM _tmpListContainer
-    WHERE _tmpListContainer.ContainerDescId = zc_Container_Count()
+    WHERE _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
       AND COALESCE (_tmpListContainer.AccountId, 0) = 0
       AND EXISTS (SELECT 1 FROM Container WHERE Container.ParentId = _tmpListContainer.ContainerId_count)
      ;
@@ -1750,6 +1751,7 @@ end if;
 
          -- Результат
          SELECT (tmpMIContainer_all.AccountId)       AS AccountId
+              , tmpMIContainer_all.ContainerDescId   AS ContainerDescId_count
               , tmpMIContainer_all.ContainerId_count AS ContainerId_count
               , tmpMIContainer_all.ContainerId_begin AS ContainerId
               , tmpMIContainer_all.LocationId
@@ -1840,6 +1842,7 @@ end if;
 
          FROM tmpMIContainer AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.AccountId 
+                , tmpMIContainer_all.ContainerDescId
                 , tmpMIContainer_all.ContainerId_count
                 , tmpMIContainer_all.ContainerId_begin
                 , tmpMIContainer_all.LocationId

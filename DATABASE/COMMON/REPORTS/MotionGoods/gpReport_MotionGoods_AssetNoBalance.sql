@@ -306,6 +306,7 @@ BEGIN
        , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR ContainerId_count <> ContainerId)
        , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND ContainerId_count = ContainerId)
        , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId
+                            , COALESCE (tmpReport_summ.ContainerDescId_count, tmpReport_count.ContainerDescId_count) AS ContainerDescId_count
                             , COALESCE (tmpReport_summ.ContainerId_count, tmpReport_count.ContainerId_count) AS ContainerId_count
                             , COALESCE (tmpReport_summ.ContainerId,       tmpReport_count.ContainerId)       AS ContainerId
                             , COALESCE (tmpReport_summ.LocationId,        tmpReport_count.LocationId)        AS LocationId
@@ -404,7 +405,8 @@ BEGIN
 
    -- Результат
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
-        , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName, View_Account.AccountName_all
+        , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName
+        , (CASE WHEN tmpMIContainer_group.ContainerDescId_count IN (zc_Container_CountAsset(), zc_Container_SummAsset()) THEN '*з* ' ELSE '' END || COALESCE (View_Account.AccountName_all, '')) :: TVarChar AS AccountName_all
         , ObjectDesc.ItemName            AS LocationDescName
         , CAST (COALESCE(Object_Location.Id, 0) AS Integer)             AS LocationId
         , Object_Location.ObjectCode     AS LocationCode
@@ -660,6 +662,7 @@ BEGIN
           END                                 ::Integer AS NumGroup_print
       FROM 
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
+              , tmpMIContainer_all.ContainerDescId_count
               , tmpMIContainer_all.ContainerId
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
@@ -816,6 +819,7 @@ BEGIN
          FROM tmpReport AS tmpMIContainer_all
              LEFT JOIN _tmpLocation_by ON _tmpLocation_by.LocationId = tmpMIContainer_all.LocationId_by
          GROUP BY tmpMIContainer_all.AccountId
+                , tmpMIContainer_all.ContainerDescId_count
                 , tmpMIContainer_all.ContainerId
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
