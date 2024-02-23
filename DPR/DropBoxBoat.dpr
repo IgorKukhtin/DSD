@@ -1,4 +1,4 @@
-program GetEmailBoat;
+program DropBoxBoat;
 
 uses
   MidasLib,
@@ -33,8 +33,7 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
-  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
-  sevenzip in '..\FormsBoat\MainUnitService\GetEmailBoat\sevenzip.pas';
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
 
 {$R *.res}
 
